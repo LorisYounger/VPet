@@ -2,6 +2,8 @@
 
 虚拟桌宠模拟器 一个开源的桌宠软件, 可以内置到任何WPF应用程序
 
+![ss4](README.assets/ss4.gif)
+
 ## 软件设计
 
 * VPet-Simulator: 适用于桌面端的虚拟桌宠模拟器
