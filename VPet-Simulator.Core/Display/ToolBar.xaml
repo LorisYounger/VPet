@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="VPet_Simulator.Core.ToolBar" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Core"
+        mc:Ignorable="d" xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
+        MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Theme.xaml" />
+    </UserControl.Resources>
+    <Grid>
+        <pu:ContentControlX BorderBrush="{DynamicResource DARKPrimaryDarker}"
+                Background="{DynamicResource SecondaryLight}" BorderThickness="2" CornerRadius="5" Height="50"
+                Width="500" VerticalAlignment="Bottom">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Button Background="Transparent" Content="投喂" FontSize="24" Foreground="{DynamicResource PrimaryText}"
+                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
+                        />
+                <Button Background="Transparent" Content="面板" FontSize="24" Foreground="{DynamicResource PrimaryText}"
+                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
+                        Grid.Column="4"  />
+                <Button Background="Transparent" Content="打工" FontSize="24" Foreground="{DynamicResource PrimaryText}"
+                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
+                        Grid.Column="2"  />
+                <Button Background="Transparent" Content="睡觉" FontSize="24" Foreground="{DynamicResource PrimaryText}"
+                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
+                        Grid.Column="6" />
+                <Button Background="Transparent" Content="设置" FontSize="24" Foreground="{DynamicResource PrimaryText}"
+                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
+                        Grid.Column="8" />
+                <Rectangle Grid.Column="1" Width="2" Fill="{DynamicResource SecondaryDarker}"
+                        HorizontalAlignment="Center" Margin="0,6,0,6" />
+                <Rectangle Grid.Column="3" Width="2" Fill="{DynamicResource SecondaryDarker}"
+                        HorizontalAlignment="Center" Margin="0,6,0,6" />
+                <Rectangle Grid.Column="5" Width="2" Fill="{DynamicResource SecondaryDarker}"
+                        HorizontalAlignment="Center" Margin="0,6,0,6" />
+                <Rectangle Grid.Column="7" Width="2" Fill="{DynamicResource SecondaryDarker}"
+                        HorizontalAlignment="Center" Margin="0,6,0,6" />
+
+            </Grid>
+        </pu:ContentControlX>
+    </Grid>
+</UserControl>
