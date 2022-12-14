@@ -7,41 +7,48 @@ using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows
 {
+    /// <summary>
+    /// 窗体控制器实现
+    /// </summary>
     public class MWController : IController
     {
-        MainWindow mw;
+        readonly MainWindow mw;
         public MWController(MainWindow mw)
         {
             this.mw = mw;
         }
 
-        public override double WindowsWidth { get => mw.Width; set => mw.Width = value; }
-        public override double WindowsHight { get => mw.Height; set => mw.Height = value; }
+        public double WindowsWidth { get => mw.Dispatcher.Invoke(() => mw.Width); set => mw.Dispatcher.Invoke(() => mw.Width = value); }
+        public double WindowsHight { get => mw.Dispatcher.Invoke(() => mw.Height); set => mw.Dispatcher.Invoke(() => mw.Height = value); }
 
-        public override double GetWindowsDistanceDown()
+        public double GetWindowsDistanceDown()
         {
-            return System.Windows.SystemParameters.PrimaryScreenHeight - mw.Top - mw.Height;
+            return mw.Dispatcher.Invoke(() => System.Windows.SystemParameters.PrimaryScreenHeight - mw.Top - mw.Height);
         }
 
-        public override double GetWindowsDistanceLeft()
+        public double GetWindowsDistanceLeft()
         {
-            return mw.Left;
+            return mw.Dispatcher.Invoke(() => mw.Left);
         }
 
-        public override double GetWindowsDistanceRight()
+        public double GetWindowsDistanceRight()
         {
-            return System.Windows.SystemParameters.PrimaryScreenWidth - mw.Left - mw.Width;
+            return mw.Dispatcher.Invoke(() => System.Windows.SystemParameters.PrimaryScreenWidth - mw.Left - mw.Width);
         }
 
-        public override double GetWindowsDistanceUp()
+        public double GetWindowsDistanceUp()
         {
-            return mw.Top;
+            return mw.Dispatcher.Invoke(() => mw.Top);
         }
 
-        public override void MoveWindows(double X, double Y)
+        public void MoveWindows(double X, double Y)
         {
-            mw.Left += X * .5;
-            mw.Top += Y * .5;
+            mw.Dispatcher.Invoke(() =>
+            {
+                mw.Left += X * ZoomRatio;
+                mw.Top += Y * ZoomRatio;
+            });
         }
+        public double ZoomRatio => 0.5;
     }
 }
