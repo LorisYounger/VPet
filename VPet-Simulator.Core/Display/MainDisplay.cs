@@ -69,7 +69,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示拖拽中
         /// </summary>
-        public void DisplayRaising()
+        private void DisplayRaising()
         {
             switch (rasetype++)
             {
@@ -119,7 +119,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示向左走
         /// </summary>
-        public void DisplayWalk_Lefting()
+        private void DisplayWalk_Lefting()
         {
             //看看距离是不是不足
             if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio)
@@ -127,10 +127,18 @@ namespace VPet_Simulator.Core
                 switch (Function.Rnd.Next(3))
                 {
                     case 0:
-                        DisplayClimb_Left_UP();
+                        DisplayClimb_Left_UP(() =>
+                        {
+                            MoveTimer.Stop();
+                            Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_C_End, Core.Save.Mode), DisplayNomal);
+                        });
                         return;
                     case 1:
-                        DisplayClimb_Left_DOWN();
+                        DisplayClimb_Left_DOWN(() =>
+                        {
+                            MoveTimer.Stop();
+                            Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_C_End, Core.Save.Mode), DisplayNomal);
+                        });
                         return;
                     default:
                         MoveTimer.Stop();
@@ -150,9 +158,68 @@ namespace VPet_Simulator.Core
             }
         }
         /// <summary>
+        /// 显示向右走 (有判断)
+        /// </summary>
+        public void DisplayWalk_Right()
+        {
+            //看看距离是否满足调节
+            if (Core.Controller.GetWindowsDistanceRight() > 400 * Core.Controller.ZoomRatio)
+            {
+                walklength = 0;
+                IsNomal = false;
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_A_Start, Core.Save.Mode), () =>
+                {
+                    MoveTimerPoint = new Point(-20, 0);//TODO:锚定设置
+                    MoveTimer.Start();
+                    DisplayWalk_Righting();
+                });
+            }
+        }
+        /// <summary>
+        /// 显示向右走
+        /// </summary>
+        private void DisplayWalk_Righting()
+        {
+            //看看距离是不是不足
+            if (Core.Controller.GetWindowsDistanceRight() < 50 * Core.Controller.ZoomRatio)
+            {//是,停下恢复默认 or/爬墙
+                switch (Function.Rnd.Next(3))
+                {
+                    case 0:
+                        DisplayClimb_Right_UP(() =>
+                        {
+                            MoveTimer.Stop();
+                            Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_C_End, Core.Save.Mode), DisplayNomal);
+                        });
+                        return;
+                    case 1:
+                        DisplayClimb_Right_DOWN(() =>
+                        {
+                            MoveTimer.Stop();
+                            Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_C_End, Core.Save.Mode), DisplayNomal);
+                        });
+                        return;
+                    default:
+                        MoveTimer.Stop();
+                        Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_C_End, Core.Save.Mode), DisplayNomal);
+                        return;
+                }
+            }
+            //不是:继续右边走or停下
+            if (Function.Rnd.Next(walklength++) < 5)
+            {
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_B_Loop, Core.Save.Mode), DisplayWalk_Righting);
+            }
+            else
+            {//停下来
+                MoveTimer.Stop();
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_C_End, Core.Save.Mode), DisplayNomal);
+            }
+        }
+        /// <summary>
         /// 显示左墙壁爬行 上
         /// </summary>
-        public void DisplayClimb_Left_UP()
+        public void DisplayClimb_Left_UP(Action ifNot = null)
         {
             //看看距离是否满足调节
             if (Core.Controller.GetWindowsDistanceLeft() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceUp() > 400 * Core.Controller.ZoomRatio)
@@ -161,20 +228,25 @@ namespace VPet_Simulator.Core
                 IsNomal = false;
 
                 Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - 145, 0);//TODO:锚定设置
-                MoveTimerPoint = new Point(0, -10);//TODO:锚定设置
-                MoveTimer.Start();
-                DisplayClimb_Lefting_UP();
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_A_Start, Core.Save.Mode), () =>
+                {
+                    MoveTimerPoint = new Point(0, -10);//TODO:锚定设置
+                    MoveTimer.Start();
+                    DisplayClimb_Lefting_UP();
+                });
             }
+            else
+                ifNot?.Invoke();
         }
         /// <summary>
         /// 显示左墙壁爬行 上
         /// </summary>
-        public void DisplayClimb_Lefting_UP()
+        private void DisplayClimb_Lefting_UP()
         {
             //看看距离是不是不足
             if (Core.Controller.GetWindowsDistanceUp() < 100 * Core.Controller.ZoomRatio)
             {//是,停下恢复默认 or/爬上面的墙
-                switch (Function.Rnd.Next(3))
+                switch (0)//Function.Rnd.Next(3))
                 {
                     case 0:
                         DisplayClimb_Top_Right();
@@ -201,7 +273,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示左墙壁爬行 下
         /// </summary>
-        public void DisplayClimb_Left_DOWN()
+        public void DisplayClimb_Left_DOWN(Action ifNot = null)
         {
             //看看距离是否满足调节
             if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceDown() > 400 * Core.Controller.ZoomRatio)
@@ -210,15 +282,20 @@ namespace VPet_Simulator.Core
                 IsNomal = false;
 
                 Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - 145, 0);//TODO:锚定设置
-                MoveTimerPoint = new Point(0, 10);//TODO:锚定设置
-                MoveTimer.Start();
-                DisplayClimb_Lefting_DOWN();
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_A_Start, Core.Save.Mode), () =>
+                {
+                    MoveTimerPoint = new System.Windows.Point(0, 10);//TODO:锚定设置
+                    MoveTimer.Start();
+                    DisplayClimb_Lefting_DOWN();
+                });
             }
+            else
+                ifNot?.Invoke();
         }
         /// <summary>
         /// 显示左墙壁爬行 下
         /// </summary>
-        public void DisplayClimb_Lefting_DOWN()
+        private void DisplayClimb_Lefting_DOWN()
         {
             //看看距离是不是不足
             if (Core.Controller.GetWindowsDistanceDown() < 50 * Core.Controller.ZoomRatio)
@@ -240,7 +317,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示右墙壁爬行 上
         /// </summary>
-        public void DisplayClimb_Right_UP()
+        public void DisplayClimb_Right_UP(Action ifNot = null)
         {
             //看看距离是否满足调节
             if (Core.Controller.GetWindowsDistanceRight() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceUp() > 400 * Core.Controller.ZoomRatio)
@@ -249,15 +326,20 @@ namespace VPet_Simulator.Core
                 IsNomal = false;
 
                 Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 185, 0);//TODO:锚定设置
-                MoveTimerPoint = new Point(0, -10);//TODO:锚定设置
-                MoveTimer.Start();
-                DisplayClimb_Righting_UP();
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_A_Start, Core.Save.Mode), () =>
+                {
+                    MoveTimerPoint = new Point(0, -10);//TODO:锚定设置
+                    MoveTimer.Start();
+                    DisplayClimb_Righting_UP();
+                });
             }
+            else
+                ifNot?.Invoke();
         }
         /// <summary>
         /// 显示右墙壁爬行 上
         /// </summary>
-        public void DisplayClimb_Righting_UP()
+        private void DisplayClimb_Righting_UP()
         {
             //看看距离是不是不足
             if (Core.Controller.GetWindowsDistanceUp() < 100 * Core.Controller.ZoomRatio)
@@ -265,9 +347,10 @@ namespace VPet_Simulator.Core
                 switch (3)//Function.Rnd.Next(3))
                 {
                     case 0:
+                        DisplayClimb_Top_Left();
                         return;
-                    case 1:
-                        return;
+                    //case 1://TODO:落下
+                    //    return;
                     default:
                         MoveTimer.Stop();
                         DisplayNomal();
@@ -288,7 +371,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示右墙壁爬行 下
         /// </summary>
-        public void DisplayClimb_Right_DOWN()
+        public void DisplayClimb_Right_DOWN(Action ifNot = null)
         {
             //看看距离是否满足调节
             if (Core.Controller.GetWindowsDistanceRight() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceDown() > 400 * Core.Controller.ZoomRatio)
@@ -297,15 +380,20 @@ namespace VPet_Simulator.Core
                 IsNomal = false;
 
                 Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 185, 0);//TODO:锚定设置
-                MoveTimerPoint = new Point(0, 10);//TODO:锚定设置
-                MoveTimer.Start();
-                DisplayClimb_Righting_DOWN();
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_A_Start, Core.Save.Mode), () =>
+                {
+                    MoveTimerPoint = new Point(0, 10);//TODO:锚定设置
+                    MoveTimer.Start();
+                    DisplayClimb_Righting_DOWN();
+                });
             }
+            else
+                ifNot?.Invoke();
         }
         /// <summary>
         /// 显示右墙壁爬行 下
         /// </summary>
-        public void DisplayClimb_Righting_DOWN()
+        private void DisplayClimb_Righting_DOWN()
         {
             //看看距离是不是不足
             if (Core.Controller.GetWindowsDistanceDown() < 50 * Core.Controller.ZoomRatio)
@@ -342,19 +430,20 @@ namespace VPet_Simulator.Core
             }
         }
         /// <summary>
-        /// 显示左墙壁爬行 上
+        /// 显示顶部墙壁爬行向左
         /// </summary>
-        public void DisplayClimb_Top_Righting()
+        private void DisplayClimb_Top_Righting()
         {
             //看看距离是不是不足
             if (Core.Controller.GetWindowsDistanceRight() < 50 * Core.Controller.ZoomRatio)
-            {//是,停下恢复默认 or向下爬
+            {//是,停下恢复默认 or向下爬or掉落
                 switch (3)//Function.Rnd.Next(3))
                 {
                     case 0:
+                        DisplayClimb_Right_DOWN();
                         return;
-                    case 1:
-                        return;
+                    //case 1://TODO:落下
+                    //    return;
                     default:
                         Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
                         MoveTimer.Stop();
@@ -374,7 +463,57 @@ namespace VPet_Simulator.Core
                 DisplayNomal();
             }
         }
+        /// <summary>
+        /// 显示顶部墙壁爬行向左
+        /// </summary>
+        public void DisplayClimb_Top_Left()
+        {
+            //看看距离是否满足调节
+            if (Core.Controller.GetWindowsDistanceUp() < 50 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
+            {
+                walklength = 0;
+                IsNomal = false;
 
+                Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);//TODO:锚定设置
+                MoveTimerPoint = new Point(8, 0);//TODO:锚定设置
+                MoveTimer.Start();
+                DisplayClimb_Top_Lefting();
+            }
+        }
+        /// <summary>
+        /// 显示顶部墙壁爬行向左
+        /// </summary>
+        private void DisplayClimb_Top_Lefting()
+        {
+            //看看距离是不是不足
+            if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio)
+            {//是,停下恢复默认 or向下爬
+                switch (3)//Function.Rnd.Next(3))
+                {
+                    case 0:
+                        DisplayClimb_Left_DOWN();
+                        return;
+                    //case 1://TODO:落下
+                    //    return;
+                    default:
+                        Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
+                        MoveTimer.Stop();
+                        DisplayNomal();
+                        return;
+                }
+            }
+            //不是:继续or停下
+            if (Function.Rnd.Next(walklength++) < 10)
+            {
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Climb_Top_Left, Core.Save.Mode), DisplayClimb_Top_Lefting);
+            }
+            else
+            {//停下来
+                Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
+                MoveTimer.Stop();
+                DisplayNomal();
+            }
+        }
 
 
 

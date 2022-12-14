@@ -26,7 +26,7 @@ namespace VPet_Simulator.Core
             //TODO:饮食等乱七八糟的消耗
 
             if (IsNomal)
-                switch (3)//Function.Rnd.Next(10))
+                switch (1)//Function.Rnd.Next(10))
                 {
                     case 0:
                         //随机向右                      
