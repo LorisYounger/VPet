@@ -5,7 +5,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:VPet_Simulator.Core" mc:Ignorable="d" Height="500"
        Width="500">
-    <Grid>
-
-    </Grid>
+    <UserControl.Resources>
+        <ResourceDictionary Source="Theme.xaml" />
+    </UserControl.Resources>
+    <Border Background="{DynamicResource Primary}" BorderBrush="{DynamicResource DARKPrimaryDark}" BorderThickness="5"
+            VerticalAlignment="Bottom" Padding="10" Margin="5" CornerRadius="5">
+        <StackPanel>
+            <Label Content="虚拟桌宠名字:" Foreground="{DynamicResource PrimaryText}" HorizontalAlignment="Left" Padding="0"
+                    FontWeight="Bold" Margin="0,0,0,6" FontSize="22" />
+            <TextBlock Text="我说话长这样,这是我说的话巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉" TextWrapping="WrapWithOverflow" FontSize="16" />
+        </StackPanel>
+    </Border>
 </UserControl>
