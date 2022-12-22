@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Steamworks;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,8 +26,34 @@ namespace VPet_Simulator.Windows
     public partial class MainWindow : Window
     {
         public readonly string ModPath = Environment.CurrentDirectory + @"\mod";
+        public readonly bool IsSteamUser;
+        public Setting Set;
         public MainWindow()
         {
+            //判断是不是Steam用户,因为本软件会发布到Steam
+            //在 https://store.steampowered.com/app/1920960/VPet
+            try
+            {
+                SteamClient.Init(1920960, true);
+                SteamClient.RunCallbacks();
+                IsSteamUser = SteamClient.IsValid;
+                ////同时看看有没有买dlc,如果有就添加dlc按钮
+                //if (Steamworks.SteamApps.IsDlcInstalled(1386450))
+                //    dlcToolStripMenuItem.Visible = true;
+            }
+            catch
+            {
+                IsSteamUser = false;
+            }
+
+            //加载游戏设置
+            if (new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps").Exists)
+            {
+                Set = new Setting(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps"));
+            }
+            else
+                Set = new Setting();
+
             InitializeComponent();
 
             //不存在就关掉
@@ -39,7 +66,7 @@ namespace VPet_Simulator.Windows
             }
 
             var core = new GameCore();
-            core.Setting = new Setting();
+            core.Setting = Set;
             core.Controller = new MWController(this);
             core.Graph = new GraphCore();
             core.Save = new Save();

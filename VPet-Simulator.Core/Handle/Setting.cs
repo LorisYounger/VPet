@@ -12,6 +12,13 @@ namespace VPet_Simulator.Core
     /// </summary>
     public class Setting : LpsDocument
     {
+        public Setting(string lps) : base(lps)
+        {
+        }
+        public Setting() : base()
+        {
+        }
+
         /// <summary>
         /// 窗体宽度
         /// </summary>
