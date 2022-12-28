@@ -12,7 +12,7 @@
             VerticalAlignment="Bottom" Padding="10" Margin="5" CornerRadius="5">
         <StackPanel>
             <Label Content="虚拟桌宠名字:" Foreground="{DynamicResource PrimaryText}" HorizontalAlignment="Left" Padding="0"
-                    FontWeight="Bold" Margin="0,0,0,6" FontSize="22" />
+                    FontWeight="Bold" Margin="0,0,0,6" FontSize="22" Background="{x:Null}" />
             <TextBlock Text="我说话长这样,这是我说的话巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉" TextWrapping="WrapWithOverflow" FontSize="16" />
         </StackPanel>
     </Border>

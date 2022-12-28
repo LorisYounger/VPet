@@ -47,6 +47,9 @@ namespace VPet_Simulator.Core
         /// 缩放比例 
         /// </summary>
         double ZoomRatio { get; }
-
+        /// <summary>
+        /// 显示设置窗体
+        /// </summary>
+        void ShowSetting();
     }
 }

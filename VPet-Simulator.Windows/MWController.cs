@@ -49,6 +49,12 @@ namespace VPet_Simulator.Windows
                 mw.Top += Y * ZoomRatio;
             });
         }
+
+        public void ShowSetting()
+        {//TODO
+            throw new NotImplementedException();
+        }
+
         public double ZoomRatio => 0.5;
     }
 }

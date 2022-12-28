@@ -70,7 +70,7 @@ namespace VPet_Simulator.Core
 
         private void MenuSetting_Click(object sender, RoutedEventArgs e)
         {
-
+            m.Core.Controller.ShowSetting();
         }
     }
 }
