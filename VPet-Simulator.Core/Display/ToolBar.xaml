@@ -8,80 +8,23 @@
         <ResourceDictionary Source="Theme.xaml" />
     </UserControl.Resources>
     <Grid>
-        <pu:ContentControlX BorderBrush="{DynamicResource DARKPrimaryDarker}" Background="{DynamicResource Secondary}"
-                BorderThickness="2" CornerRadius="5" Height="200" Width="300" VerticalAlignment="Bottom"
-                HorizontalAlignment="Left" Margin="0,0,0,50">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="1*" />
-                </Grid.RowDefinitions>
-                <Button Background="Transparent" Content="投喂" FontSize="24" Foreground="{DynamicResource PrimaryText}"
-                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}" />
-                <Button Background="Transparent" Content="面板" FontSize="24" Foreground="{DynamicResource PrimaryText}"
-                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
-                        Grid.Row="4" Margin="0,-1,0,0" />
-                <Button Background="Transparent" Content="打工" FontSize="24" Foreground="{DynamicResource PrimaryText}"
-                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
-                        Grid.Row="2" Margin="0,-1,0,0" />
-                <Button Background="Transparent" Content="睡觉" FontSize="24" Foreground="{DynamicResource PrimaryText}"
-                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
-                        Grid.Row="6" Margin="0,-1,0,0" />
-                <Button Background="Transparent" Content="设置" FontSize="24" Foreground="{DynamicResource PrimaryText}"
-                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
-                        Grid.Row="8" Margin="0,-4,0,0" />
-                <Rectangle Grid.Row="1" Fill="{DynamicResource SecondaryDarker}" Height="2" VerticalAlignment="Center" />
-                <Rectangle Grid.Row="3" Fill="{DynamicResource SecondaryDarker}" Height="2" VerticalAlignment="Center" />
-                <Rectangle Grid.Row="5" Fill="{DynamicResource SecondaryDarker}" Height="2" VerticalAlignment="Center" />
-                <Rectangle Grid.Row="7" Fill="{DynamicResource SecondaryDarker}" Height="2" VerticalAlignment="Center" />
-            </Grid>
-        </pu:ContentControlX>
-        <pu:ContentControlX BorderBrush="{DynamicResource DARKPrimaryDarker}"
-                Background="{DynamicResource SecondaryLight}" BorderThickness="2" CornerRadius="5" Height="50"
-                Width="500" VerticalAlignment="Bottom">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
-                <Button Background="Transparent" Content="投喂" FontSize="24" Foreground="{DynamicResource PrimaryText}"
-                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}" />
-                <Button Background="Transparent" Content="面板" FontSize="24" Foreground="{DynamicResource PrimaryText}"
-                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
-                        Grid.Column="4" />
-                <Button Background="Transparent" Content="打工" FontSize="24" Foreground="{DynamicResource PrimaryText}"
-                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
-                        Grid.Column="2" />
-                <Button Background="Transparent" Content="睡觉" FontSize="24" Foreground="{DynamicResource PrimaryText}"
-                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
-                        Grid.Column="6" />
-                <Button Background="Transparent" Content="设置" FontSize="24" Foreground="{DynamicResource PrimaryText}"
-                        BorderBrush="Transparent" pu:ButtonHelper.HoverBackground="{DynamicResource Secondary}"
-                        Grid.Column="8" />
-                <Rectangle Grid.Column="1" Width="2" Fill="{DynamicResource SecondaryDarker}"
-                        HorizontalAlignment="Center" Margin="0,6,0,6" />
-                <Rectangle Grid.Column="3" Width="2" Fill="{DynamicResource SecondaryDarker}"
-                        HorizontalAlignment="Center" Margin="0,6,0,6" />
-                <Rectangle Grid.Column="5" Width="2" Fill="{DynamicResource SecondaryDarker}"
-                        HorizontalAlignment="Center" Margin="0,6,0,6" />
-                <Rectangle Grid.Column="7" Width="2" Fill="{DynamicResource SecondaryDarker}"
-                        HorizontalAlignment="Center" Margin="0,6,0,6" />
-
-            </Grid>
-        </pu:ContentControlX>
+        <Menu Width="500"
+              VerticalAlignment="Bottom"
+              Style="{DynamicResource ToolBarMenuStyle}">
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="5"/>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
+            <MenuItem Header="投喂">
+                <MenuItem Header="食物" />
+                <MenuItem Header="饮料" />
+                <MenuItem Header="药品" />
+            </MenuItem>
+            <MenuItem Header="面板" />
+            <MenuItem Header="打工" />
+            <MenuItem Header="睡觉" />
+            <MenuItem Header="设置" />
+        </Menu>
     </Grid>
 </UserControl>

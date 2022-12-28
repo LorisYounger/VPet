@@ -1,0 +1,75 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
+                    xmlns:pucore="clr-namespace:Panuon.WPF;assembly=Panuon.WPF">
+    <ResourceDictionary.MergedDictionaries>
+        <pucore:SharedResourceDictionary Source="/Panuon.WPF.UI;component/Control.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="ToolBarMenuStyle"
+           TargetType="Menu"
+           BasedOn="{StaticResource {x:Type Menu}}">
+        <Setter Property="Height"
+                Value="55" />
+        <Setter Property="FontSize"
+                Value="24" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="pu:MenuHelper.TopLevelDropDownVerticalOffset"
+                Value="-20" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource DARKPrimaryDarker}" />
+        <Setter Property="Background"
+                Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="pu:MenuHelper.CornerRadius"
+                Value="5" />
+        <Setter Property="pu:MenuHelper.TopLevelDropDownPlacement"
+                Value="TopRight" />
+        <Setter Property="pu:MenuHelper.TopLevelItemsPadding"
+                Value="20,0" />
+        <Setter Property="pu:MenuHelper.TopLevelItemsCornerRadius"
+                Value="7" />
+        <Setter Property="pu:MenuHelper.TopLevelItemsBackground"
+                Value="Transparent" />
+        <Setter Property="pu:MenuHelper.TopLevelItemsHoverBackground"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:MenuHelper.TopLevelItemsHoverForeground"
+                Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="pu:MenuHelper.TopLevelItemsOpenedBackground"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:MenuHelper.TopLevelItemsOpenedForeground"
+                Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="pu:MenuHelper.SubmenuItemsPadding"
+                Value="20,0" />
+        <Setter Property="pu:MenuHelper.SubmenuItemsHeight"
+                Value="55" />
+        <Setter Property="pu:MenuHelper.SubmenuItemsIconWidth"
+                Value="NaN" />
+        <Setter Property="pu:MenuHelper.SubmenuItemsWidth"
+                Value="200" />
+        <Setter Property="pu:DropDownHelper.CornerRadius"
+                Value="5" />
+        <Setter Property="pu:MenuHelper.SubmenuItemsBackground"
+                Value="Transparent" />
+        <Setter Property="pu:MenuHelper.SubmenuItemsHoverBackground"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:MenuHelper.SubmenuItemsHoverForeground"
+                Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="pu:MenuHelper.SubmenuItemsOpenedBackground"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:MenuHelper.SubmenuItemsOpenedForeground"
+                Value="{DynamicResource DARKPrimaryText}" />
+
+        <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorVisibility"
+                Value="Visible" />
+        <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorBrush"
+                Value="#CCCECF" />
+        <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorMargin"
+                Value="10,0" />
+        <Setter Property="pu:ShadowHelper.Opacity"
+                Value="0.7" />
+        <Setter Property="pu:ShadowHelper.BlurRadius"
+                Value="15" />
+    </Style>
+    
+</ResourceDictionary>
