@@ -67,5 +67,10 @@ namespace VPet_Simulator.Core
         {
             closetimer.Start();
         }
+
+        private void MenuSetting_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

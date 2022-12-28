@@ -71,7 +71,7 @@ namespace VPet_Simulator.Windows
             core.Graph = new GraphCore();
             core.Save = new Save();
             LoadGraph(core.Graph, modpath, "");
-            DisplayGrid.Children.Add(new Main(core));            
+            DisplayGrid.Children.Add(new Main(core));
         }
         //public void DEBUGValue()
         //{

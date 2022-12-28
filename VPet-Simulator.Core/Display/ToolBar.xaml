@@ -24,7 +24,8 @@
             <MenuItem Header="面板" />
             <MenuItem Header="打工" />
             <MenuItem Header="睡觉" />
-            <MenuItem Header="设置" />
+            <MenuItem Header="设置" 
+                      Click="MenuSetting_Click"/>
         </Menu>
     </Grid>
 </UserControl>

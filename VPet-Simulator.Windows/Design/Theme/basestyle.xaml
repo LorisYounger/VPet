@@ -6,6 +6,121 @@
         <pucore:SharedResourceDictionary Source="/Panuon.WPF.UI;component/Control.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <Style x:Key="StandardComboBoxStyle"
+           TargetType="{x:Type ComboBox}"
+           BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="Height"
+                Value="30" />
+        <Setter Property="Background"
+                Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="BorderThickness"
+                Value="1.5" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="Padding"
+                Value="7,0,15,0" />
+        <Setter Property="pu:ComboBoxHelper.CornerRadius"
+                Value="5" />
+        <Setter Property="pu:ComboBoxHelper.WatermarkForeground"
+                Value="#DCDCDC" />
+        <Setter Property="pu:ComboBoxHelper.ItemsSelectedBackground"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:ComboBoxHelper.ItemsSelectedForeground"
+                Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="pu:ComboBoxHelper.ItemsHoverBackground"
+                Value="{DynamicResource DARKPrimaryTrans4}" />
+        <Setter Property="pu:ComboBoxHelper.ItemsPadding"
+                Value="22,0" />
+        <Setter Property="pu:DropDownHelper.BorderThickness"
+                Value="1" />
+        <Setter Property="pu:DropDownHelper.Background"
+                Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="pu:DropDownHelper.ShadowColor"
+                Value="{DynamicResource ShadowColor}" />
+        <Setter Property="pu:DropDownHelper.CornerRadius"
+                Value="5" />
+        <Setter Property="pu:DropDownHelper.MinHeight"
+                Value="100" />
+        <Setter Property="pu:DropDownHelper.ClipDockSideShadow"
+                Value="False" />
+        <Setter Property="pu:DropDownHelper.BorderBrush"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:ShadowHelper.BlurRadius"
+                Value="15" />
+        <Setter Property="pu:ShadowHelper.Opacity"
+                Value="0.5" />
+        <Setter Property="pu:ComboBoxHelper.ToggleArrowTransformControlStyle">
+            <Setter.Value>
+                <Style TargetType="pu:TransformControl"
+                       BasedOn="{StaticResource {x:Static pu:ComboBoxHelper.ToggleArrowTransformControlStyle}}">
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource PrimaryText}" />
+                    <Setter Property="FontSize"
+                            Value="10" />
+                    <Setter Property="Content"
+                            Value="&#xe91f;" />
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="StandardSliderStyle"
+           TargetType="Slider"
+           BasedOn="{StaticResource {x:Type Slider}}">
+        <Setter Property="Background"
+                Value="{DynamicResource DARKPrimaryTrans4}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource DARKPrimaryDark}" />
+        <Setter Property="pu:SliderHelper.ThumbShadowColor"
+                Value="{DynamicResource ShadowColor}" />
+        <Setter Property="pu:SliderHelper.TrackThickness"
+                Value="2.5" />
+        <Setter Property="pu:SliderHelper.ThumbBorderBrush"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:SliderHelper.ThumbBorderThickness"
+                Value="2.5" />
+        <Setter Property="pu:SliderHelper.CoveredBackground"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:ShadowHelper.ShadowDepth"
+                Value="3" />
+        <Setter Property="pu:ShadowHelper.Direction"
+                Value="270" />
+        <Setter Property="pu:ShadowHelper.Opacity"
+                Value="0.5" />
+    </Style>
+
+    <Style x:Key="StandardRadioButtonStyle"
+           TargetType="RadioButton"
+           BasedOn="{StaticResource {x:Type RadioButton}}">
+        <Setter Property="pu:RadioButtonHelper.CheckedToggleBrush"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:RadioButtonHelper.CheckedBorderBrush"
+                Value="{DynamicResource DARKPrimary}" />
+    </Style>
+
+    <Style x:Key="SideMenuListBoxStyle"
+           TargetType="ListBox"
+           BasedOn="{StaticResource {x:Type ListBox}}">
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="pu:ListBoxHelper.ItemsHeight"
+                Value="30" />
+        <Setter Property="pu:ListBoxHelper.ItemsPadding"
+                Value="15,0" />
+        <Setter Property="pu:ListBoxHelper.ItemsCornerRadius"
+                Value="5" />
+        <Setter Property="pu:ListBoxHelper.ItemsHoverBackground"
+                Value="{x:Null}" />
+        <Setter Property="pu:ListBoxHelper.ItemsSelectedBackground"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:ListBoxHelper.ItemsSelectedForeground"
+                Value="{DynamicResource DARKPrimaryText}" />
+    </Style>
+    
     <Style x:Key="ToolBarMenuStyle"
            TargetType="Menu"
            BasedOn="{StaticResource {x:Type Menu}}">
