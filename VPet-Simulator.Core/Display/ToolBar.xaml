@@ -16,7 +16,8 @@
                     <UniformGrid Columns="5"/>
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
-            <MenuItem Header="投喂">
+            <MenuItem x:Name="MenuFeed"
+                      Header="投喂">
                 <MenuItem Header="食物" />
                 <MenuItem Header="饮料" />
                 <MenuItem Header="药品" />

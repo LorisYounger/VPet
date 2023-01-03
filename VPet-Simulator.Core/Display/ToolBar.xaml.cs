@@ -72,5 +72,25 @@ namespace VPet_Simulator.Core
         {
             m.Core.Controller.ShowSetting();
         }
+
+        public void AddMenuButton(string parentMenu,
+            string displayName,
+            Action clickCallback)
+        {
+            var menuItem = new MenuItem()
+            {
+                Header = displayName,
+            };
+            menuItem.Click += delegate
+            {
+                clickCallback?.Invoke();
+            };
+            switch (parentMenu)
+            {
+                case "投喂":
+                    MenuFeed.Items.Add(menuItem);
+                    break;
+            }
+        }
     }
 }
