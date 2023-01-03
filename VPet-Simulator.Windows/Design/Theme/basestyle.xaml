@@ -6,6 +6,25 @@
         <pucore:SharedResourceDictionary Source="/Panuon.WPF.UI;component/Control.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <Style x:Key="BaseWindowXStyle"
+           TargetType="pu:WindowX">
+        <Setter Property="pu:WindowXCaption.Background"
+                Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:WindowXCaption.Foreground"
+                Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="pu:WindowXCaption.Buttons"
+                Value="Close" />
+        <Setter Property="pu:WindowXCaption.CloseButtonStyle">
+            <Setter.Value>
+                <Style TargetType="Button"
+                       BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyle}}">
+                    <Setter Property="pu:ButtonHelper.HoverBackground"
+                            Value="{x:Null}" />
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style x:Key="StandardComboBoxStyle"
            TargetType="{x:Type ComboBox}"
            BasedOn="{StaticResource {x:Type ComboBox}}">
@@ -147,13 +166,13 @@
         <Setter Property="pu:MenuHelper.TopLevelItemsBackground"
                 Value="Transparent" />
         <Setter Property="pu:MenuHelper.TopLevelItemsHoverBackground"
-                Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:MenuHelper.TopLevelItemsHoverForeground"
-                Value="{DynamicResource DARKPrimaryText}" />
+                Value="{DynamicResource SecondaryLight}" />
+        <!--<Setter Property="pu:MenuHelper.TopLevelItemsHoverForeground"
+                Value="{DynamicResource DARKPrimaryText}" />-->
         <Setter Property="pu:MenuHelper.TopLevelItemsOpenedBackground"
-                Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:MenuHelper.TopLevelItemsOpenedForeground"
-                Value="{DynamicResource DARKPrimaryText}" />
+                Value="{DynamicResource SecondaryLight}" />
+        <!--<Setter Property="pu:MenuHelper.TopLevelItemsOpenedForeground"
+                Value="{DynamicResource DARKPrimaryText}" />-->
         <Setter Property="pu:MenuHelper.SubmenuItemsPadding"
                 Value="20,0" />
         <Setter Property="pu:MenuHelper.SubmenuItemsHeight"
@@ -167,14 +186,13 @@
         <Setter Property="pu:MenuHelper.SubmenuItemsBackground"
                 Value="Transparent" />
         <Setter Property="pu:MenuHelper.SubmenuItemsHoverBackground"
-                Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:MenuHelper.SubmenuItemsHoverForeground"
-                Value="{DynamicResource DARKPrimaryText}" />
+                Value="{DynamicResource SecondaryLight}" />
+        <!--<Setter Property="pu:MenuHelper.SubmenuItemsHoverForeground"
+                Value="{DynamicResource DARKPrimaryText}" />-->
         <Setter Property="pu:MenuHelper.SubmenuItemsOpenedBackground"
-                Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:MenuHelper.SubmenuItemsOpenedForeground"
-                Value="{DynamicResource DARKPrimaryText}" />
-
+                Value="{DynamicResource SecondaryLight}" />
+        <!--<Setter Property="pu:MenuHelper.SubmenuItemsOpenedForeground"
+                Value="{DynamicResource DARKPrimaryText}" />-->
         <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorVisibility"
                 Value="Visible" />
         <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorBrush"

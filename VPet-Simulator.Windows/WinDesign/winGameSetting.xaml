@@ -1,4 +1,4 @@
-﻿<Grid x:Class="VPet_Simulator.Windows.WinDesign.winGameSetting"
+﻿<pu:WindowX x:Class="VPet_Simulator.Windows.WinDesign.winGameSetting"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,7 +7,13 @@
       xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
       mc:Ignorable="d"
       d:DesignHeight="450"
-      d:DesignWidth="800">
+      d:DesignWidth="800"
+            Title="设置"
+            Width="350"
+            Height="450"
+            Style="{DynamicResource BaseWindowXStyle}"
+            WindowStartupLocation="CenterScreen">
+    <Grid>
        <TabControl Margin="5" BorderThickness="0" pu:TabControlHelper.ItemsHeight="NaN"
             pu:TabControlHelper.ItemsFontSize="14" Background="Transparent" pu:TabControlHelper.ItemsPadding="10,7"
             pu:TabControlHelper.ItemsCornerRadius="4"
@@ -18,7 +24,7 @@
         <TabControl.ContentTemplate>
             <DataTemplate>
                 <Border Margin="5,10,5,20" CornerRadius="15" Background="{DynamicResource DARKPrimaryText}">
-                    <ContentControl Content="{Binding}" Margin="15"/>
+                    <ContentControl Content="{Binding}" Margin="15,10"/>
                 </Border>
             </DataTemplate>
         </TabControl.ContentTemplate>
@@ -345,5 +351,5 @@
     </TabControl>
     <Label x:Name="GameVerison" Content="版本v1.0 (655366666)" HorizontalAlignment="Left" Margin="0,398,0,-1"
             VerticalAlignment="Top" FontSize="10" Foreground="Green" Background="{x:Null}" />
-
-</Grid>
+    </Grid>
+</pu:WindowX>
