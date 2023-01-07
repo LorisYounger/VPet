@@ -6,10 +6,8 @@
       xmlns:local="clr-namespace:VPet_Simulator.Windows.WinDesign"
       xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
       mc:Ignorable="d"
-      d:DesignHeight="450"
-      d:DesignWidth="800"
             Title="设置"
-            Width="350"
+            Width="450"
             Height="450"
             Style="{DynamicResource BaseWindowXStyle}"
             WindowStartupLocation="CenterScreen">
@@ -349,7 +347,7 @@
             </Grid>
         </TabItem>
     </TabControl>
-    <Label x:Name="GameVerison" Content="版本v1.0 (655366666)" HorizontalAlignment="Left" Margin="0,398,0,-1"
-            VerticalAlignment="Top" FontSize="10" Foreground="Green" Background="{x:Null}" />
+    <Label x:Name="GameVerison" Content="版本v1.0 (655366666)" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                FontSize="10" Foreground="Green" Background="{x:Null}" />
     </Grid>
 </pu:WindowX>
