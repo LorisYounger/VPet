@@ -343,7 +343,7 @@
             </Grid>
         </TabItem>
     </TabControl>
-    <Label x:Name="GameVerison" Content="版本v1.0 (655366666)" HorizontalAlignment="Left" Margin="0,398,0,-1"
-            VerticalAlignment="Top" FontSize="10" Foreground="Green" Background="{x:Null}" />
+    <Label x:Name="GameVerison" Content="版本v1.0 (655366666)" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                FontSize="10" Foreground="Green" Background="{x:Null}" />
     </Grid>
 </pu:WindowX>
