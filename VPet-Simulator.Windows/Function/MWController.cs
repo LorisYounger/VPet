@@ -64,5 +64,7 @@ namespace VPet_Simulator.Windows
         }
 
         public double ZoomRatio => 0.5;
+
+        public int PressLength => 500;
     }
 }

@@ -21,16 +21,30 @@ namespace VPet_Simulator.Core
     /// </summary>
     public partial class Main : UserControl
     {
+        /// <summary>
+        /// 游戏核心
+        /// </summary>
         public GameCore Core;
+        /// <summary>
+        /// 菜单栏
+        /// </summary>
         public ToolBar Bar;
+        /// <summary>
+        /// 刷新时间时会调用该方法
+        /// </summary>
+        public event Action<Main> TimeHandle;
+        /// <summary>
+        /// 刷新时间时会调用该方法,在所有任务处理完之后
+        /// </summary>
+        public event Action<Main> TimeUIHandle;
         public Main(GameCore core)
         {
             InitializeComponent();
             Core = core;
 
             Bar = new ToolBar(this);
-            UIGrid.Children.Add(Bar);
             Bar.Visibility = Visibility.Collapsed;
+            UIGrid.Children.Add(Bar);
             //TODO:锚定设置
             Core.TouchEvent.Add(new TouchArea(new Point(138, 12), new Size(224, 176), DisplayTouchHead));
             Core.TouchEvent.Add(new TouchArea(new Point(0, 0), new Size(500, 180), DisplayRaised, true));
@@ -58,7 +72,7 @@ namespace VPet_Simulator.Core
             }
             Task.Run(() =>
             {
-                Thread.Sleep(Core.Setting.PressLength);
+                Thread.Sleep(Core.Controller.PressLength);
                 Point mp = default;
                 Dispatcher.BeginInvoke(new Action(() => mp = Mouse.GetPosition(MainGrid))).Wait();
                 if (isPress)

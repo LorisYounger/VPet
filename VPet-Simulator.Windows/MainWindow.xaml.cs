@@ -28,6 +28,9 @@ namespace VPet_Simulator.Windows
         public readonly string ModPath = Environment.CurrentDirectory + @"\mod";
         public readonly bool IsSteamUser;
         public Setting Set;
+        public List<CorePet> Pets = new List<CorePet>();
+        public List<CoreMOD> CoreMODs = new List<CoreMOD>();
+        public GameCore Core = new GameCore();
         public MainWindow()
         {
             //判断是不是Steam用户,因为本软件会发布到Steam
@@ -52,7 +55,7 @@ namespace VPet_Simulator.Windows
                 Set = new Setting(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps"));
             }
             else
-                Set = new Setting();
+                Set = new Setting("Setting#VPET:|\n");
 
             InitializeComponent();
 
@@ -64,15 +67,51 @@ namespace VPet_Simulator.Windows
                 Close();
                 return;
             }
-
-            var core = new GameCore();
-            core.Setting = Set;
-            core.Controller = new MWController(this);
-            core.Graph = new GraphCore();
-            core.Save = new Save();
-            LoadGraph(core.Graph, modpath, "");
-            DisplayGrid.Children.Add(new Main(core));
+            Task.Run(GameLoad);
         }
+        public void GameLoad()
+        {
+            //加载所有MOD
+            List<DirectoryInfo> Path = new List<DirectoryInfo>();
+            Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
+            if (IsSteamUser)//如果是steam用户,尝试加载workshop
+            {
+                Dispatcher.Invoke(new Action(() => LoadingText.Content = "尝试加载 Steam Workshop"));
+                int i = 1;
+                while (true)
+                {
+                    var page = Steamworks.Ugc.Query.ItemsReadyToUse.GetPageAsync(i++).Result;
+                    if (page.HasValue && page.Value.ResultCount != 0)
+                    {
+                        foreach (Steamworks.Ugc.Item entry in page.Value.Entries)
+                        {
+                            if (entry.Directory != null)
+                                Path.Add(new DirectoryInfo(entry.Directory));
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            //加载mod
+            foreach (DirectoryInfo di in Path)
+            {
+                if (!File.Exists(di.FullName + @"\info.lps"))
+                    continue;
+                Dispatcher.Invoke(new Action(() => LoadingText.Content = $"尝试加载 MOD数据: {di.Name}"));
+                CoreMODs.Add(new CoreMOD(di, this));
+            }
+            Dispatcher.Invoke(new Action(() => LoadingText.Content = "尝试加载游戏内容"));
+            //加载游戏内容
+            Core.Controller = new MWController(this);
+            Dispatcher.Invoke(new Action(() => Core.Graph = Pets[0].Graph));
+            Core.Save = new Save();
+            Dispatcher.Invoke(new Action(() => LoadingText.Visibility = Visibility.Collapsed));
+            Dispatcher.Invoke(new Action(() => DisplayGrid.Child = new Main(Core)));
+        }
+
         //public void DEBUGValue()
         //{
         //    Dispatcher.Invoke(() =>
@@ -83,51 +122,6 @@ namespace VPet_Simulator.Windows
         //    Thread.Sleep(1000);
         //    DEBUGValue(); 
         //}
-        public static void LoadGraph(GraphCore graph, DirectoryInfo di, string path_name)
-        {
-            var list = di.EnumerateDirectories();
-            if (list.Count() == 0)
-            {
-                if (File.Exists(di.FullName + @"\info.lps"))
-                {//如果自带描述信息,则手动加载
 
-                }
-                else
-                {//自动加载 PNG ANMIN
-                    path_name = path_name.Trim('_').ToLower();
-                    for (int i = 0; i < GraphTypeValue.Length; i++)
-                    {
-                        if (path_name.StartsWith(GraphTypeValue[i][0]))
-                        {
-                            if (path_name.Contains("happy"))
-                            {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Happy, (GraphType)i, GraphTypeValue[i][1], GraphTypeValue[i][2]), (GraphType)i);
-                            }
-                            if (path_name.Contains("nomal"))
-                            {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Nomal, (GraphType)i, GraphTypeValue[i][1], GraphTypeValue[i][2]), (GraphType)i);
-                            }
-                            if (path_name.Contains("poorcondition"))
-                            {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.PoorCondition, (GraphType)i, GraphTypeValue[i][1], GraphTypeValue[i][2]), (GraphType)i);
-                            }
-                            if (path_name.Contains("ill"))
-                            {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Ill, (GraphType)i, GraphTypeValue[i][1], GraphTypeValue[i][2]), (GraphType)i);
-                            }
-                            return;
-                        }
-                    }
-#if DEBUG
-                    throw new Exception("未知的图像类型: " + path_name);
-#endif
-                }
-            }
-            else
-                foreach (var p in list)
-                {
-                    LoadGraph(graph, p, path_name + "_" + p.Name);
-                }
-        }
     }
 }

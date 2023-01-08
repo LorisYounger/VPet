@@ -7,7 +7,9 @@
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" />
     </WindowChrome.WindowChrome>
-    <Grid>
-        <Grid x:Name="DisplayGrid" />
+    <Grid><Label x:Name="LoadingText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                Background="{DynamicResource DARKPrimaryLight}" Foreground="{DynamicResource DARKPrimaryText}"
+                Content="桌宠加载中" />
+        <Border x:Name="DisplayGrid" />
     </Grid>
 </Window>

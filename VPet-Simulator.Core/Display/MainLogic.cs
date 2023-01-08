@@ -23,7 +23,13 @@ namespace VPet_Simulator.Core
 
         private void EventTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            //所有Handle
+            TimeHandle?.Invoke(this);
+
             //TODO:饮食等乱七八糟的消耗
+
+            //UIHandle
+            Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
             if (IsNomal)
                 switch (1)//Function.Rnd.Next(10))
@@ -34,7 +40,7 @@ namespace VPet_Simulator.Core
                         break;
                     case 1:
                         DisplayClimb_Left_UP();
-                        break;                    
+                        break;
                     case 2:
                         DisplayClimb_Left_DOWN();
                         break;
@@ -45,7 +51,7 @@ namespace VPet_Simulator.Core
                         DisplayClimb_Right_DOWN();
                         break;
                     case 10:
-                        DisplayClimb_Top_Right();                        
+                        DisplayClimb_Top_Right();
                         break;
                     default:
                         break;

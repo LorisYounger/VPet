@@ -30,7 +30,7 @@ namespace VPet_Simulator.Core
         /// 升级所需经验值
         /// </summary>
         /// <returns></returns>
-        public int LevelUpNeed() => (int)(Math.Pow((Level - 1) * 5, 2));
+        public int LevelUpNeed() => (int)(Math.Pow((Level) * 5, 2));
         /// <summary>
         /// 体力 0-100
         /// </summary>
@@ -93,7 +93,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 计算宠物当前状态
         /// </summary>
-        public void CalMode()
+        public ModeType CalMode()
         {
             int realhel = 60 - (Feeling >= 80 ? 20 : 0) - (Likability >= 80 ? 20 : (Likability >= 40 ? 10 : 0));
             //先从最次的开始
@@ -102,21 +102,21 @@ namespace VPet_Simulator.Core
                 //可以确认从状态不佳和生病二选一
                 if (Health <= realhel / 2)
                 {//生病
-                    Mode = ModeType.Ill;
+                    return ModeType.Ill;
                 }
                 else
                 {
-                    Mode = ModeType.PoorCondition;
+                    return ModeType.PoorCondition;
                 }
             }
             //然后判断是高兴还是普通
             else if (Feeling >= 80 - (Likability >= 80 ? 20 : (Likability >= 40 ? 10 : 0)))
             {
-                Mode = ModeType.Happy;
+                return ModeType.Happy;
             }
             else
             {
-                Mode = ModeType.Nomal;
+                return ModeType.Nomal;
             }
         }
         /// <summary>
@@ -132,7 +132,7 @@ namespace VPet_Simulator.Core
             Feeling = 60;
             Health = 100;
             Likability = 0;
-            CalMode();
+            Mode = CalMode();
         }
         /// <summary>
         /// 读档
@@ -147,7 +147,7 @@ namespace VPet_Simulator.Core
             Feeling = line.GetFloat("feeling");
             Health = line.GetFloat("health");
             Likability = line.GetFloat("likability");
-            CalMode();
+            Mode = CalMode();
         }
         /// <summary>
         /// 存档

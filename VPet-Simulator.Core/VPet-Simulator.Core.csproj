@@ -154,7 +154,6 @@
     <Compile Include="Handle\GameCore.cs" />
     <Compile Include="Handle\IController.cs" />
     <Compile Include="Handle\Save.cs" />
-    <Compile Include="Handle\Setting.cs" />
     <Compile Include="Item\Drink.cs" />
     <Compile Include="Item\Food.cs" />
     <Compile Include="Item\Item.cs" />

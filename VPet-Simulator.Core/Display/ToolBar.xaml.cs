@@ -45,6 +45,23 @@ namespace VPet_Simulator.Core
                 Interval = TimeSpan.FromSeconds(0.1),
             };
             closePanelTimer.Tick += ClosePanelTimer_Tick;
+            m.TimeUIHandle += M_TimeUIHandle;
+        }
+
+        private void M_TimeUIHandle(Main m)
+        {
+            if (BdrPanel.Visibility == Visibility.Visible)
+            {
+                Tlv.Text = "Lv " + m.Core.Save.Level.ToString();
+                tMoney.Text = "$ " + m.Core.Save.Money.ToString("N2");
+                till.Visibility = m.Core.Save.Mode == Save.ModeType.Ill ? Visibility.Visible : Visibility.Collapsed;
+                pExp.Maximum = m.Core.Save.LevelUpNeed();
+                pExp.Value = m.Core.Save.Exp;
+                pStrength.Value = m.Core.Save.Strength;
+                pFeeling.Value = m.Core.Save.Feeling;
+                pStrengthFood.Value = m.Core.Save.StrengthFood;
+                pStrengthDrink.Value = m.Core.Save.StrengthDrink;
+            }
         }
 
         private void ClosePanelTimer_Tick(object sender, EventArgs e)
@@ -120,7 +137,7 @@ namespace VPet_Simulator.Core
 
         private void PgbExperience_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
         {
-            e.Text = $"{e.Value * 10} / {100 * 10}";
+            e.Text = $"{e.Value} / {pExp.Maximum}";
         }
 
         private void PgbStrength_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
@@ -147,10 +164,10 @@ namespace VPet_Simulator.Core
             var progressBar = (ProgressBar)sender;
             progressBar.Foreground = GetForeground(e.Value);
             e.Text = $"{e.Value} / 100";
-            if (e.Value <= 20)
-            {
-                txtHearth.Visibility = Visibility.Visible;
-            }
+            //if (e.Value <= 20)
+            //{
+            //    tHearth.Visibility = Visibility.Visible;
+            //}
         }
 
         private Brush GetForeground(double value)
@@ -172,6 +189,7 @@ namespace VPet_Simulator.Core
         private void MenuPanel_MouseEnter(object sender, MouseEventArgs e)
         {
             BdrPanel.Visibility = Visibility.Visible;
+            M_TimeUIHandle(m);
         }
 
         private void MenuPanel_MouseLeave(object sender, MouseEventArgs e)

@@ -109,6 +109,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Function\CoreMOD.cs" />
+    <Compile Include="Function\CorePet.cs" />
+    <Compile Include="Function\Setting.cs" />
     <Compile Include="WinDesign\winCharacterPanel.xaml.cs">
       <DependentUpon>winCharacterPanel.xaml</DependentUpon>
     </Compile>
@@ -127,7 +130,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MWController.cs" />
+    <Compile Include="Function\MWController.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
