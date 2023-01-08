@@ -8,6 +8,62 @@
         <ResourceDictionary Source="Theme.xaml" />
     </UserControl.Resources>
     <Grid>
+        <Border x:Name="BdrPanel" Visibility="Collapsed" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24" TextElement.FontSize="24"
+                BorderBrush="{DynamicResource DARKPrimaryDarker}" BorderThickness="1"
+                Background="{DynamicResource DARKPrimaryText}" CornerRadius="5" MouseLeave="MenuPanel_MouseLeave">
+            <Grid Margin="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Lv 14" VerticalAlignment="Center" Foreground="{DynamicResource DARKPrimary}"/>
+                <Button Grid.Column="4" VerticalAlignment="Center" Background="Transparent" Foreground="{DynamicResource DARKPrimary}" Content="详细" Cursor="Hand" Click="MenuPanel_Click">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"
+                                       TextDecorations="Underline" />
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <TextBlock x:Name="txtHearth" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#FF4C4C" TextWrapping="Wrap" Text="宠物已经生病。通过服用药物可以恢复。" />
+                <TextBlock Grid.Row="2" Text="金钱" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="2" Grid.Column="2" Foreground="{DynamicResource DARKPrimary}" Text="￥100,000" />
+                <TextBlock Grid.Row="3" Text="经验" VerticalAlignment="Center" />
+                <ProgressBar Grid.Row="3" Grid.Column="2"  Value="40" FontSize="20" Height="20" VerticalAlignment="Center" 
+                             pu:ProgressBarHelper.CornerRadius="10" Foreground="{DynamicResource ProgressBarForeground}" pu:ProgressBarHelper.IsPercentVisible="True" pu:ProgressBarHelper.GeneratingPercentText="PgbExperience_GeneratingPercentText" />
+                <TextBlock Grid.Row="3" Grid.Column="4" HorizontalAlignment="Right" Text="x2倍" Foreground="{DynamicResource DARKPrimary}" />
+                <TextBlock Grid.Row="4" Text="体力" VerticalAlignment="Center" />
+                <ProgressBar Grid.Row="4" Grid.Column="2"  Value="40" FontSize="20" Height="20" VerticalAlignment="Center" 
+                             pu:ProgressBarHelper.CornerRadius="10" Foreground="{DynamicResource ProgressBarForeground}" pu:ProgressBarHelper.IsPercentVisible="True" pu:ProgressBarHelper.GeneratingPercentText="PgbStrength_GeneratingPercentText" />
+                <TextBlock Grid.Row="4" Grid.Column="4" HorizontalAlignment="Right" Text="+1/m" Foreground="{DynamicResource DARKPrimary}" />
+                <TextBlock Grid.Row="5" Text="心情" VerticalAlignment="Center" />
+                <ProgressBar Grid.Row="5" Grid.Column="2"  Value="60" FontSize="20" Height="20" VerticalAlignment="Center" 
+                             pu:ProgressBarHelper.CornerRadius="10" Foreground="{DynamicResource ProgressBarForeground}" pu:ProgressBarHelper.IsPercentVisible="True" pu:ProgressBarHelper.GeneratingPercentText="PgbSpirit_GeneratingPercentText" />
+                <TextBlock Grid.Row="5" Grid.Column="4" HorizontalAlignment="Right" Text="+1/m" Foreground="{DynamicResource DARKPrimary}" />
+                <TextBlock Grid.Row="6" Text="饱腹度" VerticalAlignment="Center" />
+                <ProgressBar Grid.Row="6" Grid.Column="2"  Value="80" FontSize="20" Height="20" VerticalAlignment="Center" 
+                             pu:ProgressBarHelper.CornerRadius="10" Foreground="{DynamicResource ProgressBarForeground}" pu:ProgressBarHelper.IsPercentVisible="True" pu:ProgressBarHelper.GeneratingPercentText="PgbHunger_GeneratingPercentText" />
+                <TextBlock Grid.Row="6" Grid.Column="4" HorizontalAlignment="Right" Text="+1/m" Foreground="{DynamicResource DARKPrimary}" />
+                <TextBlock Grid.Row="7" Text="口渴度" VerticalAlignment="Center" />
+                <ProgressBar Grid.Row="7" Grid.Column="2"  Value="20" FontSize="20" Height="20" VerticalAlignment="Center" 
+                             pu:ProgressBarHelper.CornerRadius="10" Foreground="{DynamicResource ProgressBarForeground}" pu:ProgressBarHelper.IsPercentVisible="True" pu:ProgressBarHelper.GeneratingPercentText="PgbThirsty_GeneratingPercentText" />
+                <TextBlock Grid.Row="7" Grid.Column="4" HorizontalAlignment="Right" Text="+1/m" Foreground="{DynamicResource DARKPrimary}" />
+            </Grid>
+        </Border>
+
         <Menu Width="500"
               VerticalAlignment="Bottom"
               Style="{DynamicResource ToolBarMenuStyle}">
@@ -22,7 +78,9 @@
                 <MenuItem Header="饮料" />
                 <MenuItem Header="药品" />
             </MenuItem>
-            <MenuItem Header="面板" />
+            <MenuItem x:Name="MenuPanel" Header="面板" 
+                      MouseEnter="MenuPanel_MouseEnter"
+                      MouseLeave="MenuPanel_MouseLeave"/>
             <MenuItem Header="打工" />
             <MenuItem Header="睡觉" />
             <MenuItem Header="设置" 

@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Timers;
 using Timer = System.Timers.Timer;
+using Panuon.WPF.UI;
+using System.Windows.Threading;
 
 namespace VPet_Simulator.Core
 {
@@ -25,6 +27,8 @@ namespace VPet_Simulator.Core
         Main m;
         Timer closetimer;
         bool onFocus = false;
+        DispatcherTimer closePanelTimer;
+
         public ToolBar(Main m)
         {
             InitializeComponent();
@@ -36,6 +40,22 @@ namespace VPet_Simulator.Core
                 Enabled = false
             };
             closetimer.Elapsed += Closetimer_Elapsed;
+            closePanelTimer = new DispatcherTimer()
+            {
+                Interval = TimeSpan.FromSeconds(0.1),
+            };
+            closePanelTimer.Tick += ClosePanelTimer_Tick;
+        }
+
+        private void ClosePanelTimer_Tick(object sender, EventArgs e)
+        {
+            if (BdrPanel.IsMouseOver
+                || MenuPanel.IsMouseOver)
+            {
+                closePanelTimer.Stop();
+                return;
+            }
+            BdrPanel.Visibility = Visibility.Collapsed;
         }
 
         private void Closetimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -73,6 +93,11 @@ namespace VPet_Simulator.Core
             m.Core.Controller.ShowSetting();
         }
 
+        private void MenuPanel_Click(object sender, RoutedEventArgs e)
+        {
+            m.Core.Controller.ShowPanel();
+        }
+
         public void AddMenuButton(string parentMenu,
             string displayName,
             Action clickCallback)
@@ -91,6 +116,67 @@ namespace VPet_Simulator.Core
                     MenuFeed.Items.Add(menuItem);
                     break;
             }
+        }
+
+        private void PgbExperience_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
+        {
+            e.Text = $"{e.Value * 10} / {100 * 10}";
+        }
+
+        private void PgbStrength_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
+        {
+            e.Text = $"{e.Value} / 100";
+        }
+
+        private void PgbSpirit_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
+        {
+            var progressBar = (ProgressBar)sender;
+            progressBar.Foreground = GetForeground(e.Value);
+            e.Text = $"{e.Value} / 100";
+        }
+
+        private void PgbHunger_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
+        {
+            var progressBar = (ProgressBar)sender;
+            progressBar.Foreground = GetForeground(e.Value);
+            e.Text = $"{e.Value} / 100";
+        }
+
+        private void PgbThirsty_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
+        {
+            var progressBar = (ProgressBar)sender;
+            progressBar.Foreground = GetForeground(e.Value);
+            e.Text = $"{e.Value} / 100";
+            if (e.Value <= 20)
+            {
+                txtHearth.Visibility = Visibility.Visible;
+            }
+        }
+
+        private Brush GetForeground(double value)
+        {
+            if (value >= 80)
+            {
+                return FindResource("SuccessProgressBarForeground") as Brush;
+            }
+            else if (value >= 50)
+            {
+                return FindResource("WarningProgressBarForeground") as Brush;
+            }
+            else
+            {
+                return FindResource("DangerProgressBarForeground") as Brush;
+            }
+        }
+
+        private void MenuPanel_MouseEnter(object sender, MouseEventArgs e)
+        {
+            BdrPanel.Visibility = Visibility.Visible;
+        }
+
+        private void MenuPanel_MouseLeave(object sender, MouseEventArgs e)
+        {
+            closePanelTimer.Start();
         }
     }
 }

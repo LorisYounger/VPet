@@ -79,10 +79,12 @@
       <HintPath>..\packages\LinePutScript.1.6.1\lib\net48\LinePutScript.dll</HintPath>
     </Reference>
     <Reference Include="Panuon.WPF, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Panuon.WPF.1.0.1\lib\net48\Panuon.WPF.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Refer\Panuon.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Panuon.WPF.UI, Version=1.1.6.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Panuon.WPF.UI.1.1.6.5\lib\net48\Panuon.WPF.UI.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Refer\Panuon.WPF.UI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -104,6 +106,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="WinDesign\winCharacterPanel.xaml.cs">
+      <DependentUpon>winCharacterPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinDesign\winGameSetting.xaml.cs">
       <DependentUpon>winGameSetting.xaml</DependentUpon>
     </Compile>
@@ -124,6 +129,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="WinDesign\winCharacterPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WinDesign\winGameSetting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -51,5 +51,9 @@ namespace VPet_Simulator.Core
         /// 显示设置窗体
         /// </summary>
         void ShowSetting();
+        /// <summary>
+        /// 显示面板窗体
+        /// </summary>
+        void ShowPanel();
     }
 }

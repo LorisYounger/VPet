@@ -57,6 +57,12 @@ namespace VPet_Simulator.Windows
             settingWindow.ShowDialog();
         }
 
+        public void ShowPanel()
+        {
+            var panelWindow = new winCharacterPanel();
+            panelWindow.ShowDialog();
+        }
+
         public double ZoomRatio => 0.5;
     }
 }

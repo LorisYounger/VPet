@@ -35,4 +35,6 @@
     <SolidColorBrush x:Key="DARKPrimaryDark" Color="#FF0290D5" />
     <SolidColorBrush x:Key="DARKPrimaryDarker" Color="#FF0286C6" />
     <SolidColorBrush x:Key="DARKPrimaryText" Color="#FFffffff" />
+
+    <Color x:Key="ShadowColor">#90caf9</Color>
 </ResourceDictionary>

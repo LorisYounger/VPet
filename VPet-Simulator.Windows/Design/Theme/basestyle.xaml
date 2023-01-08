@@ -6,6 +6,115 @@
         <pucore:SharedResourceDictionary Source="/Panuon.WPF.UI;component/Control.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <DrawingBrush x:Key="ProgressBarForeground"
+                  Viewport="0,0,8,22"
+                  ViewportUnits="Absolute"
+                  Stretch="None"
+                  TileMode="Tile">
+        <DrawingBrush.RelativeTransform>
+            <RotateTransform Angle="2" />
+        </DrawingBrush.RelativeTransform>
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{DynamicResource DARKPrimaryTransA}">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="5.5,0,2.5,22" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="{DynamicResource DARKPrimary}">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,5.5,22" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <DrawingBrush x:Key="SuccessProgressBarForeground"
+                  Viewport="0,0,8,22"
+                  ViewportUnits="Absolute"
+                  Stretch="None"
+                  TileMode="Tile">
+        <DrawingBrush.RelativeTransform>
+            <RotateTransform Angle="2" />
+        </DrawingBrush.RelativeTransform>
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#AAAACC6C">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="5.5,0,2.5,22" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#AACC6C">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,5.5,22" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <DrawingBrush x:Key="WarningProgressBarForeground"
+                  Viewport="0,0,8,22"
+                  ViewportUnits="Absolute"
+                  Stretch="None"
+                  TileMode="Tile">
+        <DrawingBrush.RelativeTransform>
+            <RotateTransform Angle="2" />
+        </DrawingBrush.RelativeTransform>
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#AAFFCC4C">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="5.5,0,2.5,22" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FFCC4C">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,5.5,22" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <DrawingBrush x:Key="DangerProgressBarForeground"
+                  Viewport="0,0,8,22"
+                  ViewportUnits="Absolute"
+                  Stretch="None"
+                  TileMode="Tile">
+        <DrawingBrush.RelativeTransform>
+            <RotateTransform Angle="2" />
+        </DrawingBrush.RelativeTransform>
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#AAFF4C4C">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="5.5,0,2.5,22" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FF4C4C">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,5.5,22" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
     <Style x:Key="BaseWindowXStyle"
            TargetType="pu:WindowX">
         <Setter Property="pu:WindowXCaption.Background"
@@ -150,7 +259,7 @@
         <Setter Property="VerticalContentAlignment"
                 Value="Center" />
         <Setter Property="pu:MenuHelper.TopLevelDropDownVerticalOffset"
-                Value="-20" />
+                Value="-25" />
         <Setter Property="BorderBrush"
                 Value="{DynamicResource DARKPrimaryDarker}" />
         <Setter Property="Background"
@@ -160,21 +269,19 @@
         <Setter Property="pu:MenuHelper.TopLevelDropDownPlacement"
                 Value="TopRight" />
         <Setter Property="pu:MenuHelper.TopLevelItemsPadding"
-                Value="20,0" />
-        <Setter Property="pu:MenuHelper.TopLevelItemsCornerRadius"
-                Value="7" />
+                Value="15,0" />
         <Setter Property="pu:MenuHelper.TopLevelItemsBackground"
                 Value="Transparent" />
         <Setter Property="pu:MenuHelper.TopLevelItemsHoverBackground"
-                Value="{DynamicResource SecondaryLight}" />
-        <!--<Setter Property="pu:MenuHelper.TopLevelItemsHoverForeground"
-                Value="{DynamicResource DARKPrimaryText}" />-->
+                Value="{DynamicResource SecondaryLighter}" />
+        <Setter Property="pu:MenuHelper.TopLevelItemsHoverForeground"
+                Value="{DynamicResource DARKPrimary}" />
         <Setter Property="pu:MenuHelper.TopLevelItemsOpenedBackground"
-                Value="{DynamicResource SecondaryLight}" />
-        <!--<Setter Property="pu:MenuHelper.TopLevelItemsOpenedForeground"
-                Value="{DynamicResource DARKPrimaryText}" />-->
+                Value="{DynamicResource SecondaryLighter}" />
+        <Setter Property="pu:MenuHelper.TopLevelItemsOpenedForeground"
+                Value="{DynamicResource DARKPrimary}" />
         <Setter Property="pu:MenuHelper.SubmenuItemsPadding"
-                Value="20,0" />
+                Value="15,0" />
         <Setter Property="pu:MenuHelper.SubmenuItemsHeight"
                 Value="55" />
         <Setter Property="pu:MenuHelper.SubmenuItemsIconWidth"
@@ -186,23 +293,27 @@
         <Setter Property="pu:MenuHelper.SubmenuItemsBackground"
                 Value="Transparent" />
         <Setter Property="pu:MenuHelper.SubmenuItemsHoverBackground"
-                Value="{DynamicResource SecondaryLight}" />
+                Value="{DynamicResource SecondaryLighter}" />
         <!--<Setter Property="pu:MenuHelper.SubmenuItemsHoverForeground"
-                Value="{DynamicResource DARKPrimaryText}" />-->
+                Value="{DynamicResource DARKPrimary}" />-->
         <Setter Property="pu:MenuHelper.SubmenuItemsOpenedBackground"
-                Value="{DynamicResource SecondaryLight}" />
+                Value="{DynamicResource SecondaryLighter}" />
         <!--<Setter Property="pu:MenuHelper.SubmenuItemsOpenedForeground"
-                Value="{DynamicResource DARKPrimaryText}" />-->
+                Value="{DynamicResource DARKPrimary}" />-->
         <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorVisibility"
                 Value="Visible" />
         <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorBrush"
                 Value="#CCCECF" />
         <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorMargin"
                 Value="10,0" />
+        <!--<Setter Property="pu:MenuHelper.ShadowColor"
+                Value="{DynamicResource ShadowColor}" />-->
+        <Setter Property="pu:DropDownHelper.ShadowColor"
+                Value="{DynamicResource ShadowColor}" />
         <Setter Property="pu:ShadowHelper.Opacity"
                 Value="0.7" />
         <Setter Property="pu:ShadowHelper.BlurRadius"
-                Value="15" />
+                Value="25" />
     </Style>
     
 </ResourceDictionary>
