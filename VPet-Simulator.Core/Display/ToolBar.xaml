@@ -8,7 +8,7 @@
         <ResourceDictionary Source="Theme.xaml" />
     </UserControl.Resources>
     <Grid>
-        <Border x:Name="BdrPanel" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24"
+        <Border x:Name="BdrPanel" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24" Visibility="Collapsed"
                 TextElement.FontSize="24" BorderBrush="{DynamicResource DARKPrimaryDarker}" BorderThickness="1"
                 Background="{DynamicResource DARKPrimaryText}" CornerRadius="5" MouseLeave="MenuPanel_MouseLeave">
             <Grid Margin="15">

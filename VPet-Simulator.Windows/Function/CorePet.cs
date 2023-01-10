@@ -24,11 +24,15 @@ namespace VPet_Simulator.Windows
             get
             {
                 var g = new GraphCore();
-                LoadGraph(g, new DirectoryInfo(path), "");
+                foreach (var p in path)
+                    LoadGraph(g, new DirectoryInfo(p), "");
                 return g;
             }
         }
-        public string path;
+        /// <summary>
+        /// 图像位置
+        /// </summary>
+        public List<string> path = new List<string>();
         /// <summary>
         /// 宠物名字
         /// </summary>
@@ -42,10 +46,10 @@ namespace VPet_Simulator.Windows
         {
             Name = lps.First().Info;
             Intor = lps.First()["intor"].Info;
-            path = directory.FullName + "\\" + lps.First()["path"].Info;
+            path.Add(directory.FullName + "\\" + lps.First()["path"].Info);
             GraphSetting = lps["graph"];
         }
-        
+
         public static void LoadGraph(GraphCore graph, DirectoryInfo di, string path_name)
         {
             var list = di.EnumerateDirectories();
@@ -62,7 +66,7 @@ namespace VPet_Simulator.Windows
                     {
                         if (path_name.StartsWith(GraphTypeValue[i][0]))
                         {
-                            
+
                             if (path_name.Contains("happy"))
                             {
                                 graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Happy, (GraphType)i, GraphTypeValue[i][1], GraphTypeValue[i][2]), (GraphType)i);

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VPet_Simulator.Core;
-using VPet_Simulator.Windows.WinDesign;
 
 namespace VPet_Simulator.Windows
 {
@@ -53,8 +52,7 @@ namespace VPet_Simulator.Windows
 
         public void ShowSetting()
         {
-            var settingWindow = new winGameSetting();
-            settingWindow.ShowDialog();
+            mw.winSetting.Show();
         }
 
         public void ShowPanel()
@@ -63,7 +61,7 @@ namespace VPet_Simulator.Windows
             panelWindow.ShowDialog();
         }
 
-        public double ZoomRatio => 0.5;
+        public double ZoomRatio => mw.Set.ZoomLevel;
 
         public int PressLength => 500;
     }

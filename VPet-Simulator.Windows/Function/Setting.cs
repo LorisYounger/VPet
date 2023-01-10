@@ -39,39 +39,33 @@ namespace VPet_Simulator.Windows
         //        FindorAddLine("windowssize").info = $"{value.Width},{value.Height}";
         //    }
         //}
-        public ResolutionType Resolution
+        private double zoomlevel = 0;
+        public double ZoomLevel
         {
             get
             {
-                var line = FindLine("windowssize");
-                if (line == null)
-                    return ResolutionType.q1280x720;
-                return (ResolutionType)line.InfoToInt;
-            }
-            set
-            {
-                FindorAddLine("windowssize").InfoToInt = (int)value;
-            }
-        }
-        public int ZoomLevel
-        {
-            get
-            {
-                var line = FindLine("zoomlevel");
-                if (line == null)
-                    return 75;
-                int zl = line.InfoToInt;
-                if (zl < 25 || zl > 100)
+                if(zoomlevel == 0)
                 {
-                    return 75;
+                    var line = FindLine("zoomlevel");
+                    if (line == null)
+                        zoomlevel = 0.5;
+                    else
+                    {
+                        zoomlevel = line.InfoToDouble;
+                        if (zoomlevel < 0.1 || zoomlevel > 8)
+                        {
+                            zoomlevel = 0.5;
+                        }
+                    }
                 }
-                return zl;
+                return zoomlevel;                
             }
             set
             {
-                FindorAddLine("zoomlevel").InfoToInt = value;
+                FindorAddLine("zoomlevel").InfoToDouble = value;
+                zoomlevel = value;
             }
-        }
+        }      
         /// <summary>
         /// 分辨率类型,仅支持以下分辨率 q:1.77 l:1.6 s:1.33
         /// </summary>
@@ -194,12 +188,12 @@ namespace VPet_Simulator.Windows
             set => SetInt("autosave", value);
         }
         /// <summary>
-        /// 桌面图标是否自动对齐
+        /// 是否置于顶层
         /// </summary>
-        public bool ShortcutAlignment
+        public bool TopMost
         {
-            get => !GetBool("shortcut_alignment");
-            set => SetBool("shortcut_alignment", !value);
+            get => !GetBool("topmost");
+            set => SetBool("topmost", !value);
         }
         /// <summary>
         /// 数据收集是否被禁止(当日)

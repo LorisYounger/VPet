@@ -70,7 +70,16 @@ namespace VPet_Simulator.Windows
                             LpsDocument lps = new LpsDocument(File.ReadAllText(fi.FullName));
                             if (lps.First().Name.ToLower() == "pet")
                             {
-                                mw.Pets.Add(new CorePet(lps, di));
+                                var name = lps.First().Info;
+                                var p = mw.Pets.FirstOrDefault(x => x.Name == name);
+                                if (p == null)
+                                    mw.Pets.Add(new CorePet(lps, di));
+                                else
+                                {
+                                    p.path.Add(di.FullName + "\\" + lps.First()["path"].Info);
+                                    foreach (var sub in lps["graph"])
+                                        p.GraphSetting.AddorReplaceSub(sub);
+                                }
                             }
                         }
                         break;

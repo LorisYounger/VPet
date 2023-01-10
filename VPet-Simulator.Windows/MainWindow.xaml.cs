@@ -25,12 +25,7 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
-        public readonly string ModPath = Environment.CurrentDirectory + @"\mod";
-        public readonly bool IsSteamUser;
-        public Setting Set;
-        public List<CorePet> Pets = new List<CorePet>();
-        public List<CoreMOD> CoreMODs = new List<CoreMOD>();
-        public GameCore Core = new GameCore();
+        
         public MainWindow()
         {
             //判断是不是Steam用户,因为本软件会发布到Steam
@@ -106,10 +101,13 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(new Action(() => LoadingText.Content = "尝试加载游戏内容"));
             //加载游戏内容
             Core.Controller = new MWController(this);
-            Dispatcher.Invoke(new Action(() => Core.Graph = Pets[0].Graph));
             Core.Save = new Save();
-            Dispatcher.Invoke(new Action(() => LoadingText.Visibility = Visibility.Collapsed));
-            Dispatcher.Invoke(new Action(() => DisplayGrid.Child = new Main(Core)));
+            Dispatcher.Invoke(new Action(() => {
+                Core.Graph = Pets[0].Graph;
+                LoadingText.Visibility = Visibility.Collapsed;
+                winSetting = new winGameSetting(this);
+                DisplayGrid.Child = new Main(Core);
+            }));
         }
 
         //public void DEBUGValue()
