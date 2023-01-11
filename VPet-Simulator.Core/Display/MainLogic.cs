@@ -27,6 +27,7 @@ namespace VPet_Simulator.Core
             TimeHandle?.Invoke(this);
 
             //TODO:饮食等乱七八糟的消耗
+            
 
             //UIHandle
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));

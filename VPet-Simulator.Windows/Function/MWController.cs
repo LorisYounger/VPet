@@ -18,9 +18,6 @@ namespace VPet_Simulator.Windows
             this.mw = mw;
         }
 
-        public double WindowsWidth { get => mw.Dispatcher.Invoke(() => mw.Width); set => mw.Dispatcher.Invoke(() => mw.Width = value); }
-        public double WindowsHight { get => mw.Dispatcher.Invoke(() => mw.Height); set => mw.Dispatcher.Invoke(() => mw.Height = value); }
-
         public double GetWindowsDistanceDown()
         {
             return mw.Dispatcher.Invoke(() => System.Windows.SystemParameters.PrimaryScreenHeight - mw.Top - mw.Height);

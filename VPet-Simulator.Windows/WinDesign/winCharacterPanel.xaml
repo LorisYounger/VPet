@@ -6,7 +6,7 @@
             xmlns:local="clr-namespace:VPet_Simulator.Windows"
             xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
             mc:Ignorable="d"
-            d:DesignHeight="450"
+            d:DesignHeight="800"
             d:DesignWidth="800"
             Title="面板"
             Width="400"

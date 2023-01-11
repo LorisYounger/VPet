@@ -28,7 +28,11 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 菜单栏
         /// </summary>
-        public ToolBar Bar;
+        public ToolBar ToolBar;
+        /// <summary>
+        /// 菜单栏
+        /// </summary>
+        public MessageBar MsgBar;
         /// <summary>
         /// 刷新时间时会调用该方法
         /// </summary>
@@ -42,9 +46,12 @@ namespace VPet_Simulator.Core
             InitializeComponent();
             Core = core;
 
-            Bar = new ToolBar(this);
-            Bar.Visibility = Visibility.Collapsed;
-            UIGrid.Children.Add(Bar);
+            ToolBar = new ToolBar(this);
+            ToolBar.Visibility = Visibility.Collapsed;
+            UIGrid.Children.Add(ToolBar);
+            MsgBar = new MessageBar();
+            MsgBar.Visibility = Visibility.Collapsed;
+            UIGrid.Children.Add(MsgBar);
             //TODO:锚定设置
             Core.TouchEvent.Add(new TouchArea(new Point(138, 12), new Size(224, 176), DisplayTouchHead));
             Core.TouchEvent.Add(new TouchArea(new Point(0, 0), new Size(500, 180), DisplayRaised, true));
@@ -55,7 +62,10 @@ namespace VPet_Simulator.Core
             EventTimer.Elapsed += EventTimer_Elapsed;
             MoveTimer.Elapsed += MoveTimer_Elapsed;
         }
-
+        public void Say(string text)
+        {
+            MsgBar.Show(Core.Save.Name, text);
+        }
         private void MoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             Core.Controller.MoveWindows(MoveTimerPoint.X, MoveTimerPoint.Y);
@@ -87,7 +97,7 @@ namespace VPet_Simulator.Core
                     if (act != null)
                         Dispatcher.Invoke(act.DoAction);
                     else
-                        Dispatcher.Invoke(Bar.Show);
+                        Dispatcher.Invoke(ToolBar.Show);
                 }
             });
         }

@@ -8,9 +8,10 @@
         <ResourceDictionary Source="Theme.xaml" />
     </UserControl.Resources>
     <Grid>
-        <Border x:Name="BdrPanel" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24" Visibility="Collapsed"
-                TextElement.FontSize="24" BorderBrush="{DynamicResource DARKPrimaryDarker}" BorderThickness="1"
-                Background="{DynamicResource DARKPrimaryText}" CornerRadius="5" MouseLeave="MenuPanel_MouseLeave">
+        <Border x:Name="BdrPanel" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24"
+                Visibility="Collapsed" TextElement.FontSize="24" BorderBrush="{DynamicResource DARKPrimaryDarker}"
+                BorderThickness="1" Background="{DynamicResource DARKPrimaryText}" CornerRadius="5"
+                MouseLeave="MenuPanel_MouseLeave">
             <Grid Margin="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -93,15 +94,21 @@
                     <UniformGrid Columns="5" />
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
-            <MenuItem x:Name="MenuFeed" Header="投喂">
-                <MenuItem Header="食物" />
-                <MenuItem Header="饮料" />
-                <MenuItem Header="药品" />
+            <MenuItem x:Name="MenuFeed" Header="投喂" HorizontalContentAlignment="Center">
+                <MenuItem Header="食物" HorizontalContentAlignment="Center" />
+                <MenuItem Header="饮料" HorizontalContentAlignment="Center" />
+                <MenuItem Header="药品" HorizontalContentAlignment="Center" />
             </MenuItem>
-            <MenuItem x:Name="MenuPanel" Header="面板" MouseEnter="MenuPanel_MouseEnter" MouseLeave="MenuPanel_MouseLeave" />
-            <MenuItem Header="打工" />
-            <MenuItem Header="睡觉" />
-            <MenuItem Header="设置" Click="MenuSetting_Click" />
+            <MenuItem x:Name="MenuPanel" Header="面板" MouseEnter="MenuPanel_MouseEnter" MouseLeave="MenuPanel_MouseLeave"
+                    HorizontalContentAlignment="Center" />
+            <MenuItem x:Name="MenuInteract" Header="互动" HorizontalContentAlignment="Center">
+                <MenuItem Header="睡觉" HorizontalContentAlignment="Center" />
+                <MenuItem Header="玩耍" HorizontalContentAlignment="Center" />
+                <MenuItem Header="说话" HorizontalContentAlignment="Center" />
+                <MenuItem Header="学习" HorizontalContentAlignment="Center" />
+            </MenuItem>
+            <MenuItem x:Name="MenuDIY" Header="自定" HorizontalContentAlignment="Center" Click="MenuDIY_Click" />
+            <MenuItem Header="设置" Click="MenuSetting_Click" HorizontalContentAlignment="Center" />
         </Menu>
     </Grid>
 </UserControl>

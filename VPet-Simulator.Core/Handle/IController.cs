@@ -35,14 +35,14 @@ namespace VPet_Simulator.Core
         /// 获取桌宠距离下方的位置
         /// </summary>
         double GetWindowsDistanceDown();
-        /// <summary>
-        /// 窗体宽度
-        /// </summary>
-        double WindowsWidth { get; set; }
-        /// <summary>
-        /// 窗体高度
-        /// </summary>
-        double WindowsHight { get; set; }
+        ///// <summary>
+        ///// 窗体宽度
+        ///// </summary>
+        //double WindowsWidth { get; set; }
+        ///// <summary>
+        ///// 窗体高度
+        ///// </summary>
+        //double WindowsHight { get; set; }
         /// <summary>
         /// 缩放比例 
         /// </summary>

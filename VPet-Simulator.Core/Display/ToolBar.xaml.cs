@@ -114,14 +114,32 @@ namespace VPet_Simulator.Core
         {
             m.Core.Controller.ShowPanel();
         }
-
-        public void AddMenuButton(string parentMenu,
+        /// <summary>
+        /// 窗口类型
+        /// </summary>
+        public enum MenuType
+        {
+            /// <summary>
+            /// 投喂
+            /// </summary>
+            Feed,
+            /// <summary>
+            /// 互动
+            /// </summary>
+            Interact,
+            /// <summary>
+            /// 自定
+            /// </summary>
+            DIY,
+        }
+        public void AddMenuButton(MenuType parentMenu,
             string displayName,
             Action clickCallback)
         {
             var menuItem = new MenuItem()
             {
                 Header = displayName,
+                HorizontalContentAlignment = HorizontalAlignment.Center
             };
             menuItem.Click += delegate
             {
@@ -129,8 +147,14 @@ namespace VPet_Simulator.Core
             };
             switch (parentMenu)
             {
-                case "投喂":
+                case MenuType.Feed:
                     MenuFeed.Items.Add(menuItem);
+                    break;
+                case MenuType.Interact:
+                    MenuInteract.Items.Add(menuItem);
+                    break;
+                case MenuType.DIY:
+                    MenuDIY.Items.Add(menuItem);
                     break;
             }
         }
@@ -195,6 +219,11 @@ namespace VPet_Simulator.Core
         private void MenuPanel_MouseLeave(object sender, MouseEventArgs e)
         {
             closePanelTimer.Start();
+        }
+
+        private void MenuDIY_Click(object sender, RoutedEventArgs e)
+        {
+            m.Say("private void MenuDIY_Click(object sender, RoutedEventArgs e)\r\n        {\r\n            m.Say(\"\");\r\n        }");
         }
     }
 }

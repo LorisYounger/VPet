@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace VPet_Simulator.Core
 {
@@ -12,6 +13,11 @@ namespace VPet_Simulator.Core
     /// </summary>
     public class Save
     {
+        /// <summary>
+        /// 宠物名字
+        /// </summary>
+        public string Name;
+        
         /// <summary>
         /// 金钱
         /// </summary>
@@ -122,8 +128,9 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 新游戏
         /// </summary>
-        public Save()
+        public Save(string name)
         {
+            Name = name;
             Money = 100;
             Exp = 0;
             Strength = 100;
@@ -140,6 +147,7 @@ namespace VPet_Simulator.Core
         public Save(Line line)
         {
             Money = line.GetFloat("money");
+            Name = line.Info;
             Exp = line.GetInt("exp");
             Strength = line.GetFloat("strength");
             StrengthDrink = line.GetFloat("strengthdrink");
@@ -155,7 +163,7 @@ namespace VPet_Simulator.Core
         /// <returns>存档行</returns>
         public Line ToLine()
         {
-            Line save = new Line("vpet", "");
+            Line save = new Line("vpet", Name);
             save.SetFloat("money", Money);
             save.SetInt("exp", Exp);
             save.SetFloat("strength", Strength);
@@ -165,6 +173,28 @@ namespace VPet_Simulator.Core
             save.SetFloat("health", Health);
             save.SetFloat("Likability", Likability);
             return save;
+        }
+        /// <summary>
+        /// 当前正在的状态
+        /// </summary>
+        public enum WorkingState
+        {
+            /// <summary>
+            /// 默认:啥都没干
+            /// </summary>
+            Nomal,
+            /// <summary>
+            /// 正在干活, workingobj指示正在干啥活
+            /// </summary>
+            Working,
+            /// <summary>
+            /// 学习中 
+            /// </summary>
+            Studying,
+            /// <summary>
+            /// 玩耍中
+            /// </summary>
+            Playing,
         }
     }
 }

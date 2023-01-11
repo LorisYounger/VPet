@@ -101,7 +101,7 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(new Action(() => LoadingText.Content = "尝试加载游戏内容"));
             //加载游戏内容
             Core.Controller = new MWController(this);
-            Core.Save = new Save();
+            Core.Save = new Save("莉莉丝");
             Dispatcher.Invoke(new Action(() => {
                 Core.Graph = Pets[0].Graph;
                 LoadingText.Visibility = Visibility.Collapsed;
