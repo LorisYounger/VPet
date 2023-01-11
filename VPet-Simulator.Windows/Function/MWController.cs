@@ -49,6 +49,7 @@ namespace VPet_Simulator.Windows
 
         public void ShowSetting()
         {
+            mw.Topmost = false;
             mw.winSetting.Show();
         }
 

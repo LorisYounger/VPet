@@ -5,7 +5,7 @@
         mc:Ignorable="d" d:DesignHeight="250" d:DesignWidth="250">
     <Viewbox>
         <Grid x:Name="MainGrid" Width="500" Height="500" MouseLeftButtonDown="MainGrid_MouseLeftButtonDown"
-                MouseLeftButtonUp="MainGrid_MouseLeftButtonUp">
+                MouseLeftButtonUp="MainGrid_MouseLeftButtonUp" MouseRightButtonDown="MainGrid_MouseRightButtonDown">
             <Border x:Name="PetGrid" VerticalAlignment="Bottom" />
             <Border x:Name="PetGrid2" VerticalAlignment="Bottom" />
             <Grid x:Name="UIGrid">

@@ -27,8 +27,7 @@ namespace VPet_Simulator.Windows
         private bool AllowChange = false;
         public winGameSetting(MainWindow mw)
         {
-            this.mw = mw;
-            mw.Topmost = false;
+            this.mw = mw;           
             InitializeComponent();
             TopMostBox.IsChecked = mw.Set.TopMost;
             if (mw.Set.IsFullScreen)

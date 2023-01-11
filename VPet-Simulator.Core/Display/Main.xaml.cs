@@ -121,5 +121,10 @@ namespace VPet_Simulator.Core
             if (Math.Abs(x) + Math.Abs(y) > 10)
                 rasetype = 0;
         }
+
+        private void MainGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ToolBar.Show();
+        }
     }
 }
