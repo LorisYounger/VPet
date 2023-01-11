@@ -2,6 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
         xmlns:pucore="clr-namespace:Panuon.WPF;assembly=Panuon.WPF">
+    <ResourceDictionary.MergedDictionaries>
+        <pucore:SharedResourceDictionary Source="/Panuon.WPF.UI;component/Control.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    
     <DrawingBrush x:Key="ProgressBarForeground" Viewport="0,0,8,22" ViewportUnits="Absolute" Stretch="None"
             TileMode="Tile">
         <DrawingBrush.RelativeTransform>
