@@ -2,145 +2,41 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
         xmlns:pucore="clr-namespace:Panuon.WPF;assembly=Panuon.WPF">
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-            <SolidColorBrush x:Key="Primary" Color="#FF81d4fa" />
-            <SolidColorBrush x:Key="PrimaryTrans" Color="#DD81d4fa" />
-            <SolidColorBrush x:Key="PrimaryTrans4" Color="#4481d4fa" />
-            <SolidColorBrush x:Key="PrimaryTransA" Color="#AA81d4fa" />
-            <SolidColorBrush x:Key="PrimaryTransE" Color="#EE81d4fa" />
+    <SolidColorBrush x:Key="Primary" Color="#FF81d4fa" />
+    <SolidColorBrush x:Key="PrimaryTrans" Color="#DD81d4fa" />
+    <SolidColorBrush x:Key="PrimaryTrans4" Color="#4481d4fa" />
+    <SolidColorBrush x:Key="PrimaryTransA" Color="#AA81d4fa" />
+    <SolidColorBrush x:Key="PrimaryTransE" Color="#EE81d4fa" />
 
-            <SolidColorBrush x:Key="PrimaryLight" Color="#FFA3E2FF" />
-            <SolidColorBrush x:Key="PrimaryLighter" Color="#FFC1EBFF" />
-            <SolidColorBrush x:Key="PrimaryDark" Color="#FF5CBEEA" />
-            <SolidColorBrush x:Key="PrimaryDarker" Color="#FF3CA9DB" />
-            <SolidColorBrush x:Key="PrimaryText" Color="#FF000000" />
+    <SolidColorBrush x:Key="PrimaryLight" Color="#FFA3E2FF" />
+    <SolidColorBrush x:Key="PrimaryLighter" Color="#FFC1EBFF" />
+    <SolidColorBrush x:Key="PrimaryDark" Color="#FF5CBEEA" />
+    <SolidColorBrush x:Key="PrimaryDarker" Color="#FF3CA9DB" />
+    <SolidColorBrush x:Key="PrimaryText" Color="#FF000000" />
 
-            <SolidColorBrush x:Key="Secondary" Color="#FF90caf9" />
-            <SolidColorBrush x:Key="SecondaryTrans" Color="#DD90caf9" />
-            <SolidColorBrush x:Key="SecondaryTrans4" Color="#4490caf9" />
-            <SolidColorBrush x:Key="SecondaryTransA" Color="#AA90caf9" />
-            <SolidColorBrush x:Key="SecondaryTransE" Color="#EE90caf9" />
+    <SolidColorBrush x:Key="Secondary" Color="#FF90caf9" />
+    <SolidColorBrush x:Key="SecondaryTrans" Color="#DD90caf9" />
+    <SolidColorBrush x:Key="SecondaryTrans4" Color="#4490caf9" />
+    <SolidColorBrush x:Key="SecondaryTransA" Color="#AA90caf9" />
+    <SolidColorBrush x:Key="SecondaryTransE" Color="#EE90caf9" />
 
-            <SolidColorBrush x:Key="SecondaryLight" Color="#FFADD7F9" />
-            <SolidColorBrush x:Key="SecondaryLighter" Color="#FFCBE4F9" />
-            <SolidColorBrush x:Key="SecondaryDark" Color="#FF6BB1E9" />
-            <SolidColorBrush x:Key="SecondaryDarker" Color="#FF4999DA" />
-            <SolidColorBrush x:Key="SecondaryText" Color="#FF000000" />
+    <SolidColorBrush x:Key="SecondaryLight" Color="#FFADD7F9" />
+    <SolidColorBrush x:Key="SecondaryLighter" Color="#FFCBE4F9" />
+    <SolidColorBrush x:Key="SecondaryDark" Color="#FF6BB1E9" />
+    <SolidColorBrush x:Key="SecondaryDarker" Color="#FF4999DA" />
+    <SolidColorBrush x:Key="SecondaryText" Color="#FF000000" />
 
-            <SolidColorBrush x:Key="DARKPrimary" Color="#FF039be5" />
-            <SolidColorBrush x:Key="DARKPrimaryTrans" Color="#DD039be5" />
-            <SolidColorBrush x:Key="DARKPrimaryTrans4" Color="#44039be5" />
-            <SolidColorBrush x:Key="DARKPrimaryTransA" Color="#AA039be5" />
-            <SolidColorBrush x:Key="DARKPrimaryTransE" Color="#EE039be5" />
+    <SolidColorBrush x:Key="DARKPrimary" Color="#FF039be5" />
+    <SolidColorBrush x:Key="DARKPrimaryTrans" Color="#DD039be5" />
+    <SolidColorBrush x:Key="DARKPrimaryTrans4" Color="#44039be5" />
+    <SolidColorBrush x:Key="DARKPrimaryTransA" Color="#AA039be5" />
+    <SolidColorBrush x:Key="DARKPrimaryTransE" Color="#EE039be5" />
 
-            <SolidColorBrush x:Key="DARKPrimaryLight" Color="#FF1FA9EC" />
-            <SolidColorBrush x:Key="DARKPrimaryLighter" Color="#FF3DB8F4" />
-            <SolidColorBrush x:Key="DARKPrimaryDark" Color="#FF0290D5" />
-            <SolidColorBrush x:Key="DARKPrimaryDarker" Color="#FF0286C6" />
-            <SolidColorBrush x:Key="DARKPrimaryText" Color="#FFffffff" />
+    <SolidColorBrush x:Key="DARKPrimaryLight" Color="#FF1FA9EC" />
+    <SolidColorBrush x:Key="DARKPrimaryLighter" Color="#FF3DB8F4" />
+    <SolidColorBrush x:Key="DARKPrimaryDark" Color="#FF0290D5" />
+    <SolidColorBrush x:Key="DARKPrimaryDarker" Color="#FF0286C6" />
+    <SolidColorBrush x:Key="DARKPrimaryText" Color="#FFffffff" />
 
-            <Color x:Key="ShadowColor">#90caf9</Color>
-        </ResourceDictionary>
-        <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-            <DrawingBrush x:Key="ProgressBarForeground" Viewport="0,0,8,22" ViewportUnits="Absolute" Stretch="None"
-                    TileMode="Tile">
-                <DrawingBrush.RelativeTransform>
-                    <RotateTransform Angle="2" />
-                </DrawingBrush.RelativeTransform>
-                <DrawingBrush.Drawing>
-                    <DrawingGroup>
-                        <GeometryDrawing Brush="{DynamicResource DARKPrimaryTransA}">
-                            <GeometryDrawing.Geometry>
-                                <GeometryGroup>
-                                    <RectangleGeometry Rect="5.5,0,2.5,22" />
-                                </GeometryGroup>
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                        <GeometryDrawing Brush="{DynamicResource DARKPrimary}">
-                            <GeometryDrawing.Geometry>
-                                <GeometryGroup>
-                                    <RectangleGeometry Rect="0,0,5.5,22" />
-                                </GeometryGroup>
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                    </DrawingGroup>
-                </DrawingBrush.Drawing>
-            </DrawingBrush>
-            <DrawingBrush x:Key="SuccessProgressBarForeground" Viewport="0,0,8,22" ViewportUnits="Absolute"
-                    Stretch="None" TileMode="Tile">
-                <DrawingBrush.RelativeTransform>
-                    <RotateTransform Angle="2" />
-                </DrawingBrush.RelativeTransform>
-                <DrawingBrush.Drawing>
-                    <DrawingGroup>
-                        <GeometryDrawing Brush="#AAAACC6C">
-                            <GeometryDrawing.Geometry>
-                                <GeometryGroup>
-                                    <RectangleGeometry Rect="5.5,0,2.5,22" />
-                                </GeometryGroup>
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                        <GeometryDrawing Brush="#AACC6C">
-                            <GeometryDrawing.Geometry>
-                                <GeometryGroup>
-                                    <RectangleGeometry Rect="0,0,5.5,22" />
-                                </GeometryGroup>
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                    </DrawingGroup>
-                </DrawingBrush.Drawing>
-            </DrawingBrush>
-            <DrawingBrush x:Key="WarningProgressBarForeground" Viewport="0,0,8,22" ViewportUnits="Absolute"
-                    Stretch="None" TileMode="Tile">
-                <DrawingBrush.RelativeTransform>
-                    <RotateTransform Angle="2" />
-                </DrawingBrush.RelativeTransform>
-                <DrawingBrush.Drawing>
-                    <DrawingGroup>
-                        <GeometryDrawing Brush="#AAFFCC4C">
-                            <GeometryDrawing.Geometry>
-                                <GeometryGroup>
-                                    <RectangleGeometry Rect="5.5,0,2.5,22" />
-                                </GeometryGroup>
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                        <GeometryDrawing Brush="#FFCC4C">
-                            <GeometryDrawing.Geometry>
-                                <GeometryGroup>
-                                    <RectangleGeometry Rect="0,0,5.5,22" />
-                                </GeometryGroup>
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                    </DrawingGroup>
-                </DrawingBrush.Drawing>
-            </DrawingBrush>
-            <DrawingBrush x:Key="DangerProgressBarForeground" Viewport="0,0,8,22" ViewportUnits="Absolute"
-                    Stretch="None" TileMode="Tile">
-                <DrawingBrush.RelativeTransform>
-                    <RotateTransform Angle="2" />
-                </DrawingBrush.RelativeTransform>
-                <DrawingBrush.Drawing>
-                    <DrawingGroup>
-                        <GeometryDrawing Brush="#AAFF4C4C">
-                            <GeometryDrawing.Geometry>
-                                <GeometryGroup>
-                                    <RectangleGeometry Rect="5.5,0,2.5,22" />
-                                </GeometryGroup>
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                        <GeometryDrawing Brush="#FF4C4C">
-                            <GeometryDrawing.Geometry>
-                                <GeometryGroup>
-                                    <RectangleGeometry Rect="0,0,5.5,22" />
-                                </GeometryGroup>
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                    </DrawingGroup>
-                </DrawingBrush.Drawing>
-            </DrawingBrush>
-        </ResourceDictionary>
-    </ResourceDictionary.MergedDictionaries>
+    <Color x:Key="ShadowColor">#90caf9</Color>
 </ResourceDictionary>

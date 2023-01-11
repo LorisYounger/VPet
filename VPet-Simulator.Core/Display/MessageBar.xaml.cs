@@ -29,15 +29,17 @@ namespace VPet_Simulator.Core
 
         private void ShowTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Dispatcher.Invoke(() => this.Visibility = Visibility.Collapsed);
+            if (--timeleft <= 0)
+                Dispatcher.Invoke(() => this.Visibility = Visibility.Collapsed);
         }
 
-        public Timer ShowTimer = new Timer();
+        public Timer ShowTimer = new Timer() { Interval = 100 };
+        int timeleft;
         public void Show(string name, string text)
         {
             TText.Text = text;
             LName.Content = name;
-            ShowTimer.Interval = text.Length * 200 + 1000;
+            timeleft = text.Length * 2 + 10;
             ShowTimer.Start();
             this.Visibility = Visibility.Visible;
         }

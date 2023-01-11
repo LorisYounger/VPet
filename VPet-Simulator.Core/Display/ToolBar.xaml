@@ -5,7 +5,12 @@
         mc:Ignorable="d" xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
         MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave" Height="500" Width="500">
     <UserControl.Resources>
-        <ResourceDictionary Source="Theme.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Theme.xaml" />
+                <ResourceDictionary Source="basestyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <Border x:Name="BdrPanel" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24"

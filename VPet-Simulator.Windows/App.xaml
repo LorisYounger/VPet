@@ -7,7 +7,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/VPet-Simulator.Core;component/Display/Theme.xaml" />
-                <ResourceDictionary Source="/VPet-Simulator.Windows;component/Design/Theme/basestyle.xaml" />
+                <ResourceDictionary Source="/VPet-Simulator.Core;component/Display/basestyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
