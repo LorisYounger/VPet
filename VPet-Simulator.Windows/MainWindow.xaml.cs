@@ -101,13 +101,18 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(new Action(() => LoadingText.Content = "尝试加载游戏内容"));
             //加载游戏内容
             Core.Controller = new MWController(this);
-            Core.Save = new Save("莉莉丝");
+            Core.Save = new Save("玛哈萝");
             Dispatcher.Invoke(new Action(() => {
                 Core.Graph = Pets[0].Graph;
                 LoadingText.Visibility = Visibility.Collapsed;
                 winSetting = new winGameSetting(this);
                 DisplayGrid.Child = new Main(Core);
             }));
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            ((Main)DisplayGrid.Child).Dispose();
         }
 
         //public void DEBUGValue()

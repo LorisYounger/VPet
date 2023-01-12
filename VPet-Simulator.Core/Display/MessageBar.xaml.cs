@@ -24,39 +24,56 @@ namespace VPet_Simulator.Core
         public MessageBar()
         {
             InitializeComponent();
+            EndTimer.Elapsed += EndTimer_Elapsed;
             ShowTimer.Elapsed += ShowTimer_Elapsed;
         }
-
+        List<char> outputtext;
         private void ShowTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (outputtext.Count > 0)
+            {
+                Dispatcher.Invoke(() => { TText.Text += outputtext[0]; outputtext.RemoveAt(0); });
+            }
+            else
+            {
+                ShowTimer.Stop();
+                EndTimer.Start();
+            }
+        }
+
+        private void EndTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (--timeleft <= 0)
                 Dispatcher.Invoke(() => this.Visibility = Visibility.Collapsed);
         }
 
-        public Timer ShowTimer = new Timer() { Interval = 100 };
+        public Timer EndTimer = new Timer() { Interval = 100 };
+        public Timer ShowTimer = new Timer() { Interval = 20 };
         int timeleft;
         public void Show(string name, string text)
         {
-            TText.Text = text;
+            TText.Text = "";
+            outputtext = text.ToList();
             LName.Content = name;
-            timeleft = text.Length * 2 + 10;
-            ShowTimer.Start();
+            timeleft = text.Length + 5;
+            ShowTimer.Start(); EndTimer.Stop();
             this.Visibility = Visibility.Visible;
         }
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)
         {
-            ShowTimer.Stop();
+            EndTimer.Stop();
         }
 
         private void Border_MouseLeave(object sender, MouseEventArgs e)
         {
-            ShowTimer.Start();
+            if (!ShowTimer.Enabled)
+                EndTimer.Start();
         }
 
         private void UserControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            ShowTimer.Stop();
+            EndTimer.Stop(); ShowTimer.Stop();
             this.Visibility = Visibility.Collapsed;
         }
     }

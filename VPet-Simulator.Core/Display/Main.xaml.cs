@@ -19,7 +19,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// Main.xaml 的交互逻辑
     /// </summary>
-    public partial class Main : UserControl
+    public partial class Main : UserControl, IDisposable
     {
         /// <summary>
         /// 游戏核心
@@ -125,6 +125,18 @@ namespace VPet_Simulator.Core
         private void MainGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             ToolBar.Show();
+        }
+        
+        public void Dispose()
+        {
+            EventTimer.Stop();
+            MoveTimer.Stop();
+            EventTimer.Dispose();
+            MoveTimer.Dispose();
+            if (PetGrid.Child is IGraph g)
+                g.Stop();
+            if (PetGrid2.Child is IGraph g2)
+                g2.Stop();
         }
     }
 }
