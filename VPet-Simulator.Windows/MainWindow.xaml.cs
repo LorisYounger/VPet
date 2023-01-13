@@ -105,8 +105,10 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(new Action(() => {
                 Core.Graph = Pets[0].Graph;
                 LoadingText.Visibility = Visibility.Collapsed;
-                winSetting = new winGameSetting(this);
-                DisplayGrid.Child = new Main(Core);
+                winSetting = new winGameSetting(this);               
+                var main = new Main(Core) {  };
+                main.DefaultClickAction = () => { Dispatcher.Invoke(() => { main.Say("你知道吗? 鼠标右键可以打开菜单栏"); }); };
+                DisplayGrid.Child = main;                
             }));
         }
 

@@ -40,11 +40,14 @@ namespace VPet_Simulator.Core
                 EndTimer.Start();
             }
         }
-
+        public Action EndAction;
         private void EndTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (--timeleft <= 0)
+            {
                 Dispatcher.Invoke(() => this.Visibility = Visibility.Collapsed);
+                EndAction?.Invoke();
+            }
         }
 
         public Timer EndTimer = new Timer() { Interval = 100 };
@@ -75,6 +78,7 @@ namespace VPet_Simulator.Core
         {
             EndTimer.Stop(); ShowTimer.Stop();
             this.Visibility = Visibility.Collapsed;
+            EndAction?.Invoke();
         }
     }
 }

@@ -70,7 +70,7 @@ namespace VPet_Simulator.Core
         {
             Core.Controller.MoveWindows(MoveTimerPoint.X, MoveTimerPoint.Y);
         }
-
+        public Action DefaultClickAction;
         bool isPress = false;
         private void MainGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -97,7 +97,7 @@ namespace VPet_Simulator.Core
                     if (act != null)
                         Dispatcher.Invoke(act.DoAction);
                     else
-                        Dispatcher.Invoke(ToolBar.Show);
+                        DefaultClickAction?.Invoke();
                 }
             });
         }
