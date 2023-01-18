@@ -57,7 +57,8 @@ namespace VPet_Simulator.Core
             Core.TouchEvent.Add(new TouchArea(new Point(0, 0), new Size(500, 180), DisplayRaised, true));
             var ig = Core.Graph.FindGraph(GraphCore.GraphType.Default, Core.Save.Mode);
             PetGrid.Child = ig.This;
-            ig.Run();
+            ig.Run(DisplayNomal);
+            
 
             EventTimer.Elapsed += EventTimer_Elapsed;
             MoveTimer.Elapsed += MoveTimer_Elapsed;
@@ -109,6 +110,7 @@ namespace VPet_Simulator.Core
             {
                 MainGrid.MouseMove -= MainGrid_MouseMove;
                 rasetype = -1;
+                DisplayRaising();
             }
         }
 

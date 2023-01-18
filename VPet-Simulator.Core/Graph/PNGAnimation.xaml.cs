@@ -61,7 +61,7 @@ namespace VPet_Simulator.Core
         /// <param name="path">文件夹位置</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="storemem">是否储存到内存以支持快速显示</param>
-        public PNGAnimation(string path, Save.ModeType modetype, GraphCore.GraphType graphtype, bool isLoop = true, bool storemem = false)
+        public PNGAnimation(string path, Save.ModeType modetype, GraphCore.GraphType graphtype, bool storemem = false, bool isLoop = false)
         {
             InitializeComponent();
             Animations = new List<Animation>();
@@ -171,7 +171,7 @@ namespace VPet_Simulator.Core
                 //先显示该图层
                 parent.Dispatcher.Invoke(Visible);
                 //然后等待帧时间毫秒
-                Thread.Sleep(Time);                
+                Thread.Sleep(Time);
                 //判断是否要下一步
                 if (parent.PlayState)
                 {
@@ -185,14 +185,15 @@ namespace VPet_Simulator.Core
                         }
                         else
                         {
+                            parent.Dispatcher.Invoke(Hidden);
                             if (parent.DoEndAction)
                                 EndAction?.Invoke();//运行结束动画时事件
                                                     //重新加载第一帧
-                            Task.Run(() =>
-                            {
-                                Thread.Sleep(25);
-                                parent.Dispatcher.Invoke(Hidden);
-                            });
+                            //Task.Run(() =>
+                            //{
+                            //    Thread.Sleep(25);
+                            //    parent.Dispatcher.Invoke(Hidden);
+                            //});
                             return;
                         }
                     //要下一步,现在就隐藏图层
@@ -230,6 +231,6 @@ namespace VPet_Simulator.Core
             DoEndAction = !StopEndAction;
             PlayState = false;
         }
-       
+
     }
 }

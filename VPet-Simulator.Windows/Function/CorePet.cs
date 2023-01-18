@@ -19,15 +19,12 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 宠物图像
         /// </summary>
-        public GraphCore Graph
+        public GraphCore Graph(bool storemem)
         {
-            get
-            {
-                var g = new GraphCore();
-                foreach (var p in path)
-                    LoadGraph(g, new DirectoryInfo(p), "");
-                return g;
-            }
+            var g = new GraphCore();
+            foreach (var p in path)
+                LoadGraph(g, new DirectoryInfo(p), "", storemem);
+            return g;
         }
         /// <summary>
         /// 图像位置
@@ -50,7 +47,7 @@ namespace VPet_Simulator.Windows
             GraphSetting = lps["graph"];
         }
 
-        public static void LoadGraph(GraphCore graph, DirectoryInfo di, string path_name)
+        public static void LoadGraph(GraphCore graph, DirectoryInfo di, string path_name,bool storemem)
         {
             var list = di.EnumerateDirectories();
             if (list.Count() == 0)
@@ -64,24 +61,24 @@ namespace VPet_Simulator.Windows
                     path_name = path_name.Trim('_').ToLower();
                     for (int i = 0; i < GraphTypeValue.Length; i++)
                     {
-                        if (path_name.StartsWith(GraphTypeValue[i][0]))
+                        if (path_name.StartsWith(GraphTypeValue[i]))
                         {
 
                             if (path_name.Contains("happy"))
                             {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Happy, (GraphType)i, GraphTypeValue[i][1], GraphTypeValue[i][2]), (GraphType)i);
+                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Happy, (GraphType)i, storemem), (GraphType)i);
                             }
                             if (path_name.Contains("nomal"))
                             {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Nomal, (GraphType)i, GraphTypeValue[i][1], GraphTypeValue[i][2]), (GraphType)i);
+                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Nomal, (GraphType)i, storemem), (GraphType)i);
                             }
                             if (path_name.Contains("poorcondition"))
                             {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.PoorCondition, (GraphType)i, GraphTypeValue[i][1], GraphTypeValue[i][2]), (GraphType)i);
+                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.PoorCondition, (GraphType)i, storemem), (GraphType)i);
                             }
                             if (path_name.Contains("ill"))
                             {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Ill, (GraphType)i, GraphTypeValue[i][1], GraphTypeValue[i][2]), (GraphType)i);
+                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Ill, (GraphType)i, storemem), (GraphType)i);
                             }
                             return;
                         }
@@ -94,7 +91,7 @@ namespace VPet_Simulator.Windows
             else
                 foreach (var p in list)
                 {
-                    LoadGraph(graph, p, path_name + "_" + p.Name);
+                    LoadGraph(graph, p, path_name + "_" + p.Name,storemem);
                 }
         }
     }

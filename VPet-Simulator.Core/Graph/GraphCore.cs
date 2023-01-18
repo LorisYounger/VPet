@@ -34,6 +34,22 @@ namespace VPet_Simulator.Core
             /// </summary>
             Climb_Top_Left,
             /// <summary>
+            /// 从下向右爬 (循环)
+            /// </summary>
+            Climb_Bottom_Right,
+            /// <summary>
+            /// 从下向左爬 (循环)
+            /// </summary>
+            Climb_Bottom_Left,
+            /// <summary>
+            /// 爬起向右
+            /// </summary>
+            Climb_Up_Right,
+            /// <summary>
+            /// 爬起向左
+            /// </summary>
+            Climb_Up_Left,
+            /// <summary>
             /// 从右边爬 (循环)
             /// </summary>
             Climb_Right,
@@ -78,13 +94,21 @@ namespace VPet_Simulator.Core
             /// </summary>
             Squat_C_End,
             /// <summary>
-            /// 下落 (开始/循环)
+            /// 下落向左 (开始/循环)
             /// </summary>
-            Fall_A_Loop,
+            Fall_Left_A_Loop,
             /// <summary>
-            /// 下落 (结束)
+            /// 下落向左 (结束)
             /// </summary>
-            Fall_B_End,
+            Fall_Left_B_End,
+            /// <summary>
+            /// 下落向右 (开始/循环)
+            /// </summary>
+            Fall_Right_A_Loop,
+            /// <summary>
+            /// 下落向右 (结束)
+            /// </summary>
+            Fall_Right_B_End,
             /// <summary>
             /// 走路向右 (开始)
             /// </summary>
@@ -110,36 +134,40 @@ namespace VPet_Simulator.Core
             /// </summary>
             Walk_Left_C_End,
         }
-        /// <summary>
-        /// 动画类型默认设置 前文本|是否循环|是否常用
-        /// </summary>
-        public static readonly dynamic[][] GraphTypeValue = new dynamic[][]
-        {
-             new dynamic[]{ "raised_dynamic" ,false,true},
-             new dynamic[]{ "raised_static_a", false,true},
-             new dynamic[]{ "raised_static_b", false,true},
-             new dynamic[]{ "climb_top_right", false,false},
-             new dynamic[]{ "climb_top_left", false, false},
-             new dynamic[]{ "climb_right", false, false},
-             new dynamic[]{ "climb_left", false, false},
-             new dynamic[]{ "default", true,true},
-             new dynamic[]{ "touch_head_a", false,true},
-             new dynamic[]{ "touch_head_b", false,true},
-             new dynamic[]{ "touch_head_c", false,true},
-             new dynamic[]{ "crawl_right", false, true},
-             new dynamic[]{ "crawl_left", false, true},
-             new dynamic[]{ "squat_a", false,true},
-             new dynamic[]{ "squat_b", false, true},
-             new dynamic[]{ "squat_c", false,true},
-             new dynamic[]{ "fall_a", false, false},
-             new dynamic[]{ "fall_b", false,true},
-             new dynamic[]{ "walk_right_a", false,true},
-             new dynamic[]{ "walk_right_b", false, true},
-             new dynamic[]{ "walk_right_c", false,true},
-             new dynamic[]{ "walk_left_a", false,true},
-             new dynamic[]{ "walk_left_b", false, true},
-             new dynamic[]{ "walk_left_c", false,true},
-        };
+        ///// <summary> loop 应该被取缔
+        ///// 动画类型默认设置 前文本|是否循环|是否常用
+        ///// </summary>
+        //public static readonly dynamic[][] GraphTypeValue = new dynamic[][]
+        //{
+        //     new dynamic[]{ "raised_dynamic" ,false,true},
+        //     new dynamic[]{ "raised_static_a", false,true},
+        //     new dynamic[]{ "raised_static_b", false,true},
+        //     new dynamic[]{ "climb_top_right", false,false},
+        //     new dynamic[]{ "climb_top_left", false, false},
+        //     new dynamic[]{ "climb_bottom_right", false,false},
+        //     new dynamic[]{ "climb_bottom_left", false, false},
+        //     new dynamic[]{ "climb_right", false, false},
+        //     new dynamic[]{ "climb_left", false, false},
+        //     new dynamic[]{ "default", true,true},
+        //     new dynamic[]{ "touch_head_a", false,true},
+        //     new dynamic[]{ "touch_head_b", false,true},
+        //     new dynamic[]{ "touch_head_c", false,true},
+        //     new dynamic[]{ "crawl_right", false, true},
+        //     new dynamic[]{ "crawl_left", false, true},
+        //     new dynamic[]{ "squat_a", false,true},
+        //     new dynamic[]{ "squat_b", false, true},
+        //     new dynamic[]{ "squat_c", false,true},
+        //     new dynamic[]{ "fall_left_a", false, false},
+        //     new dynamic[]{ "fall_left_b", false,true},
+        //     new dynamic[]{ "fall_right_a", false, false},
+        //     new dynamic[]{ "fall_right_b", false,true},
+        //     new dynamic[]{ "walk_right_a", false,true},
+        //     new dynamic[]{ "walk_right_b", false, true},
+        //     new dynamic[]{ "walk_right_c", false,true},
+        //     new dynamic[]{ "walk_left_a", false,true},
+        //     new dynamic[]{ "walk_left_b", false, true},
+        //     new dynamic[]{ "walk_left_c", false,true},
+        //};
         /// <summary>
         /// 图像字典
         /// </summary>
@@ -174,5 +202,23 @@ namespace VPet_Simulator.Core
             }
             return FindGraph(GraphType.Default, mode);
         }
+        static string[] graphtypevalue = null;
+        public static string[] GraphTypeValue
+        {
+            get
+            {
+                if (graphtypevalue == null)
+                {
+                    List<string> gtv = new List<string>();
+                    foreach (string v in Enum.GetNames(typeof(GraphType)))
+                    {
+                        gtv.Add(v.Replace("_Start", "").Replace("_Loop", "").Replace("_End", "").ToLower());
+                    }
+                    graphtypevalue = gtv.ToArray();
+                }
+                return graphtypevalue;
+            }
+        }
+
     }
 }

@@ -33,7 +33,7 @@ namespace VPet_Simulator.Core
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
             if (IsNomal)
-                switch (1)//Function.Rnd.Next(10))
+                switch (10)//Function.Rnd.Next(10))
                 {
                     case 0:
                         //随机向右                      

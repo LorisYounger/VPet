@@ -223,7 +223,7 @@ namespace VPet_Simulator.Core
 
         private void MenuDIY_Click(object sender, RoutedEventArgs e)
         {
-            m.Say("您好,我是玛哈萝, 让我来帮您熟悉并掌握使用vos系统,成为永世流传的虚拟主播.");
+            m.Say("您好,我是萝莉斯, 让我来帮您熟悉并掌握使用vos系统,成为永世流传的虚拟主播.");
         }
     }
 }
