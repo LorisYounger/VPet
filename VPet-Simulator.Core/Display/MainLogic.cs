@@ -10,10 +10,6 @@ namespace VPet_Simulator.Core
 {
     public partial class Main
     {
-        /// <summary>
-        /// 是否在默认情况(playnoaml)
-        /// </summary>
-        public bool IsNomal = true;
 
         public Timer EventTimer = new Timer(15000)
         {
@@ -27,13 +23,13 @@ namespace VPet_Simulator.Core
             TimeHandle?.Invoke(this);
 
             //TODO:饮食等乱七八糟的消耗
-            
+
 
             //UIHandle
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
-            if (IsNomal)
-                switch (10)//Function.Rnd.Next(10))
+            if (DisplayType == GraphCore.GraphType.Default)
+                switch (20)//Function.Rnd.Next(10))
                 {
                     case 0:
                         //随机向右                      
@@ -51,12 +47,25 @@ namespace VPet_Simulator.Core
                     case 4:
                         DisplayClimb_Right_DOWN();
                         break;
+                    case 5:
+                        DisplayWalk_Right();
+                        break;
                     case 10:
                         DisplayClimb_Top_Right();
+                        break;
+                    case 11:
+                        DisplayClimb_Top_Left();
+                        break;
+                    case 20:
+                        DisplayBoring();
+                        break;
+                    case 21:
+                        DisplaySquat();
                         break;
                     default:
                         break;
                 }
+
         }
         /// <summary>
         /// 定点移动位置向量

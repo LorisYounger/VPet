@@ -25,13 +25,14 @@ namespace VPet_Simulator.Core
         /// 新建新静态图像
         /// </summary>
         /// <param name="path">图片路径</param>
-        public Picture(string path, Save.ModeType modetype, int length = 1000, bool isloop = false)
+        public Picture(string path, Save.ModeType modetype, GraphCore.GraphType graphType, int length = 1000,  bool isloop = false)
         {
             InitializeComponent();
             ModeType = modetype;
             IsLoop = isloop;
             Length = length;
             Source = new BitmapImage(new Uri(path));
+            GraphType = graphType;
         }
         public Save.ModeType ModeType { get; private set; }
 
@@ -42,9 +43,9 @@ namespace VPet_Simulator.Core
 
         public UIElement This => this;
 
-        public bool IsContinue { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool IsContinue { get; set; }
 
-        public GraphCore.GraphType GraphType => throw new NotImplementedException();
+        public GraphCore.GraphType GraphType { get; set; }
 
         public void Run(Action EndAction = null)
         {

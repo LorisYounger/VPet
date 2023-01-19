@@ -58,7 +58,7 @@ namespace VPet_Simulator.Core
             var ig = Core.Graph.FindGraph(GraphCore.GraphType.Default, Core.Save.Mode);
             PetGrid.Child = ig.This;
             ig.Run(DisplayNomal);
-            
+
 
             EventTimer.Elapsed += EventTimer_Elapsed;
             MoveTimer.Elapsed += MoveTimer_Elapsed;
@@ -76,10 +76,12 @@ namespace VPet_Simulator.Core
         private void MainGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             isPress = true;
-            if (!IsNomal)
+            if (DisplayType != GraphCore.GraphType.Default)
             {//不是nomal! 可能会卡timer,所有全部timer清空下
                 MoveTimer.Stop();
                 MainGrid.MouseMove -= MainGrid_MouseMove;
+                if (DisplayStopMove(DisplayNomal))
+                    return;
             }
             Task.Run(() =>
             {
@@ -128,7 +130,7 @@ namespace VPet_Simulator.Core
         {
             ToolBar.Show();
         }
-        
+
         public void Dispose()
         {
             EventTimer.Stop();

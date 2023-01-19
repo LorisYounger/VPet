@@ -58,10 +58,10 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 新建 PNG 动画
         /// </summary>
-        /// <param name="path">文件夹位置</param>
+        /// <param name="paths">文件夹位置</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="storemem">是否储存到内存以支持快速显示</param>
-        public PNGAnimation(string path, Save.ModeType modetype, GraphCore.GraphType graphtype, bool storemem = false, bool isLoop = false)
+        public PNGAnimation(FileInfo[] paths, Save.ModeType modetype, GraphCore.GraphType graphtype, bool storemem = false, bool isLoop = false)
         {
             InitializeComponent();
             Animations = new List<Animation>();
@@ -70,7 +70,7 @@ namespace VPet_Simulator.Core
             GraphType = graphtype;
             ModeType = modetype;
             if (storemem)
-                foreach (var file in new DirectoryInfo(path).GetFiles())
+                foreach (var file in paths)
                 {
                     int time = int.Parse(file.Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
                     var img = new Image()
@@ -99,13 +99,11 @@ namespace VPet_Simulator.Core
                 {
                     Visibility = Visibility.Hidden
                 };
-                var fs = new DirectoryInfo(path).GetFiles();
-
-                int time = int.Parse(fs[0].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
+                int time = int.Parse(paths[0].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
                 //第一张图:有专门自己的图层
                 var img = new Image()
                 {
-                    Source = new BitmapImage(new Uri(fs[0].FullName)),
+                    Source = new BitmapImage(new Uri(paths[0].FullName)),
                     Visibility = Visibility.Hidden
                 };
                 MainGrid.Children.Add(img);
@@ -115,16 +113,16 @@ namespace VPet_Simulator.Core
                 Animations.Add(new Animation(this, time, () =>
                 {
                     img.Visibility = Visibility.Visible;
-                    imgs[1].Source = new BitmapImage(new Uri(fs[1].FullName));
+                    imgs[1].Source = new BitmapImage(new Uri(paths[1].FullName));
                 }, () => img.Visibility = Visibility.Hidden));
 
-                int last = fs.Count() - 1;
+                int last = paths.Count() - 1;
                 for (int i = 1; i < last; i++)
                 {
-                    time = int.Parse(fs[i].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
+                    time = int.Parse(paths[i].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
                     var im1 = imgs[i % 3];
                     var im2 = imgs[(i + 1) % 3];
-                    var st3 = fs[i + 1].FullName;
+                    var st3 = paths[i + 1].FullName;
                     Animations.Add(new Animation(this, time, () =>
                     {
                         im1.Visibility = Visibility.Visible;
@@ -133,7 +131,7 @@ namespace VPet_Simulator.Core
                 }
                 //最后一张图: 不处理下一张图的imgsSources
 
-                time = int.Parse(fs[last].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
+                time = int.Parse(paths[last].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
                 Animations.Add(new Animation(this, time, () => imgs[last % 3].Visibility = Visibility.Visible
                 , () => imgs[last % 3].Visibility = Visibility.Hidden));
             }

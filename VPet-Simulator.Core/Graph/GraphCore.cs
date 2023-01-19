@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,14 +34,6 @@ namespace VPet_Simulator.Core
             /// 从上向左爬 (循环)
             /// </summary>
             Climb_Top_Left,
-            /// <summary>
-            /// 从下向右爬 (循环)
-            /// </summary>
-            Climb_Bottom_Right,
-            /// <summary>
-            /// 从下向左爬 (循环)
-            /// </summary>
-            Climb_Bottom_Left,
             /// <summary>
             /// 爬起向右
             /// </summary>
@@ -133,6 +126,18 @@ namespace VPet_Simulator.Core
             /// 走路向左 (结束)
             /// </summary>
             Walk_Left_C_End,
+            /// <summary>
+            /// 无聊 (开始)
+            /// </summary>
+            Boring_A_Start,
+            /// <summary>
+            /// 无聊 (循环)
+            /// </summary>
+            Boring_B_Loop,
+            /// <summary>
+            /// 无聊 (结束)
+            /// </summary>
+            Boring_C_End,
         }
         ///// <summary> loop 应该被取缔
         ///// 动画类型默认设置 前文本|是否循环|是否常用
@@ -180,11 +185,30 @@ namespace VPet_Simulator.Core
         /// <param name="type">类型</param>
         public void AddGraph(IGraph graph, GraphType type)
         {
+            //switch (graph.GraphType)
+            //{
+            //    case GraphType.Default:
+            //    case GraphType.Boring_B_Loop:
+            //    case GraphType.Squat_B_Loop:
+            //        graph.IsLoop = true;
+            //        break;
+            //}//循环真要不得,要做随机循环
             if (!Graphs.ContainsKey(type))
             {
                 Graphs.Add(type, new List<IGraph>());
             }
             Graphs[type].Add(graph);
+        }
+        public void AddGraph(string path, Save.ModeType modetype, GraphType graphtype, bool storemem = false)
+        {
+            var paths = new DirectoryInfo(path).GetFiles();
+            if (paths.Length == 0)
+                return;
+            if (paths.Length == 1)
+                AddGraph(new Picture(paths[0].FullName, modetype, graphtype,
+                    int.Parse(paths[0].Name.Split('.').Reverse().ToArray()[1].Split('_').Last())), graphtype);
+            else
+                AddGraph(new PNGAnimation(paths, modetype, graphtype, storemem), graphtype);
         }
         public IGraph FindGraph(GraphType type, Save.ModeType mode)
         {

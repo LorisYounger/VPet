@@ -66,19 +66,19 @@ namespace VPet_Simulator.Windows
 
                             if (path_name.Contains("happy"))
                             {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Happy, (GraphType)i, storemem), (GraphType)i);
+                                graph.AddGraph(di.FullName, Save.ModeType.Happy, (GraphType)i, storemem);
                             }
                             if (path_name.Contains("nomal"))
                             {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Nomal, (GraphType)i, storemem), (GraphType)i);
+                                graph.AddGraph(di.FullName, Save.ModeType.Nomal, (GraphType)i, storemem);
                             }
                             if (path_name.Contains("poorcondition"))
                             {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.PoorCondition, (GraphType)i, storemem), (GraphType)i);
+                                graph.AddGraph(di.FullName, Save.ModeType.PoorCondition, (GraphType)i, storemem);
                             }
                             if (path_name.Contains("ill"))
                             {
-                                graph.AddGraph(new PNGAnimation(di.FullName, Save.ModeType.Ill, (GraphType)i, storemem), (GraphType)i);
+                                graph.AddGraph(di.FullName, Save.ModeType.Ill, (GraphType)i, storemem);
                             }
                             return;
                         }

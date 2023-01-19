@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -13,20 +14,38 @@ namespace VPet_Simulator.Core
 {
     public partial class Main
     {
+        public GraphCore.GraphType DisplayType = GraphCore.GraphType.Default;
         /// <summary>
         /// 显示默认情况
         /// </summary>
         public void DisplayNomal()
         {
-            IsNomal = true;
             Display(Core.Graph.FindGraph(GraphCore.GraphType.Default, Core.Save.Mode), DisplayNomal);
         }
+        /// <summary>
+        /// 显示结束动画
+        /// </summary>
+        /// <param name="EndAction">结束后接下来</param>
+        /// <returns>是否成功结束</returns>
+        public bool DisplayStopMove(Action EndAction)
+        {
+            switch (DisplayType)
+            {
+                case GraphCore.GraphType.Boring_B_Loop:
+                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Boring_C_End, Core.Save.Mode), EndAction);
+                    return true;
+                case GraphCore.GraphType.Squat_B_Loop:
+                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Squat_C_End, Core.Save.Mode), EndAction);
+                    return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// 显示摸头情况
         /// </summary>
         public void DisplayTouchHead()
         {
-            IsNomal = false;
             if (petgridcrlf)
                 if (PetGrid.Child is IGraph ig && ig.GraphType == GraphCore.GraphType.Touch_Head_B_Loop)
                 {
@@ -43,12 +62,49 @@ namespace VPet_Simulator.Core
                Display(Core.Graph.FindGraph(GraphCore.GraphType.Touch_Head_C_End, Core.Save.Mode), DisplayNomal
             )));
         }
+
+        /// <summary>
+        /// 显示无聊情况
+        /// </summary>
+        public void DisplayBoring()
+        {
+            looptimes = 0;
+            Display(Core.Graph.FindGraph(GraphCore.GraphType.Boring_A_Start, Core.Save.Mode), DisplayBoringing);
+        }
+        /// <summary>
+        /// 显示无聊情况
+        /// </summary>
+        private void DisplayBoringing()
+        {
+            if (Function.Rnd.Next(++looptimes) > 10)
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Boring_C_End, Core.Save.Mode), DisplayNomal);
+            else
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Boring_B_Loop, Core.Save.Mode), DisplayBoringing);
+        }
+        int looptimes;
+        /// <summary>
+        /// 显示蹲下情况
+        /// </summary>
+        public void DisplaySquat()
+        {
+            looptimes = 0;
+            Display(Core.Graph.FindGraph(GraphCore.GraphType.Squat_A_Start, Core.Save.Mode), DisplaySquating);
+        }
+        /// <summary>
+        /// 显示蹲下情况
+        /// </summary>
+        public void DisplaySquating()
+        {
+            if (Function.Rnd.Next(++looptimes) > 10)
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Squat_C_End, Core.Save.Mode), DisplayNomal);
+            else
+                Display(Core.Graph.FindGraph(GraphCore.GraphType.Squat_B_Loop, Core.Save.Mode), DisplaySquating);
+        }
         /// <summary>
         /// 显示拖拽情况
         /// </summary>
         public void DisplayRaised()
         {
-            IsNomal = false;
             //位置迁移: 254-128           
             MainGrid.MouseMove += MainGrid_MouseMove;
             rasetype = 0;
@@ -116,7 +172,6 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-                IsNomal = false;
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_A_Start, Core.Save.Mode), () =>
                 {
                     MoveTimerPoint = new Point(-20, 0);//TODO:锚定设置
@@ -175,7 +230,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceRight() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-                IsNomal = false;
+
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_A_Start, Core.Save.Mode), () =>
                 {
                     MoveTimerPoint = new Point(-20, 0);//TODO:锚定设置
@@ -184,6 +239,64 @@ namespace VPet_Simulator.Core
                 });
             }
         }
+        ///// <summary>
+        ///// 显示向左爬 (有判断)
+        ///// </summary>
+        //public void DisplayClimb_Bottom_Left()
+        //{
+        //    //看看距离是否满足调节
+        //    if (Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
+        //    {
+        //        walklength = 0;
+        //        Display(Core.Graph.FindGraph(GraphCore.GraphType.Climb_Bottom_Left, Core.Save.Mode), () =>
+        //        {
+        //            MoveTimerPoint = new Point(-20, 0);//TODO:锚定设置
+        //            MoveTimer.Start();
+        //            DisplayWalk_Lefting();
+        //        });
+        //    }
+        //}
+        ///// <summary>
+        ///// 显示向左爬
+        ///// </summary>
+        //private void DisplayClimb_Bottom_Lefting()
+        //{
+        //    //看看距离是不是不足
+        //    if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio)
+        //    {//是,停下恢复默认 or/爬墙
+        //        switch (Function.Rnd.Next(3))
+        //        {
+        //            case 0:
+        //                DisplayClimb_Left_UP(() =>
+        //                {
+        //                    MoveTimer.Stop();
+        //                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_C_End, Core.Save.Mode), DisplayNomal);
+        //                });
+        //                return;
+        //            case 1:
+        //                DisplayClimb_Left_DOWN(() =>
+        //                {
+        //                    MoveTimer.Stop();
+        //                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_C_End, Core.Save.Mode), DisplayNomal);
+        //                });
+        //                return;
+        //            default:
+        //                MoveTimer.Stop();
+        //                Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_C_End, Core.Save.Mode), DisplayNomal);
+        //                return;
+        //        }
+        //    }
+        //    //不是:继续右边走or停下
+        //    if (Function.Rnd.Next(walklength++) < 5)
+        //    {
+        //        Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_B_Loop, Core.Save.Mode), DisplayWalk_Lefting);
+        //    }
+        //    else
+        //    {//停下来
+        //        MoveTimer.Stop();
+        //        Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_C_End, Core.Save.Mode), DisplayNomal);
+        //    }
+        //}
         /// <summary>
         /// 显示向右走
         /// </summary>
@@ -231,11 +344,9 @@ namespace VPet_Simulator.Core
         public void DisplayClimb_Left_UP(Action ifNot = null)
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceLeft() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceUp() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceLeft() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceUp() > 300 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-                IsNomal = false;
-
                 Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - 145, 0);//TODO:锚定设置
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_A_Start, Core.Save.Mode), () =>
                 {
@@ -269,7 +380,7 @@ namespace VPet_Simulator.Core
                 }
             }
             //不是:继续or停下
-            if (Function.Rnd.Next(walklength++) < 5)
+            if (Function.Rnd.Next(walklength++) < 8)
             {
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Climb_Left, Core.Save.Mode), DisplayClimb_Lefting_UP);
             }
@@ -288,7 +399,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceDown() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-                IsNomal = false;
+
 
                 Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - 145, 0);//TODO:锚定设置
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_A_Start, Core.Save.Mode), () =>
@@ -332,7 +443,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceRight() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceUp() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-                IsNomal = false;
+
 
                 Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 185, 0);//TODO:锚定设置
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_A_Start, Core.Save.Mode), () =>
@@ -386,7 +497,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceRight() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceDown() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-                IsNomal = false;
+
 
                 Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 185, 0);//TODO:锚定设置
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_A_Start, Core.Save.Mode), () =>
@@ -427,10 +538,9 @@ namespace VPet_Simulator.Core
         public void DisplayClimb_Top_Right()
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceUp() < 50 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceRight() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceUp() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceRight() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-                IsNomal = false;
 
                 Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);//TODO:锚定设置
                 MoveTimerPoint = new Point(8, 0);//TODO:锚定设置
@@ -481,7 +591,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceUp() < 50 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-                IsNomal = false;
+
 
                 Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);//TODO:锚定设置
                 MoveTimerPoint = new Point(8, 0);//TODO:锚定设置
@@ -539,9 +649,11 @@ namespace VPet_Simulator.Core
         /// <param name="EndAction">结束操作</param>
         public void Display(IGraph graph, Action EndAction = null)
         {
+            DisplayType = graph.GraphType;
             if (PetGrid.Child == graph.This)
             {
-                Dispatcher.Invoke(() => {
+                Dispatcher.Invoke(() =>
+                {
                     PetGrid.Visibility = Visibility;
                     PetGrid2.Visibility = Visibility.Collapsed;
                 });
@@ -550,7 +662,8 @@ namespace VPet_Simulator.Core
             }
             else if (PetGrid2.Child == graph.This)
             {
-                Dispatcher.Invoke(() => {
+                Dispatcher.Invoke(() =>
+                {
                     PetGrid2.Visibility = Visibility;
                     PetGrid.Visibility = Visibility.Collapsed;
                 });
@@ -563,7 +676,8 @@ namespace VPet_Simulator.Core
             if (petgridcrlf)
             {
                 ((IGraph)(PetGrid.Child)).Stop(true);
-                Dispatcher.Invoke(() => {
+                Dispatcher.Invoke(() =>
+                {
                     PetGrid2.Visibility = Visibility;
                     PetGrid.Visibility = Visibility.Collapsed;
                     PetGrid2.Child = graph.This;
@@ -577,7 +691,8 @@ namespace VPet_Simulator.Core
             else
             {
                 ((IGraph)(PetGrid2.Child)).Stop(true);
-                Dispatcher.Invoke(() => {
+                Dispatcher.Invoke(() =>
+                {
                     PetGrid.Visibility = Visibility;
                     PetGrid2.Visibility = Visibility.Collapsed;
                     PetGrid.Child = graph.This;
