@@ -57,7 +57,7 @@ namespace VPet_Simulator.Core
             var ig = Core.Graph.FindGraph(GraphCore.GraphType.Default, Core.Save.Mode);
             PetGrid.Child = ig.This;
             ig.Run(DisplayNomal);
-
+            
 
             EventTimer.Elapsed += EventTimer_Elapsed;
             MoveTimer.Elapsed += MoveTimer_Elapsed;
@@ -72,9 +72,11 @@ namespace VPet_Simulator.Core
         }
         public Action DefaultClickAction;
         bool isPress = false;
+        long presstime;
         private void MainGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             isPress = true;
+            CountNomal = 0;
             if (DisplayType != GraphCore.GraphType.Default)
             {//不是nomal! 可能会卡timer,所有全部timer清空下
                 MoveTimer.Stop();
@@ -84,14 +86,16 @@ namespace VPet_Simulator.Core
             }
             Task.Run(() =>
             {
-                Thread.Sleep(Core.Controller.PressLength);
+                var pth = DateTime.Now.Ticks;
+                presstime = pth;
+                Thread.Sleep(Core.Controller.PressLength);                
                 Point mp = default;
                 Dispatcher.BeginInvoke(new Action(() => mp = Mouse.GetPosition(MainGrid))).Wait();
-                if (isPress)
+                if (isPress && presstime == pth)
                 {//历遍长按事件
                     var act = Core.TouchEvent.FirstOrDefault(x => x.IsPress == true && x.Touch(mp));
                     if (act != null)
-                        Dispatcher.BeginInvoke(act.DoAction);
+                        Dispatcher.Invoke(act.DoAction);
                 }
                 else
                 {//历遍点击事件
@@ -107,7 +111,7 @@ namespace VPet_Simulator.Core
         private void MainGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             isPress = false;
-            if (rasetype != int.MinValue)
+            if (DisplayType.ToString().StartsWith("Raised"))
             {
                 MainGrid.MouseMove -= MainGrid_MouseMove;
                 rasetype = -1;

@@ -55,6 +55,10 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void DisplayTouchHead()
         {
+            if (Core.Save.Strength <= 50)
+                return;
+            Core.Save.StrengthChange(-1);
+            Core.Save.FeelingChange(1);
             if (DisplayType == GraphCore.GraphType.Touch_Head_B_Loop)
                 if (PetGrid.Child is IGraph ig && ig.GraphType == GraphCore.GraphType.Touch_Head_B_Loop)
                 {
@@ -78,6 +82,7 @@ namespace VPet_Simulator.Core
         public void DisplayBoring()
         {
             looptimes = 0;
+            CountNomal = 0;
             Display(Core.Graph.FindGraph(GraphCore.GraphType.Boring_A_Start, Core.Save.Mode), DisplayBoringing);
         }
         /// <summary>
@@ -97,6 +102,7 @@ namespace VPet_Simulator.Core
         public void DisplaySquat()
         {
             looptimes = 0;
+            CountNomal = 0;
             Display(Core.Graph.FindGraph(GraphCore.GraphType.Squat_A_Start, Core.Save.Mode), DisplaySquating);
         }
         /// <summary>
@@ -181,6 +187,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
+                CountNomal = 0;
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_A_Start, Core.Save.Mode), () =>
                 {
                     MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedWalk, 0);
@@ -239,7 +246,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceRight() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-
+                CountNomal = 0;
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_A_Start, Core.Save.Mode), () =>
                 {
                     MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedWalk, 0);
@@ -356,6 +363,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceLeft() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceUp() > 300 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
+                CountNomal = 0;
                 Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - 145, 0);//TODO:锚定设置
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_A_Start, Core.Save.Mode), () =>
                 {
@@ -408,7 +416,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceDown() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-
+                CountNomal = 0;
 
                 Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - 145, 0);//TODO:锚定设置
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_A_Start, Core.Save.Mode), () =>
@@ -452,7 +460,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceRight() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceUp() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-
+                CountNomal = 0;
 
                 Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 185, 0);//TODO:锚定设置
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_A_Start, Core.Save.Mode), () =>
@@ -506,7 +514,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceRight() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceDown() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-
+                CountNomal = 0;
 
                 Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 185, 0);//TODO:锚定设置
                 Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_A_Start, Core.Save.Mode), () =>
@@ -550,6 +558,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceUp() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceRight() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
+                CountNomal = 0;
 
                 Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);//TODO:锚定设置
                 MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedClimbTop, 0);
@@ -600,7 +609,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceUp() < 50 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
-
+                CountNomal = 0;
 
                 Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);//TODO:锚定设置
                 MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedClimbTop, 0);
@@ -657,7 +666,7 @@ namespace VPet_Simulator.Core
         /// <param name="graph">动画</param>
         /// <param name="EndAction">结束操作</param>
         public void Display(IGraph graph, Action EndAction = null)
-        {            
+        {
             //if(graph.GraphType == GraphType.Climb_Up_Left)
             //{
             //    Dispatcher.Invoke(() => Say(graph.GraphType.ToString()));
