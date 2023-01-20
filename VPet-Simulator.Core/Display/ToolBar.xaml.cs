@@ -61,6 +61,10 @@ namespace VPet_Simulator.Core
                 pFeeling.Value = m.Core.Save.Feeling;
                 pStrengthFood.Value = m.Core.Save.StrengthFood;
                 pStrengthDrink.Value = m.Core.Save.StrengthDrink;
+                tStrength.Text = $"{m.Core.Save.ChangeStrength:f1}/t";
+                tFeeling.Text = $"{m.Core.Save.ChangeFeeling:f1}/t";
+                tStrengthDrink.Text = $"{m.Core.Save.ChangeStrengthDrink:f1}/t";
+                tStrengthFood.Text = $"{m.Core.Save.ChangeStrengthFood:f1}/t";
             }
         }
 

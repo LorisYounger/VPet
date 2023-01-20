@@ -17,7 +17,7 @@ namespace VPet_Simulator.Core
         /// 宠物名字
         /// </summary>
         public string Name;
-        
+
         /// <summary>
         /// 金钱
         /// </summary>
@@ -44,11 +44,29 @@ namespace VPet_Simulator.Core
 
         private double strength;
         /// <summary>
+        /// 变化 体力
+        /// </summary>
+        public double ChangeStrength = 0;
+        public void StrengthChange(double value)
+        {
+            ChangeStrength += value;
+            Strength += value;
+        }
+        /// <summary>
         /// 饱腹度
         /// </summary>
         public double StrengthFood { get => strengthFood; set => strengthFood = Math.Min(100, Math.Max(0, value)); }
 
         private double strengthFood;
+        public void StrengthChangeFood(double value)
+        {
+            ChangeStrengthFood += value;
+            StrengthFood += value;
+        }
+        /// <summary>
+        /// 变化 食物
+        /// </summary>
+        public double ChangeStrengthFood = 0;
         /// <summary>
         /// 口渴度
         /// </summary>
@@ -56,11 +74,29 @@ namespace VPet_Simulator.Core
 
         private double strengthDrink;
         /// <summary>
+        /// 变化 口渴度
+        /// </summary>
+        public double ChangeStrengthDrink = 0;
+        public void StrengthChangeDrink(double value)
+        {
+            ChangeStrengthDrink += value;
+            StrengthDrink += value;
+        }
+        /// <summary>
         /// 心情
         /// </summary>
         public double Feeling { get => feeling; set => feeling = Math.Min(100, Math.Max(0, value)); }
 
         private double feeling;
+        /// <summary>
+        /// 变化 心情
+        /// </summary>
+        public double ChangeFeeling = 0;
+        public void FeelingChange(double value)
+        {
+            ChangeFeeling += value;
+            Feeling += value;
+        }
         /// <summary>
         /// 健康(生病)(隐藏)
         /// </summary>
@@ -73,6 +109,19 @@ namespace VPet_Simulator.Core
         public double Likability { get => likability; set => likability = Math.Min(90 + Level * 10, Math.Max(0, value)); }
 
         private double likability;
+
+        /// <summary>
+        /// 清除变化
+        /// </summary>
+        public void CleanChange()
+        {
+            ChangeStrength = 0;
+            ChangeFeeling = 0;
+            ChangeStrengthDrink = 0;
+            ChangeStrengthFood = 0;
+        }
+
+        
         /// <summary>
         /// 宠物状态模式
         /// </summary>

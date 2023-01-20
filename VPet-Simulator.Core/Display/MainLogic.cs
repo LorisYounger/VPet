@@ -22,17 +22,48 @@ namespace VPet_Simulator.Core
             //所有Handle
             TimeHandle?.Invoke(this);
 
-            //TODO:饮食等乱七八糟的消耗
+            //饮食等乱七八糟的消耗
+            if (Core.Save.StrengthFood >= 50)
+            {
+                Core.Save.StrengthChange(1);
+            }
+            else if (Core.Save.StrengthFood <= 25)
+            {
+                Core.Save.Health -= Function.Rnd.Next(0, 1);
+            }
+            if (Core.Save.Strength <= 40)
+            {
+                Core.Save.Health -= Function.Rnd.Next(0, 1);
+            }
+            Core.Save.StrengthChangeFood(-1);
+            if (Core.Save.Feeling >= 75)
+            {
+                if (Core.Save.Feeling >= 90)
+                {
+                    Core.Save.Likability++;
+                }
+                Core.Save.Exp++;
+                Core.Save.Health++;
+            }
+            else if (Core.Save.Feeling <= 25)
+            {
+                Core.Save.Likability--;
+            }
+            if (Core.Save.StrengthDrink <= 25)
+            {
+                Core.Save.Health -= Function.Rnd.Next(0, 1);
+            }
 
 
             //UIHandle
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
-            if (DisplayType == GraphCore.GraphType.Default)                
-                switch (-1)//Function.Rnd.Next(10))
+            if (DisplayType == GraphCore.GraphType.Default && !isPress)
+                switch (Function.Rnd.Next(Math.Max(20, 200 - CountNomal)))
                 {
                     case 0:
-                        //随机向右                      
+                    case 7:
+                        //随机向右
                         DisplayWalk_Left();
                         break;
                     case 1:
@@ -48,6 +79,7 @@ namespace VPet_Simulator.Core
                         DisplayClimb_Right_DOWN();
                         break;
                     case 5:
+                    case 6:
                         DisplayWalk_Right();
                         break;
                     case 10:
@@ -57,9 +89,11 @@ namespace VPet_Simulator.Core
                         DisplayClimb_Top_Left();
                         break;
                     case 15:
+                    case 16:
                         DisplayBoring();
                         break;
-                    case 16:
+                    case 18:
+                    case 17:
                         DisplaySquat();
                         break;
                     default:
