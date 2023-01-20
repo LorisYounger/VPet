@@ -110,7 +110,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Function\CoreMOD.cs" />
-    <Compile Include="Function\CorePet.cs" />
     <Compile Include="Function\Setting.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="WinDesign\winCharacterPanel.xaml.cs">

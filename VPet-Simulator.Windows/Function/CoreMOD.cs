@@ -73,12 +73,11 @@ namespace VPet_Simulator.Windows
                                 var name = lps.First().Info;
                                 var p = mw.Pets.FirstOrDefault(x => x.Name == name);
                                 if (p == null)
-                                    mw.Pets.Add(new CorePet(lps, di));
+                                    mw.Pets.Add(new PetLoader(lps, di));
                                 else
                                 {
                                     p.path.Add(di.FullName + "\\" + lps.First()["path"].Info);
-                                    foreach (var sub in lps["graph"])
-                                        p.GraphSetting.AddorReplaceSub(sub);
+                                    p.Config.Set(lps);
                                 }
                             }
                         }

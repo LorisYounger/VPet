@@ -12,7 +12,7 @@ namespace VPet_Simulator.Windows
         public readonly string ModPath = Environment.CurrentDirectory + @"\mod";
         public readonly bool IsSteamUser;
         public Setting Set;
-        public List<CorePet> Pets = new List<CorePet>();
+        public List<PetLoader> Pets = new List<PetLoader>();
         public List<CoreMOD> CoreMODs = new List<CoreMOD>();
         public GameCore Core = new GameCore();
         public winGameSetting winSetting;

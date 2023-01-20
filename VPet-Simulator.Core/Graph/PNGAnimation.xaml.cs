@@ -54,6 +54,7 @@ namespace VPet_Simulator.Core
 
         public GraphCore.GraphType GraphType { get; private set; }
 
+        private Action endwilldo;
         int nowid;
         /// <summary>
         /// 新建 PNG 动画
@@ -183,10 +184,11 @@ namespace VPet_Simulator.Core
                         }
                         else
                         {
-                            parent.Dispatcher.Invoke(Hidden);
+                            parent.endwilldo = () => parent.Dispatcher.Invoke(Hidden);
                             if (parent.DoEndAction)
                                 EndAction?.Invoke();//运行结束动画时事件
-                                                    //重新加载第一帧
+
+                            //重新加载第一帧
                             //Task.Run(() =>
                             //{
                             //    Thread.Sleep(25);
@@ -203,13 +205,14 @@ namespace VPet_Simulator.Core
                 else
                 {
                     parent.IsContinue = false;
+                    parent.Dispatcher.Invoke(Hidden);
                     if (parent.DoEndAction)
                         EndAction?.Invoke();//运行结束动画时事件
-                    Task.Run(() =>
-                    {
-                        Thread.Sleep(25);
-                        parent.Dispatcher.Invoke(Hidden);
-                    });
+                    //Task.Run(() =>
+                    //{
+                    //    Thread.Sleep(25);
+                    //    parent.Dispatcher.Invoke(Hidden);
+                    //});
                 }
             }
         }
@@ -218,6 +221,11 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void Run(Action EndAction = null)
         {
+            if(endwilldo != null && nowid != Animations.Count)
+            {
+                endwilldo.Invoke();
+                endwilldo = null;
+            }
             nowid = 0;
             PlayState = true;
             DoEndAction = true;

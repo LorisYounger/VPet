@@ -1,14 +1,17 @@
-﻿using System;
+﻿using LinePutScript;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace VPet_Simulator.Core
 {
     public class GraphCore
     {
+
         /// <summary>
         /// 动画类型
         /// </summary>
@@ -199,6 +202,13 @@ namespace VPet_Simulator.Core
             }
             Graphs[type].Add(graph);
         }
+        /// <summary>
+        /// 添加动画 自动创建
+        /// </summary>
+        /// <param name="path">位置</param>
+        /// <param name="modetype">状态类型</param>
+        /// <param name="graphtype">动画类型</param>
+        /// <param name="storemem">是否储存到内存以节约加载</param>
         public void AddGraph(string path, Save.ModeType modetype, GraphType graphtype, bool storemem = false)
         {
             var paths = new DirectoryInfo(path).GetFiles();
@@ -210,6 +220,12 @@ namespace VPet_Simulator.Core
             else
                 AddGraph(new PNGAnimation(paths, modetype, graphtype, storemem), graphtype);
         }
+        /// <summary>
+        /// 查找动画
+        /// </summary>
+        /// <param name="type">动画类型</param>
+        /// <param name="mode">状态类型,找不到就找相同动画类型</param>
+        /// <returns></returns>
         public IGraph FindGraph(GraphType type, Save.ModeType mode)
         {
             if (Graphs.ContainsKey(type))
@@ -227,6 +243,9 @@ namespace VPet_Simulator.Core
             return FindGraph(GraphType.Default, mode);
         }
         static string[] graphtypevalue = null;
+        /// <summary>
+        /// 动画类型默认前文本
+        /// </summary>
         public static string[] GraphTypeValue
         {
             get
@@ -244,5 +263,115 @@ namespace VPet_Simulator.Core
             }
         }
 
+        public Config GraphConfig;
+        /// <summary>
+        /// 动画设置
+        /// </summary>
+        public class Config
+        {
+            /// <summary>
+            /// 摸头触发位置
+            /// </summary>
+            public Point TouchHeadLocate;
+            /// <summary>
+            /// 提起触发位置
+            /// </summary>
+            public Point TouchRaisedLocate;
+            /// <summary>
+            /// 摸头触发大小
+            /// </summary>
+            public Size TouchHeadSize;
+            /// <summary>
+            /// 提起触发大小
+            /// </summary>
+            public Size TouchRaisedSize;
+
+            /// <summary>
+            /// 提起定位点
+            /// </summary>
+            public Point RaisePoint;
+            /// <summary>
+            /// 行走速度
+            /// </summary>
+            public double SpeedWalk;
+            /// <summary>
+            /// 侧边爬行速度
+            /// </summary>
+            public double SpeedClimb;
+            /// <summary>
+            /// 顶部爬行速度
+            /// </summary>
+            public double SpeedClimbTop;
+            /// <summary>
+            /// 爬行速度
+            /// </summary>
+            public double SpeedCrawl;
+            /// <summary>
+            /// 定位爬行左边距离
+            /// </summary>
+            public double LocateClimbLeft;
+            /// <summary>
+            /// 定位爬行右边距离
+            /// </summary>
+            public double LocateClimbRight;
+            /// <summary>
+            /// 定位爬行上边距离
+            /// </summary>
+            public double LocateClimbTop;
+            /// <summary>
+            /// 初始化设置
+            /// </summary>
+            /// <param name="lps"></param>
+            public Config(LpsDocument lps)
+            {
+                TouchHeadLocate = new Point(lps["touchhead"][(gdbe)"px"], lps["touchhead"][(gdbe)"py"]);
+                TouchHeadSize = new Size(lps["touchhead"][(gdbe)"sw"], lps["touchhead"][(gdbe)"sh"]);
+                TouchRaisedLocate = new Point(lps["touchraised"][(gdbe)"px"], lps["touchraised"][(gdbe)"py"]);
+                TouchRaisedSize = new Size(lps["touchraised"][(gdbe)"sw"], lps["touchraised"][(gdbe)"sh"]);
+                RaisePoint = new Point(lps["raisepoint"][(gdbe)"x"], lps["raisepoint"][(gdbe)"y"]);
+                var s = lps["speed"];
+                SpeedWalk = s[(gdbe)"walk"];
+                SpeedClimb = s[(gdbe)"climb"];
+                SpeedClimbTop = s[(gdbe)"climbtop"];
+                SpeedCrawl = s[(gdbe)"crawl"];
+                s = lps["locate"];
+                LocateClimbLeft = s[(gdbe)"climbleft"];
+                LocateClimbRight = s[(gdbe)"climbright"];
+                LocateClimbTop = s[(gdbe)"climbtop"];
+            }
+            /// <summary>
+            /// 加载更多设置,新的替换后来的,允许空内容
+            /// </summary>
+            public void Set(LpsDocument lps)
+            {
+                if (lps.HaveLine("touchhead"))
+                {
+                    TouchHeadLocate = new Point(lps["touchhead"][(gdbe)"px"], lps["touchhead"][(gdbe)"py"]);
+                    TouchHeadSize = new Size(lps["touchhead"][(gdbe)"sw"], lps["touchhead"][(gdbe)"wh"]);
+                }
+                if (lps.HaveLine("touchraised"))
+                {
+                    TouchRaisedLocate = new Point(lps["touchraised"][(gdbe)"px"], lps["touchraised"][(gdbe)"py"]);
+                    TouchRaisedSize = new Size(lps["touchraised"][(gdbe)"sw"], lps["touchraised"][(gdbe)"wh"]);
+                }
+                if (lps.HaveLine("raisepoint"))
+                    RaisePoint = new Point(lps["raisepoint"][(gdbe)"x"], lps["raisepoint"][(gdbe)"y"]);
+                var s = lps.FindLine("speed");
+                if (s != null)
+                {
+                    SpeedWalk = s.GetDouble("walk", SpeedWalk);
+                    SpeedClimb = s.GetDouble("climb", SpeedWalk);
+                    SpeedClimbTop = s.GetDouble("climbtop", SpeedWalk);
+                    SpeedCrawl = s.GetDouble("crawl", SpeedWalk);
+                }
+                s = lps.FindLine("locate");
+                if (s != null)
+                {
+                    LocateClimbLeft = s.GetDouble("climbleft", LocateClimbLeft);
+                    LocateClimbRight = s.GetDouble("climbright", LocateClimbRight);
+                    LocateClimbTop = s.GetDouble("climbtop", LocateClimbTop);
+                }
+            }
+        }
     }
 }

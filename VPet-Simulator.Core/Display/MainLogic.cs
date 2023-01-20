@@ -28,8 +28,8 @@ namespace VPet_Simulator.Core
             //UIHandle
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
-            if (DisplayType == GraphCore.GraphType.Default)
-                switch (20)//Function.Rnd.Next(10))
+            if (DisplayType == GraphCore.GraphType.Default)                
+                switch (-1)//Function.Rnd.Next(10))
                 {
                     case 0:
                         //随机向右                      
@@ -56,10 +56,10 @@ namespace VPet_Simulator.Core
                     case 11:
                         DisplayClimb_Top_Left();
                         break;
-                    case 20:
+                    case 15:
                         DisplayBoring();
                         break;
-                    case 21:
+                    case 16:
                         DisplaySquat();
                         break;
                     default:

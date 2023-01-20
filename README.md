@@ -2,7 +2,7 @@
 
 虚拟桌宠模拟器 一个开源的桌宠软件, 可以内置到任何WPF应用程序
 
-![ss4](README.assets/ss4.gif)
+![主图](README.assets/%E4%B8%BB%E5%9B%BE.png)
 
 获取虚拟桌宠模拟器 [OnSteam(免费)](https://store.steampowered.com/app/1920960/VPet) 或 通过[Nuget]()内置到你的WPF应用程序
 
@@ -26,7 +26,9 @@
 
 ##### 提起
 
-![ss4](README.assets/ss4.gif)
+![ss4](README.assets/ss4.gif)![ss4](README.assets/ss8.gif)
+
+
 
 ##### 爬墙
 

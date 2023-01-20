@@ -157,6 +157,7 @@
     <Compile Include="Handle\Function.cs" />
     <Compile Include="Handle\GameCore.cs" />
     <Compile Include="Handle\IController.cs" />
+    <Compile Include="Handle\PetLoader.cs" />
     <Compile Include="Handle\Save.cs" />
     <Compile Include="Item\Drink.cs" />
     <Compile Include="Item\Food.cs" />

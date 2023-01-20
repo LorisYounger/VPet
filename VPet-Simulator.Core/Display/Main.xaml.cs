@@ -52,9 +52,8 @@ namespace VPet_Simulator.Core
             MsgBar = new MessageBar();
             MsgBar.Visibility = Visibility.Collapsed;
             UIGrid.Children.Add(MsgBar);
-            //TODO:锚定设置
-            Core.TouchEvent.Add(new TouchArea(new Point(138, 12), new Size(224, 176), DisplayTouchHead));
-            Core.TouchEvent.Add(new TouchArea(new Point(0, 0), new Size(500, 180), DisplayRaised, true));
+            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, DisplayTouchHead));
+            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate, Core.Graph.GraphConfig.TouchRaisedSize, DisplayRaised, true));
             var ig = Core.Graph.FindGraph(GraphCore.GraphType.Default, Core.Save.Mode);
             PetGrid.Child = ig.This;
             ig.Run(DisplayNomal);
@@ -108,7 +107,7 @@ namespace VPet_Simulator.Core
         private void MainGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             isPress = false;
-            if (rasetype != -1)
+            if (rasetype != int.MinValue)
             {
                 MainGrid.MouseMove -= MainGrid_MouseMove;
                 rasetype = -1;
@@ -119,8 +118,8 @@ namespace VPet_Simulator.Core
         private void MainGrid_MouseMove(object sender, MouseEventArgs e)
         {
             var mp = e.GetPosition(MainGrid);
-            var x = mp.X - 290;//TODO:锚定设置
-            var y = mp.Y - 128;
+            var x = mp.X - Core.Graph.GraphConfig.RaisePoint.X;
+            var y = mp.Y - Core.Graph.GraphConfig.RaisePoint.Y;
             Core.Controller.MoveWindows(x, y);
             if (Math.Abs(x) + Math.Abs(y) > 10)
                 rasetype = 0;
