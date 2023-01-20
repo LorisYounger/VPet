@@ -22,12 +22,12 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// ToolBar.xaml 的交互逻辑
     /// </summary>
-    public partial class ToolBar : UserControl
+    public partial class ToolBar : UserControl, IDisposable
     {
         Main m;
         Timer closetimer;
         bool onFocus = false;
-        DispatcherTimer closePanelTimer;
+        Timer closePanelTimer;
 
         public ToolBar(Main m)
         {
@@ -40,11 +40,8 @@ namespace VPet_Simulator.Core
                 Enabled = false
             };
             closetimer.Elapsed += Closetimer_Elapsed;
-            closePanelTimer = new DispatcherTimer()
-            {
-                Interval = TimeSpan.FromSeconds(0.1),
-            };
-            closePanelTimer.Tick += ClosePanelTimer_Tick;
+            closePanelTimer = new Timer();
+            closePanelTimer.Elapsed += ClosePanelTimer_Tick;
             m.TimeUIHandle += M_TimeUIHandle;
         }
 
@@ -70,13 +67,16 @@ namespace VPet_Simulator.Core
 
         private void ClosePanelTimer_Tick(object sender, EventArgs e)
         {
-            if (BdrPanel.IsMouseOver
-                || MenuPanel.IsMouseOver)
+            Dispatcher.Invoke(() =>
             {
-                closePanelTimer.Stop();
-                return;
-            }
-            BdrPanel.Visibility = Visibility.Collapsed;
+                if (BdrPanel.IsMouseOver
+                    || MenuPanel.IsMouseOver)
+                {
+                    closePanelTimer.Stop();
+                    return;
+                }
+                BdrPanel.Visibility = Visibility.Collapsed;
+            });
         }
 
         private void Closetimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -227,7 +227,14 @@ namespace VPet_Simulator.Core
 
         private void MenuDIY_Click(object sender, RoutedEventArgs e)
         {
-            m.Say("您好,我是萝莉斯, 让我来帮您熟悉并掌握使用vos系统,成为永世流传的虚拟主播.");
+            //m.Say("您好,我是萝莉斯, 让我来帮您熟悉并掌握使用vos系统,成为永世流传的虚拟主播.");
+        }
+
+        public void Dispose()
+        {
+            m = null;
+            closetimer.Dispose();
+            closePanelTimer.Dispose();
         }
     }
 }

@@ -44,6 +44,10 @@ namespace VPet_Simulator.Core
         /// 是否循环播放
         /// </summary>
         public bool IsContinue { get; set; } = false;
+        ///// <summary>
+        ///// 是否重置状态从0开始播放
+        ///// </summary>
+        //public bool IsResetPlay { get; set; } = false;
         /// <summary>
         /// 是否储存到内存以支持快速显示
         /// </summary>
@@ -53,8 +57,10 @@ namespace VPet_Simulator.Core
         public Save.ModeType ModeType { get; private set; }
 
         public GraphCore.GraphType GraphType { get; private set; }
-
-        //private Action endwilldo;
+        /// <summary>
+        /// 动画停止时运行的方法
+        /// </summary>
+        private Action StopAction;
         int nowid;
         /// <summary>
         /// 新建 PNG 动画
@@ -188,13 +194,14 @@ namespace VPet_Simulator.Core
                             //parent.Dispatcher.Invoke(Hidden);
                             if (parent.DoEndAction)
                                 EndAction?.Invoke();//运行结束动画时事件
-
+                            parent.StopAction?.Invoke();
+                            parent.StopAction = null;
                             //重新加载第一帧
-                            //Task.Run(() =>
-                            //{
-                            //    Thread.Sleep(25);
-                            //    parent.Dispatcher.Invoke(Hidden);
-                            //});
+                            Task.Run(() =>
+                            {
+                                Thread.Sleep(25);
+                                parent.Dispatcher.Invoke(Hidden);
+                            });
                             return;
                         }
                     //要下一步,现在就隐藏图层
@@ -209,6 +216,8 @@ namespace VPet_Simulator.Core
                     parent.Dispatcher.Invoke(Hidden);
                     if (parent.DoEndAction)
                         EndAction?.Invoke();//运行结束动画时事件
+                    parent.StopAction?.Invoke();
+                    parent.StopAction = null;
                     //Task.Run(() =>
                     //{
                     //    Thread.Sleep(25);
@@ -227,6 +236,13 @@ namespace VPet_Simulator.Core
             //    endwilldo.Invoke();
             //    endwilldo = null;
             //}
+            if (PlayState)
+            {//如果当前正在运行,重置状态
+                //IsResetPlay = true;
+                Stop(true);
+                StopAction = () => Run(EndAction);
+                return;
+            }
             nowid = 0;
             PlayState = true;
             DoEndAction = true;
@@ -237,6 +253,7 @@ namespace VPet_Simulator.Core
         {
             DoEndAction = !StopEndAction;
             PlayState = false;
+            //IsResetPlay = false;
         }
 
     }

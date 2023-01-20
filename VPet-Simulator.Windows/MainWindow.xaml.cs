@@ -17,6 +17,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.GraphCore;
+using Microsoft.Win32;
+using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
+using ContextMenu = System.Windows.Forms.ContextMenu;
+using MenuItem = System.Windows.Forms.MenuItem;
+using Application = System.Windows.Application;
 
 namespace VPet_Simulator.Windows
 {
@@ -25,7 +31,7 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+        private NotifyIcon notifyIcon;
         public MainWindow()
         {
             //判断是不是Steam用户,因为本软件会发布到Steam
@@ -102,19 +108,52 @@ namespace VPet_Simulator.Windows
             //加载游戏内容
             Core.Controller = new MWController(this);
             Core.Save = new Save("萝莉斯");
-            Dispatcher.Invoke(new Action(() => {
+            Dispatcher.Invoke(new Action(() =>
+            {
                 Core.Graph = Pets[0].Graph(Set.StoreInMemory);
                 LoadingText.Visibility = Visibility.Collapsed;
-                winSetting = new winGameSetting(this);               
-                var main = new Main(Core) {  };
+                winSetting = new winGameSetting(this);
+                var main = new Main(Core) { };
                 main.DefaultClickAction = () => { Dispatcher.Invoke(() => { main.Say("你知道吗? 鼠标右键可以打开菜单栏"); }); };
-                DisplayGrid.Child = main;                
+                DisplayGrid.Child = main;
+                main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.DIY, "退出桌宠", () => { Close(); });
+
+                //加载图标
+                notifyIcon = new NotifyIcon();
+                ContextMenu m_menu;
+
+                m_menu = new ContextMenu();
+                m_menu.MenuItems.Add(new MenuItem("重置", (x, y) => {
+                    main.CleanState();
+                    main.DisplayNomal();
+                }));
+                m_menu.MenuItems.Add(new MenuItem("居中", (x, y) =>
+                {
+                    Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+                    Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+                }));
+                m_menu.MenuItems.Add(new MenuItem("设置", (x, y) => Core.Controller.ShowSetting()));
+                m_menu.MenuItems.Add(new MenuItem("退出", (x, y) => Close()));
+                notifyIcon.ContextMenu = m_menu;
+
+                var streamResourceInfo = Application.GetResourceStream(new Uri("pack://application:,,,/vpeticon.ico"));
+                if (streamResourceInfo != null)
+                    notifyIcon.Icon = new System.Drawing.Icon(streamResourceInfo.Stream);
+
+                notifyIcon.Visible = true;
+
+                //notifyIcon.ShowBalloonTip(5, "你好 " + Environment.UserName,
+                //    "Press Alt+C to show Clock\nRight Click on Tray to Close", ToolTipIcon.Info);
             }));
+
         }
+
 
         private void Window_Closed(object sender, EventArgs e)
         {
             ((Main)DisplayGrid.Child).Dispose();
+            notifyIcon.Dispose();
+            System.Environment.Exit(0);
         }
 
         //public void DEBUGValue()

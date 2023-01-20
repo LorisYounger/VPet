@@ -221,19 +221,38 @@ namespace VPet_Simulator.Core
                 AddGraph(new PNGAnimation(paths, modetype, graphtype, storemem), graphtype);
         }
         /// <summary>
+        /// 随机数字典(用于确保随机动画不会错位)
+        /// </summary>
+        public Dictionary<int, int> RndGraph = new Dictionary<int, int>();
+        /// <summary>
         /// 查找动画
         /// </summary>
         /// <param name="type">动画类型</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
+        /// <param name="storernd">是否储存随机数字典</param>
         /// <returns></returns>
-        public IGraph FindGraph(GraphType type, Save.ModeType mode)
+        public IGraph FindGraph(GraphType type, Save.ModeType mode, bool storernd = false)
         {
             if (Graphs.ContainsKey(type))
             {
                 var list = Graphs[type].FindAll(x => x.ModeType == mode);
                 if (list.Count > 0)
                 {
-                    return list[Function.Rnd.Next(list.Count)];
+                    if (list.Count == 1)
+                        return list[0];
+                    if (storernd)
+                        if (RndGraph.TryGetValue(list.Count, out int index))
+                        {
+                            return list[index];
+                        }
+                        else
+                        {
+                            index = Function.Rnd.Next(list.Count);
+                            RndGraph.Add(list.Count, index);
+                            return list[index];
+                        }
+                    else
+                        return list[Function.Rnd.Next(list.Count)];
                 }
                 else
                 {

@@ -121,7 +121,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Graph\IEyeTracking.xaml">
+    <Page Include="Graph\EyeTracking.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Graph\FoodAnimation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -143,9 +147,12 @@
     <Compile Include="Display\ToolBar.xaml.cs">
       <DependentUpon>ToolBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Graph\FoodAnimation.xaml.cs">
+      <DependentUpon>FoodAnimation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Graph\GraphCore.cs" />
-    <Compile Include="Graph\IEyeTracking.xaml.cs">
-      <DependentUpon>IEyeTracking.xaml</DependentUpon>
+    <Compile Include="Graph\EyeTracking.xaml.cs">
+      <DependentUpon>EyeTracking.xaml</DependentUpon>
     </Compile>
     <Compile Include="Graph\IGraph.cs" />
     <Compile Include="Graph\Picture.xaml.cs">

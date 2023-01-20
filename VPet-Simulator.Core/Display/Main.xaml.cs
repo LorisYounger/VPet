@@ -79,8 +79,7 @@ namespace VPet_Simulator.Core
             CountNomal = 0;
             if (DisplayType != GraphCore.GraphType.Default)
             {//不是nomal! 可能会卡timer,所有全部timer清空下
-                MoveTimer.Stop();
-                MainGrid.MouseMove -= MainGrid_MouseMove;
+                CleanState();
                 if (DisplayStopMove(DisplayNomal))
                     return;
             }
@@ -140,10 +139,20 @@ namespace VPet_Simulator.Core
             MoveTimer.Stop();
             EventTimer.Dispose();
             MoveTimer.Dispose();
+            MsgBar.Dispose();
+            ToolBar.Dispose();
             if (PetGrid.Child is IGraph g)
-                g.Stop();
+                g.Stop(true);
             if (PetGrid2.Child is IGraph g2)
-                g2.Stop();
+                g2.Stop(true);
+        }
+        /// <summary>
+        /// 清理所有状态
+        /// </summary>
+        public void CleanState()
+        {
+            MoveTimer.Stop();
+            MainGrid.MouseMove -= MainGrid_MouseMove;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// MessageBar.xaml 的交互逻辑
     /// </summary>
-    public partial class MessageBar : UserControl
+    public partial class MessageBar : UserControl, IDisposable
     {
         public MessageBar()
         {
@@ -97,6 +97,13 @@ namespace VPet_Simulator.Core
             EndTimer.Stop(); ShowTimer.Stop();CloseTimer.Close();
             this.Visibility = Visibility.Collapsed;
             EndAction?.Invoke();
+        }
+
+        public void Dispose()
+        {
+            EndTimer.Dispose();
+            ShowTimer.Dispose();
+            CloseTimer.Dispose();
         }
     }
 }

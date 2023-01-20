@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace VPet_Simulator.Core
+namespace VPet_Simulator.Core.Graph
 {
     /// <summary>
-    /// IEyeTracking.xaml 的交互逻辑
+    /// FoodAnimation.xaml 的交互逻辑
     /// </summary>
-    public partial class IEyeTracking : UserControl
+    public partial class FoodAnimation : UserControl
     {
-        public IEyeTracking()
+        public FoodAnimation()
         {
             InitializeComponent();
         }
