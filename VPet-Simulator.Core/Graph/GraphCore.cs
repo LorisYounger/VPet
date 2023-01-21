@@ -90,21 +90,29 @@ namespace VPet_Simulator.Core
             /// </summary>
             Squat_C_End,
             /// <summary>
-            /// 下落向左 (开始/循环)
+            /// 下落向左 (开始)
             /// </summary>
-            Fall_Left_A_Loop,
+            Fall_Left_A_Start,
+            /// <summary>
+            /// 下落向左 (循环)
+            /// </summary>
+            Fall_Left_B_Loop,
             /// <summary>
             /// 下落向左 (结束)
             /// </summary>
-            Fall_Left_B_End,
+            Fall_Left_C_End,
             /// <summary>
             /// 下落向右 (开始/循环)
             /// </summary>
-            Fall_Right_A_Loop,
+            Fall_Right_A_Start,
+            /// <summary>
+            /// 下落向右 (开始/循环)
+            /// </summary>
+            Fall_Right_B_Loop,
             /// <summary>
             /// 下落向右 (结束)
             /// </summary>
-            Fall_Right_B_End,
+            Fall_Right_C_End,
             /// <summary>
             /// 走路向右 (开始)
             /// </summary>
@@ -326,6 +334,14 @@ namespace VPet_Simulator.Core
             /// </summary>
             public double SpeedCrawl;
             /// <summary>
+            /// 掉落速度 X轴
+            /// </summary>
+            public double SpeedFallX;
+            /// <summary>
+            /// 掉落速度 Y轴
+            /// </summary>
+            public double SpeedFallY;
+            /// <summary>
             /// 定位爬行左边距离
             /// </summary>
             public double LocateClimbLeft;
@@ -337,6 +353,8 @@ namespace VPet_Simulator.Core
             /// 定位爬行上边距离
             /// </summary>
             public double LocateClimbTop;
+
+            
             /// <summary>
             /// 初始化设置
             /// </summary>
@@ -353,6 +371,10 @@ namespace VPet_Simulator.Core
                 SpeedClimb = s[(gdbe)"climb"];
                 SpeedClimbTop = s[(gdbe)"climbtop"];
                 SpeedCrawl = s[(gdbe)"crawl"];
+                SpeedFallX = s[(gdbe)"fallx"];
+                SpeedFallY = s[(gdbe)"fally"];
+
+
                 s = lps["locate"];
                 LocateClimbLeft = s[(gdbe)"climbleft"];
                 LocateClimbRight = s[(gdbe)"climbright"];
@@ -379,9 +401,11 @@ namespace VPet_Simulator.Core
                 if (s != null)
                 {
                     SpeedWalk = s.GetDouble("walk", SpeedWalk);
-                    SpeedClimb = s.GetDouble("climb", SpeedWalk);
-                    SpeedClimbTop = s.GetDouble("climbtop", SpeedWalk);
-                    SpeedCrawl = s.GetDouble("crawl", SpeedWalk);
+                    SpeedClimb = s.GetDouble("climb", SpeedClimb);
+                    SpeedClimbTop = s.GetDouble("climbtop", SpeedClimbTop);
+                    SpeedCrawl = s.GetDouble("crawl", SpeedCrawl);
+                    SpeedFallX = s.GetDouble("fallx", SpeedFallX);
+                    SpeedFallY = s.GetDouble("fally", SpeedFallY);
                 }
                 s = lps.FindLine("locate");
                 if (s != null)

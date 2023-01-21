@@ -59,6 +59,9 @@ namespace VPet_Simulator.Core
         /// 显示面板窗体
         /// </summary>
         void ShowPanel();
-      
+        /// <summary>
+        /// 启用计算等数据功能
+        /// </summary>
+        bool EnableFunction { get; }
     }
 }

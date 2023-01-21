@@ -54,10 +54,10 @@ namespace VPet_Simulator.Core
             UIGrid.Children.Add(MsgBar);
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, DisplayTouchHead));
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate, Core.Graph.GraphConfig.TouchRaisedSize, DisplayRaised, true));
-            var ig = Core.Graph.FindGraph(GraphCore.GraphType.Default, Core.Save.Mode);
+            var ig = Core.Graph.FindGraph(GraphCore.GraphType.Default, core.Save.Mode);
             PetGrid.Child = ig.This;
             ig.Run(DisplayNomal);
-            
+
 
             EventTimer.Elapsed += EventTimer_Elapsed;
             MoveTimer.Elapsed += MoveTimer_Elapsed;
@@ -87,7 +87,7 @@ namespace VPet_Simulator.Core
             {
                 var pth = DateTime.Now.Ticks;
                 presstime = pth;
-                Thread.Sleep(Core.Controller.PressLength);                
+                Thread.Sleep(Core.Controller.PressLength);
                 Point mp = default;
                 Dispatcher.BeginInvoke(new Action(() => mp = Mouse.GetPosition(MainGrid))).Wait();
                 if (isPress && presstime == pth)

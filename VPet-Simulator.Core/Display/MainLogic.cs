@@ -22,44 +22,56 @@ namespace VPet_Simulator.Core
             //所有Handle
             TimeHandle?.Invoke(this);
 
-            //饮食等乱七八糟的消耗
-            if (Core.Save.StrengthFood >= 50)
+            if (Core.Controller.EnableFunction)
             {
-                Core.Save.StrengthChange(1);
-            }
-            else if (Core.Save.StrengthFood <= 25)
-            {
-                Core.Save.Health -= Function.Rnd.Next(0, 1);
-            }
-            if (Core.Save.Strength <= 40)
-            {
-                Core.Save.Health -= Function.Rnd.Next(0, 1);
-            }
-            Core.Save.StrengthChangeFood(-1);
-            if (Core.Save.Feeling >= 75)
-            {
-                if (Core.Save.Feeling >= 90)
+                //饮食等乱七八糟的消耗
+                if (Core.Save.StrengthFood >= 50)
                 {
-                    Core.Save.Likability++;
+                    Core.Save.StrengthChange(1);
                 }
-                Core.Save.Exp++;
-                Core.Save.Health++;
+                else if (Core.Save.StrengthFood <= 25)
+                {
+                    Core.Save.Health -= Function.Rnd.Next(0, 1);
+                }
+                if (Core.Save.Strength <= 40)
+                {
+                    Core.Save.Health -= Function.Rnd.Next(0, 1);
+                }
+                Core.Save.StrengthChangeFood(-1);
+                if (Core.Save.Feeling >= 75)
+                {
+                    if (Core.Save.Feeling >= 90)
+                    {
+                        Core.Save.Likability++;
+                    }
+                    Core.Save.Exp++;
+                    Core.Save.Health++;
+                }
+                else if (Core.Save.Feeling <= 25)
+                {
+                    Core.Save.Likability--;
+                }
+                if (Core.Save.StrengthDrink <= 25)
+                {
+                    Core.Save.Health -= Function.Rnd.Next(0, 1);
+                }
+                var newmod = Core.Save.CalMode();
+                if(Core.Save.Mode != newmod)
+                {
+                    //TODO:切换逻辑
+                    Core.Save.Mode = newmod;                    
+                }
             }
-            else if (Core.Save.Feeling <= 25)
+            else
             {
-                Core.Save.Likability--;
+                Core.Save.Mode = Save.ModeType.Happy;
             }
-            if (Core.Save.StrengthDrink <= 25)
-            {
-                Core.Save.Health -= Function.Rnd.Next(0, 1);
-            }
-
 
             //UIHandle
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
             if (DisplayType == GraphCore.GraphType.Default && !isPress)
-                switch (Function.Rnd.Next(Math.Max(20, 200 - CountNomal)))
+                switch (9)//Function.Rnd.Next(Math.Max(20, 200 - CountNomal)))
                 {
                     case 0:
                     case 7:
@@ -81,6 +93,12 @@ namespace VPet_Simulator.Core
                     case 5:
                     case 6:
                         DisplayWalk_Right();
+                        break;
+                    case 8:
+                        DisplayFall_Left();
+                        break;
+                    case 9:
+                        DisplayFall_Right();
                         break;
                     case 10:
                         DisplayClimb_Top_Right();
