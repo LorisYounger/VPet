@@ -46,6 +46,30 @@ namespace VPet_Simulator.Core
                 case GraphCore.GraphType.Squat_B_Loop:
                     Display(Core.Graph.FindGraph(GraphCore.GraphType.Squat_C_End, Core.Save.Mode, true), EndAction);
                     return true;
+                case GraphType.Crawl_Left_B_Loop:
+                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Crawl_Left_C_End, Core.Save.Mode, true), EndAction);
+                    return true;
+                case GraphType.Crawl_Right_B_Loop:
+                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Crawl_Right_C_End, Core.Save.Mode, true), EndAction);
+                    return true;
+                case GraphType.Fall_Left_B_Loop:
+                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Fall_Left_C_End, Core.Save.Mode, true), EndAction);
+                    return true;
+                case GraphType.Fall_Right_B_Loop:
+                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Fall_Right_C_End, Core.Save.Mode, true), EndAction);
+                    return true;
+                case GraphType.Walk_Left_B_Loop:
+                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_C_End, Core.Save.Mode, true), EndAction);
+                    return true;
+                case GraphType.Walk_Right_B_Loop:
+                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_C_End, Core.Save.Mode, true), EndAction);
+                    return true;
+                //case GraphType.Climb_Left:
+                //case GraphType.Climb_Right:
+                //case GraphType.Climb_Top_Left:
+                //case GraphType.Climb_Top_Right:
+                //    DisplayFalled_Left();
+                //    return true;
             }
             return false;
         }
@@ -193,7 +217,7 @@ namespace VPet_Simulator.Core
                 CountNomal = 0;
                 Display(GraphCore.GraphType.Walk_Left_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedWalk, 0);
+                    MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedWalk * Core.Controller.ZoomRatio, 0);
                     MoveTimer.Start();
                     DisplayWalk_Lefting();
                 });
@@ -273,7 +297,7 @@ namespace VPet_Simulator.Core
                 CountNomal = 0;
                 Display(GraphCore.GraphType.Walk_Right_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedWalk, 0);
+                    MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedWalk * Core.Controller.ZoomRatio, 0);
                     MoveTimer.Start();
                     DisplayWalk_Righting();
                 });
@@ -341,64 +365,122 @@ namespace VPet_Simulator.Core
                 }
             }
         }
-        ///// <summary>
-        ///// 显示向左爬 (有判断)
-        ///// </summary>
-        //public void DisplayClimb_Bottom_Left()
-        //{
-        //    //看看距离是否满足调节
-        //    if (Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
-        //    {
-        //        walklength = 0;
-        //        Display(GraphCore.GraphType.Climb_Bottom_Left, () =>
-        //        {
-        //            MoveTimerPoint = new Point(-20, 0);//TODO:锚定设置
-        //            MoveTimer.Start();
-        //            DisplayWalk_Lefting();
-        //        });
-        //    }
-        //}
-        ///// <summary>
-        ///// 显示向左爬
-        ///// </summary>
-        //private void DisplayClimb_Bottom_Lefting()
-        //{
-        //    //看看距离是不是不足
-        //    if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio)
-        //    {//是,停下恢复默认 or/爬墙
-        //        switch (Function.Rnd.Next(3))
-        //        {
-        //            case 0:
-        //                DisplayClimb_Left_UP(() =>
-        //                {
-        //                    MoveTimer.Stop();
-        //                    Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
-        //                });
-        //                return;
-        //            case 1:
-        //                DisplayClimb_Left_DOWN(() =>
-        //                {
-        //                    MoveTimer.Stop();
-        //                    Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
-        //                });
-        //                return;
-        //            default:
-        //                MoveTimer.Stop();
-        //                Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
-        //                return;
-        //        }
-        //    }
-        //    //不是:继续右边走or停下
-        //    if (Function.Rnd.Next(walklength++) < 5)
-        //    {
-        //        Display(GraphCore.GraphType.Walk_Left_B_Loop, DisplayWalk_Lefting);
-        //    }
-        //    else
-        //    {//停下来
-        //        MoveTimer.Stop();
-        //        Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
-        //    }
-        //}
+        /// <summary>
+        /// 显示向左爬 (有判断)
+        /// </summary>
+        public void DisplayCrawl_Left()
+        {
+            //看看距离是否满足调节
+            if (Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
+            {
+                walklength = 0;
+                Display(GraphCore.GraphType.Crawl_Left_A_Start, () =>
+                {
+                    MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedCrawl * Core.Controller.ZoomRatio, 0);//TODO:锚定设置
+                    MoveTimer.Start();
+                    DisplayCrawl_Lefting();
+                });
+            }
+        }
+        /// <summary>
+        /// 显示向左爬
+        /// </summary>
+        private void DisplayCrawl_Lefting()
+        {
+            //看看距离是不是不足
+            if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio)
+            {//是,停下恢复默认 or/爬墙
+                switch (Function.Rnd.Next(3))
+                {
+                    case 0:
+                        DisplayClimb_Left_UP(() =>
+                        {
+                            MoveTimer.Stop();
+                            Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
+                        });
+                        return;
+                    case 1:
+                        DisplayClimb_Left_DOWN(() =>
+                        {
+                            MoveTimer.Stop();
+                            Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
+                        });
+                        return;
+                    default:
+                        MoveTimer.Stop();
+                        Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
+                        return;
+                }
+            }
+            //不是:继续右边走or停下
+            if (Function.Rnd.Next(walklength++) < 5)
+            {
+                Display(GraphCore.GraphType.Crawl_Left_B_Loop, DisplayCrawl_Lefting);
+            }
+            else
+            {//停下来
+                MoveTimer.Stop();
+                Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
+            }
+        }
+        /// <summary>
+        /// 显示向右爬 (有判断)
+        /// </summary>
+        public void DisplayCrawl_Right()
+        {
+            //看看距离是否满足调节
+            if (Core.Controller.GetWindowsDistanceRight() > 400 * Core.Controller.ZoomRatio)
+            {
+                walklength = 0;
+                Display(GraphCore.GraphType.Crawl_Right_A_Start, () =>
+                {
+                    MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedCrawl * Core.Controller.ZoomRatio, 0);//TODO:锚定设置
+                    MoveTimer.Start();
+                    DisplayCrawl_Righting();
+                });
+            }
+        }
+        /// <summary>
+        /// 显示向右爬
+        /// </summary>
+        private void DisplayCrawl_Righting()
+        {
+            //看看距离是不是不足
+            if (Core.Controller.GetWindowsDistanceRight() < 50 * Core.Controller.ZoomRatio)
+            {//是,停下恢复默认 or/爬墙
+                switch (Function.Rnd.Next(3))
+                {
+                    case 0:
+                        DisplayClimb_Right_UP(() =>
+                        {
+                            MoveTimer.Stop();
+                            Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
+                        });
+                        return;
+                    case 1:
+                        DisplayClimb_Right_DOWN(() =>
+                        {
+                            MoveTimer.Stop();
+                            Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
+                        });
+                        return;
+                    default:
+                        MoveTimer.Stop();
+                        Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
+                        return;
+                }
+            }
+            //不是:继续右边走or停下
+            if (Function.Rnd.Next(walklength++) < 5)
+            {
+                Display(GraphCore.GraphType.Crawl_Right_B_Loop, DisplayCrawl_Righting);
+            }
+            else
+            {//停下来
+                MoveTimer.Stop();
+                Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
+            }
+        }
         /// <summary>
         /// 显示左墙壁爬行 上
         /// </summary>
@@ -409,10 +491,10 @@ namespace VPet_Simulator.Core
             {
                 walklength = 0;
                 CountNomal = 0;
-                Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - 145, 0);//TODO:锚定设置
+                Core.Controller.MoveWindows(-(Core.Controller.GetWindowsDistanceLeft() + Core.Graph.GraphConfig.LocateClimbLeft) / Core.Controller.ZoomRatio, 0);
                 Display(GraphCore.GraphType.Walk_Left_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(0, -Core.Graph.GraphConfig.SpeedClimb);
+                    MoveTimerPoint = new Point(0, -Core.Graph.GraphConfig.SpeedClimb * Core.Controller.ZoomRatio);
                     MoveTimer.Start();
                     DisplayClimb_Lefting_UP();
                 });
@@ -472,10 +554,10 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
 
-                Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - 145, 0);//TODO:锚定设置
+                Core.Controller.MoveWindows(-(Core.Controller.GetWindowsDistanceLeft() + Core.Graph.GraphConfig.LocateClimbLeft) / Core.Controller.ZoomRatio, 0);
                 Display(GraphCore.GraphType.Walk_Left_A_Start, () =>
                 {
-                    MoveTimerPoint = new System.Windows.Point(0, Core.Graph.GraphConfig.SpeedClimb);
+                    MoveTimerPoint = new System.Windows.Point(0, Core.Graph.GraphConfig.SpeedClimb * Core.Controller.ZoomRatio);
                     MoveTimer.Start();
                     DisplayClimb_Lefting_DOWN();
                 });
@@ -516,10 +598,10 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
 
-                Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 185, 0);//TODO:锚定设置
+                Core.Controller.MoveWindows((Core.Controller.GetWindowsDistanceRight()+ Core.Graph.GraphConfig.LocateClimbRight) / Core.Controller.ZoomRatio, 0);
                 Display(GraphCore.GraphType.Walk_Right_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(0, -Core.Graph.GraphConfig.SpeedClimb);
+                    MoveTimerPoint = new Point(0, -Core.Graph.GraphConfig.SpeedClimb * Core.Controller.ZoomRatio);
                     MoveTimer.Start();
                     DisplayClimb_Righting_UP();
                 });
@@ -579,10 +661,10 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
 
-                Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 185, 0);//TODO:锚定设置
+                Core.Controller.MoveWindows((Core.Controller.GetWindowsDistanceRight() + Core.Graph.GraphConfig.LocateClimbRight) / Core.Controller.ZoomRatio, 0);
                 Display(GraphCore.GraphType.Walk_Right_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(0, Core.Graph.GraphConfig.SpeedClimb);
+                    MoveTimerPoint = new Point(0, Core.Graph.GraphConfig.SpeedClimb * Core.Controller.ZoomRatio);
                     MoveTimer.Start();
                     DisplayClimb_Righting_DOWN();
                 });
@@ -623,8 +705,8 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
 
-                Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);//TODO:锚定设置
-                MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedClimbTop, 0);
+                Core.Controller.MoveWindows(0, -(Core.Controller.GetWindowsDistanceUp()+ Core.Graph.GraphConfig.LocateClimbTop) / Core.Controller.ZoomRatio);
+                MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedClimbTop * Core.Controller.ZoomRatio, 0);
                 MoveTimer.Start();
                 DisplayClimb_Top_Righting();
             }
@@ -675,8 +757,8 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
 
-                Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);//TODO:锚定设置
-                MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedClimbTop, 0);
+                Core.Controller.MoveWindows(0, -(Core.Controller.GetWindowsDistanceUp() + Core.Graph.GraphConfig.LocateClimbTop) / Core.Controller.ZoomRatio);
+                MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedClimbTop * Core.Controller.ZoomRatio, 0);
                 MoveTimer.Start();
                 DisplayClimb_Top_Lefting();
             }
@@ -727,7 +809,7 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
                 //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);
-                MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedFallX, Core.Graph.GraphConfig.SpeedFallY);
+                MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedFallX * Core.Controller.ZoomRatio, Core.Graph.GraphConfig.SpeedFallY * Core.Controller.ZoomRatio);
                 MoveTimer.Start();
                 Display(GraphType.Fall_Left_A_Start, DisplayFall_Lefting);
             }
@@ -790,7 +872,7 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
                 //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);
-                MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedFallX, Core.Graph.GraphConfig.SpeedFallY);
+                MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedFallX * Core.Controller.ZoomRatio, Core.Graph.GraphConfig.SpeedFallY * Core.Controller.ZoomRatio);
                 MoveTimer.Start();
                 Display(GraphType.Fall_Right_A_Start, DisplayFall_Righting);
             }

@@ -86,14 +86,14 @@ namespace VPet_Simulator.Windows
             get => !this["diagnosis"].GetBool("disable");
             set => this["diagnosis"].SetBool("disable", !value);
         }
-        /// <summary>
-        /// 是将图片储存到内存
-        /// </summary>
-        public bool StoreInMemory
-        {
-            get => this["set"].GetBool("storemem");
-            set => this["set"].SetBool("storemem", value);
-        }
+        ///// <summary> //经过测试,储存到内存好处多多,不储存也要占用很多内存,干脆存了吧
+        ///// 是将图片储存到内存
+        ///// </summary>
+        //public bool StoreInMemory
+        //{
+        //    get => !this["set"].GetBool("storemem");
+        //    set => this["set"].SetBool("storemem", value);
+        //}
         /// <summary>
         /// 数据收集频率
         /// </summary>

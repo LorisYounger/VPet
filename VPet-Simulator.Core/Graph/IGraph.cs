@@ -29,10 +29,10 @@ namespace VPet_Simulator.Core
         /// 是否继续播放
         /// </summary>
         bool IsContinue { get; set; }
-        /// <summary>
-        /// 是否储存到内存以支持快速显示
-        /// </summary>
-        bool StoreMemory { get; }
+        ///// <summary>//经过测试,储存到内存好处多多,不储存也要占用很多内存,干脆存了吧
+        ///// 是否储存到内存以支持快速显示
+        ///// </summary>
+        //bool StoreMemory { get; }
         /// <summary>
         /// 该动画UI状态
         /// </summary>

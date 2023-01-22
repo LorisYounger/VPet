@@ -39,7 +39,7 @@ namespace VPet_Simulator.Core
         public bool PlayState { get; set; }
         public bool IsLoop { get; set; }
         public int Length { get; set; }
-        public bool StoreMemory => true;
+        //public bool StoreMemory => true;//经过测试,储存到内存好处多多,不储存也要占用很多内存,干脆存了吧
 
         public UIElement This => this;
 

@@ -48,10 +48,10 @@ namespace VPet_Simulator.Core
         ///// 是否重置状态从0开始播放
         ///// </summary>
         //public bool IsResetPlay { get; set; } = false;
-        /// <summary>
-        /// 是否储存到内存以支持快速显示
-        /// </summary>
-        public bool StoreMemory { get; private set; }
+        ///// <summary>//经过测试,储存到内存好处多多,不储存也要占用很多内存,干脆存了吧
+        ///// 是否储存到内存以支持快速显示
+        ///// </summary>
+        //public bool StoreMemory { get; private set; }
         public UIElement This => this;
 
         public Save.ModeType ModeType { get; private set; }
@@ -67,81 +67,80 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="paths">文件夹位置</param>
         /// <param name="isLoop">是否循环</param>
-        /// <param name="storemem">是否储存到内存以支持快速显示</param>
-        public PNGAnimation(FileInfo[] paths, Save.ModeType modetype, GraphCore.GraphType graphtype, bool storemem = false, bool isLoop = false)
+        public PNGAnimation(FileInfo[] paths, Save.ModeType modetype, GraphCore.GraphType graphtype, bool isLoop = false)
         {
             InitializeComponent();
             Animations = new List<Animation>();
             IsLoop = isLoop;
-            StoreMemory = storemem;
+            //StoreMemory = storemem;
             GraphType = graphtype;
             ModeType = modetype;
-            if (storemem)
-                foreach (var file in paths)
-                {
-                    int time = int.Parse(file.Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
-                    var img = new Image()
-                    {
-                        Source = new BitmapImage(new Uri(file.FullName)),
-                        Visibility = Visibility.Hidden
-                    };
-                    MainGrid.Children.Add(img);
-                    Animations.Add(new Animation(this, time, () =>
-                    {
-                        img.Visibility = Visibility.Visible;
-                    }, () => img.Visibility = Visibility.Hidden));
-                }
-            else
+            //if (storemem)
+            foreach (var file in paths)
             {
-                Image[] imgs = new Image[3];
-                imgs[0] = new Image()
-                {
-                    Visibility = Visibility.Hidden
-                };
-                imgs[1] = new Image()
-                {
-                    Visibility = Visibility.Hidden
-                };
-                imgs[2] = new Image()
-                {
-                    Visibility = Visibility.Hidden
-                };
-                int time = int.Parse(paths[0].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
-                //第一张图:有专门自己的图层
+                int time = int.Parse(file.Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
                 var img = new Image()
                 {
-                    Source = new BitmapImage(new Uri(paths[0].FullName)),
+                    Source = new BitmapImage(new Uri(file.FullName)),
                     Visibility = Visibility.Hidden
                 };
                 MainGrid.Children.Add(img);
-                MainGrid.Children.Add(imgs[0]);
-                MainGrid.Children.Add(imgs[1]);
-                MainGrid.Children.Add(imgs[2]);
                 Animations.Add(new Animation(this, time, () =>
                 {
                     img.Visibility = Visibility.Visible;
-                    imgs[1].Source = new BitmapImage(new Uri(paths[1].FullName));
                 }, () => img.Visibility = Visibility.Hidden));
-
-                int last = paths.Count() - 1;
-                for (int i = 1; i < last; i++)
-                {
-                    time = int.Parse(paths[i].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
-                    var im1 = imgs[i % 3];
-                    var im2 = imgs[(i + 1) % 3];
-                    var st3 = paths[i + 1].FullName;
-                    Animations.Add(new Animation(this, time, () =>
-                    {
-                        im1.Visibility = Visibility.Visible;
-                        im2.Source = new BitmapImage(new Uri(st3));
-                    }, () => im1.Visibility = Visibility.Hidden));
-                }
-                //最后一张图: 不处理下一张图的imgsSources
-
-                time = int.Parse(paths[last].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
-                Animations.Add(new Animation(this, time, () => imgs[last % 3].Visibility = Visibility.Visible
-                , () => imgs[last % 3].Visibility = Visibility.Hidden));
             }
+            //else
+            //{
+            //    Image[] imgs = new Image[3];
+            //    imgs[0] = new Image()
+            //    {
+            //        Visibility = Visibility.Hidden
+            //    };
+            //    imgs[1] = new Image()
+            //    {
+            //        Visibility = Visibility.Hidden
+            //    };
+            //    imgs[2] = new Image()
+            //    {
+            //        Visibility = Visibility.Hidden
+            //    };
+            //    int time = int.Parse(paths[0].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
+            //    //第一张图:有专门自己的图层
+            //    var img = new Image()
+            //    {
+            //        Source = new BitmapImage(new Uri(paths[0].FullName)),
+            //        Visibility = Visibility.Hidden
+            //    };
+            //    MainGrid.Children.Add(img);
+            //    MainGrid.Children.Add(imgs[0]);
+            //    MainGrid.Children.Add(imgs[1]);
+            //    MainGrid.Children.Add(imgs[2]);
+            //    Animations.Add(new Animation(this, time, () =>
+            //    {
+            //        img.Visibility = Visibility.Visible;
+            //        imgs[1].Source = new BitmapImage(new Uri(paths[1].FullName));
+            //    }, () => img.Visibility = Visibility.Hidden));
+
+            //    int last = paths.Count() - 1;
+            //    for (int i = 1; i < last; i++)
+            //    {
+            //        time = int.Parse(paths[i].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
+            //        var im1 = imgs[i % 3];
+            //        var im2 = imgs[(i + 1) % 3];
+            //        var st3 = paths[i + 1].FullName;
+            //        Animations.Add(new Animation(this, time, () =>
+            //        {
+            //            im1.Visibility = Visibility.Visible;
+            //            im2.Source = new BitmapImage(new Uri(st3));
+            //        }, () => im1.Visibility = Visibility.Hidden));
+            //    }
+            //    //最后一张图: 不处理下一张图的imgsSources
+
+            //    time = int.Parse(paths[last].Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
+            //    Animations.Add(new Animation(this, time, () => imgs[last % 3].Visibility = Visibility.Visible
+            //    , () => imgs[last % 3].Visibility = Visibility.Hidden));
+            //}
         }
         /// <summary>
         /// 单帧动画
@@ -192,6 +191,7 @@ namespace VPet_Simulator.Core
                         {
                             //parent.endwilldo = () => parent.Dispatcher.Invoke(Hidden);
                             //parent.Dispatcher.Invoke(Hidden);
+                            parent.PlayState = false;
                             if (parent.DoEndAction)
                                 EndAction?.Invoke();//运行结束动画时事件
                             parent.StopAction?.Invoke();

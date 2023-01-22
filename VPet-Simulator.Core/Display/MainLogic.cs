@@ -19,6 +19,7 @@ namespace VPet_Simulator.Core
 
         private void EventTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            Core.Save.CleanChange();
             //所有Handle
             TimeHandle?.Invoke(this);
 
@@ -28,15 +29,17 @@ namespace VPet_Simulator.Core
                 if (Core.Save.StrengthFood >= 50)
                 {
                     Core.Save.StrengthChange(1);
+                    if (Core.Save.StrengthFood >= 75)
+                        Core.Save.Health += Function.Rnd.Next(0, 1);
                 }
                 else if (Core.Save.StrengthFood <= 25)
                 {
                     Core.Save.Health -= Function.Rnd.Next(0, 1);
                 }
-                if (Core.Save.Strength <= 40)
-                {
-                    Core.Save.Health -= Function.Rnd.Next(0, 1);
-                }
+                //if (Core.Save.Strength <= 40)
+                //{
+                //    Core.Save.Health -= Function.Rnd.Next(0, 1);
+                //}
                 Core.Save.StrengthChangeFood(-1);
                 if (Core.Save.Feeling >= 75)
                 {
@@ -55,11 +58,14 @@ namespace VPet_Simulator.Core
                 {
                     Core.Save.Health -= Function.Rnd.Next(0, 1);
                 }
+                else if(Core.Save.StrengthDrink >= 75)
+                        Core.Save.Health += Function.Rnd.Next(0, 1);
                 var newmod = Core.Save.CalMode();
-                if(Core.Save.Mode != newmod)
+                if (Core.Save.Mode != newmod)
                 {
                     //TODO:切换逻辑
-                    Core.Save.Mode = newmod;                    
+
+                    Core.Save.Mode = newmod;
                 }
             }
             else
@@ -71,7 +77,7 @@ namespace VPet_Simulator.Core
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
             if (DisplayType == GraphCore.GraphType.Default && !isPress)
-                switch (9)//Function.Rnd.Next(Math.Max(20, 200 - CountNomal)))
+                switch (22)//Function.Rnd.Next(Math.Max(23, 200 - CountNomal)))
                 {
                     case 0:
                     case 7:
@@ -113,6 +119,14 @@ namespace VPet_Simulator.Core
                     case 18:
                     case 17:
                         DisplaySquat();
+                        break;
+                    case 19:
+                    case 20:
+                        DisplayCrawl_Left();
+                        break;
+                    case 21:
+                    case 22:
+                        DisplayCrawl_Right();
                         break;
                     default:
                         break;

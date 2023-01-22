@@ -18,11 +18,11 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 宠物图像
         /// </summary>
-        public GraphCore Graph(bool storemem)
+        public GraphCore Graph()
         {
             var g = new GraphCore();
             foreach (var p in path)
-                LoadGraph(g, new DirectoryInfo(p), "", storemem);
+                LoadGraph(g, new DirectoryInfo(p), "");
             g.GraphConfig = Config;
             return g;
         }
@@ -47,7 +47,7 @@ namespace VPet_Simulator.Core
             Config = new Config(lps);
         }
 
-        public static void LoadGraph(GraphCore graph, DirectoryInfo di, string path_name,bool storemem)
+        public static void LoadGraph(GraphCore graph, DirectoryInfo di, string path_name)
         {
             var list = di.EnumerateDirectories();
             if (list.Count() == 0)
@@ -66,19 +66,19 @@ namespace VPet_Simulator.Core
 
                             if (path_name.Contains("happy"))
                             {
-                                graph.AddGraph(di.FullName, Save.ModeType.Happy, (GraphType)i, storemem);
+                                graph.AddGraph(di.FullName, Save.ModeType.Happy, (GraphType)i);
                             }
                             if (path_name.Contains("nomal"))
                             {
-                                graph.AddGraph(di.FullName, Save.ModeType.Nomal, (GraphType)i, storemem);
+                                graph.AddGraph(di.FullName, Save.ModeType.Nomal, (GraphType)i);
                             }
                             if (path_name.Contains("poorcondition"))
                             {
-                                graph.AddGraph(di.FullName, Save.ModeType.PoorCondition, (GraphType)i, storemem);
+                                graph.AddGraph(di.FullName, Save.ModeType.PoorCondition, (GraphType)i);
                             }
                             if (path_name.Contains("ill"))
                             {
-                                graph.AddGraph(di.FullName, Save.ModeType.Ill, (GraphType)i, storemem);
+                                graph.AddGraph(di.FullName, Save.ModeType.Ill, (GraphType)i);
                             }
                             return;
                         }
@@ -91,7 +91,7 @@ namespace VPet_Simulator.Core
             else
                 foreach (var p in list)
                 {
-                    LoadGraph(graph, p, path_name + "_" + p.Name,storemem);
+                    LoadGraph(graph, p, path_name + "_" + p.Name);
                 }
         }
     }

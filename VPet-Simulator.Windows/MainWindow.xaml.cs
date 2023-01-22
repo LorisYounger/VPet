@@ -110,7 +110,7 @@ namespace VPet_Simulator.Windows
             Core.Save = new Save("萝莉斯");
             Dispatcher.Invoke(new Action(() =>
             {
-                Core.Graph = Pets[0].Graph(Set.StoreInMemory);
+                Core.Graph = Pets[0].Graph();
                 LoadingText.Visibility = Visibility.Collapsed;
                 winSetting = new winGameSetting(this);
                 var main = new Main(Core) { };

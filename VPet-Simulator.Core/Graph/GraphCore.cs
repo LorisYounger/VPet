@@ -70,13 +70,29 @@ namespace VPet_Simulator.Core
             /// </summary>
             Touch_Head_C_End,
             /// <summary>
+            /// 爬行向右 (开始)
+            /// </summary>
+            Crawl_Right_A_Start,
+            /// <summary>
             /// 爬行向右 (循环)
             /// </summary>
-            Crawl_Right,
+            Crawl_Right_B_Loop,
+            /// <summary>
+            /// 爬行向右 (结束)
+            /// </summary>
+            Crawl_Right_C_End,
+            /// <summary>
+            /// 爬行向左 (开始)
+            /// </summary>
+            Crawl_Left_A_Start,
             /// <summary>
             /// 爬行向左 (循环)
             /// </summary>
-            Crawl_Left,
+            Crawl_Left_B_Loop,
+            /// <summary>
+            /// 爬行向左 (结束)
+            /// </summary>
+            Crawl_Left_C_End,
             /// <summary>
             /// 下蹲 (开始)
             /// </summary>
@@ -160,8 +176,8 @@ namespace VPet_Simulator.Core
         //     new dynamic[]{ "raised_static_b", false,true},
         //     new dynamic[]{ "climb_top_right", false,false},
         //     new dynamic[]{ "climb_top_left", false, false},
-        //     new dynamic[]{ "climb_bottom_right", false,false},
-        //     new dynamic[]{ "climb_bottom_left", false, false},
+        //     new dynamic[]{ "Crawl_right", false,false},
+        //     new dynamic[]{ "Crawl_left", false, false},
         //     new dynamic[]{ "climb_right", false, false},
         //     new dynamic[]{ "climb_left", false, false},
         //     new dynamic[]{ "default", true,true},
