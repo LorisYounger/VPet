@@ -51,10 +51,7 @@ namespace VPet_Simulator.Core
         /// 按多久视为长按 单位毫秒
         /// </summary>
         int PressLength { get; }
-        /// <summary>
-        /// 显示设置窗体
-        /// </summary>
-        void ShowSetting();
+
         /// <summary>
         /// 显示面板窗体
         /// </summary>

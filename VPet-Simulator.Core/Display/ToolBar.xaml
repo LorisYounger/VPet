@@ -16,7 +16,7 @@
         <Border x:Name="BdrPanel" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24"
                 TextElement.FontSize="24" BorderBrush="{DynamicResource DARKPrimaryDarker}"
                 BorderThickness="1" Background="{DynamicResource DARKPrimaryText}" CornerRadius="5"
-                MouseLeave="MenuPanel_MouseLeave">
+                MouseLeave="MenuPanel_MouseLeave" Visibility="Collapsed">
             <Grid Margin="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -113,7 +113,7 @@
                 <MenuItem Header="学习" HorizontalContentAlignment="Center" />
             </MenuItem>
             <MenuItem x:Name="MenuDIY" Header="自定" HorizontalContentAlignment="Center" Click="MenuDIY_Click" />
-            <MenuItem Header="设置" Click="MenuSetting_Click" HorizontalContentAlignment="Center" />
+            <MenuItem x:Name="MenuSetting" Header="管理" HorizontalContentAlignment="Center" />
         </Menu>
     </Grid>
 </UserControl>

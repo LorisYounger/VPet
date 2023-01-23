@@ -169,8 +169,10 @@ namespace VPet_Simulator.Core
         /// </summary>
         private void DisplayRaising()
         {
-            switch (rasetype++)
+            switch (rasetype)
             {
+                case int.MinValue:
+                    break;
                 case -1:
                     DisplayFalled_Left();
                     rasetype = int.MinValue;
@@ -178,9 +180,11 @@ namespace VPet_Simulator.Core
                 case 0:
                 case 1:
                 case 2:
+                    rasetype++;
                     Display(GraphCore.GraphType.Raised_Dynamic, DisplayRaising);
                     return;
                 case 3:
+                    rasetype++;
                     Display(GraphCore.GraphType.Raised_Static_A_Start, DisplayRaising);
                     return;
                 default:

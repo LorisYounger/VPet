@@ -2,6 +2,7 @@
 using Steamworks.Ugc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,10 +28,10 @@ namespace VPet_Simulator.Windows
         private bool AllowChange = false;
         public winGameSetting(MainWindow mw)
         {
-            this.mw = mw;           
+            this.mw = mw;
             InitializeComponent();
             TopMostBox.IsChecked = mw.Set.TopMost;
-            if (mw.Set.IsFullScreen)
+            if (mw.Set.IsBiggerScreen)
             {
                 FullScreenBox.IsChecked = true;
                 ZoomSlider.Maximum = 8;
@@ -193,21 +194,14 @@ namespace VPet_Simulator.Windows
         {
             if (FullScreenBox.IsChecked == true)
             {
-                mw.Set.IsFullScreen = true;
+                mw.Set.IsBiggerScreen = true;
                 ZoomSlider.Maximum = 8;
             }
             else
             {
-                mw.Set.IsFullScreen = false;
+                mw.Set.IsBiggerScreen = false;
                 ZoomSlider.Maximum = 3;
             }
-        }
-
-        private void ZoomSlider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
-        {
-            mw.SetZoomLevel(ZoomSlider.Value / 2);
-            this.Width = 400 * ZoomSlider.Value;
-            this.Height = 450 * ZoomSlider.Value;
         }
 
         private void ThemeBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -225,10 +219,6 @@ namespace VPet_Simulator.Windows
 
         }
 
-        private void sDesktopAlignment_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void RBDiagnosisYES_Checked(object sender, RoutedEventArgs e)
         {
@@ -300,8 +290,8 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法发布\n如需发布自定义内容,请复制并更改名称", "MOD上传失败", MessageBoxIcon.Error);
                 return;
             }
-#if TEST || DEMO
-            winMessageBox.Show(mw, "特殊版无法上传创意工坊","经测试,除正式版均无创意工坊权限,此功能仅作为展示");
+#if DEBUG
+            MessageBoxX.Show("经测试,除正式版均无创意工坊权限,此功能仅作为展示", "特殊版无法上传创意工坊");
 #endif
             ButtonPublish.IsEnabled = false;
             ButtonPublish.Text = "正在上传";
@@ -382,7 +372,7 @@ namespace VPet_Simulator.Windows
 
         private void hyper_moreInfo(object sender, RoutedEventArgs e)
         {
-
+            Process.Start("https://www.exlb.net/Diagnosis");
         }
 
         private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -400,6 +390,53 @@ namespace VPet_Simulator.Windows
         private void TopMostBox_Unchecked(object sender, RoutedEventArgs e)
         {
             mw.Set.TopMost = false;
+        }
+
+        private void ZoomSlider_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            mw.SetZoomLevel(ZoomSlider.Value / 2);
+            this.Width = 400 * ZoomSlider.Value;
+            this.Height = 450 * ZoomSlider.Value;
+        }
+
+        private void PressLengthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            mw.Set.PressLength = (int)(PressLengthSlider.Value * 1000);
+        }
+
+        private void InteractionSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+        }
+
+        private void Git_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://github.com/LorisYounger/VPet/graphs/contributors");
+        }
+
+        private void Steam_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://store.steampowered.com/app/1920960/_/");
+        }
+
+        private void Github_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://github.com/LorisYounger/VPet");
+        }
+
+        private void LB_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://www.exlb.net/VPet");
+        }
+
+        private void VPET_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://www.exlb.net/");
+        }
+
+        private void sDesktopAlignment_Checked_1(object sender, RoutedEventArgs e)
+        {
+            MessageBoxX.Show("由于没做完,暂不支持数据计算\n敬请期待后续更新", "没做完!", MessageBoxButton.OK, MessageBoxIcon.Warning);
         }
     }
 }

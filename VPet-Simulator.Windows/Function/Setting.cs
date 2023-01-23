@@ -12,7 +12,22 @@ namespace VPet_Simulator.Windows
     {
         public Setting(string lps) : base(lps)
         {
-
+            var line = FindLine("zoomlevel");
+            if (line == null)
+                zoomlevel = 0.5;
+            else
+            {
+                zoomlevel = line.InfoToDouble;
+                if (zoomlevel < 0.1 || zoomlevel > 8)
+                {
+                    zoomlevel = 0.5;
+                }
+            }
+            presslength = this["gameconfig"].GetInt("presslength", 500);
+            intercycle = this["gameconfig"].GetInt("intercycle", 200);
+            moveevent = !this["gameconfig"].GetBool("moveevent");
+            smartmoveevent = this["gameconfig"].GetBool("smartmoveevent");
+            enablefunction = !this["gameconfig"].GetBool("enablefunction");
         }
 
         public void Save()
@@ -40,43 +55,28 @@ namespace VPet_Simulator.Windows
         //    }
         //}
         private double zoomlevel = 0;
+        /// <summary>
+        /// 缩放倍率
+        /// </summary>
         public double ZoomLevel
         {
             get
             {
-                if(zoomlevel == 0)
-                {
-                    var line = FindLine("zoomlevel");
-                    if (line == null)
-                        zoomlevel = 0.5;
-                    else
-                    {
-                        zoomlevel = line.InfoToDouble;
-                        if (zoomlevel < 0.1 || zoomlevel > 8)
-                        {
-                            zoomlevel = 0.5;
-                        }
-                    }
-                }
-                return zoomlevel;                
+                return zoomlevel;
             }
             set
             {
                 FindorAddLine("zoomlevel").InfoToDouble = value;
                 zoomlevel = value;
             }
-        }      
-       
-        public bool IsFullScreen
+        }
+        /// <summary>
+        /// 是否为更大的屏幕
+        /// </summary>
+        public bool IsBiggerScreen
         {
-            get => FindLine("fullscreen") != null;
-            set
-            {
-                if (value)
-                    FindorAddLine("fullscreen");
-                else
-                    RemoveAll("fullscreen");
-            }
+            get => GetBool("bigscreen");
+            set => SetBool("bigscreen", value);
         }
         /// <summary>
         /// 是否启用数据收集 //TODO:判断游戏是否是原版的
@@ -99,15 +99,15 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public int DiagnosisInterval
         {
-            get => Math.Max(this["diagnosis"].GetInt("interval", 14), 7);
+            get => Math.Max(this["diagnosis"].GetInt("interval", 500), 20000);
             set => this["diagnosis"].SetInt("interval", value);
         }
         /// <summary>
-        /// 自动保存频率
+        /// 自动保存频率 (min)
         /// </summary>
         public int AutoSaveInterval
         {
-            get => Math.Max(GetInt("autosave", 7), 0);
+            get => Math.Max(GetInt("autosave", 20), 0);
             set => SetInt("autosave", value);
         }
         /// <summary>
@@ -178,13 +178,70 @@ namespace VPet_Simulator.Windows
             FindorAddLine("passmod").Remove(ModName.ToLower());
         }
 
+        private int presslength;
+        private int intercycle;
         /// <summary>
         /// 按多久视为长按 单位毫秒
         /// </summary>
         public int PressLength
         {
-            get => this["windows"].GetInt("presslength", 500);
-            set => this["windows"].SetInt("presslength", value);
+            get => presslength;
+            set => this["gameconfig"].SetInt("presslength", value);
+        }
+        /// <summary>
+        /// 互动周期
+        /// </summary>
+        public int InteractionCycle
+        {
+            get => intercycle;
+            set => this["gameconfig"].SetInt("intercycle", value);
+        }
+        /// <summary>
+        /// 计算间隔
+        /// </summary>
+        public double LogicInterval
+        {
+            get => this["gameconfig"].GetDouble("logicinterval", 15);
+            set => this["gameconfig"].SetDouble("logicinterval", value);
+        }
+        bool moveevent;
+        /// <summary>
+        /// 允许移动事件
+        /// </summary>
+        public bool MoveEvent
+        {
+            get => moveevent;
+            set
+            {
+                moveevent = value;
+                this["gameconfig"].SetBool("moveevent", !value);
+            }
+        }
+        bool smartmoveevent;
+        /// <summary>
+        /// 智能移动
+        /// </summary>
+        public bool SmartMoveEvent
+        {
+            get => smartmoveevent;
+            set
+            {
+                smartmoveevent = value;
+                this["gameconfig"].SetBool("smartmoveevent", value);
+            }
+        }
+        bool enablefunction;
+        /// <summary>
+        /// 允许移动
+        /// </summary>
+        public bool EnableFunction
+        {
+            get => enablefunction;
+            set
+            {
+                enablefunction = value;
+                this["gameconfig"].SetBool("function", !value);
+            }
         }
     }
 }

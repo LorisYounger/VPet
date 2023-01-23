@@ -38,7 +38,11 @@ namespace VPet_Simulator.Windows
             //在 https://store.steampowered.com/app/1920960/VPet
             try
             {
+#if DEBUG
+                SteamClient.Init(2293870, true);
+#else
                 SteamClient.Init(1920960, true);
+#endif
                 SteamClient.RunCallbacks();
                 IsSteamUser = SteamClient.IsValid;
                 ////同时看看有没有买dlc,如果有就添加dlc按钮
@@ -105,6 +109,7 @@ namespace VPet_Simulator.Windows
                 CoreMODs.Add(new CoreMOD(di, this));
             }
             Dispatcher.Invoke(new Action(() => LoadingText.Content = "尝试加载游戏内容"));
+
             //加载游戏内容
             Core.Controller = new MWController(this);
             Core.Save = new Save("萝莉斯");
@@ -116,43 +121,65 @@ namespace VPet_Simulator.Windows
                 var main = new Main(Core) { };
                 main.DefaultClickAction = () => { Dispatcher.Invoke(() => { main.Say("你知道吗? 鼠标右键可以打开菜单栏"); }); };
                 DisplayGrid.Child = main;
-                main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.DIY, "退出桌宠", () => { Close(); });
+                main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板", () =>
+                {
+                    Topmost = false;
+                    winSetting.Show();
+                });
+                main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠", () => { Close(); });
 
                 //加载图标
                 notifyIcon = new NotifyIcon();
                 ContextMenu m_menu;
 
                 m_menu = new ContextMenu();
-                m_menu.MenuItems.Add(new MenuItem("重置", (x, y) => {
+                m_menu.MenuItems.Add(new MenuItem("重置状态", (x, y) =>
+                {
                     main.CleanState();
                     main.DisplayNomal();
                 }));
-                m_menu.MenuItems.Add(new MenuItem("居中", (x, y) =>
+                m_menu.MenuItems.Add(new MenuItem("屏幕居中", (x, y) =>
                 {
                     Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
                     Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
                 }));
-                m_menu.MenuItems.Add(new MenuItem("设置", (x, y) => Core.Controller.ShowSetting()));
-                m_menu.MenuItems.Add(new MenuItem("退出", (x, y) => Close()));
+                m_menu.MenuItems.Add(new MenuItem("设置面板", (x, y) =>
+                {
+                    Topmost = false;
+                    winSetting.Show();
+                }));
+                m_menu.MenuItems.Add(new MenuItem("退出桌宠", (x, y) => Close()));
                 notifyIcon.ContextMenu = m_menu;
 
-                var streamResourceInfo = Application.GetResourceStream(new Uri("pack://application:,,,/vpeticon.ico"));
-                if (streamResourceInfo != null)
-                    notifyIcon.Icon = new System.Drawing.Icon(streamResourceInfo.Stream);
+                notifyIcon.Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/vpeticon.ico")).Stream);
 
                 notifyIcon.Visible = true;
 
-                //notifyIcon.ShowBalloonTip(5, "你好 " + Environment.UserName,
-                //    "Press Alt+C to show Clock\nRight Click on Tray to Close", ToolTipIcon.Info);
+                if (Set["SingleTips"].GetBool("helloworld"))
+                {
+                    Set["SingleTips"].SetBool("helloworld", true);
+                    notifyIcon.ShowBalloonTip(10, "你好 " + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
+                        "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠", ToolTipIcon.Info);
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(1000);
+                        main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议");
+                    });
+                }
             }));
-
         }
 
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            ((Main)DisplayGrid.Child).Dispose();
-            notifyIcon.Dispose();
+            //游戏存档
+            if (Set != null)
+                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
+            if (Core != null && Core.Save != null)
+                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
+            if (DisplayGrid.Child != null)
+                ((Main)DisplayGrid.Child).Dispose();
+            notifyIcon?.Dispose();
             System.Environment.Exit(0);
         }
 

@@ -77,7 +77,7 @@ namespace VPet_Simulator.Core
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
             if (DisplayType == GraphCore.GraphType.Default && !isPress)
-                switch (22)//Function.Rnd.Next(Math.Max(23, 200 - CountNomal)))
+                switch (1)//Function.Rnd.Next(Math.Max(23, 200 - CountNomal)))
                 {
                     case 0:
                     case 7:

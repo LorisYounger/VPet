@@ -109,11 +109,6 @@ namespace VPet_Simulator.Core
             closetimer.Start();
         }
 
-        private void MenuSetting_Click(object sender, RoutedEventArgs e)
-        {
-            m.Core.Controller.ShowSetting();
-        }
-
         private void MenuPanel_Click(object sender, RoutedEventArgs e)
         {
             m.Core.Controller.ShowPanel();
@@ -135,6 +130,10 @@ namespace VPet_Simulator.Core
             /// 自定
             /// </summary>
             DIY,
+            /// <summary>
+            /// 设置
+            /// </summary>
+            Setting,
         }
         public void AddMenuButton(MenuType parentMenu,
             string displayName,
@@ -159,6 +158,9 @@ namespace VPet_Simulator.Core
                     break;
                 case MenuType.DIY:
                     MenuDIY.Items.Add(menuItem);
+                    break;
+                case MenuType.Setting:
+                    MenuSetting.Items.Add(menuItem);
                     break;
             }
         }

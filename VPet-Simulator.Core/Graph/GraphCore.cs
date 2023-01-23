@@ -165,6 +165,18 @@ namespace VPet_Simulator.Core
             /// 无聊 (结束)
             /// </summary>
             Boring_C_End,
+            /// <summary>
+            /// 睡觉 (开始)
+            /// </summary>
+            Sleep_A_Start,
+            /// <summary>
+            /// 睡觉 (循环)
+            /// </summary>
+            Sleep_B_Loop,
+            /// <summary>
+            /// 睡觉 (结束)
+            /// </summary>
+            Sleep_C_End,
         }
         ///// <summary> loop 应该被取缔
         ///// 动画类型默认设置 前文本|是否循环|是否常用
