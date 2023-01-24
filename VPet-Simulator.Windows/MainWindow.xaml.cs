@@ -63,7 +63,10 @@ namespace VPet_Simulator.Windows
             }
             else
                 Set = new Setting("Setting#VPET:|\n");
-
+            //this.Width = 400 * ZoomSlider.Value;
+            //this.Height = 450 * ZoomSlider.Value;
+            this.Height = 500 * Set.ZoomLevel;
+            this.Width = 500 * Set.ZoomLevel;
             InitializeComponent();
 
             //不存在就关掉
@@ -145,6 +148,7 @@ namespace VPet_Simulator.Windows
                 Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
                 //加载图标
                 notifyIcon = new NotifyIcon();
+                notifyIcon.Text = "虚拟桌宠模拟器";
                 ContextMenu m_menu;
 
                 m_menu = new ContextMenu();
@@ -197,6 +201,7 @@ namespace VPet_Simulator.Windows
         {
             Save();
             Main?.Dispose();
+            notifyIcon.Visible = false;
             notifyIcon?.Dispose();
             System.Environment.Exit(0);
         }

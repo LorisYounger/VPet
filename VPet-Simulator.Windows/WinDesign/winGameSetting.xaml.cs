@@ -482,6 +482,15 @@ namespace VPet_Simulator.Windows
         {
             Process.Start("https://www.exlb.net/");
         }
+        private void VUP_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://store.steampowered.com/app/1352140/_/");
+        }
+
+        private void Group_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://jq.qq.com/?_wv=1027&k=zmeWNHyI");
+        }
         #endregion
         private void sDesktopAlignment_Checked_1(object sender, RoutedEventArgs e)
         {
@@ -525,5 +534,7 @@ namespace VPet_Simulator.Windows
         {
             mw.Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
         }
+
+  
     }
 }

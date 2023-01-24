@@ -38,7 +38,7 @@
             <TextBox x:Name="tContact" pu:TextBoxHelper.Watermark="提供联系方式以获得反馈,可不填&#13;eg:QQ430081239"
                     AcceptsReturn="True" MaxHeight="44" />
         </pu:FormGroup>
-        <Button Content="提交" Margin="10,10,0,10" FontSize="16" Background="{DynamicResource DARKPrimary}"
+        <Button x:Name="btn_Report" Content="提交" Margin="10,10,0,10" FontSize="16" Background="{DynamicResource DARKPrimary}"
                 BorderThickness="1" pu:ButtonHelper.CornerRadius="5" BorderBrush="{DynamicResource DARKPrimaryDarker}"
                 Foreground="{DynamicResource DARKPrimaryText}" Padding="2" Click="btn_upload" />
     </StackPanel>

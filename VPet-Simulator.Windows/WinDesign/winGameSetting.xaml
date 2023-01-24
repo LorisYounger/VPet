@@ -484,18 +484,6 @@
                     <Run x:Name="runActivate">已通过Steam[uid]激活服务注册</Run><LineBreak />
                         </TextBlock>
                         <TextBlock Margin="0,100,0,0" Text="制作组名单" FontSize="20" FontWeight="Bold" />
-                        <TextBlock Margin="0,130,0,0" FontWeight="Bold">
-                    <Run>游戏策划</Run><LineBreak />
-                    <Run>UI&amp;程序</Run><LineBreak />
-                    <Run>动画绘制</Run><LineBreak />                    
-                    <Run>开源项目</Run><LineBreak /><LineBreak /><LineBreak />
-                    <Run>项目页面</Run><LineBreak />
-                    <LineBreak /><LineBreak />
-                    <LineBreak /><Run xml:space="preserve">Power By        </Run>
-                    <Hyperlink TextDecorations="Underline" Foreground="Black" Click="VPET_Click">exLB.net</Hyperlink>
-                    <Run> </Run>
-                    <Hyperlink TextDecorations="Underline" Foreground="Black" Click="LB_Click">LBGame</Hyperlink>
-                        </TextBlock>
                         <TextBlock Margin="100,130,0,0">
                     <Run>杨远洛里斯, 广大MOD作者</Run><LineBreak />
                     <Run>洛里斯杨远, トニーちゃん</Run> <Hyperlink Click="Git_Click">Git贡献名单</Hyperlink><LineBreak />
@@ -512,6 +500,27 @@
                         </TextBlock>
                         <Image Source="/Res/TopLogo2018.PNG" Width="38" Margin="208,257,0,0" HorizontalAlignment="Left"
                                 VerticalAlignment="Top" Height="38" />
+
+                        <TextBlock Margin="0,130,0,0" FontWeight="Bold">
+                    <Run>游戏策划</Run><LineBreak />
+                    <Run>UI&amp;程序</Run><LineBreak />
+                    <Run>动画绘制</Run><LineBreak />                    
+                    <Run>开源项目</Run><LineBreak /><LineBreak /><LineBreak />
+                    <Run>项目页面</Run><LineBreak />
+                    <LineBreak /><LineBreak />
+                    <LineBreak /><Run xml:space="preserve">Power By        </Run>
+                    <Hyperlink TextDecorations="Underline" Foreground="Black" Click="VPET_Click">exLB.net</Hyperlink>
+                    <Run> </Run>
+                    <Hyperlink TextDecorations="Underline" Foreground="Black" Click="LB_Click">LBGame</Hyperlink>
+                            <LineBreak /><LineBreak />
+                            <Run xml:space="preserve">相关链接          </Run>
+                            <Hyperlink TextDecorations="Underline"
+                                    Foreground="{DynamicResource DARKPrimaryDarker}"
+                                    Click="VUP_Click" FontWeight="Normal">虚拟主播模拟器</Hyperlink>
+                            <Hyperlink TextDecorations="Underline" Foreground="{DynamicResource DARKPrimaryDarker}"
+                                    Click="Group_Click" FontWeight="Normal">相关群</Hyperlink>
+
+                        </TextBlock>
                     </Grid>
                 </TabItem>
             </TabControl>

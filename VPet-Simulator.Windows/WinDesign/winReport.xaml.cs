@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using VPet_Simulator.Core;
 using System.Web;
+using System.Threading;
 
 namespace VPet_Simulator.Windows
 {
@@ -46,11 +47,10 @@ namespace VPet_Simulator.Windows
 
             if (!mw.IsSteamUser)
             {
-                IsEnabled = false;
                 MessageBoxX.Show("您不是Steam用户，无法使用反馈中心\n欢迎加入虚拟主播模拟器群430081239反馈问题", "非Steam用户无法使用反馈中心", MessageBoxButton.OK, MessageBoxIcon.Info);
             }
         }
-        
+
         private void tUpload_Click(object sender, RoutedEventArgs e)
         {
             if (tUpload.IsChecked == true)
@@ -63,12 +63,14 @@ namespace VPet_Simulator.Windows
         {
             if (tDescription.Text == "" && tType.SelectedIndex != 0)
             {
-                 MessageBoxX.Show("请填写问题描述", "问题详细描述是反馈具体问题\n例如如何触发这个报错,游戏有什么地方不合理等");
+                MessageBoxX.Show("请填写问题描述", "问题详细描述是反馈具体问题\n例如如何触发这个报错,游戏有什么地方不合理等");
                 return;
             }
             if (!mw.IsSteamUser)
+            {
+                MessageBoxX.Show("您不是Steam用户，无法使用反馈中心\n欢迎加入虚拟主播模拟器群430081239反馈问题", "非Steam用户无法使用反馈中心", MessageBoxButton.OK, MessageBoxIcon.Info);
                 return;//不遥测非Steam用户
-
+            }
             try
             {
                 string _url = "http://cn.exlb.org:5810/VPET/Report";
@@ -103,22 +105,22 @@ namespace VPet_Simulator.Windows
                 }
                 if (responseString == "Report Error Success")
                 {
-                     MessageBoxX.Show("您的反馈已提交成功,感谢您的反馈与提交\nVOS将会尽快处理您的反馈并做的更好", "感谢您的反馈和提交");
+                    MessageBoxX.Show("您的反馈已提交成功,感谢您的反馈与提交\nVOS将会尽快处理您的反馈并做的更好", "感谢您的反馈和提交");
                     Close();
                 }
                 else if (responseString == "IP times Max")
                 {
                     mw.Set.DiagnosisDayEnable = false;
-                     MessageBoxX.Show( "您今天的反馈次数已达上限,请明天再来反馈.\n或欢迎加入虚拟主播模拟器群430081239反馈问题", "您今天的反馈次数已达上限", MessageBoxButton.OK, MessageBoxIcon.Error);
+                    MessageBoxX.Show("您今天的反馈次数已达上限,请明天再来反馈.\n或欢迎加入虚拟主播模拟器群430081239反馈问题", "您今天的反馈次数已达上限", MessageBoxButton.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                     MessageBoxX.Show( "反馈上传失败\n欢迎加入虚拟主播模拟器群430081239手动反馈问题\n服务器消息:" + responseString, "反馈提交失败,遇到错误", MessageBoxButton.OK, MessageBoxIcon.Error);
+                    MessageBoxX.Show("反馈上传失败\n欢迎加入虚拟主播模拟器群430081239手动反馈问题\n服务器消息:" + responseString, "反馈提交失败,遇到错误", MessageBoxButton.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception exp)
             {
-                 MessageBoxX.Show( "反馈上传失败,可能是网络或其他问题导致无法上传\n欢迎加入虚拟主播模拟器群430081239手动反馈问题\n" + exp.ToString(), "反馈提交失败,遇到错误", MessageBoxButton.OK, MessageBoxIcon.Error);
+                MessageBoxX.Show("反馈上传失败,可能是网络或其他问题导致无法上传\n欢迎加入虚拟主播模拟器群430081239手动反馈问题\n" + exp.ToString(), "反馈提交失败,遇到错误", MessageBoxButton.OK, MessageBoxIcon.Error);
             }
 
         }
