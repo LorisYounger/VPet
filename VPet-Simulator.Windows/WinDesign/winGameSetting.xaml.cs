@@ -45,6 +45,36 @@ namespace VPet_Simulator.Windows
             this.Width = 400 * ZoomSlider.Value;
             this.Height = 450 * ZoomSlider.Value;
 
+            sDesktopAlignment.IsChecked = mw.Set.EnableFunction;
+            CalSlider.Value = mw.Set.LogicInterval;
+            InteractionSlider.Value = mw.Set.InteractionCycle;
+            MoveEventBox.IsChecked = mw.Set.AllowMove;
+            SmartMoveEventBox.IsChecked = mw.Set.SmartMove;
+            PressLengthSlider.Value = mw.Set.PressLength;
+
+            foreach (PetLoader pl in mw.Pets)
+            {
+                PetBox.Items.Add(pl.Name);
+            }
+            PetBox.SelectedIndex = 0;
+
+            foreach (ComboBoxItem v in CBAutoSave.Items)
+            {
+                if ((int)v.Tag == mw.Set.AutoSaveInterval)
+                {
+                    CBAutoSave.SelectedItem = v;
+                    break;
+                }
+            }
+            foreach (ComboBoxItem v in CBSmartMove.Items)
+            {
+                if ((int)v.Tag == mw.Set.SmartMoveInterval)
+                {
+                    CBSmartMove.SelectedItem = v;
+                    break;
+                }
+            }
+
 #if X64
             GameVerison.Content = $"游戏版本v{mw.Verison} x64";
 #else
@@ -216,7 +246,18 @@ namespace VPet_Simulator.Windows
 
         private void CBAutoSave_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (!AllowChange)
+                return;
+            mw.Set.AutoSaveInterval = (int)((ComboBoxItem)CBAutoSave.SelectedItem).Tag;
+            if (mw.Set.AutoSaveInterval > 0)
+            {
+                mw.AutoSaveTimer.Interval = mw.Set.AutoSaveInterval * 60000;
+                mw.AutoSaveTimer.Start();
+            }
+            else
+            {
+                mw.AutoSaveTimer.Stop();
+            }
         }
 
 
@@ -384,11 +425,15 @@ namespace VPet_Simulator.Windows
 
         private void TopMostBox_Checked(object sender, RoutedEventArgs e)
         {
+            if (!AllowChange)
+                return;
             mw.Set.TopMost = true;
         }
 
         private void TopMostBox_Unchecked(object sender, RoutedEventArgs e)
         {
+            if (!AllowChange)
+                return;
             mw.Set.TopMost = false;
         }
 
@@ -401,14 +446,18 @@ namespace VPet_Simulator.Windows
 
         private void PressLengthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (!AllowChange)
+                return;
             mw.Set.PressLength = (int)(PressLengthSlider.Value * 1000);
         }
 
         private void InteractionSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-
+            if (!AllowChange)
+                return;
+            mw.Set.InteractionCycle = (int)(InteractionSlider.Value);
         }
-
+        #region Link
         private void Git_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("https://github.com/LorisYounger/VPet/graphs/contributors");
@@ -433,10 +482,48 @@ namespace VPet_Simulator.Windows
         {
             Process.Start("https://www.exlb.net/");
         }
-
+        #endregion
         private void sDesktopAlignment_Checked_1(object sender, RoutedEventArgs e)
         {
+            if (!AllowChange)
+                return;
             MessageBoxX.Show("由于没做完,暂不支持数据计算\n敬请期待后续更新", "没做完!", MessageBoxButton.OK, MessageBoxIcon.Warning);
+        }
+
+        private void CalSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.LogicInterval = CalSlider.Value;
+            mw.Main.SetLogicInterval((int)(CalSlider.Value * 1000));
+        }
+
+        private void MoveEventBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.AllowMove = MoveEventBox.IsChecked == true;
+            SetSmartMove();
+        }
+
+        private void SmartMoveEventBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.SmartMove = SmartMoveEventBox.IsChecked == true;
+            SetSmartMove();
+        }
+
+        private void CBSmartMove_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.SmartMoveInterval = (int)((ComboBoxItem)CBSmartMove.SelectedItem).Tag;
+            SetSmartMove();
+        }
+        public void SetSmartMove()
+        {
+            mw.Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
         }
     }
 }

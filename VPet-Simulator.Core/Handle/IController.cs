@@ -13,7 +13,7 @@ namespace VPet_Simulator.Core
     public interface IController
     {
         /// <summary>
-        /// 移动桌宠位置
+        /// 移动桌宠位置 (自带缩放倍率)
         /// </summary>
         /// <param name="X">X轴</param>
         /// <param name="Y">Y轴</param>
@@ -60,5 +60,9 @@ namespace VPet_Simulator.Core
         /// 启用计算等数据功能
         /// </summary>
         bool EnableFunction { get; }
+        /// <summary>
+        /// 互动周期
+        /// </summary>
+        int InteractionCycle { get; }      
     }
 }

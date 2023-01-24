@@ -64,12 +64,12 @@ namespace VPet_Simulator.Core
                 case GraphType.Walk_Right_B_Loop:
                     Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_C_End, Core.Save.Mode, true), EndAction);
                     return true;
-                //case GraphType.Climb_Left:
-                //case GraphType.Climb_Right:
-                //case GraphType.Climb_Top_Left:
-                //case GraphType.Climb_Top_Right:
-                //    DisplayFalled_Left();
-                //    return true;
+                    //case GraphType.Climb_Left:
+                    //case GraphType.Climb_Right:
+                    //case GraphType.Climb_Top_Left:
+                    //case GraphType.Climb_Top_Right:
+                    //    DisplayFalled_Left();
+                    //    return true;
             }
             return false;
         }
@@ -221,7 +221,7 @@ namespace VPet_Simulator.Core
                 CountNomal = 0;
                 Display(GraphCore.GraphType.Walk_Left_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedWalk * Core.Controller.ZoomRatio, 0);
+                    MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedWalk, 0);
                     MoveTimer.Start();
                     DisplayWalk_Lefting();
                 });
@@ -301,7 +301,7 @@ namespace VPet_Simulator.Core
                 CountNomal = 0;
                 Display(GraphCore.GraphType.Walk_Right_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedWalk * Core.Controller.ZoomRatio, 0);
+                    MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedWalk, 0);
                     MoveTimer.Start();
                     DisplayWalk_Righting();
                 });
@@ -380,7 +380,7 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 Display(GraphCore.GraphType.Crawl_Left_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedCrawl * Core.Controller.ZoomRatio, 0);//TODO:锚定设置
+                    MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedCrawl, 0);
                     MoveTimer.Start();
                     DisplayCrawl_Lefting();
                 });
@@ -438,7 +438,7 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 Display(GraphCore.GraphType.Crawl_Right_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedCrawl * Core.Controller.ZoomRatio, 0);//TODO:锚定设置
+                    MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedCrawl, 0);
                     MoveTimer.Start();
                     DisplayCrawl_Righting();
                 });
@@ -495,10 +495,10 @@ namespace VPet_Simulator.Core
             {
                 walklength = 0;
                 CountNomal = 0;
-                Core.Controller.MoveWindows(-(Core.Controller.GetWindowsDistanceLeft() + Core.Graph.GraphConfig.LocateClimbLeft) / Core.Controller.ZoomRatio, 0);
+                Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - Core.Graph.GraphConfig.LocateClimbLeft, 0);
                 Display(GraphCore.GraphType.Walk_Left_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(0, -Core.Graph.GraphConfig.SpeedClimb * Core.Controller.ZoomRatio);
+                    MoveTimerPoint = new Point(0, -Core.Graph.GraphConfig.SpeedClimb);
                     MoveTimer.Start();
                     DisplayClimb_Lefting_UP();
                 });
@@ -558,10 +558,10 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
 
-                Core.Controller.MoveWindows(-(Core.Controller.GetWindowsDistanceLeft() + Core.Graph.GraphConfig.LocateClimbLeft) / Core.Controller.ZoomRatio, 0);
+                Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - Core.Graph.GraphConfig.LocateClimbLeft, 0);
                 Display(GraphCore.GraphType.Walk_Left_A_Start, () =>
                 {
-                    MoveTimerPoint = new System.Windows.Point(0, Core.Graph.GraphConfig.SpeedClimb * Core.Controller.ZoomRatio);
+                    MoveTimerPoint = new System.Windows.Point(0, Core.Graph.GraphConfig.SpeedClimb);
                     MoveTimer.Start();
                     DisplayClimb_Lefting_DOWN();
                 });
@@ -602,10 +602,10 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
 
-                Core.Controller.MoveWindows((Core.Controller.GetWindowsDistanceRight()+ Core.Graph.GraphConfig.LocateClimbRight) / Core.Controller.ZoomRatio, 0);
+                Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + Core.Graph.GraphConfig.LocateClimbRight, 0);
                 Display(GraphCore.GraphType.Walk_Right_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(0, -Core.Graph.GraphConfig.SpeedClimb * Core.Controller.ZoomRatio);
+                    MoveTimerPoint = new Point(0, -Core.Graph.GraphConfig.SpeedClimb);
                     MoveTimer.Start();
                     DisplayClimb_Righting_UP();
                 });
@@ -665,10 +665,10 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
 
-                Core.Controller.MoveWindows((Core.Controller.GetWindowsDistanceRight() + Core.Graph.GraphConfig.LocateClimbRight) / Core.Controller.ZoomRatio, 0);
+                Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + Core.Graph.GraphConfig.LocateClimbRight, 0);
                 Display(GraphCore.GraphType.Walk_Right_A_Start, () =>
                 {
-                    MoveTimerPoint = new Point(0, Core.Graph.GraphConfig.SpeedClimb * Core.Controller.ZoomRatio);
+                    MoveTimerPoint = new Point(0, Core.Graph.GraphConfig.SpeedClimb);
                     MoveTimer.Start();
                     DisplayClimb_Righting_DOWN();
                 });
@@ -709,8 +709,8 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
 
-                Core.Controller.MoveWindows(0, -(Core.Controller.GetWindowsDistanceUp()+ Core.Graph.GraphConfig.LocateClimbTop) / Core.Controller.ZoomRatio);
-                MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedClimbTop * Core.Controller.ZoomRatio, 0);
+                Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - Core.Graph.GraphConfig.LocateClimbTop);
+                MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedClimbTop, 0);
                 MoveTimer.Start();
                 DisplayClimb_Top_Righting();
             }
@@ -761,8 +761,8 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
 
-                Core.Controller.MoveWindows(0, -(Core.Controller.GetWindowsDistanceUp() + Core.Graph.GraphConfig.LocateClimbTop) / Core.Controller.ZoomRatio);
-                MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedClimbTop * Core.Controller.ZoomRatio, 0);
+                Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - Core.Graph.GraphConfig.LocateClimbTop);
+                MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedClimbTop, 0);
                 MoveTimer.Start();
                 DisplayClimb_Top_Lefting();
             }
@@ -813,7 +813,7 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
                 //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);
-                MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedFallX * Core.Controller.ZoomRatio, Core.Graph.GraphConfig.SpeedFallY * Core.Controller.ZoomRatio);
+                MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedFallX, Core.Graph.GraphConfig.SpeedFallY);
                 MoveTimer.Start();
                 Display(GraphType.Fall_Left_A_Start, DisplayFall_Lefting);
             }
@@ -876,7 +876,7 @@ namespace VPet_Simulator.Core
                 walklength = 0;
                 CountNomal = 0;
                 //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);
-                MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedFallX * Core.Controller.ZoomRatio, Core.Graph.GraphConfig.SpeedFallY * Core.Controller.ZoomRatio);
+                MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedFallX, Core.Graph.GraphConfig.SpeedFallY);
                 MoveTimer.Start();
                 Display(GraphType.Fall_Right_A_Start, DisplayFall_Righting);
             }

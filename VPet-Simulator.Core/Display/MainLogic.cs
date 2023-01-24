@@ -58,8 +58,8 @@ namespace VPet_Simulator.Core
                 {
                     Core.Save.Health -= Function.Rnd.Next(0, 1);
                 }
-                else if(Core.Save.StrengthDrink >= 75)
-                        Core.Save.Health += Function.Rnd.Next(0, 1);
+                else if (Core.Save.StrengthDrink >= 75)
+                    Core.Save.Health += Function.Rnd.Next(0, 1);
                 var newmod = Core.Save.CalMode();
                 if (Core.Save.Mode != newmod)
                 {
@@ -77,7 +77,7 @@ namespace VPet_Simulator.Core
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
             if (DisplayType == GraphCore.GraphType.Default && !isPress)
-                switch (1)//Function.Rnd.Next(Math.Max(23, 200 - CountNomal)))
+                switch (Function.Rnd.Next(Math.Max(23, Core.Controller.InteractionCycle - CountNomal)))
                 {
                     case 0:
                     case 7:
@@ -144,5 +144,50 @@ namespace VPet_Simulator.Core
         {
             AutoReset = true,
         };
+        /// <summary>
+        /// 设置计算间隔
+        /// </summary>
+        /// <param name="Interval">计算间隔</param>
+        public void SetLogicInterval(int Interval)
+        {
+            EventTimer.Interval = Interval;
+        }
+        private Timer SmartMoveTimer = new Timer(20 * 60)
+        {
+            AutoReset = true,
+        };
+        /// <summary>
+        /// 是否启用智能移动
+        /// </summary>
+        private bool SmartMove;
+        /// <summary>
+        /// 设置移动模式
+        /// </summary>
+        /// <param name="AllowMove">允许移动</param>
+        /// <param name="SmartMove">启用智能移动</param>
+        /// <param name="SmartMoveInterval">智能移动周期</param>
+        public void SetMoveMode(bool AllowMove, bool smartMove, int SmartMoveInterval)
+        {
+            MoveTimer.Stop();
+            if (AllowMove)
+            {
+                MoveTimer.AutoReset = true;
+                if (smartMove)
+                {
+                    SmartMoveTimer.Interval = SmartMoveInterval;
+                    SmartMoveTimer.Start();
+                    SmartMove = true;
+                }
+                else
+                {
+                    SmartMoveTimer.Stop();
+                    SmartMove = false;
+                }
+            }
+            else
+            {
+                MoveTimer.AutoReset = false;
+            }
+        }
     }
 }

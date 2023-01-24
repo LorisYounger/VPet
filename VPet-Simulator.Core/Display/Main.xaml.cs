@@ -61,7 +61,14 @@ namespace VPet_Simulator.Core
 
             EventTimer.Elapsed += EventTimer_Elapsed;
             MoveTimer.Elapsed += MoveTimer_Elapsed;
+            SmartMoveTimer.Elapsed += SmartMoveTimer_Elapsed;
         }
+
+        private void SmartMoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            MoveTimer.AutoReset = false;
+        }
+
         public void Say(string text)
         {
             MsgBar.Show(Core.Save.Name, text);
@@ -90,6 +97,7 @@ namespace VPet_Simulator.Core
                 Thread.Sleep(Core.Controller.PressLength);
                 Point mp = default;
                 Dispatcher.BeginInvoke(new Action(() => mp = Mouse.GetPosition(MainGrid))).Wait();
+                //mp = new Point(mp.X * Core.Controller.ZoomRatio, mp.Y * Core.Controller.ZoomRatio);
                 if (isPress && presstime == pth)
                 {//历遍长按事件
                     var act = Core.TouchEvent.FirstOrDefault(x => x.IsPress == true && x.Touch(mp));
@@ -115,6 +123,15 @@ namespace VPet_Simulator.Core
                 MainGrid.MouseMove -= MainGrid_MouseMove;
                 rasetype = -1;
                 DisplayRaising();
+            }
+            else
+            {
+                if (SmartMove)
+                {
+                    MoveTimer.AutoReset = true;
+                    SmartMoveTimer.Stop();
+                    SmartMoveTimer.Start();
+                }
             }
         }
 

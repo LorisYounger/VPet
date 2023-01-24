@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Windows"
-        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" mc:Ignorable="d" d:DesignHeight="450" Title="设置"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
+        xmlns:system="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" d:DesignHeight="450" Title="设置"
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" Closing="WindowX_Closing"
         Width="400" Height="450">
     <Viewbox>
@@ -103,6 +104,9 @@
                                     CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
                                     ToolTip="从Steam启动该游戏, 统计时长不能停" Grid.Column="1" />
                         </Grid>
+                        <TextBlock Grid.Row="6" Text="宠物动画" VerticalAlignment="Center" FontSize="14" />
+                        <ComboBox x:Name="PetBox" Grid.Row="6" Grid.Column="2" ToolTip="加载的宠物动画,重启后生效"
+                                Style="{DynamicResource StandardComboBoxStyle}" Margin="0,3,0,2" />
                     </Grid>
                 </TabItem>
                 <TabItem Header="系统" BorderBrush="{DynamicResource PrimaryDarker}">
@@ -115,12 +119,36 @@
                         <ComboBox x:Name="CBAutoSave" SelectedIndex="3" VerticalAlignment="Top" Margin="10,5,0,0"
                                 HorizontalAlignment="Left" Style="{DynamicResource StandardComboBoxStyle}" Width="200"
                                 SelectionChanged="CBAutoSave_SelectionChanged">
-                            <ComboBoxItem>关闭自动保存</ComboBoxItem>
-                            <ComboBoxItem>每5分钟一次</ComboBoxItem>
-                            <ComboBoxItem>每10分钟一次</ComboBoxItem>
-                            <ComboBoxItem>每20分钟一次</ComboBoxItem>
-                            <ComboBoxItem>每半小时一次</ComboBoxItem>
-                            <ComboBoxItem>每小时一次</ComboBoxItem>
+                            <ComboBoxItem>
+                                <ComboBoxItem.Tag>
+                                    <system:Int32>-1</system:Int32>
+                                </ComboBoxItem.Tag> 关闭自动保存
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <ComboBoxItem.Tag>
+                                    <system:Int32>5</system:Int32>
+                                </ComboBoxItem.Tag> 每5分钟一次
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <ComboBoxItem.Tag>
+                                    <system:Int32>10</system:Int32>
+                                </ComboBoxItem.Tag> 每10分钟一次
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <ComboBoxItem.Tag>
+                                    <system:Int32>20</system:Int32>
+                                </ComboBoxItem.Tag> 每20分钟一次
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <ComboBoxItem.Tag>
+                                    <system:Int32>30</system:Int32>
+                                </ComboBoxItem.Tag> 每半小时一次
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <ComboBoxItem.Tag>
+                                    <system:Int32>60</system:Int32>
+                                </ComboBoxItem.Tag> 每小时一次
+                            </ComboBoxItem>
                         </ComboBox>
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
                                 TextWrapping="Wrap" Margin="0,10,0,0">
@@ -199,7 +227,8 @@
                                         BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
                                         ToggleBrush="{DynamicResource PrimaryDark}" IsChecked="True"
                                         CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
-                                        ToolTip="启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.&#13;如果嫌麻烦可以关掉" />
+                                        ToolTip="启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.&#13;如果嫌麻烦可以关掉"
+                                        Checked="MoveEventBox_Checked" Unchecked="MoveEventBox_Checked" />
                                 <pu:Switch x:Name="SmartMoveEventBox" BorderBrush="{DynamicResource PrimaryDark}"
                                         IsEnabled="{Binding ElementName=MoveEventBox,Path=IsChecked}"
                                         CheckedBackground="{DynamicResource Primary}" Content="智能移动"
@@ -207,7 +236,8 @@
                                         BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
                                         ToggleBrush="{DynamicResource PrimaryDark}" Grid.Column="1"
                                         CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
-                                        ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除" />
+                                        ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除"
+                                        Checked="SmartMoveEventBox_Checked" Unchecked="SmartMoveEventBox_Checked" />
                             </Grid>
 
                             <TextBlock Grid.Row="0" Text="数据计算" VerticalAlignment="Center" FontSize="14" />
@@ -221,7 +251,8 @@
                                 </Grid.ColumnDefinitions>
                                 <Slider x:Name="CalSlider" TickFrequency="0.1" IsSnapToTickEnabled="True"
                                         Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center"
-                                        Maximum="60" SmallChange=".5" Minimum="5" LargeChange="1" Value="15" />
+                                        Maximum="60" SmallChange=".5" Minimum="5" LargeChange="1" Value="15"
+                                        ValueChanged="CalSlider_ValueChanged" />
                                 <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"
                                         Text="{Binding ElementName=CalSlider,Path=Value,StringFormat={}{0:f1} 秒}"
                                         FontSize="14" Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
@@ -247,20 +278,61 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock  Text="智能移动判断时间间隔"/>
+                                <TextBlock Text="智能移动判断时间间隔" />
                                 <ComboBox x:Name="CBSmartMove" Style="{DynamicResource StandardComboBoxStyle}"
                                         IsEnabled="{Binding ElementName=SmartMoveEventBox,Path=IsChecked}"
-                                        SelectionChanged="CBAutoSave_SelectionChanged" SelectedIndex="5" Grid.Column="1">
-                                    <ComboBoxItem>30 秒</ComboBoxItem>
-                                    <ComboBoxItem>1 分钟</ComboBoxItem>
-                                    <ComboBoxItem>2 分钟</ComboBoxItem>
-                                    <ComboBoxItem>5 分钟</ComboBoxItem>
-                                    <ComboBoxItem>10 分钟</ComboBoxItem>
-                                    <ComboBoxItem>20 分钟</ComboBoxItem>
-                                    <ComboBoxItem>30 分钟</ComboBoxItem>
-                                    <ComboBoxItem>40 分钟</ComboBoxItem>
-                                    <ComboBoxItem>50 分钟</ComboBoxItem>
-                                    <ComboBoxItem>60 分钟</ComboBoxItem>
+                                        SelectionChanged="CBSmartMove_SelectionChanged" SelectedIndex="5"
+                                        Grid.Column="1">
+                                    <ComboBoxItem>
+                                        <ComboBoxItem.Tag>
+                                            <system:Int32>30</system:Int32>
+                                        </ComboBoxItem.Tag> 30 秒
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <ComboBoxItem.Tag>
+                                            <system:Int32>60</system:Int32>
+                                        </ComboBoxItem.Tag> 1 分钟
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <ComboBoxItem.Tag>
+                                            <system:Int32>120</system:Int32>
+                                        </ComboBoxItem.Tag> 2 分钟
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <ComboBoxItem.Tag>
+                                            <system:Int32>300</system:Int32>
+                                        </ComboBoxItem.Tag> 5 分钟
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <ComboBoxItem.Tag>
+                                            <system:Int32>600</system:Int32>
+                                        </ComboBoxItem.Tag> 10 分钟
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <ComboBoxItem.Tag>
+                                            <system:Int32>1200</system:Int32>
+                                        </ComboBoxItem.Tag> 20 分钟
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <ComboBoxItem.Tag>
+                                            <system:Int32>1800</system:Int32>
+                                        </ComboBoxItem.Tag> 30 分钟
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <ComboBoxItem.Tag>
+                                            <system:Int32>2400</system:Int32>
+                                        </ComboBoxItem.Tag> 40 分钟
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <ComboBoxItem.Tag>
+                                            <system:Int32>3000</system:Int32>
+                                        </ComboBoxItem.Tag> 50 分钟
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <ComboBoxItem.Tag>
+                                            <system:Int32>3600</system:Int32>
+                                        </ComboBoxItem.Tag> 60 分钟
+                                    </ComboBoxItem>
                                 </ComboBox>
                             </Grid>
 

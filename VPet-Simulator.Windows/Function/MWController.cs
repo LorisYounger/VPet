@@ -61,8 +61,11 @@ namespace VPet_Simulator.Windows
 
         public double ZoomRatio => mw.Set.ZoomLevel;
 
-        public int PressLength => 500;
+        public int PressLength => mw.Set.PressLength;
 
-        public bool EnableFunction => false;
+        public bool EnableFunction => false;//mw.Set.EnableFunction;
+
+        public int InteractionCycle => mw.Set.InteractionCycle;
+
     }
 }

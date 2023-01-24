@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,18 @@ namespace VPet_Simulator.Windows
             Set.ZoomLevel = zl;
             this.Height = 500 * zl;
             this.Width = 500 * zl;
+        }
+        /// <summary>
+        /// 保存设置
+        /// </summary>
+        public void Save()
+        {
+            //游戏存档
+            if (Set != null)
+                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
+            if (Core != null && Core.Save != null)
+                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
+
         }
     }
 }

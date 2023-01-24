@@ -23,6 +23,7 @@ using MessageBox = System.Windows.MessageBox;
 using ContextMenu = System.Windows.Forms.ContextMenu;
 using MenuItem = System.Windows.Forms.MenuItem;
 using Application = System.Windows.Application;
+using System.Timers;
 
 namespace VPet_Simulator.Windows
 {
@@ -32,6 +33,7 @@ namespace VPet_Simulator.Windows
     public partial class MainWindow : Window
     {
         private NotifyIcon notifyIcon;
+        public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
         public MainWindow()
         {
             //判断是不是Steam用户,因为本软件会发布到Steam
@@ -113,21 +115,33 @@ namespace VPet_Simulator.Windows
             //加载游戏内容
             Core.Controller = new MWController(this);
             Core.Save = new Save("萝莉斯");
+
+            AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
+
+            if (Set.AutoSaveInterval > 0)
+            {
+                AutoSaveTimer.Interval = Set.AutoSaveInterval * 60000;
+                AutoSaveTimer.Start();
+            }
+
+
             Dispatcher.Invoke(new Action(() =>
             {
                 Core.Graph = Pets[0].Graph();
                 LoadingText.Visibility = Visibility.Collapsed;
                 winSetting = new winGameSetting(this);
-                var main = new Main(Core) { };
-                main.DefaultClickAction = () => { Dispatcher.Invoke(() => { main.Say("你知道吗? 鼠标右键可以打开菜单栏"); }); };
-                DisplayGrid.Child = main;
-                main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板", () =>
+                Main = new Main(Core) { };
+                Main.DefaultClickAction = () => { Dispatcher.Invoke(() => { Main.Say("你知道吗? 鼠标右键可以打开菜单栏"); }); };
+                DisplayGrid.Child = Main;
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠", () => { Close(); });
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板", () =>
                 {
                     Topmost = false;
                     winSetting.Show();
                 });
-                main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠", () => { Close(); });
 
+                Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
+                Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
                 //加载图标
                 notifyIcon = new NotifyIcon();
                 ContextMenu m_menu;
@@ -135,8 +149,8 @@ namespace VPet_Simulator.Windows
                 m_menu = new ContextMenu();
                 m_menu.MenuItems.Add(new MenuItem("重置状态", (x, y) =>
                 {
-                    main.CleanState();
-                    main.DisplayNomal();
+                    Main.CleanState();
+                    Main.DisplayNomal();
                 }));
                 m_menu.MenuItems.Add(new MenuItem("屏幕居中", (x, y) =>
                 {
@@ -163,22 +177,23 @@ namespace VPet_Simulator.Windows
                     Task.Run(() =>
                     {
                         Thread.Sleep(1000);
-                        main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议");
+                        Main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议");
                     });
                 }
             }));
         }
 
+        private void AutoSaveTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Save();
+        }
+
+        public Main Main;
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            //游戏存档
-            if (Set != null)
-                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
-            if (Core != null && Core.Save != null)
-                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
-            if (DisplayGrid.Child != null)
-                ((Main)DisplayGrid.Child).Dispose();
+            Save();
+            Main?.Dispose();
             notifyIcon?.Dispose();
             System.Environment.Exit(0);
         }

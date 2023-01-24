@@ -25,8 +25,8 @@ namespace VPet_Simulator.Windows
             }
             presslength = this["gameconfig"].GetInt("presslength", 500);
             intercycle = this["gameconfig"].GetInt("intercycle", 200);
-            moveevent = !this["gameconfig"].GetBool("moveevent");
-            smartmoveevent = this["gameconfig"].GetBool("smartmoveevent");
+            allowmove = !this["gameconfig"].GetBool("allowmove");
+            smartmove = this["gameconfig"].GetBool("smartmove");
             enablefunction = !this["gameconfig"].GetBool("enablefunction");
         }
 
@@ -204,35 +204,35 @@ namespace VPet_Simulator.Windows
             get => this["gameconfig"].GetDouble("logicinterval", 15);
             set => this["gameconfig"].SetDouble("logicinterval", value);
         }
-        bool moveevent;
+        bool allowmove;
         /// <summary>
         /// 允许移动事件
         /// </summary>
-        public bool MoveEvent
+        public bool AllowMove
         {
-            get => moveevent;
+            get => allowmove;
             set
             {
-                moveevent = value;
-                this["gameconfig"].SetBool("moveevent", !value);
+                allowmove = value;
+                this["gameconfig"].SetBool("allowmove", !value);
             }
         }
-        bool smartmoveevent;
+        bool smartmove;
         /// <summary>
         /// 智能移动
         /// </summary>
-        public bool SmartMoveEvent
+        public bool SmartMove
         {
-            get => smartmoveevent;
+            get => smartmove;
             set
             {
-                smartmoveevent = value;
-                this["gameconfig"].SetBool("smartmoveevent", value);
+                smartmove = value;
+                this["gameconfig"].SetBool("smartmove", value);
             }
         }
         bool enablefunction;
         /// <summary>
-        /// 允许移动
+        /// 启用计算等数据功能
         /// </summary>
         public bool EnableFunction
         {
@@ -242,6 +242,14 @@ namespace VPet_Simulator.Windows
                 enablefunction = value;
                 this["gameconfig"].SetBool("function", !value);
             }
+        }
+        /// <summary>
+        /// 智能移动周期 (秒)
+        /// </summary>
+        public int SmartMoveInterval
+        {
+            get => this["gameconfig"].GetInt("smartmoveinterval", 20*60);
+            set => this["gameconfig"].SetInt("smartmoveinterval", value);
         }
     }
 }
