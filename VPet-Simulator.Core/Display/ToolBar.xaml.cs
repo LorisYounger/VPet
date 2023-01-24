@@ -51,7 +51,16 @@ namespace VPet_Simulator.Core
             {
                 Tlv.Text = "Lv " + m.Core.Save.Level.ToString();
                 tMoney.Text = "$ " + m.Core.Save.Money.ToString("N2");
-                till.Visibility = m.Core.Save.Mode == Save.ModeType.Ill ? Visibility.Visible : Visibility.Collapsed;
+                if (m.Core.Controller.EnableFunction)
+                {
+                    till.Visibility = m.Core.Save.Mode == Save.ModeType.Ill ? Visibility.Visible : Visibility.Collapsed;
+                    tfun.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    till.Visibility = Visibility.Collapsed;
+                    tfun.Visibility = Visibility.Visible;
+                }    
                 pExp.Maximum = m.Core.Save.LevelUpNeed();
                 pExp.Value = m.Core.Save.Exp;
                 pStrength.Value = m.Core.Save.Strength;

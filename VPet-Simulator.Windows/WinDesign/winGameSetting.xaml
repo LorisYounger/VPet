@@ -478,7 +478,7 @@
                     <Run>版本</Run><LineBreak />
                     <Run>激活</Run><LineBreak />
                         </TextBlock>
-                        <TextBlock VerticalAlignment="Top" Margin="100,30,0,0">
+                        <TextBlock VerticalAlignment="Top" Margin="100,30,0,0" TextWrapping="WrapWithOverflow">
                     <Run x:Name="runUserName">杨远洛里斯</Run><LineBreak />
                     <Run x:Name="runabVer">v1.0 (100)</Run><LineBreak />
                     <Run x:Name="runActivate">已通过Steam[uid]激活服务注册</Run><LineBreak />

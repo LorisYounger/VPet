@@ -156,9 +156,6 @@ namespace VPet_Simulator.Windows
                 {
                     Main.CleanState();
                     Main.DisplayNomal();
-                }));
-                m_menu.MenuItems.Add(new MenuItem("屏幕居中", (x, y) =>
-                {
                     Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
                     Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
                 }));

@@ -124,14 +124,11 @@ namespace VPet_Simulator.Core
                 rasetype = -1;
                 DisplayRaising();
             }
-            else
+            else if (SmartMove)
             {
-                if (SmartMove)
-                {
-                    MoveTimer.AutoReset = true;
-                    SmartMoveTimer.Stop();
-                    SmartMoveTimer.Start();
-                }
+                MoveTimer.AutoReset = true;
+                SmartMoveTimer.Stop();
+                SmartMoveTimer.Start();
             }
         }
 

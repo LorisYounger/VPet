@@ -10,6 +10,13 @@ namespace VPet_Simulator.Core
 {
     public partial class Main
     {
+        public const int DistanceMax = 100;
+        public const int DistanceMid = 100;
+        public const int DistanceMin = 50;
+        public const int LoopMax = 10;
+        public const int LoopMid = 7;
+        public const int LoopMin = 5;
+        public const int TreeRND = 4;
 
         public Timer EventTimer = new Timer(15000)
         {
@@ -77,10 +84,9 @@ namespace VPet_Simulator.Core
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
             if (DisplayType == GraphCore.GraphType.Default && !isPress)
-                switch (Function.Rnd.Next(Math.Max(23, Core.Controller.InteractionCycle - CountNomal)))
+                switch (Function.Rnd.Next(Math.Max(20, Core.Controller.InteractionCycle - CountNomal)))
                 {
                     case 0:
-                    case 7:
                         //随机向右
                         DisplayWalk_Left();
                         break;
@@ -97,20 +103,25 @@ namespace VPet_Simulator.Core
                         DisplayClimb_Right_DOWN();
                         break;
                     case 5:
-                    case 6:
                         DisplayWalk_Right();
                         break;
-                    case 8:
+                    case 6:
                         DisplayFall_Left();
                         break;
-                    case 9:
+                    case 7:
                         DisplayFall_Right();
                         break;
-                    case 10:
+                    case 8:
                         DisplayClimb_Top_Right();
                         break;
-                    case 11:
+                    case 9:
                         DisplayClimb_Top_Left();
+                        break;
+                    case 10:
+                        DisplayCrawl_Left();
+                        break;
+                    case 11:
+                        DisplayCrawl_Right();
                         break;
                     case 15:
                     case 16:
@@ -119,15 +130,7 @@ namespace VPet_Simulator.Core
                     case 18:
                     case 17:
                         DisplaySquat();
-                        break;
-                    case 19:
-                    case 20:
-                        DisplayCrawl_Left();
-                        break;
-                    case 21:
-                    case 22:
-                        DisplayCrawl_Right();
-                        break;
+                        break;                   
                     default:
                         break;
                 }

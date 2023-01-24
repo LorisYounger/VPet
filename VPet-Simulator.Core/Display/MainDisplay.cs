@@ -79,7 +79,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void DisplayTouchHead()
         {
-            if (Core.Save.Strength <= 50)
+            if (Core.Save.Strength <= DistanceMin)
                 return;
             Core.Save.StrengthChange(-1);
             Core.Save.FeelingChange(1);
@@ -215,7 +215,7 @@ namespace VPet_Simulator.Core
         public void DisplayWalk_Left()
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceLeft() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 CountNomal = 0;
@@ -233,9 +233,9 @@ namespace VPet_Simulator.Core
         private void DisplayWalk_Lefting()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceLeft() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认 or/爬墙
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 0:
                         DisplayFall_Left(() =>
@@ -258,13 +258,13 @@ namespace VPet_Simulator.Core
                 }
             }
             //不是:继续右边走or停下
-            if (Function.Rnd.Next(walklength++) < 5)
+            if (Function.Rnd.Next(walklength++) < LoopMin)
             {
                 Display(GraphCore.GraphType.Walk_Left_B_Loop, DisplayWalk_Lefting);
             }
             else
             {//停下来
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
 
                     case 0:
@@ -295,7 +295,7 @@ namespace VPet_Simulator.Core
         public void DisplayWalk_Right()
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceRight() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceRight() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 CountNomal = 0;
@@ -313,9 +313,9 @@ namespace VPet_Simulator.Core
         private void DisplayWalk_Righting()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceRight() < 50 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceRight() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认 or/爬墙
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 0:
                         DisplayClimb_Right_UP(() =>
@@ -338,13 +338,13 @@ namespace VPet_Simulator.Core
                 }
             }
             //不是:继续右边走or停下
-            if (Function.Rnd.Next(walklength++) < 5)
+            if (Function.Rnd.Next(walklength++) < LoopMin)
             {
                 Display(GraphCore.GraphType.Walk_Right_B_Loop, DisplayWalk_Righting);
             }
             else
             {//停下来
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
 
                     case 0:
@@ -375,7 +375,7 @@ namespace VPet_Simulator.Core
         public void DisplayCrawl_Left()
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceLeft() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 Display(GraphCore.GraphType.Crawl_Left_A_Start, () =>
@@ -392,9 +392,9 @@ namespace VPet_Simulator.Core
         private void DisplayCrawl_Lefting()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceLeft() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认 or/爬墙
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 0:
                         DisplayClimb_Left_UP(() =>
@@ -417,7 +417,7 @@ namespace VPet_Simulator.Core
                 }
             }
             //不是:继续右边走or停下
-            if (Function.Rnd.Next(walklength++) < 5)
+            if (Function.Rnd.Next(walklength++) < LoopMin)
             {
                 Display(GraphCore.GraphType.Crawl_Left_B_Loop, DisplayCrawl_Lefting);
             }
@@ -433,7 +433,7 @@ namespace VPet_Simulator.Core
         public void DisplayCrawl_Right()
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceRight() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceRight() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 Display(GraphCore.GraphType.Crawl_Right_A_Start, () =>
@@ -450,9 +450,9 @@ namespace VPet_Simulator.Core
         private void DisplayCrawl_Righting()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceRight() < 50 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceRight() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认 or/爬墙
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 0:
                         DisplayClimb_Right_UP(() =>
@@ -475,7 +475,7 @@ namespace VPet_Simulator.Core
                 }
             }
             //不是:继续右边走or停下
-            if (Function.Rnd.Next(walklength++) < 5)
+            if (Function.Rnd.Next(walklength++) < LoopMin)
             {
                 Display(GraphCore.GraphType.Crawl_Right_B_Loop, DisplayCrawl_Righting);
             }
@@ -491,7 +491,7 @@ namespace VPet_Simulator.Core
         public void DisplayClimb_Left_UP(Action ifNot = null)
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceLeft() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceUp() > 300 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceLeft() < DistanceMid * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceUp() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 CountNomal = 0;
@@ -512,9 +512,9 @@ namespace VPet_Simulator.Core
         private void DisplayClimb_Lefting_UP()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceUp() < 100 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceUp() < DistanceMid * Core.Controller.ZoomRatio)
             {//是,停下恢复默认 or/爬上面的墙
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 0:
                         DisplayClimb_Top_Right();
@@ -529,13 +529,13 @@ namespace VPet_Simulator.Core
                 }
             }
             //不是:继续or停下
-            if (Function.Rnd.Next(walklength++) < 8)
+            if (Function.Rnd.Next(walklength++) < LoopMid)
             {
                 Display(GraphCore.GraphType.Climb_Left, DisplayClimb_Lefting_UP);
             }
             else
             {//停下来
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 1:
                         DisplayFall_Right();
@@ -553,7 +553,7 @@ namespace VPet_Simulator.Core
         public void DisplayClimb_Left_DOWN(Action ifNot = null)
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceDown() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceLeft() < DistanceMin * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceDown() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 CountNomal = 0;
@@ -575,13 +575,13 @@ namespace VPet_Simulator.Core
         private void DisplayClimb_Lefting_DOWN()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceDown() < 50 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceDown() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认
                 MoveTimer.Stop();
                 DisplayNomal();
             }
             //不是:继续or停下
-            if (Function.Rnd.Next(walklength++) < 5)
+            if (Function.Rnd.Next(walklength++) < LoopMin)
             {
                 Display(GraphCore.GraphType.Climb_Left, DisplayClimb_Lefting_DOWN);
             }
@@ -597,7 +597,7 @@ namespace VPet_Simulator.Core
         public void DisplayClimb_Right_UP(Action ifNot = null)
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceRight() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceUp() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceRight() < DistanceMid * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceUp() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 CountNomal = 0;
@@ -619,9 +619,9 @@ namespace VPet_Simulator.Core
         private void DisplayClimb_Righting_UP()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceUp() < 100 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceUp() < DistanceMid * Core.Controller.ZoomRatio)
             {//是,停下恢复默认 or/爬上面的墙
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 0:
                         DisplayClimb_Top_Left();
@@ -636,13 +636,13 @@ namespace VPet_Simulator.Core
                 }
             }
             //不是:继续or停下
-            if (Function.Rnd.Next(walklength++) < 5)
+            if (Function.Rnd.Next(walklength++) < LoopMin)
             {
                 Display(GraphCore.GraphType.Climb_Right, DisplayClimb_Righting_UP);
             }
             else
             {//停下来
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 0:
                         DisplayFall_Left();
@@ -660,7 +660,7 @@ namespace VPet_Simulator.Core
         public void DisplayClimb_Right_DOWN(Action ifNot = null)
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceRight() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceDown() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceRight() < DistanceMid * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceDown() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 CountNomal = 0;
@@ -682,13 +682,13 @@ namespace VPet_Simulator.Core
         private void DisplayClimb_Righting_DOWN()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceDown() < 50 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceDown() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认
                 MoveTimer.Stop();
                 DisplayNomal();
             }
             //不是:继续or停下
-            if (Function.Rnd.Next(walklength++) < 5)
+            if (Function.Rnd.Next(walklength++) < LoopMin)
             {
                 Display(GraphCore.GraphType.Climb_Right, DisplayClimb_Righting_DOWN);
             }
@@ -704,7 +704,7 @@ namespace VPet_Simulator.Core
         public void DisplayClimb_Top_Right()
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceUp() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceRight() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceUp() < DistanceMid * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceRight() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 CountNomal = 0;
@@ -721,9 +721,9 @@ namespace VPet_Simulator.Core
         private void DisplayClimb_Top_Righting()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceRight() < 50 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceRight() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认 or向下爬or掉落
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 0:
                         DisplayClimb_Right_DOWN();
@@ -739,7 +739,7 @@ namespace VPet_Simulator.Core
                 }
             }
             //不是:继续or停下
-            if (Function.Rnd.Next(walklength++) < 10)
+            if (Function.Rnd.Next(walklength++) < LoopMax)
             {
                 Display(GraphType.Climb_Top_Right, DisplayClimb_Top_Righting);
             }
@@ -756,7 +756,7 @@ namespace VPet_Simulator.Core
         public void DisplayClimb_Top_Left()
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceUp() < 100 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceUp() < DistanceMid * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceLeft() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 CountNomal = 0;
@@ -773,9 +773,9 @@ namespace VPet_Simulator.Core
         private void DisplayClimb_Top_Lefting()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceLeft() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认 or向下爬
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 0:
                         DisplayClimb_Left_DOWN();
@@ -791,7 +791,7 @@ namespace VPet_Simulator.Core
                 }
             }
             //不是:继续or停下
-            if (Function.Rnd.Next(walklength++) < 10)
+            if (Function.Rnd.Next(walklength++) < LoopMax)
             {
                 Display(GraphCore.GraphType.Climb_Top_Left, DisplayClimb_Top_Lefting);
             }
@@ -808,11 +808,11 @@ namespace VPet_Simulator.Core
         public void DisplayFall_Left(Action ifNot = null)
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceDown() > 400 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceLeft() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceDown() > DistanceMax * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceLeft() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 CountNomal = 0;
-                //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);
+                //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 1DistanceMin);
                 MoveTimerPoint = new Point(-Core.Graph.GraphConfig.SpeedFallX, Core.Graph.GraphConfig.SpeedFallY);
                 MoveTimer.Start();
                 Display(GraphType.Fall_Left_A_Start, DisplayFall_Lefting);
@@ -826,9 +826,9 @@ namespace VPet_Simulator.Core
         private void DisplayFall_Lefting()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceLeft() < 50 * Core.Controller.ZoomRatio || Core.Controller.GetWindowsDistanceDown() < 50 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceLeft() < DistanceMin * Core.Controller.ZoomRatio || Core.Controller.GetWindowsDistanceDown() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认 or向上爬
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 0:
                         DisplayClimb_Left_UP(() =>
@@ -852,7 +852,7 @@ namespace VPet_Simulator.Core
                 }
             }
             //不是:继续or停下
-            if (Function.Rnd.Next(walklength++) < 7)
+            if (Function.Rnd.Next(walklength++) < LoopMid)
             {
                 Display(GraphCore.GraphType.Fall_Left_B_Loop, DisplayFall_Lefting);
             }
@@ -871,11 +871,11 @@ namespace VPet_Simulator.Core
         public void DisplayFall_Right(Action ifNot = null)
         {
             //看看距离是否满足调节
-            if (Core.Controller.GetWindowsDistanceDown() > 400 * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceRight() > 400 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceDown() > DistanceMax * Core.Controller.ZoomRatio && Core.Controller.GetWindowsDistanceRight() > DistanceMax * Core.Controller.ZoomRatio)
             {
                 walklength = 0;
                 CountNomal = 0;
-                //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 150);
+                //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio - 1DistanceMin);
                 MoveTimerPoint = new Point(Core.Graph.GraphConfig.SpeedFallX, Core.Graph.GraphConfig.SpeedFallY);
                 MoveTimer.Start();
                 Display(GraphType.Fall_Right_A_Start, DisplayFall_Righting);
@@ -889,9 +889,9 @@ namespace VPet_Simulator.Core
         private void DisplayFall_Righting()
         {
             //看看距离是不是不足
-            if (Core.Controller.GetWindowsDistanceRight() < 50 * Core.Controller.ZoomRatio || Core.Controller.GetWindowsDistanceDown() < 50 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceRight() < DistanceMin * Core.Controller.ZoomRatio || Core.Controller.GetWindowsDistanceDown() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认 or向上爬
-                switch (Function.Rnd.Next(3))
+                switch (Function.Rnd.Next(TreeRND))
                 {
                     case 0:
                         DisplayClimb_Right_UP(() =>
@@ -915,7 +915,7 @@ namespace VPet_Simulator.Core
                 }
             }
             //不是:继续or停下
-            if (Function.Rnd.Next(walklength++) < 7)
+            if (Function.Rnd.Next(walklength++) < LoopMid)
             {
                 Display(GraphCore.GraphType.Fall_Right_B_Loop, DisplayFall_Righting);
             }
