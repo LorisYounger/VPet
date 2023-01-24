@@ -134,11 +134,12 @@ namespace VPet_Simulator.Windows
                 Main.DefaultClickAction = () => { Dispatcher.Invoke(() => { Main.Say("你知道吗? 鼠标右键可以打开菜单栏"); }); };
                 DisplayGrid.Child = Main;
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠", () => { Close(); });
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心", () => { new winReport(this).Show(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板", () =>
-                {
-                    Topmost = false;
-                    winSetting.Show();
-                });
+                    {
+                        Topmost = false;
+                        winSetting.Show();
+                    });
 
                 Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
                 Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
@@ -157,6 +158,8 @@ namespace VPet_Simulator.Windows
                     Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
                     Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
                 }));
+                m_menu.MenuItems.Add(new MenuItem("反馈中心", (x, y) => { new winReport(this).Show(); }));
+
                 m_menu.MenuItems.Add(new MenuItem("设置面板", (x, y) =>
                 {
                     Topmost = false;

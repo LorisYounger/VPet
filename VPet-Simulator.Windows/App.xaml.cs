@@ -28,8 +28,11 @@ namespace VPet_Simulator.Windows
                 MessageBox.Show(errstr, "游戏致命性错误");
                 return;
             }
-            MainWindow mw = ((MainWindow)MainWindow);
-            
+            else
+            {
+                new winReport(((MainWindow)MainWindow), errstr).Show();
+                return;
+            }
         }
     }
 }

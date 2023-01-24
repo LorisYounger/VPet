@@ -92,6 +92,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -120,6 +121,9 @@
     <Compile Include="WinDesign\winGameSetting.xaml.cs">
       <DependentUpon>winGameSetting.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WinDesign\winReport.xaml.cs">
+      <DependentUpon>winReport.xaml</DependentUpon>
+    </Compile>
     <Page Include="Design\Theme\basestyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -142,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WinDesign\winGameSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WinDesign\winReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
