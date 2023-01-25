@@ -75,7 +75,12 @@ namespace VPet_Simulator.Core
         }
         private void MoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            string str = DisplayType.ToString();
             Core.Controller.MoveWindows(MoveTimerPoint.X, MoveTimerPoint.Y);
+            if (!str.Contains("Left") && !str.Contains("Right"))
+            {
+                MoveTimer.Stop();
+            }
         }
         public Action DefaultClickAction;
         bool isPress = false;

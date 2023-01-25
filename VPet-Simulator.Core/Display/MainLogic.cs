@@ -13,6 +13,7 @@ namespace VPet_Simulator.Core
         public const int DistanceMax = 100;
         public const int DistanceMid = 100;
         public const int DistanceMin = 50;
+        public const int LoopProMax = 20;
         public const int LoopMax = 10;
         public const int LoopMid = 7;
         public const int LoopMin = 5;
@@ -84,7 +85,7 @@ namespace VPet_Simulator.Core
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
             if (DisplayType == GraphCore.GraphType.Default && !isPress)
-                switch (Function.Rnd.Next(Math.Max(20, Core.Controller.InteractionCycle - CountNomal)))
+                switch (17)//Function.Rnd.Next(Math.Max(20, Core.Controller.InteractionCycle - CountNomal)))
                 {
                     case 0:
                         //随机向右
@@ -123,6 +124,10 @@ namespace VPet_Simulator.Core
                     case 11:
                         DisplayCrawl_Right();
                         break;
+                    case 13:
+                    case 14:
+                        DisplaySleep();
+                        break;
                     case 15:
                     case 16:
                         DisplayBoring();
@@ -130,7 +135,7 @@ namespace VPet_Simulator.Core
                     case 18:
                     case 17:
                         DisplaySquat();
-                        break;                   
+                        break;
                     default:
                         break;
                 }

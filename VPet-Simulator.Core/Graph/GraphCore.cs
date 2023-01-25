@@ -265,9 +265,9 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="type">动画类型</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
-        /// <param name="storernd">是否储存随机数字典</param>
+        ///// <param name="storernd">是否储存随机数字典</param>
         /// <returns></returns>
-        public IGraph FindGraph(GraphType type, Save.ModeType mode, bool storernd = false)
+        public IGraph FindGraph(GraphType type, Save.ModeType mode)//
         {
             if (Graphs.ContainsKey(type))
             {
@@ -276,18 +276,18 @@ namespace VPet_Simulator.Core
                 {
                     if (list.Count == 1)
                         return list[0];
-                    if (storernd)
-                        if (RndGraph.TryGetValue(list.Count, out int index))
-                        {
-                            return list[index];
-                        }
-                        else
-                        {
-                            index = Function.Rnd.Next(list.Count);
-                            RndGraph.Add(list.Count, index);
-                            return list[index];
-                        }
-                    else
+                    //if (storernd)
+                    //    if (RndGraph.TryGetValue(list.Count, out int index))
+                    //    {
+                    //        return list[index];
+                    //    }
+                    //    else
+                    //    {
+                    //        index = Function.Rnd.Next(list.Count);
+                    //        RndGraph.Add(list.Count, index);
+                    //        return list[index];
+                    //    }
+                    //else
                         return list[Function.Rnd.Next(list.Count)];
                 }
                 else

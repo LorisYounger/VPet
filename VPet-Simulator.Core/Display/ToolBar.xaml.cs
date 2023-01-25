@@ -247,5 +247,10 @@ namespace VPet_Simulator.Core
             closetimer.Dispose();
             closePanelTimer.Dispose();
         }
+
+        private void Sleep_Click(object sender, RoutedEventArgs e)
+        {
+            m.DisplaySleep(true);
+        }
     }
 }

@@ -41,28 +41,31 @@ namespace VPet_Simulator.Core
             switch (DisplayType)
             {
                 case GraphCore.GraphType.Boring_B_Loop:
-                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Boring_C_End, Core.Save.Mode, true), EndAction);
+                    Display(GraphCore.GraphType.Boring_C_End, EndAction);
                     return true;
                 case GraphCore.GraphType.Squat_B_Loop:
-                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Squat_C_End, Core.Save.Mode, true), EndAction);
+                    Display(GraphCore.GraphType.Squat_C_End, EndAction);
                     return true;
                 case GraphType.Crawl_Left_B_Loop:
-                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Crawl_Left_C_End, Core.Save.Mode, true), EndAction);
+                    Display(GraphCore.GraphType.Crawl_Left_C_End, EndAction);
                     return true;
                 case GraphType.Crawl_Right_B_Loop:
-                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Crawl_Right_C_End, Core.Save.Mode, true), EndAction);
+                    Display(GraphCore.GraphType.Crawl_Right_C_End, EndAction);
                     return true;
                 case GraphType.Fall_Left_B_Loop:
-                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Fall_Left_C_End, Core.Save.Mode, true), EndAction);
+                    Display(GraphCore.GraphType.Fall_Left_C_End, EndAction);
                     return true;
                 case GraphType.Fall_Right_B_Loop:
-                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Fall_Right_C_End, Core.Save.Mode, true), EndAction);
+                    Display(GraphCore.GraphType.Fall_Right_C_End, EndAction);
                     return true;
                 case GraphType.Walk_Left_B_Loop:
-                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Left_C_End, Core.Save.Mode, true), EndAction);
+                    Display(GraphCore.GraphType.Walk_Left_C_End, EndAction);
                     return true;
                 case GraphType.Walk_Right_B_Loop:
-                    Display(Core.Graph.FindGraph(GraphCore.GraphType.Walk_Right_C_End, Core.Save.Mode, true), EndAction);
+                    Display(GraphCore.GraphType.Walk_Right_C_End, EndAction);
+                    return true;
+                case GraphType.Sleep_B_Loop:
+                    Display(GraphCore.GraphType.Sleep_C_End, EndAction);
                     return true;
                     //case GraphType.Climb_Left:
                     //case GraphType.Climb_Right:
@@ -95,9 +98,9 @@ namespace VPet_Simulator.Core
                     return;
                 }
             Core.Graph.RndGraph.Clear();
-            Display(Core.Graph.FindGraph(GraphCore.GraphType.Touch_Head_A_Start, Core.Save.Mode, true), () =>
-               Display(Core.Graph.FindGraph(GraphCore.GraphType.Touch_Head_B_Loop, Core.Save.Mode, true), () =>
-               Display(Core.Graph.FindGraph(GraphCore.GraphType.Touch_Head_C_End, Core.Save.Mode, true), DisplayNomal
+            Display(GraphCore.GraphType.Touch_Head_A_Start, () =>
+               Display(GraphCore.GraphType.Touch_Head_B_Loop, () =>
+               Display(GraphCore.GraphType.Touch_Head_C_End, DisplayNomal
             )));
         }
 
@@ -109,17 +112,17 @@ namespace VPet_Simulator.Core
             looptimes = 0;
             CountNomal = 0;
             Core.Graph.RndGraph.Clear();
-            Display(Core.Graph.FindGraph(GraphCore.GraphType.Boring_A_Start, Core.Save.Mode, true), DisplayBoringing);
+            Display(GraphCore.GraphType.Boring_A_Start, DisplayBoringing);
         }
         /// <summary>
         /// 显示无聊情况
         /// </summary>
         private void DisplayBoringing()
         {
-            if (Function.Rnd.Next(++looptimes) > 10)
-                Display(Core.Graph.FindGraph(GraphCore.GraphType.Boring_C_End, Core.Save.Mode, true), DisplayNomal);
+            if (Function.Rnd.Next(++looptimes) > LoopProMax)
+                Display(GraphCore.GraphType.Boring_C_End, DisplayNomal);
             else
-                Display(Core.Graph.FindGraph(GraphCore.GraphType.Boring_B_Loop, Core.Save.Mode, true), DisplayBoringing);
+                Display(GraphCore.GraphType.Boring_B_Loop, DisplayBoringing);
         }
         int looptimes;
         /// <summary>
@@ -130,18 +133,49 @@ namespace VPet_Simulator.Core
             looptimes = 0;
             CountNomal = 0;
             Core.Graph.RndGraph.Clear();
-            Display(Core.Graph.FindGraph(GraphCore.GraphType.Squat_A_Start, Core.Save.Mode, true), DisplaySquating);
+            Display(GraphCore.GraphType.Squat_A_Start, DisplaySquating);
         }
         /// <summary>
         /// 显示蹲下情况
         /// </summary>
         public void DisplaySquating()
         {
-            if (Function.Rnd.Next(++looptimes) > 10)
-                Display(Core.Graph.FindGraph(GraphCore.GraphType.Squat_C_End, Core.Save.Mode, true), DisplayNomal);
+            if (Function.Rnd.Next(++looptimes) > LoopProMax)
+                Display(GraphCore.GraphType.Squat_C_End, DisplayNomal);
             else
-                Display(Core.Graph.FindGraph(GraphCore.GraphType.Squat_B_Loop, Core.Save.Mode, true), DisplaySquating);
+                Display(GraphCore.GraphType.Squat_B_Loop, DisplaySquating);
         }
+        /// <summary>
+        /// 显示睡觉情况
+        /// </summary>
+        public void DisplaySleep(bool force = false)
+        {
+            looptimes = 0;
+            CountNomal = 0;
+            Core.Graph.RndGraph.Clear();
+            if (force)
+                Display(GraphCore.GraphType.Sleep_A_Start, DisplaySleepingForce);
+            else
+                Display(GraphCore.GraphType.Sleep_A_Start, DisplaySleeping);
+        }
+        /// <summary>
+        /// 显示睡觉情况 (正常)
+        /// </summary>
+        public void DisplaySleeping()
+        {
+            if (Function.Rnd.Next(++looptimes) > LoopProMax)
+                Display(GraphCore.GraphType.Sleep_C_End, DisplayNomal);
+            else
+                Display(GraphCore.GraphType.Sleep_B_Loop, DisplaySleeping);
+        }
+        /// <summary>
+        /// 显示睡觉情况 (强制)
+        /// </summary>
+        public void DisplaySleepingForce()
+        {//TODO:如果开启了Function,强制睡觉为永久,否则睡到自然醒+LoopMax
+            Display(GraphCore.GraphType.Sleep_B_Loop, DisplaySleepingForce);
+        }
+
         /// <summary>
         /// 显示拖拽情况
         /// </summary>
@@ -930,10 +964,14 @@ namespace VPet_Simulator.Core
 
 
 
-
-        public void Display(GraphType Type, Action EndAction = null, bool StoreRnd = false)
+        /// <summary>
+        /// 显示动画 
+        /// </summary>
+        /// <param name="Type">动画类型</param>
+        /// <param name="EndAction">动画结束后操作</param>
+        public void Display(GraphType Type, Action EndAction = null)//, bool StoreRnd = false)
         {
-            Display(Core.Graph.FindGraph(Type, Core.Save.Mode, StoreRnd), EndAction);
+            Display(Core.Graph.FindGraph(Type, Core.Save.Mode), EndAction);
         }
         bool petgridcrlf = true;
         /// <summary>

@@ -85,10 +85,7 @@ namespace VPet_Simulator.Core
                     Visibility = Visibility.Hidden
                 };
                 MainGrid.Children.Add(img);
-                Animations.Add(new Animation(this, time, () =>
-                {
-                    img.Visibility = Visibility.Visible;
-                }, () => img.Visibility = Visibility.Hidden));
+                Animations.Add(new Animation(this, time, () => img.Visibility = Visibility.Visible, () => img.Visibility = Visibility.Hidden));
             }
             //else
             //{
@@ -196,7 +193,7 @@ namespace VPet_Simulator.Core
                                 EndAction?.Invoke();//运行结束动画时事件
                             parent.StopAction?.Invoke();
                             parent.StopAction = null;
-                            //重新加载第一帧
+                            //延时隐藏
                             Task.Run(() =>
                             {
                                 Thread.Sleep(25);
@@ -213,16 +210,16 @@ namespace VPet_Simulator.Core
                 else
                 {
                     parent.IsContinue = false;
-                    parent.Dispatcher.Invoke(Hidden);
+                    //parent.Dispatcher.Invoke(Hidden);
                     if (parent.DoEndAction)
                         EndAction?.Invoke();//运行结束动画时事件
                     parent.StopAction?.Invoke();
                     parent.StopAction = null;
-                    //Task.Run(() =>
-                    //{
-                    //    Thread.Sleep(25);
-                    //    parent.Dispatcher.Invoke(Hidden);
-                    //});
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(25);
+                        parent.Dispatcher.Invoke(Hidden);
+                    });
                 }
             }
         }

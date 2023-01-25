@@ -109,7 +109,7 @@
             <MenuItem x:Name="MenuPanel" Header="面板" MouseEnter="MenuPanel_MouseEnter" MouseLeave="MenuPanel_MouseLeave"
                     HorizontalContentAlignment="Center" />
             <MenuItem x:Name="MenuInteract" Header="互动" HorizontalContentAlignment="Center">
-                <MenuItem Header="睡觉" HorizontalContentAlignment="Center" />
+                <MenuItem Header="睡觉" HorizontalContentAlignment="Center" Click="Sleep_Click" />
                 <MenuItem Header="玩耍" HorizontalContentAlignment="Center" />
                 <MenuItem Header="说话" HorizontalContentAlignment="Center" />
                 <MenuItem Header="学习" HorizontalContentAlignment="Center" />
