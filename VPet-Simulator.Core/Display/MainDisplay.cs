@@ -988,20 +988,22 @@ namespace VPet_Simulator.Core
             DisplayType = graph.GraphType;
             if (PetGrid.Child == graph.This)
             {
+                ((IGraph)(PetGrid2.Child)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid.Visibility = Visibility.Visible;
-                    PetGrid2.Visibility = Visibility.Collapsed;
+                    PetGrid2.Visibility = Visibility.Hidden;
                 });
                 graph.Run(EndAction);
                 return;
             }
             else if (PetGrid2.Child == graph.This)
             {
+                ((IGraph)(PetGrid.Child)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid2.Visibility = Visibility.Visible;
-                    PetGrid.Visibility = Visibility.Collapsed;
+                    PetGrid.Visibility = Visibility.Hidden;
                 });
                 graph.Run(EndAction);
                 return;
@@ -1015,7 +1017,7 @@ namespace VPet_Simulator.Core
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid2.Child = graph.This;
-                    PetGrid.Visibility = Visibility.Collapsed;
+                    PetGrid.Visibility = Visibility.Hidden;
                     PetGrid2.Visibility = Visibility.Visible;
                 });
                 //Task.Run(() =>
@@ -1030,7 +1032,7 @@ namespace VPet_Simulator.Core
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid.Child = graph.This;
-                    PetGrid2.Visibility = Visibility.Collapsed;
+                    PetGrid2.Visibility = Visibility.Hidden;
                     PetGrid.Visibility = Visibility.Visible;
                 });
                 //Task.Run(() =>

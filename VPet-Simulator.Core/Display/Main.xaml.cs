@@ -56,6 +56,8 @@ namespace VPet_Simulator.Core
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate, Core.Graph.GraphConfig.TouchRaisedSize, DisplayRaised, true));
             var ig = Core.Graph.FindGraph(GraphCore.GraphType.Default, core.Save.Mode);
             PetGrid.Child = ig.This;
+            var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Touch_Head_A_Start, core.Save.Mode);
+            PetGrid2.Child = ig2.This; //用于缓存
             ig.Run(DisplayNomal);
 
 

@@ -85,7 +85,7 @@ namespace VPet_Simulator.Core
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
             if (DisplayType == GraphCore.GraphType.Default && !isPress)
-                switch (17)//Function.Rnd.Next(Math.Max(20, Core.Controller.InteractionCycle - CountNomal)))
+                switch (Function.Rnd.Next(Math.Max(20, Core.Controller.InteractionCycle - CountNomal)))
                 {
                     case 0:
                         //随机向右

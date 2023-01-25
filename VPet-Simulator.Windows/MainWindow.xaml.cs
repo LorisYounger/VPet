@@ -79,6 +79,7 @@ namespace VPet_Simulator.Windows
             }
             Task.Run(GameLoad);
         }
+        private long lastclicktime;
         public void GameLoad()
         {
             //加载所有MOD
@@ -134,9 +135,16 @@ namespace VPet_Simulator.Windows
                 LoadingText.Visibility = Visibility.Collapsed;
                 winSetting = new winGameSetting(this);
                 Main = new Main(Core) { };
-                Main.DefaultClickAction = () => { Dispatcher.Invoke(() => { Main.Say("你知道吗? 鼠标右键可以打开菜单栏"); }); };
+                Main.DefaultClickAction = () => {
+                    if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalMinutes > 1)
+                    {
+                        lastclicktime = DateTime.Now.Ticks;
+                        Dispatcher.Invoke(() => { Main.Say("你知道吗? 鼠标右键可以打开菜单栏"); });
+                    }
+                };
                 DisplayGrid.Child = Main;
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠", () => { Close(); });
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "管理控制台", () => { new winConsole(this).Show(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心", () => { new winReport(this).Show(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板", () =>
                     {

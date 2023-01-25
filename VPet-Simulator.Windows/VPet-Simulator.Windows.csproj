@@ -118,6 +118,9 @@
     <Compile Include="WinDesign\winCharacterPanel.xaml.cs">
       <DependentUpon>winCharacterPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WinDesign\winConsole.xaml.cs">
+      <DependentUpon>winConsole.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinDesign\winGameSetting.xaml.cs">
       <DependentUpon>winGameSetting.xaml</DependentUpon>
     </Compile>
@@ -142,6 +145,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="WinDesign\winCharacterPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WinDesign\winConsole.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

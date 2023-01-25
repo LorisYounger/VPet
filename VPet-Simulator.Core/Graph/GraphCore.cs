@@ -244,8 +244,8 @@ namespace VPet_Simulator.Core
         /// <param name="path">位置</param>
         /// <param name="modetype">状态类型</param>
         /// <param name="graphtype">动画类型</param>
-        /// <param name="storemem">是否储存到内存以节约加载</param>
-        public void AddGraph(string path, Save.ModeType modetype, GraphType graphtype, bool storemem = false)
+        ///// <param name="storemem">是否储存到内存以节约加载</param>
+        public void AddGraph(string path, Save.ModeType modetype, GraphType graphtype)//, bool storemem = false)
         {
             var paths = new DirectoryInfo(path).GetFiles();
             if (paths.Length == 0)
@@ -254,7 +254,7 @@ namespace VPet_Simulator.Core
                 AddGraph(new Picture(paths[0].FullName, modetype, graphtype,
                     int.Parse(paths[0].Name.Split('.').Reverse().ToArray()[1].Split('_').Last())), graphtype);
             else
-                AddGraph(new PNGAnimation(paths, modetype, graphtype, storemem), graphtype);
+                AddGraph(new PNGAnimation(paths, modetype, graphtype), graphtype);
         }
         /// <summary>
         /// 随机数字典(用于确保随机动画不会错位)
