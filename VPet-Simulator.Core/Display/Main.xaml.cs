@@ -49,7 +49,7 @@ namespace VPet_Simulator.Core
             ToolBar = new ToolBar(this);
             ToolBar.Visibility = Visibility.Collapsed;
             UIGrid.Children.Add(ToolBar);
-            MsgBar = new MessageBar();
+            MsgBar = new MessageBar(this);
             MsgBar.Visibility = Visibility.Collapsed;
             UIGrid.Children.Add(MsgBar);
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, DisplayTouchHead));
@@ -71,10 +71,6 @@ namespace VPet_Simulator.Core
             MoveTimer.AutoReset = false;
         }
 
-        public void Say(string text)
-        {
-            MsgBar.Show(Core.Save.Name, text);
-        }
         private void MoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             string str = DisplayType.ToString();
@@ -131,11 +127,18 @@ namespace VPet_Simulator.Core
                 rasetype = -1;
                 DisplayRaising();
             }
-            else if (SmartMove)
+            else
             {
-                MoveTimer.AutoReset = true;
-                SmartMoveTimer.Stop();
-                SmartMoveTimer.Start();
+                //if (MsgBar.Visibility == Visibility.Visible)
+                //{
+                //    MsgBar.ForceClose();
+                //}
+                if (SmartMove)
+                {
+                    MoveTimer.AutoReset = true;
+                    SmartMoveTimer.Stop();
+                    SmartMoveTimer.Start();
+                }
             }
         }
 

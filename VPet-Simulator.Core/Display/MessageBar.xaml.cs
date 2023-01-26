@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Timer = System.Timers.Timer;
 
 namespace VPet_Simulator.Core
 {
@@ -21,12 +23,14 @@ namespace VPet_Simulator.Core
     /// </summary>
     public partial class MessageBar : UserControl, IDisposable
     {
-        public MessageBar()
+        Main m;
+        public MessageBar(Main m)
         {
             InitializeComponent();
             EndTimer.Elapsed += EndTimer_Elapsed;
             ShowTimer.Elapsed += ShowTimer_Elapsed;
             CloseTimer.Elapsed += CloseTimer_Elapsed;
+            this.m = m;
         }
 
         private void CloseTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -35,7 +39,8 @@ namespace VPet_Simulator.Core
             {
                 Dispatcher.Invoke(() => this.Visibility = Visibility.Collapsed);
                 EndAction?.Invoke();
-            }else
+            }
+            else
             {
                 Dispatcher.Invoke(() => Opacity -= 0.02);
             }
@@ -50,6 +55,11 @@ namespace VPet_Simulator.Core
             }
             else
             {
+                Task.Run(() =>
+                {
+                    Thread.Sleep(timeleft * 50);
+                    m.Display(GraphCore.GraphType.Say_C_End, m.DisplayNomal);
+                });
                 ShowTimer.Stop();
                 EndTimer.Start();
             }
@@ -65,9 +75,14 @@ namespace VPet_Simulator.Core
         }
 
         public Timer EndTimer = new Timer() { Interval = 100 };
-        public Timer ShowTimer = new Timer() { Interval = 20 };
+        public Timer ShowTimer = new Timer() { Interval = 40 };
         public Timer CloseTimer = new Timer() { Interval = 10 };
         int timeleft;
+        /// <summary>
+        /// 显示消息
+        /// </summary>
+        /// <param name="name">名字</param>
+        /// <param name="text">内容</param>
         public void Show(string name, string text)
         {
             TText.Text = "";
@@ -94,11 +109,17 @@ namespace VPet_Simulator.Core
 
         private void UserControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            EndTimer.Stop(); ShowTimer.Stop();CloseTimer.Close();
+            ForceClose();
+        }
+        /// <summary>
+        /// 强制关闭
+        /// </summary>
+        public void ForceClose()
+        {
+            EndTimer.Stop(); ShowTimer.Stop(); CloseTimer.Close();
             this.Visibility = Visibility.Collapsed;
             EndAction?.Invoke();
         }
-
         public void Dispose()
         {
             EndTimer.Dispose();

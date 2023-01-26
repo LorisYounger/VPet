@@ -11,5 +11,44 @@
                 <ListBox x:Name="GraphListBox" Margin="0,20,0,0" MouseDoubleClick="GraphListBox_MouseDoubleClick" />
             </Grid>
         </TabItem>
+        <TabItem Header="显示逻辑">
+            <Grid>
+                <Label Background="{x:Null}" Content="双击运行显示效果" />
+                <Label x:Name="LabelSuccess" Background="{x:Null}" Content="" HorizontalAlignment="Right" />
+                <ListBox x:Name="DisplayListBox" Margin="0,20,0,0" MouseDoubleClick="DisplayListBox_MouseDoubleClick">
+                    <ListBoxItem Content="DisplayNomal" />
+                    <ListBoxItem Content="DisplayTouchHead" />
+                    <ListBoxItem Content="DisplayBoring" />
+                    <ListBoxItem Content="DisplaySquat" />
+                    <ListBoxItem Content="DisplaySquating" />
+                    <ListBoxItem Content="DisplaySleep" />
+                    <ListBoxItem Content="DisplaySleeping" />
+                    <ListBoxItem Content="DisplaySleepingForce" />
+                    <ListBoxItem Content="DisplayRaised" />
+                    <ListBoxItem Content="DisplayFalled_Left" />
+                    <ListBoxItem Content="DisplayFalled_Right" />
+                    <ListBoxItem Content="DisplayWalk_Left" />
+                    <ListBoxItem Content="DisplayWalk_Right" />
+                    <ListBoxItem Content="DisplayCrawl_Left" />
+                    <ListBoxItem Content="DisplayCrawl_Right" />
+                    <ListBoxItem Content="DisplayClimb_Left_UP" />
+                    <ListBoxItem Content="DisplayClimb_Left_DOWN" />
+                    <ListBoxItem Content="DisplayClimb_Right_UP" />
+                    <ListBoxItem Content="DisplayClimb_Right_DOWN" />
+                    <ListBoxItem Content="DisplayClimb_Top_Right" />
+                    <ListBoxItem Content="DisplayClimb_Top_Left" />
+                    <ListBoxItem Content="DisplayFall_Left" />
+                    <ListBoxItem Content="DisplayFall_Right" />
+                </ListBox>
+            </Grid>
+        </TabItem>
+        <TabItem Header="说话">
+            <Grid>
+                <Label Background="{x:Null}" Content="输入要说的话,按说话键发送" />
+                <TextBox x:Name="SayTextBox" TextWrapping="Wrap" Text="在这里输入要说话的内容" VerticalAlignment="Top"
+                        Margin="5,25,5,0" Height="60" AcceptsReturn="True" VerticalContentAlignment="Top" />
+                <Button VerticalAlignment="Bottom" Content="说话" Click="Say_Click" />
+            </Grid>
+        </TabItem>
     </TabControl>
 </Window>

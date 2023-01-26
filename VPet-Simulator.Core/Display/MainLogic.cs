@@ -17,13 +17,25 @@ namespace VPet_Simulator.Core
         public const int LoopMax = 10;
         public const int LoopMid = 7;
         public const int LoopMin = 5;
-        public const int TreeRND = 4;
+        public const int TreeRND = 5;
 
         public Timer EventTimer = new Timer(15000)
         {
             AutoReset = true,
             Enabled = true
         };
+        public void Say(string text)
+        {
+            Display(GraphCore.GraphType.Say_A_Start, () =>
+            {
+                Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text));
+                Saying();
+            });
+        }
+        public void Saying()
+        {
+            Display(GraphCore.GraphType.Say_B_Loop, Saying);
+        }
 
         private void EventTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {

@@ -177,6 +177,30 @@ namespace VPet_Simulator.Core
             /// 睡觉 (结束)
             /// </summary>
             Sleep_C_End,
+            /// <summary>
+            /// 说话 (开始)
+            /// </summary>
+            Say_A_Start,
+            /// <summary>
+            /// 说话 (循环)
+            /// </summary>
+            Say_B_Loop,
+            /// <summary>
+            /// 说话 (结束)
+            /// </summary>
+            Say_C_End,
+            /// <summary>
+            /// 待机 (开始) (自动保持一致性)
+            /// </summary>
+            Idel_A_Start,
+            /// <summary>
+            /// 待机 (循环) (自动保持一致性)
+            /// </summary>
+            Idel_B_Loop,
+            /// <summary>
+            /// 待机 (结束) (自动保持一致性)
+            /// </summary>
+            Idel_C_End,
         }
         ///// <summary> loop 应该被取缔
         ///// 动画类型默认设置 前文本|是否循环|是否常用
@@ -265,9 +289,9 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="type">动画类型</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
-        ///// <param name="storernd">是否储存随机数字典</param>
+        /// <param name="storernd">是否储存随机数字典</param>
         /// <returns></returns>
-        public IGraph FindGraph(GraphType type, Save.ModeType mode)//
+        public IGraph FindGraph(GraphType type, Save.ModeType mode, bool storernd = false)
         {
             if (Graphs.ContainsKey(type))
             {
@@ -276,18 +300,18 @@ namespace VPet_Simulator.Core
                 {
                     if (list.Count == 1)
                         return list[0];
-                    //if (storernd)
-                    //    if (RndGraph.TryGetValue(list.Count, out int index))
-                    //    {
-                    //        return list[index];
-                    //    }
-                    //    else
-                    //    {
-                    //        index = Function.Rnd.Next(list.Count);
-                    //        RndGraph.Add(list.Count, index);
-                    //        return list[index];
-                    //    }
-                    //else
+                    if (storernd)
+                        if (RndGraph.TryGetValue(list.Count, out int index))
+                        {
+                            return list[index];
+                        }
+                        else
+                        {
+                            index = Function.Rnd.Next(list.Count);
+                            RndGraph.Add(list.Count, index);
+                            return list[index];
+                        }
+                    else
                         return list[Function.Rnd.Next(list.Count)];
                 }
                 else
@@ -382,7 +406,7 @@ namespace VPet_Simulator.Core
             /// </summary>
             public double LocateClimbTop;
 
-            
+
             /// <summary>
             /// 初始化设置
             /// </summary>

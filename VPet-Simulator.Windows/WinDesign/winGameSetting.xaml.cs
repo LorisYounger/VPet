@@ -42,8 +42,8 @@ namespace VPet_Simulator.Windows
                 ZoomSlider.Maximum = 3;
             }
             ZoomSlider.Value = mw.Set.ZoomLevel * 2;
-            this.Width = 400 * ZoomSlider.Value;
-            this.Height = 450 * ZoomSlider.Value;
+            this.Width = 400 * Math.Sqrt(ZoomSlider.Value);
+            this.Height = 450 * Math.Sqrt(ZoomSlider.Value);
 
             sDesktopAlignment.IsChecked = mw.Set.EnableFunction;
             CalSlider.Value = mw.Set.LogicInterval;
@@ -440,8 +440,8 @@ namespace VPet_Simulator.Windows
         private void ZoomSlider_MouseUp(object sender, MouseButtonEventArgs e)
         {
             mw.SetZoomLevel(ZoomSlider.Value / 2);
-            this.Width = 400 * ZoomSlider.Value;
-            this.Height = 450 * ZoomSlider.Value;
+            this.Width = 400 * Math.Sqrt(ZoomSlider.Value);
+            this.Height = 450 * Math.Sqrt(ZoomSlider.Value);
         }
 
         private void PressLengthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -535,6 +535,6 @@ namespace VPet_Simulator.Windows
             mw.Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
         }
 
-  
+
     }
 }

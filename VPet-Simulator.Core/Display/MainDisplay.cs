@@ -53,10 +53,12 @@ namespace VPet_Simulator.Core
                     Display(GraphCore.GraphType.Crawl_Right_C_End, EndAction);
                     return true;
                 case GraphType.Fall_Left_B_Loop:
-                    Display(GraphCore.GraphType.Fall_Left_C_End, EndAction);
+                    Display(GraphCore.GraphType.Fall_Left_C_End,
+                        () => Display(GraphCore.GraphType.Climb_Up_Left, EndAction));
                     return true;
                 case GraphType.Fall_Right_B_Loop:
-                    Display(GraphCore.GraphType.Fall_Right_C_End, EndAction);
+                    Display(GraphCore.GraphType.Fall_Right_C_End,
+                        () => Display(GraphCore.GraphType.Climb_Up_Right, EndAction));
                     return true;
                 case GraphType.Walk_Left_B_Loop:
                     Display(GraphCore.GraphType.Walk_Left_C_End, EndAction);
@@ -97,7 +99,6 @@ namespace VPet_Simulator.Core
                     ig2.IsContinue = true;
                     return;
                 }
-            Core.Graph.RndGraph.Clear();
             Display(GraphCore.GraphType.Touch_Head_A_Start, () =>
                Display(GraphCore.GraphType.Touch_Head_B_Loop, () =>
                Display(GraphCore.GraphType.Touch_Head_C_End, DisplayNomal
@@ -111,7 +112,6 @@ namespace VPet_Simulator.Core
         {
             looptimes = 0;
             CountNomal = 0;
-            Core.Graph.RndGraph.Clear();
             Display(GraphCore.GraphType.Boring_A_Start, DisplayBoringing);
         }
         /// <summary>
@@ -132,7 +132,6 @@ namespace VPet_Simulator.Core
         {
             looptimes = 0;
             CountNomal = 0;
-            Core.Graph.RndGraph.Clear();
             Display(GraphCore.GraphType.Squat_A_Start, DisplaySquating);
         }
         /// <summary>
@@ -152,7 +151,6 @@ namespace VPet_Simulator.Core
         {
             looptimes = 0;
             CountNomal = 0;
-            Core.Graph.RndGraph.Clear();
             if (force)
                 Display(GraphCore.GraphType.Sleep_A_Start, DisplaySleepingForce);
             else
@@ -969,9 +967,10 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="Type">动画类型</param>
         /// <param name="EndAction">动画结束后操作</param>
-        public void Display(GraphType Type, Action EndAction = null)//, bool StoreRnd = false)
+        /// <param name="storernd">是否储存随机数字典</param>
+        public void Display(GraphType Type, Action EndAction = null, bool storernd = false)
         {
-            Display(Core.Graph.FindGraph(Type, Core.Save.Mode), EndAction);
+            Display(Core.Graph.FindGraph(Type, Core.Save.Mode, storernd), EndAction);
         }
         bool petgridcrlf = true;
         /// <summary>
