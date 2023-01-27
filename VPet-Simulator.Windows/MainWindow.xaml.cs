@@ -65,10 +65,12 @@ namespace VPet_Simulator.Windows
                 Set = new Setting("Setting#VPET:|\n");
             //this.Width = 400 * ZoomSlider.Value;
             //this.Height = 450 * ZoomSlider.Value;
-            this.Height = 500 * Set.ZoomLevel;
-            this.Width = 500 * Set.ZoomLevel;
+
             InitializeComponent();
 
+            this.Height = 1000 * Set.ZoomLevel;
+            this.Width = 1000 * Set.ZoomLevel;
+            
             //不存在就关掉
             var modpath = new DirectoryInfo(ModPath + @"\0000_core\pet\vup");
             if (!modpath.Exists)

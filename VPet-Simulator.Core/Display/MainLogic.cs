@@ -24,13 +24,22 @@ namespace VPet_Simulator.Core
             AutoReset = true,
             Enabled = true
         };
+        /// <summary>
+        /// 说话
+        /// </summary>
+        /// <param name="text">说话内容</param>
         public void Say(string text)
         {
-            Display(GraphCore.GraphType.Say_A_Start, () =>
+            if (DisplayType == GraphCore.GraphType.Default)
+                Display(GraphCore.GraphType.Say_A_Start, () =>
+                {
+                    Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text));
+                    Saying();
+                });
+            else
             {
                 Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text));
-                Saying();
-            });
+            }
         }
         public void Saying()
         {

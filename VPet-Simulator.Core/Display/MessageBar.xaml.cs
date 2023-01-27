@@ -58,7 +58,8 @@ namespace VPet_Simulator.Core
                 Task.Run(() =>
                 {
                     Thread.Sleep(timeleft * 50);
-                    m.Display(GraphCore.GraphType.Say_C_End, m.DisplayNomal);
+                    if (m.DisplayType == GraphCore.GraphType.Default || m.DisplayType.ToString().Contains("Say"))
+                        m.Display(GraphCore.GraphType.Say_C_End, m.DisplayNomal);                  
                 });
                 ShowTimer.Stop();
                 EndTimer.Start();

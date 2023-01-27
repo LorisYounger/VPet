@@ -41,7 +41,7 @@ namespace VPet_Simulator.Core
         /// 刷新时间时会调用该方法,在所有任务处理完之后
         /// </summary>
         public event Action<Main> TimeUIHandle;
-        public Main(GameCore core)
+        public Main(GameCore core,bool loadtouchevent = true)
         {
             InitializeComponent();
             Core = core;
@@ -52,8 +52,12 @@ namespace VPet_Simulator.Core
             MsgBar = new MessageBar(this);
             MsgBar.Visibility = Visibility.Collapsed;
             UIGrid.Children.Add(MsgBar);
-            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, DisplayTouchHead));
-            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate, Core.Graph.GraphConfig.TouchRaisedSize, DisplayRaised, true));
+
+            if (loadtouchevent)
+            {
+                LoadTouchEvent();
+            }
+
             var ig = Core.Graph.FindGraph(GraphCore.GraphType.Default, core.Save.Mode);
             PetGrid.Child = ig.This;
             var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Touch_Head_A_Start, core.Save.Mode);
@@ -64,6 +68,14 @@ namespace VPet_Simulator.Core
             EventTimer.Elapsed += EventTimer_Elapsed;
             MoveTimer.Elapsed += MoveTimer_Elapsed;
             SmartMoveTimer.Elapsed += SmartMoveTimer_Elapsed;
+        }
+        /// <summary>
+        /// 自动加载触摸事件
+        /// </summary>
+        public void LoadTouchEvent()
+        {
+            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, DisplayTouchHead));
+            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate, Core.Graph.GraphConfig.TouchRaisedSize, DisplayRaised, true));
         }
 
         private void SmartMoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
