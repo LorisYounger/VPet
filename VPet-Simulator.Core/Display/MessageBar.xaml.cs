@@ -51,7 +51,9 @@ namespace VPet_Simulator.Core
         {
             if (outputtext.Count > 0)
             {
-                Dispatcher.Invoke(() => { TText.Text += outputtext[0]; outputtext.RemoveAt(0); });
+                var str = outputtext[0];
+                outputtext.RemoveAt(0);
+                Dispatcher.Invoke(() => { TText.Text += str; });
             }
             else
             {
@@ -59,7 +61,7 @@ namespace VPet_Simulator.Core
                 {
                     Thread.Sleep(timeleft * 50);
                     if (m.DisplayType == GraphCore.GraphType.Default || m.DisplayType.ToString().Contains("Say"))
-                        m.Display(GraphCore.GraphType.Say_C_End, m.DisplayNomal);                  
+                        m.Display(GraphCore.GraphType.Say_C_End, m.DisplayNomal);
                 });
                 ShowTimer.Stop();
                 EndTimer.Start();
@@ -92,14 +94,14 @@ namespace VPet_Simulator.Core
             timeleft = text.Length + 5;
             ShowTimer.Start(); EndTimer.Stop(); CloseTimer.Stop();
             this.Visibility = Visibility.Visible;
-            Opacity = 1;
+            Opacity = .8;
         }
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)
         {
             EndTimer.Stop();
             CloseTimer.Stop();
-            this.Opacity = 1;
+            this.Opacity = .8;
         }
 
         private void Border_MouseLeave(object sender, MouseEventArgs e)

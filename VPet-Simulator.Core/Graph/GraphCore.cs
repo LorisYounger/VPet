@@ -46,13 +46,21 @@ namespace VPet_Simulator.Core
             /// </summary>
             Climb_Up_Left,
             /// <summary>
+            /// 从右边爬 (开始)
+            /// </summary>
+            Climb_Right_A_Start,
+            /// <summary>
+            /// 从左边爬 (开始)
+            /// </summary>
+            Climb_Left_A_Start,
+            /// <summary>
             /// 从右边爬 (循环)
             /// </summary>
-            Climb_Right,
+            Climb_Right_B_Loop,
             /// <summary>
             /// 从左边爬 (循环)
             /// </summary>
-            Climb_Left,
+            Climb_Left_B_Loop,
             /// <summary>
             /// 呼吸 (循环)
             /// </summary>
@@ -190,17 +198,29 @@ namespace VPet_Simulator.Core
             /// </summary>
             Say_C_End,
             /// <summary>
-            /// 待机 (开始) (自动保持一致性)
+            /// 待机 模式1 (开始)
             /// </summary>
-            Idel_A_Start,
+            Idel_StateONE_A_Start,
             /// <summary>
-            /// 待机 (循环) (自动保持一致性)
+            /// 待机 模式1 (循环)
             /// </summary>
-            Idel_B_Loop,
+            Idel_StateONE_B_Loop,
             /// <summary>
-            /// 待机 (结束) (自动保持一致性)
+            /// 待机 模式1 (结束)
             /// </summary>
-            Idel_C_End,
+            Idel_StateONE_C_End,
+            /// <summary>
+            /// 待机 模式2 (开始)
+            /// </summary>
+            Idel_StateTWO_A_Start,
+            /// <summary>
+            /// 待机 模式2 (循环)
+            /// </summary>
+            Idel_StateTWO_B_Loop,
+            /// <summary>
+            /// 待机 模式2 (结束)
+            /// </summary>
+            Idel_StateTWO_C_End,
         }
         ///// <summary> loop 应该被取缔
         ///// 动画类型默认设置 前文本|是否循环|是否常用

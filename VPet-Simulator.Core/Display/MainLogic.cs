@@ -157,6 +157,11 @@ namespace VPet_Simulator.Core
                     case 17:
                         DisplaySquat();
                         break;
+                    case 12:
+                    case 19:
+                    case 20:
+                        DisplayIdel_StateONE();
+                            break;
                     default:
                         break;
                 }

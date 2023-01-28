@@ -170,7 +170,7 @@ namespace VPet_Simulator.Core
             public void Run(Action EndAction = null)
             {
                 //先显示该图层
-                parent.Dispatcher.BeginInvoke(Visible);
+                parent.Dispatcher.Invoke(Visible);
                 //然后等待帧时间毫秒
                 Thread.Sleep(Time);
                 //判断是否要下一步
@@ -186,8 +186,8 @@ namespace VPet_Simulator.Core
                         }
                         else
                         {
-                            //parent.endwilldo = () => parent.Dispatcher.BeginInvoke(Hidden);
-                            //parent.Dispatcher.BeginInvoke(Hidden);
+                            //parent.endwilldo = () => parent.Dispatcher.Invoke(Hidden);
+                            //parent.Dispatcher.Invoke(Hidden);
                             parent.PlayState = false;
                             if (parent.DoEndAction)
                                 EndAction?.Invoke();//运行结束动画时事件
@@ -197,20 +197,20 @@ namespace VPet_Simulator.Core
                             Task.Run(() =>
                             {
                                 Thread.Sleep(25);
-                                parent.Dispatcher.BeginInvoke(Hidden);
+                                parent.Dispatcher.Invoke(Hidden);
                             });
                             return;
                         }
                     //要下一步,现在就隐藏图层
                     //隐藏该图层
-                    parent.Dispatcher.BeginInvoke(Hidden);
+                    parent.Dispatcher.Invoke(Hidden);
                     parent.Animations[parent.nowid].Run(EndAction);
                     return;
                 }
                 else
                 {
                     parent.IsContinue = false;
-                    //parent.Dispatcher.BeginInvoke(Hidden);
+                    //parent.Dispatcher.Invoke(Hidden);
                     if (parent.DoEndAction)
                         EndAction?.Invoke();//运行结束动画时事件
                     parent.StopAction?.Invoke();
@@ -218,7 +218,7 @@ namespace VPet_Simulator.Core
                     Task.Run(() =>
                     {
                         Thread.Sleep(25);
-                        parent.Dispatcher.BeginInvoke(Hidden);
+                        parent.Dispatcher.Invoke(Hidden);
                     });
                 }
             }

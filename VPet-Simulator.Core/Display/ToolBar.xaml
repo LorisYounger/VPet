@@ -114,8 +114,9 @@
                 <MenuItem Header="说话" HorizontalContentAlignment="Center" />
                 <MenuItem Header="学习" HorizontalContentAlignment="Center" />
             </MenuItem>
-            <MenuItem x:Name="MenuDIY" Header="自定" HorizontalContentAlignment="Center" Click="MenuDIY_Click" />
-            <MenuItem x:Name="MenuSetting" Header="管理" HorizontalContentAlignment="Center" />
+            <MenuItem x:Name="MenuDIY" Header="自定" HorizontalContentAlignment="Center" Click="MenuDIY_Click"
+                    x:FieldModifier="public" />
+            <MenuItem x:Name="MenuSetting" Header="系统" HorizontalContentAlignment="Center" />
         </Menu>
     </Grid>
 </UserControl>

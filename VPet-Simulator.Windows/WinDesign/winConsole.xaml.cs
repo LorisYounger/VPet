@@ -62,17 +62,8 @@ namespace VPet_Simulator.Windows
                 case "DisplaySquat":
                     mw.Main.DisplaySquat();
                     break;
-                case "DisplaySquating":
-                    mw.Main.DisplaySquating();
-                    break;
                 case "DisplaySleep":
                     mw.Main.DisplaySleep();
-                    break;
-                case "DisplaySleeping":
-                    mw.Main.DisplaySleeping();
-                    break;
-                case "DisplaySleepingForce":
-                    mw.Main.DisplaySleepingForce();
                     break;
                 case "DisplayRaised":
                     mw.Main.DisplayRaised();
@@ -118,6 +109,12 @@ namespace VPet_Simulator.Windows
                     break;
                 case "DisplayFall_Right":
                     mw.Main.DisplayFall_Right();
+                    break;
+                case "DisplayIdel_StateONE":
+                    mw.Main.DisplayIdel_StateONE();
+                    break;
+                case "DisplayIdel_StateTWO":
+                    mw.Main.DisplayIdel_StateTWO();
                     break;
             }
         }

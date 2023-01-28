@@ -20,10 +20,7 @@
                     <ListBoxItem Content="DisplayTouchHead" />
                     <ListBoxItem Content="DisplayBoring" />
                     <ListBoxItem Content="DisplaySquat" />
-                    <ListBoxItem Content="DisplaySquating" />
                     <ListBoxItem Content="DisplaySleep" />
-                    <ListBoxItem Content="DisplaySleeping" />
-                    <ListBoxItem Content="DisplaySleepingForce" />
                     <ListBoxItem Content="DisplayRaised" />
                     <ListBoxItem Content="DisplayFalled_Left" />
                     <ListBoxItem Content="DisplayFalled_Right" />
@@ -39,6 +36,8 @@
                     <ListBoxItem Content="DisplayClimb_Top_Left" />
                     <ListBoxItem Content="DisplayFall_Left" />
                     <ListBoxItem Content="DisplayFall_Right" />
+                    <ListBoxItem Content="DisplayIdel_StateONE" />
+                    <ListBoxItem Content="DisplayIdel_StateTWO" />
                 </ListBox>
             </Grid>
         </TabItem>

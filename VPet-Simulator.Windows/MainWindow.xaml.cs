@@ -24,6 +24,7 @@ using ContextMenu = System.Windows.Forms.ContextMenu;
 using MenuItem = System.Windows.Forms.MenuItem;
 using Application = System.Windows.Application;
 using System.Timers;
+using System.Windows.Forms.VisualStyles;
 
 namespace VPet_Simulator.Windows
 {
@@ -68,9 +69,9 @@ namespace VPet_Simulator.Windows
 
             InitializeComponent();
 
-            this.Height = 1000 * Set.ZoomLevel;
-            this.Width = 1000 * Set.ZoomLevel;
-            
+            this.Height = 500 * Set.ZoomLevel;
+            this.Width = 500 * Set.ZoomLevel;
+
             //不存在就关掉
             var modpath = new DirectoryInfo(ModPath + @"\0000_core\pet\vup");
             if (!modpath.Exists)
@@ -81,6 +82,19 @@ namespace VPet_Simulator.Windows
             }
             Task.Run(GameLoad);
         }
+        private string[] rndtext = new string[]
+        {
+            "你知道吗? 鼠标右键可以打开菜单栏",
+            "如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的",
+            "你知道吗? 你可以在设置里面修改游戏的缩放比例",
+            "想要宠物不乱动? 设置里可以设置智能移动或者关闭移动",
+            "有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧",
+            "你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing",
+            "你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧",
+            "这游戏开发这么慢,都怪画师太咕了.\n记得多催催画师(@叶书天)画桌宠, 催的越快更新越快!",
+            "长按脑袋拖动桌宠到你喜欢的任意位置",
+            "欢迎加入 虚拟主播模拟器群 430081239",
+        };
         private long lastclicktime;
         public void GameLoad()
         {
@@ -137,11 +151,12 @@ namespace VPet_Simulator.Windows
                 LoadingText.Visibility = Visibility.Collapsed;
                 winSetting = new winGameSetting(this);
                 Main = new Main(Core) { };
-                Main.DefaultClickAction = () => {
-                    if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalMinutes > 1)
+                Main.DefaultClickAction = () =>
+                {
+                    if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
                     {
                         lastclicktime = DateTime.Now.Ticks;
-                        Dispatcher.Invoke(() => { Main.Say("你知道吗? 鼠标右键可以打开菜单栏"); });
+                        Dispatcher.Invoke(() => Main.Say(rndtext[Function.Rnd.Next(rndtext.Length)]));
                     }
                 };
                 DisplayGrid.Child = Main;
