@@ -83,7 +83,7 @@ namespace VPet_Simulator.Core
                             return;
                         }
                     }
-#if DEBUG
+#if DEMO
                     throw new Exception("未知的图像类型: " + path_name);
 #endif
                 }

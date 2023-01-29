@@ -1035,6 +1035,11 @@ namespace VPet_Simulator.Core
         /// <param name="EndAction">结束操作</param>
         public void Display(IGraph graph, Action EndAction = null)
         {
+            if(graph == null)
+            {
+                EndAction?.Invoke();
+                return;
+            }
             //if(graph.GraphType == GraphType.Climb_Up_Left)
             //{
             //    Dispatcher.Invoke(() => Say(graph.GraphType.ToString()));

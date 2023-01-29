@@ -41,7 +41,7 @@ namespace VPet_Simulator.Windows
             //在 https://store.steampowered.com/app/1920960/VPet
             try
             {
-#if DEBUG
+#if DEMO
                 SteamClient.Init(2293870, true);
 #else
                 SteamClient.Init(1920960, true);

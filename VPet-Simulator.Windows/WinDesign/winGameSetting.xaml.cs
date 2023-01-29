@@ -331,7 +331,7 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法发布\n如需发布自定义内容,请复制并更改名称", "MOD上传失败", MessageBoxIcon.Error);
                 return;
             }
-#if DEBUG
+#if DEMO
             MessageBoxX.Show("经测试,除正式版均无创意工坊权限,此功能仅作为展示", "特殊版无法上传创意工坊");
 #endif
             ButtonPublish.IsEnabled = false;

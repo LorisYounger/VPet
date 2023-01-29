@@ -15,7 +15,9 @@ namespace VPet_Simulator.Windows
     {
         public App() : base()
         {
+#if !DEBUG
             base.DispatcherUnhandledException += App_DispatcherUnhandledException;
+#endif
             //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
 

@@ -339,7 +339,7 @@ namespace VPet_Simulator.Core
                     return Graphs[type][Function.Rnd.Next(Graphs[type].Count)];
                 }
             }
-            return FindGraph(GraphType.Default, mode);
+            return null;// FindGraph(GraphType.Default, mode);
         }
         static string[] graphtypevalue = null;
         /// <summary>

@@ -7,13 +7,13 @@ using System.Windows;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("VPet-Simulator.Windows")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("虚拟桌宠模拟器")]
+[assembly: AssemblyDescription("VPET的独立窗口实现")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("LB Game")]
 [assembly: AssemblyProduct("VPet-Simulator.Windows")]
-[assembly: AssemblyCopyright("Copyright ©  2022")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Copyright © exLB.org 2022")]
+[assembly: AssemblyTrademark("exLB.org")]
 [assembly: AssemblyCulture("")]
 
 // 将 ComVisible 设置为 false 会使此程序集中的类型
