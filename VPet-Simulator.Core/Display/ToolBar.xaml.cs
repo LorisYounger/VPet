@@ -60,7 +60,7 @@ namespace VPet_Simulator.Core
                 {
                     till.Visibility = Visibility.Collapsed;
                     tfun.Visibility = Visibility.Visible;
-                }    
+                }
                 pExp.Maximum = m.Core.Save.LevelUpNeed();
                 pExp.Value = m.Core.Save.Exp;
                 pStrength.Value = m.Core.Save.Strength;
@@ -101,6 +101,11 @@ namespace VPet_Simulator.Core
 
         public void Show()
         {
+            if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
+            {
+                m.UIGrid.Children.Remove(this);
+                m.UIGrid.Children.Add(this);
+            }
             Visibility = Visibility.Visible;
             if (closetimer.Enabled)
                 onFocus = true;

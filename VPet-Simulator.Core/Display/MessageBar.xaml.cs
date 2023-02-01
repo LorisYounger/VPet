@@ -88,6 +88,11 @@ namespace VPet_Simulator.Core
         /// <param name="text">内容</param>
         public void Show(string name, string text)
         {
+            if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
+            {
+                m.UIGrid.Children.Remove(this);
+                m.UIGrid.Children.Add(this);
+            }
             TText.Text = "";
             outputtext = text.ToList();
             LName.Content = name;

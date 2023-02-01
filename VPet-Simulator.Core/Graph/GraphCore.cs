@@ -457,17 +457,17 @@ namespace VPet_Simulator.Core
             /// </summary>
             public void Set(LpsDocument lps)
             {
-                if (lps.HaveLine("touchhead"))
+                if (lps.FindLine("touchhead") != null)
                 {
                     TouchHeadLocate = new Point(lps["touchhead"][(gdbe)"px"], lps["touchhead"][(gdbe)"py"]);
                     TouchHeadSize = new Size(lps["touchhead"][(gdbe)"sw"], lps["touchhead"][(gdbe)"wh"]);
                 }
-                if (lps.HaveLine("touchraised"))
+                if (lps.FindLine("touchraised") != null)
                 {
                     TouchRaisedLocate = new Point(lps["touchraised"][(gdbe)"px"], lps["touchraised"][(gdbe)"py"]);
                     TouchRaisedSize = new Size(lps["touchraised"][(gdbe)"sw"], lps["touchraised"][(gdbe)"wh"]);
                 }
-                if (lps.HaveLine("raisepoint"))
+                if (lps.FindLine("raisepoint") != null)
                     RaisePoint = new Point(lps["raisepoint"][(gdbe)"x"], lps["raisepoint"][(gdbe)"y"]);
                 var s = lps.FindLine("speed");
                 if (s != null)

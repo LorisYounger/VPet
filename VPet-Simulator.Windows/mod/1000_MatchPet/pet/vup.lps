@@ -1,0 +1,6 @@
+pet#火柴人:|intor#来试试这个极简手残画风的单帧宠物吧:|path#matchmen:|
+touchhead:|px#159:|py#16:|sw#189:|sh#178:|
+touchraised:|px#0:|py#50:|sw#500:|sh#200:|
+raisepoint:|x#290:|y#128:|
+speed:|walk#20:|climb#10:|climbtop#8:|crawl#8:|fallx#14:|fally#10:|crawl#10:|
+locate:|climbleft#145:|climbright#185:|climbtop#150:|
