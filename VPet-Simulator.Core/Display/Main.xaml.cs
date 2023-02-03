@@ -89,7 +89,7 @@ namespace VPet_Simulator.Core
             Core.Controller.MoveWindows(MoveTimerPoint.X, MoveTimerPoint.Y);
             if (!str.Contains("Left") && !str.Contains("Right"))
             {
-                MoveTimer.Stop();
+                MoveTimer.Enabled = false;
             }
         }
         public Action DefaultClickAction;
@@ -148,7 +148,7 @@ namespace VPet_Simulator.Core
                 if (SmartMove)
                 {
                     MoveTimer.AutoReset = true;
-                    SmartMoveTimer.Stop();
+                    SmartMoveTimer.Enabled = false;
                     SmartMoveTimer.Start();
                 }
             }
@@ -172,7 +172,7 @@ namespace VPet_Simulator.Core
         public void Dispose()
         {
             EventTimer.Stop();
-            MoveTimer.Stop();
+            MoveTimer.Enabled = false;;
             EventTimer.Dispose();
             MoveTimer.Dispose();
             MsgBar.Dispose();

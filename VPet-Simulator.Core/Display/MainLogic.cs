@@ -202,7 +202,7 @@ namespace VPet_Simulator.Core
         /// <param name="SmartMoveInterval">智能移动周期</param>
         public void SetMoveMode(bool AllowMove, bool smartMove, int SmartMoveInterval)
         {
-            MoveTimer.Stop();
+            MoveTimer.Enabled = false;;
             if (AllowMove)
             {
                 MoveTimer.AutoReset = true;
@@ -214,7 +214,7 @@ namespace VPet_Simulator.Core
                 }
                 else
                 {
-                    SmartMoveTimer.Stop();
+                    SmartMoveTimer.Enabled = false;;
                     SmartMove = false;
                 }
             }
