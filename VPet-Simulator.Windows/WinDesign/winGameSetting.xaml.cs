@@ -50,7 +50,7 @@ namespace VPet_Simulator.Windows
             InteractionSlider.Value = mw.Set.InteractionCycle;
             MoveEventBox.IsChecked = mw.Set.AllowMove;
             SmartMoveEventBox.IsChecked = mw.Set.SmartMove;
-            PressLengthSlider.Value = mw.Set.PressLength;
+            PressLengthSlider.Value = mw.Set.PressLength / 1000.0;
 
             foreach (PetLoader pl in mw.Pets)
             {
