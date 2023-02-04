@@ -187,7 +187,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void CleanState()
         {
-            MoveTimer.Stop();
+            MoveTimer.Enabled = false;
             MainGrid.MouseMove -= MainGrid_MouseMove;
         }
     }

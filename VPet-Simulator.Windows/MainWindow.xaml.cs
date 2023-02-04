@@ -56,7 +56,15 @@ namespace VPet_Simulator.Windows
             {
                 IsSteamUser = false;
             }
-
+            //给正在玩这个游戏的主播/游戏up主做个小功能
+            if (IsSteamUser)
+            {
+                rndtext.Add($"关注 {Steamworks.SteamClient.Name} 谢谢喵");
+            }
+            else
+            {
+                rndtext.Add($"关注 {Environment.UserName} 谢谢喵");    
+            }
             //加载游戏设置
             if (new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps").Exists)
             {
@@ -82,7 +90,7 @@ namespace VPet_Simulator.Windows
             }
             Task.Run(GameLoad);
         }
-        private string[] rndtext = new string[]
+        private List<string> rndtext = new List<string>
         {
             "你知道吗? 鼠标右键可以打开菜单栏",
             "如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的",
@@ -93,7 +101,7 @@ namespace VPet_Simulator.Windows
             "你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧",
             "这游戏开发这么慢,都怪画师太咕了.\n记得多催催画师(@叶书天)画桌宠, 催的越快更新越快!",
             "长按脑袋拖动桌宠到你喜欢的任意位置",
-            "欢迎加入 虚拟主播模拟器群 430081239",
+            "欢迎加入 虚拟主播模拟器群 430081239",            
         };
         private long lastclicktime;
         public void GameLoad()
@@ -156,7 +164,7 @@ namespace VPet_Simulator.Windows
                     if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
                     {
                         lastclicktime = DateTime.Now.Ticks;
-                        Dispatcher.Invoke(() => Main.Say(rndtext[Function.Rnd.Next(rndtext.Length)]));
+                        Dispatcher.Invoke(() => Main.Say(rndtext[Function.Rnd.Next(rndtext.Count)]));
                     }
                 };
                 DisplayGrid.Child = Main;

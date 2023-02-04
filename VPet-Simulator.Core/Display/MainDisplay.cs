@@ -327,19 +327,19 @@ namespace VPet_Simulator.Core
                     case 0:
                         DisplayFall_Left(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
                         });
                         return;
                     case 1:
                         DisplayFall_Right(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
                         });
                         return;
                     default:
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
                         return;
                 }
@@ -357,19 +357,19 @@ namespace VPet_Simulator.Core
                     case 0:
                         DisplayFall_Left(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
                         });
                         break;
                     case 1:
                         DisplayFall_Right(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
                         });
                         break;
                     default:
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
                         break;
 
@@ -407,19 +407,19 @@ namespace VPet_Simulator.Core
                     case 0:
                         DisplayClimb_Right_UP(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Walk_Right_C_End, DisplayNomal);
                         });
                         return;
                     case 1:
                         DisplayClimb_Right_DOWN(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Walk_Right_C_End, DisplayNomal);
                         });
                         return;
                     default:
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         Display(GraphCore.GraphType.Walk_Right_C_End, DisplayNomal);
                         return;
                 }
@@ -437,19 +437,19 @@ namespace VPet_Simulator.Core
                     case 0:
                         DisplayFall_Left(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
                         });
                         break;
                     case 1:
                         DisplayFall_Right(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
                         });
                         break;
                     default:
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
                         break;
 
@@ -486,19 +486,19 @@ namespace VPet_Simulator.Core
                     case 0:
                         DisplayClimb_Left_UP(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
                         });
                         return;
                     case 1:
                         DisplayClimb_Left_DOWN(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
                         });
                         return;
                     default:
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
                         return;
                 }
@@ -510,7 +510,7 @@ namespace VPet_Simulator.Core
             }
             else
             {//停下来
-                MoveTimer.Stop();
+                MoveTimer.Enabled = false;
                 Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
             }
         }
@@ -544,19 +544,19 @@ namespace VPet_Simulator.Core
                     case 0:
                         DisplayClimb_Right_UP(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
                         });
                         return;
                     case 1:
                         DisplayClimb_Right_DOWN(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
                         });
                         return;
                     default:
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
                         return;
                 }
@@ -568,7 +568,7 @@ namespace VPet_Simulator.Core
             }
             else
             {//停下来
-                MoveTimer.Stop();
+                MoveTimer.Enabled = false;
                 Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
             }
         }
@@ -610,7 +610,7 @@ namespace VPet_Simulator.Core
                         DisplayFall_Right();
                         return;
                     default:
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         DisplayNomal();
                         return;
                 }
@@ -628,7 +628,7 @@ namespace VPet_Simulator.Core
                         DisplayFall_Right();
                         break;
                     default:
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         DisplayNomal();
                         break;
                 }
@@ -664,7 +664,7 @@ namespace VPet_Simulator.Core
             //看看距离是不是不足
             if (Core.Controller.GetWindowsDistanceDown() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认
-                MoveTimer.Stop();
+                MoveTimer.Enabled = false;
                 DisplayNomal();
             }
             //不是:继续or停下
@@ -674,7 +674,7 @@ namespace VPet_Simulator.Core
             }
             else
             {//停下来
-                MoveTimer.Stop();
+                MoveTimer.Enabled = false;
                 DisplayNomal();
             }
         }
@@ -717,7 +717,7 @@ namespace VPet_Simulator.Core
                         DisplayFall_Left();
                         return;
                     default:
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         DisplayNomal();
                         return;
                 }
@@ -735,7 +735,7 @@ namespace VPet_Simulator.Core
                         DisplayFall_Left();
                         break;
                     default:
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         DisplayNomal();
                         break;
                 }
@@ -771,7 +771,7 @@ namespace VPet_Simulator.Core
             //看看距离是不是不足
             if (Core.Controller.GetWindowsDistanceDown() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认
-                MoveTimer.Stop();
+                MoveTimer.Enabled = false;
                 DisplayNomal();
             }
             //不是:继续or停下
@@ -781,7 +781,7 @@ namespace VPet_Simulator.Core
             }
             else
             {//停下来
-                MoveTimer.Stop();
+                MoveTimer.Enabled = false;
                 DisplayNomal();
             }
         }
@@ -820,7 +820,7 @@ namespace VPet_Simulator.Core
                         return;
                     default:
                         Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         DisplayFalled_Right();
                         return;
                 }
@@ -833,7 +833,7 @@ namespace VPet_Simulator.Core
             else
             {//停下来
                 Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
-                MoveTimer.Stop();
+                MoveTimer.Enabled = false;
                 DisplayFalled_Right();
             }
         }
@@ -872,7 +872,7 @@ namespace VPet_Simulator.Core
                         return;
                     default:
                         Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         DisplayFalled_Right();
                         return;
                 }
@@ -885,7 +885,7 @@ namespace VPet_Simulator.Core
             else
             {//停下来
                 Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
-                MoveTimer.Stop();
+                MoveTimer.Enabled = false;
                 DisplayFalled_Right();
             }
         }
@@ -920,20 +920,20 @@ namespace VPet_Simulator.Core
                     case 0:
                         DisplayClimb_Left_UP(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             DisplayFalled_Left();
                         });
                         return;
                     case 1:
                         DisplayClimb_Left_DOWN(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             DisplayFalled_Left();
                         });
                         return;
                     default:
                         //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         DisplayFalled_Left();
                         return;
                 }
@@ -946,7 +946,7 @@ namespace VPet_Simulator.Core
             else
             {//停下来
              //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
-                MoveTimer.Stop();
+                MoveTimer.Enabled = false;
                 DisplayFalled_Left();
                 //DisplayNomal();
             }
@@ -983,20 +983,20 @@ namespace VPet_Simulator.Core
                     case 0:
                         DisplayClimb_Right_UP(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             DisplayFalled_Right();
                         });
                         return;
                     case 1:
                         DisplayClimb_Right_DOWN(() =>
                         {
-                            MoveTimer.Stop();
+                            MoveTimer.Enabled = false;
                             DisplayFalled_Right();
                         });
                         return;
                     default:
                         //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
-                        MoveTimer.Stop();
+                        MoveTimer.Enabled = false;
                         DisplayFalled_Right();
                         return;
                 }
@@ -1009,7 +1009,7 @@ namespace VPet_Simulator.Core
             else
             {//停下来
              //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
-                MoveTimer.Stop();
+                MoveTimer.Enabled = false;
                 DisplayFalled_Right();
                 //DisplayNomal();
             }
