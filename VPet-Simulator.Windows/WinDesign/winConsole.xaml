@@ -10,7 +10,7 @@
         <TabItem Header="动画列表">
             <Grid>
                 <Label Background="{x:Null}" Content="双击查看动画效果&#13;选择状态模式:" />
-                <ComboBox x:Name="ComboxMode" VerticalAlignment="Top" Margin="110,25,5,0">
+                <ComboBox x:Name="ComboxMode" VerticalAlignment="Top" Margin="110,25,5,0" SelectedIndex="1">
                     <ComboBoxItem Content="Happy" />
                     <ComboBoxItem Content="Nomal" />
                     <ComboBoxItem Content="PoorCondition" />

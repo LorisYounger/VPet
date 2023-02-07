@@ -63,7 +63,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                rndtext.Add($"关注 {Environment.UserName} 谢谢喵");    
+                rndtext.Add($"关注 {Environment.UserName} 谢谢喵");
             }
             //加载游戏设置
             if (new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps").Exists)
@@ -101,7 +101,7 @@ namespace VPet_Simulator.Windows
             "你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧",
             "这游戏开发这么慢,都怪画师太咕了.\n记得多催催画师(@叶书天)画桌宠, 催的越快更新越快!",
             "长按脑袋拖动桌宠到你喜欢的任意位置",
-            "欢迎加入 虚拟主播模拟器群 430081239",            
+            "欢迎加入 虚拟主播模拟器群 430081239",
         };
         private long lastclicktime;
         public void GameLoad()
@@ -231,7 +231,6 @@ namespace VPet_Simulator.Windows
         {
             Save();
             Main?.Dispose();
-            notifyIcon.Visible = false;
             notifyIcon?.Dispose();
             System.Environment.Exit(0);
         }
