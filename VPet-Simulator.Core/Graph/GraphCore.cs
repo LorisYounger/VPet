@@ -11,7 +11,7 @@ namespace VPet_Simulator.Core
 {
     public class GraphCore
     {
-
+        public static string CachePath = AppDomain.CurrentDomain.BaseDirectory + @"\cache";
         /// <summary>
         /// 动画类型
         /// </summary>
@@ -298,7 +298,7 @@ namespace VPet_Simulator.Core
                 AddGraph(new Picture(paths[0].FullName, modetype, graphtype,
                     int.Parse(paths[0].Name.Split('.').Reverse().ToArray()[1].Split('_').Last())), graphtype);
             else
-                AddGraph(new PNGAnimation(paths, modetype, graphtype), graphtype);
+                AddGraph(new PNGAnimation(path, paths, modetype, graphtype), graphtype);
         }
         /// <summary>
         /// 随机数字典(用于确保随机动画不会错位)

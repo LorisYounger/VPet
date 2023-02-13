@@ -60,8 +60,9 @@ namespace VPet_Simulator.Core
 
             var ig = Core.Graph.FindGraph(GraphCore.GraphType.Default, core.Save.Mode);
             PetGrid.Child = ig.This;
-            var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Touch_Head_A_Start, core.Save.Mode);
+            var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Touch_Head_A_Start, core.Save.Mode);            
             PetGrid2.Child = ig2.This; //用于缓存
+            PetGrid2.Visibility = Visibility.Collapsed;
             ig.Run(DisplayNomal);
 
 

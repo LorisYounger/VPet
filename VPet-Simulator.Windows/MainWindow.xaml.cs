@@ -72,6 +72,11 @@ namespace VPet_Simulator.Windows
             }
             else
                 Set = new Setting("Setting#VPET:|\n");
+
+            if (!Directory.Exists(GraphCore.CachePath))
+            {
+                Directory.CreateDirectory(GraphCore.CachePath);
+            }
             //this.Width = 400 * ZoomSlider.Value;
             //this.Height = 450 * ZoomSlider.Value;
 
@@ -156,7 +161,6 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(new Action(() =>
             {
                 Core.Graph = Pets[0].Graph();
-                LoadingText.Visibility = Visibility.Collapsed;
                 winSetting = new winGameSetting(this);
                 Main = new Main(Core) { };
                 Main.DefaultClickAction = () =>
@@ -179,6 +183,7 @@ namespace VPet_Simulator.Windows
 
                 Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
                 Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
+                LoadingText.Visibility = Visibility.Collapsed;
                 //加载图标
                 notifyIcon = new NotifyIcon();
                 notifyIcon.Text = "虚拟桌宠模拟器";
@@ -216,6 +221,12 @@ namespace VPet_Simulator.Windows
                         Thread.Sleep(1000);
                         Main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议");
                     });
+                }
+                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 2, 13))
+                {
+                    Set["SingleTips"].SetDateTime("update", DateTime.Now);
+                    notifyIcon.ShowBalloonTip(10, "更新通知 02/13",
+                        "现在使用缓存机制,不仅占用小,而且再也不会有那种闪闪的问题了!", ToolTipIcon.Info);
                 }
             }));
         }

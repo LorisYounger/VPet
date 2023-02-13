@@ -873,7 +873,7 @@ namespace VPet_Simulator.Core
                     default:
                         Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
                         MoveTimer.Enabled = false;
-                        DisplayFalled_Right();
+                        DisplayFalled_Left();
                         return;
                 }
             }
@@ -886,7 +886,7 @@ namespace VPet_Simulator.Core
             {//停下来
                 Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
                 MoveTimer.Enabled = false;
-                DisplayFalled_Right();
+                DisplayFalled_Left();
             }
         }
         /// <summary>

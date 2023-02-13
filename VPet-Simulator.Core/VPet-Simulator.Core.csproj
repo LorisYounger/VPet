@@ -69,15 +69,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LinePutScript.1.6.1\lib\net462\LinePutScript.dll</HintPath>
+      <HintPath>..\..\VUPSimulator\packages\LinePutScript.1.6.1\lib\net462\LinePutScript.dll</HintPath>
     </Reference>
     <Reference Include="Panuon.WPF, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Refer\Panuon.WPF.dll</HintPath>
+      <HintPath>..\..\VUPSimulator\packages\Panuon.WPF.1.0.1\lib\net462\Panuon.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Panuon.WPF.UI, Version=1.1.6.5, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Refer\Panuon.WPF.UI.dll</HintPath>
+    <Reference Include="Panuon.WPF.UI, Version=1.1.6.7, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\VUPSimulator\packages\Panuon.WPF.UI.1.1.6.7\lib\net462\Panuon.WPF.UI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
