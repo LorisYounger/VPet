@@ -448,11 +448,11 @@
                                     <TextBlock x:Name="ButtonPublish" HorizontalAlignment="Left" Margin="0,2,0,0"
                                             TextWrapping="Wrap" Text="更新至Steam" VerticalAlignment="Top" FontSize="12"
                                             Width="74" Foreground="DimGray" TextDecorations="Underline" Cursor="Hand"
-                                            IsEnabled="False" MouseDown="ButtonPublish_MouseDown" />
+                                             MouseDown="ButtonPublish_MouseDown" />
                                     <TextBlock x:Name="ButtonSteam" HorizontalAlignment="Left" Margin="0,2,0,0"
                                             TextWrapping="Wrap" Text="创意工坊页面" VerticalAlignment="Top" FontSize="12"
                                             Width="72" Foreground="DimGray" TextDecorations="Underline" Cursor="Hand"
-                                            IsEnabled="False" MouseDown="ButtonSteam_MouseDown" />
+                                             MouseDown="ButtonSteam_MouseDown" />
                                     <ProgressBar x:Name="ProgressBarUpload" Margin="0,2,0,0" Visibility="Collapsed"
                                             pu:ProgressBarHelper.CornerRadius="2" VerticalAlignment="Top" Height="30"
                                             Value="60" Background="{DynamicResource Primary}"

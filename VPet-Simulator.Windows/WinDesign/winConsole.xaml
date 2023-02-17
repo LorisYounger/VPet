@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="桌宠管理控制台" Height="450" Width="450"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="桌宠管理开发控制台" Height="450" Width="450"
         FontSize="16">
     <TabControl pu:TabControlHelper.ItemsSelectedBackground="White"
             pu:TabControlHelper.HeaderPanelBackground="{DynamicResource PrimaryLight}">

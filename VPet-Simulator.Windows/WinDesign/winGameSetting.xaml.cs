@@ -199,7 +199,7 @@ namespace VPet_Simulator.Windows
                     ButtonPublish.Text = "更新至Steam";
                     ButtonSteam.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimaryDarker);
                 }
-                if (mod.ItemID != 1 && mod.AuthorID == Steamworks.SteamClient.SteamId.AccountId)
+                if (mod.ItemID != 1 && (mod.AuthorID == Steamworks.SteamClient.SteamId.AccountId || mod.AuthorID == 0))
                 {
                     ButtonPublish.IsEnabled = true;
                     ButtonPublish.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimaryDarker);
@@ -282,7 +282,10 @@ namespace VPet_Simulator.Windows
 
         private void ListMod_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (!AllowChange || ListMod.SelectedItem == null)
+                return;
 
+            ShowMod((string)((ListBoxItem)ListMod.SelectedItem).Content);
         }
 
         private void ButtonOpenModFolder_MouseDown(object sender, MouseButtonEventArgs e)
@@ -335,6 +338,11 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法发布\n如需发布自定义内容,请复制并更改名称", "MOD上传失败", MessageBoxIcon.Error);
                 return;
             }
+            if (!File.Exists(mod.Path.FullName + @"\icon.png") || new FileInfo(mod.Path.FullName + @"\icon.png").Length > 524288)
+            {
+                MessageBoxX.Show("封面图片(icon.png)大于500kb,请修改后重试", "MOD上传失败", MessageBoxIcon.Error);
+                return;
+            }
 #if DEMO
             MessageBoxX.Show("经测试,除正式版均无创意工坊权限,此功能仅作为展示", "特殊版无法上传创意工坊");
 #endif
@@ -349,23 +357,28 @@ namespace VPet_Simulator.Windows
                         .WithDescription(mod.Intro)
                         .WithPublicVisibility()
                         .WithPreviewFile(mod.Path.FullName + @"\icon.png")
-                        .WithContent(mod.Path);
-                //foreach (string tag in mod.Content.Trim('\n').Split('\n'))
-                //    result.WithTag(tag);
+                        .WithContent(mod.Path.FullName);
+                foreach (string tag in mod.Content.Trim('\n').Split('\n'))
+                    result.WithTag(tag);
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
-
+                mod.AuthorID = Steamworks.SteamClient.SteamId.AccountId;
+                mod.WriteFile();
                 if (r.Success)
                 {
-                    mod.AuthorID = Steamworks.SteamClient.SteamId.AccountId;
                     mod.ItemID = r.FileId.Value;
                     mod.WriteFile();
+                    //ProgressBarUpload.Value = 0;
+                    //await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
                     if (MessageBoxX.Show($"{mod.Name} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑详细介绍和图标?", "MOD上传成功", MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
                     {
                         System.Diagnostics.Process.Start("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
                     }
                 }
                 else
-                    MessageBoxX.Show($"{mod.Name} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n   如需代上传物品可以联系作者", $"MOD上传失败 {r.Result}");
+                {
+                    mod.AuthorID = 0; mod.WriteFile();
+                    MessageBoxX.Show($"{mod.Name} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{r.Result}", $"MOD上传失败 {r.Result}");
+                }
             }
             else if (mod.AuthorID == Steamworks.SteamClient.SteamId.AccountId)
             {
@@ -386,7 +399,7 @@ namespace VPet_Simulator.Windows
                         System.Diagnostics.Process.Start("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
                 }
                 else
-                    MessageBoxX.Show($"{mod.Name} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件", "MOD更新失败", MessageBoxIcon.Error);
+                    MessageBoxX.Show($"{mod.Name} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{r.Result}", $"MOD更新失败 {r.Result}");
             }
             ButtonPublish.IsEnabled = true;
             ButtonPublish.Text = "任务完成";
