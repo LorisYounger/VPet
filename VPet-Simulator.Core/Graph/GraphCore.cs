@@ -9,8 +9,17 @@ using System.Windows;
 
 namespace VPet_Simulator.Core
 {
+    /// <summary>
+    /// 图像显示核心
+    /// </summary>
     public class GraphCore
     {
+        public GraphCore()
+        {
+            if (!Directory.Exists(CachePath))
+                Directory.CreateDirectory(CachePath);
+        }
+
         public static string CachePath = AppDomain.CurrentDomain.BaseDirectory + @"\cache";
         /// <summary>
         /// 动画类型

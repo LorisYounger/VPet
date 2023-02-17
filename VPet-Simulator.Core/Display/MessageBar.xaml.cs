@@ -59,7 +59,7 @@ namespace VPet_Simulator.Core
             {
                 Task.Run(() =>
                 {
-                    Thread.Sleep(timeleft * 100);
+                    Thread.Sleep(timeleft * 50);
                     if (m.DisplayType == GraphCore.GraphType.Default || m.DisplayType.ToString().Contains("Say"))
                         m.Display(GraphCore.GraphType.Say_C_End, m.DisplayNomal);
                 });
@@ -77,9 +77,9 @@ namespace VPet_Simulator.Core
             }
         }
 
-        public Timer EndTimer = new Timer() { Interval = 100 };
+        public Timer EndTimer = new Timer() { Interval = 200 };
         public Timer ShowTimer = new Timer() { Interval = 40 };
-        public Timer CloseTimer = new Timer() { Interval = 10 };
+        public Timer CloseTimer = new Timer() { Interval = 20 };
         int timeleft;
         /// <summary>
         /// 显示消息

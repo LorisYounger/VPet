@@ -248,8 +248,24 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public int SmartMoveInterval
         {
-            get => this["gameconfig"].GetInt("smartmoveinterval", 20*60);
+            get => this["gameconfig"].GetInt("smartmoveinterval", 20 * 60);
             set => this["gameconfig"].SetInt("smartmoveinterval", value);
+        }
+        /// <summary>
+        /// 开机启动
+        /// </summary>
+        public bool StartUPBoot
+        {
+            get => this["gameconfig"].GetBool("startboot");
+            set => this["gameconfig"].SetBool("startboot", value);
+        }
+        /// <summary>
+        /// 开机启动 Steam
+        /// </summary>
+        public bool StartUPBootSteam
+        {
+            get => !this["gameconfig"].GetBool("startbootsteam");
+            set => this["gameconfig"].SetBool("startbootsteam", !value);
         }
     }
 }

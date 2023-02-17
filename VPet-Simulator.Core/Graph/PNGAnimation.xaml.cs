@@ -18,13 +18,14 @@ using System.Threading;
 using System.Drawing;
 using LinePutScript;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
+using Panuon.WPF.UI;
 
 namespace VPet_Simulator.Core
 {
     /// <summary>
     /// PNGAnimation.xaml 的交互逻辑
     /// </summary>
-    public partial class PNGAnimation : UserControl, IGraph
+    public partial class PNGAnimation : ContentControlX, IGraph
     {
         /// <summary>
         /// 所有动画帧

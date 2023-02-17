@@ -3,6 +3,7 @@ using Steamworks.Ugc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,9 @@ namespace VPet_Simulator.Windows
             MoveEventBox.IsChecked = mw.Set.AllowMove;
             SmartMoveEventBox.IsChecked = mw.Set.SmartMove;
             PressLengthSlider.Value = mw.Set.PressLength / 1000.0;
+
+            StartUpBox.IsChecked = mw.Set.StartUPBoot;
+            StartUpSteamBox.IsChecked = mw.Set.StartUPBootSteam;
 
             foreach (PetLoader pl in mw.Pets)
             {
@@ -534,7 +538,51 @@ namespace VPet_Simulator.Windows
         {
             mw.Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
         }
+        private void GenStartUP()
+        {
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + @"\VPET_Simulator.lnk";
+            if (mw.Set.StartUPBoot)
+            {
+                if (File.Exists(path))
+                {
+                    return;
+                }
+                IWshRuntimeLibrary.WshShell shell = new IWshRuntimeLibrary.WshShell();
+                string shortcutAddress;
+                if (mw.Set.StartUPBootSteam)
+#if DEMO
+                    shortcutAddress = "steam://rungameid/2293870";
+#else
+                    shortcutAddress = "steam://rungameid/1920960";
+#endif
+                else
+                    shortcutAddress = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
+                IWshRuntimeLibrary.IWshShortcut shortcut = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(path);
+                shortcut.Description = "VPet Simulator";
+                shortcut.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                shortcut.TargetPath = shortcutAddress;
+                shortcut.IconLocation = AppDomain.CurrentDomain.BaseDirectory + @"vpeticon.ico";
+                shortcut.Save();
+            }
+            else
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
+        }
+        private void StartUpBox_Checked(object sender, RoutedEventArgs e)
+        {
+            mw.Set.StartUPBoot = StartUpBox.IsChecked == true;
+            GenStartUP();
+        }
 
+        private void StartUpSteamBox_Checked(object sender, RoutedEventArgs e)
+        {
+            mw.Set.StartUPBootSteam = StartUpSteamBox.IsChecked == true;
+            GenStartUP();
+        }
     }
 }
