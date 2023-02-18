@@ -149,7 +149,18 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    <Style x:Key="StandardTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="BorderThickness" Value="1.5" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="Padding" Value="7,0,15,0" />
+        <Setter Property="pu:TextBoxHelper.CornerRadius" Value="5" />
+        <Setter Property="pu:TextBoxHelper.WatermarkForeground" Value="#DCDCDC" />
+        <Setter Property="pu:ShadowHelper.BlurRadius" Value="15" />
+        <Setter Property="pu:ShadowHelper.Opacity" Value="0.5" />        
+    </Style>
     <Style x:Key="StandardSliderStyle" TargetType="Slider" BasedOn="{StaticResource {x:Type Slider}}">
         <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
         <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDark}" />

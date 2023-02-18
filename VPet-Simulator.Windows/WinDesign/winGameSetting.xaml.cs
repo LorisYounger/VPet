@@ -55,7 +55,7 @@ namespace VPet_Simulator.Windows
 
             StartUpBox.IsChecked = mw.Set.StartUPBoot;
             StartUpSteamBox.IsChecked = mw.Set.StartUPBootSteam;
-
+            TextBoxPetName.Text = mw.Core.Save.Name;
             foreach (PetLoader pl in mw.Pets)
             {
                 PetBox.Items.Add(pl.Name);
@@ -613,6 +613,13 @@ namespace VPet_Simulator.Windows
             mw.Set.PetGraph = (string)PetBox.SelectedItem;
             PetIntor.Text = mw.Pets[PetBox.SelectedIndex].Intor;
             ButtonRestartGraph.Visibility = Visibility.Visible;
+        }
+
+        private void TextBoxPetName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Core.Save.Name = TextBoxPetName.Text;
         }
     }
 }

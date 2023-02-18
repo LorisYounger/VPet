@@ -2,29 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using VPet_Simulator.Core;
-using static VPet_Simulator.Core.GraphCore;
-using Microsoft.Win32;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
 using ContextMenu = System.Windows.Forms.ContextMenu;
 using MenuItem = System.Windows.Forms.MenuItem;
 using Application = System.Windows.Application;
 using System.Timers;
-using System.Windows.Forms.VisualStyles;
+using LinePutScript;
 
 namespace VPet_Simulator.Windows
 {
@@ -143,7 +131,10 @@ namespace VPet_Simulator.Windows
 
             //加载游戏内容
             Core.Controller = new MWController(this);
-            Core.Save = new Save("萝莉斯");
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
+                Core.Save = new Save(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First());
+            else
+                Core.Save = new Save("萝莉斯");
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
 
@@ -209,6 +200,11 @@ namespace VPet_Simulator.Windows
                 notifyIcon.Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/vpeticon.ico")).Stream);
 
                 notifyIcon.Visible = true;
+                notifyIcon.BalloonTipClicked += (a, b) =>
+                {
+                    Topmost = false;
+                    winSetting.Show();
+                };
 
                 if (!Set["SingleTips"].GetBool("helloworld"))
                 {
