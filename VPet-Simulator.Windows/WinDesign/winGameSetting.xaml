@@ -39,7 +39,8 @@
                             <RowDefinition Height="35" />
                             <RowDefinition Height="35" />
                             <RowDefinition Height="35" />
-                            <RowDefinition Height="169*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <TextBlock Text="置于顶层" VerticalAlignment="Center" FontSize="14" />
                         <pu:Switch x:Name="TopMostBox" Grid.Column="2" BorderBrush="{DynamicResource PrimaryDark}"
@@ -107,8 +108,13 @@
                                     Unchecked="StartUpSteamBox_Checked" />
                         </Grid>
                         <TextBlock Grid.Row="6" Text="宠物动画" VerticalAlignment="Center" FontSize="14" />
+                        <TextBlock x:Name="PetIntor" Grid.Row="7" Text="动画描述动画描述动画描述动画描述动画描述" VerticalAlignment="Top" Grid.Column="2" Margin="0,0,0,5" TextWrapping="WrapWithOverflow" />
                         <ComboBox x:Name="PetBox" Grid.Row="6" Grid.Column="2" ToolTip="加载的宠物动画,重启后生效"
-                                Style="{DynamicResource StandardComboBoxStyle}" Margin="0,3,0,2" />
+                                Style="{DynamicResource StandardComboBoxStyle}" Margin="0,3,0,2" SelectionChanged="PetBox_SelectionChanged" />
+                        <Button x:Name="ButtonRestartGraph"  Content="重启软件以应用更改" Margin="0,2,0,0" Visibility="Collapsed"
+                                        VerticalAlignment="Bottom" Background="{DynamicResource DARKPrimary}"
+                                        Foreground="{DynamicResource DARKPrimaryText}"
+                                        Click="ButtonRestart_Click" Grid.ColumnSpan="3" Grid.Row="10" />
                     </Grid>
                 </TabItem>
                 <TabItem Header="系统" BorderBrush="{DynamicResource PrimaryDarker}">
@@ -186,6 +192,7 @@
                                         Background="{x:Null}" />
                             </Grid>
                         </Grid>
+                        
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="互动" BorderBrush="{DynamicResource PrimaryDarker}">

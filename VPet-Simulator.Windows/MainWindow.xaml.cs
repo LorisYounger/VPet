@@ -157,7 +157,8 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(new Action(() =>
             {
                 LoadingText.Content = "尝试加载动画和生成缓存";
-                Core.Graph = Pets[0].Graph();
+                var pl = Pets.Find(x => x.Name == Set.PetGraph);
+                Core.Graph = pl == null ? Pets[0].Graph() : pl.Graph();
                 LoadingText.Content = "正在加载游戏";
                 winSetting = new winGameSetting(this);
                 Main = new Main(Core) { };
@@ -224,7 +225,7 @@ namespace VPet_Simulator.Windows
                 {
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);
                     notifyIcon.ShowBalloonTip(10, "更新通知 02/17",
-                        "现在使用缓存机制,不仅占用小,而且再也不会有那种闪闪的问题了!\n现已支持开机启动功能,前往设置设置开机启动", ToolTipIcon.Info);                    
+                        "现在使用缓存机制,不仅占用小,而且再也不会有那种闪闪的问题了!\n现已支持开机启动功能,前往设置设置开机启动", ToolTipIcon.Info);
                 }
             }));
         }

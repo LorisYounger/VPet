@@ -60,7 +60,11 @@ namespace VPet_Simulator.Windows
             {
                 PetBox.Items.Add(pl.Name);
             }
-            PetBox.SelectedIndex = 0;
+            int petboxid = mw.Pets.FindIndex(x => x.Name == mw.Set.PetGraph);
+            if (petboxid == -1)
+                petboxid = 0;
+            PetBox.SelectedIndex = petboxid;
+            PetIntor.Text = mw.Pets[petboxid].Intor;
 
             foreach (ComboBoxItem v in CBAutoSave.Items)
             {
@@ -588,14 +592,27 @@ namespace VPet_Simulator.Windows
         }
         private void StartUpBox_Checked(object sender, RoutedEventArgs e)
         {
+            if (!AllowChange)
+                return;
             mw.Set.StartUPBoot = StartUpBox.IsChecked == true;
             GenStartUP();
         }
 
         private void StartUpSteamBox_Checked(object sender, RoutedEventArgs e)
         {
+            if (!AllowChange)
+                return;
             mw.Set.StartUPBootSteam = StartUpSteamBox.IsChecked == true;
             GenStartUP();
+        }
+
+        private void PetBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.PetGraph = (string)PetBox.SelectedItem;
+            PetIntor.Text = mw.Pets[PetBox.SelectedIndex].Intor;
+            ButtonRestartGraph.Visibility = Visibility.Visible;
         }
     }
 }

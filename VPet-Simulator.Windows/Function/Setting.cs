@@ -267,5 +267,13 @@ namespace VPet_Simulator.Windows
             get => !this["gameconfig"].GetBool("startbootsteam");
             set => this["gameconfig"].SetBool("startbootsteam", !value);
         }
+        /// <summary>
+        /// 桌宠选择内容
+        /// </summary>
+        public string PetGraph
+        {
+            get => this["gameconfig"].GetString("petgraph", "默认虚拟桌宠");
+            set => this["gameconfig"].SetString("petgraph", value);
+        }
     }
 }
