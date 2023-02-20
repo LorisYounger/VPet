@@ -22,7 +22,7 @@
 
 ##### 摸头
 
-![ss2](README.assets/ss2.gif)
+![ss0](README.assets/ss0.gif)
 
 ##### 提起
 

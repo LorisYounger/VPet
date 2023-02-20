@@ -561,9 +561,7 @@ namespace VPet_Simulator.Windows
             if (mw.Set.StartUPBoot)
             {
                 if (File.Exists(path))
-                {
-                    return;
-                }
+                    File.Delete(path);
                 IWshRuntimeLibrary.WshShell shell = new IWshRuntimeLibrary.WshShell();
                 string shortcutAddress;
                 if (mw.Set.StartUPBootSteam)
@@ -585,9 +583,7 @@ namespace VPet_Simulator.Windows
             else
             {
                 if (File.Exists(path))
-                {
                     File.Delete(path);
-                }
             }
         }
         private void StartUpBox_Checked(object sender, RoutedEventArgs e)

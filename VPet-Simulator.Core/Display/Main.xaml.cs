@@ -41,7 +41,7 @@ namespace VPet_Simulator.Core
         /// 刷新时间时会调用该方法,在所有任务处理完之后
         /// </summary>
         public event Action<Main> TimeUIHandle;
-        public Main(GameCore core,bool loadtouchevent = true)
+        public Main(GameCore core, bool loadtouchevent = true)
         {
             InitializeComponent();
             Core = core;
@@ -60,7 +60,7 @@ namespace VPet_Simulator.Core
 
             var ig = Core.Graph.FindGraph(GraphCore.GraphType.Default, core.Save.Mode);
             PetGrid.Child = ig.This;
-            var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Touch_Head_A_Start, core.Save.Mode);            
+            var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Touch_Head_A_Start, core.Save.Mode);
             PetGrid2.Child = ig2.This; //用于缓存
             PetGrid2.Visibility = Visibility.Collapsed;
             ig.Run(DisplayNomal);
@@ -137,6 +137,7 @@ namespace VPet_Simulator.Core
             if (DisplayType.ToString().StartsWith("Raised"))
             {
                 MainGrid.MouseMove -= MainGrid_MouseMove;
+                MainGrid.MouseMove += MainGrid_MouseWave;
                 rasetype = -1;
                 DisplayRaising();
             }
@@ -173,7 +174,7 @@ namespace VPet_Simulator.Core
         public void Dispose()
         {
             EventTimer.Stop();
-            MoveTimer.Enabled = false;;
+            MoveTimer.Enabled = false; ;
             EventTimer.Dispose();
             MoveTimer.Dispose();
             MsgBar.Dispose();
@@ -190,6 +191,73 @@ namespace VPet_Simulator.Core
         {
             MoveTimer.Enabled = false;
             MainGrid.MouseMove -= MainGrid_MouseMove;
+            MainGrid.MouseMove += MainGrid_MouseWave;
+        }
+        private int wavetimes = 0;
+        private int switchcount = 0;
+        private bool? waveleft = null;
+        private bool? wavetop = null;
+        private DateTime wavespan;
+        private void MainGrid_MouseWave(object sender, MouseEventArgs e)
+        {
+            if ((DateTime.Now - wavespan).TotalSeconds > 5)
+            {
+                wavetimes = 0;
+                switchcount = 0;
+                waveleft = null;
+                wavetop = null;
+            }
+            wavespan = DateTime.Now;
+            bool active = false;
+            var p = e.GetPosition(MainGrid);
+
+            if (p.Y < 200)
+            {
+                if (wavetop != false)
+                    wavetop = true;
+                else
+                {
+                    if (switchcount++ > 150)
+                        wavespan = DateTime.MinValue;
+                    return;
+                }
+            }
+            else
+            {
+                if (waveleft != true)
+                    wavetop = false;
+                else
+                {
+                    if (switchcount++ > 150)
+                        wavespan = DateTime.MinValue;
+                    return;
+                }
+            }
+
+            if (p.X < 200 && waveleft != true)
+            {
+                waveleft = true;
+                active = true;
+            }
+            if (p.X > 300 && waveleft != false)
+            {
+                active = true;
+                waveleft = false;
+            }
+
+            if (active)
+            {
+                if (wavetimes++ > 3)
+                    if (wavetop == true)
+                    {
+                        DisplayTouchHead();
+                        Console.WriteLine(wavetimes);
+                    }
+                    else
+                    {
+
+                    }
+            }
         }
     }
 }

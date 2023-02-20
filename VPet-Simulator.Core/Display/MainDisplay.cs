@@ -90,10 +90,13 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void DisplayTouchHead()
         {
-            if (Core.Save.Strength <= DistanceMin)
+            if (Core.Controller.EnableFunction && Core.Save.Strength <= DistanceMin)
+            {
+                Core.Save.StrengthChange(-1);
+                Core.Save.FeelingChange(1);
+            }
+            if (DisplayType == GraphType.Touch_Head_A_Start)
                 return;
-            Core.Save.StrengthChange(-1);
-            Core.Save.FeelingChange(1);
             if (DisplayType == GraphType.Touch_Head_B_Loop)
                 if (PetGrid.Child is IGraph ig && ig.GraphType == GraphCore.GraphType.Touch_Head_B_Loop)
                 {
@@ -105,6 +108,7 @@ namespace VPet_Simulator.Core
                     ig2.IsContinue = true;
                     return;
                 }
+
             Display(GraphCore.GraphType.Touch_Head_A_Start, () =>
                Display(GraphCore.GraphType.Touch_Head_B_Loop, () =>
                Display(GraphCore.GraphType.Touch_Head_C_End, DisplayNomal
@@ -236,6 +240,7 @@ namespace VPet_Simulator.Core
         {
             //位置迁移: 254-128           
             MainGrid.MouseMove += MainGrid_MouseMove;
+            MainGrid.MouseMove -= MainGrid_MouseWave;
             rasetype = 0;
             DisplayRaising();
             //if (((IGraph)PetGrid.Child).GraphType == GraphCore.GraphType.Touch_Head_B_Loop)
@@ -1035,7 +1040,7 @@ namespace VPet_Simulator.Core
         /// <param name="EndAction">结束操作</param>
         public void Display(IGraph graph, Action EndAction = null)
         {
-            if(graph == null)
+            if (graph == null)
             {
                 EndAction?.Invoke();
                 return;
