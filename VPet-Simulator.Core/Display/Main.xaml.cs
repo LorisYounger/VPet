@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Panuon.WPF.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// Main.xaml 的交互逻辑
     /// </summary>
-    public partial class Main : UserControl, IDisposable
+    public partial class Main : ContentControlX, IDisposable
     {
         /// <summary>
         /// 游戏核心
@@ -200,7 +201,7 @@ namespace VPet_Simulator.Core
         private DateTime wavespan;
         private void MainGrid_MouseWave(object sender, MouseEventArgs e)
         {
-            if ((DateTime.Now - wavespan).TotalSeconds > 5)
+            if ((DateTime.Now - wavespan).TotalSeconds > 2)
             {
                 wavetimes = 0;
                 switchcount = 0;
@@ -224,7 +225,7 @@ namespace VPet_Simulator.Core
             }
             else
             {
-                if (waveleft != true)
+                if (wavetop != true)
                     wavetop = false;
                 else
                 {
@@ -251,11 +252,11 @@ namespace VPet_Simulator.Core
                     if (wavetop == true)
                     {
                         DisplayTouchHead();
-                        Console.WriteLine(wavetimes);
+                        //Console.WriteLine(wavetimes);
                     }
                     else
                     {
-
+                        DisplayTouchBody();
                     }
             }
         }

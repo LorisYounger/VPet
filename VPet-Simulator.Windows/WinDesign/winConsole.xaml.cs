@@ -77,6 +77,9 @@ namespace VPet_Simulator.Windows
                 case "DisplayTouchHead":
                     mw.Main.DisplayTouchHead();
                     break;
+                case "DisplayTouchBody":
+                    mw.Main.DisplayTouchBody();
+                    break;
                 case "DisplayBoring":
                     mw.Main.DisplayBoring();
                     break;
@@ -137,6 +140,7 @@ namespace VPet_Simulator.Windows
                 case "DisplayIdel_StateTWO":
                     mw.Main.DisplayIdel_StateTWO();
                     break;
+                    
             }
         }
 

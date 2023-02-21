@@ -114,7 +114,35 @@ namespace VPet_Simulator.Core
                Display(GraphCore.GraphType.Touch_Head_C_End, DisplayNomal
             )));
         }
+        /// <summary>
+        /// 显示摸身体情况
+        /// </summary>
+        public void DisplayTouchBody()
+        {
+            if (Core.Controller.EnableFunction && Core.Save.Strength <= DistanceMin)
+            {
+                Core.Save.StrengthChange(-1);
+                Core.Save.FeelingChange(1);
+            }
+            if (DisplayType == GraphType.Touch_Body_A_Start)
+                return;
+            if (DisplayType == GraphType.Touch_Body_B_Loop)
+                if (PetGrid.Child is IGraph ig && ig.GraphType == GraphCore.GraphType.Touch_Body_B_Loop)
+                {
+                    ig.IsContinue = true;
+                    return;
+                }
+                else if (PetGrid2.Child is IGraph ig2 && ig2.GraphType == GraphCore.GraphType.Touch_Body_B_Loop)
+                {
+                    ig2.IsContinue = true;
+                    return;
+                }
 
+            Display(GraphCore.GraphType.Touch_Body_A_Start, () =>
+               Display(GraphCore.GraphType.Touch_Body_B_Loop, () =>
+               Display(GraphCore.GraphType.Touch_Body_C_End, DisplayNomal
+            )));
+        }
         /// <summary>
         /// 显示待机(模式1)情况
         /// </summary>

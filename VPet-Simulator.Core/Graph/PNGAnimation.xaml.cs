@@ -25,7 +25,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// PNGAnimation.xaml 的交互逻辑
     /// </summary>
-    public partial class PNGAnimation : ContentControlX, IGraph
+    public partial class PNGAnimation : Grid, IGraph
     {
         /// <summary>
         /// 所有动画帧
@@ -90,7 +90,7 @@ namespace VPet_Simulator.Core
                     Width = 500 * (paths.Length + 1),
                     Height = 500
                 };
-                MainGrid.Children.Add(img);
+                Children.Add(img);
                 for (int i = 0; i < paths.Length; i++)
                 {
                     FileInfo file = paths[i];
@@ -115,7 +115,7 @@ namespace VPet_Simulator.Core
                     Width = 500 * (paths.Length + 1),
                     Height = 500
                 };
-                MainGrid.Children.Add(img);
+                Children.Add(img);
                 for (int i = 0; i < paths.Length; i++)
                 {
                     FileInfo file = paths[i];

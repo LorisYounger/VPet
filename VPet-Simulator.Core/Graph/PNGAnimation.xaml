@@ -1,5 +1,4 @@
-﻿<pu:ContentControlX x:Class="VPet_Simulator.Core.PNGAnimation"
-             xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
+﻿<Grid x:Class="VPet_Simulator.Core.PNGAnimation"              
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,6 +6,4 @@
              xmlns:local="clr-namespace:VPet_Simulator.Core"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="500">
-    <Grid x:Name="MainGrid">
-    </Grid>
-</pu:ContentControlX>
+</Grid>

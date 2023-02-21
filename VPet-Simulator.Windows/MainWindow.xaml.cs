@@ -217,11 +217,16 @@ namespace VPet_Simulator.Windows
                         Main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议");
                     });
                 }
-                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 2, 17))
+                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 2, 20))
                 {
+                    if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 2, 17))
+                        notifyIcon.ShowBalloonTip(10, "更新通知 02/17",
+                       "现在使用缓存机制,不仅占用小,而且再也不会有那种闪闪的问题了!\n现已支持开机启动功能,前往设置设置开机启动", ToolTipIcon.Info);
+                    else
+                        notifyIcon.ShowBalloonTip(10, "更新通知 02/20",
+                       "现已支通过抚摸(鼠标左右移动)进行摸头", ToolTipIcon.Info);
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);
-                    notifyIcon.ShowBalloonTip(10, "更新通知 02/17",
-                        "现在使用缓存机制,不仅占用小,而且再也不会有那种闪闪的问题了!\n现已支持开机启动功能,前往设置设置开机启动", ToolTipIcon.Info);
+
                 }
             }));
         }

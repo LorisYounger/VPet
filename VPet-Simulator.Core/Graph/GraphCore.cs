@@ -87,6 +87,18 @@ namespace VPet_Simulator.Core
             /// </summary>
             Touch_Head_C_End,
             /// <summary>
+            /// 摸身体 (开始)
+            /// </summary>
+            Touch_Body_A_Start,
+            /// <summary>
+            /// 摸身体 (循环)
+            /// </summary>
+            Touch_Body_B_Loop,
+            /// <summary>
+            /// 摸身体 (结束)
+            /// </summary>
+            Touch_Body_C_End,
+            /// <summary>
             /// 爬行向右 (开始)
             /// </summary>
             Crawl_Right_A_Start,

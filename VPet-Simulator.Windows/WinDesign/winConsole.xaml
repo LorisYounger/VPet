@@ -27,6 +27,7 @@
                 <ListBox x:Name="DisplayListBox" Margin="0,30,0,0" MouseDoubleClick="DisplayListBox_MouseDoubleClick">
                     <ListBoxItem Content="DisplayNomal" />
                     <ListBoxItem Content="DisplayTouchHead" />
+                    <ListBoxItem Content="DisplayTouchBody" />
                     <ListBoxItem Content="DisplayBoring" />
                     <ListBoxItem Content="DisplaySquat" />
                     <ListBoxItem Content="DisplaySleep" />
