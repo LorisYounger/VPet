@@ -19,13 +19,14 @@ using System.Drawing;
 using LinePutScript;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 using Panuon.WPF.UI;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace VPet_Simulator.Core
 {
     /// <summary>
     /// PNGAnimation.xaml 的交互逻辑
     /// </summary>
-    public partial class PNGAnimation : Grid, IGraph
+    public partial class PNGAnimation : System.Windows.Controls.Image, IGraph
     {
         /// <summary>
         /// 所有动画帧
@@ -61,6 +62,10 @@ namespace VPet_Simulator.Core
 
         public GraphCore.GraphType GraphType { get; private set; }
         /// <summary>
+        /// 是否准备完成
+        /// </summary>
+        public bool IsReady { get; private set; } = false;
+        /// <summary>
         /// 动画停止时运行的方法
         /// </summary>
         private Action StopAction;
@@ -79,59 +84,7 @@ namespace VPet_Simulator.Core
             //StoreMemory = storemem;
             GraphType = graphtype;
             ModeType = modetype;
-            //新方法:加载大图片
-            //生成大文件加载非常慢,先看看有没有缓存能用
-            string cp = GraphCore.CachePath + $"\\{Sub.GetHashCode(path)}_{paths.Length}.png";
-            if (File.Exists(cp))
-            {
-                var img = new System.Windows.Controls.Image()
-                {
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    Width = 500 * (paths.Length + 1),
-                    Height = 500
-                };
-                Children.Add(img);
-                for (int i = 0; i < paths.Length; i++)
-                {
-                    FileInfo file = paths[i];
-                    int time = int.Parse(file.Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
-                    int wxi = -500 * i;
-                    Animations.Add(new Animation(this, time, () => img.Margin = new Thickness(wxi, 0, 0, 0)));
-                }
-                img.Source = new BitmapImage(new Uri(cp));
-            }
-            else
-            {
-                List<System.Drawing.Image> imgs = new List<System.Drawing.Image>();
-                foreach (var file in paths)
-                    imgs.Add(System.Drawing.Image.FromFile(file.FullName));
-                int w = imgs[0].Width;
-                int h = imgs[0].Height;
-                Bitmap joinedBitmap = new Bitmap(w * paths.Length, h);
-                var graph = Graphics.FromImage(joinedBitmap);
-                var img = new System.Windows.Controls.Image()
-                {
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    Width = 500 * (paths.Length + 1),
-                    Height = 500
-                };
-                Children.Add(img);
-                for (int i = 0; i < paths.Length; i++)
-                {
-                    FileInfo file = paths[i];
-                    int time = int.Parse(file.Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
-                    graph.DrawImage(imgs[i], w * i, 0, w, h);
-                    int wxi = -500 * i;
-                    Animations.Add(new Animation(this, time, () => img.Margin = new Thickness(wxi, 0, 0, 0)));
-                }
-                joinedBitmap.Save(cp);
-                graph.Dispose();
-                joinedBitmap.Dispose();
-                imgs.ForEach(x => x.Dispose());
-                img.Source = new BitmapImage(new Uri(cp));
-            }
-
-
+            Task.Run(() => startup(path, paths));
             //if (storemem)
             //foreach (var file in paths)
             //{
@@ -196,6 +149,50 @@ namespace VPet_Simulator.Core
             //    , () => imgs[last % 3].Visibility = Visibility.Hidden));
             //}
         }
+        private void startup(string path, FileInfo[] paths)
+        {
+            //新方法:加载大图片
+            //生成大文件加载非常慢,先看看有没有缓存能用
+            string cp = GraphCore.CachePath + $"\\{Sub.GetHashCode(path)}_{paths.Length}.png";
+            Dispatcher.Invoke(() => Width = 500 * (paths.Length + 1));
+            if (File.Exists(cp))
+            {
+                for (int i = 0; i < paths.Length; i++)
+                {
+                    FileInfo file = paths[i];
+                    int time = int.Parse(file.Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
+                    int wxi = -500 * i;
+                    Animations.Add(new Animation(this, time, () => Margin = new Thickness(wxi, 0, 0, 0)));
+                }
+                Dispatcher.Invoke(() => Source = new BitmapImage(new Uri(cp)));
+                IsReady = true;
+            }
+            else
+            {
+                List<System.Drawing.Image> imgs = new List<System.Drawing.Image>();
+                foreach (var file in paths)
+                    imgs.Add(System.Drawing.Image.FromFile(file.FullName));
+                int w = imgs[0].Width;
+                int h = imgs[0].Height;
+                Bitmap joinedBitmap = new Bitmap(w * paths.Length, h);
+                var graph = Graphics.FromImage(joinedBitmap);
+                for (int i = 0; i < paths.Length; i++)
+                {
+                    FileInfo file = paths[i];
+                    int time = int.Parse(file.Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
+                    graph.DrawImage(imgs[i], w * i, 0, w, h);
+                    int wxi = -500 * i;
+                    Animations.Add(new Animation(this, time, () => Margin = new Thickness(wxi, 0, 0, 0)));
+                }
+                joinedBitmap.Save(cp);
+                graph.Dispose();
+                joinedBitmap.Dispose();
+                imgs.ForEach(x => x.Dispose());
+                Dispatcher.Invoke(() => Source = new BitmapImage(new Uri(cp)));
+                IsReady = true;
+            }
+        }
+
         /// <summary>
         /// 单帧动画
         /// </summary>
@@ -310,5 +307,16 @@ namespace VPet_Simulator.Core
             //IsResetPlay = false;
         }
 
+        public void WaitForReadyRun(Action EndAction = null)
+        {
+            Task.Run(() =>
+            {
+                while (!IsReady)
+                {
+                    Thread.Sleep(100);
+                }
+                Run(EndAction);
+            });
+        }
     }
 }

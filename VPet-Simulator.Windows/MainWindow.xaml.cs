@@ -144,15 +144,16 @@ namespace VPet_Simulator.Windows
                 AutoSaveTimer.Start();
             }
 
-
             Dispatcher.Invoke(new Action(() =>
             {
                 LoadingText.Content = "尝试加载动画和生成缓存";
                 var pl = Pets.Find(x => x.Name == Set.PetGraph);
                 Core.Graph = pl == null ? Pets[0].Graph() : pl.Graph();
                 LoadingText.Content = "正在加载游戏";
+
                 winSetting = new winGameSetting(this);
                 Main = new Main(Core) { };
+
                 Main.DefaultClickAction = () =>
                 {
                     if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
@@ -188,6 +189,7 @@ namespace VPet_Simulator.Windows
                     Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
                 }));
                 m_menu.MenuItems.Add(new MenuItem("反馈中心", (x, y) => { new winReport(this).Show(); }));
+                m_menu.MenuItems.Add(new MenuItem("开发控制台", (x, y) => { new winConsole(this).Show(); }));
 
                 m_menu.MenuItems.Add(new MenuItem("设置面板", (x, y) =>
                 {

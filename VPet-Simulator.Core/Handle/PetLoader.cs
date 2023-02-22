@@ -52,41 +52,38 @@ namespace VPet_Simulator.Core
             var list = di.EnumerateDirectories();
             if (list.Count() == 0)
             {
-                if (File.Exists(di.FullName + @"\info.lps"))
-                {//如果自带描述信息,则手动加载
-                    //TODO:
-                }
-                else
-                {//自动加载 PNG ANMIN
-                    path_name = path_name.Trim('_').ToLower();
-                    for (int i = 0; i < GraphTypeValue.Length; i++)
+                //自动加载 PNG ANMIN
+                path_name = path_name.Trim('_').ToLower();
+                for (int i = 0; i < GraphTypeValue.Length; i++)
+                {
+                    if (path_name.StartsWith(GraphTypeValue[i]))
                     {
-                        if (path_name.StartsWith(GraphTypeValue[i]))
+                        if (path_name.Contains("happy"))
                         {
-
-                            if (path_name.Contains("happy"))
-                            {
-                                graph.AddGraph(di.FullName, Save.ModeType.Happy, (GraphType)i);
-                            }
-                            if (path_name.Contains("nomal"))
-                            {
-                                graph.AddGraph(di.FullName, Save.ModeType.Nomal, (GraphType)i);
-                            }
-                            if (path_name.Contains("poorcondition"))
-                            {
-                                graph.AddGraph(di.FullName, Save.ModeType.PoorCondition, (GraphType)i);
-                            }
-                            if (path_name.Contains("ill"))
-                            {
-                                graph.AddGraph(di.FullName, Save.ModeType.Ill, (GraphType)i);
-                            }
-                            return;
+                            graph.AddGraph(di.FullName, Save.ModeType.Happy, (GraphType)i);
                         }
+                        if (path_name.Contains("nomal"))
+                        {
+                            graph.AddGraph(di.FullName, Save.ModeType.Nomal, (GraphType)i);
+                        }
+                        if (path_name.Contains("poorcondition"))
+                        {
+                            graph.AddGraph(di.FullName, Save.ModeType.PoorCondition, (GraphType)i);
+                        }
+                        if (path_name.Contains("ill"))
+                        {
+                            graph.AddGraph(di.FullName, Save.ModeType.Ill, (GraphType)i);
+                        }
+                        return;
                     }
-#if DEMO
-                    throw new Exception("未知的图像类型: " + path_name);
-#endif
                 }
+#if DEBUG
+                throw new Exception("未知的图像类型: " + path_name);
+#endif
+            }
+            else if (File.Exists(di.FullName + @"\info.lps"))
+            {//如果自带描述信息,则手动加载
+             //TODO:
             }
             else
                 foreach (var p in list)

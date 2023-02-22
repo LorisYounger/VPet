@@ -44,6 +44,7 @@ namespace VPet_Simulator.Core
         public event Action<Main> TimeUIHandle;
         public Main(GameCore core, bool loadtouchevent = true)
         {
+            Console.WriteLine(DateTime.Now.ToString("T:fff"));
             InitializeComponent();
             Core = core;
 
@@ -64,7 +65,7 @@ namespace VPet_Simulator.Core
             var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Touch_Head_A_Start, core.Save.Mode);
             PetGrid2.Child = ig2.This; //用于缓存
             PetGrid2.Visibility = Visibility.Collapsed;
-            ig.Run(DisplayNomal);
+            ig.WaitForReadyRun(DisplayNomal);
 
 
             EventTimer.Elapsed += EventTimer_Elapsed;

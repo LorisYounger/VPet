@@ -36,7 +36,10 @@ namespace VPet_Simulator.Tool
         {
             Console.WriteLine("请输入每张图片的持续时间 (单位: 毫秒)");
             string timestr = Console.ReadLine();
-            int time = timestr == "" ? 125 : int.Parse(timestr);
+            if(!int.TryParse(timestr,out int time))
+            {
+                time = 125;
+            }
             Console.WriteLine("请输入图片位置");
             DirectoryInfo directoryInfo = new DirectoryInfo(Console.ReadLine());
             int id = 0;

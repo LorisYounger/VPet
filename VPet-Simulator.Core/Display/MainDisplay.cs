@@ -137,11 +137,11 @@ namespace VPet_Simulator.Core
                     ig2.IsContinue = true;
                     return;
                 }
-
+            Core.Graph.RndGraph.Clear();
             Display(GraphCore.GraphType.Touch_Body_A_Start, () =>
                Display(GraphCore.GraphType.Touch_Body_B_Loop, () =>
                Display(GraphCore.GraphType.Touch_Body_C_End, DisplayNomal
-            )));
+            , true), true), true);
         }
         /// <summary>
         /// 显示待机(模式1)情况

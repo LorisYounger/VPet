@@ -29,6 +29,10 @@ namespace VPet_Simulator.Core
         /// 是否继续播放
         /// </summary>
         bool IsContinue { get; set; }
+        /// <summary>
+        /// 从0开始运行该动画, 等待部署完成后执行
+        /// </summary>
+        void WaitForReadyRun(Action EndAction = null);
         ///// <summary>//经过测试,储存到内存好处多多,不储存也要占用很多内存,干脆存了吧
         ///// 是否储存到内存以支持快速显示
         ///// </summary>
@@ -36,7 +40,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 该动画UI状态
         /// </summary>
-        Save.ModeType ModeType { get;}
+        Save.ModeType ModeType { get; }
         /// <summary>
         /// 该动画UI状态
         /// </summary>

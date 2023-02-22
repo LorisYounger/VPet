@@ -72,5 +72,7 @@ namespace VPet_Simulator.Core
             PlayState = false;
             this.StopEndAction = StopEndAction;
         }
+
+        public void WaitForReadyRun(Action EndAction = null) => Run(EndAction);
     }
 }
