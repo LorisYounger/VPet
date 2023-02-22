@@ -230,6 +230,8 @@ namespace VPet_Simulator.Windows
         }
         private void FullScreenBox_Check(object sender, RoutedEventArgs e)
         {
+            if (!AllowChange)
+                return;
             if (FullScreenBox.IsChecked == true)
             {
                 mw.Set.IsBiggerScreen = true;
@@ -412,6 +414,8 @@ namespace VPet_Simulator.Windows
 
         private void ButtonSteam_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (!AllowChange)
+                return;
             var modname = (string)((ListBoxItem)ListMod.SelectedItem).Content;
             var mod = mw.CoreMODs.Find(x => x.Name == modname);
             System.Diagnostics.Process.Start("https://steamcommunity.com/sharedfiles/filedetails/?id=" + mod.ItemID);
@@ -460,6 +464,8 @@ namespace VPet_Simulator.Windows
 
         private void ZoomSlider_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (!AllowChange)
+                return;
             mw.SetZoomLevel(ZoomSlider.Value / 2);
             this.Width = 400 * Math.Sqrt(ZoomSlider.Value);
             this.Height = 450 * Math.Sqrt(ZoomSlider.Value);
@@ -553,6 +559,8 @@ namespace VPet_Simulator.Windows
         }
         public void SetSmartMove()
         {
+            if (!AllowChange)
+                return;
             mw.Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
         }
         private void GenStartUP()
