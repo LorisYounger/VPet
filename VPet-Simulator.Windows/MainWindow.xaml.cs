@@ -13,6 +13,7 @@ using MenuItem = System.Windows.Forms.MenuItem;
 using Application = System.Windows.Application;
 using System.Timers;
 using LinePutScript;
+using System.Diagnostics;
 
 namespace VPet_Simulator.Windows
 {
@@ -181,6 +182,7 @@ namespace VPet_Simulator.Windows
                 ContextMenu m_menu;
 
                 m_menu = new ContextMenu();
+                m_menu.MenuItems.Add(new MenuItem("操作教程", (x, y) => { Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html"); }));
                 m_menu.MenuItems.Add(new MenuItem("重置状态", (x, y) =>
                 {
                     Main.CleanState();
@@ -208,14 +210,20 @@ namespace VPet_Simulator.Windows
                     winSetting.Show();
                 };
 
+                if (Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 2, 23))
+                {
+                    Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
+                    Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
+                }
                 if (!Set["SingleTips"].GetBool("helloworld"))
                 {
-                    Set["SingleTips"].SetBool("helloworld", true);
-                    notifyIcon.ShowBalloonTip(10, "你好 " + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
-                        "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠", ToolTipIcon.Info);
                     Task.Run(() =>
                     {
-                        Thread.Sleep(1000);
+                        Thread.Sleep(2000);
+                        Set["SingleTips"].SetBool("helloworld", true);
+                        notifyIcon.ShowBalloonTip(10, "你好 " + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
+                            "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠", ToolTipIcon.Info);
+                        Thread.Sleep(2000);
                         Main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议");
                     });
                 }
@@ -228,8 +236,8 @@ namespace VPet_Simulator.Windows
                         notifyIcon.ShowBalloonTip(10, "更新通知 02/20",
                        "现已支通过抚摸(鼠标左右移动)进行摸头", ToolTipIcon.Info);
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);
-
                 }
+                Save();
             }));
         }
 

@@ -193,7 +193,7 @@
                                         Background="{x:Null}" />
                             </Grid>
                         </Grid>
-                        
+
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="互动" BorderBrush="{DynamicResource PrimaryDarker}">
@@ -481,7 +481,9 @@
                 </TabItem>
                 <TabItem Header="关于" BorderBrush="{DynamicResource PrimaryDarker}"
                         Foreground="{DynamicResource PrimaryText}">
-                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Grid>
+                        <Image x:Name="ImageWHY" Width="38" Margin="208,257,0,0" HorizontalAlignment="Left"
+                                VerticalAlignment="Top" Height="38" Source="/Res/TopLogo2019.PNG" />
                         <TextBlock Margin="0,0,0,0" Text="虚拟主播模拟器 规格" FontSize="20" FontWeight="Bold" />
                         <TextBlock Margin="0,30,0,0" FontWeight="Bold">
                     <Run>用户名</Run><LineBreak />
@@ -508,8 +510,7 @@
                     <LineBreak />                    
                     <Run FontStyle="Italic" FontSize="8">由于游戏暂未开发完毕,该名单并非完整名单.将在正式版完成前修改</Run><LineBreak />
                         </TextBlock>
-                        <Image Source="/Res/TopLogo2018.PNG" Width="38" Margin="208,257,0,0" HorizontalAlignment="Left"
-                                VerticalAlignment="Top" Height="38" />
+
 
                         <TextBlock Margin="0,130,0,0" FontWeight="Bold">
                     <Run>游戏策划</Run><LineBreak />

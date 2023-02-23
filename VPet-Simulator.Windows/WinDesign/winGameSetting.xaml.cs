@@ -30,7 +30,13 @@ namespace VPet_Simulator.Windows
         public winGameSetting(MainWindow mw)
         {
             this.mw = mw;
+            //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
             InitializeComponent();
+            //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
+            //var bit = new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.png"));
+            //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
+            ////ImageWHY.Source = bit;
+            //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
             TopMostBox.IsChecked = mw.Set.TopMost;
             if (mw.Set.IsBiggerScreen)
             {
