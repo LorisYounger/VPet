@@ -149,6 +149,12 @@ namespace VPet_Simulator.Core
             /// </summary>
             Setting,
         }
+        /// <summary>
+        /// 添加按钮
+        /// </summary>
+        /// <param name="parentMenu">按钮位置</param>
+        /// <param name="displayName">显示名称</param>
+        /// <param name="clickCallback">功能</param>
         public void AddMenuButton(MenuType parentMenu,
             string displayName,
             Action clickCallback)

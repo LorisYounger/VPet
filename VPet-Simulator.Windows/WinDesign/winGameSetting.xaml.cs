@@ -1,4 +1,5 @@
-﻿using Panuon.WPF.UI;
+﻿using LinePutScript;
+using Panuon.WPF.UI;
 using Steamworks.Ugc;
 using System;
 using System.Collections.Generic;
@@ -88,6 +89,9 @@ namespace VPet_Simulator.Windows
                     break;
                 }
             }
+
+            foreach (Sub sub in mw.Set["diy"])
+                StackDIY.Children.Add(new DIYViewer(sub));
 
 #if X64
             GameVerison.Content = $"游戏版本v{mw.Verison} x64";
@@ -524,6 +528,10 @@ namespace VPet_Simulator.Windows
         {
             Process.Start("https://jq.qq.com/?_wv=1027&k=zmeWNHyI");
         }
+        private void sendkey_click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://www.exlb.net/SendKeys");
+        }
         #endregion
         private void sDesktopAlignment_Checked_1(object sender, RoutedEventArgs e)
         {
@@ -630,6 +638,21 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Core.Save.Name = TextBoxPetName.Text;
+        }
+
+        private void DIY_ADD_Click(object sender, RoutedEventArgs e)
+        {
+            StackDIY.Children.Add(new DIYViewer());
+        }
+
+        private void DIY_Save_Click(object sender, RoutedEventArgs e)
+        {
+            mw.Set["diy"].Clear();
+            foreach (DIYViewer dv in StackDIY.Children)
+            {
+                mw.Set["diy"].Add(dv.ToSub());
+            }
+            mw.LoadDIY();
         }
     }
 }

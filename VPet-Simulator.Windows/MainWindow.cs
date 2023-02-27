@@ -1,5 +1,7 @@
-﻿using System;
+﻿using LinePutScript;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -43,6 +45,23 @@ namespace VPet_Simulator.Windows
             if (Core != null && Core.Save != null)
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
 
+        }
+        public void LoadDIY()
+        {
+            Main.ToolBar.MenuDIY.Items.Clear();
+            foreach (Sub sub in Set["diy"])
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.DIY, sub.Name, () => RunDIY(sub.Info));
+        }
+        public static void RunDIY(string content)
+        {
+            if(content.Contains("://") || content.Contains(@":\"))
+            {
+                Process.Start(content);
+            }
+            else
+            {
+                System.Windows.Forms.SendKeys.SendWait(content);
+            }
         }
     }
 }

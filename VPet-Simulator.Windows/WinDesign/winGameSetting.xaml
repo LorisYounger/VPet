@@ -7,6 +7,11 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" d:DesignHeight="450" Title="设置"
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" Closing="WindowX_Closing"
         Width="400" Height="450">
+    <!--<pu:WindowX.Resources>
+        <DataTemplate x:Key="DIYDataTemplate">
+
+        </DataTemplate>
+    </pu:WindowX.Resources>-->
     <Viewbox>
         <Grid Width="400" Height="450">
             <TabControl Margin="5" BorderThickness="0" pu:TabControlHelper.ItemsHeight="NaN"
@@ -348,6 +353,30 @@
 
                         </Grid>
                     </StackPanel>
+                </TabItem>
+                <TabItem Header="自定" BorderBrush="{DynamicResource PrimaryDarker}">
+                    <StackPanel>
+                        <TextBlock Background="{x:Null}"
+                                TextWrapping="Wrap">
+                    <Run FontWeight="Bold" FontSize="16">自定义链接</Run><LineBreak />
+                    <Run>在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能</Run><LineBreak/>
+                            <Run>键盘快捷键编写方法请参考</Run> <Hyperlink Click="sendkey_click">键盘快捷键 通用注解</Hyperlink><LineBreak/>
+                            <Run>右键进行排序/删除等操作</Run>
+                        </TextBlock>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button pu:ButtonHelper.CornerRadius="4" Content="添加新链接" Margin="4"
+                                    Background="{DynamicResource SecondaryLight}" Padding="1" Click="DIY_ADD_Click" />
+                            <Button pu:ButtonHelper.CornerRadius="4" Content="保存设置" Margin="4" Grid.Column="1"
+                                    Background="{DynamicResource SecondaryLight}" Padding="1" Click="DIY_Save_Click" />
+                        </Grid>
+                        <StackPanel x:Name="StackDIY" />
+                    </StackPanel>
+                   
+
                 </TabItem>
                 <TabItem Header="诊断" BorderBrush="{DynamicResource PrimaryDarker}">
                     <StackPanel>

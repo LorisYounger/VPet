@@ -199,6 +199,9 @@ namespace VPet_Simulator.Windows
                     winSetting.Show();
                 }));
                 m_menu.MenuItems.Add(new MenuItem("退出桌宠", (x, y) => Close()));
+
+                LoadDIY();
+
                 notifyIcon.ContextMenu = m_menu;
 
                 notifyIcon.Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/vpeticon.ico")).Stream);
