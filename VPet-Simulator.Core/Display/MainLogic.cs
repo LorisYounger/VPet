@@ -100,6 +100,7 @@ namespace VPet_Simulator.Core
             else
             {
                 Core.Save.Mode = Save.ModeType.Happy;
+                //Core.Save.Mode = Save.ModeType.Ill;
             }
 
             //UIHandle

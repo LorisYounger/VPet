@@ -15,8 +15,10 @@
             <Label x:Name="LName" Content="虚拟桌宠名字:" Foreground="{DynamicResource PrimaryText}" HorizontalAlignment="Left" Padding="0"
                     FontWeight="Bold" Margin="0,0,0,6" FontSize="32"
                     Background="{x:Null}" />
-            <TextBlock x:Name="TText" Text="我说话长这样,这是我说的话巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉" TextWrapping="WrapWithOverflow"
+            <ScrollViewer MaxHeight="400">
+                <TextBlock x:Name="TText" Text="我说话长这样,这是我说的话巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉" TextWrapping="WrapWithOverflow"
                     FontSize="24" />
+            </ScrollViewer>            
         </StackPanel>
     </Border>
 </UserControl>

@@ -1,6 +1,6 @@
 pet#默认虚拟桌宠:|intor#虚拟主播模拟器默认人物形象:|path#vup:|
 touchhead:|px#159:|py#16:|sw#189:|sh#178:|
 touchraised:|px#0:|py#50:|sw#500:|sh#200:|
-raisepoint:|x#290:|y#128:|
+raisepoint:|happy_x#290:|happy_y#128:|nomal_x#290:|nomal_y#128:|poorcondition_x#290:|poorcondition_y#128:|ill_x#290:|ill_y#128:|
 speed:|walk#20:|climb#10:|climbtop#8:|crawl#8:|fallx#14:|fally#10:|crawl#10:|
 locate:|climbleft#145:|climbright#185:|climbtop#150:|

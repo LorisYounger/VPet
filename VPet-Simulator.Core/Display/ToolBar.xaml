@@ -12,7 +12,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid x:Name="MainGrid" x:FieldModifier="public">
         <Border x:Name="BdrPanel" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24"
                 TextElement.FontSize="24" BorderBrush="{DynamicResource DARKPrimaryDarker}"
                 BorderThickness="1" Background="{DynamicResource DARKPrimaryText}" CornerRadius="5"
@@ -94,7 +94,6 @@
                         Foreground="{DynamicResource DARKPrimary}" />
             </Grid>
         </Border>
-
         <Menu Width="500" VerticalAlignment="Bottom" Style="{DynamicResource ToolBarMenuStyle}">
             <Menu.ItemsPanel>
                 <ItemsPanelTemplate>

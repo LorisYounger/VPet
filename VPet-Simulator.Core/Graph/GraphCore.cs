@@ -352,12 +352,12 @@ namespace VPet_Simulator.Core
                             RndGraph.Add(list.Count, index);
                             return list[index];
                         }
-                    else
-                        return list[Function.Rnd.Next(list.Count)];
                 }
-                else
+                if (mode != Save.ModeType.Ill)
                 {
-                    return Graphs[type][Function.Rnd.Next(Graphs[type].Count)];
+                    list = Graphs[type].FindAll(x => x.ModeType != Save.ModeType.Ill);
+                    if (list.Count > 0)
+                        return list[Function.Rnd.Next(list.Count)];
                 }
             }
             return null;// FindGraph(GraphType.Default, mode);
@@ -409,7 +409,7 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 提起定位点
             /// </summary>
-            public Point RaisePoint;
+            public Point[] RaisePoint;
             /// <summary>
             /// 行走速度
             /// </summary>
@@ -458,7 +458,12 @@ namespace VPet_Simulator.Core
                 TouchHeadSize = new Size(lps["touchhead"][(gdbe)"sw"], lps["touchhead"][(gdbe)"sh"]);
                 TouchRaisedLocate = new Point(lps["touchraised"][(gdbe)"px"], lps["touchraised"][(gdbe)"py"]);
                 TouchRaisedSize = new Size(lps["touchraised"][(gdbe)"sw"], lps["touchraised"][(gdbe)"sh"]);
-                RaisePoint = new Point(lps["raisepoint"][(gdbe)"x"], lps["raisepoint"][(gdbe)"y"]);
+                RaisePoint = new Point[] {
+                    new Point(lps["raisepoint"][(gdbe)"happy_x"], lps["raisepoint"][(gdbe)"happy_y"]),
+                    new Point(lps["raisepoint"][(gdbe)"nomal_x"], lps["raisepoint"][(gdbe)"nomal_y"]),
+                    new Point(lps["raisepoint"][(gdbe)"poorcondition_x"], lps["raisepoint"][(gdbe)"poorcondition_y"]),
+                    new Point(lps["raisepoint"][(gdbe)"ill_x"], lps["raisepoint"][(gdbe)"ill_y"])
+                };
                 var s = lps["speed"];
                 SpeedWalk = s[(gdbe)"walk"];
                 SpeedClimb = s[(gdbe)"climb"];
@@ -489,7 +494,14 @@ namespace VPet_Simulator.Core
                     TouchRaisedSize = new Size(lps["touchraised"][(gdbe)"sw"], lps["touchraised"][(gdbe)"wh"]);
                 }
                 if (lps.FindLine("raisepoint") != null)
-                    RaisePoint = new Point(lps["raisepoint"][(gdbe)"x"], lps["raisepoint"][(gdbe)"y"]);
+                {
+                    RaisePoint = new Point[] {
+                    new Point(lps["raisepoint"].GetDouble("happy_x",RaisePoint[0].X), lps["raisepoint"].GetDouble("happy_y",RaisePoint[0].Y)),
+                    new Point(lps["raisepoint"].GetDouble ("nomal_x",RaisePoint[1].X), lps["raisepoint"].GetDouble("nomal_y",RaisePoint[1].Y)),
+                    new Point(lps["raisepoint"].GetDouble("poorcondition_x",RaisePoint[2].X), lps["raisepoint"].GetDouble("poorcondition_y",RaisePoint[2].Y)),
+                    new Point(lps["raisepoint"].GetDouble("ill_x",RaisePoint[3].X), lps["raisepoint"].GetDouble("ill_y",RaisePoint[3].Y))
+                };
+                }
                 var s = lps.FindLine("speed");
                 if (s != null)
                 {

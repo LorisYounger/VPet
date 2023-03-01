@@ -161,8 +161,8 @@ namespace VPet_Simulator.Core
         private void MainGrid_MouseMove(object sender, MouseEventArgs e)
         {
             var mp = e.GetPosition(MainGrid);
-            var x = mp.X - Core.Graph.GraphConfig.RaisePoint.X;
-            var y = mp.Y - Core.Graph.GraphConfig.RaisePoint.Y;
+            var x = mp.X - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].X;
+            var y = mp.Y - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].Y;
             Core.Controller.MoveWindows(x, y);
             if (Math.Abs(x) + Math.Abs(y) > 10)
                 rasetype = 0;
