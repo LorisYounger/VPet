@@ -24,6 +24,7 @@ namespace VPet_Simulator.Windows
     {
         private NotifyIcon notifyIcon;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
+        public TalkBox TalkBox;
         public MainWindow()
         {
             //判断是不是Steam用户,因为本软件会发布到Steam
@@ -154,6 +155,11 @@ namespace VPet_Simulator.Windows
 
                 winSetting = new winGameSetting(this);
                 Main = new Main(Core) { };
+                if (IsSteamUser)
+                {
+                    TalkBox = new TalkBox(Main);
+                    Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                }
 
                 Main.DefaultClickAction = () =>
                 {
