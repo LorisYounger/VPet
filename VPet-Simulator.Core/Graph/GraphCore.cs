@@ -242,6 +242,10 @@ namespace VPet_Simulator.Core
             /// 待机 模式2 (结束)
             /// </summary>
             Idel_StateTWO_C_End,
+            /// <summary>
+            /// 开机
+            /// </summary>
+            StartUP,
         }
         ///// <summary> loop 应该被取缔
         ///// 动画类型默认设置 前文本|是否循环|是否常用

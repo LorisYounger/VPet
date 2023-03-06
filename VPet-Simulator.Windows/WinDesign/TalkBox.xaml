@@ -12,11 +12,14 @@
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="tbTalk" Style="{DynamicResource StandardTextBoxStyle}" Height="Auto" 
+            <TextBox x:Name="tbTalk" Style="{DynamicResource StandardTextBoxStyle}" Height="Auto"
                      pu:TextBoxHelper.Watermark="和桌宠说" FontSize="30" AcceptsReturn="True" TextWrapping="WrapWithOverflow"/>
             <Button pu:ButtonHelper.CornerRadius="4" Content="发送" BorderThickness="2"
                                     Background="{DynamicResource SecondaryLight}" Grid.Column="2" BorderBrush="{DynamicResource DARKPrimaryDarker}" 
                     FontSize="30" Click="SendMessage_Click" />
+            <Button x:Name="btn_startup" pu:ButtonHelper.CornerRadius="4" Content="初始化桌宠聊天程序" BorderThickness="2"
+                                    Background="{DynamicResource SecondaryLight}" BorderBrush="{DynamicResource DARKPrimaryDarker}" 
+                    FontSize="30" Click="StartUP_Click" Grid.ColumnSpan="3" />
         </Grid>
     </Border>
 </UserControl>
