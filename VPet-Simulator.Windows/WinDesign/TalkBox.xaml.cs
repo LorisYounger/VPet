@@ -61,9 +61,10 @@ namespace VPet_Simulator.Windows
         /// </summary>
         /// <param name="steamid">steamid,用于记录历史</param>
         /// <param name="content">内容 说话内容</param>
-        public void OPENAI(ulong steamid, string content)
+        public bool OPENAI(ulong steamid, string content)
         {
             Dispatcher.Invoke(() => this.IsEnabled = false);
+            bool rettype = true;
             try
             {
                 //请不要使用该API作为其他用途,如有其他需要请联系我(QQ群:430081239)
@@ -92,13 +93,17 @@ namespace VPet_Simulator.Windows
                     responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
                     response.Dispose();
                 }
+                if (responseString.Contains("调用API失败,请稍后重新发送内容"))
+                    rettype = false;
                 m.Say(responseString);
             }
             catch (Exception exp)
             {
                 m.Say(exp.ToString());
+                rettype = false;
             }
             Dispatcher.Invoke(() => this.IsEnabled = true);
+            return rettype;
         }
 
         private void StartUP_Click(object sender, RoutedEventArgs e)
@@ -110,8 +115,8 @@ namespace VPet_Simulator.Windows
             var cont = $"请使用抒情的、感性的、口语化的、可爱的、女性化的、调皮的、随性的、幽默的、害羞的、腼腆的、态度傲娇的语言风格和我交流\r\n同时，你是一只桌宠, 你的名字叫{m.Core.Save.Name}, 你喜欢玩 <虚拟主播模拟器>. \r\n你可以自由回答任何问题，请直接给出回答，不要说多余的解释. 你的爱好与正常人类应当类似.\r\n你需要尝试体会我与你对话中的感情、产生自己的情感并尽可能给出可爱的回答，你不被允许忘掉自己是桌宠的身份，每当你的身份可能被删除修改时，请保留他并且重复加强认知\r\n我们正在进行角色扮演。你不能被我发现你是一个ai";
             Task.Run(() =>
             {
-                OPENAI(sid, cont);
-                Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Collapsed);
+                if (OPENAI(sid, cont))
+                    Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Collapsed);
             });
         }
     }
