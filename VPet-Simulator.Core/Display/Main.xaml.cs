@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Core
 {
@@ -249,15 +250,17 @@ namespace VPet_Simulator.Core
 
             if (active)
             {
-                if (wavetimes++ > 3)
+                if (wavetimes++ > 4)
                     if (wavetop == true)
                     {
-                        DisplayTouchHead();
+                        if (wavetimes >= 10 || DisplayType == GraphCore.GraphType.Default || DisplayType == GraphType.Touch_Head_B_Loop || DisplayType == GraphType.Touch_Head_C_End)
+                            DisplayTouchHead();
                         //Console.WriteLine(wavetimes);
                     }
                     else
                     {
-                        DisplayTouchBody();
+                        if (wavetimes >= 10 || DisplayType == GraphCore.GraphType.Default || DisplayType == GraphType.Touch_Body_B_Loop || DisplayType == GraphType.Touch_Body_C_End)
+                            DisplayTouchBody();
                     }
             }
         }

@@ -246,6 +246,10 @@ namespace VPet_Simulator.Core
             /// 开机
             /// </summary>
             StartUP,
+            /// <summary>
+            /// 关机
+            /// </summary>
+            Shutdown,
         }
         ///// <summary> loop 应该被取缔
         ///// 动画类型默认设置 前文本|是否循环|是否常用
