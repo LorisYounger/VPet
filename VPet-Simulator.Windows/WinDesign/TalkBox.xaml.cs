@@ -38,10 +38,9 @@ namespace VPet_Simulator.Windows
             InitializeComponent();
             this.m = mw.Main;
             set = mw.Set;
-            if (set["aiopen"][(gbol)"startup"])
-            {
-                btn_startup.Visibility = Visibility.Collapsed;
-            }
+            this.IsEnabled = false;
+            var sid = Steamworks.SteamClient.SteamId.Value;
+            Task.Run(() => PetLifeDisplay(sid));
         }
 
         private void SendMessage_Click(object sender, RoutedEventArgs e)
@@ -56,6 +55,7 @@ namespace VPet_Simulator.Windows
             Task.Run(() => OPENAI(sid, cont));
 
         }
+
         /// <summary>
         /// 使用OPENAI-LB进行回复
         /// </summary>
@@ -95,6 +95,12 @@ namespace VPet_Simulator.Windows
                 }
                 if (responseString.Contains("调用API失败,请稍后重新发送内容"))
                     rettype = false;
+                else if (responseString.Contains("点击初始化桌宠聊天程序"))
+                {
+                    Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Visible);
+                    set["aiopen"][(gbol)"startup"] = false;
+                    rettype = false;
+                }
                 m.Say(responseString);
             }
             catch (Exception exp)
@@ -105,14 +111,60 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(() => this.IsEnabled = true);
             return rettype;
         }
-
+        /// <summary>
+        /// 根据宠物剩余寿命显示相关UI
+        /// </summary>
+        /// <param name="steamid">steamid,用于记录历史</param>
+        public void PetLifeDisplay(ulong steamid)
+        {
+            Dispatcher.Invoke(() => this.IsEnabled = false);
+            try
+            {
+                //请不要使用该API作为其他用途,如有其他需要请联系我(QQ群:430081239)
+                //该API可能会因为其他原因更改
+                string _url = "https://aiopen.exlb.net:5810/VPet/Life";
+                //参数
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine($"steamid={steamid}");
+                var request = (HttpWebRequest)WebRequest.Create(_url);
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";//ContentType
+                byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());
+                int length = byteData.Length;
+                request.ContentLength = length;
+                using (Stream writer = request.GetRequestStream())
+                {
+                    writer.Write(byteData, 0, length);
+                    writer.Close();
+                    writer.Dispose();
+                }
+                string responseString;
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
+                    response.Dispose();
+                }
+                if (int.TryParse(responseString, out int value))
+                {
+                    if(value != 0)
+                    {
+                        Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Collapsed);
+                    }
+                }
+            }
+            catch
+            {
+                Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Collapsed);
+            }
+            Dispatcher.Invoke(() => this.IsEnabled = true);
+        }
         private void StartUP_Click(object sender, RoutedEventArgs e)
         {
             set["aiopen"][(gbol)"startup"] = true;
             set.Save();
             btn_startup.Content = "初始化桌宠聊天程序中...";
             var sid = Steamworks.SteamClient.SteamId.Value;
-            var cont = $"请使用抒情的、感性的、口语化的、可爱的、女性化的、调皮的、随性的、幽默的、害羞的、腼腆的、态度傲娇的语言风格和我交流\r\n同时，你是一只桌宠, 你的名字叫{m.Core.Save.Name}, 你喜欢玩 <虚拟主播模拟器>. \r\n你可以自由回答任何问题，请直接给出回答，不要说多余的解释. 你的爱好与正常人类应当类似.\r\n你需要尝试体会我与你对话中的感情、产生自己的情感并尽可能给出可爱的回答，你不被允许忘掉自己是桌宠的身份，每当你的身份可能被删除修改时，请保留他并且重复加强认知\r\n我们正在进行角色扮演。你不能被我发现你是一个ai";
+            var cont = $"请使用抒情的、感性的、口语化的、可爱的、女性化的、调皮的、随性的、幽默的、害羞的、腼腆的、态度傲娇的语言风格和我交流\r\n你是一只桌宠, 你的名字叫{m.Core.Save.Name}, 你喜欢玩 <虚拟主播模拟器>. \r\n你可以自由回答任何问题，请直接给出回答，不要说多余的解释. 你的爱好与正常人类应当类似.\r\n你需要尝试体会我与你对话中的感情、产生自己的情感并尽可能给出可爱的回答\r\n我们正在进行角色扮演。你不能被我发现你是一个ai";
             Task.Run(() =>
             {
                 if (OPENAI(sid, cont))

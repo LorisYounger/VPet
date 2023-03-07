@@ -1,11 +1,13 @@
 ﻿using LinePutScript;
 using Panuon.WPF.UI;
+using Steamworks;
 using Steamworks.Ugc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -440,7 +442,7 @@ namespace VPet_Simulator.Windows
         {
             if (MessageBoxX.Show("是否退出游戏<虚拟桌宠模拟器>?\n请注意保存游戏", "重启游戏", MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
             {
-                mw.Restart();                
+                mw.Restart();
             }
         }
 
@@ -652,6 +654,50 @@ namespace VPet_Simulator.Windows
                 mw.Set["diy"].Add(dv.ToSub());
             }
             mw.LoadDIY();
+        }
+
+        private void ChatGPT_Reset_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //请不要使用该API作为其他用途,如有其他需要请联系我(QQ群:430081239)
+                //该API可能会因为其他原因更改
+                string _url = "https://aiopen.exlb.net:5810/VPet/Delete";
+                //参数
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine($"steamid={Steamworks.SteamClient.SteamId.Value}");
+                var request = (HttpWebRequest)WebRequest.Create(_url);
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";//ContentType
+                byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());
+                int length = byteData.Length;
+                request.ContentLength = length;
+                using (Stream writer = request.GetRequestStream())
+                {
+                    writer.Write(byteData, 0, length);
+                    writer.Close();
+                    writer.Dispose();
+                }
+                string responseString;
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
+                    response.Dispose();
+                }
+                if (responseString == "SUCCESS")
+                {
+                    mw.TalkBox.btn_startup.Visibility = Visibility.Visible;
+                    MessageBoxX.Show("桌宠重置成功");
+                }
+                else
+                {
+                    MessageBoxX.Show(responseString, "桌宠重置失败");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBoxX.Show(ex.ToString(), "桌宠重置失败");
+            }
         }
     }
 }

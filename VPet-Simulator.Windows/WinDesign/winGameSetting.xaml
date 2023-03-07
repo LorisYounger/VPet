@@ -177,7 +177,6 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
-                                <RowDefinition Height="35" />
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="长按间隔" VerticalAlignment="Center" FontSize="14" />
                             <TextBlock Grid.Row="1" Text="桌宠名字" VerticalAlignment="Center" FontSize="14" />
@@ -198,7 +197,38 @@
                                         Background="{x:Null}" />
                             </Grid>
                         </Grid>
-
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
+                                TextWrapping="Wrap" Margin="0,10,0,0">
+                    <Run FontWeight="Bold" FontSize="16">聊天设置</Run><LineBreak />
+                    <Run>使用ChatGPT进行聊天等相关设置</Run>
+                        </TextBlock>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35" />
+                                <RowDefinition Height="35" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="使用模式" VerticalAlignment="Center" FontSize="14" />
+                            <TextBlock Grid.Row="1" Text="相关功能" VerticalAlignment="Center" FontSize="14" />
+                            <Grid Grid.Column="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <RadioButton Style="{DynamicResource StandardRadioButtonStyle}"
+                                Content="使用从ChatGPT&#13;申请的的API"  ToolTip="需要去OpenAI官网申请"                           
+                                GroupName="cgpttype" Grid.Column="1" IsEnabled="False" />
+                                <RadioButton  Style="{DynamicResource StandardRadioButtonStyle}"
+                                Content="使用桌宠开发者&#13;提供的免费API" ToolTip="需遵循相关协议法律法规并有聊天字数限制"                            
+                                GroupName="cgpttype" IsChecked="True"  />
+                            </Grid>
+                            <Button pu:ButtonHelper.CornerRadius="4" Content="初始化桌宠聊天程序" Margin="4" Grid.Column="2"
+                                    Background="{DynamicResource SecondaryLight}" Padding="1" Grid.Row="1" Click="ChatGPT_Reset_Click" />
+                        </Grid>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="互动" BorderBrush="{DynamicResource PrimaryDarker}">
@@ -375,7 +405,7 @@
                         </Grid>
                         <StackPanel x:Name="StackDIY" />
                     </StackPanel>
-                   
+
 
                 </TabItem>
                 <TabItem Header="诊断" BorderBrush="{DynamicResource PrimaryDarker}">
