@@ -81,6 +81,33 @@ namespace VPet_Simulator.Windows
             }
             Task.Run(GameLoad);
         }
+        public new void Close()
+        {
+            if (Main == null)
+            {
+                base.Close();
+            }
+            else
+            {
+                Main.DisplayClose(() => Dispatcher.Invoke(base.Close));
+            }
+        }
+        public void Restart()
+        {
+            this.Closed -= Window_Closed;
+            this.Closed += Restart_Closed;
+            base.Close();
+        }
+
+        private void Restart_Closed(object sender, EventArgs e)
+        {
+            Save();
+            Main?.Dispose();
+            notifyIcon?.Dispose();
+            System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            System.Environment.Exit(0);
+        }
+
         private List<string> rndtext = new List<string>
         {
             "你知道吗? 鼠标右键可以打开菜单栏",

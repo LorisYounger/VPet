@@ -440,8 +440,7 @@ namespace VPet_Simulator.Windows
         {
             if (MessageBoxX.Show("是否退出游戏<虚拟桌宠模拟器>?\n请注意保存游戏", "重启游戏", MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
             {
-                mw.Close();
-                System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                mw.Restart();                
             }
         }
 
