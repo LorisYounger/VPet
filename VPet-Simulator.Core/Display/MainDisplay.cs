@@ -84,7 +84,14 @@ namespace VPet_Simulator.Core
             }
             return false;
         }
-
+        /// <summary>
+        /// 显示关机动画
+        /// </summary>
+        public void DisplayClose(Action EndAction)
+        {
+            CountNomal++;
+            Display(GraphCore.GraphType.Shutdown, EndAction);
+        }
         /// <summary>
         /// 显示摸头情况
         /// </summary>
@@ -1080,6 +1087,7 @@ namespace VPet_Simulator.Core
             DisplayType = graph.GraphType;
             if (PetGrid.Child == graph.This)
             {
+                petgridcrlf = true;
                 ((IGraph)(PetGrid2.Child)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
@@ -1091,6 +1099,7 @@ namespace VPet_Simulator.Core
             }
             else if (PetGrid2.Child == graph.This)
             {
+                petgridcrlf = false;
                 ((IGraph)(PetGrid.Child)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
@@ -1101,8 +1110,6 @@ namespace VPet_Simulator.Core
                 return;
             }
             graph.Run(EndAction);
-
-
             if (petgridcrlf)
             {
                 ((IGraph)(PetGrid.Child)).Stop(true);
