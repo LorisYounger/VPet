@@ -119,6 +119,12 @@ namespace VPet_Simulator.Windows
             ShowMod((string)((ListBoxItem)ListMod.SelectedItem).Content);
 
             AllowChange = true;
+
+            if (!mw.IsSteamUser)
+            {
+                RBCGPTUseLB.IsEnabled = false;
+                BtnCGPTReSet.IsEnabled = false;
+            }
         }
         public void ShowModList()
         {
@@ -655,48 +661,19 @@ namespace VPet_Simulator.Windows
             }
             mw.LoadDIY();
         }
+       
 
         private void ChatGPT_Reset_Click(object sender, RoutedEventArgs e)
         {
-            try
+            string responseString = mw.TalkBox.ChatGPT_Reset();
+            if (responseString == "SUCCESS")
             {
-                //请不要使用该API作为其他用途,如有其他需要请联系我(QQ群:430081239)
-                //该API可能会因为其他原因更改
-                string _url = "https://aiopen.exlb.net:5810/VPet/Delete";
-                //参数
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine($"steamid={Steamworks.SteamClient.SteamId.Value}");
-                var request = (HttpWebRequest)WebRequest.Create(_url);
-                request.Method = "POST";
-                request.ContentType = "application/x-www-form-urlencoded";//ContentType
-                byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());
-                int length = byteData.Length;
-                request.ContentLength = length;
-                using (Stream writer = request.GetRequestStream())
-                {
-                    writer.Write(byteData, 0, length);
-                    writer.Close();
-                    writer.Dispose();
-                }
-                string responseString;
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
-                    response.Dispose();
-                }
-                if (responseString == "SUCCESS")
-                {
-                    mw.TalkBox.btn_startup.Visibility = Visibility.Visible;
-                    MessageBoxX.Show("桌宠重置成功");
-                }
-                else
-                {
-                    MessageBoxX.Show(responseString, "桌宠重置失败");
-                }
+                mw.TalkBox.btn_startup.Visibility = Visibility.Visible;
+                MessageBoxX.Show("桌宠重置成功");
             }
-            catch (Exception ex)
+            else
             {
-                MessageBoxX.Show(ex.ToString(), "桌宠重置失败");
+                MessageBoxX.Show(responseString, "桌宠重置失败");
             }
         }
     }

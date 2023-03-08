@@ -222,11 +222,11 @@
                                 <RadioButton Style="{DynamicResource StandardRadioButtonStyle}"
                                 Content="使用从ChatGPT&#13;申请的的API"  ToolTip="需要去OpenAI官网申请"                           
                                 GroupName="cgpttype" Grid.Column="1" IsEnabled="False" />
-                                <RadioButton  Style="{DynamicResource StandardRadioButtonStyle}"
+                                <RadioButton x:Name="RBCGPTUseLB"  Style="{DynamicResource StandardRadioButtonStyle}"
                                 Content="使用桌宠开发者&#13;提供的免费API" ToolTip="需遵循相关协议法律法规并有聊天字数限制"                            
                                 GroupName="cgpttype" IsChecked="True"  />
                             </Grid>
-                            <Button pu:ButtonHelper.CornerRadius="4" Content="初始化桌宠聊天程序" Margin="4" Grid.Column="2"
+                            <Button x:Name="BtnCGPTReSet" pu:ButtonHelper.CornerRadius="4" Content="初始化桌宠聊天程序" Margin="4" Grid.Column="2"
                                     Background="{DynamicResource SecondaryLight}" Padding="1" Grid.Row="1" Click="ChatGPT_Reset_Click" />
                         </Grid>
                     </StackPanel>

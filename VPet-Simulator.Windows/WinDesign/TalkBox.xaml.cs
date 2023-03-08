@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -101,6 +102,14 @@ namespace VPet_Simulator.Windows
                     set["aiopen"][(gbol)"startup"] = false;
                     rettype = false;
                 }
+                else if (responseString.ToLower().Contains("是ChatGPT"))
+                {
+                    Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Visible);
+                    set["aiopen"][(gbol)"startup"] = false;
+                    rettype = false;
+                    responseString += "\n检测到模型错误,已重置桌宠聊天系统";
+                    ChatGPT_Reset();
+                }
                 m.Say(responseString);
             }
             catch (Exception exp)
@@ -111,6 +120,46 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(() => this.IsEnabled = true);
             return rettype;
         }
+        /// <summary>
+        /// 重置ChatGPT
+        /// </summary>
+        /// <returns></returns>
+        public string ChatGPT_Reset()
+        {
+            try
+            {
+                //请不要使用该API作为其他用途,如有其他需要请联系我(QQ群:430081239)
+                //该API可能会因为其他原因更改
+                string _url = "https://aiopen.exlb.net:5810/VPet/Delete";
+                //参数
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine($"steamid={Steamworks.SteamClient.SteamId.Value}");
+                var request = (HttpWebRequest)WebRequest.Create(_url);
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";//ContentType
+                byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());
+                int length = byteData.Length;
+                request.ContentLength = length;
+                using (Stream writer = request.GetRequestStream())
+                {
+                    writer.Write(byteData, 0, length);
+                    writer.Close();
+                    writer.Dispose();
+                }
+                string responseString;
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
+                    response.Dispose();
+                }
+                return responseString;
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+        }
+
         /// <summary>
         /// 根据宠物剩余寿命显示相关UI
         /// </summary>
