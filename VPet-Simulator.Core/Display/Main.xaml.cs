@@ -157,10 +157,12 @@ namespace VPet_Simulator.Core
                     SmartMoveTimer.Start();
                 }
             }
+            ((UIElement)e.Source).ReleaseMouseCapture();
         }
 
         private void MainGrid_MouseMove(object sender, MouseEventArgs e)
         {
+            ((UIElement)e.Source).CaptureMouse();
             var mp = e.GetPosition(MainGrid);
             var x = mp.X - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].X;
             var y = mp.Y - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].Y;
@@ -203,6 +205,9 @@ namespace VPet_Simulator.Core
         private DateTime wavespan;
         private void MainGrid_MouseWave(object sender, MouseEventArgs e)
         {
+            if (rasetype >= 0)
+                return;
+
             if ((DateTime.Now - wavespan).TotalSeconds > 2)
             {
                 wavetimes = 0;
