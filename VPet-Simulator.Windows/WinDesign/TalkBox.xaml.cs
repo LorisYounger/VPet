@@ -102,7 +102,9 @@ namespace VPet_Simulator.Windows
                     set["aiopen"][(gbol)"startup"] = false;
                     rettype = false;
                 }
-                else if (responseString.ToLower().Contains("是ChatGPT"))
+                else if (responseString.ToLower().Contains("ChatGPT") || 
+                    ((responseString.ToLower().Contains("AI") || responseString.ToLower().Contains("语言")) && responseString.ToLower().Contains("模型"))
+                    || (responseString.ToLower().Contains("程序") && (responseString.ToLower().Contains("机器人") || responseString.ToLower().Contains("计算机"))))
                 {
                     Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Visible);
                     set["aiopen"][(gbol)"startup"] = false;

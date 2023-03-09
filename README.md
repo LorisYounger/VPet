@@ -198,7 +198,7 @@
 
 感谢以下参与的开发人员(按贡献程度排序)
 
-* 占位符
+* [Wreathlit](https://github.com/Wreathlit)
 
 ## 动画版权声明与授权
 
