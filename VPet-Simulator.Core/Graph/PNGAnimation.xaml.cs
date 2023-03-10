@@ -20,6 +20,8 @@ using LinePutScript;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 using Panuon.WPF.UI;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
+using System.Security.Policy;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace VPet_Simulator.Core
 {
@@ -70,6 +72,18 @@ namespace VPet_Simulator.Core
         /// </summary>
         private Action StopAction;
         int nowid;
+        /// <summary>
+        /// 图片资源
+        /// </summary>
+        public MemoryStream stream;
+        /// <summary>
+        /// 回收图片资源Timer
+        /// </summary>
+        public System.Timers.Timer GCTimer = new System.Timers.Timer()
+        {
+            Interval = 10000,
+            AutoReset = false,
+        };
         /// <summary>
         /// 新建 PNG 动画
         /// </summary>
@@ -164,8 +178,6 @@ namespace VPet_Simulator.Core
                     int wxi = -500 * i;
                     Animations.Add(new Animation(this, time, () => Margin = new Thickness(wxi, 0, 0, 0)));
                 }
-                Dispatcher.Invoke(() => Source = new BitmapImage(new Uri(cp)));
-                IsReady = true;
             }
             else
             {
@@ -188,10 +200,17 @@ namespace VPet_Simulator.Core
                 graph.Dispose();
                 joinedBitmap.Dispose();
                 imgs.ForEach(x => x.Dispose());
-                Dispatcher.Invoke(() => Source = new BitmapImage(new Uri(cp)));
-                IsReady = true;
             }
+            stream = new MemoryStream(File.ReadAllBytes(cp));
+            //GCTimer
+            GCTimer.Elapsed += (a, b) =>
+            {
+                Dispatcher.Invoke(() => Source = null);
+                GC.Collect();
+            };
+            IsReady = true;
         }
+
 
         /// <summary>
         /// 单帧动画
@@ -247,6 +266,7 @@ namespace VPet_Simulator.Core
                                 EndAction?.Invoke();//运行结束动画时事件
                             parent.StopAction?.Invoke();
                             parent.StopAction = null;
+                            parent.GCTimer.Start();
                             ////延时隐藏
                             //Task.Run(() =>
                             //{
@@ -269,6 +289,7 @@ namespace VPet_Simulator.Core
                         EndAction?.Invoke();//运行结束动画时事件
                     parent.StopAction?.Invoke();
                     parent.StopAction = null;
+                    parent.GCTimer.Start();
                     //Task.Run(() =>
                     //{
                     //    Thread.Sleep(25);
@@ -289,7 +310,7 @@ namespace VPet_Simulator.Core
             //}
             if (PlayState)
             {//如果当前正在运行,重置状态
-                //IsResetPlay = true;
+             //IsResetPlay = true;
                 Stop(true);
                 StopAction = () => Run(EndAction);
                 return;
@@ -297,6 +318,20 @@ namespace VPet_Simulator.Core
             nowid = 0;
             PlayState = true;
             DoEndAction = true;
+            GCTimer.Enabled = false;
+            if (Dispatcher.Invoke<bool>(() => Source == null))
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    stream.Seek(0, SeekOrigin.Begin);
+                    bitmap.StreamSource = stream;
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    Source = bitmap;
+                });
+            }
             new Thread(() => Animations[0].Run(EndAction)).Start();
         }
 
