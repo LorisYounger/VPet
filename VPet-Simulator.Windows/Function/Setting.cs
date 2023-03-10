@@ -186,7 +186,11 @@ namespace VPet_Simulator.Windows
         public int PressLength
         {
             get => presslength;
-            set => this["gameconfig"].SetInt("presslength", value);
+            set
+            {
+                presslength = value;
+                this["gameconfig"].SetInt("presslength", value);
+            }
         }
         /// <summary>
         /// 互动周期
@@ -194,7 +198,11 @@ namespace VPet_Simulator.Windows
         public int InteractionCycle
         {
             get => intercycle;
-            set => this["gameconfig"].SetInt("intercycle", value);
+            set
+            {
+                intercycle = value;
+                this["gameconfig"].SetInt("intercycle", value);
+            }
         }
         /// <summary>
         /// 计算间隔

@@ -81,7 +81,7 @@ namespace VPet_Simulator.Windows
                 byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());
                 int length = byteData.Length;
                 request.ContentLength = length;
-                request.Timeout = 500000;
+                request.Timeout = 200000;
                 using (Stream writer = request.GetRequestStream())
                 {
                     writer.Write(byteData, 0, length);
