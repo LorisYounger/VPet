@@ -1,25 +1,16 @@
-﻿using System;
+﻿using LinePutScript;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
 using System.IO;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows;
 using System.Windows.Threading;
-using System.Threading;
-using System.Drawing;
-using LinePutScript;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
-using Panuon.WPF.UI;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
+using VPet_Simulator.Core.New;
 
 namespace VPet_Simulator.Core
 {
@@ -162,9 +153,9 @@ namespace VPet_Simulator.Core
                     FileInfo file = paths[i];
                     int time = int.Parse(file.Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
                     int wxi = -500 * i;
-                    Animations.Add(new Animation(this, time, () => Margin = new Thickness(wxi, 0, 0, 0)));
+                    Animations.Add(new Animation(this, time, () => { }, paths[i].FullName));
                 }
-                Dispatcher.Invoke(() => Source = new BitmapImage(new Uri(cp)));
+                //Dispatcher.Invoke(() => Source = new BitmapImage(new Uri(cp)));
                 IsReady = true;
             }
             else
@@ -182,13 +173,13 @@ namespace VPet_Simulator.Core
                     int time = int.Parse(file.Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
                     graph.DrawImage(imgs[i], w * i, 0, w, h);
                     int wxi = -500 * i;
-                    Animations.Add(new Animation(this, time, () => Margin = new Thickness(wxi, 0, 0, 0)));
+                    Animations.Add(new Animation(this, time, () => { }, paths[i].FullName));
                 }
                 joinedBitmap.Save(cp);
                 graph.Dispose();
                 joinedBitmap.Dispose();
                 imgs.ForEach(x => x.Dispose());
-                Dispatcher.Invoke(() => Source = new BitmapImage(new Uri(cp)));
+                //Dispatcher.Invoke(() => Source = new BitmapImage(new Uri(cp)));
                 IsReady = true;
             }
         }
@@ -211,8 +202,10 @@ namespace VPet_Simulator.Core
             /// 帧时间
             /// </summary>
             public int Time;
-            public Animation(PNGAnimation parent, int time, Action visible)//, Action hidden)
+            public string path;
+            public Animation(PNGAnimation parent, int time, Action visible, string path)//, Action hidden)
             {
+                this.path = path;
                 this.parent = parent;
                 Time = time;
                 Visible = visible;
@@ -220,11 +213,12 @@ namespace VPet_Simulator.Core
             }
             /// <summary>
             /// 运行该图层
-            /// </summary>
+            /// </summary>`
             public void Run(Action EndAction = null)
             {
                 //先显示该图层
                 parent.Dispatcher.Invoke(Visible);
+                AnimationController.Instance.PlayRawFrame(path);
                 //然后等待帧时间毫秒
                 Thread.Sleep(Time);
                 //判断是否要下一步
@@ -277,6 +271,9 @@ namespace VPet_Simulator.Core
                 }
             }
         }
+
+
+        private static List<Action> taskQuene = new List<Action>();
         /// <summary>
         /// 从0开始运行该动画
         /// </summary>

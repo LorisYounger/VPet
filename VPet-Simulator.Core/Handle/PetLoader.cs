@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using VPet_Simulator.Core.New;
 using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Core
@@ -89,6 +90,7 @@ namespace VPet_Simulator.Core
                 foreach (var p in list)
                 {
                     LoadGraph(graph, p, path_name + "_" + p.Name);
+                    AnimationController.Instance.AddAnimation(p, path_name + "_" + p.Name);
                 }
         }
     }

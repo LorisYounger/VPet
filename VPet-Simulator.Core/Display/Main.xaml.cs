@@ -1,19 +1,11 @@
 ﻿using Panuon.WPF.UI;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using VPet_Simulator.Core.New;
 using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Core
@@ -65,13 +57,15 @@ namespace VPet_Simulator.Core
             PetGrid.Child = ig.This;
             var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Default, core.Save.Mode);
             PetGrid2.Child = ig2.This; //用于缓存
-            PetGrid2.Visibility = Visibility.Collapsed;
+            //PetGrid2.Visibility = Visibility.Collapsed;
             ig.WaitForReadyRun(DisplayNomal);
 
 
             EventTimer.Elapsed += EventTimer_Elapsed;
             MoveTimer.Elapsed += MoveTimer_Elapsed;
             SmartMoveTimer.Elapsed += SmartMoveTimer_Elapsed;
+
+            AnimationController.Instance.RegistryGraph(animationCanvas);
         }
         /// <summary>
         /// 自动加载触摸事件

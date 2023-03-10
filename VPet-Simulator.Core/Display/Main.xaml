@@ -1,13 +1,14 @@
 ﻿<pu:ContentControlX x:Class="VPet_Simulator.Core.Main" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Core"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Core.New"
         mc:Ignorable="d" d:DesignHeight="250" d:DesignWidth="250">
     <Viewbox>
         <Grid x:Name="MainGrid" Width="500" Height="500" MouseLeftButtonDown="MainGrid_MouseLeftButtonDown" x:FieldModifier="public"
                 MouseLeftButtonUp="MainGrid_MouseLeftButtonUp" MouseRightButtonDown="MainGrid_MouseRightButtonDown" MouseMove="MainGrid_MouseWave">
-            <Border x:Name="PetGrid" VerticalAlignment="Bottom" />
-            <Border x:Name="PetGrid2" VerticalAlignment="Bottom" />
+            <Border x:Name="PetGrid" VerticalAlignment="Bottom" Visibility="Hidden"/>
+            <Border x:Name="PetGrid2" VerticalAlignment="Bottom" Visibility="Hidden" />
+            <local:AnimationCanvas x:Name="animationCanvas" Width="500" Height="500"/>
             <Grid x:Name="UIGrid">
                 
             </Grid>

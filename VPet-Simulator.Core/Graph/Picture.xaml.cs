@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VPet_Simulator.Core.New;
 
 namespace VPet_Simulator.Core
 {
@@ -31,9 +32,12 @@ namespace VPet_Simulator.Core
             ModeType = modetype;
             IsLoop = isloop;
             Length = length;
-            Source = new BitmapImage(new Uri(path));
+            this.path = path;
+            //Source = new BitmapImage(new Uri(path));
             GraphType = graphType;
         }
+        public string path;
+
         public Save.ModeType ModeType { get; private set; }
 
         public bool PlayState { get; set; }
@@ -51,6 +55,7 @@ namespace VPet_Simulator.Core
         {
             PlayState = true;
             StopEndAction = false;
+            AnimationController.Instance.PlayRawFrame(path);
             Task.Run(() =>
             {
                 Thread.Sleep(Length);

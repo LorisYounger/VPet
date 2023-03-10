@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Threading;
 using static VPet_Simulator.Core.GraphCore;
 
@@ -273,7 +265,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void DisplayRaised()
         {
-            //位置迁移: 254-128           
+            //位置迁移: 254-128
             MainGrid.MouseMove += MainGrid_MouseMove;
             MainGrid.MouseMove -= MainGrid_MouseWave;
             rasetype = 0;
@@ -1091,7 +1083,7 @@ namespace VPet_Simulator.Core
                 ((IGraph)(PetGrid2.Child)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
-                    PetGrid.Visibility = Visibility.Visible;
+                    PetGrid.Visibility = Visibility.Hidden;
                     PetGrid2.Visibility = Visibility.Hidden;
                 });
                 graph.Run(EndAction);
@@ -1103,7 +1095,7 @@ namespace VPet_Simulator.Core
                 ((IGraph)(PetGrid.Child)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
-                    PetGrid2.Visibility = Visibility.Visible;
+                    PetGrid2.Visibility = Visibility.Hidden;
                     PetGrid.Visibility = Visibility.Hidden;
                 });
                 graph.Run(EndAction);
@@ -1117,7 +1109,7 @@ namespace VPet_Simulator.Core
                 {
                     PetGrid2.Child = graph.This;
                     PetGrid.Visibility = Visibility.Hidden;
-                    PetGrid2.Visibility = Visibility.Visible;
+                    PetGrid2.Visibility = Visibility.Hidden;
                 });
                 //Task.Run(() =>
                 //{
@@ -1132,7 +1124,7 @@ namespace VPet_Simulator.Core
                 {
                     PetGrid.Child = graph.This;
                     PetGrid2.Visibility = Visibility.Hidden;
-                    PetGrid.Visibility = Visibility.Visible;
+                    PetGrid.Visibility = Visibility.Hidden;
                 });
                 //Task.Run(() =>
                 //{
