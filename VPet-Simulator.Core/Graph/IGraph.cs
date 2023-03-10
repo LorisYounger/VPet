@@ -38,11 +38,11 @@ namespace VPet_Simulator.Core
         ///// </summary>
         //bool StoreMemory { get; }
         /// <summary>
-        /// 该动画UI状态
+        /// 该动画模式
         /// </summary>
         Save.ModeType ModeType { get; }
         /// <summary>
-        /// 该动画UI状态
+        /// 该动画类型
         /// </summary>
         GraphType GraphType { get; }
         /// <summary>

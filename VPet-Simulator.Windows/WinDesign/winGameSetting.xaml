@@ -544,33 +544,6 @@
                         <Image x:Name="ImageWHY" Width="38" Margin="208,257,0,0" HorizontalAlignment="Left"
                                 VerticalAlignment="Top" Height="38" Source="/Res/TopLogo2019.PNG" />
                         <TextBlock Margin="0,0,0,0" Text="虚拟主播模拟器 规格" FontSize="20" FontWeight="Bold" />
-                        <TextBlock Margin="0,30,0,0" FontWeight="Bold">
-                    <Run>用户名</Run><LineBreak />
-                    <Run>版本</Run><LineBreak />
-                    <Run>激活</Run><LineBreak />
-                        </TextBlock>
-                        <TextBlock VerticalAlignment="Top" Margin="100,30,0,0" TextWrapping="WrapWithOverflow">
-                    <Run x:Name="runUserName">杨远洛里斯</Run><LineBreak />
-                    <Run x:Name="runabVer">v1.0 (100)</Run><LineBreak />
-                    <Run x:Name="runActivate">已通过Steam[uid]激活服务注册</Run><LineBreak />
-                        </TextBlock>
-                        <TextBlock Margin="0,100,0,0" Text="制作组名单" FontSize="20" FontWeight="Bold" />
-                        <TextBlock Margin="100,130,0,0">
-                    <Run>杨远洛里斯, 广大MOD作者</Run><LineBreak />
-                    <Run>洛里斯杨远, トニーちゃん</Run> <Hyperlink Click="Git_Click">Git贡献名单</Hyperlink><LineBreak />
-                    <Run>叶书天, 广大MOD作者</Run>
-                    <LineBreak />
-                    <Hyperlink>Panuon.WPF.UI</Hyperlink>
-                    <Hyperlink>LinePutScript</Hyperlink><LineBreak />
-                    <Hyperlink>Facepunch.Steamworks</Hyperlink>
-                    <Hyperlink>查看引用名单</Hyperlink><LineBreak /><LineBreak />
-                    <Hyperlink Click="Steam_Click">访问Steam页面</Hyperlink>
-                    <Hyperlink Click="Github_Click">访问Github页面</Hyperlink>
-                    <LineBreak />                    
-                    <Run FontStyle="Italic" FontSize="8">由于游戏暂未开发完毕,该名单并非完整名单.将在正式版完成前修改</Run><LineBreak />
-                        </TextBlock>
-
-
                         <TextBlock Margin="0,130,0,0" FontWeight="Bold">
                     <Run>游戏策划</Run><LineBreak />
                     <Run>UI&amp;程序</Run><LineBreak />
@@ -590,6 +563,31 @@
                             <Hyperlink TextDecorations="Underline" Foreground="{DynamicResource DARKPrimaryDarker}"
                                     Click="Group_Click" FontWeight="Normal">相关群</Hyperlink>
 
+                        </TextBlock>
+                        <TextBlock Margin="0,30,0,0" FontWeight="Bold">
+                    <Run>用户名</Run><LineBreak />
+                    <Run>版本</Run><LineBreak />
+                    <Run>激活</Run><LineBreak />
+                        </TextBlock>
+                        <TextBlock VerticalAlignment="Top" Margin="100,30,0,0" TextWrapping="WrapWithOverflow">
+                    <Run x:Name="runUserName">杨远洛里斯</Run><LineBreak />
+                    <Run x:Name="runabVer">v1.0 (100)</Run><LineBreak />
+                    <Run x:Name="runActivate">已通过Steam[uid]激活服务注册</Run><LineBreak />
+                        </TextBlock>
+                        <TextBlock Margin="0,100,0,0" Text="制作组名单" FontSize="20" FontWeight="Bold" />
+                        <TextBlock Margin="100,130,0,0" VerticalAlignment="Top">
+                    <Run>杨远洛里斯, 广大MOD作者</Run><LineBreak />
+                    <Run>洛里斯杨远, トニーちゃん</Run> <Hyperlink Click="Git_Click">Git贡献名单</Hyperlink><LineBreak />
+                    <Run>叶书天, 广大MOD作者</Run>
+                    <LineBreak />
+                    <Hyperlink>Panuon.WPF.UI</Hyperlink>
+                    <Hyperlink>LinePutScript</Hyperlink><LineBreak />
+                    <Hyperlink>Facepunch.Steamworks</Hyperlink>
+                    <Hyperlink>查看引用名单</Hyperlink><LineBreak /><LineBreak />
+                    <Hyperlink Click="Steam_Click">访问Steam页面</Hyperlink>
+                    <Hyperlink Click="Github_Click">访问Github页面</Hyperlink>
+                    <LineBreak />                    
+                    <Run FontStyle="Italic" FontSize="8">由于游戏暂未开发完毕,该名单并非完整名单.将在正式版完成前修改</Run><LineBreak />
                         </TextBlock>
                     </Grid>
                 </TabItem>
