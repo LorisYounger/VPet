@@ -6,8 +6,8 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" Title="反馈中心"
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" Width="500" MinHeight="250"
         Height="Auto" ResizeMode="NoResize" WindowState="Normal"
-        Icon="../vpeticon.ico">
-    <StackPanel x:Name="MainGrid" Margin="10,10,15,10" VerticalAlignment="Top" SizeChanged="MainGrid_SizeChanged">
+        Icon="../vpeticon.ico" SizeToContent="Height">
+    <StackPanel x:Name="MainGrid" Margin="10,10,15,10" VerticalAlignment="Top">
         <Label Background="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left" Content="反馈与错误提交" FontSize="24"
                 Margin="10,0,0,0" />
         <pu:FormGroup Header="类型:" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal" Margin="0,2,0,0"

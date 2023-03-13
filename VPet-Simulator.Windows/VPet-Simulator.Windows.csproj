@@ -78,8 +78,14 @@
     <ApplicationIcon>vpeticon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ChatGPT.API.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChatGPT.API.Framework.1.0.2\lib\net462\ChatGPT.API.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LinePutScript.1.6.1\lib\net48\LinePutScript.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Panuon.WPF, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Panuon.WPF.1.0.1\lib\net48\Panuon.WPF.dll</HintPath>
@@ -110,6 +116,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Function\ITalkBox.cs" />
+    <Compile Include="WinDesign\TalkBoxAPI.xaml.cs">
+      <DependentUpon>TalkBoxAPI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WinDesign\winCGPTSetting.xaml.cs">
+      <DependentUpon>winCGPTSetting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinDesign\DIYViewer.xaml.cs">
       <DependentUpon>DIYViewer.xaml</DependentUpon>
     </Compile>
@@ -132,6 +145,14 @@
       <DependentUpon>winReport.xaml</DependentUpon>
     </Compile>
     <Page Include="Design\Theme\basestyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WinDesign\TalkBoxAPI.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WinDesign\winCGPTSetting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

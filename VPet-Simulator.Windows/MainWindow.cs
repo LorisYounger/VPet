@@ -1,4 +1,5 @@
-﻿using LinePutScript;
+﻿using ChatGPT.API.Framework;
+using LinePutScript;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,6 +20,7 @@ namespace VPet_Simulator.Windows
         public List<CoreMOD> CoreMODs = new List<CoreMOD>();
         public GameCore Core = new GameCore();
         public winGameSetting winSetting;
+        public ChatGPTClient CGPTClient;
         /// <summary>
         /// 版本号
         /// </summary>
@@ -44,7 +46,8 @@ namespace VPet_Simulator.Windows
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
             if (Core != null && Core.Save != null)
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
-
+            if(CGPTClient != null)
+                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json", CGPTClient.Save());
         }
         public void LoadDIY()
         {

@@ -14,6 +14,7 @@ using Application = System.Windows.Application;
 using System.Timers;
 using LinePutScript;
 using System.Diagnostics;
+using ChatGPT.API.Framework;
 
 namespace VPet_Simulator.Windows
 {
@@ -24,7 +25,7 @@ namespace VPet_Simulator.Windows
     {
         private NotifyIcon notifyIcon;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
-        public TalkBox TalkBox;
+        public ITalkBox TalkBox;
         public MainWindow()
         {
             //判断是不是Steam用户,因为本软件会发布到Steam
@@ -63,6 +64,8 @@ namespace VPet_Simulator.Windows
             else
                 Set = new Setting("Setting#VPET:|\n");
 
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json"))
+                CGPTClient = ChatGPTClient.Load(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json"));
             //this.Width = 400 * ZoomSlider.Value;
             //this.Height = 450 * ZoomSlider.Value;
 
@@ -182,10 +185,15 @@ namespace VPet_Simulator.Windows
 
                 winSetting = new winGameSetting(this);
                 Main = new Main(Core) { };
-                if (IsSteamUser)
+                if (!Set["CGPT"][(gbol)"enable"] && IsSteamUser)
                 {
                     TalkBox = new TalkBox(this);
-                    Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                    Main.ToolBar.MainGrid.Children.Add(TalkBox.This);
+                }
+                else if (Set["CGPT"][(gbol)"enable"] && !IsSteamUser)
+                {
+                    TalkBox = new TalkBoxAPI(this);
+                    Main.ToolBar.MainGrid.Children.Add(TalkBox.This);
                 }
 
                 Main.DefaultClickAction = () =>

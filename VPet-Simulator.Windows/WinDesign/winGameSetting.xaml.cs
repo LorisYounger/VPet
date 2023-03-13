@@ -52,8 +52,8 @@ namespace VPet_Simulator.Windows
                 ZoomSlider.Maximum = 3;
             }
             ZoomSlider.Value = mw.Set.ZoomLevel * 2;
-            this.Width = 400 * Math.Sqrt(ZoomSlider.Value);
-            this.Height = 450 * Math.Sqrt(ZoomSlider.Value);
+            //this.Width = 400 * Math.Sqrt(ZoomSlider.Value);
+            //this.Height = 450 * Math.Sqrt(ZoomSlider.Value);
 
             sDesktopAlignment.IsChecked = mw.Set.EnableFunction;
             CalSlider.Value = mw.Set.LogicInterval;
@@ -110,7 +110,17 @@ namespace VPet_Simulator.Windows
             {
                 runUserName.Text = Environment.UserName;
                 runActivate.Text = "尚未激活 您可能需要启动Steam或去Steam上免费领个";
+                RBCGPTUseLB.IsEnabled = false;
+                if (!mw.Set["CGPT"][(gbol)"enable"])
+                    BtnCGPTReSet.IsEnabled = false;
             }
+            if (mw.Set["CGPT"][(gbol)"enable"])
+            {
+                RBCGPTUseAPI.IsChecked = true;
+                BtnCGPTReSet.Content = "打开 ChatGPT API 设置";
+            }
+            else
+                BtnCGPTReSet.Content = "初始化桌宠聊天程序";
             runabVer.Text = $"v{mw.Verison} ({mw.verison})";
 
             //mod列表
@@ -119,12 +129,6 @@ namespace VPet_Simulator.Windows
             ShowMod((string)((ListBoxItem)ListMod.SelectedItem).Content);
 
             AllowChange = true;
-
-            if (!mw.IsSteamUser)
-            {
-                RBCGPTUseLB.IsEnabled = false;
-                BtnCGPTReSet.IsEnabled = false;
-            }
         }
         public void ShowModList()
         {
@@ -484,8 +488,8 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.SetZoomLevel(ZoomSlider.Value / 2);
-            this.Width = 400 * Math.Sqrt(ZoomSlider.Value);
-            this.Height = 450 * Math.Sqrt(ZoomSlider.Value);
+            //this.Width = 400 * Math.Sqrt(ZoomSlider.Value);
+            //this.Height = 450 * Math.Sqrt(ZoomSlider.Value);
         }
 
         private void PressLengthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -661,19 +665,50 @@ namespace VPet_Simulator.Windows
             }
             mw.LoadDIY();
         }
-       
+
 
         private void ChatGPT_Reset_Click(object sender, RoutedEventArgs e)
         {
-            string responseString = mw.TalkBox.ChatGPT_Reset();
-            if (responseString == "SUCCESS")
+            if (mw.Set["CGPT"][(gbol)"enable"])
             {
-                mw.TalkBox.btn_startup.Visibility = Visibility.Visible;
-                MessageBoxX.Show("桌宠重置成功");
+                new winCGPTSetting(mw).ShowDialog();
             }
             else
             {
-                MessageBoxX.Show(responseString, "桌宠重置失败");
+                string responseString = ((TalkBox)mw.TalkBox).ChatGPT_Reset();
+                if (responseString == "SUCCESS")
+                {
+                    ((TalkBox)mw.TalkBox).btn_startup.Visibility = Visibility.Visible;
+                    MessageBoxX.Show("桌宠重置成功");
+                }
+                else
+                {
+                    MessageBoxX.Show(responseString, "桌宠重置失败");
+                }
+            }
+        }
+
+        private void CGPType_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set["CGPT"].SetBool("enable", RBCGPTUseLB.IsChecked == false);
+            if (mw.Set["CGPT"][(gbol)"enable"])
+            {
+                BtnCGPTReSet.Content = "打开 ChatGPT API 设置";
+                BtnCGPTReSet.IsEnabled = true;
+                if (mw.TalkBox != null)
+                    mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox.This);
+                mw.TalkBox = new TalkBoxAPI(mw);
+                mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox.This);
+            }
+            else
+            {
+                BtnCGPTReSet.Content = "初始化桌宠聊天程序";
+                if (mw.TalkBox != null)
+                    mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox.This);
+                mw.TalkBox = new TalkBox(mw);
+                mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox.This);
             }
         }
     }
