@@ -127,14 +127,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Graph\Picture.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Graph\PNGAnimation.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Display\MainDisplay.cs" />
@@ -153,12 +145,8 @@
       <DependentUpon>EyeTracking.xaml</DependentUpon>
     </Compile>
     <Compile Include="Graph\IGraph.cs" />
-    <Compile Include="Graph\Picture.xaml.cs">
-      <DependentUpon>Picture.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Graph\PNGAnimation.xaml.cs">
-      <DependentUpon>PNGAnimation.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Graph\Picture.cs" />
+    <Compile Include="Graph\PNGAnimation.cs" />
     <Compile Include="Handle\Function.cs" />
     <Compile Include="Handle\GameCore.cs" />
     <Compile Include="Handle\IController.cs" />

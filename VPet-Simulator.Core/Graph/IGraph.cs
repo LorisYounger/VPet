@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Core
@@ -16,7 +17,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 从0开始运行该动画
         /// </summary>
-        void Run(Action EndAction = null);
+        void Run(Border parant, Action EndAction = null);
         /// <summary>
         /// 当前动画播放状态
         /// </summary>
@@ -32,7 +33,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 从0开始运行该动画, 等待部署完成后执行
         /// </summary>
-        void WaitForReadyRun(Action EndAction = null);
+        void WaitForReadyRun(Border parant, Action EndAction = null);
         ///// <summary>//经过测试,储存到内存好处多多,不储存也要占用很多内存,干脆存了吧
         ///// 是否储存到内存以支持快速显示
         ///// </summary>
@@ -45,10 +46,6 @@ namespace VPet_Simulator.Core
         /// 该动画类型
         /// </summary>
         GraphType GraphType { get; }
-        /// <summary>
-        /// 当前UI
-        /// </summary>
-        UIElement This { get; }
         /// <summary>
         /// 停止动画
         /// </summary>
