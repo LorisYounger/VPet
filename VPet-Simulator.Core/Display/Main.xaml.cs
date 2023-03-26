@@ -62,11 +62,17 @@ namespace VPet_Simulator.Core
             }
 
             var ig = Core.Graph.FindGraph(GraphCore.GraphType.StartUP, core.Save.Mode);
-            PetGrid.Child = ig.This;
-            var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Default, core.Save.Mode);
-            PetGrid2.Child = ig2.This; //用于缓存
+            //var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Default, core.Save.Mode);
             PetGrid2.Visibility = Visibility.Collapsed;
-            ig.WaitForReadyRun(DisplayNomal);
+            
+            ig.WaitForReadyRun(PetGrid,()=> {
+                Dispatcher.Invoke(() => {
+                    PetGrid.Tag = ig;
+                    PetGrid2.Tag = ig;
+                });              
+                DisplayNomal();
+            });
+            
 
 
             EventTimer.Elapsed += EventTimer_Elapsed;

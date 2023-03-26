@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace VPet_Simulator.Core
 {
@@ -14,6 +15,8 @@ namespace VPet_Simulator.Core
     /// </summary>
     public class GraphCore
     {
+
+
         public GraphCore()
         {
             if (!Directory.Exists(CachePath))
@@ -289,7 +292,14 @@ namespace VPet_Simulator.Core
         /// 图像字典
         /// </summary>
         public Dictionary<GraphType, List<IGraph>> Graphs = new Dictionary<GraphType, List<IGraph>>();
-
+        /// <summary>
+        /// 通用UI资源
+        /// </summary>
+        public Dictionary<string, UIElement> CommUIElements = new Dictionary<string, UIElement>();
+        /// <summary>
+        /// 通用设置属性/方法
+        /// </summary>
+        public Dictionary<string, dynamic> CommConfig = new Dictionary<string, dynamic>();
         /// <summary>
         /// 添加动画
         /// </summary>
@@ -324,10 +334,10 @@ namespace VPet_Simulator.Core
             if (paths.Length == 0)
                 return;
             if (paths.Length == 1)
-                AddGraph(new Picture(paths[0].FullName, modetype, graphtype,
+                AddGraph(new Picture(this, paths[0].FullName, modetype, graphtype,
                     int.Parse(paths[0].Name.Split('.').Reverse().ToArray()[1].Split('_').Last())), graphtype);
             else
-                AddGraph(new PNGAnimation(path, paths, modetype, graphtype), graphtype);
+                AddGraph(new PNGAnimation(this, path, paths, modetype, graphtype), graphtype);
         }
         /// <summary>
         /// 随机数字典(用于确保随机动画不会错位)

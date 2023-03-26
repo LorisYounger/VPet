@@ -1085,63 +1085,57 @@ namespace VPet_Simulator.Core
             //    Dispatcher.Invoke(() => Say(graph.GraphType.ToString()));
             //}
             DisplayType = graph.GraphType;
-            if (PetGrid.Child == graph.This)
+            var PetGridTag = Dispatcher.Invoke(() => PetGrid.Tag);
+            var PetGrid2Tag = Dispatcher.Invoke(() => PetGrid2.Tag);
+            if (PetGridTag == graph)
             {
                 petgridcrlf = true;
-                ((IGraph)(PetGrid2.Child)).Stop(true);
+                ((IGraph)(PetGrid2Tag)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid.Visibility = Visibility.Visible;
                     PetGrid2.Visibility = Visibility.Hidden;
                 });
-                graph.Run(EndAction);
+                graph.Run(PetGrid, EndAction);//(x) => PetGrid.Child = x
                 return;
             }
-            else if (PetGrid2.Child == graph.This)
+            else if (PetGrid2Tag == graph)
             {
                 petgridcrlf = false;
-                ((IGraph)(PetGrid.Child)).Stop(true);
+                ((IGraph)(PetGridTag)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid2.Visibility = Visibility.Visible;
                     PetGrid.Visibility = Visibility.Hidden;
                 });
-                graph.Run(EndAction);
+                graph.Run(PetGrid2, EndAction);
                 return;
             }
-            graph.Run(EndAction);
+
             if (petgridcrlf)
             {
-                ((IGraph)(PetGrid.Child)).Stop(true);
+                graph.Run(PetGrid2, EndAction);
+                ((IGraph)(PetGridTag)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
-                    PetGrid2.Child = graph.This;
                     PetGrid.Visibility = Visibility.Hidden;
                     PetGrid2.Visibility = Visibility.Visible;
-                });
-                //Task.Run(() =>
-                //{
-                //    Thread.Sleep(25);
-                //    Dispatcher.Invoke(() => PetGrid.Child = null);
-                //});
+                    //PetGrid2.Tag = graph;
+                });              
             }
             else
             {
-                ((IGraph)(PetGrid2.Child)).Stop(true);
+                graph.Run(PetGrid, EndAction);
+                ((IGraph)(PetGrid2Tag)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
-                    PetGrid.Child = graph.This;
                     PetGrid2.Visibility = Visibility.Hidden;
                     PetGrid.Visibility = Visibility.Visible;
-                });
-                //Task.Run(() =>
-                //{
-                //    Thread.Sleep(25);
-                //    Dispatcher.Invoke(() => PetGrid2.Child = null);
-                //});
+                    //PetGrid.Tag = graph;
+                });                
             }
             petgridcrlf = !petgridcrlf;
-
+            GC.Collect();
         }
     }
 }
