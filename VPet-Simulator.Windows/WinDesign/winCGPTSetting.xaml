@@ -47,8 +47,7 @@
                  pu:TextBoxHelper.InputLimit="Digit"
                  pu:TextBoxHelper.Watermark="读取最大花费Token数量 1千Token=$0.02" ToolTip="读取最大花费Token数量 1千Token=$0.02"/>
         <TextBox x:Name="tbHistory" Grid.Row="6" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}" FontSize="16" Text="[]"
-                 pu:TextBoxHelper.InputLimit="Digit" TextWrapping="WrapWithOverflow"
-                 pu:TextBoxHelper.Watermark="聊天历史记录" ToolTip="聊天历史记录" Height="Auto"
+                 TextWrapping="WrapWithOverflow" pu:TextBoxHelper.Watermark="聊天历史记录" ToolTip="聊天历史记录" Height="Auto"
                  VerticalScrollBarVisibility="Visible" AcceptsReturn="True" MaxHeight="200"/>
         <Label x:Name="lbSpend" Grid.Row="5" Grid.Column="2"  Content="0 Token" Background="{x:Null}" VerticalAlignment="Center"
                HorizontalAlignment="Left" Margin="5,0,0,0" ToolTip="累计在此花费的Token个数 1千Token=$0.02"/>
