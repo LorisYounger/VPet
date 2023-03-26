@@ -1114,28 +1114,28 @@ namespace VPet_Simulator.Core
 
             if (petgridcrlf)
             {
+                graph.Run(PetGrid2, EndAction);
                 ((IGraph)(PetGridTag)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid.Visibility = Visibility.Hidden;
                     PetGrid2.Visibility = Visibility.Visible;
                     //PetGrid2.Tag = graph;
-                });
-                graph.Run(PetGrid2, EndAction);
+                });              
             }
             else
             {
+                graph.Run(PetGrid, EndAction);
                 ((IGraph)(PetGrid2Tag)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid2.Visibility = Visibility.Hidden;
                     PetGrid.Visibility = Visibility.Visible;
                     //PetGrid.Tag = graph;
-                });
-                graph.Run(PetGrid, EndAction);
+                });                
             }
             petgridcrlf = !petgridcrlf;
-
+            GC.Collect();
         }
     }
 }

@@ -26,7 +26,7 @@ namespace VPet_Simulator.Core
             IsLoop = isloop;
             Length = length;
             GraphCore = graphCore;
-            stream = new MemoryStream(File.ReadAllBytes(path));
+            Path = path;
             GraphType = graphType;
             if (!GraphCore.CommConfig.ContainsKey("PIC_Setup"))
             {
@@ -39,7 +39,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 图片资源
         /// </summary>
-        public MemoryStream stream;
+        public string Path;
         public Save.ModeType ModeType { get; private set; }
         private GraphCore GraphCore;
         public bool PlayState { get; set; }
@@ -77,13 +77,13 @@ namespace VPet_Simulator.Core
                         }
                     }
                 }
-                var bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                stream.Seek(0, SeekOrigin.Begin);
-                bitmap.StreamSource = stream;
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                bitmap.EndInit();
-                img.Source = bitmap;
+                //var bitmap = new BitmapImage();
+                //bitmap.BeginInit();
+                //stream.Seek(0, SeekOrigin.Begin);
+                //bitmap.StreamSource = stream;
+                //bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                //bitmap.EndInit();
+                img.Source = new BitmapImage(new Uri(Path));
                 parant.Tag = this;
             }
             Task.Run(() =>

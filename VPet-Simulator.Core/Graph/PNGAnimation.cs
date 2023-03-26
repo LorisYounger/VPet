@@ -66,7 +66,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 图片资源
         /// </summary>
-        public MemoryStream stream;
+        public string Path;
         private GraphCore GraphCore;
         /// <summary>
         /// 新建 PNG 动画
@@ -162,9 +162,9 @@ namespace VPet_Simulator.Core
         {
             //新方法:加载大图片
             //生成大文件加载非常慢,先看看有没有缓存能用
-            string cp = GraphCore.CachePath + $"\\{Sub.GetHashCode(path)}_{paths.Length}.png";
+            Path = GraphCore.CachePath + $"\\{Sub.GetHashCode(path)}_{paths.Length}.png";
             Width = 500 * (paths.Length + 1);
-            if (File.Exists(cp))
+            if (File.Exists(Path))
             {
                 for (int i = 0; i < paths.Length; i++)
                 {
@@ -189,12 +189,12 @@ namespace VPet_Simulator.Core
                     graph.DrawImage(imgs[i], w * i, 0, w, h);
                     Animations.Add(new Animation(this, time, -500 * i));
                 }
-                joinedBitmap.Save(cp);
+                joinedBitmap.Save(Path);
                 graph.Dispose();
                 joinedBitmap.Dispose();
                 imgs.ForEach(x => x.Dispose());
             }
-            stream = new MemoryStream(File.ReadAllBytes(cp));
+            //stream = new MemoryStream(File.ReadAllBytes(cp));
             IsReady = true;
         }
 
@@ -335,14 +335,14 @@ namespace VPet_Simulator.Core
                     }
                 }
                 parant.Tag = this;
-                var bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                stream.Seek(0, SeekOrigin.Begin);
-                bitmap.StreamSource = stream;
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                bitmap.EndInit();
-                img.Source = bitmap;
-               
+                //var bitmap = new BitmapImage();
+                //bitmap.BeginInit();
+                //stream.Seek(0, SeekOrigin.Begin);
+                //bitmap.StreamSource = stream;
+                //bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                //bitmap.EndInit();
+                img.Source = new BitmapImage(new Uri(Path));
+
                 img.Width = Width;
                 new Thread(() => Animations[0].Run(parant, EndAction)).Start();
             });           
