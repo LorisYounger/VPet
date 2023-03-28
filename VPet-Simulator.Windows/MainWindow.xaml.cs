@@ -15,6 +15,7 @@ using System.Timers;
 using LinePutScript;
 using System.Diagnostics;
 using ChatGPT.API.Framework;
+using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Windows
 {
@@ -33,7 +34,7 @@ namespace VPet_Simulator.Windows
             try
             {
 #if DEMO
-                SteamClient.Init(2293870, true);
+        SteamClient.Init(2293870, true);
 #else
                 SteamClient.Init(1920960, true);
 #endif
@@ -41,7 +42,7 @@ namespace VPet_Simulator.Windows
                 IsSteamUser = SteamClient.IsValid;
                 ////同时看看有没有买dlc,如果有就添加dlc按钮
                 //if (Steamworks.SteamApps.IsDlcInstalled(1386450))
-                //    dlcToolStripMenuItem.Visible = true;
+                //  dlcToolStripMenuItem.Visible = true;
             }
             catch
             {
@@ -50,11 +51,11 @@ namespace VPet_Simulator.Windows
             //给正在玩这个游戏的主播/游戏up主做个小功能
             if (IsSteamUser)
             {
-                rndtext.Add($"关注 {Steamworks.SteamClient.Name} 谢谢喵");
+                rndtext.Add(new Tuple<string, Helper.SayType>($"关注 {SteamClient.Name} 谢谢喵", Helper.SayType.Shining));
             }
             else
             {
-                rndtext.Add($"关注 {Environment.UserName} 谢谢喵");
+                rndtext.Add(new Tuple<string, Helper.SayType>($"关注 {Environment.UserName} 谢谢喵", Helper.SayType.Shining));
             }
             //加载游戏设置
             if (new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps").Exists)
@@ -111,18 +112,18 @@ namespace VPet_Simulator.Windows
             System.Environment.Exit(0);
         }
 
-        private List<string> rndtext = new List<string>
+        private List<Tuple<string, Helper.SayType>> rndtext = new List<Tuple<string, Helper.SayType>>
         {
-            "你知道吗? 鼠标右键可以打开菜单栏",
-            "如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的",
-            "你知道吗? 你可以在设置里面修改游戏的缩放比例",
-            "想要宠物不乱动? 设置里可以设置智能移动或者关闭移动",
-            "有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧",
-            "你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing",
-            "你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧",
-            "这游戏开发这么慢,都怪画师太咕了.\n记得多催催画师(@叶书天)画桌宠, 催的越快更新越快!",
-            "长按脑袋拖动桌宠到你喜欢的任意位置",
-            "欢迎加入 虚拟主播模拟器群 430081239",
+              new Tuple<string, Helper.SayType>("你知道吗? 鼠标右键可以打开菜单栏", Helper.SayType.Serious),
+              new Tuple<string, Helper.SayType>("如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的", Helper.SayType.Serious),
+              new Tuple<string, Helper.SayType>("你知道吗? 你可以在设置里面修改游戏的缩放比例", Helper.SayType.Serious),
+              new Tuple<string, Helper.SayType>("想要宠物不乱动? 设置里可以设置智能移动或者关闭移动", Helper.SayType.Serious),
+              new Tuple<string, Helper.SayType>("有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧", Helper.SayType.Serious),
+              new Tuple<string, Helper.SayType>("你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing", Helper.SayType.Serious),
+              new Tuple<string, Helper.SayType>("你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧", Helper.SayType.Serious),
+              new Tuple<string, Helper.SayType>("这游戏开发这么慢,都怪画师太咕了.\n记得多催催画师(@叶书天)画桌宠, 催的越快更新越快!", Helper.SayType.Serious),
+              new Tuple<string, Helper.SayType>("长按脑袋拖动桌宠到你喜欢的任意位置", Helper.SayType.Serious),
+              new Tuple<string, Helper.SayType>("欢迎加入 虚拟主播模拟器群 430081239", Helper.SayType.Shining),
         };
         private long lastclicktime;
         public void GameLoad()
@@ -201,7 +202,8 @@ namespace VPet_Simulator.Windows
                     if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
                     {
                         lastclicktime = DateTime.Now.Ticks;
-                        Dispatcher.Invoke(() => Main.Say(rndtext[Function.Rnd.Next(rndtext.Count)]));
+                        var v = rndtext[Function.Rnd.Next(rndtext.Count)];
+                        Dispatcher.Invoke(() => Main.Say(v.Item1, v.Item2));
                     }
                 };
                 DisplayGrid.Child = Main;
@@ -209,10 +211,10 @@ namespace VPet_Simulator.Windows
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "开发控制台", () => { new winConsole(this).Show(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心", () => { new winReport(this).Show(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板", () =>
-                    {
-                        Topmost = false;
-                        winSetting.Show();
-                    });
+            {
+                Topmost = false;
+                winSetting.Show();
+            });
 
                 Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
                 Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
@@ -225,20 +227,20 @@ namespace VPet_Simulator.Windows
                 m_menu = new ContextMenu();
                 m_menu.MenuItems.Add(new MenuItem("操作教程", (x, y) => { Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html"); }));
                 m_menu.MenuItems.Add(new MenuItem("重置状态", (x, y) =>
-                {
-                    Main.CleanState();
-                    Main.DisplayNomal();
-                    Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-                    Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
-                }));
+          {
+              Main.CleanState();
+              Main.DisplayNomal();
+              Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+              Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+          }));
                 m_menu.MenuItems.Add(new MenuItem("反馈中心", (x, y) => { new winReport(this).Show(); }));
                 m_menu.MenuItems.Add(new MenuItem("开发控制台", (x, y) => { new winConsole(this).Show(); }));
 
                 m_menu.MenuItems.Add(new MenuItem("设置面板", (x, y) =>
-                {
-                    Topmost = false;
-                    winSetting.Show();
-                }));
+          {
+              Topmost = false;
+              winSetting.Show();
+          }));
                 m_menu.MenuItems.Add(new MenuItem("退出桌宠", (x, y) => Close()));
 
                 LoadDIY();
@@ -249,10 +251,10 @@ namespace VPet_Simulator.Windows
 
                 notifyIcon.Visible = true;
                 notifyIcon.BalloonTipClicked += (a, b) =>
-                {
-                    Topmost = false;
-                    winSetting.Show();
-                };
+          {
+              Topmost = false;
+              winSetting.Show();
+          };
 
                 if (Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 2, 23))
                 {
@@ -262,23 +264,23 @@ namespace VPet_Simulator.Windows
                 if (!Set["SingleTips"].GetBool("helloworld"))
                 {
                     Task.Run(() =>
-                    {
-                        Thread.Sleep(2000);
-                        Set["SingleTips"].SetBool("helloworld", true);
-                        notifyIcon.ShowBalloonTip(10, "你好 " + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
-                            "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠", ToolTipIcon.Info);
-                        Thread.Sleep(2000);
-                        Main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议");
-                    });
+              {
+                  Thread.Sleep(2000);
+                  Set["SingleTips"].SetBool("helloworld", true);
+                  notifyIcon.ShowBalloonTip(10, "你好" + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
+             "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠", ToolTipIcon.Info);
+                  Thread.Sleep(2000);
+                  Main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议", GraphCore.Helper.SayType.Shining);
+              });
                 }
-                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 4))
+                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 27))
                 {
-                    if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 2, 17))
-                        notifyIcon.ShowBalloonTip(10, "更新通知 02/17",
-                       "现在使用缓存机制,不仅占用小,而且再也不会有那种闪闪的问题了!\n现已支持开机启动功能,前往设置设置开机启动", ToolTipIcon.Info);
-                    else
+                    if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 4))
                         notifyIcon.ShowBalloonTip(10, "更新通知 03/04",
-                       "现已接入ChatGPT, 右键和桌宠说话吧.\n已根据steamID独立创建的聊天API,调教你独属的桌宠吧", ToolTipIcon.Info);
+                   "现已接入ChatGPT, 右键和桌宠说话吧.\n已根据steamID独立创建的聊天API,调教你独属的桌宠吧", ToolTipIcon.Info);
+                    else
+                        notifyIcon.ShowBalloonTip(10, "更新通知 03/27",
+                   "全新图形核心引擎,现在桌宠对内存的占用更小!", ToolTipIcon.Info);
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);
                 }
                 Save();
@@ -302,13 +304,13 @@ namespace VPet_Simulator.Windows
 
         //public void DEBUGValue()
         //{
-        //    Dispatcher.Invoke(() =>
-        //    {
-        //        Console.WriteLine("Left: " + mwc.GetWindowsDistanceLeft());
-        //        Console.WriteLine("Right: " + mwc.GetWindowsDistanceRight());
-        //    });
-        //    Thread.Sleep(1000);
-        //    DEBUGValue(); 
+        //  Dispatcher.Invoke(() =>
+        //  {
+        //    Console.WriteLine("Left:" + mwc.GetWindowsDistanceLeft());
+        //    Console.WriteLine("Right:" + mwc.GetWindowsDistanceRight());
+        //  });
+        //  Thread.Sleep(1000);
+        //  DEBUGValue(); 
         //}
 
     }

@@ -31,6 +31,10 @@ namespace VPet_Simulator.Windows
             {
                 GraphListBox.Items.Add(v);
             }
+            foreach (string v in Enum.GetNames(typeof(GraphCore.Helper.SayType)))
+            {
+                CombSay.Items.Add(v);
+            }
             DestanceTimer.Elapsed += DestanceTimer_Elapsed;
         }
 
@@ -140,13 +144,13 @@ namespace VPet_Simulator.Windows
                 case "DisplayIdel_StateTWO":
                     mw.Main.DisplayIdel_StateTWO();
                     break;
-                    
+
             }
         }
 
         private void Say_Click(object sender, RoutedEventArgs e)
         {
-            mw.Main.Say(SayTextBox.Text);
+            mw.Main.Say(SayTextBox.Text, (Helper.SayType)Enum.Parse(typeof(Helper.SayType), CombSay.Text));
         }
         Timer DestanceTimer = new Timer()
         {

@@ -74,6 +74,10 @@ namespace VPet_Simulator.Core
                         {
                             graph.AddGraph(di.FullName, Save.ModeType.Ill, (GraphType)i);
                         }
+                        else
+                        {
+                            graph.AddGraph(di.FullName, Save.ModeType.Nomal, (GraphType)i);
+                        }
                         return;
                     }
                 }

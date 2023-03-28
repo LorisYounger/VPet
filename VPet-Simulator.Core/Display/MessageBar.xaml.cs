@@ -60,8 +60,8 @@ namespace VPet_Simulator.Core
                 Task.Run(() =>
                 {
                     Thread.Sleep(timeleft * 50);
-                    if (m.DisplayType == GraphCore.GraphType.Default || m.DisplayType.ToString().Contains("Say"))
-                        m.Display(GraphCore.GraphType.Say_C_End, m.DisplayNomal);
+                    if (sayType != GraphCore.Helper.SayType.None && m.DisplayType.ToString().StartsWith("Say"))
+                        m.Display(GraphCore.Helper.Convert(sayType, GraphCore.Helper.AnimatType.C_End), m.DisplayNomal);
                 });
                 ShowTimer.Stop();
                 EndTimer.Start();
@@ -81,12 +81,13 @@ namespace VPet_Simulator.Core
         public Timer ShowTimer = new Timer() { Interval = 40 };
         public Timer CloseTimer = new Timer() { Interval = 20 };
         int timeleft;
+        GraphCore.Helper.SayType sayType;
         /// <summary>
         /// 显示消息
         /// </summary>
         /// <param name="name">名字</param>
         /// <param name="text">内容</param>
-        public void Show(string name, string text)
+        public void Show(string name, string text, GraphCore.Helper.SayType sayType)
         {
             if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
             {
@@ -100,6 +101,7 @@ namespace VPet_Simulator.Core
             ShowTimer.Start(); EndTimer.Stop(); CloseTimer.Stop();
             this.Visibility = Visibility.Visible;
             Opacity = .8;
+            this.sayType = sayType;
         }
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)

@@ -66,17 +66,17 @@ namespace VPet_Simulator.Windows
             }
             if (mw.CGPTClient == null)
             {
-                m.Say("请先前往设置中设置 ChatGPT API");
+                m.Say("请先前往设置中设置 ChatGPT API", GraphCore.Helper.SayType.Serious);
                 return;
             }
             Dispatcher.Invoke(() => this.IsEnabled = false);
             try
             {
-                m.Say(mw.CGPTClient.Ask("vpet", content).GetMessageContent());
+                m.Say(mw.CGPTClient.Ask("vpet", content).GetMessageContent(), GraphCore.Helper.SayType.Serious);
             }
             catch (Exception exp)
             {
-                m.Say("API调用失败,请检查设置和网络连接\n" + exp.ToString());
+                m.Say("API调用失败,请检查设置和网络连接\n" + exp.ToString(), GraphCore.Helper.SayType.Serious);
             }
             Dispatcher.Invoke(() => this.IsEnabled = true);
         }

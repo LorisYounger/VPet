@@ -54,7 +54,7 @@
         <TabItem Header="说话">
             <Grid>
                 <Label Background="{x:Null}" Content="输入要说的话,按说话键发送:&#13;选择说话类型:" />
-                <ComboBox VerticalAlignment="Top" Margin="110,26,5,0" />
+                <ComboBox x:Name="CombSay" VerticalAlignment="Top" Margin="110,26,5,0" />
                 <TextBox x:Name="SayTextBox" TextWrapping="Wrap" pu:TextBoxHelper.Watermark="在这里输入要说话的内容" VerticalAlignment="Top"
                         Margin="5,54,5,0" Height="200" AcceptsReturn="True" VerticalContentAlignment="Top" />
                 <Button VerticalAlignment="Bottom" Content="说话" Click="Say_Click" FontSize="24" />

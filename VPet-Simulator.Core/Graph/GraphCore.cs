@@ -3,10 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace VPet_Simulator.Core
 {
@@ -212,15 +209,27 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 说话 (开始)
             /// </summary>
-            Say_A_Start,
+            Say_Serious_A_Start,
             /// <summary>
             /// 说话 (循环)
             /// </summary>
-            Say_B_Loop,
+            Say_Serious_B_Loop,
             /// <summary>
             /// 说话 (结束)
             /// </summary>
-            Say_C_End,
+            Say_Serious_C_End,
+            /// <summary>
+            /// 说话 (开始)
+            /// </summary>
+            Say_Shining_A_Start,
+            /// <summary>
+            /// 说话 (循环)
+            /// </summary>
+            Say_Shining_B_Loop,
+            /// <summary>
+            /// 说话 (结束)
+            /// </summary>
+            Say_Shining_C_End,
             /// <summary>
             /// 待机 模式1 (开始)
             /// </summary>
@@ -254,40 +263,7 @@ namespace VPet_Simulator.Core
             /// </summary>
             Shutdown,
         }
-        ///// <summary> loop 应该被取缔
-        ///// 动画类型默认设置 前文本|是否循环|是否常用
-        ///// </summary>
-        //public static readonly dynamic[][] GraphTypeValue = new dynamic[][]
-        //{
-        //     new dynamic[]{ "raised_dynamic" ,false,true},
-        //     new dynamic[]{ "raised_static_a", false,true},
-        //     new dynamic[]{ "raised_static_b", false,true},
-        //     new dynamic[]{ "climb_top_right", false,false},
-        //     new dynamic[]{ "climb_top_left", false, false},
-        //     new dynamic[]{ "Crawl_right", false,false},
-        //     new dynamic[]{ "Crawl_left", false, false},
-        //     new dynamic[]{ "climb_right", false, false},
-        //     new dynamic[]{ "climb_left", false, false},
-        //     new dynamic[]{ "default", true,true},
-        //     new dynamic[]{ "touch_head_a", false,true},
-        //     new dynamic[]{ "touch_head_b", false,true},
-        //     new dynamic[]{ "touch_head_c", false,true},
-        //     new dynamic[]{ "crawl_right", false, true},
-        //     new dynamic[]{ "crawl_left", false, true},
-        //     new dynamic[]{ "squat_a", false,true},
-        //     new dynamic[]{ "squat_b", false, true},
-        //     new dynamic[]{ "squat_c", false,true},
-        //     new dynamic[]{ "fall_left_a", false, false},
-        //     new dynamic[]{ "fall_left_b", false,true},
-        //     new dynamic[]{ "fall_right_a", false, false},
-        //     new dynamic[]{ "fall_right_b", false,true},
-        //     new dynamic[]{ "walk_right_a", false,true},
-        //     new dynamic[]{ "walk_right_b", false, true},
-        //     new dynamic[]{ "walk_right_c", false,true},
-        //     new dynamic[]{ "walk_left_a", false,true},
-        //     new dynamic[]{ "walk_left_b", false, true},
-        //     new dynamic[]{ "walk_left_c", false,true},
-        //};
+
         /// <summary>
         /// 图像字典
         /// </summary>
@@ -537,6 +513,28 @@ namespace VPet_Simulator.Core
                     LocateClimbRight = s.GetDouble("climbright", LocateClimbRight);
                     LocateClimbTop = s.GetDouble("climbtop", LocateClimbTop);
                 }
+            }
+        }
+
+        public static class Helper
+        {
+            public enum AnimatType
+            {
+                A_Start,
+                B_Loop,
+                C_End,
+            }
+            public enum SayType
+            {
+                None,
+                Default,
+                Serious,
+                Shining
+            }
+            public static GraphType Convert(SayType sayType, AnimatType type)
+            {
+                string say = "Say_" + sayType.ToString() + '_' + type.ToString(); // (type == null ? "" : '_' + type.ToString());
+                return (GraphType)Enum.Parse(typeof(GraphType), say);
             }
         }
     }

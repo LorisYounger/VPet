@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.IO;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace VPet_Simulator.Core
 {
@@ -54,51 +55,54 @@ namespace VPet_Simulator.Core
         {
             PlayState = true;
             StopEndAction = false;
-            if (parant.Tag != this)
+            parant.Dispatcher.Invoke(() =>
             {
-                System.Windows.Controls.Image img;
-                if (parant.Child == GraphCore.CommUIElements["Image1.Picture"])
+                if (parant.Tag != this)
                 {
-                    img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image1.Picture"];
-                }
-                else
-                {
-                    img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image2.Picture"];
-                    if (parant.Child != GraphCore.CommUIElements["Image2.Picture"])
+                    System.Windows.Controls.Image img;
+                    if (parant.Child == GraphCore.CommUIElements["Image1.Picture"])
                     {
-                        if (img.Parent == null)
+                        img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image1.Picture"];
+                    }
+                    else
+                    {
+                        img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image2.Picture"];
+                        if (parant.Child != GraphCore.CommUIElements["Image2.Picture"])
                         {
-                            parant.Child = img;
-                        }
-                        else
-                        {
-                            img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image3.Picture"];
-                            parant.Child = img;
+                            if (img.Parent == null)
+                            {
+                                parant.Child = img;
+                            }
+                            else
+                            {
+                                img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image3.Picture"];
+                                parant.Child = img;
+                            }
                         }
                     }
+                    //var bitmap = new BitmapImage();
+                    //bitmap.BeginInit();
+                    //stream.Seek(0, SeekOrigin.Begin);
+                    //bitmap.StreamSource = stream;
+                    //bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    //bitmap.EndInit();
+                    img.Source = new BitmapImage(new Uri(Path));
+                    parant.Tag = this;
                 }
-                //var bitmap = new BitmapImage();
-                //bitmap.BeginInit();
-                //stream.Seek(0, SeekOrigin.Begin);
-                //bitmap.StreamSource = stream;
-                //bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                //bitmap.EndInit();
-                img.Source = new BitmapImage(new Uri(Path));
-                parant.Tag = this;
-            }
-            Task.Run(() =>
-            {
-                Thread.Sleep(Length);
-                if (IsLoop && PlayState)
+                Task.Run(() =>
                 {
-                    Run(parant, EndAction);
-                }
-                else
-                {
-                    PlayState = false;
-                    if (!StopEndAction)
-                        EndAction?.Invoke();//运行结束动画时事件
-                }
+                    Thread.Sleep(Length);
+                    if (IsLoop && PlayState)
+                    {
+                        Run(parant, EndAction);
+                    }
+                    else
+                    {
+                        PlayState = false;
+                        if (!StopEndAction)
+                            EndAction?.Invoke();//运行结束动画时事件
+                    }
+                });
             });
         }
         bool StopEndAction = false;

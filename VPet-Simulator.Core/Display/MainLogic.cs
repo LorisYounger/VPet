@@ -28,22 +28,22 @@ namespace VPet_Simulator.Core
         /// 说话
         /// </summary>
         /// <param name="text">说话内容</param>
-        public void Say(string text)
+        public void Say(string text, GraphCore.Helper.SayType type)
         {
-            if (DisplayType == GraphCore.GraphType.Default)
-                Display(GraphCore.GraphType.Say_A_Start, () =>
+            if (type != GraphCore.Helper.SayType.None && DisplayType == GraphCore.GraphType.Default)
+                Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.A_Start), () =>
                 {
-                    Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text));
-                    Saying();
+                    Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text, type));
+                    Saying(type);
                 });
             else
             {
-                Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text));
+                Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text, type));
             }
         }
-        public void Saying()
+        public void Saying(GraphCore.Helper.SayType type)
         {
-            Display(GraphCore.GraphType.Say_B_Loop, Saying);
+            Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.B_Loop), () => Saying(type));
         }
 
         private void EventTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -162,7 +162,7 @@ namespace VPet_Simulator.Core
                     case 19:
                     case 20:
                         DisplayIdel_StateONE();
-                            break;
+                        break;
                     default:
                         break;
                 }
@@ -203,7 +203,7 @@ namespace VPet_Simulator.Core
         /// <param name="SmartMoveInterval">智能移动周期</param>
         public void SetMoveMode(bool AllowMove, bool smartMove, int SmartMoveInterval)
         {
-            MoveTimer.Enabled = false;;
+            MoveTimer.Enabled = false; ;
             if (AllowMove)
             {
                 MoveTimer.AutoReset = true;
@@ -215,7 +215,7 @@ namespace VPet_Simulator.Core
                 }
                 else
                 {
-                    SmartMoveTimer.Enabled = false;;
+                    SmartMoveTimer.Enabled = false; ;
                     SmartMove = false;
                 }
             }

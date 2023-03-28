@@ -313,7 +313,7 @@ namespace VPet_Simulator.Core
                     return;
                 }
                 System.Windows.Controls.Image img;
-                
+
                 if (parant.Child == GraphCore.CommUIElements["Image1.PNGAnimation"])
                 {
                     img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image1.PNGAnimation"];
@@ -344,8 +344,8 @@ namespace VPet_Simulator.Core
                 img.Source = new BitmapImage(new Uri(Path));
 
                 img.Width = Width;
-                new Thread(() => Animations[0].Run(parant, EndAction)).Start();
-            });           
+                Task.Run(() => Animations[0].Run(parant, EndAction));
+            });
         }
 
         public void Stop(bool StopEndAction = false)

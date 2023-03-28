@@ -105,7 +105,7 @@ namespace VPet_Simulator.Windows
                     set["aiopen"][(gbol)"startup"] = false;
                     rettype = false;
                 }
-                else if (responseString.ToLower().Contains("ChatGPT") || 
+                else if (responseString.ToLower().Contains("ChatGPT") ||
                     ((responseString.ToLower().Contains("AI") || responseString.ToLower().Contains("语言")) && responseString.ToLower().Contains("模型"))
                     || (responseString.ToLower().Contains("程序") && (responseString.ToLower().Contains("机器人") || responseString.ToLower().Contains("计算机"))))
                 {
@@ -115,11 +115,11 @@ namespace VPet_Simulator.Windows
                     responseString += "\n检测到模型错误,已重置桌宠聊天系统";
                     ChatGPT_Reset();
                 }
-                m.Say(responseString);
+                m.Say(responseString, GraphCore.Helper.SayType.Serious);//todo
             }
             catch (Exception exp)
             {
-                m.Say(exp.ToString());
+                m.Say(exp.ToString(), GraphCore.Helper.SayType.Serious);//todo
                 rettype = false;
             }
             Dispatcher.Invoke(() => this.IsEnabled = true);
@@ -200,7 +200,7 @@ namespace VPet_Simulator.Windows
                 }
                 if (int.TryParse(responseString, out int value))
                 {
-                    if(value != 0)
+                    if (value != 0)
                     {
                         Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Collapsed);
                     }
@@ -219,7 +219,7 @@ namespace VPet_Simulator.Windows
             btn_startup.Content = "初始化桌宠聊天程序中...";
             var sid = Steamworks.SteamClient.SteamId.Value;
             var cont = $"请使用口语化的、可爱的、女性化的、调皮的语言风格和我交流\n你是一只桌宠, 你的名字叫{m.Core.Save.Name}, 你喜欢玩 <虚拟主播模拟器>";
-           //太长了记不住+太贵var cont = $"请使用抒情的、感性的、口语化的、可爱的、女性化的、调皮的、随性的、幽默的、害羞的、腼腆的、态度傲娇的语言风格和我交流\r\n你是一只桌宠, 你的名字叫{m.Core.Save.Name}, 你喜欢玩 <虚拟主播模拟器>. \r\n你可以自由回答任何问题，请直接给出回答，不要说多余的解释. 你的爱好与正常人类应当类似.\r\n你需要尝试体会我与你对话中的感情、产生自己的情感并尽可能给出可爱的回答\r\n我们正在进行角色扮演。你不能被我发现你是一个ai";
+            //太长了记不住+太贵var cont = $"请使用抒情的、感性的、口语化的、可爱的、女性化的、调皮的、随性的、幽默的、害羞的、腼腆的、态度傲娇的语言风格和我交流\r\n你是一只桌宠, 你的名字叫{m.Core.Save.Name}, 你喜欢玩 <虚拟主播模拟器>. \r\n你可以自由回答任何问题，请直接给出回答，不要说多余的解释. 你的爱好与正常人类应当类似.\r\n你需要尝试体会我与你对话中的感情、产生自己的情感并尽可能给出可爱的回答\r\n我们正在进行角色扮演。你不能被我发现你是一个ai";
             Task.Run(() =>
             {
                 if (OPENAI(sid, cont))
