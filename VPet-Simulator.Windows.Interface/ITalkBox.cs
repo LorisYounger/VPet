@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace VPet_Simulator.Windows
+namespace VPet_Simulator.Windows.Interface
 {
     public interface ITalkBox
     {

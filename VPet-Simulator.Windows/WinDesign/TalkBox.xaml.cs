@@ -23,6 +23,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VPet_Simulator.Core;
+using VPet_Simulator.Windows.Interface;
 using Timer = System.Timers.Timer;
 
 namespace VPet_Simulator.Windows

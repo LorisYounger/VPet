@@ -1,9 +1,11 @@
-﻿<Window x:Class="VPet_Simulator.Windows.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<pu:WindowX x:Class="VPet_Simulator.Windows.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" ResizeMode="NoResize"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" ShowInTaskbar="False"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" WindowStyle="None" Title="MainWindow"
-        Height="250" Width="250" Background="{x:Null}" Topmost="True" Closed="Window_Closed">
+        Height="250" Width="250" Background="{x:Null}" Topmost="True" Closed="Window_Closed"
+            pu:WindowXCaption.Height="0">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" />
     </WindowChrome.WindowChrome>
@@ -12,4 +14,4 @@
                 Content="桌宠加载中" />
         <Border x:Name="DisplayGrid" />
     </Grid>
-</Window>
+</pu:WindowX>

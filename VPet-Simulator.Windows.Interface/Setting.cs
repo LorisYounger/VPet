@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VPet_Simulator.Windows
+namespace VPet_Simulator.Windows.Interface
 {
     public class Setting : LpsDocument
     {

@@ -28,7 +28,7 @@ namespace VPet_Simulator.Core
         /// 说话
         /// </summary>
         /// <param name="text">说话内容</param>
-        public void Say(string text, GraphCore.Helper.SayType type)
+        public void Say(string text, GraphCore.Helper.SayType type = GraphCore.Helper.SayType.Shining)
         {
             if (type != GraphCore.Helper.SayType.None && DisplayType == GraphCore.GraphType.Default)
                 Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.A_Start), () =>

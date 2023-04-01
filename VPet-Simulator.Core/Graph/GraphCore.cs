@@ -529,7 +529,8 @@ namespace VPet_Simulator.Core
                 None,
                 Default,
                 Serious,
-                Shining
+                Shining,
+                Error
             }
             public static GraphType Convert(SayType sayType, AnimatType type)
             {

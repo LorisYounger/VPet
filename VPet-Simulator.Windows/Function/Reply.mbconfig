@@ -1,0 +1,15 @@
+﻿{
+  "Scenario": "TextClassification",
+  "Environment": {
+    "Type": "LocalCPU",
+    "Version": 1
+  },
+  "Type": "TrainingConfig",
+  "Version": 4,
+  "TrainingOption": {
+    "Version": 0,
+    "Type": "TextClassficationTrainingOption",
+    "TrainingTime": 0,
+    "Seed": 0
+  }
+}
