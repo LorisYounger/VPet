@@ -19,6 +19,12 @@ namespace VPet_Simulator.Core
         public const int LoopMin = 5;
         public const int TreeRND = 5;
 
+        /// <summary>
+        /// 处理说话内容
+        /// </summary>
+        public event Action<string> OnSay;
+
+
         public Timer EventTimer = new Timer(15000)
         {
             AutoReset = true,
@@ -30,6 +36,7 @@ namespace VPet_Simulator.Core
         /// <param name="text">说话内容</param>
         public void Say(string text, GraphCore.Helper.SayType type = GraphCore.Helper.SayType.Shining)
         {
+            OnSay.Invoke(text);
             if (type != GraphCore.Helper.SayType.None && DisplayType == GraphCore.GraphType.Default)
                 Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.A_Start), () =>
                 {
@@ -41,6 +48,7 @@ namespace VPet_Simulator.Core
                 Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text, type));
             }
         }
+
         public void Saying(GraphCore.Helper.SayType type)
         {
             Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.B_Loop), () => Saying(type));

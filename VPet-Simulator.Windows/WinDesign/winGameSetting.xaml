@@ -525,6 +525,10 @@
                                             BorderBrush="{DynamicResource PrimaryDarker}"
                                             pu:ProgressBarHelper.IsPercentVisible="True"
                                             Foreground="{DynamicResource DARKPrimary}" BorderThickness="2" />
+                                <TextBlock x:Name="ButtonSetting" HorizontalAlignment="Left" Margin="0,2,0,0"
+                                            TextWrapping="Wrap" Text="MOD设置" VerticalAlignment="Top" FontSize="14"
+                                             Foreground="DimGray" TextDecorations="Underline" Cursor="Hand" MouseDown="ButtonSetting_MouseDown"
+                                              />
                                 <Button x:Name="ButtonAllow" Content="启用代码插件" HorizontalAlignment="Left"
                                             VerticalAlignment="Top" Background="#FFFF2C2C" Foreground="White"
                                             FontSize="12" ToolTip="启用该模组的代码内容,不能保证系统安全性" Click="ButtonAllow_Click" />

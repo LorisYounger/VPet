@@ -249,6 +249,7 @@ namespace VPet_Simulator.Windows
             GameHave.Text = mod.Content.Trim('\n');
 
             ButtonAllow.Visibility = mod.SuccessLoad ? Visibility.Collapsed : Visibility.Visible;
+            ButtonSetting.Visibility = ButtonAllow.Visibility;
         }
         private void FullScreenBox_Check(object sender, RoutedEventArgs e)
         {
@@ -445,7 +446,13 @@ namespace VPet_Simulator.Windows
 
         private void ButtonAllow_Click(object sender, RoutedEventArgs e)
         {
-
+            if (MessageBoxX.Show($"是否启用 {mod.Name} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查",
+                $"启用 {mod.Name} 的代码插件?", MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
+            {
+                mw.Set.PassMod(mod.Name);
+                ShowMod((string)LabelModName.Content);
+                ButtonRestart.Visibility = Visibility.Visible;
+            }
         }
 
         private void ButtonRestart_Click(object sender, RoutedEventArgs e)
@@ -698,18 +705,23 @@ namespace VPet_Simulator.Windows
                 BtnCGPTReSet.Content = "打开 ChatGPT API 设置";
                 BtnCGPTReSet.IsEnabled = true;
                 if (mw.TalkBox != null)
-                    mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox.This);
+                    mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
                 mw.TalkBox = new TalkBoxAPI(mw);
-                mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox.This);
+                mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
             }
             else
             {
                 BtnCGPTReSet.Content = "初始化桌宠聊天程序";
                 if (mw.TalkBox != null)
-                    mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox.This);
+                    mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
                 mw.TalkBox = new TalkBox(mw);
-                mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox.This);
+                mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
             }
+        }
+
+        private void ButtonSetting_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }

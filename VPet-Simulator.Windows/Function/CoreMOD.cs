@@ -10,12 +10,19 @@ using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using VPet_Simulator.Core;
+using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Windows
 {
     public class CoreMOD
     {
+        public static List<string> LoadedDLL { get; } = new List<string>()
+        {
+            "ChatGPT.API.Framework.dll","Panuon.WPF.dll","steam_api.dll","Panuon.WPF.UI.dll","steam_api64.dll",
+            "LinePutScript.dll","Newtonsoft.Json.dll","Facepunch.Steamworks.Win32.dll", "Facepunch.Steamworks.Win64.dll",
+            "VPet-Simulator.Core.dll","VPet-Simulator.Windows.Interface.dll"
+        };
         public static string NowLoading = null;
         public string Name;
         public string Author;
@@ -81,6 +88,40 @@ namespace VPet_Simulator.Windows
                                 }
                             }
                         }
+                        break;
+                    case "plugin":
+                        Content += "代码插件\n";
+                        SuccessLoad = false;
+                        if (!IsPassMOD(mw))
+                        {//不是通过模组,不加载
+                            break;
+                        }
+
+                        foreach (FileInfo tmpfi in di.EnumerateFiles("*.dll"))
+                        {
+                            try
+                            {
+                                var path = tmpfi.FullName;
+                                if (LoadedDLL.Contains(path))
+                                    continue;
+                                LoadedDLL.Add(path);
+                                Assembly dll = Assembly.LoadFrom(path);
+                                var v = dll.GetExportedTypes();
+                                foreach (Type exportedType in v)
+                                {
+                                    if (exportedType.BaseType == typeof(MainPlugin))
+                                    {
+                                        mw.Plugins.Add((MainPlugin)Activator.CreateInstance(exportedType, mw));
+                                    }
+                                }
+                            }
+                            catch
+                            {
+
+                            }
+                        }
+
+                        SuccessLoad = true;
                         break;
                 }
             }

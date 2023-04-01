@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
@@ -17,17 +18,23 @@ namespace VPet_Simulator.Windows
     public partial class MainWindow : IMainWindow
     {
         public readonly string ModPath = Environment.CurrentDirectory + @"\mod";
-        public readonly bool IsSteamUser;
-        public Setting Set;
-        public List<PetLoader> Pets = new List<PetLoader>();
+        public bool IsSteamUser { get; }
+        public Setting Set { get; set; }
+        public List<PetLoader> Pets { get; set; } = new List<PetLoader>();
         public List<CoreMOD> CoreMODs = new List<CoreMOD>();
-        public GameCore Core = new GameCore();
-        public winGameSetting winSetting;
+        public GameCore Core { get; set; } = new GameCore();
+        public Main Main { get; set; }
+        public UIElement TalkBox;
+        public winGameSetting winSetting { get; set; }
         public ChatGPTClient CGPTClient;
+        /// <summary>
+        /// 所有三方插件
+        /// </summary>
+        public List<MainPlugin> Plugins { get; } = new List<MainPlugin>();
         /// <summary>
         /// 版本号
         /// </summary>
-        public readonly int verison = 10;
+        public int verison { get; } = 10;
         /// <summary>
         /// 版本号
         /// </summary>
@@ -44,6 +51,8 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public void Save()
         {
+            foreach (MainPlugin mp in Plugins)
+                mp.Save();
             //游戏存档
             if (Set != null)
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
@@ -52,11 +61,24 @@ namespace VPet_Simulator.Windows
             if (CGPTClient != null)
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json", CGPTClient.Save());
         }
+        /// <summary>
+        /// 重载DIY按钮区域
+        /// </summary>
         public void LoadDIY()
         {
             Main.ToolBar.MenuDIY.Items.Clear();
             foreach (Sub sub in Set["diy"])
                 Main.ToolBar.AddMenuButton(ToolBar.MenuType.DIY, sub.Name, () => RunDIY(sub.Info));
+            try
+            {
+                //加载游戏创意工坊插件
+                foreach (MainPlugin mp in Plugins)
+                    mp.StartGame();
+            }
+            catch (Exception e)
+            {
+                new winReport(this, "由于插件引起的自定按钮加载错误\n" + e.ToString());
+            }
         }
         public static void RunDIY(string content)
         {

@@ -116,7 +116,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Function\ITalkBox.cs" />
     <Compile Include="WinDesign\TalkBoxAPI.xaml.cs">
       <DependentUpon>TalkBoxAPI.xaml</DependentUpon>
     </Compile>
@@ -127,7 +126,6 @@
       <DependentUpon>DIYViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Function\CoreMOD.cs" />
-    <Compile Include="Function\Setting.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="WinDesign\TalkBox.xaml.cs">
       <DependentUpon>TalkBox.xaml</DependentUpon>
@@ -236,6 +234,10 @@
     <ProjectReference Include="..\VPet-Simulator.Core\VPet-Simulator.Core.csproj">
       <Project>{7bd4cb1d-c8f3-4349-9bf0-cd11789130ba}</Project>
       <Name>VPet-Simulator.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VPet-Simulator.Windows.Interface\VPet-Simulator.Windows.Interface.csproj">
+      <Project>{DCAD838A-1A02-4BDF-962C-FD47C6006D28}</Project>
+      <Name>VPet-Simulator.Windows.Interface</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -28,7 +28,6 @@ namespace VPet_Simulator.Windows
     {
         private NotifyIcon notifyIcon;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
-        public ITalkBox TalkBox;
         public MainWindow()
         {
             //判断是不是Steam用户,因为本软件会发布到Steam
@@ -36,7 +35,7 @@ namespace VPet_Simulator.Windows
             try
             {
 #if DEMO
-        SteamClient.Init(2293870, true);
+                SteamClient.Init(2293870, true);
 #else
                 SteamClient.Init(1920960, true);
 #endif
@@ -108,6 +107,13 @@ namespace VPet_Simulator.Windows
         private void Restart_Closed(object sender, EventArgs e)
         {
             Save();
+            try
+            {
+                //关闭所有插件
+                foreach (MainPlugin mp in Plugins)
+                    mp.EndGame();
+            }
+            catch { }
             Main?.Dispose();
             notifyIcon?.Dispose();
             System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -127,7 +133,7 @@ namespace VPet_Simulator.Windows
               new Tuple<string, Helper.SayType>("长按脑袋拖动桌宠到你喜欢的任意位置", Helper.SayType.Serious),
               new Tuple<string, Helper.SayType>("欢迎加入 虚拟主播模拟器群 430081239", Helper.SayType.Shining),
         };
-        private long lastclicktime;
+        public long lastclicktime { get; set; }
         public void GameLoad()
         {
             //加载所有MOD
@@ -187,18 +193,28 @@ namespace VPet_Simulator.Windows
                 LoadingText.Content = "正在加载CGPT";
 
                 winSetting = new winGameSetting(this);
-                Main = new Main(Core) { };
+                Main = new Main(Core) { };              
                 if (!Set["CGPT"][(gbol)"enable"] && IsSteamUser)
                 {
                     TalkBox = new TalkBox(this);
-                    Main.ToolBar.MainGrid.Children.Add(TalkBox.This);
+                    Main.ToolBar.MainGrid.Children.Add(TalkBox);
                 }
                 else if (Set["CGPT"][(gbol)"enable"])
                 {
                     TalkBox = new TalkBoxAPI(this);
-                    Main.ToolBar.MainGrid.Children.Add(TalkBox.This);
+                    Main.ToolBar.MainGrid.Children.Add(TalkBox);
                 }
                 LoadingText.Content = "正在加载游戏";
+                try
+                {
+                    //加载游戏创意工坊插件
+                    foreach (MainPlugin mp in Plugins)
+                        mp.StartGame();
+                }
+                catch (Exception e)
+                {
+                    new winReport(this, "由于插件引起的游戏启动错误\n" + e.ToString());
+                }
                 Main.DefaultClickAction = () =>
                 {
                     if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
@@ -294,15 +310,22 @@ namespace VPet_Simulator.Windows
             Save();
         }
 
-        public Main Main;
 
         private void Window_Closed(object sender, EventArgs e)
         {
             Save();
+            try
+            {
+                //关闭所有插件
+                foreach (MainPlugin mp in Plugins)
+                    mp.EndGame();
+            }
+            catch { }
             Main?.Dispose();
             notifyIcon?.Dispose();
             System.Environment.Exit(0);
         }
+
 
         //public void DEBUGValue()
         //{

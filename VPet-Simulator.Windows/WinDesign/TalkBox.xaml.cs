@@ -31,12 +31,10 @@ namespace VPet_Simulator.Windows
     /// <summary>
     /// MessageBar.xaml 的交互逻辑
     /// </summary>
-    public partial class TalkBox : UserControl, ITalkBox
+    public partial class TalkBox : UserControl
     {
         Main m;
         Setting set;
-
-        public UIElement This => this;
 
         public TalkBox(MainWindow mw)
         {
