@@ -12,6 +12,10 @@ namespace VPet_Simulator.Windows.Interface
     public abstract class MainPlugin
     {
         /// <summary>
+        /// 通过插件名称定位插件
+        /// </summary>
+        public abstract string PluginName { get; }
+        /// <summary>
         /// 主窗体, 主程序提供的各种功能和设置等 大部分参数和调用均在这里
         /// </summary>
         public IMainWindow MW;

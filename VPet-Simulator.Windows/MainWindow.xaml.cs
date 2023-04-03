@@ -70,11 +70,25 @@ namespace VPet_Simulator.Windows
                 CGPTClient = ChatGPTClient.Load(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json"));
             //this.Width = 400 * ZoomSlider.Value;
             //this.Height = 450 * ZoomSlider.Value;
-
             InitializeComponent();
 
             this.Height = 500 * Set.ZoomLevel;
             this.Width = 500 * Set.ZoomLevel;
+
+            if (Set.StartRecordLast)
+            {
+                var point = Set.StartRecordLastPoint;
+                if (point.X != 0 || point.Y != 0)
+                {
+                    this.Left = point.X;
+                    this.Top = point.Y;
+                }
+            }
+            else
+            {
+                var point = Set.StartRecordPoint;
+                Left = point.X; Top = point.Y;
+            }
 
             //不存在就关掉
             var modpath = new DirectoryInfo(ModPath + @"\0000_core\pet\vup");

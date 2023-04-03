@@ -101,11 +101,11 @@ namespace VPet_Simulator.Windows
                         {
                             try
                             {
-                                var path = tmpfi.FullName;
+                                var path = tmpfi.Name;
                                 if (LoadedDLL.Contains(path))
                                     continue;
                                 LoadedDLL.Add(path);
-                                Assembly dll = Assembly.LoadFrom(path);
+                                Assembly dll = Assembly.LoadFrom(tmpfi.FullName);
                                 var v = dll.GetExportedTypes();
                                 foreach (Type exportedType in v)
                                 {

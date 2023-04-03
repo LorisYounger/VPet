@@ -41,6 +41,8 @@
                         <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="35"/>
                         <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
                         <RowDefinition Height="Auto" />
@@ -87,9 +89,35 @@
                     <TextBlock Grid.Row="4" Text="字体" VerticalAlignment="Center"  />
                     <ComboBox x:Name="FontBox" Grid.Row="4" Grid.Column="2"
                                 SelectionChanged="FontBox_SelectionChanged" IsEnabled="False"
-                                Style="{DynamicResource StandardComboBoxStyle}" Margin="0,3,0,2" FontSize="16" />
-                    <TextBlock Grid.Row="5" Text="开机启动" VerticalAlignment="Center"  />
+                                Style="{DynamicResource StandardComboBoxStyle}" FontSize="16" Margin="0,2,0,3" />
+                    <TextBlock Grid.Row="5" Text="启动位置" VerticalAlignment="Center"  />
                     <Grid Grid.Row="5" Grid.Column="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <pu:Switch x:Name="StartPlace" BorderBrush="{DynamicResource PrimaryDark}"
+                                    CheckedBackground="{DynamicResource Primary}" IsChecked="True"
+                                    CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
+                                    BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
+                                    ToggleBrush="{DynamicResource PrimaryDark}" Content="退出位置"
+                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="该游戏随着开机启动该程序"
+                                    Unchecked="StartPlace_Checked" VerticalAlignment="Center" Checked="StartPlace_Checked" />
+                        <TextBox x:Name="TextBoxStartUpX"  Grid.Column="1" Style="{DynamicResource StandardTextBoxStyle}" ToolTip="X轴" pu:TextBoxHelper.Icon="X"
+                                 FontSize="16" Margin="0,0,5,0" pu:TextBoxHelper.InputLimit="Digit" pu:TextBoxHelper.Watermark="X轴" 
+                                 TextChanged="TextBoxStartUp_TextChanged" pu:IconHelper.Margin="5,0,0,0"/>
+                        <TextBox x:Name="TextBoxStartUpY" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"  ToolTip="Y轴" pu:TextBoxHelper.Icon="Y"
+                                 FontSize="16" pu:TextBoxHelper.InputLimit="Digit" pu:TextBoxHelper.Watermark="Y轴" Margin="0,0,5,0"
+                                 TextChanged="TextBoxStartUp_TextChanged" pu:IconHelper.Margin="5,0,0,0"/>
+                        <Button x:Name="BtnStartUpGet" pu:ButtonHelper.CornerRadius="4" Content="当前位置" Grid.Column="3"
+                                    Background="{DynamicResource SecondaryLight}" HorizontalAlignment="Center"
+                                VerticalAlignment="Center" Height="30" BorderBrush="{DynamicResource SecondaryDark}" BorderThickness="2" Click="BtnStartUpGet_Click"/>
+
+                    </Grid>
+                    <TextBlock Grid.Row="7" Text="开机启动" VerticalAlignment="Center"  />
+                    <Grid Grid.Row="7" Grid.Column="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -111,11 +139,11 @@
                                     ToolTip="从Steam启动该游戏, 统计时长不能停" Grid.Column="1" Checked="StartUpSteamBox_Checked"
                                     Unchecked="StartUpSteamBox_Checked" />
                     </Grid>
-                    <TextBlock Grid.Row="6" Text="宠物动画" VerticalAlignment="Center"  />
-                    <TextBlock x:Name="PetIntor" Grid.Row="7" Text="动画描述动画描述动画描述动画描述动画描述" VerticalAlignment="Top" Grid.Column="2" Margin="0,0,0,5" TextWrapping="WrapWithOverflow" FontSize="14" />
-                    <ComboBox x:Name="PetBox" Grid.Row="6" Grid.Column="2" ToolTip="加载的宠物动画,重启后生效"
+                    <TextBlock Grid.Row="8" Text="宠物动画" VerticalAlignment="Center"  />
+                    <TextBlock x:Name="PetIntor" Grid.Row="9" Text="动画描述动画描述动画描述动画描述动画描述" VerticalAlignment="Center" Grid.Column="2" TextWrapping="WrapWithOverflow" FontSize="14" />
+                    <ComboBox x:Name="PetBox" Grid.Row="8" Grid.Column="2" ToolTip="加载的宠物动画,重启后生效"
                                 Style="{DynamicResource StandardComboBoxStyle}" Margin="0,3,0,2" SelectionChanged="PetBox_SelectionChanged" FontSize="16" />
-                    <Button x:Name="ButtonRestartGraph"  Content="重启软件以应用更改" Margin="0,2,0,0" Visibility="Collapsed"
+                    <Button x:Name="ButtonRestartGraph"  Content="重启软件以应用更改" Visibility="Collapsed"
                                         VerticalAlignment="Bottom" Background="{DynamicResource DARKPrimary}"
                                         Foreground="{DynamicResource DARKPrimaryText}"
                                         Click="ButtonRestart_Click" Grid.ColumnSpan="3" Grid.Row="10" />

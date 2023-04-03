@@ -75,6 +75,23 @@ namespace VPet_Simulator.Windows
             PetBox.SelectedIndex = petboxid;
             PetIntor.Text = mw.Pets[petboxid].Intor;
 
+            TextBoxStartUpX.Text = mw.Set.StartRecordPoint.X.ToString();
+            TextBoxStartUpY.Text = mw.Set.StartRecordPoint.Y.ToString();
+            if (mw.Set.StartRecordLast == true)
+            {
+                StartPlace.IsChecked = true;
+                TextBoxStartUpX.IsEnabled = false;
+                TextBoxStartUpY.IsEnabled = false;
+                BtnStartUpGet.IsEnabled = false;
+            }
+            else
+            {
+                StartPlace.IsChecked = false;
+                TextBoxStartUpX.IsEnabled = true;
+                TextBoxStartUpY.IsEnabled = true;
+                BtnStartUpGet.IsEnabled = true;
+            }
+
             foreach (ComboBoxItem v in CBAutoSave.Items)
             {
                 if ((int)v.Tag == mw.Set.AutoSaveInterval)
@@ -722,6 +739,43 @@ namespace VPet_Simulator.Windows
         private void ButtonSetting_MouseDown(object sender, MouseButtonEventArgs e)
         {
 
+        }
+
+        private void StartPlace_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            if (StartPlace.IsChecked == true)
+            {
+                mw.Set.StartRecordLast = true;
+                TextBoxStartUpX.IsEnabled = false;
+                TextBoxStartUpY.IsEnabled = false;
+                BtnStartUpGet.IsEnabled = false;
+            }
+            else
+            {
+                mw.Set.StartRecordLast = false;
+                TextBoxStartUpX.IsEnabled = true;
+                TextBoxStartUpY.IsEnabled = true;
+                BtnStartUpGet.IsEnabled = true;
+            }
+        }
+
+        private void TextBoxStartUp_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            if (double.TryParse(TextBoxStartUpX.Text, out double x) && double.TryParse(TextBoxStartUpY.Text, out double y))
+                mw.Set.StartRecordPoint = new Point(x, y);
+        }
+
+        private void BtnStartUpGet_Click(object sender, RoutedEventArgs e)
+        {
+            AllowChange = false;
+            TextBoxStartUpX.Text = mw.Left.ToString();
+            TextBoxStartUpY.Text = mw.Top.ToString();
+            mw.Set.StartRecordPoint = new Point(mw.Left, mw.Top);
+            AllowChange = true;
         }
     }
 }

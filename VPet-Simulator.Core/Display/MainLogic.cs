@@ -36,7 +36,7 @@ namespace VPet_Simulator.Core
         /// <param name="text">说话内容</param>
         public void Say(string text, GraphCore.Helper.SayType type = GraphCore.Helper.SayType.Shining)
         {
-            OnSay.Invoke(text);
+            OnSay?.Invoke(text);
             if (type != GraphCore.Helper.SayType.None && DisplayType == GraphCore.GraphType.Default)
                 Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.A_Start), () =>
                 {
@@ -211,7 +211,7 @@ namespace VPet_Simulator.Core
         /// <param name="SmartMoveInterval">智能移动周期</param>
         public void SetMoveMode(bool AllowMove, bool smartMove, int SmartMoveInterval)
         {
-            MoveTimer.Enabled = false; ;
+            MoveTimer.Enabled = false;
             if (AllowMove)
             {
                 MoveTimer.AutoReset = true;

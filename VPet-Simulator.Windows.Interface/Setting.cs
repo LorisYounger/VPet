@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -282,6 +283,53 @@ namespace VPet_Simulator.Windows.Interface
         {
             get => this["gameconfig"].GetString("petgraph", "默认虚拟桌宠");
             set => this["gameconfig"].SetString("petgraph", value);
+        }
+
+        /// <summary>
+        /// 是否记录游戏退出位置 (默认:是)
+        /// </summary>
+        public bool StartRecordLast
+        {
+            get => !this["gameconfig"].GetBool("startboot");
+            set => this["gameconfig"].SetBool("startboot", !value);
+        }
+        /// <summary>
+        /// 记录上次退出位置
+        /// </summary>
+        public Point StartRecordLastPoint
+        {
+            get
+            {
+                var line = FindLine("startrecordlast");
+                if (line == null)
+                    return new Point();
+                return new Point(line.GetDouble("x", 0), line.GetDouble("y", 0));
+            }
+            set
+            {
+                var line = FindorAddLine("startrecordlast");
+                line.SetDouble("x", value.X);
+                line.SetDouble("y", value.Y);
+            }
+        }
+        /// <summary>
+        /// 设置中桌宠启动的位置
+        /// </summary>
+        public Point StartRecordPoint
+        {
+            get
+            {
+                var line = FindLine("startrecord");
+                if (line == null)
+                    return StartRecordLastPoint;
+                return new Point(line.GetDouble("x", 0), line.GetDouble("y", 0));
+            }
+            set
+            {
+                var line = FindorAddLine("startrecord");
+                line.SetDouble("x", value.X);
+                line.SetDouble("y", value.Y);
+            }
         }
     }
 }
