@@ -24,7 +24,9 @@ namespace VPet_Simulator.Core
         /// </summary>
         public event Action<string> OnSay;
 
-
+        /// <summary>
+        /// 事件Timer
+        /// </summary>
         public Timer EventTimer = new Timer(15000)
         {
             AutoReset = true,
@@ -207,7 +209,7 @@ namespace VPet_Simulator.Core
         /// 设置移动模式
         /// </summary>
         /// <param name="AllowMove">允许移动</param>
-        /// <param name="SmartMove">启用智能移动</param>
+        /// <param name="smartMove">启用智能移动</param>
         /// <param name="SmartMoveInterval">智能移动周期</param>
         public void SetMoveMode(bool AllowMove, bool smartMove, int SmartMoveInterval)
         {

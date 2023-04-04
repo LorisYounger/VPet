@@ -73,7 +73,7 @@ namespace VPet_Simulator.Windows
             {
                 //加载游戏创意工坊插件
                 foreach (MainPlugin mp in Plugins)
-                    mp.StartGame();
+                    mp.LoadDIY();
             }
             catch (Exception e)
             {

@@ -4,11 +4,6 @@
              xmlns:local="clr-namespace:VPet_Simulator.Windows"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/VPet-Simulator.Core;component/Display/Theme.xaml" />
-                <ResourceDictionary Source="/VPet-Simulator.Core;component/Display/basestyle.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <ResourceDictionary Source="/VPet-Simulator.Windows.Interface;component/ResourceStyle.xaml" />
     </Application.Resources>
 </Application>

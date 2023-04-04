@@ -3,7 +3,8 @@
                     xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
                     xmlns:pucore="clr-namespace:Panuon.WPF;assembly=Panuon.WPF">
     <ResourceDictionary.MergedDictionaries>
-        <pucore:SharedResourceDictionary Source="/Panuon.WPF.UI;component/Control.xaml" />
+        <ResourceDictionary Source="/VPet-Simulator.Core;component/Display/Theme.xaml"/>
+        <ResourceDictionary Source="/VPet-Simulator.Core;component/Display/basestyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 

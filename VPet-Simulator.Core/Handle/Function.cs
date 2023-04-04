@@ -18,7 +18,7 @@ namespace VPet_Simulator.Core
         /// <returns></returns>
         public static Brush ResourcesBrush(BrushType name)
         {
-            return (Brush)Application.Current.Resources.MergedDictionaries.First()[name.ToString()];
+            return (Brush)Application.Current.Resources.MergedDictionaries[0][name.ToString()];
         }
         public enum BrushType
         {

@@ -24,12 +24,14 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\VPet-Simulator.Windows.Interface.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -89,9 +91,17 @@
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LinePutScript.1.6.1\lib\net462\LinePutScript.dll</HintPath>
     </Reference>
+    <Reference Include="Panuon.WPF, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Panuon.WPF.1.0.1\lib\net462\Panuon.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="Panuon.WPF.UI, Version=1.1.8.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Panuon.WPF.UI.1.1.8.5\lib\net462\Panuon.WPF.UI.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -114,6 +124,12 @@
       <Project>{7BD4CB1D-C8F3-4349-9BF0-CD11789130BA}</Project>
       <Name>VPet-Simulator.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="ResourceStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
