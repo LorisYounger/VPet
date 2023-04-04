@@ -225,5 +225,14 @@ namespace VPet_Simulator.Windows
                     Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Collapsed);
             });
         }
+
+        private void tbTalk_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                SendMessage_Click(sender, e);
+                e.Handled = true;
+            }
+        }
     }
 }

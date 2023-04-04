@@ -74,9 +74,23 @@ namespace VPet_Simulator.Windows
             }
             catch (Exception exp)
             {
-                m.Say("API调用失败,请检查设置和网络连接\n" + exp.ToString(), GraphCore.Helper.SayType.Serious);
+                var e = exp.ToString();
+                string str = "请检查设置和网络连接";
+                if (e.Contains("401"))
+                {
+                    str = "请检查API token设置";
+                }
+                m.Say($"API调用失败,{str}\n{e}", GraphCore.Helper.SayType.Serious);
             }
             Dispatcher.Invoke(() => this.IsEnabled = true);
+        }
+        private void tbTalk_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                SendMessage_Click(sender, e);
+                e.Handled = true;
+            }
         }
     }
 }
