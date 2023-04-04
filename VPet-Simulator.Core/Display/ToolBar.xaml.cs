@@ -25,7 +25,7 @@ namespace VPet_Simulator.Core
     public partial class ToolBar : UserControl, IDisposable
     {
         Main m;
-        Timer closetimer;
+       public Timer CloseTimer;
         bool onFocus = false;
         Timer closePanelTimer;
 
@@ -33,13 +33,13 @@ namespace VPet_Simulator.Core
         {
             InitializeComponent();
             this.m = m;
-            closetimer = new Timer()
+            CloseTimer = new Timer()
             {
                 Interval = 4000,
                 AutoReset = false,
                 Enabled = false
             };
-            closetimer.Elapsed += Closetimer_Elapsed;
+            CloseTimer.Elapsed += Closetimer_Elapsed;
             closePanelTimer = new Timer();
             closePanelTimer.Elapsed += ClosePanelTimer_Tick;
             m.TimeUIHandle += M_TimeUIHandle;
@@ -93,7 +93,7 @@ namespace VPet_Simulator.Core
             if (onFocus)
             {
                 onFocus = false;
-                closetimer.Start();
+                CloseTimer.Start();
             }
             else
                 Dispatcher.Invoke(() => this.Visibility = Visibility.Collapsed);
@@ -107,20 +107,20 @@ namespace VPet_Simulator.Core
                 m.UIGrid.Children.Add(this);
             }
             Visibility = Visibility.Visible;
-            if (closetimer.Enabled)
+            if (CloseTimer.Enabled)
                 onFocus = true;
             else
-                closetimer.Start();
+                CloseTimer.Start();
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
-            closetimer.Stop();
+            CloseTimer.Enabled = false;
         }
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
-            closetimer.Start();
+            CloseTimer.Start();
         }
 
         private void MenuPanel_Click(object sender, RoutedEventArgs e)
@@ -255,7 +255,7 @@ namespace VPet_Simulator.Core
         public void Dispose()
         {
             m = null;
-            closetimer.Dispose();
+            CloseTimer.Dispose();
             closePanelTimer.Dispose();
         }
 

@@ -223,7 +223,7 @@ namespace VPet_Simulator.Core
                 }
                 else
                 {
-                    SmartMoveTimer.Enabled = false; ;
+                    SmartMoveTimer.Enabled = false;
                     SmartMove = false;
                 }
             }

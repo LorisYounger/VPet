@@ -64,15 +64,17 @@ namespace VPet_Simulator.Core
             var ig = Core.Graph.FindGraph(GraphCore.GraphType.StartUP, core.Save.Mode);
             //var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Default, core.Save.Mode);
             PetGrid2.Visibility = Visibility.Collapsed;
-            
-            ig.WaitForReadyRun(PetGrid,()=> {
-                Dispatcher.Invoke(() => {
+
+            ig.WaitForReadyRun(PetGrid, () =>
+            {
+                Dispatcher.Invoke(() =>
+                {
                     PetGrid.Tag = ig;
                     PetGrid2.Tag = ig;
-                });              
+                });
                 DisplayNomal();
             });
-            
+
 
 
             EventTimer.Elapsed += EventTimer_Elapsed;
@@ -96,11 +98,12 @@ namespace VPet_Simulator.Core
         private void MoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             string str = DisplayType.ToString();
-            Core.Controller.MoveWindows(MoveTimerPoint.X, MoveTimerPoint.Y);
-            if (!str.Contains("Left") && !str.Contains("Right"))
+            if (MoveTimer.Enabled == false || (!str.Contains("Left") && !str.Contains("Right")))
             {
                 MoveTimer.Enabled = false;
+                return;
             }
+            Core.Controller.MoveWindows(MoveTimerPoint.X, MoveTimerPoint.Y);
         }
         public Action DefaultClickAction;
         bool isPress = false;

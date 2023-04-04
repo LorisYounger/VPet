@@ -104,14 +104,14 @@ namespace VPet_Simulator.Core
             this.sayType = sayType;
         }
 
-        private void Border_MouseEnter(object sender, MouseEventArgs e)
+        public void Border_MouseEnter(object sender, MouseEventArgs e)
         {
             EndTimer.Stop();
             CloseTimer.Stop();
             this.Opacity = .8;
         }
 
-        private void Border_MouseLeave(object sender, MouseEventArgs e)
+        public void Border_MouseLeave(object sender, MouseEventArgs e)
         {
             if (!ShowTimer.Enabled)
                 EndTimer.Start();
