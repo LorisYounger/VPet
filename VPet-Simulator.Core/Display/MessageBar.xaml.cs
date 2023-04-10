@@ -91,8 +91,7 @@ namespace VPet_Simulator.Core
         {
             if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
             {
-                m.UIGrid.Children.Remove(this);
-                m.UIGrid.Children.Add(this);
+                Panel.SetZIndex(this, m.UIGrid.Children.Count);             
             }
             TText.Text = "";
             outputtext = text.ToList();

@@ -20,6 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VPet_Simulator.Core;
+using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows
 {
@@ -267,6 +268,17 @@ namespace VPet_Simulator.Windows
 
             ButtonAllow.Visibility = mod.SuccessLoad ? Visibility.Collapsed : Visibility.Visible;
             ButtonSetting.Visibility = ButtonAllow.Visibility;
+
+            
+            foreach (var mainplug in mw.Plugins)
+            {
+                if (mainplug.PluginName == mod.Name)
+                {
+                    ButtonSetting.Visibility = Visibility.Visible;
+                    return;
+                }
+            }
+            ButtonSetting.Visibility = Visibility.Collapsed;
         }
         private void FullScreenBox_Check(object sender, RoutedEventArgs e)
         {
@@ -738,7 +750,14 @@ namespace VPet_Simulator.Windows
 
         private void ButtonSetting_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            foreach(var mainplug in mw.Plugins)
+            {
+                if(mainplug.PluginName == mod.Name)
+                {
+                    mainplug.Setting();
+                    return; 
+                }
+            }
         }
 
         private void StartPlace_Checked(object sender, RoutedEventArgs e)
