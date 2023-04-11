@@ -41,7 +41,7 @@ namespace VPet_Simulator.Windows
             {
                 tType.SelectedIndex = 0;
                 tContent.Text = errmsg;
-                tContent.IsEnabled = false;
+                tContent.IsReadOnly = true;
                 tContent.Height = 44;
             }
 

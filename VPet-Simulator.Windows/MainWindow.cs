@@ -77,7 +77,7 @@ namespace VPet_Simulator.Windows
             }
             catch (Exception e)
             {
-                new winReport(this, "由于插件引起的自定按钮加载错误\n" + e.ToString());
+                new winReport(this, "由于插件引起的自定按钮加载错误\n" + e.ToString()).Show();
             }
         }
         public static void RunDIY(string content)

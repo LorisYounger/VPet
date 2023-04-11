@@ -230,7 +230,7 @@ namespace VPet_Simulator.Windows
                 }
                 catch (Exception e)
                 {
-                    new winReport(this, "由于插件引起的游戏启动错误\n" + e.ToString());
+                    new winReport(this, "由于插件引起的游戏启动错误\n" + e.ToString()).Show();
                 }
                 Main.DefaultClickAction = () =>
                 {

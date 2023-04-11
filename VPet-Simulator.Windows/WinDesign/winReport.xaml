@@ -28,7 +28,7 @@
         <pu:FormGroup Header="内容:" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal" Margin="0,2,0,0"
                 Padding="1" FontSize="16" ToolTip="详细内容信息">
             <TextBox x:Name="tContent" pu:TextBoxHelper.Watermark="详细描述&#13;eg:报错详细信息" AcceptsReturn="True"
-                    MaxHeight="172" HorizontalScrollBarVisibility="Auto" />
+                    MaxHeight="172" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
         </pu:FormGroup>
         <pu:FormGroup Header="提交:" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal" Margin="0,2,0,0"
                 Padding="1" FontSize="16" ToolTip="是否上传的确游戏存档">
