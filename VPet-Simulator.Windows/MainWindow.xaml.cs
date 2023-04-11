@@ -182,9 +182,9 @@ namespace VPet_Simulator.Windows
                 Dispatcher.Invoke(new Action(() => LoadingText.Content = $"尝试加载 MOD数据: {di.Name}"));
                 CoreMODs.Add(new CoreMOD(di, this));
             }
-            foreach (CoreMOD cm in CoreMODs)
-                if (!cm.SuccessLoad)
-                    MessageBoxX.Show($"由于 {cm.Name} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件", $"{cm.Name} 未加载代码插件");
+            //foreach (CoreMOD cm in CoreMODs)
+            //    if (!cm.SuccessLoad)
+            //        MessageBox.Show($"由于 {cm.Name} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件", $"{cm.Name} 未加载代码插件");
             Dispatcher.Invoke(new Action(() => LoadingText.Content = "尝试加载游戏存档"));
 
             //加载游戏内容
