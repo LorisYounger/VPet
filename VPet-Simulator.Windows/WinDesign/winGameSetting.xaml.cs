@@ -266,9 +266,7 @@ namespace VPet_Simulator.Windows
             GameInfo.Text = mod.Intro;
             GameHave.Text = mod.Content.Trim('\n');
 
-            ButtonAllow.Visibility = mod.SuccessLoad ? Visibility.Collapsed : Visibility.Visible;
-            ButtonSetting.Visibility = ButtonAllow.Visibility;
-
+            ButtonAllow.Visibility = mw.Set.IsPassMOD(mod.Name) ? Visibility.Collapsed : Visibility.Visible;
             
             foreach (var mainplug in mw.Plugins)
             {

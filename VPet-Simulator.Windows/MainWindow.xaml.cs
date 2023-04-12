@@ -182,9 +182,13 @@ namespace VPet_Simulator.Windows
                 Dispatcher.Invoke(new Action(() => LoadingText.Content = $"尝试加载 MOD数据: {di.Name}"));
                 CoreMODs.Add(new CoreMOD(di, this));
             }
-            //foreach (CoreMOD cm in CoreMODs)
-            //    if (!cm.SuccessLoad)
-            //        MessageBox.Show($"由于 {cm.Name} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件", $"{cm.Name} 未加载代码插件");
+            foreach (CoreMOD cm in CoreMODs)
+                if (!cm.SuccessLoad)
+                    if (Set.IsPassMOD(cm.Name))
+                        MessageBox.Show($"模组 {cm.Name} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题", $"{cm.Name} 未加载代码插件");
+                    else if (Set.IsMSGMOD(cm.Name))
+                        MessageBox.Show($"由于 {cm.Name} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件", $"{cm.Name} 未加载代码插件");
+
             Dispatcher.Invoke(new Action(() => LoadingText.Content = "尝试加载游戏存档"));
 
             //加载游戏内容
@@ -210,7 +214,7 @@ namespace VPet_Simulator.Windows
                 LoadingText.Content = "正在加载CGPT";
 
                 winSetting = new winGameSetting(this);
-                Main = new Main(Core) { };              
+                Main = new Main(Core) { };
                 if (!Set["CGPT"][(gbol)"enable"] && IsSteamUser)
                 {
                     TalkBox = new TalkBox(this);

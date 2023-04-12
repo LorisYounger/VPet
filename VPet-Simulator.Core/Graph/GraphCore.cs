@@ -231,6 +231,18 @@ namespace VPet_Simulator.Core
             /// </summary>
             Say_Shining_C_End,
             /// <summary>
+            /// 说话 (开始)
+            /// </summary>
+            Say_Self_A_Start,
+            /// <summary>
+            /// 说话 (循环)
+            /// </summary>
+            Say_Self_B_Loop,
+            /// <summary>
+            /// 说话 (结束)
+            /// </summary>
+            Say_Self_C_End,
+            /// <summary>
             /// 待机 模式1 (开始)
             /// </summary>
             Idel_StateONE_A_Start,
@@ -526,10 +538,29 @@ namespace VPet_Simulator.Core
             }
             public enum SayType
             {
+                /// <summary>
+                /// 无:不执行动作
+                /// </summary>
                 None,
+                /// <summary>
+                /// 默认说话
+                /// </summary>
                 Default,
+                /// <summary>
+                /// 严肃
+                /// </summary>
                 Serious,
+                /// <summary>
+                /// 闪亮
+                /// </summary>
                 Shining,
+                /// <summary>
+                /// 自己
+                /// </summary>
+                Self,
+                /// <summary>
+                /// 错误
+                /// </summary>
                 Error
             }
             public static GraphType Convert(SayType sayType, AnimatType type)

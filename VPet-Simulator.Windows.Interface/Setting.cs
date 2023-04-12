@@ -160,6 +160,14 @@ namespace VPet_Simulator.Windows.Interface
                 return false;
             return line.Find(ModName.ToLower()) != null;
         }
+        public bool IsMSGMOD(string ModName)
+        {
+            var line = FindorAddLine("msgmod");
+            if (line.GetBool(ModName))
+                return false;
+            line.SetBool(ModName, true);
+            return true;
+        }
         public void BanMod(string ModName)
         {
             if (string.IsNullOrWhiteSpace(ModName))
