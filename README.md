@@ -4,7 +4,7 @@
 
 ![主图](README.assets/%E4%B8%BB%E5%9B%BE.png)
 
-获取虚拟桌宠模拟器 [OnSteam(免费)](https://store.steampowered.com/app/1920960/VPet) 或 通过[Nuget]()内置到你的WPF应用程序
+获取虚拟桌宠模拟器 [OnSteam(免费)](https://store.steampowered.com/app/1920960/VPet) 或 通过[Nuget](https://www.nuget.org/packages/VPet-Simulator.Core)内置到你的WPF应用程序
 
 ## 虚拟桌宠模拟器 详细介绍
 

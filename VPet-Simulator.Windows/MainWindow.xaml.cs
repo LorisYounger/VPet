@@ -143,7 +143,7 @@ namespace VPet_Simulator.Windows
               new Tuple<string, Helper.SayType>("有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧", Helper.SayType.Serious),
               new Tuple<string, Helper.SayType>("你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing", Helper.SayType.Serious),
               new Tuple<string, Helper.SayType>("你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧", Helper.SayType.Serious),
-              new Tuple<string, Helper.SayType>("这游戏开发这么慢,都怪画师太咕了.\n记得多催催画师(@叶书天)画桌宠, 催的越快更新越快!", Helper.SayType.Serious),
+              new Tuple<string, Helper.SayType>("这游戏开发这么慢,都怪画师太咕了", Helper.SayType.Serious),
               new Tuple<string, Helper.SayType>("长按脑袋拖动桌宠到你喜欢的任意位置", Helper.SayType.Serious),
               new Tuple<string, Helper.SayType>("欢迎加入 虚拟主播模拟器群 430081239", Helper.SayType.Shining),
         };
