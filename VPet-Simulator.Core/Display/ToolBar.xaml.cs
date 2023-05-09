@@ -53,7 +53,7 @@ namespace VPet_Simulator.Core
                 tMoney.Text = "$ " + m.Core.Save.Money.ToString("N2");
                 if (m.Core.Controller.EnableFunction)
                 {
-                    till.Visibility = m.Core.Save.Mode == Save.ModeType.Ill ? Visibility.Visible : Visibility.Collapsed;
+                    till.Visibility = m.Core.Save.Mode == GameSave.ModeType.Ill ? Visibility.Visible : Visibility.Collapsed;
                     tfun.Visibility = Visibility.Collapsed;
                 }
                 else

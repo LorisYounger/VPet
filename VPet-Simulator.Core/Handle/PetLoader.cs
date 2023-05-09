@@ -60,23 +60,23 @@ namespace VPet_Simulator.Core
                     {
                         if (path_name.Contains("happy"))
                         {
-                            graph.AddGraph(di.FullName, Save.ModeType.Happy, (GraphType)i);
+                            graph.AddGraph(di.FullName, GameSave.ModeType.Happy, (GraphType)i);
                         }
                         if (path_name.Contains("nomal"))
                         {
-                            graph.AddGraph(di.FullName, Save.ModeType.Nomal, (GraphType)i);
+                            graph.AddGraph(di.FullName, GameSave.ModeType.Nomal, (GraphType)i);
                         }
                         if (path_name.Contains("poorcondition"))
                         {
-                            graph.AddGraph(di.FullName, Save.ModeType.PoorCondition, (GraphType)i);
+                            graph.AddGraph(di.FullName, GameSave.ModeType.PoorCondition, (GraphType)i);
                         }
                         if (path_name.Contains("ill"))
                         {
-                            graph.AddGraph(di.FullName, Save.ModeType.Ill, (GraphType)i);
+                            graph.AddGraph(di.FullName, GameSave.ModeType.Ill, (GraphType)i);
                         }
                         else
                         {
-                            graph.AddGraph(di.FullName, Save.ModeType.Nomal, (GraphType)i);
+                            graph.AddGraph(di.FullName, GameSave.ModeType.Nomal, (GraphType)i);
                         }
                         return;
                     }

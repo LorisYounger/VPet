@@ -58,7 +58,7 @@ namespace VPet_Simulator.Windows
             if (GraphListBox.SelectedItem == null)
                 return;
             var graph = mw.Main.Core.Graph.FindGraph((GraphType)Enum.Parse(typeof(GraphType), (string)GraphListBox.SelectedItem),
-                 (Save.ModeType)Enum.Parse(typeof(Save.ModeType), (string)(((ComboBoxItem)ComboxMode.SelectedItem).Content)));
+                 (GameSave.ModeType)Enum.Parse(typeof(GameSave.ModeType), (string)(((ComboBoxItem)ComboxMode.SelectedItem).Content)));
             if (graph == null)
             {
                 LabelNowPlay.Content = "未找到对应类型图像资源";

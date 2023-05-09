@@ -75,9 +75,9 @@ namespace VPet_Simulator.Core
                 {
                     Core.Save.Health -= Function.Rnd.Next(0, 1);
                 }
-                //if (Core.Save.Strength <= 40)
+                //if (Core.GameSave.Strength <= 40)
                 //{
-                //    Core.Save.Health -= Function.Rnd.Next(0, 1);
+                //    Core.GameSave.Health -= Function.Rnd.Next(0, 1);
                 //}
                 Core.Save.StrengthChangeFood(-1);
                 if (Core.Save.Feeling >= 75)
@@ -109,8 +109,8 @@ namespace VPet_Simulator.Core
             }
             else
             {
-                Core.Save.Mode = Save.ModeType.Happy;
-                //Core.Save.Mode = Save.ModeType.Ill;
+                Core.Save.Mode = GameSave.ModeType.Happy;
+                //Core.GameSave.Mode = GameSave.ModeType.Ill;
             }
 
             //UIHandle

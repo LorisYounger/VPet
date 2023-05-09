@@ -74,7 +74,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\VUPSimulator\packages\LinePutScript.1.6.1\lib\net462\LinePutScript.dll</HintPath>
+      <HintPath>..\packages\LinePutScript.1.8.0\lib\net462\LinePutScript.dll</HintPath>
     </Reference>
     <Reference Include="Panuon.WPF, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\VUPSimulator\packages\Panuon.WPF.1.0.1\lib\net462\Panuon.WPF.dll</HintPath>
@@ -156,7 +156,7 @@
     <Compile Include="Handle\GameCore.cs" />
     <Compile Include="Handle\IController.cs" />
     <Compile Include="Handle\PetLoader.cs" />
-    <Compile Include="Handle\Save.cs" />
+    <Compile Include="Handle\GameSave.cs" />
     <Compile Include="Item\Drink.cs" />
     <Compile Include="Item\Food.cs" />
     <Compile Include="Item\Item.cs" />

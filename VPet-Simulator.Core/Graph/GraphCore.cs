@@ -316,7 +316,7 @@ namespace VPet_Simulator.Core
         /// <param name="modetype">状态类型</param>
         /// <param name="graphtype">动画类型</param>
         ///// <param name="storemem">是否储存到内存以节约加载</param>
-        public void AddGraph(string path, Save.ModeType modetype, GraphType graphtype)//, bool storemem = false)
+        public void AddGraph(string path, GameSave.ModeType modetype, GraphType graphtype)//, bool storemem = false)
         {
             var paths = new DirectoryInfo(path).GetFiles();
             if (paths.Length == 0)
@@ -338,7 +338,7 @@ namespace VPet_Simulator.Core
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
         /// <param name="storernd">是否储存随机数字典</param>
         /// <returns></returns>
-        public IGraph FindGraph(GraphType type, Save.ModeType mode, bool storernd = false)
+        public IGraph FindGraph(GraphType type, GameSave.ModeType mode, bool storernd = false)
         {
             if (Graphs.ContainsKey(type))
             {
@@ -359,9 +359,9 @@ namespace VPet_Simulator.Core
                             return list[index];
                         }
                 }
-                if (mode != Save.ModeType.Ill)
+                if (mode != GameSave.ModeType.Ill)
                 {
-                    list = Graphs[type].FindAll(x => x.ModeType != Save.ModeType.Ill);
+                    list = Graphs[type].FindAll(x => x.ModeType != GameSave.ModeType.Ill);
                     if (list.Count > 0)
                         return list[Function.Rnd.Next(list.Count)];
                 }

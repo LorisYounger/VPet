@@ -21,7 +21,7 @@ namespace VPet_Simulator.Core
         /// 新建新静态图像
         /// </summary>
         /// <param name="path">图片路径</param>
-        public Picture(GraphCore graphCore, string path, Save.ModeType modetype, GraphCore.GraphType graphType, int length = 1000, bool isloop = false)
+        public Picture(GraphCore graphCore, string path, GameSave.ModeType modetype, GraphCore.GraphType graphType, int length = 1000, bool isloop = false)
         {
             ModeType = modetype;
             IsLoop = isloop;
@@ -41,7 +41,7 @@ namespace VPet_Simulator.Core
         /// 图片资源
         /// </summary>
         public string Path;
-        public Save.ModeType ModeType { get; private set; }
+        public GameSave.ModeType ModeType { get; private set; }
         private GraphCore GraphCore;
         public bool PlayState { get; set; }
         public bool IsLoop { get; set; }

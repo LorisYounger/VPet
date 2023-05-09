@@ -194,9 +194,9 @@ namespace VPet_Simulator.Windows
             //加载游戏内容
             Core.Controller = new MWController(this);
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
-                Core.Save = new Save(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First());
+                Core.Save = GameSave.Load(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First());
             else
-                Core.Save = new Save("萝莉斯");
+                Core.Save = new GameSave("萝莉斯");
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
 

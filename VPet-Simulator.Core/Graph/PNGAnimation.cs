@@ -51,7 +51,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public bool IsContinue { get; set; } = false;
 
-        public Save.ModeType ModeType { get; private set; }
+        public GameSave.ModeType ModeType { get; private set; }
 
         public GraphCore.GraphType GraphType { get; private set; }
         /// <summary>
@@ -74,7 +74,7 @@ namespace VPet_Simulator.Core
         /// <param name="path">文件夹位置</param>
         /// <param name="paths">文件内容列表</param>
         /// <param name="isLoop">是否循环</param>
-        public PNGAnimation(GraphCore graphCore, string path, FileInfo[] paths, Save.ModeType modetype, GraphCore.GraphType graphtype, bool isLoop = false)
+        public PNGAnimation(GraphCore graphCore, string path, FileInfo[] paths, GameSave.ModeType modetype, GraphCore.GraphType graphtype, bool isLoop = false)
         {
             Animations = new List<Animation>();
             IsLoop = isLoop;

@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Converter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,21 +12,22 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// 游戏存档
     /// </summary>
-    public class Save
+    public class GameSave
     {
         /// <summary>
         /// 宠物名字
         /// </summary>
+        [Line(name:"name")]
         public string Name;
 
         /// <summary>
         /// 金钱
         /// </summary>
-        public double Money;
+        [Line(Type = LPSConvert.ConvertType.ToFloat, Name ="money")] public double Money;
         /// <summary>
         /// 经验值
         /// </summary>
-        public int Exp;
+        [Line(name:"exp")] public int Exp;
         /// <summary>
         /// 等级
         /// </summary>
@@ -41,7 +43,7 @@ namespace VPet_Simulator.Core
         /// 体力 0-100
         /// </summary>
         public double Strength { get => strength; set => strength = Math.Min(100, Math.Max(0, value)); }
-
+        [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double strength;
         /// <summary>
         /// 变化 体力
@@ -56,7 +58,7 @@ namespace VPet_Simulator.Core
         /// 饱腹度
         /// </summary>
         public double StrengthFood { get => strengthFood; set => strengthFood = Math.Min(100, Math.Max(0, value)); }
-
+        [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double strengthFood;
         public void StrengthChangeFood(double value)
         {
@@ -72,6 +74,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public double StrengthDrink { get => strengthDrink; set => strengthDrink = Math.Min(100, Math.Max(0, value)); }
 
+        [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double strengthDrink;
         /// <summary>
         /// 变化 口渴度
@@ -87,6 +90,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public double Feeling { get => feeling; set => feeling = Math.Min(100, Math.Max(0, value)); }
 
+        [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double feeling;
         /// <summary>
         /// 变化 心情
@@ -102,12 +106,14 @@ namespace VPet_Simulator.Core
         /// </summary>
         public double Health { get => health; set => health = Math.Min(100, Math.Max(0, value)); }
 
+        [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double health;
         /// <summary>
         /// 好感度(隐藏)(累加值)
         /// </summary>
         public double Likability { get => likability; set => likability = Math.Min(90 + Level * 10, Math.Max(0, value)); }
 
+        [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double likability;
 
         /// <summary>
@@ -144,6 +150,7 @@ namespace VPet_Simulator.Core
             /// </summary>
             Ill
         }
+        [Line(name:"mode")]
         public ModeType Mode = ModeType.Nomal;
         /// <summary>
         /// 计算宠物当前状态
@@ -177,7 +184,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 新游戏
         /// </summary>
-        public Save(string name)
+        public GameSave(string name)
         {
             Name = name;
             Money = 100;
@@ -193,35 +200,39 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 读档
         /// </summary>
-        public Save(Line line)
+        public GameSave()
         {
-            Money = line.GetFloat("money");
-            Name = line.Info;
-            Exp = line.GetInt("exp");
-            Strength = line.GetFloat("strength");
-            StrengthDrink = line.GetFloat("strengthdrink");
-            StrengthFood = line.GetFloat("strengthfood");
-            Feeling = line.GetFloat("feeling");
-            Health = line.GetFloat("health");
-            Likability = line.GetFloat("likability");
-            Mode = CalMode();
+            //Money = line.GetFloat("money");
+            //Name = line.Info;
+            //Exp = line.GetInt("exp");
+            //Strength = line.GetFloat("strength");
+            //StrengthDrink = line.GetFloat("strengthdrink");
+            //StrengthFood = line.GetFloat("strengthfood");
+            //Feeling = line.GetFloat("feeling");
+            //Health = line.GetFloat("health");
+            //Likability = line.GetFloat("likability");
+            //Mode = CalMode();
         }
+        /// <summary>
+        /// 读档
+        /// </summary>
+        public static GameSave Load(ILine data) => LPSConvert.DeserializeObject<GameSave>(data);
         /// <summary>
         /// 存档
         /// </summary>
         /// <returns>存档行</returns>
         public Line ToLine()
         {
-            Line save = new Line("vpet", Name);
-            save.SetFloat("money", Money);
-            save.SetInt("exp", Exp);
-            save.SetFloat("strength", Strength);
-            save.SetFloat("strengthdrink", StrengthDrink);
-            save.SetFloat("strengthfood", StrengthFood);
-            save.SetFloat("feeling", Feeling);
-            save.SetFloat("health", Health);
-            save.SetFloat("Likability", Likability);
-            return save;
+            //Line save = new Line("vpet", Name);
+            //save.SetFloat("money", Money);
+            //save.SetInt("exp", Exp);
+            //save.SetFloat("strength", Strength);
+            //save.SetFloat("strengthdrink", StrengthDrink);
+            //save.SetFloat("strengthfood", StrengthFood);
+            //save.SetFloat("feeling", Feeling);
+            //save.SetFloat("health", Health);
+            //save.SetFloat("Likability", Likability);
+            return LPSConvert.SerializeObject(this,"vpet");
         }
         /// <summary>
         /// 当前正在的状态

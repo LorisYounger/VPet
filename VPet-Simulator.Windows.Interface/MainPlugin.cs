@@ -48,7 +48,7 @@ namespace VPet_Simulator.Windows.Interface
         public virtual void EndGame() { }
 
         /// <summary>
-        /// 储存游戏 (可以写 Save.Other 储存设置和数据等)
+        /// 储存游戏 (可以写 GameSave.Other 储存设置和数据等)
         /// </summary>
         public virtual void Save() { }
 

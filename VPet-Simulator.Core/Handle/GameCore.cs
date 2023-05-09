@@ -27,7 +27,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 游戏数据
         /// </summary>
-        public Save Save;
+        public GameSave Save;
     }
     /// <summary>
     /// 触摸范围事件

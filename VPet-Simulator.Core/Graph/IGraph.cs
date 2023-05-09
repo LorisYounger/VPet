@@ -41,7 +41,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 该动画模式
         /// </summary>
-        Save.ModeType ModeType { get; }
+        GameSave.ModeType ModeType { get; }
         /// <summary>
         /// 该动画类型
         /// </summary>
