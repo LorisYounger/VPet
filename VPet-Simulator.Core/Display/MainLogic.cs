@@ -56,56 +56,66 @@ namespace VPet_Simulator.Core
             Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.B_Loop), () => Saying(type));
         }
 
-        private void EventTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        /// <summary>
+        /// 根据消耗计算相关数据
+        /// </summary>
+        /// <param name="TimePass">过去时间倍率</param>
+        public void FunctionSpend(double TimePass)
         {
             Core.Save.CleanChange();
+            //饮食等乱七八糟的消耗
+            if (Core.Save.StrengthFood >= 50)
+            {
+                Core.Save.StrengthChange(TimePass);
+                if (Core.Save.StrengthFood >= 75)
+                    Core.Save.Health += Function.Rnd.Next(0, 1) * TimePass;
+            }
+            else if (Core.Save.StrengthFood <= 25)
+            {
+                Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
+            }
+            //if (Core.GameSave.Strength <= 40)
+            //{
+            //    Core.GameSave.Health -= Function.Rnd.Next(0, 1);
+            //}
+            Core.Save.StrengthChangeFood(-TimePass);
+            //感受提升好感度
+            if (Core.Save.Feeling >= 75)
+            {
+                if (Core.Save.Feeling >= 90)
+                {
+                    Core.Save.Likability += TimePass;
+                }
+                Core.Save.Exp+= TimePass;
+                Core.Save.Health += TimePass;
+            }
+            else if (Core.Save.Feeling <= 25)
+            {
+                Core.Save.Likability -= TimePass;
+            }
+            if (Core.Save.StrengthDrink <= 25)
+            {
+                Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
+            }
+            else if (Core.Save.StrengthDrink >= 75)
+                Core.Save.Health += Function.Rnd.Next(0, 1) * TimePass;
+            var newmod = Core.Save.CalMode();
+            if (Core.Save.Mode != newmod)
+            {
+                //TODO:切换逻辑
+
+                Core.Save.Mode = newmod;
+            }
+        }
+
+        private void EventTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {           
             //所有Handle
             TimeHandle?.Invoke(this);
 
             if (Core.Controller.EnableFunction)
             {
-                //饮食等乱七八糟的消耗
-                if (Core.Save.StrengthFood >= 50)
-                {
-                    Core.Save.StrengthChange(1);
-                    if (Core.Save.StrengthFood >= 75)
-                        Core.Save.Health += Function.Rnd.Next(0, 1);
-                }
-                else if (Core.Save.StrengthFood <= 25)
-                {
-                    Core.Save.Health -= Function.Rnd.Next(0, 1);
-                }
-                //if (Core.GameSave.Strength <= 40)
-                //{
-                //    Core.GameSave.Health -= Function.Rnd.Next(0, 1);
-                //}
-                Core.Save.StrengthChangeFood(-1);
-                if (Core.Save.Feeling >= 75)
-                {
-                    if (Core.Save.Feeling >= 90)
-                    {
-                        Core.Save.Likability++;
-                    }
-                    Core.Save.Exp++;
-                    Core.Save.Health++;
-                }
-                else if (Core.Save.Feeling <= 25)
-                {
-                    Core.Save.Likability--;
-                }
-                if (Core.Save.StrengthDrink <= 25)
-                {
-                    Core.Save.Health -= Function.Rnd.Next(0, 1);
-                }
-                else if (Core.Save.StrengthDrink >= 75)
-                    Core.Save.Health += Function.Rnd.Next(0, 1);
-                var newmod = Core.Save.CalMode();
-                if (Core.Save.Mode != newmod)
-                {
-                    //TODO:切换逻辑
-
-                    Core.Save.Mode = newmod;
-                }
+                FunctionSpend(0.015);
             }
             else
             {

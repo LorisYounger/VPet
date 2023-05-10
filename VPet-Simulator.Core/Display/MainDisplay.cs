@@ -97,7 +97,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void DisplayTouchHead()
         {
-            if (Core.Controller.EnableFunction && Core.Save.Strength <= DistanceMin)
+            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
             {
                 Core.Save.StrengthChange(-1);
                 Core.Save.FeelingChange(1);
@@ -105,12 +105,12 @@ namespace VPet_Simulator.Core
             if (DisplayType == GraphType.Touch_Head_A_Start)
                 return;
             if (DisplayType == GraphType.Touch_Head_B_Loop)
-                if (PetGrid.Child is IGraph ig && ig.GraphType == GraphCore.GraphType.Touch_Head_B_Loop)
+                if (Dispatcher.Invoke(() => PetGrid.Tag) is IGraph ig && ig.GraphType == GraphCore.GraphType.Touch_Head_B_Loop)
                 {
                     ig.IsContinue = true;
                     return;
                 }
-                else if (PetGrid2.Child is IGraph ig2 && ig2.GraphType == GraphCore.GraphType.Touch_Head_B_Loop)
+                else if (Dispatcher.Invoke(() => PetGrid2.Tag) is IGraph ig2 && ig2.GraphType == GraphCore.GraphType.Touch_Head_B_Loop)
                 {
                     ig2.IsContinue = true;
                     return;
@@ -126,7 +126,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void DisplayTouchBody()
         {
-            if (Core.Controller.EnableFunction && Core.Save.Strength <= DistanceMin)
+            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
             {
                 Core.Save.StrengthChange(-1);
                 Core.Save.FeelingChange(1);
@@ -134,12 +134,12 @@ namespace VPet_Simulator.Core
             if (DisplayType == GraphType.Touch_Body_A_Start)
                 return;
             if (DisplayType == GraphType.Touch_Body_B_Loop)
-                if (PetGrid.Child is IGraph ig && ig.GraphType == GraphCore.GraphType.Touch_Body_B_Loop)
+                if (Dispatcher.Invoke(() => PetGrid.Tag) is IGraph ig && ig.GraphType == GraphCore.GraphType.Touch_Body_B_Loop)
                 {
                     ig.IsContinue = true;
                     return;
                 }
-                else if (PetGrid2.Child is IGraph ig2 && ig2.GraphType == GraphCore.GraphType.Touch_Body_B_Loop)
+                else if (Dispatcher.Invoke(() => PetGrid2.Tag) is IGraph ig2 && ig2.GraphType == GraphCore.GraphType.Touch_Body_B_Loop)
                 {
                     ig2.IsContinue = true;
                     return;
@@ -278,16 +278,6 @@ namespace VPet_Simulator.Core
             MainGrid.MouseMove -= MainGrid_MouseWave;
             rasetype = 0;
             DisplayRaising();
-            //if (((IGraph)PetGrid.Child).GraphType == GraphCore.GraphType.Touch_Head_B_Loop)
-            //{
-            //    ((IGraph)PetGrid.Child).IsContinue = true;
-            //    return;
-            //}
-            //Display(GraphCore.GraphType.Raised_Dynamic, () =>
-            //   Display(GraphCore.GraphType.Touch_Head_B_Loop, () =>
-            //   Display(GraphCore.GraphType.Touch_Head_C_End, () =>
-            //   Display(GraphCore.GraphType.Default
-            //))));
         }
         int rasetype = int.MinValue;
         int walklength = 0;
@@ -1121,7 +1111,7 @@ namespace VPet_Simulator.Core
                     PetGrid.Visibility = Visibility.Hidden;
                     PetGrid2.Visibility = Visibility.Visible;
                     //PetGrid2.Tag = graph;
-                });              
+                });
             }
             else
             {
@@ -1132,7 +1122,7 @@ namespace VPet_Simulator.Core
                     PetGrid2.Visibility = Visibility.Hidden;
                     PetGrid.Visibility = Visibility.Visible;
                     //PetGrid.Tag = graph;
-                });                
+                });
             }
             petgridcrlf = !petgridcrlf;
             GC.Collect();

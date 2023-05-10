@@ -17,17 +17,17 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 宠物名字
         /// </summary>
-        [Line(name:"name")]
+        [Line(name: "name")]
         public string Name;
 
         /// <summary>
         /// 金钱
         /// </summary>
-        [Line(Type = LPSConvert.ConvertType.ToFloat, Name ="money")] public double Money;
+        [Line(Type = LPSConvert.ConvertType.ToFloat, Name = "money")] public double Money;
         /// <summary>
         /// 经验值
         /// </summary>
-        [Line(name:"exp")] public int Exp;
+        [Line(type: LPSConvert.ConvertType.ToFloat, name: "exp")] public double Exp;
         /// <summary>
         /// 等级
         /// </summary>
@@ -116,18 +116,23 @@ namespace VPet_Simulator.Core
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double likability;
 
+        private int cleantick = 10;
         /// <summary>
         /// 清除变化
         /// </summary>
-        public void CleanChange()
+        public void CleanChange(bool force = false)
         {
-            ChangeStrength = 0;
-            ChangeFeeling = 0;
-            ChangeStrengthDrink = 0;
-            ChangeStrengthFood = 0;
+            if(--cleantick <= 0 || force)
+            {
+                ChangeStrength /= 2;
+                ChangeFeeling /= 2;
+                ChangeStrengthDrink /= 2;
+                ChangeStrengthFood /= 2;
+                cleantick = 10;
+            }           
         }
 
-        
+
         /// <summary>
         /// 宠物状态模式
         /// </summary>
@@ -150,7 +155,7 @@ namespace VPet_Simulator.Core
             /// </summary>
             Ill
         }
-        [Line(name:"mode")]
+        [Line(name: "mode")]
         public ModeType Mode = ModeType.Nomal;
         /// <summary>
         /// 计算宠物当前状态
@@ -232,7 +237,7 @@ namespace VPet_Simulator.Core
             //save.SetFloat("feeling", Feeling);
             //save.SetFloat("health", Health);
             //save.SetFloat("Likability", Likability);
-            return LPSConvert.SerializeObject(this,"vpet");
+            return LPSConvert.SerializeObject(this, "vpet");
         }
         /// <summary>
         /// 当前正在的状态

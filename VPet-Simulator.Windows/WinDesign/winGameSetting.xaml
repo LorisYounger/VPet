@@ -280,14 +280,13 @@
                             <RowDefinition Height="35" />
                             <RowDefinition Height="35" />
                         </Grid.RowDefinitions>
-                        <pu:Switch x:Name="sDesktopAlignment" BorderBrush="{DynamicResource PrimaryDark}"
+                        <pu:Switch x:Name="CalFunctionBox" BorderBrush="{DynamicResource PrimaryDark}"
                                     Grid.Column="2" CheckedBackground="{DynamicResource Primary}"
                                     CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
                                     BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
                                     ToggleBrush="{DynamicResource PrimaryDark}"
                                     CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
-                                    ToolTip="启用数据计算,桌宠会有状态变化,需要按时投喂等.&#13;如果嫌麻烦可以关掉"
-                                    Checked="sDesktopAlignment_Checked_1" />
+                                    ToolTip="启用数据计算,桌宠会有状态变化,需要按时投喂等.&#13;如果嫌麻烦可以关掉" Checked="CalFunctionBox_Checked" />
                         <Grid Grid.Column="2" Grid.Row="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />

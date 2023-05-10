@@ -63,7 +63,7 @@ namespace VPet_Simulator.Windows
 
         public int PressLength => mw.Set.PressLength;
 
-        public bool EnableFunction => false;//mw.Set.EnableFunction;
+        public bool EnableFunction => mw.Set.EnableFunction;
 
         public int InteractionCycle => mw.Set.InteractionCycle;
 

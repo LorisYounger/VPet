@@ -56,7 +56,7 @@ namespace VPet_Simulator.Windows
             //this.Width = 400 * Math.Sqrt(ZoomSlider.Value);
             //this.Height = 450 * Math.Sqrt(ZoomSlider.Value);
 
-            sDesktopAlignment.IsChecked = mw.Set.EnableFunction;
+            CalFunctionBox.IsChecked = mw.Set.EnableFunction;
             CalSlider.Value = mw.Set.LogicInterval;
             InteractionSlider.Value = mw.Set.InteractionCycle;
             MoveEventBox.IsChecked = mw.Set.AllowMove;
@@ -267,7 +267,7 @@ namespace VPet_Simulator.Windows
             GameHave.Text = mod.Content.Trim('\n');
 
             ButtonAllow.Visibility = mod.SuccessLoad || mw.Set.IsPassMOD(mod.Name) ? Visibility.Collapsed : Visibility.Visible;
-            
+
             foreach (var mainplug in mw.Plugins)
             {
                 if (mainplug.PluginName == mod.Name)
@@ -577,13 +577,7 @@ namespace VPet_Simulator.Windows
         {
             Process.Start("https://www.exlb.net/SendKeys");
         }
-        #endregion
-        private void sDesktopAlignment_Checked_1(object sender, RoutedEventArgs e)
-        {
-            if (!AllowChange)
-                return;
-            MessageBoxX.Show("由于没做完,暂不支持数据计算\n敬请期待后续更新", "没做完!", MessageBoxButton.OK, MessageBoxIcon.Warning);
-        }
+        #endregion        
 
         private void CalSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -748,12 +742,12 @@ namespace VPet_Simulator.Windows
 
         private void ButtonSetting_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            foreach(var mainplug in mw.Plugins)
+            foreach (var mainplug in mw.Plugins)
             {
-                if(mainplug.PluginName == mod.Name)
+                if (mainplug.PluginName == mod.Name)
                 {
                     mainplug.Setting();
-                    return; 
+                    return;
                 }
             }
         }
@@ -793,6 +787,13 @@ namespace VPet_Simulator.Windows
             TextBoxStartUpY.Text = mw.Top.ToString();
             mw.Set.StartRecordPoint = new Point(mw.Left, mw.Top);
             AllowChange = true;
+        }
+
+        private void CalFunctionBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.EnableFunction = CalFunctionBox.IsChecked.Value;
         }
     }
 }
