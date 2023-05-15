@@ -19,7 +19,7 @@
         <Setter Property="pu:WindowXCaption.CloseButtonStyle">
             <Setter.Value>
                 <Style TargetType="Button"
-                       BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyle}}">
+                       BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
                     <Setter Property="pu:ButtonHelper.HoverBackground"
                             Value="{x:Null}" />
                 </Style>
@@ -75,7 +75,7 @@
         <Setter Property="pu:ComboBoxHelper.ToggleArrowTransformControlStyle">
             <Setter.Value>
                 <Style TargetType="pu:TransformControl"
-                       BasedOn="{StaticResource {x:Static pu:ComboBoxHelper.ToggleArrowTransformControlStyle}}">
+                       BasedOn="{StaticResource {x:Static pu:ComboBoxHelper.ToggleArrowTransformControlStyleKey}}">
                     <Setter Property="Foreground"
                             Value="{DynamicResource PrimaryText}" />
                     <Setter Property="FontSize"
