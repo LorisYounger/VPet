@@ -43,6 +43,10 @@ namespace VPet_Simulator.Core
         /// 刷新时间时会调用该方法,在所有任务处理完之后
         /// </summary>
         public event Action<Main> TimeUIHandle;
+        /// <summary>
+        /// 是否开始运行
+        /// </summary>
+        public bool IsWorking { get; private set; } = false;
         public Main(GameCore core, bool loadtouchevent = true)
         {
             Console.WriteLine(DateTime.Now.ToString("T:fff"));
@@ -67,6 +71,7 @@ namespace VPet_Simulator.Core
 
             ig.WaitForReadyRun(PetGrid, () =>
             {
+                IsWorking = true;
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid.Tag = ig;

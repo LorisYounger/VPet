@@ -102,8 +102,7 @@ namespace VPet_Simulator.Core
             var newmod = Core.Save.CalMode();
             if (Core.Save.Mode != newmod)
             {
-                //TODO:切换逻辑
-
+                //TODO:切换显示动画
                 Core.Save.Mode = newmod;
             }
         }

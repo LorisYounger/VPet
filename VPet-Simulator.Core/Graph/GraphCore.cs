@@ -18,6 +18,7 @@ namespace VPet_Simulator.Core
         {
             if (!Directory.Exists(CachePath))
                 Directory.CreateDirectory(CachePath);
+            CommConfig["Cache"] = new List<string>();
         }
 
         public static string CachePath = AppDomain.CurrentDomain.BaseDirectory + @"\cache";

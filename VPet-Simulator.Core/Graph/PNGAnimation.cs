@@ -88,7 +88,6 @@ namespace VPet_Simulator.Core
                 GraphCore.CommUIElements["Image1.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
                 GraphCore.CommUIElements["Image2.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
                 GraphCore.CommUIElements["Image3.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
-
             }
             Task.Run(() => startup(path, paths));
             //if (storemem)
@@ -164,7 +163,7 @@ namespace VPet_Simulator.Core
             //生成大文件加载非常慢,先看看有没有缓存能用
             Path = GraphCore.CachePath + $"\\{Sub.GetHashCode(path)}_{paths.Length}.png";
             Width = 500 * (paths.Length + 1);
-            if (File.Exists(Path))
+            if (File.Exists(Path) || ((List<string>)GraphCore.CommConfig["Cache"]).Contains(path))
             {
                 for (int i = 0; i < paths.Length; i++)
                 {
@@ -175,6 +174,7 @@ namespace VPet_Simulator.Core
             }
             else
             {
+                ((List<string>)GraphCore.CommConfig["Cache"]).Add(path);
                 List<System.Drawing.Image> imgs = new List<System.Drawing.Image>();
                 foreach (var file in paths)
                     imgs.Add(System.Drawing.Image.FromFile(file.FullName));
@@ -189,7 +189,8 @@ namespace VPet_Simulator.Core
                     graph.DrawImage(imgs[i], w * i, 0, w, h);
                     Animations.Add(new Animation(this, time, -500 * i));
                 }
-                joinedBitmap.Save(Path);
+                if (!File.Exists(Path))
+                    joinedBitmap.Save(Path);
                 graph.Dispose();
                 joinedBitmap.Dispose();
                 imgs.ForEach(x => x.Dispose());

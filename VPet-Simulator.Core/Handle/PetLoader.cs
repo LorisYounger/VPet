@@ -58,23 +58,28 @@ namespace VPet_Simulator.Core
                 {
                     if (path_name.StartsWith(GraphTypeValue[i]))
                     {
+                        bool isused = false;
                         if (path_name.Contains("happy"))
                         {
                             graph.AddGraph(di.FullName, GameSave.ModeType.Happy, (GraphType)i);
+                            isused = true;
                         }
                         if (path_name.Contains("nomal"))
                         {
                             graph.AddGraph(di.FullName, GameSave.ModeType.Nomal, (GraphType)i);
+                            isused = true;
                         }
                         if (path_name.Contains("poorcondition"))
                         {
                             graph.AddGraph(di.FullName, GameSave.ModeType.PoorCondition, (GraphType)i);
+                            isused = true;
                         }
                         if (path_name.Contains("ill"))
                         {
                             graph.AddGraph(di.FullName, GameSave.ModeType.Ill, (GraphType)i);
+                            isused = true;
                         }
-                        else
+                        if (!isused)
                         {
                             graph.AddGraph(di.FullName, GameSave.ModeType.Nomal, (GraphType)i);
                         }

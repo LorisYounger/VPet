@@ -246,18 +246,25 @@ namespace VPet_Simulator.Windows
                     }
                 };
                 DisplayGrid.Child = Main;
+                Task.Run(() =>
+                {
+                    while (Main.IsWorking)
+                    {
+                        Thread.Sleep(100);
+                    }
+                    Dispatcher.Invoke(() => LoadingText.Visibility = Visibility.Collapsed);
+                });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠", () => { Close(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "开发控制台", () => { new winConsole(this).Show(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心", () => { new winReport(this).Show(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板", () =>
-            {
-                Topmost = false;
-                winSetting.Show();
-            });
+                {
+                    Topmost = false;
+                    winSetting.Show();
+                });
 
                 Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
                 Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
-                LoadingText.Visibility = Visibility.Collapsed;
                 //加载图标
                 notifyIcon = new NotifyIcon();
                 notifyIcon.Text = "虚拟桌宠模拟器";
@@ -266,20 +273,20 @@ namespace VPet_Simulator.Windows
                 m_menu = new ContextMenu();
                 m_menu.MenuItems.Add(new MenuItem("操作教程", (x, y) => { Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html"); }));
                 m_menu.MenuItems.Add(new MenuItem("重置状态", (x, y) =>
-          {
-              Main.CleanState();
-              Main.DisplayNomal();
-              Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-              Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
-          }));
+                {
+                    Main.CleanState();
+                    Main.DisplayNomal();
+                    Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+                    Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+                }));
                 m_menu.MenuItems.Add(new MenuItem("反馈中心", (x, y) => { new winReport(this).Show(); }));
                 m_menu.MenuItems.Add(new MenuItem("开发控制台", (x, y) => { new winConsole(this).Show(); }));
 
                 m_menu.MenuItems.Add(new MenuItem("设置面板", (x, y) =>
-          {
-              Topmost = false;
-              winSetting.Show();
-          }));
+                {
+                    Topmost = false;
+                    winSetting.Show();
+                }));
                 m_menu.MenuItems.Add(new MenuItem("退出桌宠", (x, y) => Close()));
 
                 LoadDIY();
@@ -290,12 +297,12 @@ namespace VPet_Simulator.Windows
 
                 notifyIcon.Visible = true;
                 notifyIcon.BalloonTipClicked += (a, b) =>
-          {
-              Topmost = false;
-              winSetting.Show();
-          };
+                {
+                    Topmost = false;
+                    winSetting.Show();
+                };
 
-                if (Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 2, 23))
+                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 2, 23))
                 {
                     Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
                     Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
@@ -303,14 +310,14 @@ namespace VPet_Simulator.Windows
                 if (!Set["SingleTips"].GetBool("helloworld"))
                 {
                     Task.Run(() =>
-              {
-                  Thread.Sleep(2000);
-                  Set["SingleTips"].SetBool("helloworld", true);
-                  notifyIcon.ShowBalloonTip(10, "你好" + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
-             "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠", ToolTipIcon.Info);
-                  Thread.Sleep(2000);
-                  Main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议", GraphCore.Helper.SayType.Shining);
-              });
+                    {
+                        Thread.Sleep(2000);
+                        Set["SingleTips"].SetBool("helloworld", true);
+                        notifyIcon.ShowBalloonTip(10, "你好" + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
+                    "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠", ToolTipIcon.Info);
+                        Thread.Sleep(2000);
+                        Main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议", GraphCore.Helper.SayType.Shining);
+                    });
                 }
                 else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 27))
                 {
