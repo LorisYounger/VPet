@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
+        xmlns:pu="https://opensource.panuon.com/wpf-ui"
         xmlns:pucore="clr-namespace:Panuon.WPF;assembly=Panuon.WPF">
     <SolidColorBrush x:Key="Primary" Color="#FF81d4fa" />
     <SolidColorBrush x:Key="PrimaryTrans" Color="#DD81d4fa" />

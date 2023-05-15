@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
+        xmlns:pu="https://opensource.panuon.com/wpf-ui"
         xmlns:pucore="clr-namespace:Panuon.WPF;assembly=Panuon.WPF">
     <ResourceDictionary.MergedDictionaries>
         <pucore:SharedResourceDictionary Source="/Panuon.WPF.UI;component/Control.xaml" />
@@ -109,7 +109,7 @@
         <Setter Property="pu:WindowXCaption.Buttons" Value="Close" />
         <Setter Property="pu:WindowXCaption.CloseButtonStyle">
             <Setter.Value>
-                <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyle}}">
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
                     <Setter Property="pu:ButtonHelper.HoverBackground" Value="{x:Null}" />
                 </Style>
             </Setter.Value>
@@ -141,7 +141,7 @@
         <Setter Property="pu:ComboBoxHelper.ToggleArrowTransformControlStyle">
             <Setter.Value>
                 <Style TargetType="pu:TransformControl"
-                        BasedOn="{StaticResource {x:Static pu:ComboBoxHelper.ToggleArrowTransformControlStyle}}">
+                        BasedOn="{StaticResource {x:Static pu:ComboBoxHelper.ToggleArrowTransformControlStyleKey}}">
                     <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
                     <Setter Property="FontSize" Value="10" />
                     <Setter Property="Content" Value="&#xe91f;" />
