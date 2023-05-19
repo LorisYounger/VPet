@@ -61,7 +61,7 @@ namespace VPet_Simulator.Core
                 {
                     Thread.Sleep(timeleft * 50);
                     if (sayType != GraphCore.Helper.SayType.None && m.DisplayType.ToString().StartsWith("Say"))
-                        m.Display(GraphCore.Helper.Convert(sayType, GraphCore.Helper.AnimatType.C_End), m.DisplayNomal);
+                        m.Display(GraphCore.Helper.Convert(sayType, GraphCore.Helper.AnimatType.C_End), m.DisplayToNomal);
                 });
                 ShowTimer.Stop();
                 EndTimer.Start();

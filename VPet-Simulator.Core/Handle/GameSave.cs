@@ -239,27 +239,6 @@ namespace VPet_Simulator.Core
             //save.SetFloat("Likability", Likability);
             return LPSConvert.SerializeObject(this, "vpet");
         }
-        /// <summary>
-        /// 当前正在的状态
-        /// </summary>
-        public enum WorkingState
-        {
-            /// <summary>
-            /// 默认:啥都没干
-            /// </summary>
-            Nomal,
-            /// <summary>
-            /// 正在干活, workingobj指示正在干啥活
-            /// </summary>
-            Working,
-            /// <summary>
-            /// 学习中 
-            /// </summary>
-            Studying,
-            /// <summary>
-            /// 玩耍中
-            /// </summary>
-            Playing,
-        }
+      
     }
 }

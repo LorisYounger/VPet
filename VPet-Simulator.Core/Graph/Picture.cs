@@ -32,9 +32,9 @@ namespace VPet_Simulator.Core
             if (!GraphCore.CommConfig.ContainsKey("PIC_Setup"))
             {
                 GraphCore.CommConfig["PIC_Setup"] = true;
-                GraphCore.CommUIElements["Image1.Picture"] = new System.Windows.Controls.Image() { Width = 500, Height = 500 };
-                GraphCore.CommUIElements["Image2.Picture"] = new System.Windows.Controls.Image() { Width = 500, Height = 500 };
-                GraphCore.CommUIElements["Image3.Picture"] = new System.Windows.Controls.Image() { Width = 500, Height = 500 };
+                GraphCore.CommUIElements["Image1.Picture"] = new Image() { Width = 500, Height = 500 };
+                GraphCore.CommUIElements["Image2.Picture"] = new Image() { Width = 500, Height = 500 };
+                GraphCore.CommUIElements["Image3.Picture"] = new Image() { Width = 500, Height = 500 };
             }
         }
         /// <summary>
@@ -59,14 +59,14 @@ namespace VPet_Simulator.Core
             {
                 if (parant.Tag != this)
                 {
-                    System.Windows.Controls.Image img;
+                    Image img;
                     if (parant.Child == GraphCore.CommUIElements["Image1.Picture"])
                     {
-                        img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image1.Picture"];
+                        img = (Image)GraphCore.CommUIElements["Image1.Picture"];
                     }
                     else
                     {
-                        img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image2.Picture"];
+                        img = (Image)GraphCore.CommUIElements["Image2.Picture"];
                         if (parant.Child != GraphCore.CommUIElements["Image2.Picture"])
                         {
                             if (img.Parent == null)
@@ -75,7 +75,7 @@ namespace VPet_Simulator.Core
                             }
                             else
                             {
-                                img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image3.Picture"];
+                                img = (Image)GraphCore.CommUIElements["Image3.Picture"];
                                 parant.Child = img;
                             }
                         }

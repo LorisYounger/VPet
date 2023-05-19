@@ -154,6 +154,7 @@ namespace VPet_Simulator.Windows
             foreach (CoreMOD mod in mw.CoreMODs)
             {
                 ListBoxItem moditem = (ListBoxItem)ListMod.Items[ListMod.Items.Add(new ListBoxItem())];
+                moditem.Padding = new Thickness(5, 0, 5, 0);
                 moditem.Content = mod.Name;
                 if (mod.IsBanMOD(mw))
                 {
@@ -793,6 +794,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
+            MessageBoxX.Show("由于没做完,暂不支持数据计算\n敬请期待后续更新", "没做完!", MessageBoxButton.OK, MessageBoxIcon.Warning);
             mw.Set.EnableFunction = CalFunctionBox.IsChecked.Value;
         }
     }

@@ -13,13 +13,12 @@
         </DataTemplate>
     </pu:WindowX.Resources>-->
     <Grid>
-        <TabControl Margin="5" BorderThickness="0" pu:TabControlHelper.ItemsHeight="NaN"
-                    Background="Transparent"
-                    pu:TabControlHelper.ItemsPadding="10,7" pu:TabControlHelper.ItemsCornerRadius="4"
-                    pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
-                    pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"
-                    pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
-                    Foreground="{DynamicResource PrimaryText}">
+        <TabControl Margin="5" BorderThickness="0" pu:TabControlHelper.ItemsHeight="NaN" Background="Transparent"
+                pu:TabControlHelper.ItemsPadding="10,7" pu:TabControlHelper.ItemsCornerRadius="4"
+                pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
+                pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"
+                pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
+                Foreground="{DynamicResource PrimaryText}">
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <Border Margin="5,10,5,20" CornerRadius="15" Background="{DynamicResource DARKPrimaryText}">
@@ -28,7 +27,7 @@
                 </DataTemplate>
             </TabControl.ContentTemplate>
             <TabItem Header="图形" Foreground="{DynamicResource PrimaryText}"
-                        BorderBrush="{DynamicResource PrimaryDarker}">
+                    BorderBrush="{DynamicResource PrimaryDarker}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -41,31 +40,29 @@
                         <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
-                        <RowDefinition Height="35"/>
-                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="35" />
+                        <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
                         <RowDefinition Height="35" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <TextBlock Text="置于顶层" VerticalAlignment="Center"  />
+                    <TextBlock Text="置于顶层" VerticalAlignment="Center" />
                     <pu:Switch x:Name="TopMostBox" Grid.Column="2" BorderBrush="{DynamicResource PrimaryDark}"
-                                CheckedBackground="{DynamicResource Primary}"
-                                CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent" BoxWidth="35"
-                                BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
-                                ToggleBrush="{DynamicResource PrimaryDark}"
-                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Checked="TopMostBox_Checked"
-                                Unchecked="TopMostBox_Unchecked" ToolTip="将桌宠置于顶层" />
-                    <TextBlock Grid.Row="1" Text="更高缩放" VerticalAlignment="Center"  />
+                            CheckedBackground="{DynamicResource Primary}" CheckedBorderBrush="{DynamicResource Primary}"
+                            Background="Transparent" BoxWidth="35" BoxHeight="18" ToggleSize="14"
+                            ToggleShadowColor="{x:Null}" ToggleBrush="{DynamicResource PrimaryDark}"
+                            CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Checked="TopMostBox_Checked"
+                            Unchecked="TopMostBox_Unchecked" ToolTip="将桌宠置于顶层" />
+                    <TextBlock Grid.Row="1" Text="更高缩放" VerticalAlignment="Center" />
                     <pu:Switch x:Name="FullScreenBox" Grid.Row="1" Grid.Column="2"
-                                BorderBrush="{DynamicResource PrimaryDark}"
-                                CheckedBackground="{DynamicResource Primary}"
-                                CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent" BoxWidth="35"
-                                BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
-                                ToggleBrush="{DynamicResource PrimaryDark}"
-                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Checked="FullScreenBox_Check"
-                                Unchecked="FullScreenBox_Check" ToolTip="解锁缩放限制" />
-                    <TextBlock Grid.Row="2" Text="缩放等级" VerticalAlignment="Center"  />
+                            BorderBrush="{DynamicResource PrimaryDark}" CheckedBackground="{DynamicResource Primary}"
+                            CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent" BoxWidth="35"
+                            BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
+                            ToggleBrush="{DynamicResource PrimaryDark}"
+                            CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Checked="FullScreenBox_Check"
+                            Unchecked="FullScreenBox_Check" ToolTip="解锁缩放限制" />
+                    <TextBlock Grid.Row="2" Text="缩放等级" VerticalAlignment="Center" />
 
                     <Grid Grid.Column="2" Grid.Row="2">
                         <Grid.ColumnDefinitions>
@@ -73,92 +70,95 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Slider TickFrequency="0.05" IsSnapToTickEnabled="True" x:Name="ZoomSlider"
-                                    Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center" Maximum="3"
-                                    SmallChange=".05" Minimum="0.5" LargeChange=".1" Value="1"
-                                    PreviewMouseUp="ZoomSlider_MouseUp" />
+                                Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center" Maximum="3"
+                                SmallChange=".05" Minimum="0.5" LargeChange=".1" Value="1"
+                                PreviewMouseUp="ZoomSlider_MouseUp" />
                         <TextBlock Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Center"
-                                    Text="{Binding ElementName=ZoomSlider,Path=Value,StringFormat=f2}" FontSize="18"
-                                    Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
-                                    Background="{x:Null}" />
+                                Text="{Binding ElementName=ZoomSlider,Path=Value,StringFormat=f2}" FontSize="18"
+                                Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" Background="{x:Null}" />
                     </Grid>
-                    <TextBlock Grid.Row="3" Text="主题" VerticalAlignment="Center"  />
+                    <TextBlock Grid.Row="3" Text="主题" VerticalAlignment="Center" />
                     <ComboBox x:Name="ThemeBox" Grid.Row="3" Grid.Column="2"
-                                SelectionChanged="ThemeBox_SelectionChanged" IsEnabled="False"
-                                Style="{DynamicResource StandardComboBoxStyle}" Margin="0,3,0,2" FontSize="16" />
+                            SelectionChanged="ThemeBox_SelectionChanged" IsEnabled="False"
+                            Style="{DynamicResource StandardComboBoxStyle}" Margin="0,3,0,2" FontSize="16" />
 
-                    <TextBlock Grid.Row="4" Text="字体" VerticalAlignment="Center"  />
-                    <ComboBox x:Name="FontBox" Grid.Row="4" Grid.Column="2"
-                                SelectionChanged="FontBox_SelectionChanged" IsEnabled="False"
-                                Style="{DynamicResource StandardComboBoxStyle}" FontSize="16" Margin="0,2,0,3" />
-                    <TextBlock Grid.Row="5" Text="启动位置" VerticalAlignment="Center"  />
+                    <TextBlock Grid.Row="4" Text="字体" VerticalAlignment="Center" />
+                    <ComboBox x:Name="FontBox" Grid.Row="4" Grid.Column="2" SelectionChanged="FontBox_SelectionChanged"
+                            IsEnabled="False" Style="{DynamicResource StandardComboBoxStyle}" FontSize="16"
+                            Margin="0,2,0,3" />
+                    <TextBlock Grid.Row="5" Text="启动位置" VerticalAlignment="Center" />
                     <Grid Grid.Row="5" Grid.Column="2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1.5*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1.5*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <pu:Switch x:Name="StartPlace" BorderBrush="{DynamicResource PrimaryDark}"
-                                    CheckedBackground="{DynamicResource Primary}" IsChecked="True"
-                                    CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
-                                    BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
-                                    ToggleBrush="{DynamicResource PrimaryDark}" Content="退出位置"
-                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="该游戏随着开机启动该程序"
-                                    Unchecked="StartPlace_Checked" VerticalAlignment="Center" Checked="StartPlace_Checked" />
-                        <TextBox x:Name="TextBoxStartUpX"  Grid.Column="1" Style="{DynamicResource StandardTextBoxStyle}" ToolTip="X轴" pu:TextBoxHelper.Icon="X"
-                                 FontSize="16" Margin="0,0,5,0" pu:TextBoxHelper.InputLimit="Digit" pu:TextBoxHelper.Watermark="X轴" 
-                                 TextChanged="TextBoxStartUp_TextChanged" pu:IconHelper.Margin="5,0,0,0"/>
-                        <TextBox x:Name="TextBoxStartUpY" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"  ToolTip="Y轴" pu:TextBoxHelper.Icon="Y"
-                                 FontSize="16" pu:TextBoxHelper.InputLimit="Digit" pu:TextBoxHelper.Watermark="Y轴" Margin="0,0,5,0"
-                                 TextChanged="TextBoxStartUp_TextChanged" pu:IconHelper.Margin="5,0,0,0"/>
+                                CheckedBackground="{DynamicResource Primary}" IsChecked="True"
+                                CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent" BoxWidth="35"
+                                BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
+                                ToggleBrush="{DynamicResource PrimaryDark}" Content="退出位置"
+                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="该游戏随着开机启动该程序"
+                                Unchecked="StartPlace_Checked" VerticalAlignment="Center" Checked="StartPlace_Checked" />
+                        <TextBox x:Name="TextBoxStartUpX" Grid.Column="1" Style="{DynamicResource StandardTextBoxStyle}"
+                                ToolTip="X轴" pu:TextBoxHelper.Icon="X" FontSize="16" Margin="0,0,5,0"
+                                pu:TextBoxHelper.InputLimit="Digit" pu:TextBoxHelper.Watermark="X轴"
+                                TextChanged="TextBoxStartUp_TextChanged" pu:IconHelper.Margin="5,0,0,0" />
+                        <TextBox x:Name="TextBoxStartUpY" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
+                                ToolTip="Y轴" pu:TextBoxHelper.Icon="Y" FontSize="16" pu:TextBoxHelper.InputLimit="Digit"
+                                pu:TextBoxHelper.Watermark="Y轴" Margin="0,0,5,0"
+                                TextChanged="TextBoxStartUp_TextChanged" pu:IconHelper.Margin="5,0,0,0" />
                         <Button x:Name="BtnStartUpGet" pu:ButtonHelper.CornerRadius="4" Content="当前位置" Grid.Column="3"
-                                    Background="{DynamicResource SecondaryLight}" HorizontalAlignment="Center"
-                                VerticalAlignment="Center" Height="30" BorderBrush="{DynamicResource SecondaryDark}" BorderThickness="2" Click="BtnStartUpGet_Click"/>
+                                Background="{DynamicResource SecondaryLight}" HorizontalAlignment="Center"
+                                VerticalAlignment="Center" Height="30" BorderBrush="{DynamicResource SecondaryDark}"
+                                BorderThickness="2" Click="BtnStartUpGet_Click" />
 
                     </Grid>
-                    <TextBlock Grid.Row="7" Text="开机启动" VerticalAlignment="Center"  />
+                    <TextBlock Grid.Row="7" Text="开机启动" VerticalAlignment="Center" />
                     <Grid Grid.Row="7" Grid.Column="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <pu:Switch x:Name="StartUpBox" BorderBrush="{DynamicResource PrimaryDark}"
-                                    CheckedBackground="{DynamicResource Primary}"
-                                    CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
-                                    BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
-                                    ToggleBrush="{DynamicResource PrimaryDark}" Content="开机启动"
-                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="该游戏随着开机启动该程序"
-                                    Checked="StartUpBox_Checked" Unchecked="StartUpBox_Checked" />
+                                CheckedBackground="{DynamicResource Primary}"
+                                CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent" BoxWidth="35"
+                                BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
+                                ToggleBrush="{DynamicResource PrimaryDark}" Content="开机启动"
+                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="该游戏随着开机启动该程序"
+                                Checked="StartUpBox_Checked" Unchecked="StartUpBox_Checked" />
                         <pu:Switch x:Name="StartUpSteamBox" BorderBrush="{DynamicResource PrimaryDark}"
-                                    CheckedBackground="{DynamicResource Primary}"
-                                    IsEnabled="{Binding ElementName=StartUpBox,Path=IsChecked}"
-                                    CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
-                                    BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
-                                    ToggleBrush="{DynamicResource PrimaryDark}" Content="从Steam启动"
-                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                    ToolTip="从Steam启动该游戏, 统计时长不能停" Grid.Column="1" Checked="StartUpSteamBox_Checked"
-                                    Unchecked="StartUpSteamBox_Checked" />
+                                CheckedBackground="{DynamicResource Primary}"
+                                IsEnabled="{Binding ElementName=StartUpBox,Path=IsChecked}"
+                                CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent" BoxWidth="35"
+                                BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
+                                ToggleBrush="{DynamicResource PrimaryDark}" Content="从Steam启动"
+                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="从Steam启动该游戏, 统计时长不能停"
+                                Grid.Column="1" Checked="StartUpSteamBox_Checked" Unchecked="StartUpSteamBox_Checked" />
                     </Grid>
-                    <TextBlock Grid.Row="8" Text="宠物动画" VerticalAlignment="Center"  />
-                    <TextBlock x:Name="PetIntor" Grid.Row="9" Text="动画描述动画描述动画描述动画描述动画描述" VerticalAlignment="Center" Grid.Column="2" TextWrapping="WrapWithOverflow" FontSize="14" />
+                    <TextBlock Grid.Row="8" Text="宠物动画" VerticalAlignment="Center" />
+                    <TextBlock x:Name="PetIntor" Grid.Row="9" Text="动画描述动画描述动画描述动画描述动画描述" VerticalAlignment="Center"
+                            Grid.Column="2" TextWrapping="WrapWithOverflow" FontSize="14" />
                     <ComboBox x:Name="PetBox" Grid.Row="8" Grid.Column="2" ToolTip="加载的宠物动画,重启后生效"
-                                Style="{DynamicResource StandardComboBoxStyle}" Margin="0,3,0,2" SelectionChanged="PetBox_SelectionChanged" FontSize="16" />
-                    <Button x:Name="ButtonRestartGraph"  Content="重启软件以应用更改" Visibility="Collapsed"
-                                        VerticalAlignment="Bottom" Background="{DynamicResource DARKPrimary}"
-                                        Foreground="{DynamicResource DARKPrimaryText}"
-                                        Click="ButtonRestart_Click" Grid.ColumnSpan="3" Grid.Row="10" />
+                            Style="{DynamicResource StandardComboBoxStyle}" Margin="0,3,0,2"
+                            SelectionChanged="PetBox_SelectionChanged" FontSize="16" />
+                    <Button x:Name="ButtonRestartGraph" Content="重启软件以应用更改" Visibility="Collapsed"
+                            VerticalAlignment="Bottom" Background="{DynamicResource DARKPrimary}"
+                            Foreground="{DynamicResource DARKPrimaryText}" Click="ButtonRestart_Click"
+                            Grid.ColumnSpan="3" Grid.Row="10" />
                 </Grid>
             </TabItem>
             <TabItem Header="系统" BorderBrush="{DynamicResource PrimaryDarker}">
                 <StackPanel>
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
-                                TextWrapping="Wrap">
+                            TextWrapping="Wrap">
                     <Run FontWeight="Bold" FontSize="18">自动保存频率</Run><LineBreak />
                     <Run>在指定时间后自动保存游戏数据,频繁的自动保存可能会导致卡顿</Run>
                     </TextBlock>
                     <ComboBox x:Name="CBAutoSave" SelectedIndex="3" VerticalAlignment="Top" Margin="10,5,0,0"
-                                HorizontalAlignment="Left" Style="{DynamicResource StandardComboBoxStyle}" Width="200"
-                                SelectionChanged="CBAutoSave_SelectionChanged" FontSize="16">
+                            HorizontalAlignment="Left" Style="{DynamicResource StandardComboBoxStyle}" Width="200"
+                            SelectionChanged="CBAutoSave_SelectionChanged" FontSize="16">
                         <ComboBoxItem>
                             <ComboBoxItem.Tag>
                                 <system:Int32>-1</system:Int32>
@@ -191,7 +191,7 @@
                         </ComboBoxItem>
                     </ComboBox>
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
-                                TextWrapping="Wrap" Margin="0,10,0,0">
+                            TextWrapping="Wrap" Margin="0,10,0,0">
                     <Run FontWeight="Bold" FontSize="18">操作设置</Run><LineBreak />
                     <Run>游戏操作相关设置</Run>
                     </TextBlock>
@@ -205,27 +205,28 @@
                             <RowDefinition Height="35" />
                             <RowDefinition Height="35" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="长按间隔" VerticalAlignment="Center"  />
-                        <TextBlock Grid.Row="1" Text="桌宠名字" VerticalAlignment="Center"  />
-                        <TextBox x:Name="TextBoxPetName" Grid.Row="1" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}" TextChanged="TextBoxPetName_TextChanged" FontSize="16"/>
-                        <Grid Grid.Column="2" Grid.Row="0"
-                                    ToolTip="数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.&#13;间隔越大越不容易打扰到当前工作">
+                        <TextBlock Grid.Row="0" Text="长按间隔" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="1" Text="桌宠名字" VerticalAlignment="Center" />
+                        <TextBox x:Name="TextBoxPetName" Grid.Row="1" Grid.Column="2"
+                                Style="{DynamicResource StandardTextBoxStyle}" TextChanged="TextBoxPetName_TextChanged"
+                                FontSize="16" />
+                        <Grid Grid.Column="2" Grid.Row="0" ToolTip="数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.&#13;间隔越大越不容易打扰到当前工作">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Slider x:Name="PressLengthSlider" TickFrequency="0.01" IsSnapToTickEnabled="True"
-                                        Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center"
-                                        Maximum="5" SmallChange=".05" Minimum="0.05" LargeChange="0.1" Value="0.5"
-                                        ValueChanged="PressLengthSlider_ValueChanged" />
+                                    Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center" Maximum="5"
+                                    SmallChange=".05" Minimum="0.05" LargeChange="0.1" Value="0.5"
+                                    ValueChanged="PressLengthSlider_ValueChanged" />
                             <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" Width="60"
-                                        Text="{Binding ElementName=PressLengthSlider,Path=Value,StringFormat={}{0:f2} 秒}"
-                                         Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
-                                        Background="{x:Null}" />
+                                    Text="{Binding ElementName=PressLengthSlider,Path=Value,StringFormat={}{0:f2} 秒}"
+                                    Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
+                                    Background="{x:Null}" />
                         </Grid>
                     </Grid>
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
-                                TextWrapping="Wrap" Margin="0,10,0,0">
+                            TextWrapping="Wrap" Margin="0,10,0,0">
                     <Run FontWeight="Bold" FontSize="18">聊天设置</Run><LineBreak />
                     <Run>使用ChatGPT进行聊天等相关设置</Run>
                     </TextBlock>
@@ -239,29 +240,30 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="35" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="使用模式" VerticalAlignment="Center"  />
-                        <TextBlock Grid.Row="1" Text="相关功能" VerticalAlignment="Center"  />
+                        <TextBlock Grid.Row="0" Text="使用模式" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="1" Text="相关功能" VerticalAlignment="Center" />
                         <Grid Grid.Column="2">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <RadioButton x:Name="RBCGPTUseAPI" Style="{DynamicResource StandardRadioButtonStyle}"
-                                Content="使用从ChatGPT&#13;申请的的API"  ToolTip="需要去OpenAI官网申请"                           
-                                GroupName="cgpttype" Grid.Column="1" Checked="CGPType_Checked" />
-                            <RadioButton x:Name="RBCGPTUseLB"  Style="{DynamicResource StandardRadioButtonStyle}"
-                                Content="使用桌宠开发者&#13;提供的免费API" ToolTip="需遵循相关协议法律法规并有聊天字数限制"                            
-                                GroupName="cgpttype" IsChecked="True" Checked="CGPType_Checked"   />
+                                    Content="使用从ChatGPT&#13;申请的的API" ToolTip="需要去OpenAI官网申请" GroupName="cgpttype"
+                                    Grid.Column="1" Checked="CGPType_Checked" />
+                            <RadioButton x:Name="RBCGPTUseLB" Style="{DynamicResource StandardRadioButtonStyle}"
+                                    Content="使用桌宠开发者&#13;提供的免费API" ToolTip="需遵循相关协议法律法规并有聊天字数限制" GroupName="cgpttype"
+                                    IsChecked="True" Checked="CGPType_Checked" />
                         </Grid>
-                        <Button x:Name="BtnCGPTReSet" pu:ButtonHelper.CornerRadius="4" Content="初始化桌宠聊天程序" Margin="4" Grid.Column="2"
-                                    Background="{DynamicResource SecondaryLight}" Padding="1" Grid.Row="1" Click="ChatGPT_Reset_Click" />
+                        <Button x:Name="BtnCGPTReSet" pu:ButtonHelper.CornerRadius="4" Content="初始化桌宠聊天程序" Margin="4"
+                                Grid.Column="2" Background="{DynamicResource SecondaryLight}" Padding="1" Grid.Row="1"
+                                Click="ChatGPT_Reset_Click" />
                     </Grid>
                 </StackPanel>
             </TabItem>
             <TabItem Header="互动" BorderBrush="{DynamicResource PrimaryDarker}">
                 <StackPanel>
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
-                                TextWrapping="Wrap">
+                            TextWrapping="Wrap">
                     <Run FontWeight="Bold" FontSize="18">互动设置</Run><LineBreak />
                     <Run>游戏互动相关设置</Run>
                     </TextBlock>
@@ -280,69 +282,68 @@
                             <RowDefinition Height="35" />
                             <RowDefinition Height="35" />
                         </Grid.RowDefinitions>
-                        <pu:Switch x:Name="CalFunctionBox" BorderBrush="{DynamicResource PrimaryDark}"
-                                    Grid.Column="2" CheckedBackground="{DynamicResource Primary}"
-                                    CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
-                                    BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
-                                    ToggleBrush="{DynamicResource PrimaryDark}"
-                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
-                                    ToolTip="启用数据计算,桌宠会有状态变化,需要按时投喂等.&#13;如果嫌麻烦可以关掉" Checked="CalFunctionBox_Checked" />
+                        <pu:Switch x:Name="CalFunctionBox" BorderBrush="{DynamicResource PrimaryDark}" Grid.Column="2"
+                                CheckedBackground="{DynamicResource Primary}"
+                                CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent" BoxWidth="35"
+                                BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
+                                ToggleBrush="{DynamicResource PrimaryDark}"
+                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
+                                ToolTip="启用数据计算,桌宠会有状态变化,需要按时投喂等.&#13;如果嫌麻烦可以关掉" Checked="CalFunctionBox_Checked" />
                         <Grid Grid.Column="2" Grid.Row="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <pu:Switch x:Name="MoveEventBox" BorderBrush="{DynamicResource PrimaryDark}"
-                                        CheckedBackground="{DynamicResource Primary}" Content="启用桌宠移动"
-                                        CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
-                                        BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
-                                        ToggleBrush="{DynamicResource PrimaryDark}" IsChecked="True"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
-                                        ToolTip="启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.&#13;如果嫌麻烦可以关掉"
-                                        Checked="MoveEventBox_Checked" Unchecked="MoveEventBox_Checked" />
+                                    CheckedBackground="{DynamicResource Primary}" Content="启用桌宠移动"
+                                    CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
+                                    BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
+                                    ToggleBrush="{DynamicResource PrimaryDark}" IsChecked="True"
+                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
+                                    ToolTip="启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.&#13;如果嫌麻烦可以关掉"
+                                    Checked="MoveEventBox_Checked" Unchecked="MoveEventBox_Checked" />
                             <pu:Switch x:Name="SmartMoveEventBox" BorderBrush="{DynamicResource PrimaryDark}"
-                                        IsEnabled="{Binding ElementName=MoveEventBox,Path=IsChecked}"
-                                        CheckedBackground="{DynamicResource Primary}" Content="智能移动"
-                                        CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
-                                        BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
-                                        ToggleBrush="{DynamicResource PrimaryDark}" Grid.Column="1"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
-                                        ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除"
-                                        Checked="SmartMoveEventBox_Checked" Unchecked="SmartMoveEventBox_Checked" />
+                                    IsEnabled="{Binding ElementName=MoveEventBox,Path=IsChecked}"
+                                    CheckedBackground="{DynamicResource Primary}" Content="智能移动"
+                                    CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
+                                    BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
+                                    ToggleBrush="{DynamicResource PrimaryDark}" Grid.Column="1"
+                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
+                                    ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除"
+                                    Checked="SmartMoveEventBox_Checked" Unchecked="SmartMoveEventBox_Checked" />
                         </Grid>
 
-                        <TextBlock Grid.Row="0" Text="数据计算" VerticalAlignment="Center"  />
-                        <TextBlock Grid.Row="3" Text="桌宠移动" VerticalAlignment="Center"  />
-                        <TextBlock Grid.Row="1" Text="计算间隔" VerticalAlignment="Center"  />
-                        <Grid Grid.Column="2" Grid.Row="1"
-                                    ToolTip="数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.&#13;间隔越大越不容易打扰到当前工作">
+                        <TextBlock Grid.Row="0" Text="数据计算" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="3" Text="桌宠移动" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="1" Text="计算间隔" VerticalAlignment="Center" />
+                        <Grid Grid.Column="2" Grid.Row="1" ToolTip="数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.&#13;间隔越大越不容易打扰到当前工作">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Slider x:Name="CalSlider" TickFrequency="0.1" IsSnapToTickEnabled="True"
-                                        Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center"
-                                        Maximum="60" SmallChange=".5" Minimum="5" LargeChange="1" Value="15"
-                                        ValueChanged="CalSlider_ValueChanged" />
+                                    Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center"
+                                    Maximum="60" SmallChange=".5" Minimum="5" LargeChange="1" Value="15"
+                                    ValueChanged="CalSlider_ValueChanged" />
                             <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"
-                                        Text="{Binding ElementName=CalSlider,Path=Value,StringFormat={}{0:f1} 秒}"
-                                         Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
-                                        Background="{x:Null}" Width="60" />
+                                    Text="{Binding ElementName=CalSlider,Path=Value,StringFormat={}{0:f1} 秒}"
+                                    Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
+                                    Background="{x:Null}" Width="60" />
                         </Grid>
-                        <TextBlock Grid.Row="2" Text="互动周期" VerticalAlignment="Center"  />
+                        <TextBlock Grid.Row="2" Text="互动周期" VerticalAlignment="Center" />
                         <Grid Grid.Column="2" Grid.Row="2" ToolTip="互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Slider TickFrequency="1" IsSnapToTickEnabled="True" x:Name="InteractionSlider"
-                                        Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center"
-                                        Maximum="1000" SmallChange="1" Minimum="30" LargeChange="5" Value="200"
-                                        ValueChanged="InteractionSlider_ValueChanged" />
+                                    Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center"
+                                    Maximum="1000" SmallChange="1" Minimum="30" LargeChange="5" Value="200"
+                                    ValueChanged="InteractionSlider_ValueChanged" />
                             <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"
-                                        Text="{Binding ElementName=InteractionSlider,Path=Value}" FontSize="18"
-                                        Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
-                                        Background="{x:Null}" Width="60" />
+                                    Text="{Binding ElementName=InteractionSlider,Path=Value}" FontSize="18"
+                                    Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
+                                    Background="{x:Null}" Width="60" />
                         </Grid>
                         <Grid Grid.Row="4" Grid.Column="2" ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除">
                             <Grid.ColumnDefinitions>
@@ -351,9 +352,8 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="智能移动判断时间间隔" />
                             <ComboBox x:Name="CBSmartMove" Style="{DynamicResource StandardComboBoxStyle}"
-                                        IsEnabled="{Binding ElementName=SmartMoveEventBox,Path=IsChecked}"
-                                        SelectionChanged="CBSmartMove_SelectionChanged" SelectedIndex="5"
-                                        Grid.Column="1">
+                                    IsEnabled="{Binding ElementName=SmartMoveEventBox,Path=IsChecked}"
+                                    SelectionChanged="CBSmartMove_SelectionChanged" SelectedIndex="5" Grid.Column="1">
                                 <ComboBoxItem>
                                     <ComboBoxItem.Tag>
                                         <system:Int32>30</system:Int32>
@@ -412,11 +412,10 @@
             </TabItem>
             <TabItem Header="自定" BorderBrush="{DynamicResource PrimaryDarker}">
                 <StackPanel>
-                    <TextBlock Background="{x:Null}"
-                                TextWrapping="Wrap">
+                    <TextBlock Background="{x:Null}" TextWrapping="Wrap">
                     <Run FontWeight="Bold" FontSize="18">自定义链接</Run><LineBreak />
-                    <Run>在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能</Run><LineBreak/>
-                            <Run>键盘快捷键编写方法请参考</Run> <Hyperlink Click="sendkey_click">键盘快捷键 通用注解</Hyperlink><LineBreak/>
+                    <Run>在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能</Run><LineBreak />
+                            <Run>键盘快捷键编写方法请参考</Run> <Hyperlink Click="sendkey_click">键盘快捷键 通用注解</Hyperlink><LineBreak />
                             <Run>右键进行排序/删除等操作</Run>
                     </TextBlock>
                     <Grid>
@@ -425,39 +424,38 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button pu:ButtonHelper.CornerRadius="4" Content="添加新链接" Margin="4"
-                                    Background="{DynamicResource SecondaryLight}" Padding="1" Click="DIY_ADD_Click" />
+                                Background="{DynamicResource SecondaryLight}" Padding="1" Click="DIY_ADD_Click" />
                         <Button pu:ButtonHelper.CornerRadius="4" Content="保存设置" Margin="4" Grid.Column="1"
-                                    Background="{DynamicResource SecondaryLight}" Padding="1" Click="DIY_Save_Click" />
+                                Background="{DynamicResource SecondaryLight}" Padding="1" Click="DIY_Save_Click" />
                     </Grid>
                     <StackPanel x:Name="StackDIY" />
                 </StackPanel>
 
-
             </TabItem>
             <TabItem Header="诊断" BorderBrush="{DynamicResource PrimaryDarker}">
                 <StackPanel>
-                    <TextBlock HorizontalAlignment="Left" FontSize="11" VerticalAlignment="Top"
-                                Background="{x:Null}" TextWrapping="Wrap">
+                    <TextBlock HorizontalAlignment="Left" FontSize="11" VerticalAlignment="Top" Background="{x:Null}"
+                            TextWrapping="Wrap">
                                         <Run FontWeight="Bold" FontSize="18">诊断与反馈</Run><LineBreak />
                     <Run>选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.</Run><LineBreak />
                     <Run>无论选择哪个选项,游戏都可以安全正常地运行.</Run> <Hyperlink Click="hyper_moreInfo">获取有关这些设置的更多信息</Hyperlink>
                     </TextBlock>
                     <RadioButton x:Name="RBDiagnosisYES" Style="{DynamicResource StandardRadioButtonStyle}"
-                                Content="发送诊断数据: 发送游戏存档, 包括饱腹,状态等各种游戏内&#13;数据. 可能会包括该游戏内存和CPU使用情况"
-                                HorizontalAlignment="Left" Margin="10,10,10,0" VerticalAlignment="Top"
-                                GroupName="diagnosis" Checked="RBDiagnosisYES_Checked" IsEnabled="False" />
+                            Content="发送诊断数据: 发送游戏存档, 包括饱腹,状态等各种游戏内&#13;数据. 可能会包括该游戏内存和CPU使用情况"
+                            HorizontalAlignment="Left" Margin="10,10,10,0" VerticalAlignment="Top" GroupName="diagnosis"
+                            Checked="RBDiagnosisYES_Checked" IsEnabled="False" />
                     <RadioButton x:Name="RBDiagnosisNO" Style="{DynamicResource StandardRadioButtonStyle}"
-                                Content="不发送诊断数据: 适用于启用修改器,修改过游戏数据等不&#13;符合分析数据条件. 或不希望提供游戏数据的玩家"
-                                HorizontalAlignment="Left" Margin="10,10,10,0" VerticalAlignment="Top"
-                                GroupName="diagnosis" Checked="RBDiagnosisNO_Checked" IsChecked="True" />
+                            Content="不发送诊断数据: 适用于启用修改器,修改过游戏数据等不&#13;符合分析数据条件. 或不希望提供游戏数据的玩家" HorizontalAlignment="Left"
+                            Margin="10,10,10,0" VerticalAlignment="Top" GroupName="diagnosis"
+                            Checked="RBDiagnosisNO_Checked" IsChecked="True" />
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,0"
-                                Background="{x:Null}" TextWrapping="Wrap">
-                    <Run FontWeight="Bold" >反馈频率</Run><LineBreak />
+                            Background="{x:Null}" TextWrapping="Wrap">
+                    <Run FontWeight="Bold">反馈频率</Run><LineBreak />
                     <Run>VOS 应寻求我反馈按以下频率</Run>
                     </TextBlock>
                     <ComboBox x:Name="CBDiagnosis" SelectedIndex="1" VerticalAlignment="Top" Margin="10,5,0,0"
-                                HorizontalAlignment="Left" Style="{DynamicResource StandardComboBoxStyle}" Width="200"
-                                SelectionChanged="CBDiagnosis_SelectionChanged" IsEnabled="False">
+                            HorizontalAlignment="Left" Style="{DynamicResource StandardComboBoxStyle}" Width="200"
+                            SelectionChanged="CBDiagnosis_SelectionChanged" IsEnabled="False">
                         <ComboBoxItem>每 五百 周期一次</ComboBoxItem>
                         <ComboBoxItem>每 一千 周期一次</ComboBoxItem>
                         <ComboBoxItem>每 两千 周期一次</ComboBoxItem>
@@ -475,8 +473,8 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <ListBox x:Name="ListMod" BorderThickness="0" Background="Transparent"
-                                Style="{DynamicResource SideMenuListBoxStyle}" VerticalAlignment="Top"
-                                SelectionChanged="ListMod_SelectionChanged" SelectionMode="Single" />
+                            Style="{DynamicResource SideMenuListBoxStyle}" VerticalAlignment="Top"
+                            SelectionChanged="ListMod_SelectionChanged" SelectionMode="Single" />
                     <StackPanel Grid.Column="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -485,12 +483,12 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Image x:Name="ImageMOD" HorizontalAlignment="Right" Height="120" Margin="0,5,0,0"
-                                        VerticalAlignment="Top" Width="120" Stretch="Fill" />
+                                    VerticalAlignment="Top" Width="120" Stretch="Fill" />
                             <StackPanel Grid.Column="2">
-                                <Label x:Name="LabelModName" Content="Core" HorizontalAlignment="Left"
-                                            Margin="-5,2,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="20"
-                                            Background="{x:Null}" Foreground="{DynamicResource PrimaryText}" />
-                                <TextBlock Margin="0,0,0,0" TextWrapping="Wrap" >
+                                <Label x:Name="LabelModName" Content="Core" HorizontalAlignment="Left" Margin="-5,2,0,0"
+                                        VerticalAlignment="Top" FontWeight="Bold" FontSize="20" Background="{x:Null}"
+                                        Foreground="{DynamicResource PrimaryText}" />
+                                <TextBlock Margin="0,0,0,0" TextWrapping="Wrap">
                                 <Run Text="模组作者: " /><LineBreak />
                                 <Run x:Name="runMODAuthor" Text="LorisYounger" />
                                 <LineBreak /><Run Text="模组版本: " /><Run x:Name="runMODVer" Text="1.0" />
@@ -499,10 +497,10 @@
                             </StackPanel>
                         </Grid>
                         <ScrollViewer VerticalScrollBarVisibility="Auto" Height="60" Margin="0,7,0,0"
-                                    pu:ScrollViewerHelper.ScrollBarThickness="10" HorizontalAlignment="Left"
-                                    VerticalAlignment="Top">
+                                pu:ScrollViewerHelper.ScrollBarThickness="10" HorizontalAlignment="Left"
+                                VerticalAlignment="Top">
                             <TextBlock x:Name="GameInfo" TextWrapping="Wrap" FontSize="14"
-                                        Text="这里是MOD的介绍内容,你的介绍就是你的介绍&#xA;" VerticalAlignment="Top" />
+                                    Text="这里是MOD的介绍内容,你的介绍就是你的介绍&#xA;" VerticalAlignment="Top" />
                         </ScrollViewer>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -511,68 +509,65 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel>
                                 <Label Content="MOD介绍" HorizontalAlignment="Left" Margin="-5,0,0,0"
-                                            VerticalAlignment="Center" FontSize="18" FontWeight="Bold"
-                                            Background="{x:Null}" />
+                                        VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Background="{x:Null}" />
                                 <ScrollViewer VerticalScrollBarVisibility="Auto" Height="140" Margin="0,0,0,0"
-                                            pu:ScrollViewerHelper.ScrollBarThickness="10" HorizontalAlignment="Left"
-                                            VerticalAlignment="Top">
+                                        pu:ScrollViewerHelper.ScrollBarThickness="10" HorizontalAlignment="Left"
+                                        VerticalAlignment="Top">
                                     <TextBlock x:Name="GameHave" FontSize="14" TextWrapping="Wrap"
-                                                Text="该mod有许多功能&#xA;比如说功能1&#xA;比如说功能1&#xA;比如说功能1&#xA;比如说功能1&#xA;比如说功能1"
-                                                HorizontalAlignment="Left" VerticalAlignment="Top" />
+                                            Text="该mod有许多功能&#xA;比如说功能1&#xA;比如说功能1&#xA;比如说功能1&#xA;比如说功能1&#xA;比如说功能1"
+                                            HorizontalAlignment="Left" VerticalAlignment="Top" />
                                 </ScrollViewer>
                             </StackPanel>
                             <StackPanel Grid.Column="1">
-                                <Label Content="内容" HorizontalAlignment="Left" Margin="-5,0,0,0"
-                                            VerticalAlignment="Top" FontSize="18" FontWeight="Bold"
-                                            Background="{x:Null}" />
+                                <Label Content="内容" HorizontalAlignment="Left" Margin="-5,0,0,0" VerticalAlignment="Top"
+                                        FontSize="18" FontWeight="Bold" Background="{x:Null}" />
                                 <TextBlock x:Name="ButtonOpenModFolder" Cursor="Hand" HorizontalAlignment="Left"
-                                            Margin="0,0,0,0" TextWrapping="Wrap" Text="所在文件夹" VerticalAlignment="Top"
-                                            FontSize="14" Foreground="{DynamicResource DARKPrimaryDarker}"
-                                            TextDecorations="Underline" MouseDown="ButtonOpenModFolder_MouseDown" />
+                                        Margin="0,0,0,0" TextWrapping="Wrap" Text="所在文件夹" VerticalAlignment="Top"
+                                        FontSize="14" Foreground="{DynamicResource DARKPrimaryDarker}"
+                                        TextDecorations="Underline" MouseDown="ButtonOpenModFolder_MouseDown" />
                                 <TextBlock x:Name="ButtonEnable" HorizontalAlignment="Left" Margin="0,2,0,0"
-                                            TextWrapping="Wrap" Text="启用该模组" VerticalAlignment="Top" FontSize="14"
-                                             Foreground="{DynamicResource DARKPrimaryDarker}"
-                                            TextDecorations="Underline" Cursor="Hand" MouseDown="ButtonEnable_MouseDown" />
+                                        TextWrapping="Wrap" Text="启用该模组" VerticalAlignment="Top" FontSize="14"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" TextDecorations="Underline"
+                                        Cursor="Hand" MouseDown="ButtonEnable_MouseDown" />
                                 <TextBlock x:Name="ButtonDisEnable" HorizontalAlignment="Left" Margin="0,2,0,0"
-                                            TextWrapping="Wrap" Text="停用该模组" VerticalAlignment="Top" FontSize="14"
-                                             Foreground="{DynamicResource DARKPrimaryDarker}"
-                                            TextDecorations="Underline" Cursor="Hand"
-                                            MouseDown="ButtonDisEnable_MouseDown" />
+                                        TextWrapping="Wrap" Text="停用该模组" VerticalAlignment="Top" FontSize="14"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" TextDecorations="Underline"
+                                        Cursor="Hand" MouseDown="ButtonDisEnable_MouseDown" />
                                 <TextBlock x:Name="ButtonPublish" HorizontalAlignment="Left" Margin="0,2,0,0"
-                                            TextWrapping="Wrap" Text="更新至Steam" VerticalAlignment="Top" FontSize="14"
-                                            Foreground="DimGray" TextDecorations="Underline" Cursor="Hand"
-                                             MouseDown="ButtonPublish_MouseDown" />
+                                        TextWrapping="Wrap" Text="更新至Steam" VerticalAlignment="Top" FontSize="14"
+                                        Foreground="DimGray" TextDecorations="Underline" Cursor="Hand"
+                                        MouseDown="ButtonPublish_MouseDown" />
                                 <TextBlock x:Name="ButtonSteam" HorizontalAlignment="Left" Margin="0,2,0,0"
-                                            TextWrapping="Wrap" Text="创意工坊页面" VerticalAlignment="Top" FontSize="14"
-                                             Foreground="DimGray" TextDecorations="Underline" Cursor="Hand"
-                                             MouseDown="ButtonSteam_MouseDown" />
+                                        TextWrapping="Wrap" Text="创意工坊页面" VerticalAlignment="Top" FontSize="14"
+                                        Foreground="DimGray" TextDecorations="Underline" Cursor="Hand"
+                                        MouseDown="ButtonSteam_MouseDown" />
                                 <ProgressBar x:Name="ProgressBarUpload" Margin="0,2,0,0" Visibility="Collapsed"
-                                            pu:ProgressBarHelper.CornerRadius="2" VerticalAlignment="Top" Height="30"
-                                            Value="60" Background="{DynamicResource Primary}"
-                                            BorderBrush="{DynamicResource PrimaryDarker}"
-                                            pu:ProgressBarHelper.IsPercentVisible="True"
-                                            Foreground="{DynamicResource DARKPrimary}" BorderThickness="2" />
+                                        pu:ProgressBarHelper.CornerRadius="2" VerticalAlignment="Top" Height="30"
+                                        Value="60" Background="{DynamicResource Primary}"
+                                        BorderBrush="{DynamicResource PrimaryDarker}"
+                                        pu:ProgressBarHelper.IsPercentVisible="True"
+                                        Foreground="{DynamicResource DARKPrimary}" BorderThickness="2" />
                                 <TextBlock x:Name="ButtonSetting" HorizontalAlignment="Left" Margin="0,2,0,0"
-                                            TextWrapping="Wrap" Text="MOD设置" VerticalAlignment="Top" FontSize="14"
-                                            Foreground="{DynamicResource DARKPrimaryDarker}" TextDecorations="Underline" Cursor="Hand" MouseDown="ButtonSetting_MouseDown"
-                                              />
+                                        TextWrapping="Wrap" Text="MOD设置" VerticalAlignment="Top" FontSize="14"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" TextDecorations="Underline"
+                                        Cursor="Hand" MouseDown="ButtonSetting_MouseDown" />
                                 <Button x:Name="ButtonAllow" Content="启用代码插件" HorizontalAlignment="Left"
-                                            VerticalAlignment="Top" Background="#FFFF2C2C" Foreground="White"
-                                            FontSize="12" ToolTip="启用该模组的代码内容,不能保证系统安全性" Click="ButtonAllow_Click" />
+                                        VerticalAlignment="Top" Background="#FFFF2C2C" Foreground="White" FontSize="12"
+                                        ToolTip="启用该模组的代码内容,不能保证系统安全性" Click="ButtonAllow_Click" />
                             </StackPanel>
                             <Button x:Name="ButtonRestart" Content="重启软件以应用更改" Margin="0,2,0,0"
-                                        VerticalAlignment="Bottom" Background="{DynamicResource DARKPrimary}"
-                                        Visibility="Collapsed" Foreground="{DynamicResource DARKPrimaryText}"
-                                        Click="ButtonRestart_Click" Grid.ColumnSpan="2" />
+                                    VerticalAlignment="Bottom" Background="{DynamicResource DARKPrimary}"
+                                    Visibility="Collapsed" Foreground="{DynamicResource DARKPrimaryText}"
+                                    Click="ButtonRestart_Click" Grid.ColumnSpan="2" />
                         </Grid>
                     </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem Header="关于" BorderBrush="{DynamicResource PrimaryDarker}"
-                        Foreground="{DynamicResource PrimaryText}">
+                    Foreground="{DynamicResource PrimaryText}">
                 <Grid>
-                    <Image x:Name="ImageWHY" Width="64" HorizontalAlignment="Right"
-                                VerticalAlignment="Center" Height="64" Source="/Res/TopLogo2019.PNG" Margin="0,210,55,0" />
+                    <Image x:Name="ImageWHY" Width="64" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Height="64" Source="/Res/TopLogo2019.PNG" Margin="0,210,55,0" />
                     <TextBlock Margin="0,0,0,0" Text="虚拟主播模拟器 规格" FontSize="20" FontWeight="Bold" />
                     <TextBlock Margin="0,130,0,0" FontWeight="Bold">
                     <Run>游戏策划</Run><LineBreak />
@@ -587,11 +582,10 @@
                     <Hyperlink TextDecorations="Underline" Foreground="Black" Click="LB_Click">LBGame</Hyperlink>
                             <LineBreak /><LineBreak />
                             <Run xml:space="preserve">相关链接          </Run>
-                            <Hyperlink TextDecorations="Underline"
-                                    Foreground="{DynamicResource DARKPrimaryDarker}"
-                                    Click="VUP_Click" FontWeight="Normal">虚拟主播模拟器</Hyperlink>
                             <Hyperlink TextDecorations="Underline" Foreground="{DynamicResource DARKPrimaryDarker}"
-                                    Click="Group_Click" FontWeight="Normal">相关群</Hyperlink>
+                                Click="VUP_Click" FontWeight="Normal">虚拟主播模拟器</Hyperlink>
+                            <Hyperlink TextDecorations="Underline" Foreground="{DynamicResource DARKPrimaryDarker}"
+                                Click="Group_Click" FontWeight="Normal">相关群</Hyperlink>
 
                     </TextBlock>
                     <TextBlock Margin="0,30,0,0" FontWeight="Bold">
@@ -622,7 +616,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label x:Name="GameVerison" Content="版本v1.0 (655366666)" HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom" FontSize="10" Foreground="Green" Background="{x:Null}" />
+        <Label x:Name="GameVerison" Content="版本v1.0 (655366666)" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                FontSize="10" Foreground="Green" Background="{x:Null}" />
     </Grid>
 </pu:WindowX>

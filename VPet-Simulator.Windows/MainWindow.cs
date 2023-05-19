@@ -68,7 +68,11 @@ namespace VPet_Simulator.Windows
         {
             Main.ToolBar.MenuDIY.Items.Clear();
             foreach (Sub sub in Set["diy"])
-                Main.ToolBar.AddMenuButton(ToolBar.MenuType.DIY, sub.Name, () => RunDIY(sub.Info));
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.DIY, sub.Name, () =>
+                {
+                    Main.ToolBar.Visibility = Visibility.Collapsed;
+                    RunDIY(sub.Info);
+                });
             try
             {
                 //加载游戏创意工坊插件

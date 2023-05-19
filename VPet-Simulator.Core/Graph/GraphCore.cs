@@ -275,6 +275,42 @@ namespace VPet_Simulator.Core
             /// 关机
             /// </summary>
             Shutdown,
+            /// <summary>
+            /// 学习 (开始)
+            /// </summary>
+            Study_A_Start,
+            /// <summary>
+            /// 学习 (循环)
+            /// </summary>
+            Study_B_Loop,
+            /// <summary>
+            /// 学习 (结束)
+            /// </summary>
+            Study_C_End,
+            /// <summary>
+            /// 工作 (开始)
+            /// </summary>
+            WorkONE_A_Start,
+            /// <summary>
+            /// 工作 (循环)
+            /// </summary>
+            WorkONE_B_Loop,
+            /// <summary>
+            /// 工作 (结束)
+            /// </summary>
+            WorkONE_C_End,
+            /// <summary>
+            /// 直播 (开始)
+            /// </summary>
+            WorkTWO_A_Start,
+            /// <summary>
+            /// 直播 (循环)
+            /// </summary>
+            WorkTWO_B_Loop,
+            /// <summary>
+            /// 直播 (结束)
+            /// </summary>
+            WorkTWO_C_End,
         }
 
         /// <summary>
@@ -337,9 +373,9 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="type">动画类型</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
-        /// <param name="storernd">是否储存随机数字典</param>
+        ///// <param name="storernd">是否储存随机数字典</param>
         /// <returns></returns>
-        public IGraph FindGraph(GraphType type, GameSave.ModeType mode, bool storernd = false)
+        public IGraph FindGraph(GraphType type, GameSave.ModeType mode)
         {
             if (Graphs.ContainsKey(type))
             {
@@ -348,7 +384,7 @@ namespace VPet_Simulator.Core
                 {
                     if (list.Count == 1)
                         return list[0];
-                    if (storernd)
+                    if (GraphConfig.StoreRnd.Contains(type.ToString()))
                         if (RndGraph.TryGetValue(list.Count, out int index))
                         {
                             return list[index];
@@ -453,8 +489,8 @@ namespace VPet_Simulator.Core
             /// 定位爬行上边距离
             /// </summary>
             public double LocateClimbTop;
-
-
+            public List<string> StoreRnd = new List<string>();
+            public ILine Str;
             /// <summary>
             /// 初始化设置
             /// </summary>
@@ -484,6 +520,12 @@ namespace VPet_Simulator.Core
                 LocateClimbLeft = s[(gdbe)"climbleft"];
                 LocateClimbRight = s[(gdbe)"climbright"];
                 LocateClimbTop = s[(gdbe)"climbtop"];
+
+                foreach (Sub sub in lps["storernd"])
+                {
+                    StoreRnd.Add(sub.Name);
+                }
+                Str = lps["str"];
             }
             /// <summary>
             /// 加载更多设置,新的替换后来的,允许空内容
@@ -525,6 +567,16 @@ namespace VPet_Simulator.Core
                     LocateClimbLeft = s.GetDouble("climbleft", LocateClimbLeft);
                     LocateClimbRight = s.GetDouble("climbright", LocateClimbRight);
                     LocateClimbTop = s.GetDouble("climbtop", LocateClimbTop);
+                }
+                foreach (Sub sub in lps["storernd"])
+                {
+                    if (!StoreRnd.Contains(sub.Name))
+                        StoreRnd.Add(sub.Name);
+                }
+                foreach(Sub sub in lps["str"])
+                {
+                    if (!Str.Contains(sub.Name))
+                        Str.Add(sub);
                 }
             }
         }

@@ -254,11 +254,13 @@ namespace VPet_Simulator.Windows
                     }
                     Dispatcher.Invoke(() => LoadingText.Visibility = Visibility.Collapsed);
                 });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠", () => { Close(); });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "开发控制台", () => { new winConsole(this).Show(); });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心", () => { new winReport(this).Show(); });
+
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠", () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "开发控制台", () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心", () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板", () =>
                 {
+                    Main.ToolBar.Visibility = Visibility.Collapsed;
                     Topmost = false;
                     winSetting.Show();
                 });
@@ -275,7 +277,7 @@ namespace VPet_Simulator.Windows
                 m_menu.MenuItems.Add(new MenuItem("重置状态", (x, y) =>
                 {
                     Main.CleanState();
-                    Main.DisplayNomal();
+                    Main.DisplayToNomal();
                     Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
                     Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
                 }));

@@ -94,28 +94,30 @@
                         Foreground="{DynamicResource DARKPrimary}" />
             </Grid>
         </Border>
-        <Menu Width="500" VerticalAlignment="Bottom" Style="{DynamicResource ToolBarMenuStyle}">
+        <Menu VerticalAlignment="Bottom" Style="{DynamicResource ToolBarMenuStyle}" Width="500">
             <Menu.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="5" />
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
-            <MenuItem x:Name="MenuFeed" Header="投喂" HorizontalContentAlignment="Center" >
+            <MenuItem x:Name="MenuFeed" Header="投喂" HorizontalContentAlignment="Center" Width="99" Padding="0">
                 <MenuItem Header="食物" HorizontalContentAlignment="Center" IsEnabled="False" />
                 <MenuItem Header="饮料" HorizontalContentAlignment="Center" IsEnabled="False" />
                 <MenuItem Header="药品" HorizontalContentAlignment="Center" IsEnabled="False"/>
             </MenuItem>
             <MenuItem x:Name="MenuPanel" Header="面板" MouseEnter="MenuPanel_MouseEnter" MouseLeave="MenuPanel_MouseLeave"
-                    HorizontalContentAlignment="Center" />
-            <MenuItem x:Name="MenuInteract" Header="互动" HorizontalContentAlignment="Center">
+                    HorizontalContentAlignment="Center" Width="99" Padding="0" />
+            <MenuItem x:Name="MenuInteract" Header="互动" HorizontalContentAlignment="Center" Width="99" Padding="0">
                 <MenuItem Header="睡觉" HorizontalContentAlignment="Center" Click="Sleep_Click" />
-                <MenuItem Header="玩耍" HorizontalContentAlignment="Center" IsEnabled="False"/>
-                <MenuItem Header="说话" HorizontalContentAlignment="Center" IsEnabled="False"/>
-                <MenuItem Header="学习" HorizontalContentAlignment="Center" IsEnabled="False" />
+                <MenuItem Header="学习" HorizontalContentAlignment="Center" Click="Study_Click" />
+                <MenuItem x:Name="MenuWork1" Header="工作1" HorizontalContentAlignment="Center" Click="Work1_Click" />
+                <MenuItem x:Name="MenuWork2" Header="工作2" HorizontalContentAlignment="Center" Click="Work2_Click" />
+                <MenuItem Header="说话" HorizontalContentAlignment="Center" IsEnabled="False" />
             </MenuItem>
             <MenuItem x:Name="MenuDIY" Header="自定" HorizontalContentAlignment="Center" Click="MenuDIY_Click"
-                    x:FieldModifier="public" />
-            <MenuItem x:Name="MenuSetting" Header="系统" HorizontalContentAlignment="Center"  x:FieldModifier="public"/>
+                    x:FieldModifier="public" Width="99" Padding="0" />
+            <MenuItem x:Name="MenuSetting" Header="系统" HorizontalContentAlignment="Center" x:FieldModifier="public"
+                    Width="99" Padding="0" />
         </Menu>
     </Grid>
 </UserControl>

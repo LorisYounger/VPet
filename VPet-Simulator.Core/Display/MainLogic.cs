@@ -63,17 +63,38 @@ namespace VPet_Simulator.Core
         public void FunctionSpend(double TimePass)
         {
             Core.Save.CleanChange();
-            //饮食等乱七八糟的消耗
-            if (Core.Save.StrengthFood >= 50)
+            switch (State)
             {
-                Core.Save.StrengthChange(TimePass);
-                if (Core.Save.StrengthFood >= 75)
-                    Core.Save.Health += Function.Rnd.Next(0, 1) * TimePass;
+                case WorkingState.Sleep:
+                    //睡觉消耗
+                    if (Core.Save.StrengthFood >= 25)
+                    {
+                        Core.Save.StrengthChange(TimePass * 2);
+                        if (Core.Save.StrengthFood >= 75)
+                            Core.Save.Health += TimePass / 2;
+                    }
+                    break;
+                case WorkingState.WorkONE:
+                case WorkingState.WorkTWO:
+                case WorkingState.Study:
+                    break;
+                //工作/娱乐等消耗
+                default://默认
+                    //饮食等乱七八糟的消耗
+                    if (Core.Save.StrengthFood >= 50)
+                    {
+                        Core.Save.StrengthChange(TimePass);
+                        if (Core.Save.StrengthFood >= 75)
+                            Core.Save.Health += Function.Rnd.Next(0, 1) * TimePass;
+                    }
+                    else if (Core.Save.StrengthFood <= 25)
+                    {
+                        Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
+                    }
+                    break;
             }
-            else if (Core.Save.StrengthFood <= 25)
-            {
-                Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
-            }
+
+
             //if (Core.GameSave.Strength <= 40)
             //{
             //    Core.GameSave.Health -= Function.Rnd.Next(0, 1);
@@ -86,7 +107,7 @@ namespace VPet_Simulator.Core
                 {
                     Core.Save.Likability += TimePass;
                 }
-                Core.Save.Exp+= TimePass;
+                Core.Save.Exp += TimePass;
                 Core.Save.Health += TimePass;
             }
             else if (Core.Save.Feeling <= 25)
@@ -108,7 +129,7 @@ namespace VPet_Simulator.Core
         }
 
         private void EventTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {           
+        {
             //所有Handle
             TimeHandle?.Invoke(this);
 
@@ -242,6 +263,40 @@ namespace VPet_Simulator.Core
             {
                 MoveTimer.AutoReset = false;
             }
+        }
+        /// <summary>
+        /// 当前状态
+        /// </summary>
+        public WorkingState State = WorkingState.Nomal;
+        /// <summary>
+        /// 当前正在的状态
+        /// </summary>
+        public enum WorkingState
+        {
+            /// <summary>
+            /// 默认:啥都没干
+            /// </summary>
+            Nomal,
+            /// <summary>
+            /// 正在干活1
+            /// </summary>
+            WorkONE,
+            /// <summary>
+            /// 正在干活1
+            /// </summary>
+            WorkTWO,
+            /// <summary>
+            /// 学习中 
+            /// </summary>
+            Study,
+            /// <summary>
+            /// 睡觉
+            /// </summary>
+            Sleep,
+            ///// <summary>
+            ///// 玩耍中
+            ///// </summary>
+            //Playing,
         }
     }
 }

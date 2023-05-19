@@ -1,4 +1,5 @@
-﻿using Panuon.WPF.UI;
+﻿using LinePutScript;
+using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,6 +56,8 @@ namespace VPet_Simulator.Core
 
             ToolBar = new ToolBar(this);
             ToolBar.Visibility = Visibility.Collapsed;
+            ToolBar.MenuWork1.Header = core.Graph.GraphConfig.Str[(gstr)"work1"];
+            ToolBar.MenuWork2.Header = core.Graph.GraphConfig.Str[(gstr)"work2"];
             UIGrid.Children.Add(ToolBar);
             MsgBar = new MessageBar(this);
             MsgBar.Visibility = Visibility.Collapsed;
@@ -120,7 +123,7 @@ namespace VPet_Simulator.Core
             if (DisplayType != GraphCore.GraphType.Default)
             {//不是nomal! 可能会卡timer,所有全部timer清空下
                 CleanState();
-                if (DisplayStopMove(DisplayNomal))
+                if (DisplayStopMove(DisplayToNomal))
                     return;
             }
             Task.Run(() =>
@@ -218,8 +221,8 @@ namespace VPet_Simulator.Core
         private bool? wavetop = null;
         private DateTime wavespan;
         private void MainGrid_MouseWave(object sender, MouseEventArgs e)
-        {
-            if (rasetype >= 0)
+        {            
+            if (rasetype >= 0 || State != WorkingState.Nomal)
                 return;
 
             if ((DateTime.Now - wavespan).TotalSeconds > 2)

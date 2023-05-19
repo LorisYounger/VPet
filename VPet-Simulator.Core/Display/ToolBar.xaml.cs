@@ -25,7 +25,7 @@ namespace VPet_Simulator.Core
     public partial class ToolBar : UserControl, IDisposable
     {
         Main m;
-       public Timer CloseTimer;
+        public Timer CloseTimer;
         bool onFocus = false;
         Timer closePanelTimer;
 
@@ -260,7 +260,39 @@ namespace VPet_Simulator.Core
 
         private void Sleep_Click(object sender, RoutedEventArgs e)
         {
-            m.DisplaySleep(true);
+            if (m.Core.Save.Mode != GameSave.ModeType.Ill)
+                if (m.State == Main.WorkingState.Sleep)
+                    m.Display(GraphCore.GraphType.Sleep_C_End, m.DisplayNomal);
+                else
+                    m.DisplaySleep(true);
+            this.Visibility = Visibility.Collapsed;
+        }
+
+        private void Study_Click(object sender, RoutedEventArgs e)
+        {
+            if (m.Core.Save.Mode != GameSave.ModeType.Ill)
+                if (m.State == Main.WorkingState.Study)
+                    m.Display(GraphCore.GraphType.Study_C_End, m.DisplayNomal);
+                else m.DisplayStudy();
+            this.Visibility = Visibility.Collapsed;
+        }
+
+        private void Work1_Click(object sender, RoutedEventArgs e)
+        {
+            if (m.Core.Save.Mode != GameSave.ModeType.Ill)
+                if (m.State == Main.WorkingState.WorkONE)
+                    m.Display(GraphCore.GraphType.WorkONE_C_End, m.DisplayNomal);
+                else m.DisplayWorkONE();
+            this.Visibility = Visibility.Collapsed;
+        }
+
+        private void Work2_Click(object sender, RoutedEventArgs e)
+        {
+            if (m.Core.Save.Mode != GameSave.ModeType.Ill)
+                if (m.State == Main.WorkingState.WorkTWO)
+                    m.Display(GraphCore.GraphType.WorkTWO_C_End, m.DisplayNomal);
+                else m.DisplayWorkTWO();
+            this.Visibility = Visibility.Collapsed;
         }
     }
 }

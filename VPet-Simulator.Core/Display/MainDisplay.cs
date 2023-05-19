@@ -24,6 +24,31 @@ namespace VPet_Simulator.Core
         /// </summary>
         public int CountNomal = 0;
         /// <summary>
+        /// 以标准形式显示当前默认状态
+        /// </summary>
+        public void DisplayToNomal()
+        {
+            switch (State)
+            {
+                default:
+                case WorkingState.Nomal:
+                    DisplayNomal();
+                    return;
+                case WorkingState.Sleep:
+                    DisplaySleep(true);
+                    return;
+                case WorkingState.WorkONE:
+                    DisplayWorkONE();
+                    return;
+                case WorkingState.WorkTWO:
+                    DisplayWorkTWO();
+                    return;
+                case WorkingState.Study:
+                    DisplayStudy();
+                    return;
+            }
+        }
+        /// <summary>
         /// 显示默认情况
         /// </summary>
         public void DisplayNomal()
@@ -67,6 +92,7 @@ namespace VPet_Simulator.Core
                     Display(GraphCore.GraphType.Walk_Right_C_End, EndAction);
                     return true;
                 case GraphType.Sleep_B_Loop:
+                    State = WorkingState.Nomal;
                     Display(GraphCore.GraphType.Sleep_C_End, EndAction);
                     return true;
                 case GraphType.Idel_StateONE_B_Loop:
@@ -118,7 +144,7 @@ namespace VPet_Simulator.Core
 
             Display(GraphCore.GraphType.Touch_Head_A_Start, () =>
                Display(GraphCore.GraphType.Touch_Head_B_Loop, () =>
-               Display(GraphCore.GraphType.Touch_Head_C_End, DisplayNomal
+               Display(GraphCore.GraphType.Touch_Head_C_End, DisplayToNomal
             )));
         }
         /// <summary>
@@ -147,8 +173,8 @@ namespace VPet_Simulator.Core
             Core.Graph.RndGraph.Clear();
             Display(GraphCore.GraphType.Touch_Body_A_Start, () =>
                Display(GraphCore.GraphType.Touch_Body_B_Loop, () =>
-               Display(GraphCore.GraphType.Touch_Body_C_End, DisplayNomal
-            , true), true), true);
+               Display(GraphCore.GraphType.Touch_Body_C_End, DisplayToNomal
+            )));
         }
         /// <summary>
         /// 显示待机(模式1)情况
@@ -171,7 +197,7 @@ namespace VPet_Simulator.Core
                         DisplayIdel_StateTWO();
                         break;
                     default:
-                        Display(GraphCore.GraphType.Idel_StateONE_C_End, DisplayNomal);
+                        Display(GraphCore.GraphType.Idel_StateONE_C_End, DisplayToNomal);
                         break;
                 }
             else
@@ -213,7 +239,7 @@ namespace VPet_Simulator.Core
         private void DisplaySquating()
         {
             if (Function.Rnd.Next(++looptimes) > LoopProMax)
-                Display(GraphCore.GraphType.Squat_C_End, DisplayNomal);
+                Display(GraphCore.GraphType.Squat_C_End, DisplayToNomal);
             else
                 Display(GraphCore.GraphType.Squat_B_Loop, DisplaySquating);
         }
@@ -232,7 +258,7 @@ namespace VPet_Simulator.Core
         private void DisplayBoringing()
         {
             if (Function.Rnd.Next(++looptimes) > LoopProMax)
-                Display(GraphCore.GraphType.Boring_C_End, DisplayNomal);
+                Display(GraphCore.GraphType.Boring_C_End, DisplayToNomal);
             else
                 Display(GraphCore.GraphType.Boring_B_Loop, DisplayBoringing);
         }
@@ -246,7 +272,10 @@ namespace VPet_Simulator.Core
             looptimes = 0;
             CountNomal = 0;
             if (force)
+            {
+                State = WorkingState.Sleep;
                 Display(GraphCore.GraphType.Sleep_A_Start, DisplaySleepingForce);
+            }
             else
                 Display(GraphCore.GraphType.Sleep_A_Start, DisplaySleeping);
         }
@@ -256,7 +285,7 @@ namespace VPet_Simulator.Core
         private void DisplaySleeping()
         {
             if (Function.Rnd.Next(++looptimes) > LoopProMax)
-                Display(GraphCore.GraphType.Sleep_C_End, DisplayNomal);
+                Display(GraphCore.GraphType.Sleep_C_End, DisplayToNomal);
             else
                 Display(GraphCore.GraphType.Sleep_B_Loop, DisplaySleeping);
         }
@@ -268,6 +297,51 @@ namespace VPet_Simulator.Core
             Display(GraphCore.GraphType.Sleep_B_Loop, DisplaySleepingForce);
         }
 
+        /// <summary>
+        /// 显示工作情况
+        /// </summary>
+        public void DisplayWorkONE()
+        {
+            State = WorkingState.WorkONE;
+            Display(GraphCore.GraphType.WorkONE_A_Start, DisplayWorkONEing);
+        }
+        /// <summary>
+        /// 显示工作情况循环
+        /// </summary>
+        private void DisplayWorkONEing()
+        {
+            Display(GraphCore.GraphType.WorkONE_B_Loop, DisplayWorkONEing);
+        }
+        /// <summary>
+        /// 显示工作情况
+        /// </summary>
+        public void DisplayWorkTWO()
+        {
+            State = WorkingState.WorkTWO;
+            Display(GraphCore.GraphType.WorkTWO_A_Start, DisplayWorkTWOing);
+        }
+        /// <summary>
+        /// 显示工作情况循环
+        /// </summary>
+        private void DisplayWorkTWOing()
+        {
+            Display(GraphCore.GraphType.WorkTWO_B_Loop, DisplayWorkTWOing);
+        }
+        /// <summary>
+        /// 显示学习情况
+        /// </summary>
+        public void DisplayStudy()
+        {
+            State = WorkingState.Study;
+            Display(GraphCore.GraphType.Study_A_Start, DisplayStudying);
+        }
+        /// <summary>
+        /// 显示学习情况
+        /// </summary>
+        private void DisplayStudying()
+        {
+            Display(GraphCore.GraphType.Study_B_Loop, DisplayStudying);
+        }
         /// <summary>
         /// 显示拖拽情况
         /// </summary>
@@ -316,7 +390,7 @@ namespace VPet_Simulator.Core
         public void DisplayFalled_Left()
         {
             Display(GraphCore.GraphType.Fall_Left_C_End,
-              () => Display(GraphCore.GraphType.Climb_Up_Left, DisplayNomal));
+              () => Display(GraphCore.GraphType.Climb_Up_Left, DisplayToNomal));
         }
         /// <summary>
         /// 显示掉到地上 从左边
@@ -324,7 +398,7 @@ namespace VPet_Simulator.Core
         public void DisplayFalled_Right()
         {
             Display(GraphCore.GraphType.Fall_Right_C_End,
-              () => Display(GraphCore.GraphType.Climb_Up_Right, DisplayNomal));
+              () => Display(GraphCore.GraphType.Climb_Up_Right, DisplayToNomal));
         }
         /// <summary>
         /// 显示向左走 (有判断)
@@ -358,19 +432,19 @@ namespace VPet_Simulator.Core
                         DisplayFall_Left(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayToNomal);
                         });
                         return;
                     case 1:
                         DisplayFall_Right(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayToNomal);
                         });
                         return;
                     default:
                         MoveTimer.Enabled = false;
-                        Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
+                        Display(GraphCore.GraphType.Walk_Left_C_End, DisplayToNomal);
                         return;
                 }
             }
@@ -388,19 +462,19 @@ namespace VPet_Simulator.Core
                         DisplayFall_Left(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayToNomal);
                         });
                         break;
                     case 1:
                         DisplayFall_Right(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayToNomal);
                         });
                         break;
                     default:
                         MoveTimer.Enabled = false;
-                        Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
+                        Display(GraphCore.GraphType.Walk_Left_C_End, DisplayToNomal);
                         break;
 
                 }
@@ -438,19 +512,19 @@ namespace VPet_Simulator.Core
                         DisplayClimb_Right_UP(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Walk_Right_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Walk_Right_C_End, DisplayToNomal);
                         });
                         return;
                     case 1:
                         DisplayClimb_Right_DOWN(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Walk_Right_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Walk_Right_C_End, DisplayToNomal);
                         });
                         return;
                     default:
                         MoveTimer.Enabled = false;
-                        Display(GraphCore.GraphType.Walk_Right_C_End, DisplayNomal);
+                        Display(GraphCore.GraphType.Walk_Right_C_End, DisplayToNomal);
                         return;
                 }
             }
@@ -468,19 +542,19 @@ namespace VPet_Simulator.Core
                         DisplayFall_Left(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayToNomal);
                         });
                         break;
                     case 1:
                         DisplayFall_Right(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Walk_Left_C_End, DisplayToNomal);
                         });
                         break;
                     default:
                         MoveTimer.Enabled = false;
-                        Display(GraphCore.GraphType.Walk_Left_C_End, DisplayNomal);
+                        Display(GraphCore.GraphType.Walk_Left_C_End, DisplayToNomal);
                         break;
 
                 }
@@ -517,19 +591,19 @@ namespace VPet_Simulator.Core
                         DisplayClimb_Left_UP(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayToNomal);
                         });
                         return;
                     case 1:
                         DisplayClimb_Left_DOWN(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayToNomal);
                         });
                         return;
                     default:
                         MoveTimer.Enabled = false;
-                        Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
+                        Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayToNomal);
                         return;
                 }
             }
@@ -541,7 +615,7 @@ namespace VPet_Simulator.Core
             else
             {//停下来
                 MoveTimer.Enabled = false;
-                Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayNomal);
+                Display(GraphCore.GraphType.Crawl_Left_C_End, DisplayToNomal);
             }
         }
         /// <summary>
@@ -575,19 +649,19 @@ namespace VPet_Simulator.Core
                         DisplayClimb_Right_UP(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayToNomal);
                         });
                         return;
                     case 1:
                         DisplayClimb_Right_DOWN(() =>
                         {
                             MoveTimer.Enabled = false;
-                            Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
+                            Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayToNomal);
                         });
                         return;
                     default:
                         MoveTimer.Enabled = false;
-                        Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
+                        Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayToNomal);
                         return;
                 }
             }
@@ -599,7 +673,7 @@ namespace VPet_Simulator.Core
             else
             {//停下来
                 MoveTimer.Enabled = false;
-                Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayNomal);
+                Display(GraphCore.GraphType.Crawl_Right_C_End, DisplayToNomal);
             }
         }
         /// <summary>
@@ -641,7 +715,7 @@ namespace VPet_Simulator.Core
                         return;
                     default:
                         MoveTimer.Enabled = false;
-                        DisplayNomal();
+                        DisplayToNomal();
                         return;
                 }
             }
@@ -659,7 +733,7 @@ namespace VPet_Simulator.Core
                         break;
                     default:
                         MoveTimer.Enabled = false;
-                        DisplayNomal();
+                        DisplayToNomal();
                         break;
                 }
             }
@@ -695,7 +769,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceDown() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认
                 MoveTimer.Enabled = false;
-                DisplayNomal();
+                DisplayToNomal();
             }
             //不是:继续or停下
             if (Function.Rnd.Next(walklength++) < LoopMin)
@@ -705,7 +779,7 @@ namespace VPet_Simulator.Core
             else
             {//停下来
                 MoveTimer.Enabled = false;
-                DisplayNomal();
+                DisplayToNomal();
             }
         }
         /// <summary>
@@ -748,7 +822,7 @@ namespace VPet_Simulator.Core
                         return;
                     default:
                         MoveTimer.Enabled = false;
-                        DisplayNomal();
+                        DisplayToNomal();
                         return;
                 }
             }
@@ -766,7 +840,7 @@ namespace VPet_Simulator.Core
                         break;
                     default:
                         MoveTimer.Enabled = false;
-                        DisplayNomal();
+                        DisplayToNomal();
                         break;
                 }
             }
@@ -802,7 +876,7 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceDown() < DistanceMin * Core.Controller.ZoomRatio)
             {//是,停下恢复默认
                 MoveTimer.Enabled = false;
-                DisplayNomal();
+                DisplayToNomal();
             }
             //不是:继续or停下
             if (Function.Rnd.Next(walklength++) < LoopMin)
@@ -812,7 +886,7 @@ namespace VPet_Simulator.Core
             else
             {//停下来
                 MoveTimer.Enabled = false;
-                DisplayNomal();
+                DisplayToNomal();
             }
         }
         /// <summary>
@@ -978,7 +1052,7 @@ namespace VPet_Simulator.Core
              //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
                 MoveTimer.Enabled = false;
                 DisplayFalled_Left();
-                //DisplayNomal();
+                //DisplayToNomal();
             }
         }
 
@@ -1041,7 +1115,7 @@ namespace VPet_Simulator.Core
              //Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
                 MoveTimer.Enabled = false;
                 DisplayFalled_Right();
-                //DisplayNomal();
+                //DisplayToNomal();
             }
         }
 
@@ -1052,10 +1126,10 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="Type">动画类型</param>
         /// <param name="EndAction">动画结束后操作</param>
-        /// <param name="storernd">是否储存随机数字典</param>
-        public void Display(GraphType Type, Action EndAction = null, bool storernd = false)
+        ///// <param name="storernd">是否储存随机数字典</param>
+        public void Display(GraphType Type, Action EndAction = null)
         {
-            Display(Core.Graph.FindGraph(Type, Core.Save.Mode, storernd), EndAction);
+            Display(Core.Graph.FindGraph(Type, Core.Save.Mode), EndAction);
         }
         bool petgridcrlf = true;
         /// <summary>
