@@ -281,7 +281,9 @@ namespace VPet_Simulator.Core
         {
             if (m.Core.Save.Mode != GameSave.ModeType.Ill)
                 if (m.State == Main.WorkingState.WorkONE)
+                {
                     m.Display(GraphCore.GraphType.WorkONE_C_End, m.DisplayNomal);
+                }
                 else m.DisplayWorkONE();
             this.Visibility = Visibility.Collapsed;
         }

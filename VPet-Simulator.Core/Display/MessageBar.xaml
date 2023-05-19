@@ -1,10 +1,9 @@
-﻿<UserControl x:Class="VPet_Simulator.Core.MessageBar"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl x:Class="VPet_Simulator.Core.MessageBar" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:pu="https://opensource.panuon.com/wpf-ui" xmlns:local="clr-namespace:VPet_Simulator.Core" mc:Ignorable="d" Height="500"
-       Width="500" MouseDoubleClick="UserControl_MouseDoubleClick">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:pu="https://opensource.panuon.com/wpf-ui"
+        xmlns:local="clr-namespace:VPet_Simulator.Core" mc:Ignorable="d" Height="500" Width="500"
+        MouseDoubleClick="UserControl_MouseDoubleClick">
     <UserControl.Resources>
         <ResourceDictionary Source="Theme.xaml" />
     </UserControl.Resources>
@@ -12,12 +11,13 @@
             VerticalAlignment="Bottom" Padding="10" Margin="5" CornerRadius="5" MouseEnter="Border_MouseEnter"
             MouseLeave="Border_MouseLeave">
         <StackPanel>
-            <Label x:Name="LName" Content="虚拟桌宠名字:" Foreground="{DynamicResource PrimaryText}" HorizontalAlignment="Left" Padding="0"
-                    FontWeight="Bold" Margin="0,0,0,6" FontSize="32"                    Background="{x:Null}" />
+            <Label x:Name="LName" Content="虚拟桌宠名字:" Foreground="{DynamicResource PrimaryText}"
+                    HorizontalAlignment="Left" Padding="0" FontWeight="Bold" Margin="0,0,0,6" FontSize="32"
+                    Background="{x:Null}" />
             <ScrollViewer MaxHeight="400">
-                <TextBlock x:Name="TText" Text="我说话长这样,这是我说的话巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉" TextWrapping="WrapWithOverflow"
-                    FontSize="24" x:FieldModifier="public"/>
-            </ScrollViewer>            
+                <TextBlock x:Name="TText" Text="我说话长这样,这是我说的话巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉"
+                        TextWrapping="WrapWithOverflow" FontSize="24" x:FieldModifier="public" />
+            </ScrollViewer>
         </StackPanel>
     </Border>
 </UserControl>
