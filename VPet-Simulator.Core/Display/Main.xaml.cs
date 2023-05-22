@@ -33,9 +33,13 @@ namespace VPet_Simulator.Core
         /// </summary>
         public ToolBar ToolBar;
         /// <summary>
-        /// 菜单栏
+        /// 消息栏
         /// </summary>
         public MessageBar MsgBar;
+        /// <summary>
+        /// 工作显示栏
+        /// </summary>
+        public WorkTimer WorkTimer;
         /// <summary>
         /// 刷新时间时会调用该方法
         /// </summary>
@@ -53,7 +57,9 @@ namespace VPet_Simulator.Core
             Console.WriteLine(DateTime.Now.ToString("T:fff"));
             InitializeComponent();
             Core = core;
-
+            WorkTimer = new WorkTimer(this);
+            WorkTimer.Visibility = Visibility.Collapsed;
+            UIGrid.Children.Add(WorkTimer);
             ToolBar = new ToolBar(this);
             ToolBar.Visibility = Visibility.Collapsed;
             ToolBar.MenuWork1.Header = core.Graph.GraphConfig.Str[(gstr)"work1"];
@@ -62,6 +68,9 @@ namespace VPet_Simulator.Core
             MsgBar = new MessageBar(this);
             MsgBar.Visibility = Visibility.Collapsed;
             UIGrid.Children.Add(MsgBar);
+
+
+
 
             if (loadtouchevent)
             {
@@ -221,7 +230,7 @@ namespace VPet_Simulator.Core
         private bool? wavetop = null;
         private DateTime wavespan;
         private void MainGrid_MouseWave(object sender, MouseEventArgs e)
-        {            
+        {
             if (rasetype >= 0 || State != WorkingState.Nomal)
                 return;
 

@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Converter;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -395,6 +396,9 @@ namespace VPet_Simulator.Core
                             RndGraph.Add(list.Count, index);
                             return list[index];
                         }
+                    else
+                        return list[Function.Rnd.Next(list.Count)];
+
                 }
                 if (mode != GameSave.ModeType.Ill)
                 {
@@ -491,6 +495,10 @@ namespace VPet_Simulator.Core
             public double LocateClimbTop;
             public List<string> StoreRnd = new List<string>();
             public ILine Str;
+            public WorkTimer.UIStyleConfig UIStyleWork1;
+            public WorkTimer.UIStyleConfig UIStyleWork2;
+            public WorkTimer.UIStyleConfig UIStyleStudy;
+
             /// <summary>
             /// 初始化设置
             /// </summary>
@@ -525,6 +533,12 @@ namespace VPet_Simulator.Core
                 {
                     StoreRnd.Add(sub.Name);
                 }
+                var line = lps.FindLine("UIStyleConfig", "work1");
+                UIStyleWork1 = line == null ? new WorkTimer.UIStyleConfig() : LPSConvert.DeserializeObject<WorkTimer.UIStyleConfig>(line);
+                line = lps.FindLine("UIStyleConfig", "work2");
+                UIStyleWork2 = line == null ? new WorkTimer.UIStyleConfig() : LPSConvert.DeserializeObject<WorkTimer.UIStyleConfig>(line);
+                line = lps.FindLine("UIStyleConfig", "study");
+                UIStyleStudy = line == null ? new WorkTimer.UIStyleConfig() : LPSConvert.DeserializeObject<WorkTimer.UIStyleConfig>(line);
                 Str = lps["str"];
             }
             /// <summary>
@@ -573,7 +587,7 @@ namespace VPet_Simulator.Core
                     if (!StoreRnd.Contains(sub.Name))
                         StoreRnd.Add(sub.Name);
                 }
-                foreach(Sub sub in lps["str"])
+                foreach (Sub sub in lps["str"])
                 {
                     if (!Str.Contains(sub.Name))
                         Str.Add(sub);

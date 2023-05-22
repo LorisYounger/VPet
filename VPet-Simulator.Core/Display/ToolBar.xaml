@@ -2,8 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Core"
-        mc:Ignorable="d" xmlns:pu="https://opensource.panuon.com/wpf-ui"
-        MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave" Height="500" Width="500">
+        mc:Ignorable="d" xmlns:pu="https://opensource.panuon.com/wpf-ui" MouseEnter="UserControl_MouseEnter"
+        MouseLeave="UserControl_MouseLeave" Height="500" Width="500">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,9 +14,9 @@
     </UserControl.Resources>
     <Grid x:Name="MainGrid" x:FieldModifier="public">
         <Border x:Name="BdrPanel" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24"
-                TextElement.FontSize="24" BorderBrush="{DynamicResource DARKPrimaryDarker}"
-                BorderThickness="1" Background="{DynamicResource DARKPrimaryText}" CornerRadius="5"
-                MouseLeave="MenuPanel_MouseLeave" Visibility="Collapsed"  x:FieldModifier="public">
+                TextElement.FontSize="24" BorderBrush="{DynamicResource DARKPrimaryDarker}" BorderThickness="1"
+                Background="{DynamicResource DARKPrimaryText}" CornerRadius="5" MouseLeave="MenuPanel_MouseLeave"
+                Visibility="Collapsed" x:FieldModifier="public">
             <Grid Margin="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -38,7 +38,8 @@
                 <TextBlock x:Name="Tlv" Text="Lv 14" VerticalAlignment="Center"
                         Foreground="{DynamicResource DARKPrimary}" Grid.ColumnSpan="3" />
                 <Button Grid.Column="4" VerticalAlignment="Center" Background="Transparent"
-                        Foreground="{DynamicResource DARKPrimary}" Content="详细" Cursor="Hand" Click="MenuPanel_Click" IsEnabled="False">
+                        Foreground="{DynamicResource DARKPrimary}" Content="详细" Cursor="Hand" Click="MenuPanel_Click"
+                        IsEnabled="False">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" TextDecorations="Underline" />
@@ -103,15 +104,17 @@
             <MenuItem x:Name="MenuFeed" Header="投喂" HorizontalContentAlignment="Center" Width="99" Padding="0">
                 <MenuItem Header="食物" HorizontalContentAlignment="Center" IsEnabled="False" />
                 <MenuItem Header="饮料" HorizontalContentAlignment="Center" IsEnabled="False" />
-                <MenuItem Header="药品" HorizontalContentAlignment="Center" IsEnabled="False"/>
+                <MenuItem Header="药品" HorizontalContentAlignment="Center" IsEnabled="False" />
             </MenuItem>
             <MenuItem x:Name="MenuPanel" Header="面板" MouseEnter="MenuPanel_MouseEnter" MouseLeave="MenuPanel_MouseLeave"
                     HorizontalContentAlignment="Center" Width="99" Padding="0" />
             <MenuItem x:Name="MenuInteract" Header="互动" HorizontalContentAlignment="Center" Width="99" Padding="0">
                 <MenuItem Header="睡觉" HorizontalContentAlignment="Center" Click="Sleep_Click" />
                 <MenuItem Header="学习" HorizontalContentAlignment="Center" Click="Study_Click" />
-                <MenuItem x:Name="MenuWork1" Header="工作1" HorizontalContentAlignment="Center" Click="Work1_Click" />
-                <MenuItem x:Name="MenuWork2" Header="工作2" HorizontalContentAlignment="Center" Click="Work2_Click" />
+                <MenuItem x:Name="MenuWork1" Header="工作1" HorizontalContentAlignment="Center" Click="Work1_Click"
+                        ToolTip="工作" />
+                <MenuItem x:Name="MenuWork2" Header="工作2" HorizontalContentAlignment="Center" Click="Work2_Click"
+                        ToolTip="工作" />
                 <MenuItem Header="说话" HorizontalContentAlignment="Center" IsEnabled="False" />
             </MenuItem>
             <MenuItem x:Name="MenuDIY" Header="自定" HorizontalContentAlignment="Center" Click="MenuDIY_Click"
