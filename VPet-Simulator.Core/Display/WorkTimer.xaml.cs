@@ -41,7 +41,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 累计获得的钱/经验值
         /// </summary>
-        public int GetCount;
+        public double GetCount;
         /// <summary>
         /// 开始时间
         /// </summary>
@@ -78,7 +78,7 @@ namespace VPet_Simulator.Core
                 case 1:
                     ShowTimeSpan(tleft); break;
                 case 2:
-                    tNumber.Text = GetCount.ToString();
+                    tNumber.Text = GetCount.ToString("f0");
                     switch (m.State)
                     {
                         case Main.WorkingState.Study:

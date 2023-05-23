@@ -55,7 +55,16 @@ namespace VPet_Simulator.Core
         {
             Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.B_Loop), () => Saying(type));
         }
+        int lowstrengthAskCount = 1;
+        private void lowStrengthFood()//未来的Display
+        {
+            if (Function.Rnd.Next(lowstrengthAskCount--) == 0)
+            {
+                Say("肚子饿了,想吃东西", GraphCore.Helper.SayType.Serious);//TODO:饥饿动画//TODO:不同的饥饿说话方式
+                lowstrengthAskCount = 15;
+            }
 
+        }
         /// <summary>
         /// 根据消耗计算相关数据
         /// </summary>
@@ -69,28 +78,110 @@ namespace VPet_Simulator.Core
                     //睡觉消耗
                     if (Core.Save.StrengthFood >= 25)
                     {
-                        Core.Save.StrengthChange(TimePass * 2);
+                        Core.Save.StrengthChange(TimePass * 4);
                         if (Core.Save.StrengthFood >= 75)
-                            Core.Save.Health += TimePass / 2;
+                            Core.Save.Health += TimePass * 2;
                     }
+                    else
+                        lowStrengthFood();
+                    Core.Save.StrengthChangeFood(-TimePass);
                     break;
                 case WorkingState.WorkONE:
-                case WorkingState.WorkTWO:
-                case WorkingState.Study:
+                    //工作
+                    if (Core.Save.StrengthFood <= 25)
+                    {
+                        if (Core.Save.Strength >= TimePass)
+                        {
+                            Core.Save.StrengthChange(-TimePass);
+                        }
+                        else
+                        {
+                            Core.Save.Health -= TimePass;
+                        }
+                        lowStrengthFood();
+                        var addmoney = TimePass * 10;
+                        Core.Save.Money += addmoney;
+                        WorkTimer.GetCount += addmoney;
+                    }
+                    else
+                    {
+                        Core.Save.StrengthChange(TimePass);
+                        if (Core.Save.StrengthFood >= 75)
+                            Core.Save.Health += TimePass;
+                        var addmoney = TimePass * 20;
+                        Core.Save.Money += addmoney;
+                        WorkTimer.GetCount += addmoney;
+                    }
+                    Core.Save.StrengthChangeFood(-TimePass * 3);
                     break;
-                //工作/娱乐等消耗
+                case WorkingState.WorkTWO:
+                    //工作2 更加消耗体力
+                    if (Core.Save.StrengthFood <= 25)
+                    {
+                        if (Core.Save.Strength >= TimePass * 2)
+                        {
+                            Core.Save.StrengthChange(-TimePass * 2);
+                        }
+                        else
+                        {
+                            Core.Save.Health -= TimePass;
+                        }
+                        lowStrengthFood();
+                        var addmoney = TimePass * 20;
+                        Core.Save.Money += addmoney;
+                        WorkTimer.GetCount += addmoney;
+                    }
+                    else
+                    {
+                        if (Core.Save.StrengthFood >= 75)
+                            Core.Save.Health += TimePass;
+                        var addmoney = TimePass * 50;
+                        Core.Save.Money += addmoney;
+                        WorkTimer.GetCount += addmoney;
+                    }
+                    Core.Save.StrengthChangeFood(-TimePass * 5);
+                    break;
+                case WorkingState.Study:
+                    //学习
+                    if (Core.Save.StrengthFood <= 25)
+                    {
+                        if (Core.Save.Strength >= TimePass)
+                        {
+                            Core.Save.StrengthChange(-TimePass);
+                        }
+                        else
+                        {
+                            Core.Save.Health -= TimePass;
+                        }
+                        lowStrengthFood();
+                        var addmoney = TimePass * 12;
+                        Core.Save.Exp += addmoney;
+                        WorkTimer.GetCount += addmoney;
+                    }
+                    else
+                    {
+                        Core.Save.StrengthChange(TimePass);
+                        if (Core.Save.StrengthFood >= 75)
+                            Core.Save.Health += TimePass;
+                        var addmoney = TimePass * 25;
+                        Core.Save.Exp += addmoney;
+                        WorkTimer.GetCount += addmoney;
+                    }
+                    Core.Save.StrengthChangeFood(-TimePass * 3);
+                    break;
                 default://默认
                     //饮食等乱七八糟的消耗
                     if (Core.Save.StrengthFood >= 50)
                     {
-                        Core.Save.StrengthChange(TimePass);
+                        Core.Save.StrengthChange(TimePass * 2);
                         if (Core.Save.StrengthFood >= 75)
-                            Core.Save.Health += Function.Rnd.Next(0, 1) * TimePass;
+                            Core.Save.Health += Function.Rnd.Next(0, 2) * TimePass;
                     }
                     else if (Core.Save.StrengthFood <= 25)
                     {
                         Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
                     }
+                    Core.Save.StrengthChangeFood(-TimePass * 2);
                     break;
             }
 
@@ -99,7 +190,7 @@ namespace VPet_Simulator.Core
             //{
             //    Core.GameSave.Health -= Function.Rnd.Next(0, 1);
             //}
-            Core.Save.StrengthChangeFood(-TimePass);
+            Core.Save.Exp += TimePass;
             //感受提升好感度
             if (Core.Save.Feeling >= 75)
             {
@@ -107,7 +198,7 @@ namespace VPet_Simulator.Core
                 {
                     Core.Save.Likability += TimePass;
                 }
-                Core.Save.Exp += TimePass;
+                Core.Save.Exp += TimePass * 2;
                 Core.Save.Health += TimePass;
             }
             else if (Core.Save.Feeling <= 25)
@@ -125,6 +216,11 @@ namespace VPet_Simulator.Core
             {
                 //TODO:切换显示动画
                 Core.Save.Mode = newmod;
+                //TODO:看情况播放停止工作动画
+                if (newmod == GameSave.ModeType.Ill && (State != WorkingState.Nomal || State != WorkingState.Sleep))
+                {
+                    WorkTimer.Stop();
+                }
             }
         }
 
@@ -135,7 +231,7 @@ namespace VPet_Simulator.Core
 
             if (Core.Controller.EnableFunction)
             {
-                FunctionSpend(0.015);
+                FunctionSpend(0.1);
             }
             else
             {
