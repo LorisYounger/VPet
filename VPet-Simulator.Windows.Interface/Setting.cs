@@ -6,11 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows.Interface
 {
+    /// <summary>
+    /// 游戏设置
+    /// </summary>
     public class Setting : LpsDocument
     {
+        /// <summary>
+        /// 游戏设置
+        /// </summary>
         public Setting(string lps) : base(lps)
         {
             var line = FindLine("zoomlevel");
@@ -29,11 +36,6 @@ namespace VPet_Simulator.Windows.Interface
             allowmove = !this["gameconfig"].GetBool("allowmove");
             smartmove = this["gameconfig"].GetBool("smartmove");
             enablefunction = !this["gameconfig"].GetBool("enablefunction");
-        }
-
-        public void Save()
-        {
-            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", ToString());
         }
 
         //public Size WindowsSize
@@ -133,8 +135,6 @@ namespace VPet_Simulator.Windows.Interface
         public bool DiagnosisDayEnable = true;
 
 
-
-
         public string Font
         {
             get => GetString("font", "OPPOSans R");
@@ -153,46 +153,6 @@ namespace VPet_Simulator.Windows.Interface
             {
                 FindorAddLine("theme").Info = value;
             }
-        }
-        public bool IsBanMod(string ModName)
-        {
-            var line = FindLine("banmod");
-            if (line == null)
-                return false;
-            return line.Find(ModName.ToLower()) != null;
-        }
-        public bool IsPassMOD(string ModName)
-        {
-            var line = FindLine("passmod");
-            if (line == null)
-                return false;
-            return line.Find(ModName.ToLower()) != null;
-        }
-        public bool IsMSGMOD(string ModName)
-        {
-            var line = FindorAddLine("msgmod");
-            if (line.GetBool(ModName))
-                return false;
-            line.SetBool(ModName, true);
-            return true;
-        }
-        public void BanMod(string ModName)
-        {
-            if (string.IsNullOrWhiteSpace(ModName))
-                return;
-            FindorAddLine("banmod").AddorReplaceSub(new Sub(ModName.ToLower()));
-        }
-        public void BanModRemove(string ModName)
-        {
-            FindorAddLine("banmod").Remove(ModName.ToLower());
-        }
-        public void PassMod(string ModName)
-        {
-            FindorAddLine("passmod").AddorReplaceSub(new Sub(ModName.ToLower()));
-        }
-        public void PassModRemove(string ModName)
-        {
-            FindorAddLine("passmod").Remove(ModName.ToLower());
         }
 
         private int presslength;

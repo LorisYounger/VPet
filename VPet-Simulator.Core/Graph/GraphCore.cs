@@ -369,13 +369,13 @@ namespace VPet_Simulator.Core
         /// 随机数字典(用于确保随机动画不会错位)
         /// </summary>
         public Dictionary<int, int> RndGraph = new Dictionary<int, int>();
+        
         /// <summary>
         /// 查找动画
         /// </summary>
         /// <param name="type">动画类型</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
         ///// <param name="storernd">是否储存随机数字典</param>
-        /// <returns></returns>
         public IGraph FindGraph(GraphType type, GameSave.ModeType mode)
         {
             if (Graphs.ContainsKey(type))

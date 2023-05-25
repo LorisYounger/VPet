@@ -9,6 +9,9 @@ using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows.Interface
 {
+    /// <summary>
+    /// 游戏主窗体
+    /// </summary>
     public interface IMainWindow
     {
         /// <summary>
@@ -18,19 +21,19 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 游戏设置
         /// </summary>
-        Setting Set { get; set; }
+        Setting Set { get; }
         /// <summary>
         /// 宠物加载器列表
         /// </summary>
-        List<PetLoader> Pets { get; set; }
+        List<PetLoader> Pets { get; }
         /// <summary>
         /// 桌宠数据核心
         /// </summary>
-        GameCore Core { get; set; }
+        GameCore Core { get; }
         /// <summary>
         /// 桌宠主要部件
         /// </summary>
-        Main Main { get; set; }
+        Main Main { get; }
         /// <summary>
         /// 版本号
         /// </summary>
@@ -38,7 +41,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 版本号
         /// </summary>
-        string Verison { get; }        
+        string Verison { get; }
         /// <summary>
         /// 上次点击时间 (Tick)
         /// </summary>
@@ -47,8 +50,6 @@ namespace VPet_Simulator.Windows.Interface
         /// 所有三方插件
         /// </summary>
         List<MainPlugin> Plugins { get; }
-
-        Dispatcher Dispatcher { get; }
 
         /// <summary>
         /// 设置游戏缩放倍率

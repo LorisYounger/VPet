@@ -35,12 +35,14 @@ namespace VPet_Simulator.Windows
     {
         Main m;
         Setting set;
+        MainWindow mw;
 
         public TalkBox(MainWindow mw)
         {
             InitializeComponent();
             this.m = mw.Main;
             set = mw.Set;
+            this.mw = mw;
             this.IsEnabled = false;
             var sid = Steamworks.SteamClient.SteamId.Value;
             Task.Run(() => PetLifeDisplay(sid));
@@ -214,7 +216,7 @@ namespace VPet_Simulator.Windows
         private void StartUP_Click(object sender, RoutedEventArgs e)
         {
             set["aiopen"][(gbol)"startup"] = true;
-            set.Save();
+            mw.Save();
             btn_startup.Content = "初始化桌宠聊天程序中...";
             var sid = Steamworks.SteamClient.SteamId.Value;
             var cont = $"请使用口语化的、可爱的、女性化的、调皮的语言风格和我交流\n你是一只桌宠, 你的名字叫{m.Core.Save.Name}, 你喜欢玩 <虚拟主播模拟器>";

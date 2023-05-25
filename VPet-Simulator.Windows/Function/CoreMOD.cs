@@ -121,7 +121,6 @@ namespace VPet_Simulator.Windows
 
                             }
                         }
-
                         SuccessLoad = true;
                         break;
                 }
@@ -141,6 +140,49 @@ namespace VPet_Simulator.Windows
             modlps.FindorAddLine("authorid").InfoToInt64 = AuthorID;
             modlps.FindorAddLine("itemid").info = ItemID.ToString();
             File.WriteAllText(Path.FullName + @"\info.lps", modlps.ToString());
+        }        
+    }
+    public static class ExtensionSetting
+    {
+        public static bool IsBanMod(this Setting t, string ModName)
+        {
+            var line = t.FindLine("banmod");
+            if (line == null)
+                return false;
+            return line.Find(ModName.ToLower()) != null;
+        }
+        public static bool IsPassMOD(this Setting t, string ModName)
+        {
+            var line = t.FindLine("passmod");
+            if (line == null)
+                return false;
+            return line.Find(ModName.ToLower()) != null;
+        }
+        public static bool IsMSGMOD(this Setting t, string ModName)
+        {
+            var line = t.FindorAddLine("msgmod");
+            if (line.GetBool(ModName))
+                return false;
+            line.SetBool(ModName, true);
+            return true;
+        }
+        public static void BanMod(this Setting t, string ModName)
+        {
+            if (string.IsNullOrWhiteSpace(ModName))
+                return;
+            t.FindorAddLine("banmod").AddorReplaceSub(new Sub(ModName.ToLower()));
+        }
+        public static void BanModRemove(this Setting t, string ModName)
+        {
+            t.FindorAddLine("banmod").Remove(ModName.ToLower());
+        }
+        public static void PassMod(this Setting t, string ModName)
+        {
+            t.FindorAddLine("passmod").AddorReplaceSub(new Sub(ModName.ToLower()));
+        }
+        public static void PassModRemove(this Setting t, string ModName)
+        {
+            t.FindorAddLine("passmod").Remove(ModName.ToLower());
         }
     }
 }
