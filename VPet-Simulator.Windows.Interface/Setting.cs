@@ -72,6 +72,14 @@ namespace VPet_Simulator.Windows.Interface
             }
         }
         /// <summary>
+        /// 播放声音大小
+        /// </summary>
+        public double VoiceVolume
+        {
+            get => GetFloat("voicevolume", 0.5);
+            set => SetFloat("voicevolume", value);
+        }
+        /// <summary>
         /// 是否为更大的屏幕
         /// </summary>
         public bool IsBiggerScreen

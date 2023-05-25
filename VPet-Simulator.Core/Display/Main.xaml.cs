@@ -107,12 +107,44 @@ namespace VPet_Simulator.Core
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate, Core.Graph.GraphConfig.TouchRaisedSize, DisplayRaised, true));
         }
         /// <summary>
-        /// 播放语音
+        /// 播放语音 语音播放时不会停止播放说话表情
         /// </summary>
         /// <param name="VoicePath">语音位置</param>
-        public void PlayVoice(Uri VoicePath)
+        public void PlayVoice(Uri VoicePath)//, TimeSpan timediff = TimeSpan.Zero) TODO
         {
-           VoicePlayer.Source = VoicePath;
+            PlayingVoice = true;
+            Dispatcher.Invoke(() =>
+            {
+                VoicePlayer.Clock = new MediaTimeline(VoicePath).CreateClock();
+                VoicePlayer.Clock.Completed += Clock_Completed;
+                VoicePlayer.Play();
+                //Task.Run(() =>
+                //{
+                //    Thread.Sleep(1000);
+                //    Dispatcher.Invoke(() =>
+                //    {
+                //        if (VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true)
+                //            PlayEndTime += VoicePlayer.Clock.NaturalDuration.TimeSpan - TimeSpan.FromSeconds(0.8);
+                //    });
+                //});
+            });
+        }
+        /// <summary>
+        /// 声音音量
+        /// </summary>
+        public double PlayVoiceVolume
+        {
+            get => Dispatcher.Invoke(() => VoicePlayer.Volume);
+            set => Dispatcher.Invoke(() => VoicePlayer.Volume = value);
+        }
+        /// <summary>
+        /// 当前是否正在播放
+        /// </summary>
+        public bool PlayingVoice = false;
+        private void Clock_Completed(object sender, EventArgs e)
+        {
+            PlayingVoice = false;
+            VoicePlayer.Clock = null;
         }
 
         private void SmartMoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

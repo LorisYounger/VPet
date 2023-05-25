@@ -7,7 +7,7 @@
         <Grid x:Name="MainGrid" Width="500" Height="500" MouseLeftButtonDown="MainGrid_MouseLeftButtonDown"
                 x:FieldModifier="public" MouseLeftButtonUp="MainGrid_MouseLeftButtonUp"
                 MouseRightButtonDown="MainGrid_MouseRightButtonDown" MouseMove="MainGrid_MouseWave">
-            <MediaElement x:Name="VoicePlayer" LoadedBehavior="Play" UnloadedBehavior="Stop" />
+            <MediaElement x:Name="VoicePlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" />
             <Grid x:Name="UIGrid_Back" x:FieldModifier="public" />
             <Border x:Name="PetGrid" VerticalAlignment="Bottom" />
             <Border x:Name="PetGrid2" VerticalAlignment="Bottom" />

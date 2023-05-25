@@ -33,7 +33,6 @@ namespace VPet_Simulator.Core
         /// </summary>
         public int Level => (int)(Math.Sqrt(Exp) / 5) + 1;
 
-
         /// <summary>
         /// 升级所需经验值
         /// </summary>
@@ -239,6 +238,5 @@ namespace VPet_Simulator.Core
             //save.SetFloat("Likability", Likability);
             return LPSConvert.SerializeObject(this, "vpet");
         }
-      
     }
 }

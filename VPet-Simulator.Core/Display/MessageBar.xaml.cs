@@ -57,6 +57,18 @@ namespace VPet_Simulator.Core
             }
             else
             {
+                if (m.PlayingVoice)
+                {
+                    TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                    if (ts.TotalSeconds > 2)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine(1);
+                    }
+                }
                 Task.Run(() =>
                 {
                     Thread.Sleep(timeleft * 50);
@@ -78,7 +90,7 @@ namespace VPet_Simulator.Core
         }
 
         public Timer EndTimer = new Timer() { Interval = 200 };
-        public Timer ShowTimer = new Timer() { Interval = 40 };
+        public Timer ShowTimer = new Timer() { Interval = 50 };
         public Timer CloseTimer = new Timer() { Interval = 20 };
         int timeleft;
         GraphCore.Helper.SayType sayType;
@@ -91,7 +103,7 @@ namespace VPet_Simulator.Core
         {
             if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
             {
-                Panel.SetZIndex(this, m.UIGrid.Children.Count);             
+                Panel.SetZIndex(this, m.UIGrid.Children.Count);
             }
             TText.Text = "";
             outputtext = text.ToList();

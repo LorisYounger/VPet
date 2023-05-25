@@ -55,7 +55,10 @@ namespace VPet_Simulator.Windows
                 mp.Save();
             //游戏存档
             if (Set != null)
+            {
+                Set.VoiceVolume = Main.PlayVoiceVolume;
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
+            }
             if (Core != null && Core.Save != null)
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
             if (CGPTClient != null)

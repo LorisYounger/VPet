@@ -245,6 +245,7 @@ namespace VPet_Simulator.Windows
                         Dispatcher.Invoke(() => Main.Say(v.Item1, v.Item2));
                     }
                 };
+                Main.PlayVoiceVolume = Set.VoiceVolume;
                 DisplayGrid.Child = Main;
                 Task.Run(() =>
                 {
