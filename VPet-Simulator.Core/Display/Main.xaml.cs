@@ -106,6 +106,14 @@ namespace VPet_Simulator.Core
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, DisplayTouchHead));
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate, Core.Graph.GraphConfig.TouchRaisedSize, DisplayRaised, true));
         }
+        /// <summary>
+        /// 播放语音
+        /// </summary>
+        /// <param name="VoicePath">语音位置</param>
+        public void PlayVoice(Uri VoicePath)
+        {
+           VoicePlayer.Source = VoicePath;
+        }
 
         private void SmartMoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
