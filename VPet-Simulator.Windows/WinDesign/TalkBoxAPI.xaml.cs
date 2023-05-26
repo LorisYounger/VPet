@@ -70,7 +70,7 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(() => this.IsEnabled = false);
             try
             {
-                m.Say(mw.CGPTClient.Ask("vpet", content).GetMessageContent(), GraphCore.Helper.SayType.Serious);
+                m.SayRnd(mw.CGPTClient.Ask("vpet", content).GetMessageContent());
             }
             catch (Exception exp)
             {

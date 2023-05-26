@@ -310,7 +310,7 @@ namespace VPet_Simulator.Core
             {
                 if (parant.Tag == this)
                 {
-                    new Thread(() => Animations[0].Run(parant, EndAction)).Start();
+                    new Thread(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, EndAction)).Start();
                     return;
                 }
                 System.Windows.Controls.Image img;
@@ -345,7 +345,7 @@ namespace VPet_Simulator.Core
                 img.Source = new BitmapImage(new Uri(Path));
 
                 img.Width = Width;
-                Task.Run(() => Animations[0].Run(parant, EndAction));
+                Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, EndAction));
             });
         }
 

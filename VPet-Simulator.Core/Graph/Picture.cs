@@ -53,8 +53,13 @@ namespace VPet_Simulator.Core
 
         public void Run(Border parant, Action EndAction = null)
         {
+            if (PlayState)
+            {
+                IsLoop = true;
+                return;
+            }
             PlayState = true;
-            StopEndAction = false;
+            DoEndAction = true;
             parant.Dispatcher.Invoke(() =>
             {
                 if (parant.Tag != this)
@@ -67,15 +72,17 @@ namespace VPet_Simulator.Core
                     else
                     {
                         img = (Image)GraphCore.CommUIElements["Image2.Picture"];
-                        if (parant.Child != GraphCore.CommUIElements["Image2.Picture"])
+                        if (parant.Child != img)
                         {
                             if (img.Parent == null)
                             {
+                                parant.Child = null;
                                 parant.Child = img;
                             }
                             else
                             {
                                 img = (Image)GraphCore.CommUIElements["Image3.Picture"];
+                                parant.Child = null;
                                 parant.Child = img;
                             }
                         }
@@ -86,8 +93,8 @@ namespace VPet_Simulator.Core
                     //bitmap.StreamSource = stream;
                     //bitmap.CacheOption = BitmapCacheOption.OnLoad;
                     //bitmap.EndInit();
-                    img.Source = new BitmapImage(new Uri(Path));
-                    parant.Tag = this;
+                    img.Source = new BitmapImage(new Uri(Path));                    
+                    parant.Tag = this;                  
                 }
                 Task.Run(() =>
                 {
@@ -99,17 +106,17 @@ namespace VPet_Simulator.Core
                     else
                     {
                         PlayState = false;
-                        if (!StopEndAction)
+                        if (DoEndAction)
                             EndAction?.Invoke();//运行结束动画时事件
                     }
                 });
             });
         }
-        bool StopEndAction = false;
+        bool DoEndAction = true;
         public void Stop(bool StopEndAction = false)
         {
             PlayState = false;
-            this.StopEndAction = StopEndAction;
+            this.DoEndAction = !StopEndAction;
         }
 
         public void WaitForReadyRun(Border parant, Action EndAction = null) => Run(parant, EndAction);

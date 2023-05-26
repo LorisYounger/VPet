@@ -32,6 +32,11 @@ namespace VPet_Simulator.Core
             AutoReset = true,
             Enabled = true
         };
+        readonly GraphCore.Helper.SayType[] sayTypes = new GraphCore.Helper.SayType[] { GraphCore.Helper.SayType.Serious, GraphCore.Helper.SayType.Shining, GraphCore.Helper.SayType.Self };
+        public void SayRnd(string text)
+        {
+            Say(text, sayTypes[Function.Rnd.Next(sayTypes.Length)]);
+        }
         /// <summary>
         /// 说话
         /// </summary>

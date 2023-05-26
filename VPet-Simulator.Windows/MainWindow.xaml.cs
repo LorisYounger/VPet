@@ -242,7 +242,7 @@ namespace VPet_Simulator.Windows
                     {
                         lastclicktime = DateTime.Now.Ticks;
                         var v = rndtext[Function.Rnd.Next(rndtext.Count)];
-                        Dispatcher.Invoke(() => Main.Say(v.Item1, v.Item2));
+                        Main.Say(v.Item1, v.Item2);
                     }
                 };
                 Main.PlayVoiceVolume = Set.VoiceVolume;
@@ -322,14 +322,14 @@ namespace VPet_Simulator.Windows
                         Main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议", GraphCore.Helper.SayType.Shining);
                     });
                 }
-                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 27))
+                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 5, 26))
                 {
-                    if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 4))
-                        notifyIcon.ShowBalloonTip(10, "更新通知 03/04",
-                   "现已接入ChatGPT, 右键和桌宠说话吧.\n已根据steamID独立创建的聊天API,调教你独属的桌宠吧", ToolTipIcon.Info);
-                    else
-                        notifyIcon.ShowBalloonTip(10, "更新通知 03/27",
-                   "全新图形核心引擎,现在桌宠对内存的占用更小!", ToolTipIcon.Info);
+                    // if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 4))
+                    //     notifyIcon.ShowBalloonTip(10, "更新通知 05/26",
+                    //"现已接入ChatGPT, 右键和桌宠说话吧.\n已根据steamID独立创建的聊天API,调教你独属的桌宠吧", ToolTipIcon.Info);
+                    // else
+                    notifyIcon.ShowBalloonTip(10, "更新通知 05/26",
+               "新增学习打工等互动,新增开心的默认状态\n新增语音插件,请在设置中MOD管理开启", ToolTipIcon.Info);
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);
                 }
                 Save();

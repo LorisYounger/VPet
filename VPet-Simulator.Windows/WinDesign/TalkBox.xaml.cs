@@ -116,11 +116,11 @@ namespace VPet_Simulator.Windows
                     responseString += "\n检测到模型错误,已重置桌宠聊天系统";
                     ChatGPT_Reset();
                 }
-                m.Say(responseString, GraphCore.Helper.SayType.Serious);//todo
+                m.SayRnd(responseString);//todo
             }
             catch (Exception exp)
             {
-                m.Say(exp.ToString(), GraphCore.Helper.SayType.Serious);//todo
+                m.Say(exp.ToString(), GraphCore.Helper.SayType.Serious);
                 rettype = false;
             }
             Dispatcher.Invoke(() => this.IsEnabled = true);
