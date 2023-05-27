@@ -4,14 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Core"
         mc:Ignorable="d" d:DesignHeight="250" d:DesignWidth="250">
     <Viewbox>
-        <Grid x:Name="MainGrid" Width="500" Height="500" MouseLeftButtonDown="MainGrid_MouseLeftButtonDown"
+        <Grid x:Name="MainGrid" Width="500" MouseLeftButtonDown="MainGrid_MouseLeftButtonDown"
                 x:FieldModifier="public" MouseLeftButtonUp="MainGrid_MouseLeftButtonUp"
                 MouseRightButtonDown="MainGrid_MouseRightButtonDown" MouseMove="MainGrid_MouseWave">
             <MediaElement x:Name="VoicePlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" />
-            <Grid x:Name="UIGrid_Back" x:FieldModifier="public" />
-            <Border x:Name="PetGrid" VerticalAlignment="Bottom" />
-            <Border x:Name="PetGrid2" VerticalAlignment="Bottom" />
-            <Grid x:Name="UIGrid" x:FieldModifier="public" />
+            <Grid x:Name="UIGrid_Back" x:FieldModifier="public" Height="500" VerticalAlignment="Top" Width="500" />
+            <Border x:Name="PetGrid" Height="500" VerticalAlignment="Top" Width="500" />
+            <Border x:Name="PetGrid2" Height="500" VerticalAlignment="Top" Width="500" />
+            <Grid x:Name="UIGrid" x:FieldModifier="public" Height="500" VerticalAlignment="Top" Width="500" />
+            <Grid x:Name="UIGrid_Botton" x:FieldModifier="public" Width="500" VerticalAlignment="Top" Margin="0,500,0,0" />
         </Grid>
     </Viewbox>
 </pu:ContentControlX>

@@ -4,8 +4,8 @@
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" ShowInTaskbar="False"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" WindowStyle="None" Title="MainWindow"
-        Height="250" Width="250" Background="{x:Null}" Topmost="True" Closed="Window_Closed"
-            pu:WindowXCaption.Height="0" >
+        Width="250" Background="{x:Null}" Topmost="True" Closed="Window_Closed" pu:WindowXCaption.Height="0"
+        SizeToContent="Height">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" />
     </WindowChrome.WindowChrome>

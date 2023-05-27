@@ -43,7 +43,7 @@ namespace VPet_Simulator.Windows
         public void SetZoomLevel(double zl)
         {
             Set.ZoomLevel = zl;
-            this.Height = 500 * zl;
+            //this.Height = 500 * zl;
             this.Width = 500 * zl;
         }
         /// <summary>
@@ -56,7 +56,8 @@ namespace VPet_Simulator.Windows
             //游戏存档
             if (Set != null)
             {
-                Set.VoiceVolume = Main.PlayVoiceVolume;
+                if (Main != null)
+                    Set.VoiceVolume = Main.PlayVoiceVolume;
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
             }
             if (Core != null && Core.Save != null)

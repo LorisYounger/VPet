@@ -72,7 +72,7 @@ namespace VPet_Simulator.Windows
             //this.Height = 450 * ZoomSlider.Value;
             InitializeComponent();
 
-            this.Height = 500 * Set.ZoomLevel;
+            //this.Height = 500 * Set.ZoomLevel;
             this.Width = 500 * Set.ZoomLevel;
 
             if (Set.StartRecordLast)

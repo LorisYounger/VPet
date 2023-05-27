@@ -20,10 +20,8 @@ namespace VPet_Simulator.Tool
             switch (Console.ReadLine())
             {
                 case "1":
-                    do
-                    {
-                        Animation();
-                    } while (true);
+                    Animation();
+                    break;
                 default:
                     Console.WriteLine("暂无该功能");
                     goto start;
@@ -36,40 +34,43 @@ namespace VPet_Simulator.Tool
         {
             Console.WriteLine("请输入每张图片的持续时间 (单位: 毫秒)");
             string timestr = Console.ReadLine();
-            if(!int.TryParse(timestr,out int time))
+            if (!int.TryParse(timestr, out int time))
             {
                 time = 125;
             }
-            Console.WriteLine("请输入图片位置");
-            DirectoryInfo directoryInfo = new DirectoryInfo(Console.ReadLine());
-            int id = 0;
-            int rpt = 1;
-            string hash = null;
-            FileInfo lastf = null;
-            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
+            while (true)
             {
-                if (lastf == null)
+                Console.WriteLine("请输入图片位置");
+                DirectoryInfo directoryInfo = new DirectoryInfo(Console.ReadLine());
+                int id = 0;
+                int rpt = 1;
+                string hash = null;
+                FileInfo lastf = null;
+                foreach (FileInfo fileInfo in directoryInfo.GetFiles())
                 {
+                    if (lastf == null)
+                    {
+                        lastf = fileInfo;
+                        hash = GetFileHash(fileInfo);
+                        continue;
+                    }
+                    string filehash = GetFileHash(fileInfo);
+                    if (hash.Equals(filehash))
+                    {
+                        //这个文件和上一个文件的hash值相同，这个上个文件
+                        lastf.Delete();
+                        lastf = fileInfo;
+                        rpt++;
+                        continue;
+                    }
+                    hash = filehash;
+                    lastf.MoveTo(Path.Combine(directoryInfo.FullName, $"{lastf.Name.Split('_', '-')[0]}_{id++:D3}_{rpt * time}.png"));
+                    rpt = 1;
                     lastf = fileInfo;
-                    hash = GetFileHash(fileInfo);
-                    continue;
                 }
-                string filehash = GetFileHash(fileInfo);
-                if (hash.Equals(filehash))
-                {
-                    //这个文件和上一个文件的hash值相同，这个上个文件
-                    lastf.Delete();
-                    lastf = fileInfo;
-                    rpt++;
-                    continue;
-                }
-                hash = filehash;
-                lastf.MoveTo(Path.Combine(directoryInfo.FullName, $"{lastf.Name.Split('_')[0]}_{id++:D3}_{rpt * time}.png"));
-                rpt = 1;
-                lastf = fileInfo;
+                lastf.MoveTo(Path.Combine(directoryInfo.FullName, $"{lastf.Name.Split('_', '-')[0]}_{id++:D3}_{rpt * time}.png"));
+                Console.WriteLine("图片处理已完成");
             }
-            lastf.MoveTo(Path.Combine(directoryInfo.FullName, $"{lastf.Name.Split('_')[0]}_{id++:D3}_{rpt * time}.png"));
-            Console.WriteLine("图片处理已完成");
         }
         public static string GetFileHash(FileInfo fileInfo)
         {
