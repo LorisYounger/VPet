@@ -68,7 +68,16 @@ namespace VPet_Simulator.Core
         {
             if (Function.Rnd.Next(lowstrengthAskCount--) == 0)
             {
-                Say("肚子饿了,想吃东西", GraphCore.Helper.SayType.Serious);//TODO:饥饿动画//TODO:不同的饥饿说话方式
+                Display(GraphCore.GraphType.Switch_Thirsty, () => Say("肚子饿了,想吃东西", GraphCore.Helper.SayType.Serious));//TODO:不同的饥饿说话方式
+                lowstrengthAskCount = 15;
+            }
+
+        }
+        private void lowStrengthDrink()//未来的Display
+        {
+            if (Function.Rnd.Next(lowstrengthAskCount--) == 0)
+            {
+                Display(GraphCore.GraphType.Switch_Thirsty, () => Say("渴了,想喝东西", GraphCore.Helper.SayType.Serious));//TODO:不同的饥饿说话方式
                 lowstrengthAskCount = 15;
             }
 
@@ -216,6 +225,7 @@ namespace VPet_Simulator.Core
             if (Core.Save.StrengthDrink <= 25)
             {
                 Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
+                lowStrengthDrink();
             }
             else if (Core.Save.StrengthDrink >= 75)
                 Core.Save.Health += Function.Rnd.Next(0, 1) * TimePass;

@@ -87,7 +87,7 @@ namespace VPet_Simulator.Core
                     }
                 }
 #if DEBUG
-                throw new Exception("未知的图像类型: " + path_name);
+                //throw new Exception("未知的图像类型: " + path_name);
 #endif
             }
             else if (File.Exists(di.FullName + @"\info.lps"))

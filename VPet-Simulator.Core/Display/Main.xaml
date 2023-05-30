@@ -8,11 +8,10 @@
                 x:FieldModifier="public" MouseLeftButtonUp="MainGrid_MouseLeftButtonUp"
                 MouseRightButtonDown="MainGrid_MouseRightButtonDown" MouseMove="MainGrid_MouseWave">
             <MediaElement x:Name="VoicePlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" />
-            <Grid x:Name="UIGrid_Back" x:FieldModifier="public" Height="500" VerticalAlignment="Top" Width="500" />
+            <Grid x:Name="UIGrid_Back" x:FieldModifier="public" VerticalAlignment="Top" Width="500" />
             <Border x:Name="PetGrid" Height="500" VerticalAlignment="Top" Width="500" />
             <Border x:Name="PetGrid2" Height="500" VerticalAlignment="Top" Width="500" />
-            <Grid x:Name="UIGrid" x:FieldModifier="public" Height="500" VerticalAlignment="Top" Width="500" />
-            <Grid x:Name="UIGrid_Botton" x:FieldModifier="public" Width="500" VerticalAlignment="Top" Margin="0,500,0,0" />
+            <Grid x:Name="UIGrid" x:FieldModifier="public" VerticalAlignment="Top" Width="500" />
         </Grid>
     </Viewbox>
 </pu:ContentControlX>

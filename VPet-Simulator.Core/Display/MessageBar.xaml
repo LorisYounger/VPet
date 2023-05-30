@@ -7,7 +7,7 @@
     <UserControl.Resources>
         <ResourceDictionary Source="Theme.xaml" />
     </UserControl.Resources>
-    <Border Background="{DynamicResource Primary}" BorderBrush="{DynamicResource DARKPrimaryDark}" BorderThickness="5"
+    <Border x:Name="BorderMain" Background="{DynamicResource Primary}" BorderBrush="{DynamicResource DARKPrimaryDark}" BorderThickness="5"
             VerticalAlignment="Bottom" Padding="10" Margin="5" CornerRadius="5" MouseEnter="Border_MouseEnter"
             MouseLeave="Border_MouseLeave">
         <StackPanel>

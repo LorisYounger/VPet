@@ -3,7 +3,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Core"
         mc:Ignorable="d" xmlns:pu="https://opensource.panuon.com/wpf-ui" MouseEnter="UserControl_MouseEnter"
-        MouseLeave="UserControl_MouseLeave" Height="500" Width="500">
+        MouseLeave="UserControl_MouseLeave" Height="500" Width="500" VerticalAlignment="Top">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

@@ -268,6 +268,9 @@ namespace VPet_Simulator.Windows
 
                 Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
                 Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
+                if (Set.MessageBarOutside)
+                    Main.MsgBar.SetPlaceOUT();
+
                 //加载图标
                 notifyIcon = new NotifyIcon();
                 notifyIcon.Text = "虚拟桌宠模拟器";

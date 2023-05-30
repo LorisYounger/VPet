@@ -312,6 +312,10 @@ namespace VPet_Simulator.Core
             /// 直播 (结束)
             /// </summary>
             WorkTWO_C_End,
+            /// <summary>
+            /// 口渴
+            /// </summary>
+            Switch_Thirsty,
         }
 
         /// <summary>

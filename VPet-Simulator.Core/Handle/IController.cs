@@ -63,6 +63,6 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 互动周期
         /// </summary>
-        int InteractionCycle { get; }      
+        int InteractionCycle { get; } 
     }
 }

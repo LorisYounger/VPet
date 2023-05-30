@@ -115,6 +115,13 @@
                                 BorderThickness="2" Click="BtnStartUpGet_Click" />
 
                     </Grid>
+                    <TextBlock Grid.Row="6" Text="消息框" VerticalAlignment="Center" />
+                    <pu:Switch x:Name="SwitchMsgOut" Grid.Column="2" Grid.Row="6" BorderBrush="{DynamicResource PrimaryDark}"
+                            CheckedBackground="{DynamicResource Primary}" CheckedBorderBrush="{DynamicResource Primary}"
+                            Background="Transparent" BoxWidth="35" BoxHeight="18" ToggleSize="14"
+                            ToggleShadowColor="{x:Null}" ToggleBrush="{DynamicResource PrimaryDark}"
+                            CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Checked="SwitchMsgOut_Checked"
+                            Unchecked="TopMostBox_Unchecked" ToolTip="将消息框置于外部" Content="将消息框置于外部"/>
                     <TextBlock Grid.Row="7" Text="开机启动" VerticalAlignment="Center" />
                     <Grid Grid.Row="7" Grid.Column="2">
                         <Grid.ColumnDefinitions>
@@ -126,7 +133,7 @@
                                 CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent" BoxWidth="35"
                                 BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
                                 ToggleBrush="{DynamicResource PrimaryDark}" Content="开机启动"
-                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="该游戏随着开机启动该程序"
+                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="该游戏随着开机启动该程序&#13;如需卸载游戏,请关闭该选项"
                                 Checked="StartUpBox_Checked" Unchecked="StartUpBox_Checked" />
                         <pu:Switch x:Name="StartUpSteamBox" BorderBrush="{DynamicResource PrimaryDark}"
                                 CheckedBackground="{DynamicResource Primary}"

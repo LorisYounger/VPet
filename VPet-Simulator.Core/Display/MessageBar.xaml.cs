@@ -147,5 +147,17 @@ namespace VPet_Simulator.Core
             ShowTimer.Dispose();
             CloseTimer.Dispose();
         }
+        public void SetPlaceIN()
+        {
+            this.Height = 500;
+            BorderMain.VerticalAlignment = VerticalAlignment.Bottom;
+            Margin = new Thickness(0);
+        }
+        public void SetPlaceOUT()
+        {
+            this.Height = double.NaN;
+            BorderMain.VerticalAlignment = VerticalAlignment.Top;
+            Margin = new Thickness(0, 500, 0, 0);
+        }
     }
 }

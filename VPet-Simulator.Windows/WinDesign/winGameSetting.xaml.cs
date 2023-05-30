@@ -62,6 +62,7 @@ namespace VPet_Simulator.Windows
             MoveEventBox.IsChecked = mw.Set.AllowMove;
             SmartMoveEventBox.IsChecked = mw.Set.SmartMove;
             PressLengthSlider.Value = mw.Set.PressLength / 1000.0;
+            SwitchMsgOut.IsChecked = mw.Set.MessageBarOutside;
 
             StartUpBox.IsChecked = mw.Set.StartUPBoot;
             StartUpSteamBox.IsChecked = mw.Set.StartUPBootSteam;
@@ -796,6 +797,17 @@ namespace VPet_Simulator.Windows
                 return;
             MessageBoxX.Show("由于没做完,暂不支持数据计算\n敬请期待后续更新", "没做完!", MessageBoxButton.OK, MessageBoxIcon.Warning);
             mw.Set.EnableFunction = CalFunctionBox.IsChecked.Value;
+        }
+
+        private void SwitchMsgOut_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.MessageBarOutside = SwitchMsgOut.IsChecked.Value;
+            if (SwitchMsgOut.IsChecked.Value)
+                mw.Main.MsgBar.SetPlaceOUT();
+            else
+                mw.Main.MsgBar.SetPlaceIN();
         }
     }
 }

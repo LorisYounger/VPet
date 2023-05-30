@@ -237,6 +237,14 @@ namespace VPet_Simulator.Windows.Interface
             set => this["gameconfig"].SetInt("smartmoveinterval", value);
         }
         /// <summary>
+        /// 消息框外置
+        /// </summary>
+        public bool MessageBarOutside
+        {
+            get => this["gameconfig"].GetBool("msgbarout");
+            set => this["gameconfig"].SetBool("msgbarout", value);
+        }
+        /// <summary>
         /// 开机启动
         /// </summary>
         public bool StartUPBoot
