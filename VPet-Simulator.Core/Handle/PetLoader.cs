@@ -1,10 +1,13 @@
 ﻿using LinePutScript;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Threading;
 using static VPet_Simulator.Core.GraphCore;
 
@@ -46,11 +49,47 @@ namespace VPet_Simulator.Core
             path.Add(directory.FullName + "\\" + lps.First()["path"].Info);
             Config = new Config(lps);
         }
-
+        public delegate void LoadGraphDelegate(GraphCore graph, FileSystemInfo path, ILine info);
+        /// <summary>
+        /// 自定义图片加载方法
+        /// </summary>
+        public static Dictionary<string, LoadGraphDelegate> IGraphConvert = new Dictionary<string, LoadGraphDelegate>()
+        {
+            { "pnganimation", PNGAnimation.LoadGraph},
+        };
         public static void LoadGraph(GraphCore graph, DirectoryInfo di, string path_name)
         {
             var list = di.EnumerateDirectories();
-            if (list.Count() == 0)
+            if (File.Exists(di.FullName + @"\info.lps"))
+            {
+                //如果自带描述信息,则手动加载
+                LpsDocument lps = new LpsDocument(File.ReadAllText(di.FullName + @"\info.lps"));
+                foreach (ILine line in lps)
+                {
+                    if (IGraphConvert.TryGetValue(line.Name.ToLower(), out var func))
+                    {
+                        var str = line.GetString("path");
+                        if (!string.IsNullOrEmpty(str))
+                        {
+                            var p = Path.Combine(di.FullName, str);
+                            if(Directory.Exists(p))
+                                func.Invoke(graph, new DirectoryInfo(p), line);
+                            else if (File.Exists(p))
+                                func.Invoke(graph, new FileInfo(p), line);
+                            else
+                                MessageBox.Show("未知的图像位置: " + p);
+                        }
+                        else
+                            func.Invoke(graph, di, line);
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("未知的图像类型: " + line.Name.ToLower());
+                    }
+                }
+            }
+            else if (list.Count() == 0)
             {
                 //自动加载 PNG ANMIN
                 path_name = path_name.Trim('_').ToLower();
@@ -87,12 +126,8 @@ namespace VPet_Simulator.Core
                     }
                 }
 #if DEBUG
-                //throw new Exception("未知的图像类型: " + path_name);
+                MessageBox.Show("未知的图像类型: " + path_name);
 #endif
-            }
-            else if (File.Exists(di.FullName + @"\info.lps"))
-            {//如果自带描述信息,则手动加载
-             //TODO:
             }
             else
                 foreach (var p in list)

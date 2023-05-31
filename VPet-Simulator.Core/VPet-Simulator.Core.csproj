@@ -131,10 +131,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Graph\FoodAnimation.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Display\WorkTimer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -149,9 +145,7 @@
     <Compile Include="Display\ToolBar.xaml.cs">
       <DependentUpon>ToolBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Graph\FoodAnimation.xaml.cs">
-      <DependentUpon>FoodAnimation.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Graph\FoodAnimation.cs" />
     <Compile Include="Graph\GraphCore.cs" />
     <Compile Include="Graph\EyeTracking.xaml.cs">
       <DependentUpon>EyeTracking.xaml</DependentUpon>

@@ -9,13 +9,17 @@ using System.Windows;
 using System.IO;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using LinePutScript;
+using static VPet_Simulator.Core.GraphCore;
+using static VPet_Simulator.Core.Picture;
+using System.Security.Cryptography;
 
 namespace VPet_Simulator.Core
 {
     /// <summary>
     /// Picture.xaml 的交互逻辑
     /// </summary>
-    public partial class Picture : IGraph
+    public partial class Picture : IGraph, IImageRun
     {
         /// <summary>
         /// 新建新静态图像
@@ -37,6 +41,67 @@ namespace VPet_Simulator.Core
                 GraphCore.CommUIElements["Image3.Picture"] = new Image() { Width = 500, Height = 500 };
             }
         }
+        public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
+        {
+            if (!(path is FileInfo))
+            {
+                PNGAnimation.LoadGraph(graph, path, info);
+                return;
+            }
+            GameSave.ModeType modetype;
+            var path_name = path.FullName.Trim('_').ToLower();
+            if (!Enum.TryParse(info[(gstr)"mode"], true, out modetype))
+            {
+                if (path_name.Contains("happy"))
+                {
+                    modetype = GameSave.ModeType.Happy;
+                }
+                else if (path_name.Contains("nomal"))
+                {
+                    modetype = GameSave.ModeType.Nomal;
+                }
+                else if (path_name.Contains("poorcondition"))
+                {
+                    modetype = GameSave.ModeType.PoorCondition;
+                }
+                else if (path_name.Contains("ill"))
+                {
+                    modetype = GameSave.ModeType.Ill;
+                }
+                else
+                {
+                    modetype = GameSave.ModeType.Nomal;
+                }
+            }
+            GraphType graphtype = GraphType.Not_Able;
+            if (!Enum.TryParse(info[(gstr)"graph"], true, out graphtype))
+            {
+                for (int i = 0; i < GraphTypeValue.Length; i++)
+                {
+                    if (path_name.StartsWith(GraphTypeValue[i]))
+                    {
+                        graphtype = (GraphType)i;
+                        break;
+                    }
+                }
+            }
+            int length = info.GetInt("length");
+            if (length == 0)
+            {
+                if (!int.TryParse(path.Name.Split('.').Reverse().ToArray()[1].Split('_').Last(), out length))
+                    length = 1000;
+            }
+            bool isLoop = info[(gbol)"loop"];
+            Picture pa = new Picture(graph, path.FullName, modetype, graphtype, length, isLoop);
+            if (graphtype == GraphType.Not_Able)
+            {
+                graph.AddCOMMGraph(pa, info.info);
+            }
+            else
+            {
+                graph.AddGraph(pa, graphtype);
+            }
+        }
         /// <summary>
         /// 图片资源
         /// </summary>
@@ -50,6 +115,8 @@ namespace VPet_Simulator.Core
         public bool IsContinue { get; set; }
 
         public GraphCore.GraphType GraphType { get; set; }
+
+        public bool IsReady => true;
 
         public void Run(Border parant, Action EndAction = null)
         {
@@ -93,8 +160,9 @@ namespace VPet_Simulator.Core
                     //bitmap.StreamSource = stream;
                     //bitmap.CacheOption = BitmapCacheOption.OnLoad;
                     //bitmap.EndInit();
-                    img.Source = new BitmapImage(new Uri(Path));                    
-                    parant.Tag = this;                  
+                    img.Width = 500;
+                    img.Source = new BitmapImage(new Uri(Path));
+                    parant.Tag = this;
                 }
                 Task.Run(() =>
                 {
@@ -118,7 +186,59 @@ namespace VPet_Simulator.Core
             PlayState = false;
             this.DoEndAction = !StopEndAction;
         }
-
-        public void WaitForReadyRun(Border parant, Action EndAction = null) => Run(parant, EndAction);
+        public Thread Run(System.Windows.Controls.Image img, Action EndAction = null)
+        {
+            PlayState = true;
+            DoEndAction = true;
+            return img.Dispatcher.Invoke(() =>
+            {
+                if (img.Tag == this)
+                {
+                    return new Thread(() =>
+                    {
+                        Thread.Sleep(Length);
+                        if (IsLoop && PlayState)
+                        {
+                            Run(img, EndAction);
+                        }
+                        else
+                        {
+                            PlayState = false;
+                            if (DoEndAction)
+                                EndAction?.Invoke();//运行结束动画时事件
+                        }
+                    });
+                }
+                img.Tag = this;
+                img.Source = new BitmapImage(new Uri(Path));
+                img.Width = 500;
+                return new Thread(() =>
+                {
+                    Thread.Sleep(Length);
+                    if (IsLoop && PlayState)
+                    {
+                        Run(img, EndAction);
+                    }
+                    else
+                    {
+                        PlayState = false;
+                        if (DoEndAction)
+                            EndAction?.Invoke();//运行结束动画时事件
+                    }
+                });
+            });
+        }
+        public interface IImageRun
+        {
+            /// <summary>
+            /// 指定图像图像控件准备运行该动画
+            /// </summary>
+            /// <param name="img">用于显示的Image</param>
+            /// <param name="EndAction">结束动画</param>
+            /// <returns>准备好的线程</returns>
+            Thread Run(System.Windows.Controls.Image img, Action EndAction = null);
+        }
     }
+
+   
 }

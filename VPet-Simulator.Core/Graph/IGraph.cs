@@ -31,9 +31,13 @@ namespace VPet_Simulator.Core
         /// </summary>
         bool IsContinue { get; set; }
         /// <summary>
-        /// 从0开始运行该动画, 等待部署完成后执行
+        /// 是否准备完成
         /// </summary>
-        void WaitForReadyRun(Border parant, Action EndAction = null);
+        bool IsReady { get; } 
+        ///// <summary>
+        ///// 从0开始运行该动画, 等待部署完成后执行
+        ///// </summary>
+        //void WaitForReadyRun(Border parant, Action EndAction = null);
         ///// <summary>//经过测试,储存到内存好处多多,不储存也要占用很多内存,干脆存了吧
         ///// 是否储存到内存以支持快速显示
         ///// </summary>

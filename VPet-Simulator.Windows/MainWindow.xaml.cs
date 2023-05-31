@@ -327,12 +327,12 @@ namespace VPet_Simulator.Windows
                 }
                 else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 5, 26))
                 {
-                    // if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 4))
-                    //     notifyIcon.ShowBalloonTip(10, "更新通知 05/26",
-                    //"现已接入ChatGPT, 右键和桌宠说话吧.\n已根据steamID独立创建的聊天API,调教你独属的桌宠吧", ToolTipIcon.Info);
-                    // else
-                    notifyIcon.ShowBalloonTip(10, "更新通知 05/26",
-               "新增学习打工等互动,新增开心的默认状态\n新增语音插件,请在设置中MOD管理开启", ToolTipIcon.Info);
+                    if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 4))
+                        notifyIcon.ShowBalloonTip(10, "更新通知 05/26",
+               "支持外置消息窗/时钟等窗口\n新增语音插件,请在设置中MOD管理开启", ToolTipIcon.Info);
+                    else
+                        notifyIcon.ShowBalloonTip(10, "更新通知 06/01",
+               "支持外置消息窗/时钟等窗口", ToolTipIcon.Info);
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);
                 }
                 Save();

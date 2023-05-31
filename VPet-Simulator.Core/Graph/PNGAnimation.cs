@@ -22,13 +22,15 @@ using Panuon.WPF.UI;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Security.Policy;
 using System.Runtime.InteropServices.ComTypes;
+using static VPet_Simulator.Core.GraphCore;
+using static VPet_Simulator.Core.Picture;
 
 namespace VPet_Simulator.Core
 {
     /// <summary>
     /// PNGAnimation.xaml 的交互逻辑
     /// </summary>
-    public partial class PNGAnimation : IGraph
+    public partial class PNGAnimation : IGraph, IImageRun
     {
         /// <summary>
         /// 所有动画帧
@@ -153,6 +155,63 @@ namespace VPet_Simulator.Core
             //    Animations.Add(new Animation(this, time, () => imgs[last % 3].Visibility = Visibility.Visible
             //    , () => imgs[last % 3].Visibility = Visibility.Hidden));
             //}
+        }
+
+        public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
+        {
+            if(!(path is DirectoryInfo p))
+            {
+                Picture.LoadGraph(graph, path, info);
+                return;
+            }
+            var paths = p.GetFiles();
+            GameSave.ModeType modetype;
+            var path_name = path.FullName.Trim('_').ToLower();
+            if (!Enum.TryParse(info[(gstr)"mode"], true, out modetype))
+            {
+                if (path_name.Contains("happy"))
+                {
+                    modetype = GameSave.ModeType.Happy;
+                }
+                else if (path_name.Contains("nomal"))
+                {
+                    modetype = GameSave.ModeType.Nomal;
+                }
+                else if (path_name.Contains("poorcondition"))
+                {
+                    modetype = GameSave.ModeType.PoorCondition;
+                }
+                else if (path_name.Contains("ill"))
+                {
+                    modetype = GameSave.ModeType.Ill;
+                }
+                else
+                {
+                    modetype = GameSave.ModeType.Nomal;
+                }
+            }
+            GraphType graphtype = GraphType.Not_Able;
+            if (!Enum.TryParse(info[(gstr)"graph"], true, out graphtype))
+            {
+                for (int i = 0; i < GraphTypeValue.Length; i++)
+                {
+                    if (path_name.StartsWith(GraphTypeValue[i]))
+                    {
+                        graphtype = (GraphType)i;
+                        break;
+                    }
+                }
+            }
+            bool isLoop = info[(gbol)"loop"];
+            PNGAnimation pa = new PNGAnimation(graph, path.FullName, paths, modetype, graphtype, isLoop);
+            if(graphtype == GraphType.Not_Able)
+            {
+                graph.AddCOMMGraph(pa, info.info);
+            }
+            else
+            {
+                graph.AddGraph(pa, graphtype);
+            }
         }
 
         public double Width;
@@ -348,24 +407,34 @@ namespace VPet_Simulator.Core
                 Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, EndAction));
             });
         }
-
+        /// <summary>
+        /// 指定图像图像控件准备运行该动画
+        /// </summary>
+        /// <param name="img">用于显示的Image</param>
+        /// <param name="EndAction">结束动画</param>
+        /// <returns>准备好的线程</returns>
+        public Thread Run(System.Windows.Controls.Image img, Action EndAction = null)
+        {
+            nowid = 0;
+            PlayState = true;
+            DoEndAction = true;
+            return img.Dispatcher.Invoke(() =>
+              {
+                  if (img.Tag == this)
+                  {
+                      return new Thread(() => Animations[0].Run(img, EndAction));
+                  }
+                  img.Tag = this;
+                  img.Source = new BitmapImage(new Uri(Path));
+                  img.Width = Width;
+                  return new Thread(() => Animations[0].Run(img, EndAction));
+              });
+        }
         public void Stop(bool StopEndAction = false)
         {
             DoEndAction = !StopEndAction;
             PlayState = false;
             //IsResetPlay = false;
-        }
-
-        public void WaitForReadyRun(Border parant, Action EndAction = null)
-        {
-            Task.Run(() =>
-            {
-                while (!IsReady)
-                {
-                    Thread.Sleep(100);
-                }
-                Run(parant, EndAction);
-            });
         }
     }
 }

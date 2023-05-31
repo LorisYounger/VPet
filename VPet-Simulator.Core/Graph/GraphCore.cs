@@ -29,6 +29,10 @@ namespace VPet_Simulator.Core
         public enum GraphType
         {
             /// <summary>
+            /// 不被启用/使用的 不包含在GrapType
+            /// </summary>
+            Not_Able,
+            /// <summary>
             /// 被提起动态 (循环)
             /// </summary>
             Raised_Dynamic,
@@ -316,12 +320,20 @@ namespace VPet_Simulator.Core
             /// 口渴
             /// </summary>
             Switch_Thirsty,
+            /// <summary>
+            /// 吃东西
+            /// </summary>
+            Eat,
         }
 
         /// <summary>
         /// 图像字典
         /// </summary>
         public Dictionary<GraphType, List<IGraph>> Graphs = new Dictionary<GraphType, List<IGraph>>();
+        /// <summary>
+        /// 图像字典(不被主要引用)
+        /// </summary>
+        public Dictionary<string, List<IGraph>> CommGraphs = new Dictionary<string, List<IGraph>>();
         /// <summary>
         /// 通用UI资源
         /// </summary>
@@ -352,6 +364,24 @@ namespace VPet_Simulator.Core
             Graphs[type].Add(graph);
         }
         /// <summary>
+        /// 添加动画
+        /// </summary>
+        /// <param name="graph">动画</param>
+        public void AddGraph(IGraph graph) => AddGraph(graph, graph.GraphType);
+        /// <summary>
+        /// 添加动画
+        /// </summary>
+        /// <param name="graph">动画</param>
+        /// <param name="type">类型</param>
+        public void AddCOMMGraph(IGraph graph, string Name)
+        {
+            if (!CommGraphs.ContainsKey(Name))
+            {
+                CommGraphs.Add(Name, new List<IGraph>());
+            }
+            CommGraphs[Name].Add(graph);
+        }
+        /// <summary>
         /// 添加动画 自动创建
         /// </summary>
         /// <param name="path">位置</param>
@@ -373,7 +403,7 @@ namespace VPet_Simulator.Core
         /// 随机数字典(用于确保随机动画不会错位)
         /// </summary>
         public Dictionary<int, int> RndGraph = new Dictionary<int, int>();
-        
+
         /// <summary>
         /// 查找动画
         /// </summary>
@@ -407,6 +437,45 @@ namespace VPet_Simulator.Core
                 if (mode != GameSave.ModeType.Ill)
                 {
                     list = Graphs[type].FindAll(x => x.ModeType != GameSave.ModeType.Ill);
+                    if (list.Count > 0)
+                        return list[Function.Rnd.Next(list.Count)];
+                }
+            }
+            return null;// FindGraph(GraphType.Default, mode);
+        }
+        /// <summary>
+        /// 查找动画
+        /// </summary>
+        /// <param name="type">动画类型</param>
+        /// <param name="mode">状态类型,找不到就找相同动画类型</param>
+        ///// <param name="storernd">是否储存随机数字典</param>
+        public IGraph FindCOMMGraph(string Name, GameSave.ModeType mode)
+        {
+            if (CommGraphs.ContainsKey(Name))
+            {
+                var list = CommGraphs[Name].FindAll(x => x.ModeType == mode);
+                if (list.Count > 0)
+                {
+                    if (list.Count == 1)
+                        return list[0];
+                    if (GraphConfig.StoreRnd.Contains(Name))
+                        if (RndGraph.TryGetValue(list.Count, out int index))
+                        {
+                            return list[index];
+                        }
+                        else
+                        {
+                            index = Function.Rnd.Next(list.Count);
+                            RndGraph.Add(list.Count, index);
+                            return list[index];
+                        }
+                    else
+                        return list[Function.Rnd.Next(list.Count)];
+
+                }
+                if (mode != GameSave.ModeType.Ill)
+                {
+                    list = CommGraphs[Name].FindAll(x => x.ModeType != GameSave.ModeType.Ill);
                     if (list.Count > 0)
                         return list[Function.Rnd.Next(list.Count)];
                 }
