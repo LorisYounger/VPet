@@ -134,7 +134,7 @@ namespace VPet_Simulator.Core
                     ig2.IsContinue = true;
                     return;
                 }
-
+            Core.Graph.RndGraph.Clear();
             Display(GraphType.Touch_Head_A_Start, () =>
                Display(GraphType.Touch_Head_B_Loop, () =>
                Display(GraphType.Touch_Head_C_End, DisplayToNomal
@@ -176,6 +176,7 @@ namespace VPet_Simulator.Core
         {
             looptimes = 0;
             CountNomal = 0;
+            Core.Graph.RndGraph.Clear();
             Display(GraphType.Idel_StateONE_A_Start, DisplayIdel_StateONEing);
         }
         /// <summary>
@@ -224,6 +225,7 @@ namespace VPet_Simulator.Core
         {
             looptimes = 0;
             CountNomal = 0;
+            Core.Graph.RndGraph.Clear();
             Display(GraphType.Squat_A_Start, DisplaySquating);
         }
         /// <summary>
@@ -243,6 +245,7 @@ namespace VPet_Simulator.Core
         {
             looptimes = 0;
             CountNomal = 0;
+            Core.Graph.RndGraph.Clear();
             Display(GraphType.Boring_A_Start, DisplayBoringing);
         }
         /// <summary>

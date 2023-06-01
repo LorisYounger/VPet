@@ -310,6 +310,7 @@ namespace VPet_Simulator.Core
             nowid = 0;
             PlayState = true;
             DoEndAction = true;
+            GraphCore.RndGraph.Clear();
             parant.Dispatcher.Invoke(() =>
             {
                 parant.Tag = this;
