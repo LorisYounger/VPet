@@ -1,19 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using static System.Windows.Forms.AxHost;
 using System.Windows.Media;
 using static VPet_Simulator.Core.Picture;
+using static VPet_Simulator.Core.IGraph;
+using LinePutScript;
+using System.IO;
+using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Core
 {
-    public class FoodAnimation : IGraph
+    /// <summary>
+    /// 食物动画 支持显示前中后3层夹心动画
+    /// 不一定只用于食物,只是叫这个名字
+    /// </summary>
+    public class FoodAnimation : IRunImage
     {
+        /// <summary>
+        /// 创建食物动画 第二层夹心为运行时提供
+        /// </summary>
+        /// <param name="graphCore">动画核心</param>
+        /// <param name="modetype">动画模式</param>
+        /// <param name="graphtype">动画类型</param>
+        /// <param name="front_Lay">前层 动画名</param>
+        /// <param name="back_Lay">后层 动画名</param>
+        /// <param name="animations">中间层运动轨迹</param>
+        /// <param name="isLoop">是否循环</param>
+        public FoodAnimation(GraphCore graphCore, GameSave.ModeType modetype, GraphCore.GraphType graphtype, string front_Lay,
+            string back_Lay, ILine animations, bool isLoop = false)
+        {
+            IsLoop = isLoop;
+            GraphType = graphtype;
+            ModeType = modetype;
+            GraphCore = graphCore;
+            Front_Lay = front_Lay;
+            Back_Lay = back_Lay;
+            Animations = new List<Animation>();
+            int i = 0;
+            ISub sub = animations.Find("a" + i);
+            while (sub != null)
+            {
+                Animations.Add(new Animation(this, sub));
+                sub = animations.Find("a" + ++i);
+            }
+        }
+
+        public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
+        {
+            GameSave.ModeType modetype;
+            var path_name = path.FullName.Trim('_').ToLower();
+            if (!Enum.TryParse(info[(gstr)"mode"], true, out modetype))
+            {
+                if (path_name.Contains("happy"))
+                {
+                    modetype = GameSave.ModeType.Happy;
+                }
+                else if (path_name.Contains("nomal"))
+                {
+                    modetype = GameSave.ModeType.Nomal;
+                }
+                else if (path_name.Contains("poorcondition"))
+                {
+                    modetype = GameSave.ModeType.PoorCondition;
+                }
+                else if (path_name.Contains("ill"))
+                {
+                    modetype = GameSave.ModeType.Ill;
+                }
+                else
+                {
+                    modetype = GameSave.ModeType.Nomal;
+                }
+            }
+            GraphType graphtype = GraphType.Not_Able;
+            if (!Enum.TryParse(info[(gstr)"graph"], true, out graphtype))
+            {
+                for (int i = 0; i < GraphTypeValue.Length; i++)
+                {
+                    if (path_name.StartsWith(GraphTypeValue[i]))
+                    {
+                        graphtype = (GraphType)i;
+                        break;
+                    }
+                }
+            }
+            bool isLoop = info[(gbol)"loop"];
+            FoodAnimation pa = new FoodAnimation(graph, modetype, graphtype, info[(gstr)"front_lay"], info[(gstr)"back_lay"], info, isLoop);
+            if (graphtype == GraphType.Not_Able)
+            {
+                graph.AddCOMMGraph(pa, info.info);
+            }
+            else
+            {
+                graph.AddGraph(pa, graphtype);
+            }
+        }
         /// <summary>
         /// 前层名字
         /// </summary>
@@ -67,7 +151,10 @@ namespace VPet_Simulator.Core
         {
             private FoodAnimation parent;
             public Thickness MarginWI;
-            public double Rotate;
+            public double Rotate = 0;
+            public double Opacity = 1;
+            public bool IsVisiable = true;
+            public double Width;
             /// <summary>
             /// 帧时间
             /// </summary>
@@ -78,12 +165,37 @@ namespace VPet_Simulator.Core
             /// <param name="parent">FoodAnimation</param>
             /// <param name="time">持续时间</param>
             /// <param name="wx"></param>
-            public Animation(FoodAnimation parent, int time, Thickness wx, double rotate)
+            public Animation(FoodAnimation parent, int time, Thickness wx, double width, double rotate = 0, bool isVisiable = true, double opacity = 1)
             {
                 this.parent = parent;
                 Time = time;
                 MarginWI = wx;
                 Rotate = rotate;
+                IsVisiable = isVisiable;
+                Width = width;
+                Opacity = opacity;
+            }
+            /// <summary>
+            /// 创建单帧动画
+            /// </summary>
+            public Animation(FoodAnimation parent, ISub sub)
+            {
+                this.parent = parent;
+                var strs = sub.GetInfos();
+                Time = int.Parse(strs[0]);
+                if (strs.Length == 1)
+                    IsVisiable = false;
+                else
+                {
+                    MarginWI = new Thickness(double.Parse(strs[1]), double.Parse(strs[2]), 0, 0);
+                    Width = double.Parse(strs[3]);
+                    if (strs.Length > 4)
+                    {
+                        Rotate = double.Parse(strs[4]);
+                        if (strs.Length > 5)
+                            Opacity = double.Parse(strs[5]);
+                    }
+                }
             }
             /// <summary>
             /// 运行该图层
@@ -93,8 +205,19 @@ namespace VPet_Simulator.Core
                 //先显示该图层
                 This.Dispatcher.Invoke(() =>
                 {
-                    This.Margin = MarginWI;
-                    This.LayoutTransform = new RotateTransform(Rotate);
+                    if (IsVisiable)
+                    {
+                        This.Visibility = Visibility.Visible;
+                        This.Margin = MarginWI;
+                        This.LayoutTransform = new RotateTransform(Rotate);
+                        This.Opacity = 1;
+                        This.Width = Width;
+                    }
+                    else
+                    {
+                        This.Visibility = Visibility.Collapsed;
+                    }
+
                 });
                 //然后等待帧时间毫秒
                 Thread.Sleep(Time);
@@ -157,24 +280,62 @@ namespace VPet_Simulator.Core
                 Height = 500;
                 Front = new Image();
                 Back = new Image();
-                Food = new Image();
-                Food.RenderTransformOrigin = new Point(0.5, 0.5);
-                this.Children.Add(Front);
+                Food = new Image
+                {
+                    RenderTransformOrigin = new Point(0.5, 0.5),
+                    VerticalAlignment = VerticalAlignment.Top,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Visibility = Visibility.Collapsed,
+                };
                 this.Children.Add(Back);
+                this.Children.Add(Food);
+                this.Children.Add(Front);
             }
             public Image Front;
             public Image Food;
             public Image Back;
         }
 
-        public void Run(Border parant, Action EndAction = null)
+        public void Run(Border parant, Action EndAction = null) => Run(parant, null, EndAction);
+
+        public void Run(Border parant, ImageSource image, Action EndAction = null)
         {
-            throw new NotImplementedException();
+            if (PlayState)
+            {//如果当前正在运行,重置状态
+             //IsResetPlay = true;
+                Stop();
+                StopAction = () => Run(parant, image, EndAction);
+                return;
+            }
+            nowid = 0;
+            PlayState = true;
+            DoEndAction = true;
+            parant.Dispatcher.Invoke(() =>
+            {
+                parant.Tag = this;
+                if (parant.Child != FoodGrid)
+                {
+                    if (FoodGrid.Parent != null)
+                    {
+                        ((Border)FoodGrid.Parent).Child = null;
+                    }
+                    parant.Child = FoodGrid;
+                }
+                IImageRun FL = (IImageRun)GraphCore.FindCOMMGraph(Front_Lay, ModeType);
+                IImageRun BL = (IImageRun)GraphCore.FindCOMMGraph(Back_Lay, ModeType);
+                var t1 = FL.Run(FoodGrid.Front);
+                var t2 = BL.Run(FoodGrid.Back);
+                FoodGrid.Food.Source = image;
+                Task.Run(() => Animations[0].Run(FoodGrid.Food, EndAction));
+                Task.Run(t1.Start);
+                Task.Run(t2.Start);
+            });
         }
 
         public void Stop(bool StopEndAction = false)
         {
-            throw new NotImplementedException();
+            DoEndAction = !StopEndAction;
+            PlayState = false;
         }
     }
 }

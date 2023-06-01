@@ -53,9 +53,14 @@
 
 * 桌宠动画
 * 物品/食物/饮料等
-* 桌宠工作
+* 自定义桌宠工作
 * 说话文本
 * 主题
+* 代码插件 - 通过编写代码给桌宠添加内容
+  * 添加新的动画逻辑/显示方案 (eg: l2d/spine 等)
+  * 添加新功能 (闹钟/记事板等等)
+  * 几乎无所不能, 示例例子参见 [VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo)
+
 
 ### 反馈&建议&联系我们
 
@@ -188,7 +193,7 @@
 
 ## 参与开发
 
-欢迎参与虚拟桌宠模拟器的开发! 为保证代码可维护度和游戏性,如果想要开发新的功能,请先[邮件联系](mailto:zoujin.dev@exlb.org)我想要添加的功能/玩法, 以确保该功能/玩法适用于虚拟桌宠模拟器. 以免未来提交时因不合适被拒(而造成代码浪费)<br/>
+欢迎参与虚拟桌宠模拟器的开发! 为保证代码可维护度和游戏性,如果想要开发新的功能,请先[邮件联系](mailto:zoujin.dev@exlb.org)或发[Issues](https://github.com/LorisYounger/VPet/issues)我想要添加的功能/玩法, 以确保该功能/玩法适用于虚拟桌宠模拟器. 以免未来提交时因不合适被拒(而造成代码浪费)<br/>
 如果是修复错误或者BUG,无需联系我,修好后直接PR即可
 
 当想法通过后,您可以通过 [fork](https://github.com/LorisYounger/VPet/fork) 功能拷贝代码至自己的github以方便编写自己的代码, 编写完毕后通过[pull requests](https://github.com/LorisYounger/VPet/compare) 提交<br/>

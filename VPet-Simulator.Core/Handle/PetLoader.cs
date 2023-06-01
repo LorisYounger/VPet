@@ -1,14 +1,8 @@
 ﻿using LinePutScript;
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Core
@@ -56,6 +50,8 @@ namespace VPet_Simulator.Core
         public static Dictionary<string, LoadGraphDelegate> IGraphConvert = new Dictionary<string, LoadGraphDelegate>()
         {
             { "pnganimation", PNGAnimation.LoadGraph},
+            { "picture", Picture.LoadGraph },
+            { "foodanimation", FoodAnimation.LoadGraph },
         };
         public static void LoadGraph(GraphCore graph, DirectoryInfo di, string path_name)
         {
@@ -72,7 +68,7 @@ namespace VPet_Simulator.Core
                         if (!string.IsNullOrEmpty(str))
                         {
                             var p = Path.Combine(di.FullName, str);
-                            if(Directory.Exists(p))
+                            if (Directory.Exists(p))
                                 func.Invoke(graph, new DirectoryInfo(p), line);
                             else if (File.Exists(p))
                                 func.Invoke(graph, new FileInfo(p), line);

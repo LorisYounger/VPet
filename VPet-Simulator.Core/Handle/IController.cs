@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VPet_Simulator.Core
+﻿namespace VPet_Simulator.Core
 {
     /// <summary>
     /// 桌宠控制器 需自行实现

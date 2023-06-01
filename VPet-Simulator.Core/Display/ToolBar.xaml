@@ -101,11 +101,8 @@
                     <UniformGrid Columns="5" />
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
-            <MenuItem x:Name="MenuFeed" Header="投喂" HorizontalContentAlignment="Center" Padding="0">
-                <MenuItem Header="食物" HorizontalContentAlignment="Center" IsEnabled="False" />
-                <MenuItem Header="饮料" HorizontalContentAlignment="Center" IsEnabled="False" />
-                <MenuItem Header="药品" HorizontalContentAlignment="Center" IsEnabled="False" />
-            </MenuItem>
+            <MenuItem x:Name="MenuFeed" Header="投喂" HorizontalContentAlignment="Center" Padding="0"
+                    x:FieldModifier="public" />
             <MenuItem x:Name="MenuPanel" Header="面板" MouseEnter="MenuPanel_MouseEnter" MouseLeave="MenuPanel_MouseLeave"
                     HorizontalContentAlignment="Center" Padding="0" />
             <MenuItem x:Name="MenuInteract" Header="互动" HorizontalContentAlignment="Center" Width="99" Padding="0">
@@ -120,7 +117,7 @@
             <MenuItem x:Name="MenuDIY" Header="自定" HorizontalContentAlignment="Center" Click="MenuDIY_Click"
                     x:FieldModifier="public" Padding="0" />
             <MenuItem x:Name="MenuSetting" Header="系统" HorizontalContentAlignment="Center" x:FieldModifier="public"
-                     Padding="0" />
+                    Padding="0" />
         </Menu>
     </Grid>
 </UserControl>

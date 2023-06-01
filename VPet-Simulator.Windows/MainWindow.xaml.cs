@@ -18,6 +18,10 @@ using ChatGPT.API.Framework;
 using static VPet_Simulator.Core.GraphCore;
 using Panuon.WPF.UI;
 using VPet_Simulator.Windows.Interface;
+using static VPet_Simulator.Core.IGraph;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace VPet_Simulator.Windows
 {
@@ -265,6 +269,17 @@ namespace VPet_Simulator.Windows
                     Topmost = false;
                     winSetting.Show();
                 });
+
+                //this.Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.PNG")));
+
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喂食测试", () =>
+                {
+                    Main.ToolBar.Visibility = Visibility.Collapsed;
+                    IRunImage eat = (IRunImage)Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
+                    var b = Main.FindDisplayBorder(eat);
+                    eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/tony.bmp")), Main.DisplayToNomal);
+                }
+                );
 
                 Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
                 Main.SetLogicInterval((int)(Set.LogicInterval * 1000));

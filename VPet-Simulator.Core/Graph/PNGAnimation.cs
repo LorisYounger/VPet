@@ -1,27 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows;
-using System.Windows.Threading;
 using System.Threading;
 using System.Drawing;
 using LinePutScript;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
-using Panuon.WPF.UI;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
-using System.Security.Policy;
-using System.Runtime.InteropServices.ComTypes;
 using static VPet_Simulator.Core.GraphCore;
 using static VPet_Simulator.Core.Picture;
 
@@ -30,7 +17,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// PNGAnimation.xaml 的交互逻辑
     /// </summary>
-    public partial class PNGAnimation : IGraph, IImageRun
+    public partial class PNGAnimation : IImageRun
     {
         /// <summary>
         /// 所有动画帧
@@ -358,7 +345,7 @@ namespace VPet_Simulator.Core
             if (PlayState)
             {//如果当前正在运行,重置状态
              //IsResetPlay = true;
-                Stop(true);
+                Stop();
                 StopAction = () => Run(parant, EndAction);
                 return;
             }

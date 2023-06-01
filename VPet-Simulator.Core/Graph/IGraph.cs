@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Core
@@ -33,7 +29,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 是否准备完成
         /// </summary>
-        bool IsReady { get; } 
+        bool IsReady { get; }
         ///// <summary>
         ///// 从0开始运行该动画, 等待部署完成后执行
         ///// </summary>
@@ -55,5 +51,18 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="StopEndAction">停止动画时是否允许执行停止帧</param>
         void Stop(bool StopEndAction = false);
+        /// <summary>
+        /// 指示该ImageRun支持
+        /// </summary>
+        public interface IRunImage : IGraph
+        {
+            /// <summary>
+            /// 从0开始运行该动画
+            /// </summary>
+            /// <param name="parant">显示位置</param>
+            /// <param name="EndAction">结束方法</param>
+            /// <param name="image">额外图片</param>
+            void Run(Border parant, ImageSource image, Action EndAction = null);
+        }
     }
 }

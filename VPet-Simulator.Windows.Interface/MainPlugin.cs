@@ -1,10 +1,4 @@
-﻿using LinePutScript;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-namespace VPet_Simulator.Windows.Interface
+﻿namespace VPet_Simulator.Windows.Interface
 {
     /// <summary>
     /// 这是插件的主体内容 请继承这个类

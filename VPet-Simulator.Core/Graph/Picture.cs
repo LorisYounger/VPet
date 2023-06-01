@@ -1,25 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using System.Windows;
 using System.IO;
 using System.Windows.Controls;
-using System.Windows.Threading;
 using LinePutScript;
 using static VPet_Simulator.Core.GraphCore;
 using static VPet_Simulator.Core.Picture;
-using System.Security.Cryptography;
 
 namespace VPet_Simulator.Core
 {
     /// <summary>
     /// Picture.xaml 的交互逻辑
     /// </summary>
-    public partial class Picture : IGraph, IImageRun
+    public partial class Picture : IImageRun
     {
         /// <summary>
         /// 新建新静态图像
@@ -122,7 +117,7 @@ namespace VPet_Simulator.Core
         {
             if (PlayState)
             {
-                IsLoop = true;
+                IsContinue = true;
                 return;
             }
             PlayState = true;
@@ -228,7 +223,7 @@ namespace VPet_Simulator.Core
                 });
             });
         }
-        public interface IImageRun
+        public interface IImageRun : IGraph
         {
             /// <summary>
             /// 指定图像图像控件准备运行该动画

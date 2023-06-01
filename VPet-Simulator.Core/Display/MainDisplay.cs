@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Threading;
 using static VPet_Simulator.Core.GraphCore;
 
@@ -1216,6 +1209,66 @@ namespace VPet_Simulator.Core
             }
             petgridcrlf = !petgridcrlf;
             GC.Collect();
+        }
+        /// <summary>
+        /// 查找可用与显示的Border (自动多层切换)
+        /// </summary>
+        /// <param name="graph">动画</param>
+        public Border FindDisplayBorder(IGraph graph)
+        {
+            DisplayType = graph.GraphType;
+            var PetGridTag = Dispatcher.Invoke(() => PetGrid.Tag);
+            var PetGrid2Tag = Dispatcher.Invoke(() => PetGrid2.Tag);
+            if (PetGridTag == graph)
+            {
+                petgridcrlf = true;
+                ((IGraph)(PetGrid2Tag)).Stop(true);
+                Dispatcher.Invoke(() =>
+                {
+                    PetGrid.Visibility = Visibility.Visible;
+                    PetGrid2.Visibility = Visibility.Hidden;
+                });
+                return PetGrid;
+            }
+            else if (PetGrid2Tag == graph)
+            {
+                petgridcrlf = false;
+                ((IGraph)(PetGridTag)).Stop(true);
+                Dispatcher.Invoke(() =>
+                {
+                    PetGrid2.Visibility = Visibility.Visible;
+                    PetGrid.Visibility = Visibility.Hidden;
+                });
+                return PetGrid2;
+            }
+
+            if (petgridcrlf)
+            {
+                ((IGraph)(PetGridTag)).Stop(true);
+                Dispatcher.Invoke(() =>
+                {
+                    PetGrid.Visibility = Visibility.Hidden;
+                    PetGrid2.Visibility = Visibility.Visible;
+                    //PetGrid2.Tag = graph;
+                });
+                petgridcrlf = !petgridcrlf;
+                GC.Collect();
+                return PetGrid2;
+            }
+            else
+            {                
+                ((IGraph)(PetGrid2Tag)).Stop(true);
+                Dispatcher.Invoke(() =>
+                {
+                    PetGrid2.Visibility = Visibility.Hidden;
+                    PetGrid.Visibility = Visibility.Visible;
+                    //PetGrid.Tag = graph;
+                });
+                petgridcrlf = !petgridcrlf;
+                GC.Collect();
+                return PetGrid;
+            }
+            
         }
     }
 }
