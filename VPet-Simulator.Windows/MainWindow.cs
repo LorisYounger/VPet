@@ -27,6 +27,7 @@ namespace VPet_Simulator.Windows
         /// 所有三方插件
         /// </summary>
         public List<MainPlugin> Plugins { get; } = new List<MainPlugin>();
+        public List<Item> Items { get; } = new List<Item>();
         /// <summary>
         /// 版本号
         /// </summary>

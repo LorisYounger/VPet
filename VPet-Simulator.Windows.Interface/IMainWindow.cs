@@ -44,7 +44,10 @@ namespace VPet_Simulator.Windows.Interface
         /// 所有三方插件
         /// </summary>
         List<MainPlugin> Plugins { get; }
-
+        /// <summary>
+        /// 所有食物
+        /// </summary>
+        List<Item> Items { get; }
         /// <summary>
         /// 设置游戏缩放倍率
         /// </summary>

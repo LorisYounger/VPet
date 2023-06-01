@@ -273,13 +273,18 @@ namespace VPet_Simulator.Windows
                 //this.Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.PNG")));
 
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喂食测试", () =>
-                {
-                    Main.ToolBar.Visibility = Visibility.Collapsed;
-                    IRunImage eat = (IRunImage)Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
-                    var b = Main.FindDisplayBorder(eat);
-                    eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/tony.bmp")), Main.DisplayToNomal);
-                }
+                    {
+                        Main.ToolBar.Visibility = Visibility.Collapsed;
+                        IRunImage eat = (IRunImage)Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
+                        var b = Main.FindDisplayBorder(eat);
+                        eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/tony.bmp")), Main.DisplayToNomal);
+                    }
                 );
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "给不二一测试用的窗口", () =>
+                {
+                   new winBetterBuy(this).Show();
+                }
+               );
 
                 Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
                 Main.SetLogicInterval((int)(Set.LogicInterval * 1000));

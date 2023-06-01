@@ -113,6 +113,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="WinDesign\winBetterBuy.xaml.cs">
+      <DependentUpon>winBetterBuy.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinDesign\TalkBoxAPI.xaml.cs">
       <DependentUpon>TalkBoxAPI.xaml</DependentUpon>
     </Compile>
@@ -139,6 +142,10 @@
     <Compile Include="WinDesign\winReport.xaml.cs">
       <DependentUpon>winReport.xaml</DependentUpon>
     </Compile>
+    <Page Include="WinDesign\winBetterBuy.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WinDesign\TalkBoxAPI.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
