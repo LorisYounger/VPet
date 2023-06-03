@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Dictionary;
 using System;
 using System.Windows;
 
@@ -7,7 +8,7 @@ namespace VPet_Simulator.Windows.Interface
     /// <summary>
     /// 游戏设置
     /// </summary>
-    public class Setting : LpsDocument
+    public class Setting : LPS_D
     {
         /// <summary>
         /// 游戏设置
@@ -30,7 +31,12 @@ namespace VPet_Simulator.Windows.Interface
             allowmove = !this["gameconfig"].GetBool("allowmove");
             smartmove = this["gameconfig"].GetBool("smartmove");
             enablefunction = !this["gameconfig"].GetBool("enablefunction");
+            Statistics = this["statistics"];
         }
+        /// <summary>
+        /// 统计数据信息
+        /// </summary>
+        public ILine Statistics;
 
         //public Size WindowsSize
         //{

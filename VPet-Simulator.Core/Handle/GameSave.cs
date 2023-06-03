@@ -40,6 +40,11 @@ namespace VPet_Simulator.Core
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double strength;
         /// <summary>
+        /// 待补充的体力,随着时间缓慢加给桌宠
+        /// </summary>//让游戏更有游戏性
+        [Line(Type = LPSConvert.ConvertType.ToFloat)]
+        public double StoreStrength;
+        /// <summary>
         /// 变化 体力
         /// </summary>
         public double ChangeStrength = 0;
@@ -54,6 +59,11 @@ namespace VPet_Simulator.Core
         public double StrengthFood { get => strengthFood; set => strengthFood = Math.Min(100, Math.Max(0, value)); }
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double strengthFood;
+        /// <summary>
+        /// 待补充的饱腹度,随着时间缓慢加给桌宠
+        /// </summary>//让游戏更有游戏性
+        [Line(Type = LPSConvert.ConvertType.ToFloat)]
+        public double StoreStrengthFood;
         public void StrengthChangeFood(double value)
         {
             ChangeStrengthFood += value;
@@ -71,6 +81,11 @@ namespace VPet_Simulator.Core
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double strengthDrink;
         /// <summary>
+        /// 待补充的口渴度,随着时间缓慢加给桌宠
+        /// </summary>//让游戏更有游戏性
+        [Line(Type = LPSConvert.ConvertType.ToFloat)]
+        public double StoreStrengthDrink;
+        /// <summary>
         /// 变化 口渴度
         /// </summary>
         public double ChangeStrengthDrink = 0;
@@ -86,6 +101,11 @@ namespace VPet_Simulator.Core
 
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double feeling;
+        /// <summary>
+        /// 待补充的心情,随着时间缓慢加给桌宠
+        /// </summary>//让游戏更有游戏性
+        [Line(Type = LPSConvert.ConvertType.ToFloat)]
+        public double StoreFeeling;
         /// <summary>
         /// 变化 心情
         /// </summary>
@@ -116,16 +136,63 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void CleanChange(bool force = false)
         {
-            if(--cleantick <= 0 || force)
+            if (--cleantick <= 0 || force)
             {
                 ChangeStrength /= 2;
                 ChangeFeeling /= 2;
                 ChangeStrengthDrink /= 2;
                 ChangeStrengthFood /= 2;
                 cleantick = 10;
-            }           
+            }
+        }
+        /// <summary>
+        /// 取回被储存的体力
+        /// </summary>
+        public void StoreTake()
+        {
+            StoreFeeling /= 2;
+            if (Math.Abs(StoreFeeling) < 1)
+                StoreFeeling = 0;
+            else
+                FeelingChange(StoreFeeling);
+
+            StoreStrength /= 2;
+            if (Math.Abs(StoreStrength) < 1)
+                StoreStrength = 0;
+            else
+                StrengthChange(StoreStrength);
+
+            StoreStrengthDrink /= 2;
+            if (Math.Abs(StoreStrengthDrink) < 1)
+                StoreStrengthDrink = 0;
+            else
+                StrengthChange(StoreStrengthDrink);
+
+            StoreStrengthFood /= 2;
+            if (Math.Abs(StoreStrengthFood) < 1)
+                StoreStrengthFood = 0;
+            else
+                StrengthChange(StoreStrengthFood);
         }
 
+        public void EatFood(IFood food)
+        {
+            Exp += food.Exp;
+            var tmp = food.Strength / 2;
+            StrengthChange(tmp);
+            StoreStrength += tmp;
+            tmp = food.StrengthFood / 2;
+            StrengthChangeFood(tmp);
+            StoreStrengthFood += tmp;
+            tmp = food.StrengthDrink / 2;
+            StrengthChangeDrink(tmp);
+            StoreStrengthDrink += tmp;
+            tmp = food.Feeling / 2;
+            FeelingChange(tmp);
+            StoreFeeling += tmp;
+            Health += food.Health;
+            Likability += food.Likability;
+        }
 
         /// <summary>
         /// 宠物状态模式

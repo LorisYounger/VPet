@@ -86,6 +86,7 @@ namespace VPet_Simulator.Core
         public void FunctionSpend(double TimePass)
         {
             Core.Save.CleanChange();
+            Core.Save.StoreTake();
             switch (State)
             {
                 case WorkingState.Sleep:

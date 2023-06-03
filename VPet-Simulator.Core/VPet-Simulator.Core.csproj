@@ -71,13 +71,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LinePutScript.1.8.0\lib\net462\LinePutScript.dll</HintPath>
+      <HintPath>..\packages\LinePutScript.1.8.1\lib\net462\LinePutScript.dll</HintPath>
     </Reference>
     <Reference Include="Panuon.WPF, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Panuon.WPF.1.0.1\lib\net462\Panuon.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Panuon.WPF.UI, Version=1.1.11.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Panuon.WPF.UI.1.1.11.8\lib\net462\Panuon.WPF.UI.dll</HintPath>
+    <Reference Include="Panuon.WPF.UI, Version=1.1.11.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Panuon.WPF.UI.1.1.11.11\lib\net462\Panuon.WPF.UI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -153,6 +153,7 @@
     <Compile Include="Handle\Function.cs" />
     <Compile Include="Handle\GameCore.cs" />
     <Compile Include="Handle\IController.cs" />
+    <Compile Include="Handle\IFood.cs" />
     <Compile Include="Handle\PetLoader.cs" />
     <Compile Include="Handle\GameSave.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

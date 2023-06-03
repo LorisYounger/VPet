@@ -47,7 +47,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 所有食物
         /// </summary>
-        List<Item> Items { get; }
+        List<Food> Items { get; }
         /// <summary>
         /// 设置游戏缩放倍率
         /// </summary>
