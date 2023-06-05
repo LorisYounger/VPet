@@ -201,7 +201,7 @@
                                            TextTrimming="CharacterEllipsis"
                                            FontSize="16"
                                            Foreground="{DynamicResource DARKPrimaryText}"
-                                           Text="{Binding DisplayName}" />
+                                           Text="{Binding Name}" />
                                 <ScrollViewer Grid.Row="1"
                                               Grid.RowSpan="4"
                                               Margin="0,7,0,0"
