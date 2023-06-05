@@ -117,7 +117,9 @@
             <MenuItem x:Name="MenuDIY" Header="自定" HorizontalContentAlignment="Center" Click="MenuDIY_Click"
                     x:FieldModifier="public" Padding="0" />
             <MenuItem x:Name="MenuSetting" Header="系统" HorizontalContentAlignment="Center" x:FieldModifier="public"
-                    Padding="0" />
+                    Padding="0">
+                <MenuItem x:Name="MenuMODConfig" Header="MOD设置" HorizontalContentAlignment="Center" Visibility="Collapsed" x:FieldModifier="public" />
+            </MenuItem>
         </Menu>
     </Grid>
 </UserControl>

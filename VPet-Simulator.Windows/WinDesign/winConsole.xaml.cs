@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using VPet_Simulator.Core;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Windows
@@ -21,6 +24,7 @@ namespace VPet_Simulator.Windows
             foreach (string v in Enum.GetNames(typeof(GraphType)))
             {
                 GraphListBox.Items.Add(v);
+                GraphListPlayerBox.Items.Add(v);
             }
             foreach (string v in Enum.GetNames(typeof(GraphCore.Helper.SayType)))
             {
@@ -87,7 +91,44 @@ namespace VPet_Simulator.Windows
         {
             DestanceTimer.Stop();
         }
+        List<Tuple<GraphType, GameSave.ModeType>> playlist = new List<Tuple<GraphType, GameSave.ModeType>>();
+        private void GraphListPlayerBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            playlist.Add(new Tuple<GraphType, GameSave.ModeType>((GraphType)Enum.Parse(typeof(GraphType), (string)GraphListPlayerBox.SelectedItem),
+                (GameSave.ModeType)Enum.Parse(typeof(GameSave.ModeType), (string)(((ComboBoxItem)ComboxPlayMode.SelectedItem).Content))));
+            GraphListWillPlayBox.Items.Add((string)GraphListPlayerBox.SelectedItem + "_" + (string)((ComboBoxItem)ComboxPlayMode.SelectedItem).Content);
+        }
 
+        private void Play_Click(object sender, RoutedEventArgs e)
+        {
+            DisplayList(new Queue<Tuple<GraphType, GameSave.ModeType>>(playlist));
+        }
+        public void DisplayList(Queue<Tuple<GraphType, GameSave.ModeType>> list)
+        {
+            if (list.Count == 0)
+            {
+                mw.Main.DisplayToNomal();
+                return;
+            }
+            var v = list.Dequeue();
+            var graph = mw.Main.Core.Graph.FindGraph(v.Item1, v.Item2);
+            if (graph != null)
+            {
+                mw.Main.Display(graph, () => DisplayList(list));
+            }
+            else
+            {
+                DisplayList(list);
+            }
+        }
+
+        private void GraphListWillPlayBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            playlist.RemoveAt(GraphListWillPlayBox.SelectedIndex);
+            GraphListWillPlayBox.Items.RemoveAt(GraphListWillPlayBox.SelectedIndex);
+        }
+
+        private void PlayADD_Click(object sender, RoutedEventArgs e) => GraphListPlayerBox_MouseDoubleClick(sender, null);
         //private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
         //   switch(((TabControl)sender).SelectedIndex)

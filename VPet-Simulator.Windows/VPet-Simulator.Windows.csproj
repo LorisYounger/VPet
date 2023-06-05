@@ -76,7 +76,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ChatGPT.API.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ChatGPT.API.Framework.1.0.3\lib\net462\ChatGPT.API.Framework.dll</HintPath>
+      <HintPath>..\packages\ChatGPT.API.Framework.1.0.2\lib\net462\ChatGPT.API.Framework.dll</HintPath>
     </Reference>
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LinePutScript.1.8.1\lib\net48\LinePutScript.dll</HintPath>

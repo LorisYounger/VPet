@@ -251,8 +251,9 @@ namespace VPet_Simulator.Core
             }
             else
             {
-                Core.Save.Mode = GameSave.ModeType.Happy;
+                //Core.Save.Mode = GameSave.ModeType.Happy;
                 //Core.GameSave.Mode = GameSave.ModeType.Ill;
+                Core.Save.Mode = NoFunctionMOD;
             }
 
             //UIHandle

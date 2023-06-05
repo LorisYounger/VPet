@@ -20,6 +20,34 @@
                 <ListBox x:Name="GraphListBox" Margin="0,49,0,0" MouseDoubleClick="GraphListBox_MouseDoubleClick" />
             </Grid>
         </TabItem>
+        <TabItem Header="动画播放">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="15*" />
+                    <RowDefinition Height="110*" />
+                    <RowDefinition Height="10*" />
+                </Grid.RowDefinitions>
+                <Label Background="{x:Null}" Content="双击添加/移除播放列表内容&#13;选择状态模式:" Grid.RowSpan="2" Grid.ColumnSpan="2" />
+                <ComboBox x:Name="ComboxPlayMode" VerticalAlignment="Top" Margin="110,25,5,0" SelectedIndex="1"
+                        Grid.ColumnSpan="2">
+                    <ComboBoxItem Content="Happy" />
+                    <ComboBoxItem Content="Nomal" />
+                    <ComboBoxItem Content="PoorCondition" />
+                    <ComboBoxItem Content="Ill" />
+                </ComboBox>
+                <ListBox x:Name="GraphListPlayerBox" Grid.Row="1" Margin="5"
+                        MouseDoubleClick="GraphListPlayerBox_MouseDoubleClick" />
+                <ListBox x:Name="GraphListWillPlayBox" Grid.Row="1" Margin="5" Grid.Column="1"
+                        MouseDoubleClick="GraphListWillPlayBox_MouseDoubleClick" />
+                <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="5" Content="开始播放" Click="Play_Click" />
+                <Button VerticalAlignment="Top" Content="ADD" HorizontalAlignment="Right" Grid.Column="1" Margin="5"
+                        Click="PlayADD_Click" />
+            </Grid>
+        </TabItem>
         <TabItem Header="显示逻辑">
             <Grid>
                 <Label Background="{x:Null}" Content="双击运行显示效果" />
@@ -55,8 +83,9 @@
             <Grid>
                 <Label Background="{x:Null}" Content="输入要说的话,按说话键发送:&#13;选择说话类型:" />
                 <ComboBox x:Name="CombSay" VerticalAlignment="Top" Margin="110,26,5,0" />
-                <TextBox x:Name="SayTextBox" TextWrapping="Wrap" pu:TextBoxHelper.Watermark="在这里输入要说话的内容" VerticalAlignment="Top"
-                        Margin="5,54,5,0" Height="200" AcceptsReturn="True" VerticalContentAlignment="Top" />
+                <TextBox x:Name="SayTextBox" TextWrapping="Wrap" pu:TextBoxHelper.Watermark="在这里输入要说话的内容"
+                        VerticalAlignment="Top" Margin="5,54,5,0" Height="200" AcceptsReturn="True"
+                        VerticalContentAlignment="Top" />
                 <Button VerticalAlignment="Bottom" Content="说话" Click="Say_Click" FontSize="24" />
             </Grid>
         </TabItem>

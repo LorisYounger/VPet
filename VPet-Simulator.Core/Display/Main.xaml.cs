@@ -41,6 +41,10 @@ namespace VPet_Simulator.Core
         /// </summary>
         public event Action<Main> TimeUIHandle;
         /// <summary>
+        /// 如果不开启功能模式,默认状态设置
+        /// </summary>
+        public GameSave.ModeType NoFunctionMOD = GameSave.ModeType.Happy;
+        /// <summary>
         /// 是否开始运行
         /// </summary>
         public bool IsWorking { get; private set; } = false;
@@ -68,7 +72,8 @@ namespace VPet_Simulator.Core
             {
                 LoadTouchEvent();
             }
-
+            if (!core.Controller.EnableFunction)
+                Core.Save.Mode = NoFunctionMOD;
             var ig = Core.Graph.FindGraph(GraphCore.GraphType.StartUP, core.Save.Mode);
             //var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Default, core.GameSave.Mode);
             PetGrid2.Visibility = Visibility.Collapsed;
