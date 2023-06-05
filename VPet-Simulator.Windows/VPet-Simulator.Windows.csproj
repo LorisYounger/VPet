@@ -113,6 +113,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Design\AutoUniformGrid.cs" />
+    <Compile Include="Design\Converters\BoolToIntConverter.cs" />
+    <Compile Include="Design\Converters\DiscountPriceConverter.cs" />
     <Compile Include="WinDesign\winBetterBuy.xaml.cs">
       <DependentUpon>winBetterBuy.xaml</DependentUpon>
     </Compile>
@@ -226,6 +229,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Res\Font\OPPOSans B.ttf" />
+    <Resource Include="Res\Font\OPPOSans R.ttf" />
+    <Resource Include="Res\remixicon.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

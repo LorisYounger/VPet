@@ -116,6 +116,81 @@
         </Setter>
     </Style>
 
+        <Style x:Key="ThemedButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="pu:ButtonHelper.CornerRadius" Value="5" />
+    </Style>
+
+    <Style x:Key="TextButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryDarker}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <Style x:Key="DARKPrimaryTextButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource TextButtonStyle}">
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+    </Style>
+    
+    <Style x:Key="IconInvertedForegroundRepeatButtonStyle" TargetType="{x:Type RepeatButton}" BasedOn="{StaticResource {x:Type RepeatButton}}">
+        <Setter Property="Width" Value="25" />
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Res/#remixicon" />
+    </Style>
+
+    <Style x:Key="LinkButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource TextButtonStyle}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"
+                               TextDecorations="Underline" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="StndardToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
+        <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:ToggleButtonHelper.CheckedBackground" Value="{DynamicResource DARKPrimaryDarker}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="pu:ButtonHelper.CornerRadius" Value="5" />
+    </Style>
+
+    <Style x:Key="TextToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryDarker}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style x:Key="LinkToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource TextToggleButtonStyle}">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" TextDecorations="Underline" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="StandardPaginationStyle" TargetType="{x:Type pu:Pagination}">
+        <Setter Property="Height" Value="25" />
+        <Setter Property="ItemsBackground" Value="{DynamicResource DARKPrimaryTrans4}" />
+        <Setter Property="ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="ItemsSelectedBackground" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="ItemsCornerRadius" Value="2" />
+    </Style>
+
     <Style x:Key="StandardComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Height" Value="30" />
@@ -200,6 +275,7 @@
         <Setter Property="pu:MenuHelper.CornerRadius" Value="5" />
         <Setter Property="pu:MenuHelper.TopLevelDropDownPlacement" Value="TopRight" />
         <Setter Property="pu:MenuHelper.TopLevelItemsPadding" Value="15,0" />
+        <Setter Property="pu:MenuHelper.TopLevelItemsHeight" Value="55" />
         <Setter Property="pu:MenuHelper.TopLevelItemsBackground" Value="Transparent" />
         <Setter Property="pu:MenuHelper.TopLevelItemsHoverBackground" Value="{DynamicResource SecondaryLighter}" />
         <Setter Property="pu:MenuHelper.TopLevelItemsHoverForeground" Value="{DynamicResource DARKPrimary}" />
