@@ -42,8 +42,12 @@ namespace VPet_Simulator.Windows
         public void Show(Food.FoodType type)
         {
             mw.Topmost = false;
-            LsbCategory.SelectedIndex = (int)type;
-            //OrderItemSource(type, LsbSortRule.SelectedIndex, LsbSortAsc.SelectedIndex);
+            if (_searchTextBox != null)
+                _searchTextBox.Text = "";
+            if (LsbCategory.SelectedIndex == (int)type)
+                OrderItemSource(type, LsbSortRule.SelectedIndex, LsbSortAsc.SelectedIndex == 0);
+            else
+                LsbCategory.SelectedIndex = (int)type;
             Show();
         }
         public void OrderItemSource(Food.FoodType type, int sortrule, bool sortasc, string searchtext = null)
