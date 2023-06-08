@@ -174,7 +174,10 @@ namespace VPet_Simulator.Core
             else
                 StrengthChange(StoreStrengthFood);
         }
-
+        /// <summary>
+        /// 吃食物
+        /// </summary>
+        /// <param name="food">食物类</param>
         public void EatFood(IFood food)
         {
             Exp += food.Exp;

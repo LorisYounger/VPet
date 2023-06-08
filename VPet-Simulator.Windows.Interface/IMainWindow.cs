@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Media;
 using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows.Interface
@@ -47,7 +48,11 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 所有食物
         /// </summary>
-        List<Food> Items { get; }
+        List<Food> Foods { get; }
+        /// <summary>
+        /// 图片资源
+        /// </summary>
+        ImageResources ImageSources { get; }
         /// <summary>
         /// 设置游戏缩放倍率
         /// </summary>

@@ -76,10 +76,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ChatGPT.API.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ChatGPT.API.Framework.1.0.2\lib\net462\ChatGPT.API.Framework.dll</HintPath>
+      <HintPath>..\packages\ChatGPT.API.Framework.1.0.4\lib\net462\ChatGPT.API.Framework.dll</HintPath>
     </Reference>
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LinePutScript.1.8.1\lib\net48\LinePutScript.dll</HintPath>
+      <HintPath>..\packages\LinePutScript.1.8.2\lib\net48\LinePutScript.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -252,6 +252,7 @@
     </Resource>
     <Resource Include="Res\TopLogo2019.PNG" />
     <Resource Include="Res\tony.bmp" />
+    <Resource Include="Res\汉堡.png" />
     <Content Include="steam_api.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

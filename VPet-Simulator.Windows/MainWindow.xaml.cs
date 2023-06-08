@@ -218,6 +218,7 @@ namespace VPet_Simulator.Windows
                 LoadingText.Content = "正在加载CGPT";
 
                 winSetting = new winGameSetting(this);
+                winBetterBuy = new winBetterBuy(this);
                 Main = new Main(Core) { };
                 if (!Set["CGPT"][(gbol)"enable"] && IsSteamUser)
                 {
@@ -240,6 +241,8 @@ namespace VPet_Simulator.Windows
                 {
                     new winReport(this, "由于插件引起的游戏启动错误\n" + e.ToString()).Show();
                 }
+                Foods.ForEach(item => item.LoadImageSource(this));
+
                 Main.DefaultClickAction = () =>
                 {
                     if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
@@ -277,15 +280,24 @@ namespace VPet_Simulator.Windows
                         Main.ToolBar.Visibility = Visibility.Collapsed;
                         IRunImage eat = (IRunImage)Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
                         var b = Main.FindDisplayBorder(eat);
-                        eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/tony.bmp")), Main.DisplayToNomal);
+                        eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/汉堡.png")), Main.DisplayToNomal);
                     }
                 );
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "给不二一测试用的窗口", () =>
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "吃饭", () =>
+                    {
+                        winBetterBuy.Show(Food.FoodType.Meal);
+                    }
+                );
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喝水", () =>
                 {
-                   new winBetterBuy(this).Show();
+                    winBetterBuy.Show(Food.FoodType.Drink);
                 }
-               );
-
+              );
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "药品", () =>
+                {
+                    winBetterBuy.Show(Food.FoodType.Drug);
+                }
+              );
                 Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
                 Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
                 if (Set.MessageBarOutside)

@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Converter;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +36,29 @@ namespace VPet_Simulator.Windows
         public string Content = "";
         public bool SuccessLoad = true;
         public static string INTtoVER(int ver) => $"{ver / 100}.{ver % 100:00}";
+        public static void LoadImage(MainWindow mw, DirectoryInfo di)
+        {
+            //加载其他放在文件夹的图片
+            foreach (FileInfo fi in di.EnumerateFiles("*.png"))
+            {
+                mw.ImageSources.AddSource(fi.Name.ToLower().Substring(0, fi.Name.Length - 4), fi.FullName);
+            }
+            //加载其他放在文件夹中文件夹的图片
+            foreach (DirectoryInfo fordi in di.EnumerateDirectories())
+            {
+                LoadImage(mw, fordi);
+            }
+            //加载标志好的图片和图片设置
+            foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
+            {
+                var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
+                if (fi.Name.ToLower().StartsWith("set_"))
+                    foreach (var line in tmp)
+                        mw.ImageSources.ImageSetting.AddorReplaceLine(line);
+                else
+                    mw.ImageSources.AddImages(tmp, di.FullName);
+            }
+        }
         public CoreMOD(DirectoryInfo directory, MainWindow mw)
         {
             Path = directory;
@@ -82,6 +106,23 @@ namespace VPet_Simulator.Windows
                                 }
                             }
                         }
+                        break;
+                    case "food":
+                        Content += "食物\n";
+                        foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
+                        {
+                            var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
+                            foreach (ILine li in tmp)
+                            {
+                                string tmps = li.Find("name").info;
+                                mw.Foods.RemoveAll(x => x.Name == tmps);
+                                mw.Foods.Add(LPSConvert.DeserializeObject<Food>(li));
+                            }
+                        }
+                        break;
+                    case "image":
+                        Content += "图片包\n";
+                        LoadImage(mw, di);
                         break;
                     case "plugin":
                         Content += "代码插件\n";
@@ -133,7 +174,7 @@ namespace VPet_Simulator.Windows
             modlps.FindorAddLine("authorid").InfoToInt64 = AuthorID;
             modlps.FindorAddLine("itemid").info = ItemID.ToString();
             File.WriteAllText(Path.FullName + @"\info.lps", modlps.ToString());
-        }        
+        }
     }
     public static class ExtensionSetting
     {

@@ -22,12 +22,14 @@ namespace VPet_Simulator.Windows
         public Main Main { get; set; }
         public UIElement TalkBox;
         public winGameSetting winSetting { get; set; }
+        public winBetterBuy winBetterBuy { get; set; }
         public ChatGPTClient CGPTClient;
+        public ImageResources ImageSources { get; set; } = new ImageResources();
         /// <summary>
         /// 所有三方插件
         /// </summary>
         public List<MainPlugin> Plugins { get; } = new List<MainPlugin>();
-        public List<Food> Items { get; } = new List<Food>();
+        public List<Food> Foods { get; } = new List<Food>();
         /// <summary>
         /// 版本号
         /// </summary>
