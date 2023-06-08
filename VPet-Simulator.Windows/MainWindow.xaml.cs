@@ -354,15 +354,15 @@ namespace VPet_Simulator.Windows
                         notifyIcon.ShowBalloonTip(10, "你好" + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
                     "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠", ToolTipIcon.Info);
                         Thread.Sleep(2000);
-                        Main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议", GraphCore.Helper.SayType.Shining);
+                        Main.Say("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议", GraphCore.Helper.SayType.Shining);
                     });
                 }
                 else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 6, 8))
                 {
-               //     if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 4))
-               //         notifyIcon.ShowBalloonTip(10, "更新通知 05/26",
-               //"支持外置消息窗/时钟等窗口\n新增语音插件,请在设置中MOD管理开启", ToolTipIcon.Info);
-               //     else
+                    if (Set["SingleTips"].GetDateTime("update") > new DateTime(2023, 6, 8))
+                        notifyIcon.ShowBalloonTip(10, "更新通知 06/09",
+               "修复频繁喝水的bug,更好买新增查看详细信息\n修复干完活后动画停止播放的错误", ToolTipIcon.Info);
+                    else
                         notifyIcon.ShowBalloonTip(10, "更新通知 06/08",
                "现已支持数据计算,桌宠现在需要进行吃饭喝水等\n前往设置调整速率和关闭数据计算\n若有游戏数据设计上的反馈,欢迎加群虚拟主播模拟器430081239或使用反馈功能反馈", ToolTipIcon.Info);
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);

@@ -168,11 +168,10 @@ namespace VPet_Simulator.Windows
                 mw.Core.Save.EatFood(item);
                 mw.Core.Save.Money -= item.Price;
             }
-            this.Hide();
+            TryClose();
             IRunImage eat = (IRunImage)mw.Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
             var b = mw.Main.FindDisplayBorder(eat);
             eat.Run(b, item.ImageSource, mw.Main.DisplayToNomal);
-
         }
 
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
@@ -206,13 +205,16 @@ namespace VPet_Simulator.Windows
             mw.Set["betterbuy"].SetBool("lastasc", asc);
             OrderItemSource((Food.FoodType)LsbCategory.SelectedIndex, order, asc, _searchTextBox?.Text);
         }
-
+        public void TryClose()
+        {
+            IcCommodity.ItemsSource = null;
+            mw.Topmost = mw.Set.TopMost;
+            Hide();
+        }
         private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            mw.Topmost = mw.Set.TopMost;
+            TryClose();
             e.Cancel = true;
-            IcCommodity.ItemsSource = null;
-            Hide();
         }
     }
 }

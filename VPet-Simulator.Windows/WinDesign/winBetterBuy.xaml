@@ -6,7 +6,7 @@
         xmlns:pu="https://opensource.panuon.com/wpf-ui" xmlns:local="clr-namespace:VPet_Simulator.Windows"
         mc:Ignorable="d" Title="更好买" Height="450" Width="800" FontSize="14" WindowStartupLocation="CenterScreen"
         Background="#E0F6FF" pu:WindowXCaption.Height="45" pu:WindowXCaption.Background="{DynamicResource DARKPrimary}"
-        pu:WindowXCaption.Foreground="#FFFFFF" pu:WindowXCaption.Buttons="Close"
+        pu:WindowXCaption.Foreground="#FFFFFF" pu:WindowXCaption.Buttons="Close" Icon="/Res/BetterBuy.png"
         pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}" Closing="WindowX_Closing">
     <pu:WindowXCaption.CloseButtonStyle>
         <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
@@ -25,9 +25,11 @@
         <DataTemplate>
             <Grid Margin="10,0">
                 <StackPanel Orientation="Horizontal">
+                    <Image x:Name="ImageWHY" Width="28" Height="28" Source="/Res/BetterBuy.png"
+                            VerticalAlignment="Center" Margin="30,0,0,0" />
                     <Button Style="{DynamicResource TextButtonStyle}" Foreground="{DynamicResource DARKPrimaryText}"
                             Content="更好买" VerticalAlignment="Center" FontSize="20" Click="BtnTitle_Click"
-                            pu:WindowX.IsDragMoveArea="False" Margin="15,0,0,0"/>
+                            pu:WindowX.IsDragMoveArea="False" Margin="10,0,0,0"/>
                     <Grid Grid.Column="1" Margin="15,0,0,0" Width="200" pu:WindowX.IsDragMoveArea="False">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
