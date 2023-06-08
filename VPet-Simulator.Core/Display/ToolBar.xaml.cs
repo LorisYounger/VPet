@@ -7,6 +7,7 @@ using System.Timers;
 using Timer = System.Timers.Timer;
 using Panuon.WPF.UI;
 using System.Windows.Threading;
+using LinePutScript;
 
 namespace VPet_Simulator.Core
 {
@@ -266,28 +267,38 @@ namespace VPet_Simulator.Core
         private void Study_Click(object sender, RoutedEventArgs e)
         {
             this.Visibility = Visibility.Collapsed;
-            if (m.Core.Save.Mode != GameSave.ModeType.Ill)
+            if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
                 if (m.State == Main.WorkingState.Study)
                     m.WorkTimer.Stop();
                 else m.WorkTimer.Start(Main.WorkingState.Study);
+            else
+                MessageBoxX.Show($"您的桌宠 {m.Core.Save.Name} 生病啦,没法进行学习", "工作取消");
         }
 
         private void Work1_Click(object sender, RoutedEventArgs e)
         {
             this.Visibility = Visibility.Collapsed;
-            if (m.Core.Save.Mode != GameSave.ModeType.Ill)
+            if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
                 if (m.State == Main.WorkingState.WorkONE)
                     m.WorkTimer.Stop();
                 else m.WorkTimer.Start(Main.WorkingState.WorkONE);
+            else
+                MessageBoxX.Show($"您的桌宠 {m.Core.Save.Name} 生病啦,没法进行工作{m.Core.Graph.GraphConfig.Str[(gstr)"work1"]}", "工作取消");
         }
 
         private void Work2_Click(object sender, RoutedEventArgs e)
         {
             this.Visibility = Visibility.Collapsed;
-            if (m.Core.Save.Mode != GameSave.ModeType.Ill)
-                if (m.State == Main.WorkingState.WorkTWO)
-                    m.WorkTimer.Stop();
-                else m.WorkTimer.Start(Main.WorkingState.WorkTWO);
+
+            if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
+                if (!m.Core.Controller.EnableFunction || m.Core.Save.Level >= 10)
+                    if (m.State == Main.WorkingState.WorkTWO)
+                        m.WorkTimer.Stop();
+                    else m.WorkTimer.Start(Main.WorkingState.WorkTWO);
+                else
+                    MessageBoxX.Show($"您的桌宠等级不足{m.Core.Save.Level}/10\n无法进行工作{m.Core.Graph.GraphConfig.Str[(gstr)"work2"]}", "工作取消");
+            else
+                MessageBoxX.Show($"您的桌宠 {m.Core.Save.Name} 生病啦,没法进行工作{m.Core.Graph.GraphConfig.Str[(gstr)"work2"]}", "工作取消");
         }
     }
 }

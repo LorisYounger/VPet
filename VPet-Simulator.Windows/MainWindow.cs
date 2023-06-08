@@ -33,7 +33,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 版本号
         /// </summary>
-        public int verison { get; } = 20;
+        public int verison { get; } = 21;
         /// <summary>
         /// 版本号
         /// </summary>
@@ -56,7 +56,12 @@ namespace VPet_Simulator.Windows
             if (Set != null)
             {
                 if (Main != null)
+                {
                     Set.VoiceVolume = Main.PlayVoiceVolume;
+                    List<string> list = new List<string>();
+                    Foods.FindAll(x => x.Star).ForEach(x => list.Add(x.Name));
+                    Set["betterbuy"]["star"].info = string.Join(",", list);
+                }
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
             }
             if (Core != null && Core.Save != null)

@@ -1,6 +1,7 @@
 ﻿using LinePutScript;
 using LinePutScript.Converter;
 using System;
+using System.Windows.Forms;
 
 namespace VPet_Simulator.Core
 {
@@ -26,13 +27,13 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 等级
         /// </summary>
-        public int Level => (int)(Math.Sqrt(Exp) / 5) + 1;
+        public int Level => (int)(Math.Sqrt(Exp) / 10) + 1;
 
         /// <summary>
         /// 升级所需经验值
         /// </summary>
         /// <returns></returns>
-        public int LevelUpNeed() => (int)(Math.Pow((Level) * 5, 2));
+        public int LevelUpNeed() => (int)(Math.Pow((Level) * 10, 2));
         /// <summary>
         /// 体力 0-100
         /// </summary>
@@ -56,7 +57,20 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 饱腹度
         /// </summary>
-        public double StrengthFood { get => strengthFood; set => strengthFood = Math.Min(100, Math.Max(0, value)); }
+        public double StrengthFood
+        {
+            get => strengthFood; set
+            {
+                value = Math.Min(100, value);
+                if (value <= 0)
+                {
+                    Health += value;
+                    strengthFood = 0;
+                }
+                else
+                    strengthFood = value;
+            }
+        }
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double strengthFood;
         /// <summary>
@@ -76,7 +90,20 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 口渴度
         /// </summary>
-        public double StrengthDrink { get => strengthDrink; set => strengthDrink = Math.Min(100, Math.Max(0, value)); }
+        public double StrengthDrink
+        {
+            get => strengthDrink; set
+            {
+                value = Math.Min(100, value);
+                if (value <= 0)
+                {
+                    Health += value;
+                    strengthDrink = 0;
+                }
+                else
+                    strengthDrink = value;
+            }
+        }
 
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double strengthDrink;
@@ -125,54 +152,68 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 好感度(隐藏)(累加值)
         /// </summary>
-        public double Likability { get => likability; set => likability = Math.Min(90 + Level * 10, Math.Max(0, value)); }
+        public double Likability
+        {
+            get => likability; set
+            {
+                int max = 90 + Level * 10;
+                value = Math.Max(0, value);
+                if (value > max)
+                {
+                    likability = max;
+                    Health += value - max;
+                }
+                else
+                    likability = value;
+            }
+        }
 
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double likability;
 
-        private int cleantick = 10;
         /// <summary>
         /// 清除变化
         /// </summary>
-        public void CleanChange(bool force = false)
+        public void CleanChange()
         {
-            if (--cleantick <= 0 || force)
-            {
-                ChangeStrength /= 2;
-                ChangeFeeling /= 2;
-                ChangeStrengthDrink /= 2;
-                ChangeStrengthFood /= 2;
-                cleantick = 10;
-            }
+            ChangeStrength /= 2;
+            ChangeFeeling /= 2;
+            ChangeStrengthDrink /= 2;
+            ChangeStrengthFood /= 2;
         }
         /// <summary>
         /// 取回被储存的体力
         /// </summary>
         public void StoreTake()
         {
-            StoreFeeling /= 2;
+            const int t = 10;
+            var s = StoreFeeling / t;
+            StoreFeeling -= s;
             if (Math.Abs(StoreFeeling) < 1)
                 StoreFeeling = 0;
             else
-                FeelingChange(StoreFeeling);
+                FeelingChange(s);
 
-            StoreStrength /= 2;
+            s = StoreStrength / t;
+            StoreStrength -= s;
             if (Math.Abs(StoreStrength) < 1)
                 StoreStrength = 0;
             else
-                StrengthChange(StoreStrength);
+                StrengthChange(s);
 
-            StoreStrengthDrink /= 2;
+            s = StoreStrengthDrink / t;
+            StoreStrengthDrink -= s;
             if (Math.Abs(StoreStrengthDrink) < 1)
                 StoreStrengthDrink = 0;
             else
-                StrengthChange(StoreStrengthDrink);
+                StrengthChangeDrink(s);
 
-            StoreStrengthFood /= 2;
+            s = StoreStrengthFood / t;
+            StoreStrengthFood -= s;
             if (Math.Abs(StoreStrengthFood) < 1)
                 StoreStrengthFood = 0;
             else
-                StrengthChange(StoreStrengthFood);
+                StrengthChangeFood(s);
         }
         /// <summary>
         /// 吃食物

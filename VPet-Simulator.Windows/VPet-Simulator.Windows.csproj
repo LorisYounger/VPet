@@ -251,8 +251,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Res\TopLogo2019.PNG" />
-    <Resource Include="Res\tony.bmp" />
-    <Resource Include="Res\汉堡.png" />
     <Content Include="steam_api.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

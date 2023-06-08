@@ -275,14 +275,14 @@ namespace VPet_Simulator.Windows
 
                 //this.Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.PNG")));
 
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喂食测试", () =>
-                    {
-                        Main.ToolBar.Visibility = Visibility.Collapsed;
-                        IRunImage eat = (IRunImage)Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
-                        var b = Main.FindDisplayBorder(eat);
-                        eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/汉堡.png")), Main.DisplayToNomal);
-                    }
-                );
+                //Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喂食测试", () =>
+                //    {
+                //        Main.ToolBar.Visibility = Visibility.Collapsed;
+                //        IRunImage eat = (IRunImage)Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
+                //        var b = Main.FindDisplayBorder(eat);
+                //        eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/汉堡.png")), Main.DisplayToNomal);
+                //    }
+                //);
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "吃饭", () =>
                     {
                         winBetterBuy.Show(Food.FoodType.Meal);
@@ -357,14 +357,14 @@ namespace VPet_Simulator.Windows
                         Main.Say("欢迎使用虚拟桌宠模拟器\n这是个早期的测试版,若有bug请多多包涵\n欢迎在菜单栏-管理-反馈中提交bug或建议", GraphCore.Helper.SayType.Shining);
                     });
                 }
-                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 5, 26))
+                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 6, 8))
                 {
-                    if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 4))
-                        notifyIcon.ShowBalloonTip(10, "更新通知 05/26",
-               "支持外置消息窗/时钟等窗口\n新增语音插件,请在设置中MOD管理开启", ToolTipIcon.Info);
-                    else
-                        notifyIcon.ShowBalloonTip(10, "更新通知 06/01",
-               "支持外置消息窗/时钟等窗口", ToolTipIcon.Info);
+               //     if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 3, 4))
+               //         notifyIcon.ShowBalloonTip(10, "更新通知 05/26",
+               //"支持外置消息窗/时钟等窗口\n新增语音插件,请在设置中MOD管理开启", ToolTipIcon.Info);
+               //     else
+                        notifyIcon.ShowBalloonTip(10, "更新通知 06/08",
+               "现已支持数据计算,桌宠现在需要进行吃饭喝水等\n前往设置调整速率和关闭数据计算\n若有游戏数据设计上的反馈,欢迎加群虚拟主播模拟器430081239或使用反馈功能反馈", ToolTipIcon.Info);
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);
                 }
                 Save();

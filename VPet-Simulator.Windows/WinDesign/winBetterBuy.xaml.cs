@@ -1,4 +1,5 @@
-﻿using Panuon.WPF;
+﻿using IWshRuntimeLibrary;
+using Panuon.WPF;
 using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
@@ -40,15 +41,16 @@ namespace VPet_Simulator.Windows
         }
         public void Show(Food.FoodType type)
         {
+            mw.Topmost = false;
             LsbCategory.SelectedIndex = (int)type;
             //OrderItemSource(type, LsbSortRule.SelectedIndex, LsbSortAsc.SelectedIndex);
             Show();
         }
-        public void OrderItemSource(Food.FoodType type, int sortrule, bool sortasc)
+        public void OrderItemSource(Food.FoodType type, int sortrule, bool sortasc, string searchtext = null)
         {
             Task.Run(() =>
             {
-                IList<Food> foods;
+                List<Food> foods;
                 switch (type)
                 {
                     case Food.FoodType.Food:
@@ -69,6 +71,10 @@ namespace VPet_Simulator.Windows
                     default:
                         foods = mw.Foods.FindAll(x => x.Type == type);
                         break;
+                }
+                if (!string.IsNullOrEmpty(searchtext))
+                {
+                    foods = foods.FindAll(x => x.Name.Contains(searchtext));
                 }
                 IOrderedEnumerable<Food> ordered;
                 switch (sortrule)
@@ -139,12 +145,28 @@ namespace VPet_Simulator.Windows
 
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
-            this.Hide(); 
+
             var Button = sender as Button;
             var item = Button.DataContext as Food;
+
+            //看是什么模式
+            if (mw.Set.EnableFunction)
+            {
+                if (item.Price >= mw.Core.Save.Money)
+                {//买不起
+                    MessageBoxX.Show($"您没有足够金钱来购买 {item.Name}\n您需要 {item.Price:f2} 金钱来购买\n您当前 {mw.Core.Save.Money:f2} 拥有金钱"
+                        , "金钱不足");
+                    return;
+                }
+                //开始加点
+                mw.Core.Save.EatFood(item);
+                mw.Core.Save.Money -= item.Price;
+            }
+            this.Hide();
             IRunImage eat = (IRunImage)mw.Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
             var b = mw.Main.FindDisplayBorder(eat);
             eat.Run(b, item.ImageSource, mw.Main.DisplayToNomal);
+
         }
 
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
@@ -160,11 +182,7 @@ namespace VPet_Simulator.Windows
 
         private void Search()
         {
-            var searchText = _searchTextBox.Text;
-            var category = LsbCategory.SelectedIndex;
-            var sortRule = LsbSortRule.SelectedIndex;
-            var sortAsc = LsbSortAsc.SelectedIndex == 0;
-            //搜索商品
+            OrderItemSource((Food.FoodType)LsbCategory.SelectedIndex, LsbSortRule.SelectedIndex, LsbSortAsc.SelectedIndex == 0, _searchTextBox.Text);
         }
 
         private void TbTitleSearch_Loaded(object sender, RoutedEventArgs e)
@@ -180,12 +198,14 @@ namespace VPet_Simulator.Windows
             bool asc = LsbSortAsc.SelectedIndex == 0;
             mw.Set["betterbuy"].SetInt("lastorder", order);
             mw.Set["betterbuy"].SetBool("lastasc", asc);
-            OrderItemSource((Food.FoodType)LsbCategory.SelectedIndex, order, asc);
+            OrderItemSource((Food.FoodType)LsbCategory.SelectedIndex, order, asc, _searchTextBox?.Text);
         }
 
         private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            mw.Topmost = mw.Set.TopMost;
             e.Cancel = true;
+            IcCommodity.ItemsSource = null;
             Hide();
         }
     }

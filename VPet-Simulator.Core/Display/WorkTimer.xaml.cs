@@ -50,11 +50,29 @@ namespace VPet_Simulator.Core
             if (Visibility == Visibility.Hidden) return;
             TimeSpan ts = DateTime.Now - StartTime;
             TimeSpan tleft;
-            if (ts.TotalMinutes > MaxTime)//基本上不可能,加个这个作为容错
+            if (ts.TotalMinutes > MaxTime)
             {
-                ts = TimeSpan.FromMinutes(MaxTime);
-                tleft = TimeSpan.Zero;
-                PBLeft.Value = MaxTime;
+                //学完了,停止
+                //ts = TimeSpan.FromMinutes(MaxTime);
+                //tleft = TimeSpan.Zero;
+                //PBLeft.Value = MaxTime;
+                switch (m.State)
+                {
+                    case Main.WorkingState.Study:
+                        m.Core.Save.Money += GetCount * 0.2;
+                        Stop(() => m.Say($"学习完成啦, 累计学会了 {(GetCount * 1.2):f2} EXP\n共计花费了{MaxTime}分钟"));
+                        break;
+                    case Main.WorkingState.WorkONE:
+                        m.Core.Save.Money += GetCount * 0.15;
+                        Stop(() => m.Say($"{m.Core.Graph.GraphConfig.Str[(gstr)"work1"]}完成啦, 累计赚了 {GetCount * 1.15:f2} 金钱\n共计花费了{MaxTime}分钟"));
+                        break;
+                    case Main.WorkingState.WorkTWO:
+                        m.Core.Save.Money += GetCount * 0.25;
+                        Stop(() => m.Say($"{m.Core.Graph.GraphConfig.Str[(gstr)"work2"]}完成啦, 累计赚了 {GetCount * 1.25:f2} 金钱\n共计花费了{MaxTime}分钟"));
+                        break;
+                }
+
+                return;
             }
             else
             {
@@ -163,7 +181,6 @@ namespace VPet_Simulator.Core
             m.State = state;
             StartTime = DateTime.Now;
             GetCount = 0;
-            new UIStyleConfig().SetStyle(this);
             switch (state)
             {
                 case Main.WorkingState.Study:

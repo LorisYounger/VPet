@@ -100,6 +100,7 @@ namespace VPet_Simulator.Core
                     else
                         lowStrengthFood();
                     Core.Save.StrengthChangeFood(-TimePass);
+                    Core.Save.StrengthChangeDrink(-TimePass);
                     break;
                 case WorkingState.WorkONE:
                     //工作
@@ -114,20 +115,21 @@ namespace VPet_Simulator.Core
                             Core.Save.Health -= TimePass;
                         }
                         lowStrengthFood();
-                        var addmoney = TimePass * 10;
+                        var addmoney = TimePass * 5;
                         Core.Save.Money += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
                     else
                     {
-                        Core.Save.StrengthChange(TimePass);
+                        Core.Save.StrengthChangeFood(TimePass);
                         if (Core.Save.StrengthFood >= 75)
                             Core.Save.Health += TimePass;
-                        var addmoney = TimePass * 20;
+                        var addmoney = TimePass * (10 + Core.Save.Level / 2);
                         Core.Save.Money += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
                     Core.Save.StrengthChangeFood(-TimePass * 3);
+                    Core.Save.StrengthChangeDrink(-TimePass);
                     break;
                 case WorkingState.WorkTWO:
                     //工作2 更加消耗体力
@@ -142,7 +144,7 @@ namespace VPet_Simulator.Core
                             Core.Save.Health -= TimePass;
                         }
                         lowStrengthFood();
-                        var addmoney = TimePass * 20;
+                        var addmoney = TimePass * 10;
                         Core.Save.Money += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
@@ -150,11 +152,12 @@ namespace VPet_Simulator.Core
                     {
                         if (Core.Save.StrengthFood >= 75)
                             Core.Save.Health += TimePass;
-                        var addmoney = TimePass * 50;
+                        var addmoney = TimePass * (20 + Core.Save.Level);
                         Core.Save.Money += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
-                    Core.Save.StrengthChangeFood(-TimePass * 5);
+                    Core.Save.StrengthChangeFood(-TimePass * 4);
+                    Core.Save.StrengthChangeDrink(-TimePass * 6);
                     break;
                 case WorkingState.Study:
                     //学习
@@ -169,7 +172,7 @@ namespace VPet_Simulator.Core
                             Core.Save.Health -= TimePass;
                         }
                         lowStrengthFood();
-                        var addmoney = TimePass * 12;
+                        var addmoney = TimePass * 6;
                         Core.Save.Exp += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
@@ -178,12 +181,13 @@ namespace VPet_Simulator.Core
                         Core.Save.StrengthChange(TimePass);
                         if (Core.Save.StrengthFood >= 75)
                             Core.Save.Health += TimePass;
-                        var addmoney = TimePass * 25;
+                        var addmoney = TimePass * (15 + Core.Save.Level);
                         Core.Save.Exp += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
                     Core.Save.StrengthChangeFood(-TimePass * 3);
-                    break;
+                    Core.Save.StrengthChangeDrink(-TimePass * 2);
+                    goto default;
                 default://默认
                     //饮食等乱七八糟的消耗
                     if (Core.Save.StrengthFood >= 50)
@@ -197,9 +201,9 @@ namespace VPet_Simulator.Core
                         Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
                     }
                     Core.Save.StrengthChangeFood(-TimePass * 2);
-                    break;
+                    Core.Save.StrengthChangeDrink(-TimePass);
+                    break;                    
             }
-
 
             //if (Core.GameSave.Strength <= 40)
             //{
@@ -247,7 +251,7 @@ namespace VPet_Simulator.Core
 
             if (Core.Controller.EnableFunction)
             {
-                FunctionSpend(0.1);
+                FunctionSpend(0.05);
             }
             else
             {
