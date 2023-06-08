@@ -82,6 +82,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Line(ignoreCase: true)]
         public string Desc { get; set; }
+        private string desc = null;
         /// <summary>
         /// 描述(ToBetterBuy)
         /// </summary>
@@ -89,8 +90,24 @@ namespace VPet_Simulator.Windows.Interface
         {
             get
             {
-                StringBuilder sb = new StringBuilder(Desc);
-                return sb.ToString();
+                if(desc == null)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    if (Exp != 0)
+                        sb.Append("经验值:\t").Append(Exp > 0 ? "+" : "").Append(Exp.ToString("f2")).AppendLine();
+                    if (StrengthFood != 0) sb.Append("饱腹度:\t").Append(StrengthFood > 0 ? "+" : "").Append(StrengthFood.ToString("f2")).Append("\t\t");
+                    if (StrengthDrink != 0) sb.Append("口渴度:\t").Append(StrengthDrink > 0 ? "+" : "").Append(StrengthDrink.ToString("f2")).AppendLine();
+                    if (Strength != 0) sb.Append("体力:\t").Append(Strength > 0 ? "+" : "").Append(Strength.ToString("f2")).Append("\t\t");
+                    if (Feeling != 0)
+                        sb.Append("心情:\t").Append(Feeling > 0 ? "+" : "").Append(Feeling.ToString("f2")).AppendLine();
+                    if (Health != 0)
+                        sb.Append("健康:\t").Append(Health > 0 ? "+" : "").Append(Health.ToString("f2")).Append("\t\t");
+                    if (Likability != 0)
+                        sb.Append("好感度:\t").Append(Likability > 0 ? "+" : "").Append(Likability.ToString("f2"));
+                    sb.AppendLine().Append(Desc);
+                    desc = sb.ToString();
+                }
+                return desc;
             }
         }
         /// <summary>

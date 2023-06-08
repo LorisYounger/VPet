@@ -38,12 +38,12 @@ namespace VPet_Simulator.Core
         /// 说话
         /// </summary>
         /// <param name="text">说话内容</param>
-        public void Say(string text, GraphCore.Helper.SayType type = GraphCore.Helper.SayType.Shining)
+        public void Say(string text, GraphCore.Helper.SayType type = GraphCore.Helper.SayType.Shining, bool force = false)
         {
             Task.Run(() =>
             {
                 OnSay?.Invoke(text);
-                if (type != GraphCore.Helper.SayType.None && DisplayType == GraphCore.GraphType.Default)
+                if (force || type != GraphCore.Helper.SayType.None && DisplayType == GraphCore.GraphType.Default)
                     Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.A_Start), () =>
                     {
                         Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text, type));

@@ -142,7 +142,13 @@ namespace VPet_Simulator.Windows
         //    var item = repeatButton.DataContext as BetterBuyItem;
         //    item.Quantity = Math.Max(1, item.Quantity - 1);
         //}
-
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+            eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+            eventArg.Source = sender;
+            PageDetail.RaiseEvent(eventArg);
+        }
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
 

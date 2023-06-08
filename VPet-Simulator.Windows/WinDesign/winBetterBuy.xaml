@@ -104,7 +104,7 @@
                                     </StackPanel>
                                 </Border>-->
                                 <Button Grid.Row="4" Margin="0,7,0,0" Padding="7,5" Cursor="Hand"
-                                        HorizontalAlignment="Left" pu:ButtonHelper.Icon="&#xEF61;"
+                                        HorizontalAlignment="Left" pu:ButtonHelper.Icon="&#xF11A;"
                                         Style="{DynamicResource ThemedButtonStyle}" Content="购买" Click="BtnBuy_Click" />
                             </Grid>
                         </Grid>
@@ -123,6 +123,7 @@
                                         Foreground="{DynamicResource DARKPrimaryText}" Text="{Binding Name}" />
                                 <ScrollViewer Grid.Row="1" Grid.RowSpan="4" Margin="0,7,0,0"
                                         pu:ScrollBarHelper.ThumbBackground="#44FFFFFF"
+                                        PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"
                                         pu:ScrollBarHelper.HoverThumbBackground="#88FFFFFF">
                                     <TextBlock TextWrapping="Wrap" Background="Transparent" FontSize="12" Padding="0"
                                             Foreground="{DynamicResource DARKPrimaryText}" Text="{Binding Description}" />
@@ -228,7 +229,7 @@
             </Border>
         </Grid>
         <Grid Margin="10" Grid.Column="1">
-            <ScrollViewer>
+            <ScrollViewer x:Name="PageDetail">
                 <ItemsControl x:Name="IcCommodity" VerticalAlignment="Top">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>

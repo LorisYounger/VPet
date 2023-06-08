@@ -99,7 +99,7 @@
                                 CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent" BoxWidth="35"
                                 BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
                                 ToggleBrush="{DynamicResource PrimaryDark}" Content="退出位置"
-                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="该游戏随着开机启动该程序"
+                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="游戏退出位置为下次桌宠启动出现的位置"
                                 Unchecked="StartPlace_Checked" VerticalAlignment="Center" Checked="StartPlace_Checked" />
                         <TextBox x:Name="TextBoxStartUpX" Grid.Column="1" Style="{DynamicResource StandardTextBoxStyle}"
                                 ToolTip="X轴" pu:TextBoxHelper.Icon="X" FontSize="16" Margin="0,0,5,0"
@@ -573,10 +573,10 @@
             <TabItem Header="关于" BorderBrush="{DynamicResource PrimaryDarker}"
                     Foreground="{DynamicResource PrimaryText}">
                 <Grid>
-                    <Image x:Name="ImageWHY" Width="64" HorizontalAlignment="Right" VerticalAlignment="Center"
-                            Height="64" Source="/Res/TopLogo2019.PNG" Margin="0,210,55,0" />
-                    <TextBlock Margin="0,0,0,0" Text="虚拟主播模拟器 规格" FontSize="20" FontWeight="Bold" />
-                    <TextBlock Margin="0,130,0,0" FontWeight="Bold">
+                    <Image x:Name="ImageWHY" Width="64" HorizontalAlignment="Right" VerticalAlignment="Top" Height="64" Source="/Res/TopLogo2019.PNG" Margin="0,325,55,0" />
+                    <TextBlock Margin="0,0,0,0" Text="虚拟主播模拟器 规格" FontSize="20" FontWeight="Bold"
+                            VerticalAlignment="Top" />
+                    <TextBlock Margin="0,130,0,0" FontWeight="Bold" VerticalAlignment="Top">
                     <Run>游戏策划</Run><LineBreak />
                     <Run>UI&amp;程序</Run><LineBreak />
                     <Run>动画绘制</Run><LineBreak />                    
@@ -595,7 +595,7 @@
                                 Click="Group_Click" FontWeight="Normal">相关群</Hyperlink>
 
                     </TextBlock>
-                    <TextBlock Margin="0,30,0,0" FontWeight="Bold">
+                    <TextBlock Margin="0,30,0,0" FontWeight="Bold" VerticalAlignment="Top">
                     <Run>用户名</Run><LineBreak />
                     <Run>版本</Run><LineBreak />
                     <Run>激活</Run><LineBreak />
@@ -605,7 +605,8 @@
                     <Run x:Name="runabVer">v1.0 (100)</Run><LineBreak />
                     <Run x:Name="runActivate">已通过Steam[uid]激活服务注册</Run><LineBreak />
                     </TextBlock>
-                    <TextBlock Margin="0,100,0,0" Text="制作组名单" FontSize="20" FontWeight="Bold" />
+                    <TextBlock Margin="0,100,0,0" Text="制作组名单" FontSize="20" FontWeight="Bold"
+                            HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <TextBlock Margin="100,130,0,0" VerticalAlignment="Top" TextWrapping="WrapWithOverflow">
                     <Run>杨远洛里斯, 广大MOD作者</Run><LineBreak />
                     <Run>洛里斯杨远, トニーちゃん</Run> <Hyperlink Click="Git_Click">Git贡献名单</Hyperlink><LineBreak />

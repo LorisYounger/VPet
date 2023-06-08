@@ -60,15 +60,18 @@ namespace VPet_Simulator.Core
                 {
                     case Main.WorkingState.Study:
                         m.Core.Save.Money += GetCount * 0.2;
-                        Stop(() => m.Say($"学习完成啦, 累计学会了 {(GetCount * 1.2):f2} EXP\n共计花费了{MaxTime}分钟"));
+                        Stop(() => m.Say($"学习完成啦, 累计学会了 {(GetCount * 1.2):f2} 经验值\n共计花费了{MaxTime}分钟"
+                            , GraphCore.Helper.SayType.Shining, true));
                         break;
                     case Main.WorkingState.WorkONE:
                         m.Core.Save.Money += GetCount * 0.15;
-                        Stop(() => m.Say($"{m.Core.Graph.GraphConfig.Str[(gstr)"work1"]}完成啦, 累计赚了 {GetCount * 1.15:f2} 金钱\n共计花费了{MaxTime}分钟"));
+                        Stop(() => m.Say($"{m.Core.Graph.GraphConfig.Str[(gstr)"work1"]}完成啦, 累计赚了 {GetCount * 1.15:f2} 金钱\n共计花费了{MaxTime}分钟"
+                            , GraphCore.Helper.SayType.Shining, true));
                         break;
                     case Main.WorkingState.WorkTWO:
                         m.Core.Save.Money += GetCount * 0.25;
-                        Stop(() => m.Say($"{m.Core.Graph.GraphConfig.Str[(gstr)"work2"]}完成啦, 累计赚了 {GetCount * 1.25:f2} 金钱\n共计花费了{MaxTime}分钟"));
+                        Stop(() => m.Say($"{m.Core.Graph.GraphConfig.Str[(gstr)"work2"]}完成啦, 累计赚了 {GetCount * 1.25:f2} 金钱\n共计花费了{MaxTime}分钟"
+                            , GraphCore.Helper.SayType.Shining, true));
                         break;
                 }
 
@@ -222,7 +225,10 @@ namespace VPet_Simulator.Core
                     m.Display(GraphCore.GraphType.WorkTWO_C_End, then ?? m.DisplayNomal);
                     break;
                 default:
-                    then?.Invoke();
+                    if (then == null)
+                        m.DisplayNomal();
+                    else
+                        then();
                     return;
             }
         }
