@@ -295,7 +295,8 @@
                                 BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
                                 ToggleBrush="{DynamicResource PrimaryDark}"
                                 CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
-                                ToolTip="启用数据计算,桌宠会有状态变化,需要按时投喂等.&#13;如果嫌麻烦可以关掉" Checked="CalFunctionBox_Checked" />
+                                ToolTip="启用数据计算,桌宠会有状态变化,需要按时投喂等.&#13;如果嫌麻烦可以关掉" Checked="CalFunctionBox_Checked"
+                                Unchecked="CalFunctionBox_Checked" />
                         <Grid Grid.Column="2" Grid.Row="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />

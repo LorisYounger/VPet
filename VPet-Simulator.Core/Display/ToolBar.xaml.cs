@@ -59,19 +59,19 @@ namespace VPet_Simulator.Core
                 pFeeling.Value = m.Core.Save.Feeling;
                 pStrengthFood.Value = m.Core.Save.StrengthFood;
                 pStrengthDrink.Value = m.Core.Save.StrengthDrink;
-                if (m.Core.Save.ChangeStrength < 1)
+                if (Math.Abs(m.Core.Save.ChangeStrength) > 1)
                     tStrength.Text = $"{m.Core.Save.ChangeStrength:f1}/t";
                 else
                     tStrength.Text = $"{m.Core.Save.ChangeStrength:f2}/t";
-                if (m.Core.Save.ChangeFeeling < 1)
+                if (Math.Abs(m.Core.Save.ChangeFeeling) > 1)
                     tFeeling.Text = $"{m.Core.Save.ChangeFeeling:f1}/t";
                 else
                     tFeeling.Text = $"{m.Core.Save.ChangeFeeling:f2}/t";
-                if (m.Core.Save.ChangeStrengthDrink < 1)
+                if (Math.Abs(m.Core.Save.ChangeStrengthDrink) > 1)
                     tStrengthDrink.Text = $"{m.Core.Save.ChangeStrengthDrink:f1}/t";
                 else
                     tStrengthDrink.Text = $"{m.Core.Save.ChangeStrengthDrink:f2}/t";
-                if (m.Core.Save.ChangeStrengthFood < 1)
+                if (Math.Abs(m.Core.Save.ChangeStrengthFood) > 1)
                     tStrengthFood.Text = $"{m.Core.Save.ChangeStrengthFood:f1}/t";
                 else
                     tStrengthFood.Text = $"{m.Core.Save.ChangeStrengthFood:f2}/t";

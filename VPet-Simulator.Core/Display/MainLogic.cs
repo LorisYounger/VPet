@@ -128,8 +128,8 @@ namespace VPet_Simulator.Core
                         Core.Save.Money += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
-                    Core.Save.StrengthChangeFood(-TimePass * 3);
-                    Core.Save.StrengthChangeDrink(-TimePass);
+                    Core.Save.StrengthChangeFood(-TimePass * 4);
+                    Core.Save.StrengthChangeDrink(-TimePass * 3);
                     break;
                 case WorkingState.WorkTWO:
                     //工作2 更加消耗体力
@@ -156,8 +156,8 @@ namespace VPet_Simulator.Core
                         Core.Save.Money += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
-                    Core.Save.StrengthChangeFood(-TimePass * 4);
-                    Core.Save.StrengthChangeDrink(-TimePass * 6);
+                    Core.Save.StrengthChangeFood(-TimePass * 5);
+                    Core.Save.StrengthChangeDrink(-TimePass * 8);
                     break;
                 case WorkingState.Study:
                     //学习
@@ -186,7 +186,7 @@ namespace VPet_Simulator.Core
                         WorkTimer.GetCount += addmoney;
                     }
                     Core.Save.StrengthChangeFood(-TimePass * 3);
-                    Core.Save.StrengthChangeDrink(-TimePass * 2);
+                    Core.Save.StrengthChangeDrink(-TimePass * 4);
                     goto default;
                 default://默认
                     //饮食等乱七八糟的消耗
@@ -201,8 +201,8 @@ namespace VPet_Simulator.Core
                         Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
                     }
                     Core.Save.StrengthChangeFood(-TimePass * 2);
-                    Core.Save.StrengthChangeDrink(-TimePass);
-                    break;                    
+                    Core.Save.StrengthChangeDrink(-TimePass * 2);
+                    break;
             }
 
             //if (Core.GameSave.Strength <= 40)
