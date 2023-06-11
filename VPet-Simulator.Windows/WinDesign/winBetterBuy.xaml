@@ -29,8 +29,8 @@
                             VerticalAlignment="Center" Margin="30,0,0,0" />
                     <Button Style="{DynamicResource TextButtonStyle}" Foreground="{DynamicResource DARKPrimaryText}"
                             Content="更好买" VerticalAlignment="Center" FontSize="20" Click="BtnTitle_Click"
-                            pu:WindowX.IsDragMoveArea="False" Margin="10,0,0,0"/>
-                    <Grid Grid.Column="1" Margin="15,0,0,0" Width="200" pu:WindowX.IsDragMoveArea="False">
+                            pu:WindowX.IsDragMoveArea="False" Margin="10,0,0,0" />
+                    <Grid Grid.Column="1" Margin="15,0,0,0" pu:WindowX.IsDragMoveArea="False" Width="200">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
@@ -46,8 +46,14 @@
                                 Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" Cursor="Hand"
                                 Click="BtnSearch_Click" />
                     </Grid>
-
                 </StackPanel>
+                <pu:Switch Content="购买后不自动关闭窗口" Grid.Column="2" FontSize="14" Margin="10,0,5,0" Height="20"
+                        VerticalAlignment="Center" HorizontalAlignment="Right" BoxHeight="14" ToggleSize="18"
+                        CheckedBackground="{DynamicResource Primary}" CheckedBorderBrush="{DynamicResource Primary}"
+                        Background="Transparent" ToggleShadowColor="{x:Null}" IsChecked="{Binding StateOpen}"
+                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                        ToggleBrush="{DynamicResource PrimaryDark}" pu:WindowX.IsDragMoveArea="False" BoxWidth="30"
+                        Loaded="Switch_Loaded" Checked="Switch_Checked" Unchecked="Switch_Checked" />
             </Grid>
         </DataTemplate>
     </pu:WindowXCaption.HeaderTemplate>
@@ -78,7 +84,7 @@
                                 </Grid.RowDefinitions>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                                     <TextBlock x:Name="TxtPrice" VerticalAlignment="Bottom"
-                                            Text="{Binding Price, StringFormat='¥ 0.0'}" FontWeight="Bold" FontSize="18"
+                                            Text="{Binding Price, StringFormat='$ 0.0'}" FontWeight="Bold" FontSize="18"
                                             Foreground="{DynamicResource DARKPrimary}" />
                                     <!--<TextBlock x:Name="TxtDiscountPrice" Margin="5,0,0,0" FontWeight="Bold"
                                             FontSize="18" Foreground="{DynamicResource DARKPrimary}">
@@ -145,7 +151,7 @@
                     </Border>
                     <ToggleButton x:Name="TbtnStar" Grid.ColumnSpan="2" Margin="0,5,32,0" HorizontalAlignment="Right"
                             VerticalAlignment="Top" Width="30" Height="30" Padding="0" FontSize="22"
-                            Foreground="#FFB300" Background="Transparent" ToolTip="收藏食物"  
+                            Foreground="#FFB300" Background="Transparent" ToolTip="收藏食物"
                             pu:ToggleButtonHelper.CornerRadius="5" pu:ToggleButtonHelper.CheckedContent="&#xF186;"
                             pu:IconHelper.Margin="0" FontFamily="/VPet-Simulator.Windows;component/Res/#remixicon"
                             Content="&#xF18B;" IsChecked="{Binding Star}" />

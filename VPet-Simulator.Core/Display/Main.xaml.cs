@@ -104,8 +104,23 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void LoadTouchEvent()
         {
-            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, DisplayTouchHead));
-            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate, Core.Graph.GraphConfig.TouchRaisedSize, DisplayRaised, true));
+            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, () => { DisplayTouchHead(); return true; }));
+            for (int i = 0; i < 4; i++)
+            {
+                GameSave.ModeType m = (GameSave.ModeType)i;
+                Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate[i], Core.Graph.GraphConfig.TouchRaisedSize[i],
+                    () =>
+                    {
+                        if (Core.Save.Mode == m)
+                        {
+                            DisplayRaised();
+                            return true;
+                        }
+                        else
+                            return false;
+
+                    }, true));
+            }
         }
         /// <summary>
         /// 播放语音 语音播放时不会停止播放说话表情
@@ -186,17 +201,20 @@ namespace VPet_Simulator.Core
                 //mp = new Point(mp.X * Core.Controller.ZoomRatio, mp.Y * Core.Controller.ZoomRatio);
                 if (isPress && presstime == pth)
                 {//历遍长按事件
-                    var act = Core.TouchEvent.FirstOrDefault(x => x.IsPress == true && x.Touch(mp));
-                    if (act != null)
-                        Dispatcher.Invoke(act.DoAction);
+                    foreach (var x in Core.TouchEvent)
+                    {
+                        if (x.IsPress == true && x.Touch(mp) && x.DoAction())
+                            return;
+                    }
                 }
                 else
                 {//历遍点击事件
-                    var act = Core.TouchEvent.FirstOrDefault(x => x.IsPress == false && x.Touch(mp));
-                    if (act != null)
-                        Dispatcher.Invoke(act.DoAction);
-                    else
-                        DefaultClickAction?.Invoke();
+                    foreach (var x in Core.TouchEvent)
+                    {
+                        if (x.IsPress == false && x.Touch(mp) && x.DoAction())
+                            return;
+                    }
+                    DefaultClickAction?.Invoke();
                 }
             });
         }

@@ -42,7 +42,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 如果是触发的内容
         /// </summary>
-        public Action DoAction;
+        public Func<bool> DoAction;
         /// <summary>
         /// 否:立即触发/是:长按触发
         /// </summary>
@@ -54,7 +54,7 @@ namespace VPet_Simulator.Core
         /// <param name="size">大小</param>
         /// <param name="doAction">如果是触发的内容</param>
         /// <param name="isPress">否:立即触发/是:长按触发</param>
-        public TouchArea(Point locate, Size size, Action doAction, bool isPress = false)
+        public TouchArea(Point locate, Size size, Func<bool> doAction, bool isPress = false)
         {
             Locate = locate;
             Size = size;

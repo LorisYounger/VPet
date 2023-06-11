@@ -30,6 +30,7 @@ namespace VPet_Simulator.Windows
         private TextBox _searchTextBox;
         MainWindow mw;
         private bool AllowChange = false;
+        private Switch _puswitch;
 
         public winBetterBuy(MainWindow mw)
         {
@@ -172,7 +173,8 @@ namespace VPet_Simulator.Windows
                 mw.Core.Save.EatFood(item);
                 mw.Core.Save.Money -= item.Price;
             }
-            TryClose();
+            if (!_puswitch.IsChecked.Value)
+                TryClose();
             IRunImage eat = (IRunImage)mw.Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
             var b = mw.Main.FindDisplayBorder(eat);
             eat.Run(b, item.ImageSource, mw.Main.DisplayToNomal);
@@ -219,6 +221,17 @@ namespace VPet_Simulator.Windows
         {
             TryClose();
             e.Cancel = true;
+        }
+
+        private void Switch_Loaded(object sender, RoutedEventArgs e)
+        {
+            _puswitch = sender as Switch;
+            _puswitch.IsChecked = mw.Set["betterbuy"].GetBool("noautoclose");
+        }
+
+        private void Switch_Checked(object sender, RoutedEventArgs e)
+        {
+            mw.Set["betterbuy"].SetBool("noautoclose", _puswitch.IsChecked.Value);
         }
     }
 }

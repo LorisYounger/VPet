@@ -434,12 +434,12 @@ namespace VPet_Simulator.Core
                         return list[Function.Rnd.Next(list.Count)];
 
                 }
-                if (mode != GameSave.ModeType.Ill)
-                {
-                    list = Graphs[type].FindAll(x => x.ModeType != GameSave.ModeType.Ill);
-                    if (list.Count > 0)
-                        return list[Function.Rnd.Next(list.Count)];
-                }
+                //if (mode != GameSave.ModeType.Ill)
+                //{
+                list = Graphs[type].FindAll(x => x.ModeType != GameSave.ModeType.Ill);
+                if (list.Count > 0)
+                    return list[Function.Rnd.Next(list.Count)];
+                //}
             }
             return null;// FindGraph(GraphType.Default, mode);
         }
@@ -516,7 +516,7 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 提起触发位置
             /// </summary>
-            public Point TouchRaisedLocate;
+            public Point[] TouchRaisedLocate;
             /// <summary>
             /// 摸头触发大小
             /// </summary>
@@ -524,7 +524,7 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 提起触发大小
             /// </summary>
-            public Size TouchRaisedSize;
+            public Size[] TouchRaisedSize;
 
             /// <summary>
             /// 提起定位点
@@ -580,8 +580,18 @@ namespace VPet_Simulator.Core
             {
                 TouchHeadLocate = new Point(lps["touchhead"][(gdbe)"px"], lps["touchhead"][(gdbe)"py"]);
                 TouchHeadSize = new Size(lps["touchhead"][(gdbe)"sw"], lps["touchhead"][(gdbe)"sh"]);
-                TouchRaisedLocate = new Point(lps["touchraised"][(gdbe)"px"], lps["touchraised"][(gdbe)"py"]);
-                TouchRaisedSize = new Size(lps["touchraised"][(gdbe)"sw"], lps["touchraised"][(gdbe)"sh"]);
+                TouchRaisedLocate = new Point[] {
+                    new Point(lps["touchraised"][(gdbe)"happy_px"], lps["touchraised"][(gdbe)"happy_py"]),
+                    new Point(lps["touchraised"][(gdbe)"nomal_px"], lps["touchraised"][(gdbe)"nomal_py"]),
+                    new Point(lps["touchraised"][(gdbe)"poorcondition_px"], lps["touchraised"][(gdbe)"poorcondition_py"]),
+                    new Point(lps["touchraised"][(gdbe)"ill_px"], lps["touchraised"][(gdbe)"ill_py"])
+                };
+                TouchRaisedSize = new Size[] {
+                    new Size(lps["touchraised"][(gdbe)"happy_sw"], lps["touchraised"][(gdbe)"happy_sh"]),
+                    new Size(lps["touchraised"][(gdbe)"nomal_sw"], lps["touchraised"][(gdbe)"nomal_sh"]),
+                    new Size(lps["touchraised"][(gdbe)"poorcondition_sw"], lps["touchraised"][(gdbe)"poorcondition_sh"]),
+                    new Size(lps["touchraised"][(gdbe)"ill_sw"], lps["touchraised"][(gdbe)"ill_sh"])
+                };
                 RaisePoint = new Point[] {
                     new Point(lps["raisepoint"][(gdbe)"happy_x"], lps["raisepoint"][(gdbe)"happy_y"]),
                     new Point(lps["raisepoint"][(gdbe)"nomal_x"], lps["raisepoint"][(gdbe)"nomal_y"]),
@@ -626,8 +636,18 @@ namespace VPet_Simulator.Core
                 }
                 if (lps.FindLine("touchraised") != null)
                 {
-                    TouchRaisedLocate = new Point(lps["touchraised"][(gdbe)"px"], lps["touchraised"][(gdbe)"py"]);
-                    TouchRaisedSize = new Size(lps["touchraised"][(gdbe)"sw"], lps["touchraised"][(gdbe)"wh"]);
+                    TouchRaisedLocate = new Point[] {
+                    new Point(lps["touchraised"][(gdbe)"happy_px"], lps["touchraised"][(gdbe)"happy_py"]),
+                    new Point(lps["touchraised"][(gdbe)"nomal_px"], lps["touchraised"][(gdbe)"nomal_py"]),
+                    new Point(lps["touchraised"][(gdbe)"poorcondition_px"], lps["raistouchraisedepoint"][(gdbe)"poorcondition_py"]),
+                    new Point(lps["touchraised"][(gdbe)"ill_px"], lps["touchraised"][(gdbe)"ill_py"])
+                };
+                    TouchRaisedSize = new Size[] {
+                    new Size(lps["touchraised"][(gdbe)"happy_sx"], lps["touchraised"][(gdbe)"happy_sy"]),
+                    new Size(lps["touchraised"][(gdbe)"nomal_sx"], lps["touchraised"][(gdbe)"nomal_sy"]),
+                    new Size(lps["touchraised"][(gdbe)"poorcondition_sx"], lps["touchraised"][(gdbe)"poorcondition_sy"]),
+                    new Size(lps["touchraised"][(gdbe)"ill_sx"], lps["touchraised"][(gdbe)"ill_sy"])
+                };
                 }
                 if (lps.FindLine("raisepoint") != null)
                 {

@@ -28,7 +28,7 @@ food:|type#Snack:|name#牛扎糖:|price#4.0:|desc#好甜，像你一样:|Exp#10:
 food:|type#Snack:|name#泡泡糖:|price#3.5:|desc#就吹吧你:|Exp#15:|Strength#5:|StrengthDrink#-1:|StrengthFood#5:|Feeling#17:|
 food:|type#Snack:|name#巧克力:|price#10.0:|desc#纵享丝滑:|Exp#10:|Strength#30:|StrengthDrink#-5:|StrengthFood#38:|Feeling#15:|
 food:|type#Snack:|name#软糖:|price#3.0:|desc#come on baby~:|Exp#10:|Strength#5:|StrengthDrink#-2:|StrengthFood#12:|Feeling#5:|
-food:|type#Snack:|name#薯片:|price#7.0:|desc#开趴必备:|Exp#10:|Strength#10:|StrengthDrink#5:|StrengthFood#28:|Feeling#5:|
+food:|type#Snack:|name#薯片:|price#6.0:|desc#开趴必备:|Exp#10:|Strength#10:|StrengthDrink#-5:|StrengthFood#28:|Feeling#5:|
 food:|type#Snack:|name#娃仔小馒头:|price#4.5:|desc#这是我们的宝贝~~:|Exp#10:|Strength#15:|StrengthDrink#0:|StrengthFood#12:|Feeling#10:|
 food:|type#Snack:|name#小布丁:|price#4.0:|desc#没关系，小小的也很好吃:|Exp#10:|Strength#10:|StrengthDrink#5:|StrengthFood#10:|Feeling#5:|
 food:|type#Snack:|name#雪饼:|price#5.5:|desc#小时候的一口吃不下:|Exp#10:|Strength#10:|StrengthDrink#5:|StrengthFood#15:|Feeling#10:|
@@ -61,3 +61,4 @@ food:|type#Meal:|name#芝士焗虾:|price#28.5:|desc#焗虾闭嘴:|Exp#125:|Stre
 food:|type#Meal:|name#纸包鸡:|price#28.0:|desc#纸包鸡包纸包鸡包鸡包纸:|Exp#100:|Strength#85:|StrengthFood#75:|Feeling#30:|
 food:|type#Meal:|name#炸鸡腿:|price#14.5:|desc#:|Exp#50:|Strength#40:|StrengthFood#40:|Feeling#20:|
 food:|type#Meal:|name#汉堡:|price#19.5:|desc#还想要汉O王？这价格不是华O士已经对你很好了。:|Exp#50:|Strength#60:|StrengthFood#60:|Feeling#20:|
+food:|type#Functional:|name#地球:|price#0.0:|desc#没钱也能吃,可以用来拯救存档:|Exp#-300:|Strength#-200:|StrengthDrink#200:|StrengthFood#200:|Feeling#-200:|
