@@ -35,6 +35,10 @@ namespace VPet_Simulator.Windows
         public int Ver;
         public string Content = "";
         public bool SuccessLoad = true;
+        /// <summary>
+        /// LBGame 信任的MOD,自动加载
+        /// </summary>
+        public bool IsTrust = false;
         public static string INTtoVER(int ver) => $"{ver / 100}.{ver % 100:00}";
         public static void LoadImage(MainWindow mw, DirectoryInfo di)
         {
@@ -68,7 +72,7 @@ namespace VPet_Simulator.Windows
             Intro = modlps.FindLine("intro").Info;
             GameVer = modlps.FindSub("gamever").InfoToInt;
             Ver = modlps.FindSub("ver").InfoToInt;
-            Author = modlps.FindSub("author").Info;
+            Author = modlps.FindSub("author").Info.Split('[').First();
             if (modlps.FindLine("authorid") != null)
                 AuthorID = modlps.FindLine("authorid").InfoToInt64;
             else
@@ -127,11 +131,6 @@ namespace VPet_Simulator.Windows
                     case "plugin":
                         Content += "代码插件\n";
                         SuccessLoad = false;
-                        if (!IsPassMOD(mw))
-                        {//不是通过模组,不加载
-                            break;
-                        }
-
                         foreach (FileInfo tmpfi in di.EnumerateFiles("*.dll"))
                         {
                             try
@@ -141,12 +140,25 @@ namespace VPet_Simulator.Windows
                                     continue;
                                 LoadedDLL.Add(path);
                                 Assembly dll = Assembly.LoadFrom(tmpfi.FullName);
+                                var certificate = dll.GetModules()?.First()?.GetSignerCertificate();
+                                if (certificate != null && certificate.Subject == "")
+                                {//LBGame 信任的证书
+
+                                }
+                                else
+                                {
+                                    if (!IsPassMOD(mw))
+                                    {//不是通过模组,不加载
+                                        continue;
+                                    }
+                                }
                                 var v = dll.GetExportedTypes();
                                 foreach (Type exportedType in v)
                                 {
                                     if (exportedType.BaseType == typeof(MainPlugin))
                                     {
                                         mw.Plugins.Add((MainPlugin)Activator.CreateInstance(exportedType, mw));
+                                        SuccessLoad = true;
                                     }
                                 }
                             }
@@ -155,7 +167,6 @@ namespace VPet_Simulator.Windows
 
                             }
                         }
-                        SuccessLoad = true;
                         break;
                 }
             }

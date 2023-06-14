@@ -282,14 +282,16 @@ namespace VPet_Simulator.Core
                 }
             }
             //然后判断是高兴还是普通
-            else if (Feeling >= 80 - (Likability >= 80 ? 20 : (Likability >= 40 ? 10 : 0)))
+            realhel = 90 - (Likability >= 80 ? 20 : (Likability >= 40 ? 10 : 0));
+            if (Feeling >= realhel)
             {
                 return ModeType.Happy;
             }
-            else
+            else if (Feeling <= realhel / 2)
             {
-                return ModeType.Nomal;
+                return ModeType.PoorCondition;
             }
+            return ModeType.Nomal;
         }
         /// <summary>
         /// 新游戏

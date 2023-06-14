@@ -303,7 +303,6 @@ namespace VPet_Simulator.Core
             if (PlayState)
             {//如果当前正在运行,重置状态
              //IsResetPlay = true;
-                Stop();
                 StopAction = () => Run(parant, image, EndAction);
                 return;
             }

@@ -59,7 +59,7 @@ namespace VPet_Simulator.Core
                 switch (m.State)
                 {
                     case Main.WorkingState.Study:
-                        m.Core.Save.Money += GetCount * 0.2;
+                        m.Core.Save.Exp += GetCount * 0.2;
                         Stop(() => m.Say($"学习完成啦, 累计学会了 {(GetCount * 1.2):f2} 经验值\n共计花费了{MaxTime}分钟"
                             , GraphCore.Helper.SayType.Shining, true));
                         break;

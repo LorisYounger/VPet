@@ -201,6 +201,7 @@ namespace VPet_Simulator.Core
                 //mp = new Point(mp.X * Core.Controller.ZoomRatio, mp.Y * Core.Controller.ZoomRatio);
                 if (isPress && presstime == pth)
                 {//历遍长按事件
+                    LastInteractionTime = DateTime.Now;
                     foreach (var x in Core.TouchEvent)
                     {
                         if (x.IsPress == true && x.Touch(mp) && x.DoAction())
@@ -209,6 +210,7 @@ namespace VPet_Simulator.Core
                 }
                 else
                 {//历遍点击事件
+                    LastInteractionTime = DateTime.Now;
                     foreach (var x in Core.TouchEvent)
                     {
                         if (x.IsPress == false && x.Touch(mp) && x.DoAction())
@@ -258,7 +260,13 @@ namespace VPet_Simulator.Core
 
         private void MainGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ToolBar.Show();
+            if (ToolBar.Visibility == Visibility.Visible)
+            {
+                ToolBar.CloseTimer.Enabled = false;
+                ToolBar.Visibility = Visibility.Collapsed;
+            }
+            else
+                ToolBar.Show();
         }
 
         public void Dispose()

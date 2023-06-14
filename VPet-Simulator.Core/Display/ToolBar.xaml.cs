@@ -54,7 +54,16 @@ namespace VPet_Simulator.Core
                     tfun.Visibility = Visibility.Visible;
                 }
                 pExp.Maximum = m.Core.Save.LevelUpNeed();
+                if (m.Core.Save.Exp < 0)
+                {
+                    pExp.Minimum = m.Core.Save.Exp;
+                }
+                else
+                {
+                    pExp.Minimum = 0;
+                }
                 pExp.Value = m.Core.Save.Exp;
+
                 pStrength.Value = m.Core.Save.Strength;
                 pFeeling.Value = m.Core.Save.Feeling;
                 pStrengthFood.Value = m.Core.Save.StrengthFood;
