@@ -55,6 +55,7 @@ namespace VPet_Simulator.Windows
             //游戏存档
             if (Set != null)
             {
+                var st = Set.Statistics[(gint)"savetimes"]++;
                 if (Main != null)
                 {
                     Set.VoiceVolume = Main.PlayVoiceVolume;
@@ -62,12 +63,21 @@ namespace VPet_Simulator.Windows
                     Foods.FindAll(x => x.Star).ForEach(x => list.Add(x.Name));
                     Set["betterbuy"]["star"].info = string.Join(",", list);
                 }
-                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
-            }
-            if (Core != null && Core.Save != null)
-                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
-            if (CGPTClient != null)
-                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json", CGPTClient.Save());
+             
+                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
+                {
+                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
+                    var ds = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + @"\UserData");
+                    if (ds.Length > 20)
+                        File.Delete(ds[0]);
+
+                    File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
+                    if (Core != null && Core.Save != null)
+                        File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
+                    if (CGPTClient != null)
+                        File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json", CGPTClient.Save());
+                }
+            }            
         }
         /// <summary>
         /// 重载DIY按钮区域

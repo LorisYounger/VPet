@@ -20,7 +20,10 @@ namespace VPet_Simulator.Core
         /// 处理说话内容
         /// </summary>
         public event Action<string> OnSay;
-
+        /// <summary>
+        /// 上次交互时间
+        /// </summary>
+        public DateTime LastInteractionTime { get; set; } = DateTime.Now;
         /// <summary>
         /// 事件Timer
         /// </summary>
@@ -88,6 +91,11 @@ namespace VPet_Simulator.Core
         {
             Core.Save.CleanChange();
             Core.Save.StoreTake();
+            double freedrop = (DateTime.Now - LastInteractionTime).TotalMinutes;
+            if (freedrop < 1)
+                freedrop = 0;
+            else
+                freedrop = Math.Sqrt(freedrop) * TimePass;
             switch (State)
             {
                 case WorkingState.Sleep:
@@ -98,10 +106,9 @@ namespace VPet_Simulator.Core
                         if (Core.Save.StrengthFood >= 75)
                             Core.Save.Health += TimePass * 2;
                     }
-                    else
-                        lowStrengthFood();
-                    Core.Save.StrengthChangeFood(-TimePass);
-                    Core.Save.StrengthChangeDrink(-TimePass);
+                    Core.Save.StrengthChangeFood(-TimePass / 2);
+                    Core.Save.StrengthChangeDrink(-TimePass / 2);
+                    Core.Save.FeelingChange(-freedrop / 2);
                     break;
                 case WorkingState.WorkONE:
                     //工作
@@ -129,8 +136,9 @@ namespace VPet_Simulator.Core
                         Core.Save.Money += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
-                    Core.Save.StrengthChangeFood(-TimePass * 4);
-                    Core.Save.StrengthChangeDrink(-TimePass * 3);
+                    Core.Save.StrengthChangeFood(-TimePass * 3.5);
+                    Core.Save.StrengthChangeDrink(-TimePass * 2.5);
+                    Core.Save.FeelingChange(-freedrop * 1.5);
                     break;
                 case WorkingState.WorkTWO:
                     //工作2 更加消耗体力
@@ -157,8 +165,9 @@ namespace VPet_Simulator.Core
                         Core.Save.Money += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
-                    Core.Save.StrengthChangeFood(-TimePass * 5);
-                    Core.Save.StrengthChangeDrink(-TimePass * 8);
+                    Core.Save.StrengthChangeFood(-TimePass * 4.5);
+                    Core.Save.StrengthChangeDrink(-TimePass * 7.5);
+                    Core.Save.FeelingChange(-freedrop * 2.5);
                     break;
                 case WorkingState.Study:
                     //学习
@@ -188,6 +197,7 @@ namespace VPet_Simulator.Core
                     }
                     Core.Save.StrengthChangeFood(-TimePass * 3);
                     Core.Save.StrengthChangeDrink(-TimePass * 4);
+                    Core.Save.FeelingChange(-freedrop * 3);
                     goto default;
                 default://默认
                     //饮食等乱七八糟的消耗
@@ -201,8 +211,9 @@ namespace VPet_Simulator.Core
                     {
                         Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
                     }
-                    Core.Save.StrengthChangeFood(-TimePass * 2);
-                    Core.Save.StrengthChangeDrink(-TimePass * 2);
+                    Core.Save.StrengthChangeFood(-TimePass * 1.5);
+                    Core.Save.StrengthChangeDrink(-TimePass * 1.5);
+                    Core.Save.FeelingChange(-freedrop);
                     break;
             }
 
