@@ -22,6 +22,7 @@ using static VPet_Simulator.Core.IGraph;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using System.Linq;
 
 namespace VPet_Simulator.Windows
 {
@@ -178,6 +179,7 @@ namespace VPet_Simulator.Windows
                     }
                 }
             }
+            Dispatcher.Invoke(new Action(() => LoadingText.Content = "尝试加载 Steam Workshop"));
             //加载mod
             foreach (DirectoryInfo di in Path)
             {
@@ -189,11 +191,21 @@ namespace VPet_Simulator.Windows
             foreach (CoreMOD cm in CoreMODs)
                 if (!cm.SuccessLoad)
                     if (Set.IsPassMOD(cm.Name))
-                        MessageBox.Show($"模组 {cm.Name} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题", $"{cm.Name} 未加载代码插件");
+                        MessageBoxX.Show($"模组 {cm.Name} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题", $"{cm.Name} 未加载代码插件");
                     else if (Set.IsMSGMOD(cm.Name))
-                        MessageBox.Show($"由于 {cm.Name} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件", $"{cm.Name} 未加载代码插件");
+                        MessageBoxX.Show($"由于 {cm.Name} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件", $"{cm.Name} 未加载代码插件");
 
-            Dispatcher.Invoke(new Action(() => LoadingText.Content = "尝试加载游戏存档"));
+            //判断是否需要清空缓存
+            if (Set.LastCacheDate < CoreMODs.Max(x => x.CacheDate))
+            {//需要清理缓存
+                Set.LastCacheDate = DateTime.Now;
+                if (Directory.Exists(CachePath))
+                {
+                    Directory.Delete(CachePath, true);
+                    Directory.CreateDirectory(CachePath);
+                }
+            }
+            Dispatcher.Invoke(new Action(() => LoadingText.Content = "尝试加载游戏MOD"));
 
             //加载游戏内容
             Core.Controller = new MWController(this);
@@ -212,197 +224,210 @@ namespace VPet_Simulator.Windows
 
             Dispatcher.Invoke(new Action(() =>
             {
-                LoadingText.Content = "尝试加载动画和生成缓存";
-                var pl = Pets.Find(x => x.Name == Set.PetGraph);
-                Core.Graph = pl == null ? Pets[0].Graph() : pl.Graph();
-                LoadingText.Content = "正在加载CGPT";
+            LoadingText.Content = "尝试加载动画和生成缓存";
+            var pl = Pets.Find(x => x.Name == Set.PetGraph);
+            Core.Graph = pl == null ? Pets[0].Graph() : pl.Graph();
+            LoadingText.Content = "正在加载CGPT";
 
-                winSetting = new winGameSetting(this);
-                winBetterBuy = new winBetterBuy(this);
-                Main = new Main(Core) { };
-                if (!Set["CGPT"][(gbol)"enable"] && IsSteamUser)
-                {
-                    TalkBox = new TalkBox(this);
-                    Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                }
-                else if (Set["CGPT"][(gbol)"enable"])
-                {
-                    TalkBox = new TalkBoxAPI(this);
-                    Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                }
-                LoadingText.Content = "正在加载游戏";
-                try
-                {
-                    //加载游戏创意工坊插件
-                    foreach (MainPlugin mp in Plugins)
-                        mp.LoadPlugin();
-                }
-                catch (Exception e)
-                {
-                    new winReport(this, "由于插件引起的游戏启动错误\n" + e.ToString()).Show();
-                }
-                Foods.ForEach(item => item.LoadImageSource(this));
-
-                Main.DefaultClickAction = () =>
-                {
-                    if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
-                    {
-                        lastclicktime = DateTime.Now.Ticks;
-                        var v = rndtext[Function.Rnd.Next(rndtext.Count)];
-                        Main.Say(v.Item1, v.Item2);
-                    }
-                };
-                Main.PlayVoiceVolume = Set.VoiceVolume;
-                DisplayGrid.Child = Main;
-                Task.Run(() =>
-                {
-                    while (Main.IsWorking)
-                    {
-                        Thread.Sleep(100);
-                    }
-                    Dispatcher.Invoke(() => LoadingText.Visibility = Visibility.Collapsed);
-                });
-
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠", () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "开发控制台", () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心", () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板", () =>
-                {
-                    Main.ToolBar.Visibility = Visibility.Collapsed;
-                    Topmost = false;
-                    winSetting.Show();
-                });
-
-                //this.Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.PNG")));
-
-                //Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喂食测试", () =>
-                //    {
-                //        Main.ToolBar.Visibility = Visibility.Collapsed;
-                //        IRunImage eat = (IRunImage)Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
-                //        var b = Main.FindDisplayBorder(eat);
-                //        eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/汉堡.png")), Main.DisplayToNomal);
-                //    }
-                //);
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "吃饭", () =>
-                    {
-                        winBetterBuy.Show(Food.FoodType.Meal);
-                    }
-                );
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喝水", () =>
-                {
-                    winBetterBuy.Show(Food.FoodType.Drink);
-                }
-              );
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "药品", () =>
-                {
-                    winBetterBuy.Show(Food.FoodType.Drug);
-                }
-              );
-                Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
-                Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
-                if (Set.MessageBarOutside)
-                    Main.MsgBar.SetPlaceOUT();
-
-                //加载图标
-                notifyIcon = new NotifyIcon();
-                notifyIcon.Text = "虚拟桌宠模拟器";
-                ContextMenu m_menu;
-
-                m_menu = new ContextMenu();
-                m_menu.MenuItems.Add(new MenuItem("操作教程", (x, y) => { Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html"); }));
-                m_menu.MenuItems.Add(new MenuItem("重置状态", (x, y) =>
-                {
-                    Main.CleanState();
-                    Main.DisplayToNomal();
-                    Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-                    Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
-                }));
-                m_menu.MenuItems.Add(new MenuItem("反馈中心", (x, y) => { new winReport(this).Show(); }));
-                m_menu.MenuItems.Add(new MenuItem("开发控制台", (x, y) => { new winConsole(this).Show(); }));
-
-                m_menu.MenuItems.Add(new MenuItem("设置面板", (x, y) =>
-                {
-                    Topmost = false;
-                    winSetting.Show();
-                }));
-                m_menu.MenuItems.Add(new MenuItem("退出桌宠", (x, y) => Close()));
-
-                LoadDIY();
-
-                notifyIcon.ContextMenu = m_menu;
-
-                notifyIcon.Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/vpeticon.ico")).Stream);
-
-                notifyIcon.Visible = true;
-                notifyIcon.BalloonTipClicked += (a, b) =>
-                {
-                    Topmost = false;
-                    winSetting.Show();
-                };
-
-                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 2, 23))
-                {
-                    Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
-                    Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
-                }
-                if (!Set["SingleTips"].GetBool("helloworld"))
-                {
-                    Task.Run(() =>
-                    {
-                        Thread.Sleep(2000);
-                        Set["SingleTips"].SetBool("helloworld", true);
-                        notifyIcon.ShowBalloonTip(10, "你好" + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
-                    "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠", ToolTipIcon.Info);
-                        Thread.Sleep(2000);
-                        Main.Say("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议", GraphCore.Helper.SayType.Shining);
-                    });
-                }
-                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 6, 8))
-                {
-                    if (Set["SingleTips"].GetDateTime("update") > new DateTime(2023, 6, 8))
-                        notifyIcon.ShowBalloonTip(10, "更新通知 06/09",
-               "修复频繁喝水的bug,更好买新增查看详细信息\n修复干完活后动画停止播放的错误", ToolTipIcon.Info);
-                    else
-                        notifyIcon.ShowBalloonTip(10, "更新通知 06/08",
-               "现已支持数据计算,桌宠现在需要进行吃饭喝水等\n前往设置调整速率和关闭数据计算\n若有游戏数据设计上的反馈,欢迎加群虚拟主播模拟器430081239或使用反馈功能反馈", ToolTipIcon.Info);
-                    Set["SingleTips"].SetDateTime("update", DateTime.Now);
-                }
-                Save();
-            }));
-        }
-
-        private void AutoSaveTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            Save();
-        }
-
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            Save();
+            winSetting = new winGameSetting(this);
+            winBetterBuy = new winBetterBuy(this);
+            Main = new Main(Core) { };
+            if (!Set["CGPT"][(gbol)"enable"] && IsSteamUser)
+            {
+                TalkBox = new TalkBox(this);
+                Main.ToolBar.MainGrid.Children.Add(TalkBox);
+            }
+            else if (Set["CGPT"][(gbol)"enable"])
+            {
+                TalkBox = new TalkBoxAPI(this);
+                Main.ToolBar.MainGrid.Children.Add(TalkBox);
+            }
+            LoadingText.Content = "正在加载游戏";
+            var m = new System.Windows.Controls.MenuItem()
+            {
+                Header = "MOD管理",
+                HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center,
+            };
+            m.Click += (x, y) =>
+            {
+                Main.ToolBar.Visibility = Visibility.Collapsed;
+                Topmost = false;
+                winSetting.MainTab.SelectedIndex = 5;
+                winSetting.Show();
+            };
+            Main.ToolBar.MenuMODConfig.Items.Add(m);
             try
             {
-                //关闭所有插件
+                //加载游戏创意工坊插件
                 foreach (MainPlugin mp in Plugins)
-                    mp.EndGame();
+                    mp.LoadPlugin();
             }
-            catch { }
-            Main?.Dispose();
-            notifyIcon?.Dispose();
-            System.Environment.Exit(0);
+            catch (Exception e)
+            {
+                new winReport(this, "由于插件引起的游戏启动错误\n" + e.ToString()).Show();
+            }
+            Foods.ForEach(item => item.LoadImageSource(this));
+
+            Main.DefaultClickAction = () =>
+            {
+                if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
+                {
+                    lastclicktime = DateTime.Now.Ticks;
+                    var v = rndtext[Function.Rnd.Next(rndtext.Count)];
+                    Main.Say(v.Item1, v.Item2);
+                }
+            };
+            Main.PlayVoiceVolume = Set.VoiceVolume;
+            DisplayGrid.Child = Main;
+            Task.Run(() =>
+            {
+                while (Main.IsWorking)
+                {
+                    Thread.Sleep(100);
+                }
+                Dispatcher.Invoke(() => LoadingText.Visibility = Visibility.Collapsed);
+            });
+
+            Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠", () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
+            Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "开发控制台", () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
+            Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心", () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
+            Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板", () =>
+            {
+                Main.ToolBar.Visibility = Visibility.Collapsed;
+                Topmost = false;
+                winSetting.Show();
+            });
+
+            //this.Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.PNG")));
+
+            //Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喂食测试", () =>
+            //    {
+            //        Main.ToolBar.Visibility = Visibility.Collapsed;
+            //        IRunImage eat = (IRunImage)Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
+            //        var b = Main.FindDisplayBorder(eat);
+            //        eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/汉堡.png")), Main.DisplayToNomal);
+            //    }
+            //);
+            Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "吃饭", () =>
+                {
+                    winBetterBuy.Show(Food.FoodType.Meal);
+                }
+            );
+            Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喝水", () =>
+            {
+                winBetterBuy.Show(Food.FoodType.Drink);
+            }
+          );
+            Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "药品", () =>
+            {
+                winBetterBuy.Show(Food.FoodType.Drug);
+            }
+          );
+            Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
+            Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
+            if (Set.MessageBarOutside)
+                Main.MsgBar.SetPlaceOUT();
+
+            //加载图标
+            notifyIcon = new NotifyIcon();
+            notifyIcon.Text = "虚拟桌宠模拟器";
+            ContextMenu m_menu;
+
+            m_menu = new ContextMenu();
+            m_menu.MenuItems.Add(new MenuItem("操作教程", (x, y) => { Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html"); }));
+            m_menu.MenuItems.Add(new MenuItem("重置状态", (x, y) =>
+            {
+                Main.CleanState();
+                Main.DisplayToNomal();
+                Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+                Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+            }));
+            m_menu.MenuItems.Add(new MenuItem("反馈中心", (x, y) => { new winReport(this).Show(); }));
+            m_menu.MenuItems.Add(new MenuItem("开发控制台", (x, y) => { new winConsole(this).Show(); }));
+
+            m_menu.MenuItems.Add(new MenuItem("设置面板", (x, y) =>
+            {
+                Topmost = false;
+                winSetting.Show();
+            }));
+            m_menu.MenuItems.Add(new MenuItem("退出桌宠", (x, y) => Close()));
+
+            LoadDIY();
+
+            notifyIcon.ContextMenu = m_menu;
+
+            notifyIcon.Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/vpeticon.ico")).Stream);
+
+            notifyIcon.Visible = true;
+            notifyIcon.BalloonTipClicked += (a, b) =>
+            {
+                Topmost = false;
+                winSetting.Show();
+            };
+
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 2, 23))
+            {
+                Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
+                Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
+            }
+            if (!Set["SingleTips"].GetBool("helloworld"))
+            {
+                Task.Run(() =>
+                {
+                    Thread.Sleep(2000);
+                    Set["SingleTips"].SetBool("helloworld", true);
+                    notifyIcon.ShowBalloonTip(10, "你好" + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
+                "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠", ToolTipIcon.Info);
+                    Thread.Sleep(2000);
+                    Main.Say("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议", GraphCore.Helper.SayType.Shining);
+                });
+            }
+            else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 6, 8))
+            {
+                if (Set["SingleTips"].GetDateTime("update") > new DateTime(2023, 6, 8))
+                    notifyIcon.ShowBalloonTip(10, "更新通知 06/09",
+           "修复频繁喝水的bug,更好买新增查看详细信息\n修复干完活后动画停止播放的错误", ToolTipIcon.Info);
+                else
+                    notifyIcon.ShowBalloonTip(10, "更新通知 06/08",
+           "现已支持数据计算,桌宠现在需要进行吃饭喝水等\n前往设置调整速率和关闭数据计算\n若有游戏数据设计上的反馈,欢迎加群虚拟主播模拟器430081239或使用反馈功能反馈", ToolTipIcon.Info);
+                Set["SingleTips"].SetDateTime("update", DateTime.Now);
+            }
+            Save();
+        }));
         }
 
-
-        //public void DEBUGValue()
-        //{
-        //  Dispatcher.Invoke(() =>
-        //  {
-        //    Console.WriteLine("Left:" + mwc.GetWindowsDistanceLeft());
-        //    Console.WriteLine("Right:" + mwc.GetWindowsDistanceRight());
-        //  });
-        //  Thread.Sleep(1000);
-        //  DEBUGValue(); 
-        //}
-
+    private void AutoSaveTimer_Elapsed(object sender, ElapsedEventArgs e)
+    {
+        Save();
     }
+
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        Save();
+        try
+        {
+            //关闭所有插件
+            foreach (MainPlugin mp in Plugins)
+                mp.EndGame();
+        }
+        catch { }
+        Main?.Dispose();
+        notifyIcon?.Dispose();
+        System.Environment.Exit(0);
+    }
+
+
+    //public void DEBUGValue()
+    //{
+    //  Dispatcher.Invoke(() =>
+    //  {
+    //    Console.WriteLine("Left:" + mwc.GetWindowsDistanceLeft());
+    //    Console.WriteLine("Right:" + mwc.GetWindowsDistanceRight());
+    //  });
+    //  Thread.Sleep(1000);
+    //  DEBUGValue(); 
+    //}
+
+}
 }

@@ -130,6 +130,14 @@ namespace VPet_Simulator.Windows.Interface
             set => SetBool("topmost", !value);
         }
         /// <summary>
+        /// 上次清理缓存日期
+        /// </summary>
+        public DateTime LastCacheDate
+        {
+            get => GetDateTime("lastcachedate", DateTime.MinValue);
+            set => SetDateTime("lastcachedate", value);
+        }
+        /// <summary>
         /// 数据收集是否被禁止(当日)
         /// </summary>
         public bool DiagnosisDayEnable = true;

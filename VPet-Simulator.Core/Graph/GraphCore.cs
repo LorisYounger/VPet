@@ -435,9 +435,26 @@ namespace VPet_Simulator.Core
                         return list[Function.Rnd.Next(list.Count)];
 
                 }
+                int i = (int)mode + 1;
+                if (i < 3)
+                {
+                    //向下兼容的动画
+                    list = Graphs[type].FindAll(x => x.ModeType == (GameSave.ModeType)i);
+                    if (list.Count > 0)
+                        return list[Function.Rnd.Next(list.Count)];
+                }
+                i = (int)mode - 1;
+                if (i >= 0)
+                {
+                    //向上兼容的动画
+                    list = Graphs[type].FindAll(x => x.ModeType == (GameSave.ModeType)i);
+                    if (list.Count > 0)
+                        return list[Function.Rnd.Next(list.Count)];
+                }
+                //如果实在找不到,就走随机数
                 //if (mode != GameSave.ModeType.Ill)
                 //{
-                list = Graphs[type].FindAll(x => x.ModeType != GameSave.ModeType.Ill);
+                list = Graphs[type];
                 if (list.Count > 0)
                     return list[Function.Rnd.Next(list.Count)];
                 //}

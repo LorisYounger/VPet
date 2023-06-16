@@ -13,7 +13,7 @@
         </DataTemplate>
     </pu:WindowX.Resources>-->
     <Grid>
-        <TabControl Margin="5" BorderThickness="0" pu:TabControlHelper.ItemsHeight="NaN" Background="Transparent"
+        <TabControl x:Name="MainTab" Margin="5" BorderThickness="0" pu:TabControlHelper.ItemsHeight="NaN" Background="Transparent"
                 pu:TabControlHelper.ItemsPadding="10,7" pu:TabControlHelper.ItemsCornerRadius="4"
                 pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
                 pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"

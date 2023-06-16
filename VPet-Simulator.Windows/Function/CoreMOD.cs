@@ -35,6 +35,7 @@ namespace VPet_Simulator.Windows
         public int Ver;
         public string Content = "";
         public bool SuccessLoad = true;
+        public DateTime CacheDate;
         public static string INTtoVER(int ver) => $"{ver / 100}.{ver % 100:00}";
         public static void LoadImage(MainWindow mw, DirectoryInfo di)
         {
@@ -77,6 +78,7 @@ namespace VPet_Simulator.Windows
                 ItemID = Convert.ToUInt64(modlps.FindLine("itemid").info);
             else
                 ItemID = 0;
+            CacheDate = modlps.GetDateTime("cachedate", DateTime.MinValue);
             if (IsBanMOD(mw))
             {
                 Content = "该模组已停用";
