@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="https://opensource.panuon.com/wpf-ui" xmlns:local="clr-namespace:VPet_Simulator.Windows"
-        mc:Ignorable="d" Title="更好买" Height="450" Width="800" FontSize="14" WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" Title="更好买" Height="500" Width="800" FontSize="14" WindowStartupLocation="CenterScreen"
         Background="#E0F6FF" pu:WindowXCaption.Height="45" pu:WindowXCaption.Background="{DynamicResource DARKPrimary}"
         pu:WindowXCaption.Foreground="#FFFFFF" pu:WindowXCaption.Buttons="Close" Icon="/Res/BetterBuy.png"
         pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}" Closing="WindowX_Closing">

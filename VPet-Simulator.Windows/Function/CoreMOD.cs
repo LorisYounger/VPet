@@ -35,10 +35,6 @@ namespace VPet_Simulator.Windows
         public int Ver;
         public string Content = "";
         public bool SuccessLoad = true;
-        /// <summary>
-        /// LBGame 信任的MOD,自动加载
-        /// </summary>
-        public bool IsTrust = false;
         public static string INTtoVER(int ver) => $"{ver / 100}.{ver % 100:00}";
         public static void LoadImage(MainWindow mw, DirectoryInfo di)
         {
@@ -130,7 +126,7 @@ namespace VPet_Simulator.Windows
                         break;
                     case "plugin":
                         Content += "代码插件\n";
-                        SuccessLoad = false;
+                        SuccessLoad = true;
                         foreach (FileInfo tmpfi in di.EnumerateFiles("*.dll"))
                         {
                             try
@@ -141,9 +137,24 @@ namespace VPet_Simulator.Windows
                                 LoadedDLL.Add(path);
                                 Assembly dll = Assembly.LoadFrom(tmpfi.FullName);
                                 var certificate = dll.GetModules()?.First()?.GetSignerCertificate();
-                                if (certificate != null && certificate.Subject == "")
-                                {//LBGame 信任的证书
-
+                                if (certificate != null)
+                                {
+                                    if (certificate.Subject == "CN=\"Shenzhen Lingban Computer Technology Co., Ltd.\", O=\"Shenzhen Lingban Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
+                                        && certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US")
+                                    {//LBGame 信任的证书
+                                        if (!Author.Contains("["))
+                                            Author += "[认证]";
+                                    }
+                                    else if (!IsPassMOD(mw))
+                                    {//不是通过模组,不加载
+                                        SuccessLoad = false;
+                                        continue;
+                                    }
+                                    else if (!Author.Contains("["))
+                                    {
+                                        Author += "[签名]";
+                                        Intro += $"Subject:{certificate.Subject}\nIssuer:{certificate.Subject}";
+                                    }
                                 }
                                 else
                                 {
@@ -158,13 +169,12 @@ namespace VPet_Simulator.Windows
                                     if (exportedType.BaseType == typeof(MainPlugin))
                                     {
                                         mw.Plugins.Add((MainPlugin)Activator.CreateInstance(exportedType, mw));
-                                        SuccessLoad = true;
                                     }
                                 }
                             }
                             catch
                             {
-
+                                SuccessLoad = false;
                             }
                         }
                         break;
