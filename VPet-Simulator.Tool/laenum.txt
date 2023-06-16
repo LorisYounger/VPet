@@ -1,0 +1,295 @@
+            /// 不被启用/使用的 不包含在GrapType S
+            /// </summary>
+            Not_Able,
+            /// <summary>
+            /// 被提起动态 (循环) L
+            /// </summary>
+            Raised_Dynamic,
+            /// <summary>
+            /// 被提起静态 (开始) L
+            /// </summary>
+            Raised_Static_A_Start,
+            /// <summary>
+            /// 被提起静态 (循环) L
+            /// </summary>
+            Raised_Static_B_Loop,
+            /// <summary>
+            /// 从上向右爬 (循环) M
+            /// </summary>
+            Climb_Top_Right,
+            /// <summary>
+            /// 从上向左爬 (循环) M
+            /// </summary>
+            Climb_Top_Left,
+            /// <summary>
+            /// 爬起向右 M
+            /// </summary>
+            Climb_Up_Right,
+            /// <summary>
+            /// 爬起向左 M
+            /// </summary>
+            Climb_Up_Left,
+            /// <summary>
+            /// 从右边爬 (开始) S
+            /// </summary>
+            Climb_Right_A_Start,
+            /// <summary>
+            /// 从左边爬 (开始) S
+            /// </summary>
+            Climb_Left_A_Start,
+            /// <summary>
+            /// 从右边爬 (循环) M
+            /// </summary>
+            Climb_Right_B_Loop,
+            /// <summary>
+            /// 从左边爬 (循环) M
+            /// </summary>
+            Climb_Left_B_Loop,
+            /// <summary>
+            /// 呼吸 (循环) L
+            /// </summary>
+            Default,
+            /// <summary>
+            /// 摸头 (开始) S
+            /// </summary>
+            Touch_Head_A_Start,
+            /// <summary>
+            /// 摸头 (循环) M
+            /// </summary>
+            Touch_Head_B_Loop,
+            /// <summary>
+            /// 摸头 (结束) S
+            /// </summary>
+            Touch_Head_C_End,
+            /// <summary>
+            /// 摸身体 (开始) S
+            /// </summary>
+            Touch_Body_A_Start,
+            /// <summary>
+            /// 摸身体 (循环) M
+            /// </summary>
+            Touch_Body_B_Loop,
+            /// <summary>
+            /// 摸身体 (结束) S
+            /// </summary>
+            Touch_Body_C_End,
+            /// <summary>
+            /// 爬行向右 (开始) S
+            /// </summary>
+            Crawl_Right_A_Start,
+            /// <summary>
+            /// 爬行向右 (循环) M
+            /// </summary>
+            Crawl_Right_B_Loop,
+            /// <summary>
+            /// 爬行向右 (结束) S
+            /// </summary>
+            Crawl_Right_C_End,
+            /// <summary>
+            /// 爬行向左 (开始) S
+            /// </summary>
+            Crawl_Left_A_Start,
+            /// <summary>
+            /// 爬行向左 (循环) M
+            /// </summary>
+            Crawl_Left_B_Loop,
+            /// <summary>
+            /// 爬行向左 (结束) S
+            /// </summary>
+            Crawl_Left_C_End,
+            /// <summary>
+            /// 下蹲 (开始) S
+            /// </summary>
+            Squat_A_Start,
+            /// <summary>
+            /// 下蹲 (循环) M
+            /// </summary>
+            Squat_B_Loop,
+            /// <summary>
+            /// 下蹲 (结束) S
+            /// </summary>
+            Squat_C_End,
+            /// <summary>
+            /// 下落向左 (开始) S
+            /// </summary>
+            Fall_Left_A_Start,
+            /// <summary>
+            /// 下落向左 (循环) M
+            /// </summary>
+            Fall_Left_B_Loop,
+            /// <summary>
+            /// 下落向左 (结束) S
+            /// </summary>
+            Fall_Left_C_End,
+            /// <summary>
+            /// 下落向右 (开始) S
+            /// </summary>
+            Fall_Right_A_Start,
+            /// <summary>
+            /// 下落向右 (循环) M
+            /// </summary>
+            Fall_Right_B_Loop,
+            /// <summary>
+            /// 下落向右 (结束) S
+            /// </summary>
+            Fall_Right_C_End,
+            /// <summary>
+            /// 走路向右 (开始) S
+            /// </summary>
+            Walk_Right_A_Start,
+            /// <summary>
+            /// 走路向右 (循环) M
+            /// </summary>
+            Walk_Right_B_Loop,
+            /// <summary>
+            /// 走路向右 (结束) S
+            /// </summary>
+            Walk_Right_C_End,
+            /// <summary>
+            /// 走路向左 (开始) S
+            /// </summary>
+            Walk_Left_A_Start,
+            /// <summary>
+            /// 走路向左 (循环) M
+            /// </summary>
+            Walk_Left_B_Loop,
+            /// <summary>
+            /// 走路向左 (结束) S
+            /// </summary>
+            Walk_Left_C_End,
+            /// <summary>
+            /// 无聊 (开始) S
+            /// </summary>
+            Boring_A_Start,
+            /// <summary>
+            /// 无聊 (循环) M
+            /// </summary>
+            Boring_B_Loop,
+            /// <summary>
+            /// 无聊 (结束) S
+            /// </summary>
+            Boring_C_End,
+            /// <summary>
+            /// 睡觉 (开始) S
+            /// </summary>
+            Sleep_A_Start,
+            /// <summary>
+            /// 睡觉 (循环) M
+            /// </summary>
+            Sleep_B_Loop,
+            /// <summary>
+            /// 睡觉 (结束) S
+            /// </summary>
+            Sleep_C_End,
+            /// <summary>
+            /// 说话 (开始) S
+            /// </summary>
+            Say_Serious_A_Start,
+            /// <summary>
+            /// 说话 (循环) M
+            /// </summary>
+            Say_Serious_B_Loop,
+            /// <summary>
+            /// 说话 (结束) S
+            /// </summary>
+            Say_Serious_C_End,
+            /// <summary>
+            /// 说话 (开始) S
+            /// </summary>
+            Say_Shining_A_Start,
+            /// <summary>
+            /// 说话 (循环) M
+            /// </summary>
+            Say_Shining_B_Loop,
+            /// <summary>
+            /// 说话 (结束) S
+            /// </summary>
+            Say_Shining_C_End,
+            /// <summary>
+            /// 说话 (开始) S
+            /// </summary>
+            Say_Self_A_Start,
+            /// <summary>
+            /// 说话 (循环) M
+            /// </summary>
+            Say_Self_B_Loop,
+            /// <summary>
+            /// 说话 (结束) S
+            /// </summary>
+            Say_Self_C_End,
+            /// <summary>
+            /// 待机 模式1 (开始) S
+            /// </summary>
+            Idel_StateONE_A_Start,
+            /// <summary>
+            /// 待机 模式1 (循环) M
+            /// </summary>
+            Idel_StateONE_B_Loop,
+            /// <summary>
+            /// 待机 模式1 (结束) S
+            /// </summary>
+            Idel_StateONE_C_End,
+            /// <summary>
+            /// 待机 模式2 (开始) S
+            /// </summary>
+            Idel_StateTWO_A_Start,
+            /// <summary>
+            /// 待机 模式2 (循环) M
+            /// </summary>
+            Idel_StateTWO_B_Loop,
+            /// <summary>
+            /// 待机 模式2 (结束) S
+            /// </summary>
+            Idel_StateTWO_C_End,
+            /// <summary>
+            /// 开机 M
+            /// </summary>
+            StartUP,
+            /// <summary>
+            /// 关机 M
+            /// </summary>
+            Shutdown,
+            /// <summary>
+            /// 学习 (开始) S
+            /// </summary>
+            Study_A_Start,
+            /// <summary>
+            /// 学习 (循环) M
+            /// </summary>
+            Study_B_Loop,
+            /// <summary>
+            /// 学习 (结束) S
+            /// </summary>
+            Study_C_End,
+            /// <summary>
+            /// 工作 (开始) S
+            /// </summary>
+            WorkONE_A_Start,
+            /// <summary>
+            /// 工作 (循环) M
+            /// </summary>
+            WorkONE_B_Loop,
+            /// <summary>
+            /// 工作 (结束) S
+            /// </summary>
+            WorkONE_C_End,
+            /// <summary>
+            /// 直播 (开始) S
+            /// </summary>
+            WorkTWO_A_Start,
+            /// <summary>
+            /// 直播 (循环) M
+            /// </summary>
+            WorkTWO_B_Loop,
+            /// <summary>
+            /// 直播 (结束) S
+            /// </summary>
+            WorkTWO_C_End,
+            /// <summary>
+            /// 口渴 M
+            /// </summary>
+            Switch_Thirsty,
+            /// <summary>
+            /// 吃东西 M
+            /// </summary>
+            Eat,
