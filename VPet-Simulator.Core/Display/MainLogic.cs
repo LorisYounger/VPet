@@ -93,7 +93,7 @@ namespace VPet_Simulator.Core
             Core.Save.StoreTake();
             double freedrop = (DateTime.Now - LastInteractionTime).TotalMinutes;
             if (freedrop < 1)
-                freedrop = 0;
+                freedrop = 0.5 * TimePass;
             else
                 freedrop = Math.Sqrt(freedrop) * TimePass;
             switch (State)
@@ -182,7 +182,7 @@ namespace VPet_Simulator.Core
                             Core.Save.Health -= TimePass;
                         }
                         lowStrengthFood();
-                        var addmoney = TimePass * (6 + Core.Save.Level);
+                        var addmoney = TimePass * (10 + Core.Save.Level);
                         Core.Save.Exp += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
@@ -191,12 +191,12 @@ namespace VPet_Simulator.Core
                         Core.Save.StrengthChange(TimePass);
                         if (Core.Save.StrengthFood >= 75)
                             Core.Save.Health += TimePass;
-                        var addmoney = TimePass * (15 + Core.Save.Level);
+                        var addmoney = TimePass * (30 + Core.Save.Level);
                         Core.Save.Exp += addmoney;
                         WorkTimer.GetCount += addmoney;
                     }
-                    Core.Save.StrengthChangeFood(-TimePass * 3);
-                    Core.Save.StrengthChangeDrink(-TimePass * 4);
+                    Core.Save.StrengthChangeFood(-TimePass * 1.5);
+                    Core.Save.StrengthChangeDrink(-TimePass * 2);
                     Core.Save.FeelingChange(-freedrop * 3);
                     goto default;
                 default://默认

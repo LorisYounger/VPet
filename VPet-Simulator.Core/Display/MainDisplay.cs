@@ -118,7 +118,7 @@ namespace VPet_Simulator.Core
         {
             if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
             {
-                Core.Save.StrengthChange(-1);
+                Core.Save.StrengthChange(-2);
                 Core.Save.FeelingChange(1);
             }
             if (DisplayType == GraphType.Touch_Head_A_Start)
@@ -147,7 +147,7 @@ namespace VPet_Simulator.Core
         {
             if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
             {
-                Core.Save.StrengthChange(-1);
+                Core.Save.StrengthChange(-2);
                 Core.Save.FeelingChange(1);
             }
             if (DisplayType == GraphType.Touch_Body_A_Start)
@@ -1259,7 +1259,7 @@ namespace VPet_Simulator.Core
                 return PetGrid2;
             }
             else
-            {                
+            {
                 ((IGraph)(PetGrid2Tag)).Stop(true);
                 Dispatcher.Invoke(() =>
                 {
@@ -1271,7 +1271,7 @@ namespace VPet_Simulator.Core
                 GC.Collect();
                 return PetGrid;
             }
-            
+
         }
     }
 }

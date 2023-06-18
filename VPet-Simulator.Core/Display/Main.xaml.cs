@@ -354,11 +354,13 @@ namespace VPet_Simulator.Core
                         if (wavetimes >= 10 || DisplayType == GraphCore.GraphType.Default || DisplayType == GraphType.Touch_Head_B_Loop || DisplayType == GraphType.Touch_Head_C_End)
                             DisplayTouchHead();
                         //Console.WriteLine(wavetimes);
+                        LastInteractionTime = DateTime.Now;
                     }
                     else
                     {
                         if (wavetimes >= 10 || DisplayType == GraphCore.GraphType.Default || DisplayType == GraphType.Touch_Body_B_Loop || DisplayType == GraphType.Touch_Body_C_End)
                             DisplayTouchBody();
+                        LastInteractionTime = DateTime.Now;
                     }
             }
         }
