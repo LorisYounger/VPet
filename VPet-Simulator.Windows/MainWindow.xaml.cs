@@ -255,6 +255,7 @@ namespace VPet_Simulator.Windows
                     winSetting.MainTab.SelectedIndex = 5;
                     winSetting.Show();
                 };
+                Main.FunctionSpendHandle += lowStrength;
                 Main.ToolBar.MenuMODConfig.Items.Add(m);
                 try
                 {

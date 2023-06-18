@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
@@ -39,6 +40,10 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public string Verison => $"{verison / 100}.{verison % 100}";
 
+        public List<LowText> LowFoodText { get; set; } = new List<LowText>();
+
+        public List<LowText> LowDrinkText { get; set; } = new List<LowText>();
+
         public void SetZoomLevel(double zl)
         {
             Set.ZoomLevel = zl;
@@ -63,7 +68,7 @@ namespace VPet_Simulator.Windows
                     Foods.FindAll(x => x.Star).ForEach(x => list.Add(x.Name));
                     Set["betterbuy"]["star"].info = string.Join(",", list);
                 }
-             
+
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
                 {
                     File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
@@ -77,7 +82,7 @@ namespace VPet_Simulator.Windows
                     if (CGPTClient != null)
                         File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json", CGPTClient.Save());
                 }
-            }            
+            }
         }
         /// <summary>
         /// 重载DIY按钮区域
@@ -207,5 +212,108 @@ namespace VPet_Simulator.Windows
                     break;
             }
         }
+        int lowstrengthAskCountFood = 1;
+        int lowstrengthAskCountDrink = 1;
+        private void lowStrength()
+        {
+            if (Core.Save.Mode == GameSave.ModeType.Happy || Core.Save.Mode == GameSave.ModeType.Nomal)
+            {
+                if (Core.Save.StrengthFood < 75 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
+                {
+                    lowstrengthAskCountFood = 20;
+                    var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
+                    var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like < like);
+                    if (Core.Save.StrengthFood > 60)
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    else if (Core.Save.StrengthFood > 40)
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    else
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Thirsty, Main.DisplayToNomal));
+                    return;
+                }
+                if (Core.Save.StrengthDrink < 75 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
+                {
+                    lowstrengthAskCountDrink = 20;
+                    var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
+                    var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like < like);
+                    if (Core.Save.StrengthDrink > 60)
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    else if (Core.Save.StrengthDrink > 40)
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    else
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Thirsty, Main.DisplayToNomal));
+                    return;
+                }
+            }
+            else
+            {
+                if (Core.Save.StrengthFood < 60 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
+                {
+                    var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
+                    var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
+                    if (Core.Save.StrengthFood > 40)
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    else if (Core.Save.StrengthFood > 20)
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    else
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Thirsty, Main.DisplayToNomal));
+                    return;
+                }
+                if (Core.Save.StrengthDrink < 60 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
+                {
+                    var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
+                    var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
+                    if (Core.Save.StrengthDrink > 40)
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    else if (Core.Save.StrengthDrink > 20)
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    else
+                    {
+                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                    }
+                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Thirsty, Main.DisplayToNomal));
+                    return;
+                }
+            }
+
+
+        }   
     }
 }

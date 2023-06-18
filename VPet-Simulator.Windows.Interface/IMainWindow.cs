@@ -50,6 +50,14 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         List<Food> Foods { get; }
         /// <summary>
+        /// 需要食物时会说的话
+        /// </summary>
+        List<LowText> LowFoodText { get; }
+        /// <summary>
+        /// 需要饮料时会说的话
+        /// </summary>
+        List<LowText> LowDrinkText { get; }
+         /// <summary>
         /// 图片资源
         /// </summary>
         ImageResources ImageSources { get; }

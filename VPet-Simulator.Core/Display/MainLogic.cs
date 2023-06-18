@@ -63,26 +63,6 @@ namespace VPet_Simulator.Core
         {
             Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.B_Loop), () => Saying(type));
         }
-        int lowstrengthAskCountFood = 1;
-        int lowstrengthAskCountDrink = 1;
-        private void lowStrengthFood()//未来的Display
-        {
-            if (Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
-            {
-                Display(GraphCore.GraphType.Switch_Thirsty, () => Say("肚子饿了,想吃东西", GraphCore.Helper.SayType.Serious, true));//TODO:不同的饥饿说话方式
-                lowstrengthAskCountFood = 20;
-            }
-
-        }
-        private void lowStrengthDrink()//未来的Display
-        {
-            if (Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
-            {
-                Display(GraphCore.GraphType.Switch_Thirsty, () => Say("渴了,想喝东西", GraphCore.Helper.SayType.Serious, true));//TODO:不同的饥饿说话方式
-                lowstrengthAskCountDrink = 20;
-            }
-
-        }
         /// <summary>
         /// 根据消耗计算相关数据
         /// </summary>
@@ -122,7 +102,6 @@ namespace VPet_Simulator.Core
                         {
                             Core.Save.Health -= TimePass;
                         }
-                        lowStrengthFood();
                         var addmoney = TimePass * 5;
                         Core.Save.Money += addmoney;
                         WorkTimer.GetCount += addmoney;
@@ -152,7 +131,6 @@ namespace VPet_Simulator.Core
                         {
                             Core.Save.Health -= TimePass;
                         }
-                        lowStrengthFood();
                         var addmoney = TimePass * 10;
                         Core.Save.Money += addmoney;
                         WorkTimer.GetCount += addmoney;
@@ -181,7 +159,6 @@ namespace VPet_Simulator.Core
                         {
                             Core.Save.Health -= TimePass;
                         }
-                        lowStrengthFood();
                         var addmoney = TimePass * (10 + Core.Save.Level);
                         Core.Save.Exp += addmoney;
                         WorkTimer.GetCount += addmoney;
@@ -241,10 +218,11 @@ namespace VPet_Simulator.Core
             {
                 Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
                 Core.Save.Exp -= TimePass;
-                lowStrengthDrink();
             }
             else if (Core.Save.StrengthDrink >= 75)
                 Core.Save.Health += Function.Rnd.Next(0, 1) * TimePass;
+
+            FunctionSpendHandle?.Invoke();
             var newmod = Core.Save.CalMode();
             if (Core.Save.Mode != newmod)
             {
@@ -257,7 +235,7 @@ namespace VPet_Simulator.Core
                 }
             }
         }
-
+        public event Action FunctionSpendHandle;
         private void EventTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             //所有Handle

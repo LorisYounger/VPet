@@ -126,6 +126,25 @@ namespace VPet_Simulator.Windows
                         Content += "图片包\n";
                         LoadImage(mw, di);
                         break;
+                    case "text":
+                        Content += "文本集\n";
+                        foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
+                        {
+                            var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
+                            foreach (ILine li in tmp)
+                            {
+                                switch (li.Name.ToLower())
+                                {
+                                    case "lowfoodtext":
+                                        mw.LowFoodText.Add(LPSConvert.DeserializeObject<LowText>(li));
+                                        break;
+                                    case "lowdrinktext":
+                                        mw.LowDrinkText.Add(LPSConvert.DeserializeObject<LowText>(li));
+                                        break;
+                                }
+                            }
+                        }
+                        break;
                     case "plugin":
                         Content += "代码插件\n";
                         SuccessLoad = true;

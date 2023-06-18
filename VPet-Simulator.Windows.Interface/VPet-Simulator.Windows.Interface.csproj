@@ -112,7 +112,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMainWindow.cs" />
-    <Compile Include="Food.cs" />
+    <Compile Include="Mod\LowText.cs" />
+    <Compile Include="Mod\Food.cs" />
     <Compile Include="MainPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setting.cs" />
