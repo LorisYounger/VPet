@@ -43,7 +43,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 如果不开启功能模式,默认状态设置
         /// </summary>
-        public GameSave.ModeType NoFunctionMOD = GameSave.ModeType.Ill;
+        public GameSave.ModeType NoFunctionMOD = GameSave.ModeType.Happy;
         /// <summary>
         /// 是否开始运行
         /// </summary>

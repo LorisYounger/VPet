@@ -322,9 +322,17 @@ namespace VPet_Simulator.Core
             /// </summary>
             Switch_Thirsty,
             /// <summary>
+            /// 饥饿 M
+            /// </summary>
+            Switch_Hunger,
+            /// <summary>
             /// 吃东西 M
             /// </summary>
             Eat,
+            /// <summary>
+            /// 喝东西 M
+            /// </summary>
+            Drink,
         }
 
         /// <summary>
