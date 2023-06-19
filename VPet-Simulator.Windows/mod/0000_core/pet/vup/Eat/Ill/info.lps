@@ -1,0 +1,3 @@
+PNGAnimation#eat_back_lay:|path#back_lay:|mode#ill:|graph#Not_Able:|
+PNGAnimation#eat_front_lay:|path#front_lay:|mode#ill:|graph#Not_Able:|
+FoodAnimation:|mode#ill:|graph#Eat:|a0#500:|a1#125,60,125,59:|a2#125,120,175,59:|a3#125,170,250,59:|a4#250,165,232,64:|a5#250,170,265,65:|a6#250,170,270,65:|a7#250,180,270,64:|a8#2000:|front_lay#eat_front_lay:|back_lay#eat_back_lay:|///Time,MarginX,Y,Width,Rotate,Opacity

@@ -30,7 +30,7 @@ namespace VPet_Simulator.Windows.Interface
             intercycle = this["gameconfig"].GetInt("intercycle", 200);
             allowmove = !this["gameconfig"].GetBool("allowmove");
             smartmove = this["gameconfig"].GetBool("smartmove");
-            enablefunction = !this["gameconfig"].GetBool("enablefunction");
+            enablefunction = !this["gameconfig"].GetBool("nofunction");
             Statistics = this["statistics"];
         }
         /// <summary>
@@ -233,7 +233,7 @@ namespace VPet_Simulator.Windows.Interface
             set
             {
                 enablefunction = value;
-                this["gameconfig"].SetBool("function", !value);
+                this["gameconfig"].SetBool("nofunction", !value);
             }
         }
         /// <summary>

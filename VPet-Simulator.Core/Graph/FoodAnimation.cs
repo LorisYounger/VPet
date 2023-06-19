@@ -182,18 +182,18 @@ namespace VPet_Simulator.Core
             {
                 this.parent = parent;
                 var strs = sub.GetInfos();
-                Time = int.Parse(strs[0]);
+                Time = int.Parse(strs[0]);//0: Time
                 if (strs.Length == 1)
                     IsVisiable = false;
                 else
-                {
+                {//1,2: Margin X,Y
                     MarginWI = new Thickness(double.Parse(strs[1]), double.Parse(strs[2]), 0, 0);
-                    Width = double.Parse(strs[3]);
+                    Width = double.Parse(strs[3]);//3:Width
                     if (strs.Length > 4)
                     {
-                        Rotate = double.Parse(strs[4]);
+                        Rotate = double.Parse(strs[4]);//Rotate
                         if (strs.Length > 5)
-                            Opacity = double.Parse(strs[5]);
+                            Opacity = double.Parse(strs[5]);//Opacity
                     }
                 }
             }
