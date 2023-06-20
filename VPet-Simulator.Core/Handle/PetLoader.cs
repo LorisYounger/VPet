@@ -81,7 +81,8 @@ namespace VPet_Simulator.Core
                     }
                     else
                     {
-                        MessageBox.Show("未知的图像类型: " + line.Name.ToLower());
+                        if (!string.IsNullOrEmpty(line.Name))
+                            MessageBox.Show("未知的图像类型: " + line.Name.ToLower());
                     }
                 }
             }

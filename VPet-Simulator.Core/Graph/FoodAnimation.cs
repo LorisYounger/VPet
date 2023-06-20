@@ -323,12 +323,14 @@ namespace VPet_Simulator.Core
                 }
                 IImageRun FL = (IImageRun)GraphCore.FindCOMMGraph(Front_Lay, ModeType);
                 IImageRun BL = (IImageRun)GraphCore.FindCOMMGraph(Back_Lay, ModeType);
-                var t1 = FL.Run(FoodGrid.Front);
-                var t2 = BL.Run(FoodGrid.Back);
+                var t1 = FL?.Run(FoodGrid.Front);
+                var t2 = BL?.Run(FoodGrid.Back);
                 FoodGrid.Food.Source = image;
                 Task.Run(() => Animations[0].Run(FoodGrid.Food, EndAction));
-                Task.Run(t1.Start);
-                Task.Run(t2.Start);
+                if (t1 != null)
+                    Task.Run(t1.Start);
+                if (t2 != null)
+                    Task.Run(t2.Start);
             });
         }
 

@@ -64,9 +64,7 @@ namespace VPet_Simulator.Core
             MsgBar = new MessageBar(this);
             MsgBar.Visibility = Visibility.Collapsed;
             UIGrid.Children.Add(MsgBar);
-
-
-
+            
 
             if (loadtouchevent)
             {

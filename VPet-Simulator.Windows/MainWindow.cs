@@ -238,7 +238,7 @@ namespace VPet_Simulator.Windows
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
                         Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
                     }
-                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Thirsty, Main.DisplayToNomal));
+                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Hunger, Main.DisplayToNomal));
                     return;
                 }
                 if (Core.Save.StrengthDrink < 75 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
@@ -286,7 +286,7 @@ namespace VPet_Simulator.Windows
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
                         Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
                     }
-                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Thirsty, Main.DisplayToNomal));
+                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Hunger, Main.DisplayToNomal));
                     return;
                 }
                 if (Core.Save.StrengthDrink < 60 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)

@@ -175,9 +175,17 @@ namespace VPet_Simulator.Windows
             }
             if (!_puswitch.IsChecked.Value)
                 TryClose();
-            IRunImage eat = (IRunImage)mw.Core.Graph.FindGraph(GraphType.Eat, mw.Core.Save.Mode);
-            var b = mw.Main.FindDisplayBorder(eat);
-            eat.Run(b, item.ImageSource, mw.Main.DisplayToNomal);
+            var ig = mw.Core.Graph.FindGraph(item.Type == Food.FoodType.Drink ? GraphType.Drink : GraphType.Eat, mw.Core.Save.Mode);
+            if (ig is IRunImage iri)
+            {
+                var b = mw.Main.FindDisplayBorder(iri);
+                iri.Run(b, item.ImageSource, mw.Main.DisplayToNomal);
+            }
+            else
+            {
+                mw.Main.Display(ig, mw.Main.DisplayToNomal);
+            }
+
         }
 
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
