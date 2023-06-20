@@ -75,7 +75,8 @@ namespace VPet_Simulator.Windows
                     var ds = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + @"\UserData");
                     if (ds.Length > 20)
                         File.Delete(ds[0]);
-
+                    if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps"))
+                        File.Delete(AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
                     File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
                     if (Core != null && Core.Save != null)
                         File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
@@ -314,6 +315,6 @@ namespace VPet_Simulator.Windows
             }
 
 
-        }   
+        }
     }
 }
