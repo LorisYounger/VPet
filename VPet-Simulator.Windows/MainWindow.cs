@@ -75,9 +75,12 @@ namespace VPet_Simulator.Windows
 
                 if (Core != null && Core.Save != null)
                 {
-                    var ds = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + @"\UserData");
-                    while (ds.Length > Set.BackupSaveMaxNum)
+                    var ds = new List<string>(Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + @"\UserData"));
+                    while (ds.Count > Set.BackupSaveMaxNum)
+                    {
                         File.Delete(ds[0]);
+                        ds.RemoveAt(0);
+                    }
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps"))
                         File.Delete(AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
 

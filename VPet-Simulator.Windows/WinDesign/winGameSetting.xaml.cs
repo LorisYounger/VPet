@@ -2,6 +2,7 @@
 using Panuon.WPF.UI;
 using Steamworks.Ugc;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -70,6 +71,8 @@ namespace VPet_Simulator.Windows
             TextBoxStartUpX.Text = mw.Set.StartRecordPoint.X.ToString();
             TextBoxStartUpY.Text = mw.Set.StartRecordPoint.Y.ToString();
             numBackupSaveMaxNum.Value = mw.Set.BackupSaveMaxNum;
+            combCalFunState.SelectedIndex = (int)mw.Set.CalFunState;
+            combCalFunState.IsEnabled = !mw.Set.EnableFunction;
             if (mw.Set.StartRecordLast == true)
             {
                 StartPlace.IsChecked = true;
@@ -787,7 +790,16 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             //MessageBoxX.Show("由于没做完,暂不支持数据计算\n敬请期待后续更新", "没做完!", MessageBoxButton.OK, MessageBoxIcon.Warning);
-            mw.Set.EnableFunction = CalFunctionBox.IsChecked.Value;
+            if (CalFunctionBox.IsChecked == true)
+            {
+                mw.Set.EnableFunction = true;
+                combCalFunState.IsEnabled = false;
+            }
+            else
+            {
+                mw.Set.EnableFunction = false;
+                combCalFunState.IsEnabled = true;
+            }
         }
 
         private void SwitchMsgOut_Checked(object sender, RoutedEventArgs e)
@@ -845,6 +857,32 @@ namespace VPet_Simulator.Windows
                     }
                 }
             }
+        }
+
+        private void Mod_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> list = new List<string>();
+            foreach (CoreMOD mod in mw.CoreMODs)
+            {
+                foreach (string str in mod.Author.Split(','))
+                    list.Add(str.Trim());
+            }
+            list = list.Distinct().ToList();
+            MessageBoxX.Show(string.Join("\n", list), "感谢以下MOD开发人员");
+        }
+
+        private void Using_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxX.Show(string.Join("\n", CoreMOD.LoadedDLL), "DLL引用名单");
+        }
+
+        private void combCalFunState_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.CalFunState = (GameSave.ModeType)combCalFunState.SelectedIndex;
+            mw.Main.NoFunctionMOD = (GameSave.ModeType)combCalFunState.SelectedIndex;
+            mw.Main.EventTimer_Elapsed(null, null);
         }
     }
 }

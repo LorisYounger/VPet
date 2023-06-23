@@ -2,6 +2,7 @@
 using LinePutScript.Dictionary;
 using System;
 using System.Windows;
+using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -105,6 +106,14 @@ namespace VPet_Simulator.Windows.Interface
         //    get => !this["set"].GetBool("storemem");
         //    set => this["set"].SetBool("storemem", value);
         //}
+        /// <summary>
+        /// 非计算模式下默认模式
+        /// </summary>
+        public GameSave.ModeType CalFunState
+        {
+            get => (GameSave.ModeType)this[(gint)"calfunstate"];
+            set => this[(gint)"calfunstate"] = (int)value;
+        }
         /// <summary>
         /// 数据收集频率
         /// </summary>

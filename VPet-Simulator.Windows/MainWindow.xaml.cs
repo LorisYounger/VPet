@@ -232,6 +232,7 @@ namespace VPet_Simulator.Windows
                 winSetting = new winGameSetting(this);
                 winBetterBuy = new winBetterBuy(this);
                 Main = new Main(Core) { };
+                Main.NoFunctionMOD = Set.CalFunState;
                 if (!Set["CGPT"][(gbol)"enable"] && IsSteamUser)
                 {
                     TalkBox = new TalkBox(this);

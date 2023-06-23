@@ -218,11 +218,13 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Row="0" Text="备份数量" VerticalAlignment="Center" />
-                            <pu:NumberInput x:Name="numBackupSaveMaxNum" Grid.Column="2" Minimum="1" Value="20" Margin="0,1,0,1" CornerRadius="4"
-                                    BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5" ValueChanged="numBackupSaveMaxNum_ValueChanged" />
+                            <pu:NumberInput x:Name="numBackupSaveMaxNum" Grid.Column="2" Minimum="1" Value="20"
+                                    Margin="0,1,0,1" CornerRadius="4" BorderBrush="{DynamicResource PrimaryDarker}"
+                                    BorderThickness="1.5" ValueChanged="numBackupSaveMaxNum_ValueChanged" />
                             <TextBlock Grid.Row="1" Text="加载存档" VerticalAlignment="Center" />
                             <Button x:Name="BtnSaveReload" pu:ButtonHelper.CornerRadius="4" Content="加载" Grid.Column="3"
-                                    Background="{DynamicResource SecondaryLight}" Padding="1" Margin="5" Grid.Row="1" ToolTip="加载上次保存的存档" Click="BtnSaveReload_Click" />
+                                    Background="{DynamicResource SecondaryLight}" Padding="1" Margin="5" Grid.Row="1"
+                                    ToolTip="加载上次保存的存档" Click="BtnSaveReload_Click" />
                             <ComboBox x:Name="CBSaveReLoad" SelectedIndex="3"
                                     Style="{DynamicResource StandardComboBoxStyle}" FontSize="16" Grid.Column="2"
                                     Grid.Row="1" MouseEnter="CBSaveReLoad_MouseEnter" />
@@ -320,16 +322,31 @@
                             <RowDefinition Height="35" />
                             <RowDefinition Height="35" />
                             <RowDefinition Height="35" />
+                            <RowDefinition Height="35" />
                         </Grid.RowDefinitions>
                         <pu:Switch x:Name="CalFunctionBox" BorderBrush="{DynamicResource PrimaryDark}" Grid.Column="2"
                                 CheckedBackground="{DynamicResource Primary}"
                                 CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent" BoxWidth="35"
                                 BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
-                                ToggleBrush="{DynamicResource PrimaryDark}"
-                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
+                                ToggleBrush="{DynamicResource PrimaryDark}" Content="启用后桌宠会有状态变化,需要按时投喂等"
+                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
                                 ToolTip="启用数据计算,桌宠会有状态变化,需要按时投喂等.&#13;如果嫌麻烦可以关掉" Checked="CalFunctionBox_Checked"
                                 Unchecked="CalFunctionBox_Checked" />
-                        <Grid Grid.Column="2" Grid.Row="3">
+                        <Grid Grid.Row="1" Grid.Column="2" ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="当关闭数据计算时&#13;桌宠显示的状态" FontSize="14" />
+                            <ComboBox x:Name="combCalFunState" Style="{DynamicResource StandardComboBoxStyle}" ToolTip="当关闭数据计算时&#13;桌宠显示的状态"
+                                    SelectionChanged="combCalFunState_SelectionChanged" SelectedIndex="5" Grid.Column="1">
+                                <ComboBoxItem Content="Happy" />
+                                <ComboBoxItem Content="Nomal" />
+                                <ComboBoxItem Content="PoorCondition" />
+                                <ComboBoxItem Content="Ill" />
+                            </ComboBox>
+                        </Grid>
+                        <Grid Grid.Column="2" Grid.Row="4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
@@ -354,9 +371,10 @@
                         </Grid>
 
                         <TextBlock Grid.Row="0" Text="数据计算" VerticalAlignment="Center" />
-                        <TextBlock Grid.Row="3" Text="桌宠移动" VerticalAlignment="Center" />
-                        <TextBlock Grid.Row="1" Text="计算间隔" VerticalAlignment="Center" />
-                        <Grid Grid.Column="2" Grid.Row="1" ToolTip="数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.&#13;间隔越大越不容易打扰到当前工作">
+                        <TextBlock Grid.Row="1" Text="显示状态" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="4" Text="桌宠移动" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="2" Text="计算间隔" VerticalAlignment="Center" />
+                        <Grid Grid.Column="2" Grid.Row="2" ToolTip="数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.&#13;间隔越大越不容易打扰到当前工作">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
@@ -370,8 +388,8 @@
                                     Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
                                     Background="{x:Null}" Width="60" />
                         </Grid>
-                        <TextBlock Grid.Row="2" Text="互动周期" VerticalAlignment="Center" />
-                        <Grid Grid.Column="2" Grid.Row="2" ToolTip="互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动">
+                        <TextBlock Grid.Row="3" Text="互动周期" VerticalAlignment="Center" />
+                        <Grid Grid.Column="2" Grid.Row="3" ToolTip="互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
@@ -385,7 +403,7 @@
                                     Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
                                     Background="{x:Null}" Width="60" />
                         </Grid>
-                        <Grid Grid.Row="4" Grid.Column="2" ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除">
+                        <Grid Grid.Row="5" Grid.Column="2" ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
@@ -496,6 +514,7 @@
                     <ComboBox x:Name="CBDiagnosis" SelectedIndex="1" VerticalAlignment="Top" Margin="10,5,0,0"
                             HorizontalAlignment="Left" Style="{DynamicResource StandardComboBoxStyle}" Width="200"
                             SelectionChanged="CBDiagnosis_SelectionChanged" IsEnabled="False">
+                        <ComboBoxItem>每 两百 周期一次</ComboBoxItem>
                         <ComboBoxItem>每 五百 周期一次</ComboBoxItem>
                         <ComboBoxItem>每 一千 周期一次</ComboBoxItem>
                         <ComboBoxItem>每 两千 周期一次</ComboBoxItem>
@@ -642,14 +661,14 @@
                     <TextBlock Margin="0,100,0,0" Text="制作组名单" FontSize="20" FontWeight="Bold"
                             HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <TextBlock Margin="100,130,0,0" VerticalAlignment="Top" TextWrapping="WrapWithOverflow">
-                    <Run>杨远洛里斯, 广大MOD作者</Run><LineBreak />
+                    <Run>杨远洛里斯, </Run> <Hyperlink Click="Mod_Click" Foreground="{DynamicResource PrimaryText}">广大MOD作者</Hyperlink><LineBreak /> 
                     <Run>洛里斯杨远, トニーちゃん</Run> <Hyperlink Click="Git_Click">Git贡献名单</Hyperlink><LineBreak />
-                    <Run>叶书天, 广大MOD作者</Run>
+                    <Run>叶书天, </Run> <Hyperlink Click="Mod_Click" Foreground="{DynamicResource PrimaryText}">广大MOD作者</Hyperlink>
                     <LineBreak />
-                    <Hyperlink>Panuon.WPF.UI</Hyperlink>
-                    <Hyperlink>LinePutScript</Hyperlink><LineBreak />
-                    <Hyperlink>Facepunch.Steamworks</Hyperlink>
-                    <Hyperlink>查看引用名单</Hyperlink><LineBreak /><LineBreak />
+                    <Hyperlink Foreground="{DynamicResource PrimaryText}">Panuon.WPF.UI</Hyperlink>
+                    <Hyperlink Foreground="{DynamicResource PrimaryText}">LinePutScript</Hyperlink><LineBreak />
+                    <Hyperlink Foreground="{DynamicResource PrimaryText}">Facepunch.Steamworks</Hyperlink>
+                    <Hyperlink Foreground="{DynamicResource PrimaryText}" Click="Using_Click">查看引用名单</Hyperlink><LineBreak /><LineBreak />
                     <Hyperlink Click="Steam_Click">访问Steam页面</Hyperlink>
                     <Hyperlink Click="Github_Click">访问Github页面</Hyperlink>
                     <LineBreak />                    

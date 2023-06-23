@@ -236,7 +236,7 @@ namespace VPet_Simulator.Core
             }
         }
         public event Action FunctionSpendHandle;
-        private void EventTimer_Elapsed(object sender, ElapsedEventArgs e)
+        public void EventTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             //所有Handle
             TimeHandle?.Invoke(this);
