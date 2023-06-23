@@ -74,12 +74,14 @@ namespace VPet_Simulator.Windows
                     File.Delete(ds[0]);
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps"))
                     File.Delete(AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
+                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData"))
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\UserData");
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
                     File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
                 if (Core != null && Core.Save != null)
                     File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
                 if (CGPTClient != null)
-                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json", CGPTClient.Save());                
+                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json", CGPTClient.Save());
             }
         }
         /// <summary>
