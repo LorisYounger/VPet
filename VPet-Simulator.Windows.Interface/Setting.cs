@@ -122,6 +122,14 @@ namespace VPet_Simulator.Windows.Interface
             set => SetInt("autosave", value);
         }
         /// <summary>
+        /// 备份保存最大数量
+        /// </summary>
+        public int BackupSaveMaxNum
+        {
+            get => Math.Max(GetInt("bakupsave", 20), 1);
+            set => SetInt("bakupsave", value);
+        }
+        /// <summary>
         /// 是否置于顶层
         /// </summary>
         public bool TopMost

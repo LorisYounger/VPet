@@ -69,17 +69,22 @@ namespace VPet_Simulator.Windows
                     Set["betterbuy"]["star"].info = string.Join(",", list);
                 }
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
-                var ds = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + @"\UserData");
-                if (ds.Length > 20)
-                    File.Delete(ds[0]);
-                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps"))
-                    File.Delete(AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
+
                 if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData"))
                     Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\UserData");
-                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
-                    File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
+
                 if (Core != null && Core.Save != null)
+                {
+                    var ds = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + @"\UserData");
+                    while (ds.Length > Set.BackupSaveMaxNum)
+                        File.Delete(ds[0]);
+                    if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps"))
+                        File.Delete(AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
+
+                    if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
+                        File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
                     File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
+                }
                 if (CGPTClient != null)
                     File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json", CGPTClient.Save());
             }

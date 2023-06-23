@@ -4,6 +4,7 @@ using Steamworks.Ugc;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -68,6 +69,7 @@ namespace VPet_Simulator.Windows
 
             TextBoxStartUpX.Text = mw.Set.StartRecordPoint.X.ToString();
             TextBoxStartUpY.Text = mw.Set.StartRecordPoint.Y.ToString();
+            numBackupSaveMaxNum.Value = mw.Set.BackupSaveMaxNum;
             if (mw.Set.StartRecordLast == true)
             {
                 StartPlace.IsChecked = true;
@@ -797,6 +799,52 @@ namespace VPet_Simulator.Windows
                 mw.Main.MsgBar.SetPlaceOUT();
             else
                 mw.Main.MsgBar.SetPlaceIN();
+        }
+
+        private void numBackupSaveMaxNum_ValueChanged(object sender, Panuon.WPF.SelectedValueChangedRoutedEventArgs<double> e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.BackupSaveMaxNum = (int)numBackupSaveMaxNum.Value;
+        }
+        int reloadid = 0;
+        private void CBSaveReLoad_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (reloadid != mw.Set.Statistics[(gint)"savetimes"])
+            {
+                reloadid = mw.Set.Statistics[(gint)"savetimes"];
+                CBSaveReLoad.SelectedItem = null;
+                CBSaveReLoad.Items.Clear();
+                if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData"))
+                {
+                    foreach (var file in new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\UserData")
+                        .GetFiles().OrderByDescending(x => x.LastWriteTime))
+                    {
+                        if (file.Extension.ToLower() == ".lps")
+                        {
+                            CBSaveReLoad.Items.Add(file.Name.Split('.').First());
+                        }
+                    }
+                    CBSaveReLoad.SelectedIndex = 0;
+                }
+            }
+        }
+
+        private void BtnSaveReload_Click(object sender, RoutedEventArgs e)
+        {
+            if (CBSaveReLoad.SelectedItem != null)
+            {
+                string txt = (string)CBSaveReLoad.SelectedItem;
+                string path = AppDomain.CurrentDomain.BaseDirectory + @"\UserData\" + txt + ".lps";
+                if (File.Exists(path))
+                {
+                    GameSave gs = GameSave.Load(new Line(File.ReadAllText(path)));
+                    if (MessageBoxX.Show($"存档名称:{gs.Name}\n存档等级:{gs.Level}\n存档金钱:{gs.Money}\n是否加载该备份存档? 当前游戏数据会丢失", "是否加载该备份存档? 当前游戏数据会丢失", MessageBoxButton.YesNo, MessageBoxIcon.Info) == MessageBoxResult.Yes)
+                    {
+                        mw.Core.Save = gs;
+                    }
+                }
+            }
         }
     }
 }
