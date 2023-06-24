@@ -346,11 +346,15 @@
                                 <ComboBoxItem Content="Ill" />
                             </ComboBox>
                         </Grid>
-                        <Grid Grid.Column="2" Grid.Row="4">
+                        <Grid Grid.Column="2" Grid.Row="5" Grid.RowSpan="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35" />
+                                <RowDefinition Height="35" />
+                            </Grid.RowDefinitions>
                             <pu:Switch x:Name="MoveEventBox" BorderBrush="{DynamicResource PrimaryDark}"
                                     CheckedBackground="{DynamicResource Primary}" Content="启用桌宠移动"
                                     CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
@@ -368,50 +372,12 @@
                                     CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="10,0,0,0"
                                     ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除"
                                     Checked="SmartMoveEventBox_Checked" Unchecked="SmartMoveEventBox_Checked" />
-                        </Grid>
-
-                        <TextBlock Grid.Row="0" Text="数据计算" VerticalAlignment="Center" />
-                        <TextBlock Grid.Row="1" Text="显示状态" VerticalAlignment="Center" />
-                        <TextBlock Grid.Row="4" Text="桌宠移动" VerticalAlignment="Center" />
-                        <TextBlock Grid.Row="2" Text="计算间隔" VerticalAlignment="Center" />
-                        <Grid Grid.Column="2" Grid.Row="2" ToolTip="数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.&#13;间隔越大越不容易打扰到当前工作">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Slider x:Name="CalSlider" TickFrequency="0.1" IsSnapToTickEnabled="True"
-                                    Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center"
-                                    Maximum="60" SmallChange=".5" Minimum="5" LargeChange="1" Value="15"
-                                    ValueChanged="CalSlider_ValueChanged" />
-                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"
-                                    Text="{Binding ElementName=CalSlider,Path=Value,StringFormat={}{0:f1} 秒}"
-                                    Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
-                                    Background="{x:Null}" Width="60" />
-                        </Grid>
-                        <TextBlock Grid.Row="3" Text="互动周期" VerticalAlignment="Center" />
-                        <Grid Grid.Column="2" Grid.Row="3" ToolTip="互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Slider TickFrequency="1" IsSnapToTickEnabled="True" x:Name="InteractionSlider"
-                                    Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center"
-                                    Maximum="1000" SmallChange="1" Minimum="30" LargeChange="5" Value="200"
-                                    ValueChanged="InteractionSlider_ValueChanged" />
-                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"
-                                    Text="{Binding ElementName=InteractionSlider,Path=Value}" FontSize="18"
-                                    Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
-                                    Background="{x:Null}" Width="60" />
-                        </Grid>
-                        <Grid Grid.Row="5" Grid.Column="2" ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="智能移动判断时间间隔" />
+                            <TextBlock Text="智能移动判断时间间隔" Grid.Row="1"
+                                    ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除"/>
                             <ComboBox x:Name="CBSmartMove" Style="{DynamicResource StandardComboBoxStyle}"
                                     IsEnabled="{Binding ElementName=SmartMoveEventBox,Path=IsChecked}"
-                                    SelectionChanged="CBSmartMove_SelectionChanged" SelectedIndex="5" Grid.Column="1">
+                                    SelectionChanged="CBSmartMove_SelectionChanged" SelectedIndex="5" Grid.Column="1"
+                                    Grid.Row="1" ToolTip="当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#13;将在下次交互时解除">
                                 <ComboBoxItem>
                                     <ComboBoxItem.Tag>
                                         <system:Int32>30</system:Int32>
@@ -463,6 +429,45 @@
                                     </ComboBoxItem.Tag> 60 分钟
                                 </ComboBoxItem>
                             </ComboBox>
+                        </Grid>
+
+                        <TextBlock Grid.Row="0" Text="数据计算" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="1" Text="显示状态" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="5" Text="桌宠移动" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="2" Text="计算间隔" VerticalAlignment="Center" />
+                        <Grid Grid.Column="2" Grid.Row="2" ToolTip="数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.&#13;间隔越大越不容易打扰到当前工作">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Slider x:Name="CalSlider" TickFrequency="0.1" IsSnapToTickEnabled="True"
+                                    Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center"
+                                    Maximum="60" SmallChange=".5" Minimum="5" LargeChange="1" Value="15"
+                                    ValueChanged="CalSlider_ValueChanged" />
+                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"
+                                    Text="{Binding ElementName=CalSlider,Path=Value,StringFormat={}{0:f1} 秒}"
+                                    Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
+                                    Background="{x:Null}" Width="60" />
+                        </Grid>
+                        <TextBlock Grid.Row="3" Text="互动周期" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="4" VerticalAlignment="Top" Grid.Column="2" FontSize="14">
+                            <Run>每分钟计算</Run> <Run x:Name="rTimeMinute">4</Run> <Run>次数值变化</Run><LineBreak />
+                            <Run>大约</Run> <Run x:Name="RInter">4</Run> <Run>分钟左右主动进行一次互动(走路发呆爬墙等)</Run>
+                        </TextBlock>
+                        <Grid Grid.Column="2" Grid.Row="3" ToolTip="互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Slider TickFrequency="1" IsSnapToTickEnabled="True" x:Name="InteractionSlider"
+                                    Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center"
+                                    Maximum="1000" SmallChange="1" Minimum="30" LargeChange="5" Value="200"
+                                    ValueChanged="InteractionSlider_ValueChanged" />
+                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"
+                                    Text="{Binding ElementName=InteractionSlider,Path=Value}" FontSize="18"
+                                    Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
+                                    Background="{x:Null}" Width="60" />
+                            
                         </Grid>
 
                     </Grid>

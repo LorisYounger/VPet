@@ -73,6 +73,7 @@ namespace VPet_Simulator.Windows
             numBackupSaveMaxNum.Value = mw.Set.BackupSaveMaxNum;
             combCalFunState.SelectedIndex = (int)mw.Set.CalFunState;
             combCalFunState.IsEnabled = !mw.Set.EnableFunction;
+            CalTimeInteraction();
             if (mw.Set.StartRecordLast == true)
             {
                 StartPlace.IsChecked = true;
@@ -534,6 +535,13 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set.InteractionCycle = (int)(InteractionSlider.Value);
+            CalTimeInteraction();
+        }
+        private void CalTimeInteraction()
+        {
+            var interact = (60 / mw.Set.LogicInterval);
+            rTimeMinute.Text = interact.ToString("f2");
+            RInter.Text = ((0.08 * mw.Set.InteractionCycle - 0.9) / interact * 2).ToString("f2");
         }
         #region Link
         private void Git_Click(object sender, RoutedEventArgs e)
@@ -581,6 +589,7 @@ namespace VPet_Simulator.Windows
                 return;
             mw.Set.LogicInterval = CalSlider.Value;
             mw.Main.SetLogicInterval((int)(CalSlider.Value * 1000));
+            CalTimeInteraction();
         }
 
         private void MoveEventBox_Checked(object sender, RoutedEventArgs e)
