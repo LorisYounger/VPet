@@ -64,7 +64,7 @@ namespace VPet_Simulator.Core
             MsgBar = new MessageBar(this);
             MsgBar.Visibility = Visibility.Collapsed;
             UIGrid.Children.Add(MsgBar);
-            
+            labeldisplaytimer.Elapsed += Labledisplaytimer_Elapsed;
 
             if (loadtouchevent)
             {
@@ -97,6 +97,28 @@ namespace VPet_Simulator.Core
             MoveTimer.Elapsed += MoveTimer_Elapsed;
             SmartMoveTimer.Elapsed += SmartMoveTimer_Elapsed;
         }
+
+        private void Labledisplaytimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (--labeldisplaycount <= 0)
+            {
+                labeldisplaytimer.Enabled = false;
+                labeldisplaychangenum1 = 0;
+                labeldisplaychangenum2 = 0;
+                Dispatcher.Invoke(() =>
+                {
+                    LabelDisplay.Visibility = Visibility.Collapsed;
+                });
+            }
+            else if (labeldisplaycount < 50)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    LabelDisplay.Opacity = labeldisplaycount / 50;
+                });
+            }
+        }
+
         /// <summary>
         /// 自动加载触摸事件
         /// </summary>

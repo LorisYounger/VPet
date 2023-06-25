@@ -5,7 +5,7 @@
     <ResourceDictionary.MergedDictionaries>
         <pucore:SharedResourceDictionary Source="/Panuon.WPF.UI;component/Control.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
+
     <DrawingBrush x:Key="ProgressBarForeground" Viewport="0,0,8,22" ViewportUnits="Absolute" Stretch="None"
             TileMode="Tile">
         <DrawingBrush.RelativeTransform>

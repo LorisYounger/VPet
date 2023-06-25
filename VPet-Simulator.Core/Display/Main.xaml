@@ -1,17 +1,22 @@
 ﻿<pu:ContentControlX x:Class="VPet_Simulator.Core.Main" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:pu="https://opensource.panuon.com/wpf-ui"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Core"
         mc:Ignorable="d" d:DesignHeight="250" d:DesignWidth="250">
     <Viewbox>
-        <Grid x:Name="MainGrid" Width="500" MouseLeftButtonDown="MainGrid_MouseLeftButtonDown"
-                x:FieldModifier="public" MouseLeftButtonUp="MainGrid_MouseLeftButtonUp"
-                MouseRightButtonDown="MainGrid_MouseRightButtonDown" MouseMove="MainGrid_MouseWave">
-            <MediaElement x:Name="VoicePlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" />
+        <Grid x:Name="MainGrid" Width="500" MouseLeftButtonDown="MainGrid_MouseLeftButtonDown" x:FieldModifier="public"
+                MouseLeftButtonUp="MainGrid_MouseLeftButtonUp" MouseRightButtonDown="MainGrid_MouseRightButtonDown"
+                MouseMove="MainGrid_MouseWave">
+            <MediaElement x:Name="VoicePlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" x:FieldModifier="public" />
             <Grid x:Name="UIGrid_Back" x:FieldModifier="public" VerticalAlignment="Top" Width="500" />
             <Border x:Name="PetGrid" Height="500" VerticalAlignment="Top" Width="500" />
             <Border x:Name="PetGrid2" Height="500" VerticalAlignment="Top" Width="500" />
             <Grid x:Name="UIGrid" x:FieldModifier="public" VerticalAlignment="Top" Width="500" />
+            <Label x:Name="LabelDisplay" HorizontalAlignment="Center" VerticalAlignment="Center" Content="内容显示如下"
+                    FontSize="30" Background="{DynamicResource DARKPrimaryTransA}"
+                    Foreground="{DynamicResource DARKPrimaryText}" pu:LabelHelper.CornerRadius="15"
+                    pu:LabelHelper.ShadowColor="{DynamicResource ShadowColor}" pu:ShadowHelper.Opacity="0.8"
+                    x:FieldModifier="public" Margin="0,300,0,0" Padding="15,7" Visibility="Collapsed" />
         </Grid>
     </Viewbox>
 </pu:ContentControlX>

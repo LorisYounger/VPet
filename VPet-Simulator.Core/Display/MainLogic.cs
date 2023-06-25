@@ -58,7 +58,62 @@ namespace VPet_Simulator.Core
                 }
             });
         }
-
+        int labeldisplaycount = 100;
+        int labeldisplayhash = 0;
+        Timer labeldisplaytimer = new Timer(10)
+        {
+            AutoReset = true,
+        };
+        double labeldisplaychangenum1 = 0;
+        double labeldisplaychangenum2 = 0;
+        /// <summary>
+        /// 显示消息弹窗Label
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="time">持续时间</param>
+        public void LabelDisplayShow(string text, int time = 2000)
+        {
+            labeldisplayhash = text.GetHashCode();
+            Dispatcher.Invoke(() =>
+            {
+                LabelDisplay.Content = text;
+                LabelDisplay.Opacity = 1;
+                LabelDisplay.Visibility = Visibility.Visible;
+                labeldisplaycount = time / 10;
+                labeldisplaytimer.Start();
+            });
+        }
+        /// <summary>
+        /// 显示消息弹窗Lable,自动统计数值变化
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="changenum1">变化值1</param>
+        /// <param name="changenum2">变化值2</param>
+        /// <param name="time">持续时间</param>
+        /// <param name="tostr1">转换方法1</param>
+        /// <param name="tostr2">转换方法2</param>
+        public void LabelDisplayShowChangeNumber(string text, double changenum1, double changenum2 = 0, int time = 2000, string tostr1 = "f2", string tostr2 = "f2")
+        {
+            if (labeldisplayhash == text.GetHashCode())
+            {
+                labeldisplaychangenum1 += changenum1;
+                labeldisplaychangenum2 += changenum2;
+            }
+            else
+            {
+                labeldisplaychangenum1 = changenum1;
+                labeldisplaychangenum2 = changenum2;
+                labeldisplayhash = text.GetHashCode();
+            }
+            Dispatcher.Invoke(() =>
+            {
+                LabelDisplay.Content = text.Replace("{1}", labeldisplaychangenum1.ToString(tostr1)).Replace("{2}", labeldisplaychangenum2.ToString(tostr2));
+                LabelDisplay.Opacity = 1;
+                LabelDisplay.Visibility = Visibility.Visible;
+                labeldisplaycount = time / 10;
+                labeldisplaytimer.Start();
+            });
+        }
         public void Saying(GraphCore.Helper.SayType type)
         {
             Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.B_Loop), () => Saying(type));
