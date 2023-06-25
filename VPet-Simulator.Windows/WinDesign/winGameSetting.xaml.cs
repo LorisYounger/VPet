@@ -152,7 +152,7 @@ namespace VPet_Simulator.Windows
                 ListBoxItem moditem = (ListBoxItem)ListMod.Items[ListMod.Items.Add(new ListBoxItem())];
                 moditem.Padding = new Thickness(5, 0, 5, 0);
                 moditem.Content = mod.Name;
-                if (mod.IsBanMOD(mw))
+                if (!mod.IsOnMOD(mw))
                 {
                     moditem.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 }
@@ -203,7 +203,7 @@ namespace VPet_Simulator.Windows
                     runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
                 }
             }
-            if (mod.IsBanMOD(mw))
+            if (!mod.IsOnMOD(mw))
             {
                 LabelModName.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 ButtonEnable.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimaryDarker);
@@ -348,7 +348,7 @@ namespace VPet_Simulator.Windows
 
         private void ButtonEnable_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            mw.Set.BanModRemove(mod.Name);
+            mw.Set.OnMod(mod.Name);
             ShowMod((string)LabelModName.Content);
             ButtonRestart.Visibility = Visibility.Visible;
             //int seleid = ListMod.SelectedIndex();
@@ -362,7 +362,7 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法停用", "停用失败");
                 return;
             }
-            mw.Set.BanMod(mod.Name);
+            mw.Set.OnModRemove(mod.Name);
             ShowMod((string)((ListBoxItem)ListMod.SelectedItem).Content);
             ButtonRestart.Visibility = System.Windows.Visibility.Visible;
             ShowModList();

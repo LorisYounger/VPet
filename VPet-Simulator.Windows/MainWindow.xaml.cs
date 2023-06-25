@@ -384,11 +384,11 @@ namespace VPet_Simulator.Windows
                         Main.Say("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议", GraphCore.Helper.SayType.Shining);
                     });
                 }
-                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 6, 23))
+                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 6, 26))
                 {
-                    if (Set["SingleTips"].GetDateTime("update") > new DateTime(2023, 6, 21)) // 上次更新日期时间
+                    if (Set["SingleTips"].GetDateTime("update") > new DateTime(2023, 6, 23)) // 上次更新日期时间
                         notifyIcon.ShowBalloonTip(10, "更新通知 06/23", //本次更新内容
-                        "修复空存档储存出错的bug", ToolTipIcon.Info);
+                        "MOD现已从默认启用变为默认关闭\n如需使用EdgeTTS或者DEMO时钟,请在设置中启用MOD\n互动将会提示获得的心情和消耗的体力数量", ToolTipIcon.Info);
                     else// 累计更新内容
                         notifyIcon.ShowBalloonTip(10, "更新通知 06/23",
                     "现已支持数据计算,桌宠现在需要进行吃饭喝水等\n更新了新的状态动画文件\n新增自动备份存档功能\n数据计算数据相关优化", ToolTipIcon.Info);

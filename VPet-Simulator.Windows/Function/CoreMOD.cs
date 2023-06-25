@@ -79,7 +79,7 @@ namespace VPet_Simulator.Windows
             else
                 ItemID = 0;
             CacheDate = modlps.GetDateTime("cachedate", DateTime.MinValue);
-            if (IsBanMOD(mw))
+            if (!IsOnMOD(mw))
             {
                 Content = "该模组已停用";
                 return;
@@ -202,7 +202,7 @@ namespace VPet_Simulator.Windows
                 }
             }
         }
-        public bool IsBanMOD(MainWindow mw) => mw.Set.IsBanMod(Name);
+        public bool IsOnMOD(MainWindow mw) => mw.Set.IsOnMod(Name);
         public bool IsPassMOD(MainWindow mw) => mw.Set.IsPassMOD(Name);
 
         public void WriteFile()
@@ -220,9 +220,11 @@ namespace VPet_Simulator.Windows
     }
     public static class ExtensionSetting
     {
-        public static bool IsBanMod(this Setting t, string ModName)
+        public static bool IsOnMod(this Setting t, string ModName)
         {
-            var line = t.FindLine("banmod");
+            if (ModName == "Core")
+                return true;
+            var line = t.FindLine("onmod");
             if (line == null)
                 return false;
             return line.Find(ModName.ToLower()) != null;
@@ -242,15 +244,15 @@ namespace VPet_Simulator.Windows
             line.SetBool(ModName, true);
             return true;
         }
-        public static void BanMod(this Setting t, string ModName)
+        public static void OnMod(this Setting t, string ModName)
         {
             if (string.IsNullOrWhiteSpace(ModName))
                 return;
-            t.FindorAddLine("banmod").AddorReplaceSub(new Sub(ModName.ToLower()));
+            t.FindorAddLine("onmod").AddorReplaceSub(new Sub(ModName.ToLower()));
         }
-        public static void BanModRemove(this Setting t, string ModName)
+        public static void OnModRemove(this Setting t, string ModName)
         {
-            t.FindorAddLine("banmod").Remove(ModName.ToLower());
+            t.FindorAddLine("onmod").Remove(ModName.ToLower());
         }
         public static void PassMod(this Setting t, string ModName)
         {
