@@ -5,6 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using static VPet_Simulator.Core.GraphCore;
 using Panuon.WPF.UI;
+using LinePutScript.Localization.WPF;
+
 namespace VPet_Simulator.Core
 {
     public partial class Main
@@ -121,7 +123,7 @@ namespace VPet_Simulator.Core
             {
                 Core.Save.StrengthChange(-2);
                 Core.Save.FeelingChange(1);
-                LabelDisplayShowChangeNumber("体力-{1} 心情+{2}", 2, 1, tostr1: "f0", tostr2: "f0");
+                LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
             }
             if (DisplayType == GraphType.Touch_Head_A_Start)
                 return;
@@ -151,7 +153,7 @@ namespace VPet_Simulator.Core
             {
                 Core.Save.StrengthChange(-2);
                 Core.Save.FeelingChange(1);
-                LabelDisplayShowChangeNumber("体力-{1} 心情+{2}",2,1,tostr1:"f0", tostr2: "f0");
+                LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
             }
             if (DisplayType == GraphType.Touch_Body_A_Start)
                 return;

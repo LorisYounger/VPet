@@ -1,5 +1,6 @@
 ﻿using ChatGPT.API.Framework;
 using LinePutScript;
+using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -112,7 +113,7 @@ namespace VPet_Simulator.Windows
             }
             catch (Exception e)
             {
-                new winReport(this, "由于插件引起的自定按钮加载错误\n" + e.ToString()).Show();
+                new winReport(this, "由于插件引起的自定按钮加载错误".Translate() + '\n' + e.ToString()).Show();
             }
         }
         public static void RunDIY(string content)

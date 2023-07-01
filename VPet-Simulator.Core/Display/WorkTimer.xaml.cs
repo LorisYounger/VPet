@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-
+using LinePutScript.Localization.WPF;
 namespace VPet_Simulator.Core
 {
     /// <summary>
@@ -60,18 +60,18 @@ namespace VPet_Simulator.Core
                 {
                     case Main.WorkingState.Study:
                         m.Core.Save.Exp += GetCount * 0.2;
-                        Stop(() => m.Say($"学习完成啦, 累计学会了 {(GetCount * 1.2):f2} 经验值\n共计花费了{MaxTime}分钟"
-                            , GraphCore.Helper.SayType.Shining, true));
+                        Stop(() => m.Say(LocalizeCore.Translate("学习完成啦, 累计学会了 {0:f2} 经验值\n共计花费了{1}分钟",
+                            GetCount * 1.2, MaxTime), GraphCore.Helper.SayType.Shining, true));
                         break;
                     case Main.WorkingState.WorkONE:
                         m.Core.Save.Money += GetCount * 0.15;
-                        Stop(() => m.Say($"{m.Core.Graph.GraphConfig.Str[(gstr)"work1"]}完成啦, 累计赚了 {GetCount * 1.15:f2} 金钱\n共计花费了{MaxTime}分钟"
-                            , GraphCore.Helper.SayType.Shining, true));
+                        Stop(() => m.Say(LocalizeCore.Translate("{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟", GetCount * 1.15,
+                            MaxTime, m.Core.Graph.GraphConfig.StrGetString("work1")), GraphCore.Helper.SayType.Shining, true));
                         break;
                     case Main.WorkingState.WorkTWO:
                         m.Core.Save.Money += GetCount * 0.25;
-                        Stop(() => m.Say($"{m.Core.Graph.GraphConfig.Str[(gstr)"work2"]}完成啦, 累计赚了 {GetCount * 1.25:f2} 金钱\n共计花费了{MaxTime}分钟"
-                            , GraphCore.Helper.SayType.Shining, true));
+                        Stop(() => m.Say(LocalizeCore.Translate("{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟", GetCount * 1.25,
+                            MaxTime, m.Core.Graph.GraphConfig.StrGetString("work2")), GraphCore.Helper.SayType.Shining, true));
                         break;
                 }
 
@@ -98,7 +98,7 @@ namespace VPet_Simulator.Core
                             break;
                         case Main.WorkingState.WorkONE:
                         case Main.WorkingState.WorkTWO:
-                            tNumberUnit.Text = "金钱";
+                            tNumberUnit.Text = LocalizeCore.Translate("金钱");
                             break;
                     }
                     break;
@@ -109,17 +109,17 @@ namespace VPet_Simulator.Core
             if (ts.TotalSeconds < 90)
             {
                 tNumber.Text = ts.TotalSeconds.ToString("f1");
-                tNumberUnit.Text = "秒";
+                tNumberUnit.Text = LocalizeCore.Translate("秒");
             }
             else if (ts.TotalMinutes < 90)
             {
                 tNumber.Text = ts.TotalMinutes.ToString("f1");
-                tNumberUnit.Text = "分钟";
+                tNumberUnit.Text = LocalizeCore.Translate("分钟");
             }
             else
             {
                 tNumber.Text = ts.TotalHours.ToString("f1");
-                tNumberUnit.Text = "小时";
+                tNumberUnit.Text = LocalizeCore.Translate("小时");
             }
         }
         public void DisplayUI()
@@ -127,44 +127,44 @@ namespace VPet_Simulator.Core
             switch (m.State)
             {
                 case Main.WorkingState.Study:
-                    btnStop.Content = "停止学习";
+                    btnStop.Content = LocalizeCore.Translate("停止学习");
                     switch (DisplayType)
                     {
                         default:
                         case 0:
-                            tNow.Text = "当前已学习";
+                            tNow.Text = LocalizeCore.Translate("当前已学习");
                             break;
                         case 1:
-                            tNow.Text = "剩余学习时间";
+                            tNow.Text = LocalizeCore.Translate("剩余学习时间");
                             break;
                         case 2:
-                            tNow.Text = "获得经验值";
+                            tNow.Text = LocalizeCore.Translate("获得经验值");
                             break;
                     }
                     break;
                 case Main.WorkingState.WorkONE:
-                    workdisplay(m.Core.Graph.GraphConfig.Str[(gstr)"work1"]);
+                    workdisplay(m.Core.Graph.GraphConfig.StrGetString("work1"));
                     break;
                 case Main.WorkingState.WorkTWO:
-                    workdisplay(m.Core.Graph.GraphConfig.Str[(gstr)"work2"]);
+                    workdisplay(m.Core.Graph.GraphConfig.StrGetString("work2"));
                     break;
             }
             M_TimeUIHandle(m);
         }
         private void workdisplay(string workname)
         {
-            btnStop.Content = "停止" + workname;
+            btnStop.Content = LocalizeCore.Translate("停止") + workname;
             switch (DisplayType)
             {
                 default:
                 case 0:
-                    tNow.Text = "当前已" + workname;
+                    tNow.Text = LocalizeCore.Translate("当前已") + workname;
                     break;
                 case 1:
-                    tNow.Text = $"剩余{workname}时间";
+                    tNow.Text = LocalizeCore.Translate("剩余{0}时间", workname);
                     break;
                 case 2:
-                    tNow.Text = "累计金钱收益";
+                    tNow.Text = LocalizeCore.Translate("累计金钱收益");
                     break;
             }
         }

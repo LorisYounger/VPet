@@ -58,8 +58,8 @@ namespace VPet_Simulator.Core
             UIGrid.Children.Add(WorkTimer);
             ToolBar = new ToolBar(this);
             ToolBar.Visibility = Visibility.Collapsed;
-            ToolBar.MenuWork1.Header = core.Graph.GraphConfig.Str[(gstr)"work1"];
-            ToolBar.MenuWork2.Header = core.Graph.GraphConfig.Str[(gstr)"work2"];
+            ToolBar.MenuWork1.Header = core.Graph.GraphConfig.StrGetString("work1");
+            ToolBar.MenuWork2.Header = core.Graph.GraphConfig.StrGetString("work2");
             UIGrid.Children.Add(ToolBar);
             MsgBar = new MessageBar(this);
             MsgBar.Visibility = Visibility.Collapsed;

@@ -8,6 +8,7 @@ using Timer = System.Timers.Timer;
 using Panuon.WPF.UI;
 using System.Windows.Threading;
 using LinePutScript;
+using LinePutScript.Localization.WPF;
 
 namespace VPet_Simulator.Core
 {
@@ -293,7 +294,7 @@ namespace VPet_Simulator.Core
                     m.WorkTimer.Stop();
                 else m.WorkTimer.Start(Main.WorkingState.Study);
             else
-                MessageBoxX.Show($"您的桌宠 {m.Core.Save.Name} 生病啦,没法进行学习", "工作取消");
+                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行学习", m.Core.Save.Name), LocalizeCore.Translate("工作取消"));
         }
 
         private void Work1_Click(object sender, RoutedEventArgs e)
@@ -304,7 +305,8 @@ namespace VPet_Simulator.Core
                     m.WorkTimer.Stop();
                 else m.WorkTimer.Start(Main.WorkingState.WorkONE);
             else
-                MessageBoxX.Show($"您的桌宠 {m.Core.Save.Name} 生病啦,没法进行工作{m.Core.Graph.GraphConfig.Str[(gstr)"work1"]}", "工作取消");
+                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行工作{1}", m.Core.Save.Name,
+                    m.Core.Graph.GraphConfig.StrGetString("work1")), LocalizeCore.Translate("工作取消"));
         }
 
         private void Work2_Click(object sender, RoutedEventArgs e)
@@ -317,9 +319,11 @@ namespace VPet_Simulator.Core
                         m.WorkTimer.Stop();
                     else m.WorkTimer.Start(Main.WorkingState.WorkTWO);
                 else
-                    MessageBoxX.Show($"您的桌宠等级不足{m.Core.Save.Level}/10\n无法进行工作{m.Core.Graph.GraphConfig.Str[(gstr)"work2"]}", "工作取消");
+                    MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/10\n无法进行工作{1}", m.Core.Save.Level.ToString()
+                        , m.Core.Graph.GraphConfig.StrGetString("work2")), LocalizeCore.Translate("工作取消"));
             else
-                MessageBoxX.Show($"您的桌宠 {m.Core.Save.Name} 生病啦,没法进行工作{m.Core.Graph.GraphConfig.Str[(gstr)"work2"]}", "工作取消");
+                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行工作{1}", m.Core.Save.Name,
+                   m.Core.Graph.GraphConfig.StrGetString("work2")), LocalizeCore.Translate("工作取消"));
         }
     }
 }

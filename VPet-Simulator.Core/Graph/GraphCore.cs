@@ -1,5 +1,6 @@
 ﻿using LinePutScript;
 using LinePutScript.Converter;
+using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -597,7 +598,12 @@ namespace VPet_Simulator.Core
             public WorkTimer.UIStyleConfig UIStyleWork1;
             public WorkTimer.UIStyleConfig UIStyleWork2;
             public WorkTimer.UIStyleConfig UIStyleStudy;
-
+            /// <summary>
+            /// 获得 Str 里面储存的文本 (已翻译)
+            /// </summary>
+            /// <param name="name">定位名称</param>
+            /// <returns>储存的文本 (已翻译)</returns>
+            public string StrGetString(string name) => LocalizeCore.Translate(Str.GetString(name));
             /// <summary>
             /// 初始化设置
             /// </summary>

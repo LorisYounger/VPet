@@ -1,4 +1,5 @@
 ﻿using LinePutScript.Converter;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF;
 using System;
 using System.Collections.Generic;
@@ -58,6 +59,19 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Line(name: "name")]
         public string Name { get; set; }
+        private string transname = null;
+
+        public string TranslateName
+        {
+            get
+            {
+                if (transname == null)
+                {
+                    transname = LocalizeCore.Translate(Name);
+                }
+                return transname;
+            }
+        }
         [Line(ignoreCase: true)]
         public int Exp { get; set; }
         [Line(ignoreCase: true)]
@@ -90,20 +104,20 @@ namespace VPet_Simulator.Windows.Interface
         {
             get
             {
-                if(desc == null)
+                if (desc == null)
                 {
                     StringBuilder sb = new StringBuilder();
                     if (Exp != 0)
-                        sb.Append("经验值:\t").Append(Exp > 0 ? "+" : "").Append(Exp.ToString("f2")).AppendLine();
-                    if (StrengthFood != 0) sb.Append("饱腹度:\t").Append(StrengthFood > 0 ? "+" : "").Append(StrengthFood.ToString("f2")).Append("\t\t");
-                    if (StrengthDrink != 0) sb.Append("口渴度:\t").Append(StrengthDrink > 0 ? "+" : "").Append(StrengthDrink.ToString("f2")).AppendLine();
-                    if (Strength != 0) sb.Append("体力:\t").Append(Strength > 0 ? "+" : "").Append(Strength.ToString("f2")).Append("\t\t");
+                        sb.Append(LocalizeCore.Translate("经验值") + ":\t").Append(Exp > 0 ? "+" : "").Append(Exp.ToString("f2")).AppendLine();
+                    if (StrengthFood != 0) sb.Append(LocalizeCore.Translate("饱腹度") + ":\t").Append(StrengthFood > 0 ? "+" : "").Append(StrengthFood.ToString("f2")).Append("\t\t");
+                    if (StrengthDrink != 0) sb.Append(LocalizeCore.Translate("口渴度") + ":\t").Append(StrengthDrink > 0 ? "+" : "").Append(StrengthDrink.ToString("f2")).AppendLine();
+                    if (Strength != 0) sb.Append(LocalizeCore.Translate("体力") + ":\t").Append(Strength > 0 ? "+" : "").Append(Strength.ToString("f2")).Append("\t\t");
                     if (Feeling != 0)
-                        sb.Append("心情:\t").Append(Feeling > 0 ? "+" : "").Append(Feeling.ToString("f2")).AppendLine();
+                        sb.Append("心情".Translate() + ":\t").Append(Feeling > 0 ? "+" : "").Append(Feeling.ToString("f2")).AppendLine();
                     if (Health != 0)
-                        sb.Append("健康:\t").Append(Health > 0 ? "+" : "").Append(Health.ToString("f2")).Append("\t\t");
+                        sb.Append("健康".Translate() + ":\t").Append(Health > 0 ? "+" : "").Append(Health.ToString("f2")).Append("\t\t");
                     if (Likability != 0)
-                        sb.Append("好感度:\t").Append(Likability > 0 ? "+" : "").Append(Likability.ToString("f2"));
+                        sb.Append("好感度".Translate() + ":\t").Append(Likability > 0 ? "+" : "").Append(Likability.ToString("f2"));
                     sb.AppendLine().Append(Desc);
                     desc = sb.ToString();
                 }

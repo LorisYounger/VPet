@@ -2,7 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Core"
-        mc:Ignorable="d" xmlns:pu="https://opensource.panuon.com/wpf-ui" MouseEnter="UserControl_MouseEnter"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF" mc:Ignorable="d"
+        xmlns:pu="https://opensource.panuon.com/wpf-ui" MouseEnter="UserControl_MouseEnter"
         MouseLeave="UserControl_MouseLeave" Height="500" Width="500" VerticalAlignment="Top">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -38,7 +39,7 @@
                 <TextBlock x:Name="Tlv" Text="Lv 14" VerticalAlignment="Center"
                         Foreground="{DynamicResource DARKPrimary}" Grid.ColumnSpan="3" />
                 <Button Grid.Column="4" VerticalAlignment="Center" Background="Transparent"
-                        Foreground="{DynamicResource DARKPrimary}" Content="详细" Cursor="Hand" Click="MenuPanel_Click"
+                        Foreground="{DynamicResource DARKPrimary}" Content="{ll:Str 详细}" Cursor="Hand" Click="MenuPanel_Click"
                         IsEnabled="False">
                     <Button.ContentTemplate>
                         <DataTemplate>
@@ -47,13 +48,13 @@
                     </Button.ContentTemplate>
                 </Button>
                 <TextBlock x:Name="till" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#FF4C4C" TextWrapping="Wrap"
-                        Text="宠物已经生病, 通过服用药物可以恢复" />
+                        Text="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}" />
                 <TextBlock x:Name="tfun" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#4caf50" TextWrapping="Wrap"
-                        Text="已关闭数据计算, 可放心挂机" />
-                <TextBlock Grid.Row="2" Text="金钱" VerticalAlignment="Center" />
+                        Text="{ll:Str 已关闭数据计算\, 可放心挂机}" />
+                <TextBlock Grid.Row="2" Text="{ll:Str 金钱}" VerticalAlignment="Center" />
                 <TextBlock x:Name="tMoney" Grid.Row="2" Grid.Column="2" Foreground="{DynamicResource DARKPrimary}"
-                        Text="￥100,000" />
-                <TextBlock Grid.Row="3" Text="经验" VerticalAlignment="Center" />
+                        Text="$100,000" />
+                <TextBlock Grid.Row="3" Text="{ll:Str 经验}" VerticalAlignment="Center" />
                 <ProgressBar x:Name="pExp" Grid.Row="3" Grid.Column="2" Value="40" FontSize="20" Height="20"
                         VerticalAlignment="Center" pu:ProgressBarHelper.CornerRadius="10"
                         Foreground="{DynamicResource ProgressBarForeground}"
@@ -61,7 +62,7 @@
                         pu:ProgressBarHelper.GeneratingPercentText="PgbExperience_GeneratingPercentText" />
                 <TextBlock x:Name="tExp" Grid.Row="3" Grid.Column="4" HorizontalAlignment="Right" Text="x1.0"
                         Foreground="{DynamicResource DARKPrimary}" />
-                <TextBlock Grid.Row="4" Text="体力" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="4" Text="{ll:Str 体力}" VerticalAlignment="Center" />
                 <ProgressBar x:Name="pStrength" Grid.Row="4" Grid.Column="2" Value="40" FontSize="20" Height="20"
                         VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
                         Foreground="{DynamicResource ProgressBarForeground}"
@@ -69,7 +70,7 @@
                         pu:ProgressBarHelper.GeneratingPercentText="PgbStrength_GeneratingPercentText" />
                 <TextBlock x:Name="tStrength" Grid.Row="4" Grid.Column="4" HorizontalAlignment="Right" Text="+1/t"
                         Foreground="{DynamicResource DARKPrimary}" />
-                <TextBlock Grid.Row="5" Text="心情" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="5" Text="{ll:Str 心情}" VerticalAlignment="Center" />
                 <ProgressBar x:Name="pFeeling" Grid.Row="5" Grid.Column="2" Value="60" FontSize="20" Height="20"
                         VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
                         Foreground="{DynamicResource ProgressBarForeground}"
@@ -77,7 +78,7 @@
                         pu:ProgressBarHelper.GeneratingPercentText="PgbSpirit_GeneratingPercentText" />
                 <TextBlock x:Name="tFeeling" Grid.Row="5" Grid.Column="4" HorizontalAlignment="Right" Text="+1/t"
                         Foreground="{DynamicResource DARKPrimary}" />
-                <TextBlock Grid.Row="6" Text="饱腹度" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="6" Text="{ll:Str 饱腹度}" VerticalAlignment="Center" />
                 <ProgressBar x:Name="pStrengthFood" Grid.Row="6" Grid.Column="2" Value="80" FontSize="20" Height="20"
                         VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
                         Foreground="{DynamicResource ProgressBarForeground}"
@@ -85,7 +86,7 @@
                         pu:ProgressBarHelper.GeneratingPercentText="PgbHunger_GeneratingPercentText" />
                 <TextBlock x:Name="tStrengthFood" Grid.Row="6" Grid.Column="4" HorizontalAlignment="Right" Text="+1/t"
                         Foreground="{DynamicResource DARKPrimary}" />
-                <TextBlock Grid.Row="7" Text="口渴度" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="7" Text="{ll:Str 口渴度}" VerticalAlignment="Center" />
                 <ProgressBar x:Name="pStrengthDrink" Grid.Row="7" Grid.Column="2" Value="20" FontSize="20" Height="20"
                         VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
                         Foreground="{DynamicResource ProgressBarForeground}"
@@ -101,24 +102,25 @@
                     <UniformGrid Columns="5" />
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
-            <MenuItem x:Name="MenuFeed" Header="投喂" HorizontalContentAlignment="Center" Padding="0"
+            <MenuItem x:Name="MenuFeed" Header="{ll:Str 投喂}" HorizontalContentAlignment="Center" Padding="0"
                     x:FieldModifier="public" />
-            <MenuItem x:Name="MenuPanel" Header="面板" MouseEnter="MenuPanel_MouseEnter" MouseLeave="MenuPanel_MouseLeave"
+            <MenuItem x:Name="MenuPanel" Header="{ll:Str 面板}" MouseEnter="MenuPanel_MouseEnter" MouseLeave="MenuPanel_MouseLeave"
                     HorizontalContentAlignment="Center" Padding="0" />
-            <MenuItem x:Name="MenuInteract" Header="互动" HorizontalContentAlignment="Center" Width="99" Padding="0">
-                <MenuItem Header="睡觉" HorizontalContentAlignment="Center" Click="Sleep_Click" />
-                <MenuItem Header="学习" HorizontalContentAlignment="Center" Click="Study_Click" />
+            <MenuItem x:Name="MenuInteract" Header="{ll:Str 互动}" HorizontalContentAlignment="Center" Width="99" Padding="0">
+                <MenuItem Header="{ll:Str 睡觉}" HorizontalContentAlignment="Center" Click="Sleep_Click" />
+                <MenuItem Header="{ll:Str 学习}" HorizontalContentAlignment="Center" Click="Study_Click" />
                 <MenuItem x:Name="MenuWork1" Header="工作1" HorizontalContentAlignment="Center" Click="Work1_Click"
-                        ToolTip="工作" />
+                        ToolTip="{ll:Str 工作}" />
                 <MenuItem x:Name="MenuWork2" Header="工作2" HorizontalContentAlignment="Center" Click="Work2_Click"
-                        ToolTip="工作" />
-                <MenuItem Header="说话" HorizontalContentAlignment="Center" IsEnabled="False" />
+                        ToolTip="{ll:Str 工作}" />
+                <!--<MenuItem Header="说话" HorizontalContentAlignment="Center" IsEnabled="False" />-->
             </MenuItem>
-            <MenuItem x:Name="MenuDIY" Header="自定" HorizontalContentAlignment="Center" Click="MenuDIY_Click"
+            <MenuItem x:Name="MenuDIY" Header="{ll:Str 自定}" HorizontalContentAlignment="Center" Click="MenuDIY_Click"
                     x:FieldModifier="public" Padding="0" />
-            <MenuItem x:Name="MenuSetting" Header="系统" HorizontalContentAlignment="Center" x:FieldModifier="public"
+            <MenuItem x:Name="MenuSetting" Header="{ll:Str 系统}" HorizontalContentAlignment="Center" x:FieldModifier="public"
                     Padding="0">
-                <MenuItem x:Name="MenuMODConfig" Header="MOD设置" HorizontalContentAlignment="Center" Visibility="Collapsed" x:FieldModifier="public" />
+                <MenuItem x:Name="MenuMODConfig" Header="{ll:Str MOD设置}" HorizontalContentAlignment="Center"
+                        Visibility="Collapsed" x:FieldModifier="public" />
             </MenuItem>
         </Menu>
     </Grid>

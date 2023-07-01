@@ -1,5 +1,7 @@
 ﻿using LinePutScript;
 using LinePutScript.Converter;
+using LinePutScript.Dictionary;
+using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,7 +35,7 @@ namespace VPet_Simulator.Windows
         public DirectoryInfo Path;
         public int GameVer;
         public int Ver;
-        public string Content = "";
+        public HashSet<string> Tag = new HashSet<string>();
         public bool SuccessLoad = true;
         public DateTime CacheDate;
         public static string INTtoVER(int ver) => $"{ver / 100}.{ver % 100:00}";
@@ -81,7 +83,7 @@ namespace VPet_Simulator.Windows
             CacheDate = modlps.GetDateTime("cachedate", DateTime.MinValue);
             if (!IsOnMOD(mw))
             {
-                Content = "该模组已停用";
+                //Content = "该模组已停用".Translate();
                 return;
             }
 
@@ -91,7 +93,7 @@ namespace VPet_Simulator.Windows
                 {
                     case "pet":
                         //宠物模型
-                        Content += "宠物形象\n";
+                        Tag.Add("pet");
                         foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
                         {
                             LpsDocument lps = new LpsDocument(File.ReadAllText(fi.FullName));
@@ -110,7 +112,7 @@ namespace VPet_Simulator.Windows
                         }
                         break;
                     case "food":
-                        Content += "食物\n";
+                        Tag.Add("food");
                         foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
                         {
                             var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
@@ -123,11 +125,11 @@ namespace VPet_Simulator.Windows
                         }
                         break;
                     case "image":
-                        Content += "图片包\n";
+                        Tag.Add("image");
                         LoadImage(mw, di);
                         break;
                     case "text":
-                        Content += "文本集\n";
+                        Tag.Add("text");
                         foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
                         {
                             var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
@@ -145,8 +147,18 @@ namespace VPet_Simulator.Windows
                             }
                         }
                         break;
+                    case "lang":
+                        Tag.Add("lang");
+                        foreach (DirectoryInfo dis in di.EnumerateDirectories())
+                        {
+                            foreach (FileInfo fi in dis.EnumerateFiles("*.lps"))
+                            {
+                                LocalizeCore.AddCulture(dis.Name, new LPS_D(File.ReadAllText(fi.FullName)));
+                            }
+                        }
+                        break;
                     case "plugin":
-                        Content += "代码插件\n";
+                        Tag.Add("plugin");
                         SuccessLoad = true;
                         foreach (FileInfo tmpfi in di.EnumerateFiles("*.dll"))
                         {

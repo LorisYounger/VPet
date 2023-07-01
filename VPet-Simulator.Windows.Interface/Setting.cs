@@ -158,8 +158,14 @@ namespace VPet_Simulator.Windows.Interface
         /// 数据收集是否被禁止(当日)
         /// </summary>
         public bool DiagnosisDayEnable = true;
-
-
+        /// <summary>
+        /// 语言
+        /// </summary>
+        public string Language
+        {
+            get => GetString("language", "null");
+            set => this[(gstr)"language"] = value;
+        }
         public string Font
         {
             get => GetString("font", "OPPOSans R");

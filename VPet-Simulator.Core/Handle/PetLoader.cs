@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Localization.WPF;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -73,7 +74,7 @@ namespace VPet_Simulator.Core
                             else if (File.Exists(p))
                                 func.Invoke(graph, new FileInfo(p), line);
                             else
-                                MessageBox.Show("未知的图像位置: " + p);
+                                MessageBox.Show(LocalizeCore.Translate("未知的图像位置: ") + p);
                         }
                         else
                             func.Invoke(graph, di, line);
@@ -82,7 +83,7 @@ namespace VPet_Simulator.Core
                     else
                     {
                         if (!string.IsNullOrEmpty(line.Name))
-                            MessageBox.Show("未知的图像类型: " + line.Name.ToLower());
+                            MessageBox.Show(LocalizeCore.Translate("未知的图像类型: ") + line.Name.ToLower());
                     }
                 }
             }
@@ -123,7 +124,7 @@ namespace VPet_Simulator.Core
                     }
                 }
 #if DEBUG
-                MessageBox.Show("未知的图像类型: " + path_name);
+                MessageBox.Show(LocalizeCore.Translate("未知的图像类型: ") + path_name);
 #endif
             }
             else

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using LinePutScript;
+using LinePutScript.Dictionary;
+using System.Collections.Generic;
 using System.Windows.Media;
 using VPet_Simulator.Core;
 
@@ -79,5 +81,10 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         /// <param name="action">动作名称</param>
         void RunAction(string action);
+        ///// <summary>
+        ///// 语言字典
+        ///// </summary>
+        //Dictionary<string, LPS_D> GetLanguage();
     }
+    
 }

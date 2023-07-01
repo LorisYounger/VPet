@@ -86,13 +86,11 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示消息弹窗Lable,自动统计数值变化
         /// </summary>
-        /// <param name="text">文本</param>
+        /// <param name="text">文本, 使用{0:f2}</param>
         /// <param name="changenum1">变化值1</param>
         /// <param name="changenum2">变化值2</param>
         /// <param name="time">持续时间</param>
-        /// <param name="tostr1">转换方法1</param>
-        /// <param name="tostr2">转换方法2</param>
-        public void LabelDisplayShowChangeNumber(string text, double changenum1, double changenum2 = 0, int time = 2000, string tostr1 = "f2", string tostr2 = "f2")
+        public void LabelDisplayShowChangeNumber(string text, double changenum1, double changenum2 = 0, int time = 2000)
         {
             if (labeldisplayhash == text.GetHashCode())
             {
@@ -107,7 +105,7 @@ namespace VPet_Simulator.Core
             }
             Dispatcher.Invoke(() =>
             {
-                LabelDisplay.Content = text.Replace("{1}", labeldisplaychangenum1.ToString(tostr1)).Replace("{2}", labeldisplaychangenum2.ToString(tostr2));
+                LabelDisplay.Content = string.Format(text, labeldisplaychangenum1, labeldisplaychangenum2);
                 LabelDisplay.Opacity = 1;
                 LabelDisplay.Visibility = Visibility.Visible;
                 labeldisplaycount = time / 10;

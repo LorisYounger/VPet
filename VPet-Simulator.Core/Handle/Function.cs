@@ -1,10 +1,11 @@
-﻿using System;
+﻿using LinePutScript.Dictionary;
+using System;
 using System.Windows;
 using System.Windows.Media;
 
 namespace VPet_Simulator.Core
 {
-    public class Function
+    public static class Function
     {
         public static Random Rnd = new Random();
         /// <summary>
@@ -51,5 +52,12 @@ namespace VPet_Simulator.Core
             DARKPrimaryDarker,
             DARKPrimaryText,
         }
+        ///// <summary>
+        ///// 翻译文本
+        ///// </summary>
+        ///// <param name="TranFile">翻译文件</param>
+        ///// <param name="Name">翻译内容</param>
+        ///// <returns>翻译后的文本</returns>
+        //public static string Translate(this LPS_D TranFile, string Name) => TranFile.GetString(Name, Name);
     }
 }
