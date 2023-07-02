@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LinePutScript.Localization.WPF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
@@ -6,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using VPet_Simulator.Core;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Windows
@@ -56,10 +56,10 @@ namespace VPet_Simulator.Windows
                  (GameSave.ModeType)Enum.Parse(typeof(GameSave.ModeType), (string)(((ComboBoxItem)ComboxMode.SelectedItem).Content)));
             if (graph == null)
             {
-                LabelNowPlay.Content = "未找到对应类型图像资源";
+                LabelNowPlay.Content = "未找到对应类型图像资源".Translate();
                 return;
             }
-            LabelNowPlay.Content = $"当前正在播放: {GraphListBox.SelectedItem}";
+            LabelNowPlay.Content = "当前正在播放".Translate() + ": " + GraphListBox.SelectedItem;
             DisplayLoop(graph);
         }
 
@@ -67,7 +67,7 @@ namespace VPet_Simulator.Windows
         {
             if (DisplayListBox.SelectedItem == null)
                 return;
-            LabelSuccess.Content = $"当前正在运行: {(string)((ListBoxItem)DisplayListBox.SelectedItem).Content}";
+            LabelSuccess.Content = "当前正在运行".Translate() + ": " + (string)((ListBoxItem)DisplayListBox.SelectedItem).Content;
             mw.RunAction((string)((ListBoxItem)DisplayListBox.SelectedItem).Content);
         }
 
@@ -129,6 +129,16 @@ namespace VPet_Simulator.Windows
         }
 
         private void PlayADD_Click(object sender, RoutedEventArgs e) => GraphListPlayerBox_MouseDoubleClick(sender, null);
+
+        private void Local_SelectAll_Click(object sender, MouseButtonEventArgs e)
+        {
+            LocalTextBox.SelectAll();
+        }
+
+        private void Output_No_Local(object sender, RoutedEventArgs e)
+        {
+            LocalTextBox.Text = string.Join("\n", LocalizeCore.StoreTranslationList);
+        }
         //private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
         //   switch(((TabControl)sender).SelectedIndex)

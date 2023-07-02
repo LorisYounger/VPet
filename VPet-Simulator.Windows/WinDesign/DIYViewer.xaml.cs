@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Localization.WPF;
 using Microsoft.Win32;
 using System.Windows;
 using System.Windows.Controls;
@@ -170,7 +171,7 @@ namespace VPet_Simulator.Windows
         private void SelectFilePath_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog sfd = new OpenFileDialog();
-            sfd.Filter = "所有可执行文件|*.exe";
+            sfd.Filter = "所有可执行文件".Translate() + "|*.exe";
             if (sfd.ShowDialog() == true)
             {
                 TextContent.Text = sfd.FileName;

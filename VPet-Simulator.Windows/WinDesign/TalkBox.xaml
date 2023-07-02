@@ -1,5 +1,6 @@
 ﻿<UserControl x:Class="VPet_Simulator.Windows.TalkBox" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Height="500" Width="500" VerticalAlignment="Top">
@@ -12,13 +13,13 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <TextBox x:Name="tbTalk" Style="{DynamicResource StandardTextBoxStyle}" Height="Auto"
-                    pu:TextBoxHelper.Watermark="和桌宠说" FontSize="30" AcceptsReturn="True" TextWrapping="WrapWithOverflow"
+                    pu:TextBoxHelper.Watermark="{ll:Str 和桌宠说}" FontSize="30" AcceptsReturn="True" TextWrapping="WrapWithOverflow"
                     PreviewKeyDown="tbTalk_KeyDown" />
             <Button pu:ButtonHelper.CornerRadius="4" Content="发送" BorderThickness="2"
                     Background="{DynamicResource SecondaryLight}" Grid.Column="2"
                     BorderBrush="{DynamicResource DARKPrimaryDarker}" FontSize="30" Click="SendMessage_Click"
-                    ToolTip="按 Ctrl+Enter 发送" />
-            <Button x:Name="btn_startup" pu:ButtonHelper.CornerRadius="4" Content="初始化桌宠聊天程序" BorderThickness="2"
+                    ToolTip="{ll:Str '按 Ctrl+Enter 发送'}" />
+            <Button x:Name="btn_startup" pu:ButtonHelper.CornerRadius="4" Content="{ll:Str 初始化桌宠聊天程序}" BorderThickness="2"
                     x:FieldModifier="public" Background="{DynamicResource SecondaryLight}"
                     BorderBrush="{DynamicResource DARKPrimaryDarker}" FontSize="30" Click="StartUP_Click"
                     Grid.ColumnSpan="3" />

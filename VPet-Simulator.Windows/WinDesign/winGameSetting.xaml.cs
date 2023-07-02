@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using Steamworks.Ugc;
 using System;
@@ -110,20 +111,20 @@ namespace VPet_Simulator.Windows
                 StackDIY.Children.Add(new DIYViewer(sub));
 
 #if X64
-            GameVerison.Content = $"游戏版本v{mw.Verison} x64";
+            GameVerison.Content = "游戏版本v{0} x64".Translate(mw.Verison);
 #else
-            GameVerison.Content = $"游戏版本v{mw.Verison} x86";
+            GameVerison.Content = "游戏版本v{0} x86".Translate(mw.Verison);
 #endif
             //关于ui
             if (mw.IsSteamUser)
             {
                 runUserName.Text = Steamworks.SteamClient.Name;
-                runActivate.Text = $"已通过Steam[{Steamworks.SteamClient.SteamId.Value:x}]激活服务注册";
+                runActivate.Text = "已通过Steam[{0}]激活服务注册".Translate(Steamworks.SteamClient.SteamId.Value.ToString("x").Substring(6));
             }
             else
             {
                 runUserName.Text = Environment.UserName;
-                runActivate.Text = "尚未激活 您可能需要启动Steam或去Steam上免费领个";
+                runActivate.Text = "尚未激活 您可能需要启动Steam或去Steam上免费领个".Translate();
                 RBCGPTUseLB.IsEnabled = false;
                 if (!mw.Set["CGPT"][(gbol)"enable"])
                     BtnCGPTReSet.IsEnabled = false;
@@ -131,10 +132,10 @@ namespace VPet_Simulator.Windows
             if (mw.Set["CGPT"][(gbol)"enable"])
             {
                 RBCGPTUseAPI.IsChecked = true;
-                BtnCGPTReSet.Content = "打开 ChatGPT API 设置";
+                BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
             }
             else
-                BtnCGPTReSet.Content = "初始化桌宠聊天程序";
+                BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
             runabVer.Text = $"v{mw.Verison} ({mw.verison})";
 
             //mod列表
@@ -182,11 +183,11 @@ namespace VPet_Simulator.Windows
             {
                 if (mod.GameVer / 10 == mw.verison / 10)
                 {
-                    runMODGameVer.Text += " (兼容)";
+                    runMODGameVer.Text += " (兼容)".Translate();
                 }
                 else
                 {
-                    runMODGameVer.Text += " (版本低)";
+                    runMODGameVer.Text += " (版本低)".Translate();
                     runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
                 }
             }
@@ -194,12 +195,12 @@ namespace VPet_Simulator.Windows
             {
                 if (mod.GameVer / 10 == mw.verison / 10)
                 {
-                    runMODGameVer.Text += " (兼容)";
+                    runMODGameVer.Text += " (兼容)".Translate();
                     runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
                 }
                 else
                 {
-                    runMODGameVer.Text += " (版本高)";
+                    runMODGameVer.Text += " (版本高)".Translate();
                     runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
                 }
             }
@@ -225,19 +226,19 @@ namespace VPet_Simulator.Windows
                 if (mod.ItemID == 1)
                 {
                     ButtonSteam.IsEnabled = false;
-                    ButtonPublish.Text = "系统自带";
+                    ButtonPublish.Text = "系统自带".Translate();
                     ButtonSteam.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 }
                 else if (mod.ItemID == 0)
                 {
                     ButtonSteam.IsEnabled = false;
-                    ButtonPublish.Text = "上传至Steam";
+                    ButtonPublish.Text = "上传至Steam".Translate();
                     ButtonSteam.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 }
                 else
                 {
                     ButtonSteam.IsEnabled = true;
-                    ButtonPublish.Text = "更新至Steam";
+                    ButtonPublish.Text = "更新至Steam".Translate();
                     ButtonSteam.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimaryDarker);
                 }
                 if (mod.ItemID != 1 && (mod.AuthorID == Steamworks.SteamClient.SteamId.AccountId || mod.AuthorID == 0))
@@ -254,15 +255,19 @@ namespace VPet_Simulator.Windows
             else
             {
                 ButtonSteam.IsEnabled = false;
-                ButtonPublish.Text = "未登录";
+                ButtonPublish.Text = "未登录".Translate();
                 ButtonPublish.IsEnabled = false;
                 ButtonPublish.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 ButtonSteam.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
             }
             runMODVer.Text = CoreMOD.INTtoVER(mod.Ver);
             GameInfo.Text = mod.Intro;
-            GameHave.Text = mod.Content.Trim('\n');
-
+            string content = "";
+            foreach (string tag in mod.Tag)
+            {
+                content += tag.Translate() + "\n";
+            }
+            GameHave.Text = content;
             ButtonAllow.Visibility = mod.SuccessLoad || mw.Set.IsPassMOD(mod.Name) ? Visibility.Collapsed : Visibility.Visible;
 
             foreach (var mainplug in mw.Plugins)
@@ -359,7 +364,7 @@ namespace VPet_Simulator.Windows
         {
             if (mod.Name.ToLower() == "core")
             {
-                MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法停用", "停用失败");
+                MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法停用".Translate(), "停用失败".Translate());
                 return;
             }
             mw.Set.OnModRemove(mod.Name);
@@ -383,17 +388,17 @@ namespace VPet_Simulator.Windows
         {
             if (!mw.IsSteamUser)
             {
-                MessageBoxX.Show("请先登录Steam后才能上传文件", "上传MOD需要Steam登录", MessageBoxIcon.Warning);
+                MessageBoxX.Show("请先登录Steam后才能上传文件".Translate(), "上传MOD需要Steam登录".Translate(), MessageBoxIcon.Warning);
                 return;
             }
             if (mod.Name.ToLower() == "core")
             {
-                MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法发布\n如需发布自定义内容,请复制并更改名称", "MOD上传失败", MessageBoxIcon.Error);
+                MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法发布\n如需发布自定义内容,请复制并更改名称".Translate(), "MOD上传失败".Translate(), MessageBoxIcon.Error);
                 return;
             }
             if (!File.Exists(mod.Path.FullName + @"\icon.png") || new FileInfo(mod.Path.FullName + @"\icon.png").Length > 524288)
             {
-                MessageBoxX.Show("封面图片(icon.png)大于500kb,请修改后重试", "MOD上传失败", MessageBoxIcon.Error);
+                MessageBoxX.Show("封面图片(icon.png)大于500kb,请修改后重试".Translate(), "MOD上传失败".Translate(), MessageBoxIcon.Error);
                 return;
             }
 #if DEMO
@@ -411,7 +416,7 @@ namespace VPet_Simulator.Windows
                         .WithPublicVisibility()
                         .WithPreviewFile(mod.Path.FullName + @"\icon.png")
                         .WithContent(mod.Path.FullName);
-                foreach (string tag in mod.Content.Trim('\n').Split('\n'))
+                foreach (string tag in mod.Tag)
                     result.WithTag(tag);
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
                 mod.AuthorID = Steamworks.SteamClient.SteamId.AccountId;
@@ -422,7 +427,7 @@ namespace VPet_Simulator.Windows
                     mod.WriteFile();
                     //ProgressBarUpload.Value = 0;
                     //await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
-                    if (MessageBoxX.Show($"{mod.Name} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑详细介绍和图标?", "MOD上传成功", MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
+                    if (MessageBoxX.Show("{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑详细介绍和图标?".Translate(mod.Name), "MOD上传成功".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
                     {
                         System.Diagnostics.Process.Start("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
                     }
@@ -430,7 +435,8 @@ namespace VPet_Simulator.Windows
                 else
                 {
                     mod.AuthorID = 0; mod.WriteFile();
-                    MessageBoxX.Show($"{mod.Name} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{r.Result}", $"MOD上传失败 {r.Result}");
+                    MessageBoxX.Show("{0} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{1}"
+                        .Translate(mod.Name, r.Result), "MOD上传失败 {0}".Translate(r.Result));
                 }
             }
             else if (mod.AuthorID == Steamworks.SteamClient.SteamId.AccountId)
@@ -440,7 +446,7 @@ namespace VPet_Simulator.Windows
                         .WithDescription(mod.Intro)
                         .WithPreviewFile(mod.Path.FullName + @"\icon.png")
                         .WithContent(mod.Path);
-                foreach (string tag in mod.Content.Trim('\n').Split('\n'))
+                foreach (string tag in mod.Tag)
                     result.WithTag(tag);
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
                 if (r.Success)
@@ -448,14 +454,16 @@ namespace VPet_Simulator.Windows
                     mod.AuthorID = Steamworks.SteamClient.SteamId.AccountId;
                     mod.ItemID = r.FileId.Value;
                     mod.WriteFile();
-                    if (MessageBoxX.Show($"{mod.Name} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑新内容?", "MOD更新成功", MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
+                    if (MessageBoxX.Show("{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑新内容?".Translate(mod.Name)
+                        , "MOD更新成功".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
                         System.Diagnostics.Process.Start("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
                 }
                 else
-                    MessageBoxX.Show($"{mod.Name} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{r.Result}", $"MOD更新失败 {r.Result}");
+                    MessageBoxX.Show("{0} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{1}"
+                        .Translate(mod.Name, r.Result), "MOD上传失败 {0}".Translate(r.Result));
             }
             ButtonPublish.IsEnabled = true;
-            ButtonPublish.Text = "任务完成";
+            ButtonPublish.Text = "任务完成".Translate();
             ProgressBarUpload.Visibility = Visibility.Collapsed;
         }
 
@@ -470,8 +478,8 @@ namespace VPet_Simulator.Windows
 
         private void ButtonAllow_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBoxX.Show($"是否启用 {mod.Name} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查",
-                $"启用 {mod.Name} 的代码插件?", MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
+            if (MessageBoxX.Show("是否启用 {0} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查".Translate(mod.Name),
+                "启用 {0} 的代码插件?".Translate(mod.Name), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
             {
                 mw.Set.PassMod(mod.Name);
                 ShowMod((string)LabelModName.Content);
@@ -481,7 +489,7 @@ namespace VPet_Simulator.Windows
 
         private void ButtonRestart_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBoxX.Show("是否退出游戏<虚拟桌宠模拟器>?\n请注意保存游戏", "重启游戏", MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
+            if (MessageBoxX.Show("是否退出游戏<虚拟桌宠模拟器>?\n请注意保存游戏".Translate(), "重启游戏".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
             {
                 mw.Restart();
             }
@@ -712,11 +720,11 @@ namespace VPet_Simulator.Windows
                 if (responseString == "SUCCESS")
                 {
                     ((TalkBox)mw.TalkBox).btn_startup.Visibility = Visibility.Visible;
-                    MessageBoxX.Show("桌宠重置成功");
+                    MessageBoxX.Show("桌宠重置成功".Translate());
                 }
                 else
                 {
-                    MessageBoxX.Show(responseString, "桌宠重置失败");
+                    MessageBoxX.Show(responseString, "桌宠重置失败".Translate());
                 }
             }
         }
@@ -728,7 +736,7 @@ namespace VPet_Simulator.Windows
             mw.Set["CGPT"].SetBool("enable", RBCGPTUseLB.IsChecked == false);
             if (mw.Set["CGPT"][(gbol)"enable"])
             {
-                BtnCGPTReSet.Content = "打开 ChatGPT API 设置";
+                BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
                 BtnCGPTReSet.IsEnabled = true;
                 if (mw.TalkBox != null)
                     mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
@@ -737,7 +745,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                BtnCGPTReSet.Content = "初始化桌宠聊天程序";
+                BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
                 if (mw.TalkBox != null)
                     mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
                 mw.TalkBox = new TalkBox(mw);
@@ -860,7 +868,8 @@ namespace VPet_Simulator.Windows
                 if (File.Exists(path))
                 {
                     GameSave gs = GameSave.Load(new Line(File.ReadAllText(path)));
-                    if (MessageBoxX.Show($"存档名称:{gs.Name}\n存档等级:{gs.Level}\n存档金钱:{gs.Money}\n是否加载该备份存档? 当前游戏数据会丢失", "是否加载该备份存档? 当前游戏数据会丢失", MessageBoxButton.YesNo, MessageBoxIcon.Info) == MessageBoxResult.Yes)
+                    if (MessageBoxX.Show("存档名称:{0}\n存档等级:{1}\n存档金钱:{2}\n是否加载该备份存档? 当前游戏数据会丢失"
+                        .Translate(gs.Name, gs.Level, gs.Money), "是否加载该备份存档? 当前游戏数据会丢失".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Info) == MessageBoxResult.Yes)
                     {
                         mw.Core.Save = gs;
                     }
@@ -877,12 +886,12 @@ namespace VPet_Simulator.Windows
                     list.Add(str.Trim());
             }
             list = list.Distinct().ToList();
-            MessageBoxX.Show(string.Join("\n", list), "感谢以下MOD开发人员");
+            MessageBoxX.Show(string.Join("\n", list), "感谢以下MOD开发人员".Translate());
         }
 
         private void Using_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxX.Show(string.Join("\n", CoreMOD.LoadedDLL), "DLL引用名单");
+            MessageBoxX.Show(string.Join("\n", CoreMOD.LoadedDLL), "DLL引用名单".Translate());
         }
 
         private void combCalFunState_SelectionChanged(object sender, SelectionChangedEventArgs e)

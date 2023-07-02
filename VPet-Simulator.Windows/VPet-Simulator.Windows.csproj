@@ -81,6 +81,9 @@
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LinePutScript.1.8.2\lib\net48\LinePutScript.dll</HintPath>
     </Reference>
+    <Reference Include="LinePutScript.Localization.WPF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinePutScript.Localization.WPF.1.0.3\lib\net462\LinePutScript.Localization.WPF.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>

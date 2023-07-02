@@ -1,46 +1,47 @@
 ﻿<pu:WindowX x:Class="VPet_Simulator.Windows.winReport" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Windows"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
-        xmlns:system="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" Title="反馈中心"
+        xmlns:system="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" Title="{ll:Str 反馈中心}"
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" Width="500" MinHeight="250"
-        Height="Auto" ResizeMode="NoResize" WindowState="Normal"
-        Icon="../vpeticon.ico" SizeToContent="Height">
+        Height="Auto" ResizeMode="NoResize" WindowState="Normal" Icon="../vpeticon.ico" SizeToContent="Height">
     <StackPanel x:Name="MainGrid" Margin="10,10,15,10" VerticalAlignment="Top">
-        <Label Background="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left" Content="反馈与错误提交" FontSize="24"
-                Margin="10,0,0,0" />
-        <pu:FormGroup Header="类型:" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal" Margin="0,2,0,0"
-                Padding="1" FontSize="16" ToolTip="需要反馈的类型" HeaderWidth="Auto">
+        <Label Background="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left" Content="{ll:Str 反馈与错误提交}"
+                FontSize="24" Margin="10,0,0,0" />
+        <pu:FormGroup Header="{ll:Str '类型:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal"
+                Margin="0,2,0,0" Padding="1" FontSize="16" ToolTip="{ll:Str 需要反馈的类型}" HeaderWidth="Auto">
             <ComboBox x:Name="tType" SelectedIndex="4">
-                <ComboBoxItem>游戏内报错</ComboBoxItem>
-                <ComboBoxItem>逻辑计算错误</ComboBoxItem>
-                <ComboBoxItem>数值设计不合理</ComboBoxItem>
-                <ComboBoxItem>玩法与功能建议</ComboBoxItem>
-                <ComboBoxItem>游玩心得分享</ComboBoxItem>
+                <ComboBoxItem Content="{ll:Str '游戏内报错'}" />
+                <ComboBoxItem Content="{ll:Str '逻辑计算错误'}" />
+                <ComboBoxItem Content="{ll:Str '数值设计不合理'}" />
+                <ComboBoxItem Content="{ll:Str '玩法与功能建议'}" />
+                <ComboBoxItem Content="{ll:Str '游玩心得分享'}" />
             </ComboBox>
         </pu:FormGroup>
-        <pu:FormGroup Header="描述:" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal" Margin="0,2,0,0"
-                Padding="1" FontSize="16" ToolTip="对于反馈的详细描述">
-            <TextBox x:Name="tDescription" pu:TextBoxHelper.Watermark="详细描述&#13;eg:如何触发这个报错" AcceptsReturn="True"
+        <pu:FormGroup Header="{ll:Str '描述:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal"
+                Margin="0,2,0,0" Padding="1" FontSize="16" ToolTip="{ll:Str 对于反馈的详细描述}">
+            <TextBox x:Name="tDescription" pu:TextBoxHelper.Watermark="{ll:Str '详细描述\&#13;eg:如何触发这个报错'}" AcceptsReturn="True"
                     MaxHeight="172" />
         </pu:FormGroup>
-        <pu:FormGroup Header="内容:" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal" Margin="0,2,0,0"
+        <pu:FormGroup Header="{ll:Str '内容:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal" Margin="0,2,0,0"
                 Padding="1" FontSize="16" ToolTip="详细内容信息">
             <TextBox x:Name="tContent" pu:TextBoxHelper.Watermark="详细描述&#13;eg:报错详细信息" AcceptsReturn="True"
-                    MaxHeight="172" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                    MaxHeight="172" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
         </pu:FormGroup>
-        <pu:FormGroup Header="提交:" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal" Margin="0,2,0,0"
+        <pu:FormGroup Header="{ll:Str '提交:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal" Margin="0,2,0,0"
                 Padding="1" FontSize="16" ToolTip="是否上传的确游戏存档">
-            <CheckBox x:Name="tUpload" Content="上传游戏存档" Margin="5,0,0,0" IsChecked="True" Click="tUpload_Click" />
+            <CheckBox x:Name="tUpload" Content="{ll:Str '上传游戏存档'}" Margin="5,0,0,0" IsChecked="True" Click="tUpload_Click" />
         </pu:FormGroup>
-        <pu:FormGroup Header="联系:" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal" Margin="0,2,0,0"
-                Padding="1" FontSize="16" ToolTip="提供联系方式以获得反馈,可不填">
-            <TextBox x:Name="tContact" pu:TextBoxHelper.Watermark="提供联系方式以获得反馈,可不填&#13;eg:QQ430081239"
+        <pu:FormGroup Header="{ll:Str '联系:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal" Margin="0,2,0,0"
+                Padding="1" FontSize="16" ToolTip="{ll:Str '提供联系方式以获得反馈,可不填'}">
+            <TextBox x:Name="tContact" pu:TextBoxHelper.Watermark="{ll:Str '提供联系方式以获得反馈,可不填\&#13;eg:QQ430081239'}"
                     AcceptsReturn="True" MaxHeight="44" />
         </pu:FormGroup>
-        <Button x:Name="btn_Report" Content="提交" Margin="10,10,0,10" FontSize="16" Background="{DynamicResource DARKPrimary}"
-                BorderThickness="1" pu:ButtonHelper.CornerRadius="5" BorderBrush="{DynamicResource DARKPrimaryDarker}"
-                Foreground="{DynamicResource DARKPrimaryText}" Padding="2" Click="btn_upload" />
+        <Button x:Name="btn_Report" Content="{ll:Str '提交'}" Margin="10,10,0,10" FontSize="16"
+                Background="{DynamicResource DARKPrimary}" BorderThickness="1" pu:ButtonHelper.CornerRadius="5"
+                BorderBrush="{DynamicResource DARKPrimaryDarker}" Foreground="{DynamicResource DARKPrimaryText}"
+                Padding="2" Click="btn_upload" />
     </StackPanel>
 </pu:WindowX>

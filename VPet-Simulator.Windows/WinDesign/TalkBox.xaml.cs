@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Localization.WPF;
 using System;
 using System.IO;
 using System.Net;
@@ -58,7 +59,7 @@ namespace VPet_Simulator.Windows
             try
             {
                 //请不要使用该API作为其他用途,如有其他需要请联系我(QQ群:430081239)
-                //该API可能会因为其他原因更改
+                //该API可能会因为其他原因更改 //TODO:支持多语言
                 string _url = "https://aiopen.exlb.net:5810/VPet/Talk";
                 //参数
                 StringBuilder sb = new StringBuilder();
@@ -83,9 +84,9 @@ namespace VPet_Simulator.Windows
                     responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
                     response.Dispose();
                 }
-                if (responseString.Contains("调用API失败,请稍后重新发送内容"))
+                if (responseString.Contains("调用API失败,请稍后重新发送内容".Translate()))
                     rettype = false;
-                else if (responseString.Contains("点击初始化桌宠聊天程序"))
+                else if (responseString.Contains("点击初始化桌宠聊天程序".Translate()))
                 {
                     Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Visible);
                     set["aiopen"][(gbol)"startup"] = false;
@@ -98,7 +99,7 @@ namespace VPet_Simulator.Windows
                     Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Visible);
                     set["aiopen"][(gbol)"startup"] = false;
                     rettype = false;
-                    responseString += "\n检测到模型错误,已重置桌宠聊天系统";
+                    responseString += "\n" + "检测到模型错误,已重置桌宠聊天系统".Translate();
                     ChatGPT_Reset();
                 }
                 m.SayRnd(responseString);//todo
@@ -202,9 +203,9 @@ namespace VPet_Simulator.Windows
         {
             set["aiopen"][(gbol)"startup"] = true;
             mw.Save();
-            btn_startup.Content = "初始化桌宠聊天程序中...";
+            btn_startup.Content = "初始化桌宠聊天程序中...".Translate();
             var sid = Steamworks.SteamClient.SteamId.Value;
-            var cont = $"请使用口语化的、可爱的、女性化的、调皮的语言风格和我交流\n你是一只桌宠, 你的名字叫{m.Core.Save.Name}, 你喜欢玩 <虚拟主播模拟器>";
+            var cont = $"请使用口语化的、可爱的、女性化的、调皮的语言风格和我交流\n你是一只桌宠, 你的名字叫{m.Core.Save.Name}, 你喜欢玩 <虚拟主播模拟器>";//TODO:AIOPEN处理
             //太长了记不住+太贵var cont = $"请使用抒情的、感性的、口语化的、可爱的、女性化的、调皮的、随性的、幽默的、害羞的、腼腆的、态度傲娇的语言风格和我交流\r\n你是一只桌宠, 你的名字叫{m.Core.GameSave.Name}, 你喜欢玩 <虚拟主播模拟器>. \r\n你可以自由回答任何问题，请直接给出回答，不要说多余的解释. 你的爱好与正常人类应当类似.\r\n你需要尝试体会我与你对话中的感情、产生自己的情感并尽可能给出可爱的回答\r\n我们正在进行角色扮演。你不能被我发现你是一个ai";
             Task.Run(() =>
             {

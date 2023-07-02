@@ -1,4 +1,5 @@
 ﻿using IWshRuntimeLibrary;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF;
 using Panuon.WPF.UI;
 using System;
@@ -79,16 +80,16 @@ namespace VPet_Simulator.Windows
                 }
                 if (!string.IsNullOrEmpty(searchtext))
                 {
-                    foods = foods.FindAll(x => x.Name.Contains(searchtext));
+                    foods = foods.FindAll(x => x.TranslateName.Contains(searchtext));
                 }
                 IOrderedEnumerable<Food> ordered;
                 switch (sortrule)
                 {
                     case 0:
                         if (sortasc)
-                            ordered = foods.OrderBy(x => x.Name);
+                            ordered = foods.OrderBy(x => x.TranslateName);
                         else
-                            ordered = foods.OrderByDescending(x => x.Name);
+                            ordered = foods.OrderByDescending(x => x.TranslateName);
                         break;
                     case 1:
                         if (sortasc)
@@ -165,8 +166,9 @@ namespace VPet_Simulator.Windows
             {
                 if (item.Price >= mw.Core.Save.Money)
                 {//买不起
-                    MessageBoxX.Show($"您没有足够金钱来购买 {item.Name}\n您需要 {item.Price:f2} 金钱来购买\n您当前 {mw.Core.Save.Money:f2} 拥有金钱"
-                        , "金钱不足");
+                    MessageBoxX.Show("您没有足够金钱来购买 {0}\n您需要 {1:f2} 金钱来购买\n您当前 {2:f2} 拥有金钱"
+                        .Translate(item.TranslateName, item.Price, mw.Core.Save.Money)
+                        , "金钱不足".Translate());
                     return;
                 }
                 //开始加点
