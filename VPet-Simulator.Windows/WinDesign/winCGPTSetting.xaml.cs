@@ -48,7 +48,9 @@ namespace VPet_Simulator.Windows
             mw.CGPTClient.Completions["vpet"].presence_penalty = 1;
             mw.CGPTClient.Completions["vpet"].max_tokens = Math.Min(Math.Max(int.Parse(tbMaxToken.Text), 10), 4000);
             mw.CGPTClient.Completions["vpet"].temperature = Math.Min(Math.Max(double.Parse(tbTemp.Text), 0.1), 2);
-            mw.CGPTClient.Completions["vpet"].messages.AddRange(JsonConvert.DeserializeObject<List<ChatGPT.API.Framework.Message>>(tbHistory.Text));
+            var l = JsonConvert.DeserializeObject<List<ChatGPT.API.Framework.Message>>(tbHistory.Text);
+            if (l != null)
+                mw.CGPTClient.Completions["vpet"].messages.AddRange(l);
             mw.Save();
             this.Close();
         }

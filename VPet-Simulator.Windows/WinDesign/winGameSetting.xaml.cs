@@ -379,7 +379,7 @@ namespace VPet_Simulator.Windows
                 return;
             }
             mw.Set.OnModRemove(mod.Name);
-            ShowMod((string)((ListBoxItem)ListMod.SelectedItem).Content);
+            ShowMod(mod.Name);
             ButtonRestart.Visibility = System.Windows.Visibility.Visible;
             ShowModList();
         }
@@ -663,7 +663,14 @@ namespace VPet_Simulator.Windows
                 shortcut.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
                 shortcut.TargetPath = shortcutAddress;
                 shortcut.IconLocation = AppDomain.CurrentDomain.BaseDirectory + @"vpeticon.ico";
-                shortcut.Save();
+                try
+                {
+                    shortcut.Save();
+                }
+                catch
+                {
+                    MessageBox.Show("创建快捷方式失败,权限不足\n请以管理员身份运行后重试".Translate(), "权限不足".Translate());
+                }
             }
             else
             {
@@ -929,7 +936,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            if(PetHelperBox.IsChecked == true)
+            if (PetHelperBox.IsChecked == true)
             {
                 mw.Set.PetHelper = true;
                 mw.LoadPetHelper();

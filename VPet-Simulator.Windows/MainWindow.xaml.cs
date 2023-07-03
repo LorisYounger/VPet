@@ -528,7 +528,7 @@ namespace VPet_Simulator.Windows
         }
         private void WindowX_LocationChanged(object sender, EventArgs e)
         {
-            petHelper.SetLocation();
+            petHelper?.SetLocation();
         }
         //public void DEBUGValue()
         //{

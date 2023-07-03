@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -73,7 +74,13 @@ namespace VPet_Simulator.Windows
 
         private void Say_Click(object sender, RoutedEventArgs e)
         {
-            mw.Main.Say(SayTextBox.Text, (Helper.SayType)Enum.Parse(typeof(Helper.SayType), CombSay.Text));
+            if (Enum.TryParse<Helper.SayType>(CombSay.Text, out var sayType))
+            {
+                mw.Main.Say(SayTextBox.Text, sayType);
+            }
+            else
+                mw.Main.Say("暂无该说话方法".Translate() + CombSay.Text, Helper.SayType.Serious);
+
         }
         Timer DestanceTimer = new Timer()
         {
@@ -137,7 +144,12 @@ namespace VPet_Simulator.Windows
 
         private void Output_No_Local(object sender, RoutedEventArgs e)
         {
-            LocalTextBox.Text = string.Join("\n", LocalizeCore.StoreTranslationList);
+            StringBuilder sb = new StringBuilder();
+            foreach (var v in LocalizeCore.StoreTranslationList)
+            {
+                sb.AppendLine(v.Replace("\n", @"\n").Replace("\r", @"\r"));
+            }
+            LocalTextBox.Text = sb.ToString();
         }
         //private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
