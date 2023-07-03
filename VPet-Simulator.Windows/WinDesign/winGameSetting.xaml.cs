@@ -61,13 +61,13 @@ namespace VPet_Simulator.Windows
             TextBoxPetName.Text = mw.Core.Save.Name;
             foreach (PetLoader pl in mw.Pets)
             {
-                PetBox.Items.Add(pl.Name);
+                PetBox.Items.Add(pl.Name.Translate());
             }
             int petboxid = mw.Pets.FindIndex(x => x.Name == mw.Set.PetGraph);
             if (petboxid == -1)
                 petboxid = 0;
             PetBox.SelectedIndex = petboxid;
-            PetIntor.Text = mw.Pets[petboxid].Intor;
+            PetIntor.Text = mw.Pets[petboxid].Intor.Translate();
 
             TextBoxStartUpX.Text = mw.Set.StartRecordPoint.X.ToString();
             TextBoxStartUpY.Text = mw.Set.StartRecordPoint.Y.ToString();
@@ -75,6 +75,17 @@ namespace VPet_Simulator.Windows
             combCalFunState.SelectedIndex = (int)mw.Set.CalFunState;
             combCalFunState.IsEnabled = !mw.Set.EnableFunction;
             CalTimeInteraction();
+
+            LanguageBox.Items.Add("null");
+            foreach (string v in LocalizeCore.AvailableCultures)
+            {
+                LanguageBox.Items.Add(v);
+            }
+            LanguageBox.SelectedItem = LocalizeCore.CurrentCulture;
+
+            HitThroughBox.IsChecked = mw.Set.HitThrough;
+            PetHelperBox.IsChecked = mw.Set.PetHelper;
+
             if (mw.Set.StartRecordLast == true)
             {
                 StartPlace.IsChecked = true;
@@ -680,7 +691,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Set.PetGraph = (string)PetBox.SelectedItem;
+            mw.Set.PetGraph = mw.Pets[PetBox.SelectedIndex].Name;
             PetIntor.Text = mw.Pets[PetBox.SelectedIndex].Intor;
             ButtonRestartGraph.Visibility = Visibility.Visible;
         }
@@ -901,6 +912,42 @@ namespace VPet_Simulator.Windows
             mw.Set.CalFunState = (GameSave.ModeType)combCalFunState.SelectedIndex;
             mw.Main.NoFunctionMOD = (GameSave.ModeType)combCalFunState.SelectedIndex;
             mw.Main.EventTimer_Elapsed(null, null);
+        }
+
+        private void HitThroughBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.HitThrough = HitThroughBox.IsChecked.Value;
+            if (HitThroughBox.IsChecked.Value != mw.HitThrough)
+                mw.SetTransparentHitThrough();
+            if (HitThroughBox.IsChecked.Value)
+                PetHelperBox.IsChecked = true;
+        }
+
+        private void PetHelperBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            if(PetHelperBox.IsChecked == true)
+            {
+                mw.Set.PetHelper = true;
+                mw.LoadPetHelper();
+            }
+            else
+            {
+                mw.Set.PetHelper = false;
+                mw.petHelper?.Close();
+                mw.petHelper = null;
+            }
+        }
+
+        private void LanguageBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            LocalizeCore.LoadCulture((string)LanguageBox.SelectedItem);
+            mw.Set.Language = LocalizeCore.CurrentCulture;
         }
     }
 }

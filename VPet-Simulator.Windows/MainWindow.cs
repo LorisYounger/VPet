@@ -50,6 +50,12 @@ namespace VPet_Simulator.Windows
             Set.ZoomLevel = zl;
             //this.Height = 500 * zl;
             this.Width = 500 * zl;
+            if (petHelper != null)
+            {
+                petHelper.Width = 50 * zl;
+                petHelper.Height = 50 * zl;
+                petHelper.ReloadLocation();
+            }
         }
         /// <summary>
         /// 保存设置
@@ -116,6 +122,15 @@ namespace VPet_Simulator.Windows
                 new winReport(this, "由于插件引起的自定按钮加载错误".Translate() + '\n' + e.ToString()).Show();
             }
         }
+        /// <summary>
+        /// 加载帮助器
+        /// </summary>
+        public void LoadPetHelper()
+        {            
+            petHelper = new PetHelper(this);
+            petHelper.Show();
+        }
+       
         public static void RunDIY(string content)
         {
             if (content.Contains("://") || content.Contains(@":\"))
@@ -235,17 +250,17 @@ namespace VPet_Simulator.Windows
                     if (Core.Save.StrengthFood > 60)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     else if (Core.Save.StrengthFood > 40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     else
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Hunger, Main.DisplayToNomal));
                     return;
@@ -258,17 +273,17 @@ namespace VPet_Simulator.Windows
                     if (Core.Save.StrengthDrink > 60)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     else if (Core.Save.StrengthDrink > 40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     else
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Thirsty, Main.DisplayToNomal));
                     return;
@@ -283,17 +298,17 @@ namespace VPet_Simulator.Windows
                     if (Core.Save.StrengthFood > 40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     else if (Core.Save.StrengthFood > 20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     else
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Hunger, Main.DisplayToNomal));
                     return;
@@ -305,17 +320,17 @@ namespace VPet_Simulator.Windows
                     if (Core.Save.StrengthDrink > 40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     else if (Core.Save.StrengthDrink > 20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     else
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].Text, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
                     }
                     Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Thirsty, Main.DisplayToNomal));
                     return;

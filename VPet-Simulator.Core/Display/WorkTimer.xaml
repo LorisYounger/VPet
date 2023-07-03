@@ -25,7 +25,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="4*" />
-                <RowDefinition Height="1*" />
+                <RowDefinition Height="1.5*" />
             </Grid.RowDefinitions>
             <TextBlock x:Name="tNow" Foreground="{DynamicResource Foreground}" FontSize="36" FontWeight="Bold"
                     HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0,5,0" Grid.ColumnSpan="2"
@@ -38,7 +38,7 @@
             <ProgressBar x:Name="PBLeft" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}"
                     Foreground="{DynamicResource ButtonBackgroundHover}" Value="20" />
             <Button x:Name="btnStop" Grid.Row="2" Grid.ColumnSpan="2" Foreground="{DynamicResource ButtonForeground}"
-                    Background="{DynamicResource ButtonBackground}" Content="{ll:Str 停止工作}" FontSize="16" Click="btnStop_Click"
+                    Background="{DynamicResource ButtonBackground}" Content="{ll:Str 停止工作}" FontSize="24" Click="btnStop_Click"
                     pu:ButtonHelper.HoverBackground="{DynamicResource ButtonBackgroundHover}" />
             <Button HorizontalAlignment="Left" VerticalAlignment="Center" Padding="5,5,8,7"
                     Background="{DynamicResource BorderBrush}" pu:ButtonHelper.CornerRadius="5" Margin="10,0,0,0"

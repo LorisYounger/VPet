@@ -60,7 +60,9 @@ namespace VPet_Simulator.Windows.Interface
         [Line(name: "name")]
         public string Name { get; set; }
         private string transname = null;
-
+        /// <summary>
+        /// 食物名字 (翻译)
+        /// </summary>
         public string TranslateName
         {
             get
@@ -118,7 +120,7 @@ namespace VPet_Simulator.Windows.Interface
                         sb.Append("健康".Translate() + ":\t").Append(Health > 0 ? "+" : "").Append(Health.ToString("f2")).Append("\t\t");
                     if (Likability != 0)
                         sb.Append("好感度".Translate() + ":\t").Append(Likability > 0 ? "+" : "").Append(Likability.ToString("f2"));
-                    sb.AppendLine().Append(Desc);
+                    sb.AppendLine().Append(Desc.Translate());
                     desc = sb.ToString();
                 }
                 return desc;

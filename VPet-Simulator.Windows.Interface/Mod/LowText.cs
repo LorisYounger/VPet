@@ -1,9 +1,11 @@
 ﻿using LinePutScript.Converter;
+using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -82,5 +84,21 @@ namespace VPet_Simulator.Windows.Interface
         /// 说话的内容
         /// </summary>
         [Line(IgnoreCase = true)] public string Text { get; set; }
+
+        private string transText = null;
+        /// <summary>
+        /// 说话的内容 (翻译)
+        /// </summary>
+        public string TranslateText
+        {
+            get
+            {
+                if (transText == null)
+                {
+                    transText = LocalizeCore.Translate(Text);
+                }
+                return transText;
+            }
+        }
     }
 }

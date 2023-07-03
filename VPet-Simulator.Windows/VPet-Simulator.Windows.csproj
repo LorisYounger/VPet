@@ -82,7 +82,7 @@
       <HintPath>..\packages\LinePutScript.1.8.2\lib\net48\LinePutScript.dll</HintPath>
     </Reference>
     <Reference Include="LinePutScript.Localization.WPF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LinePutScript.Localization.WPF.1.0.3\lib\net462\LinePutScript.Localization.WPF.dll</HintPath>
+      <HintPath>..\packages\LinePutScript.Localization.WPF.1.0.4\lib\net462\LinePutScript.Localization.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -90,8 +90,8 @@
     <Reference Include="Panuon.WPF, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Panuon.WPF.1.0.1\lib\net48\Panuon.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Panuon.WPF.UI, Version=1.1.12.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Panuon.WPF.UI.1.1.12.1\lib\net48\Panuon.WPF.UI.dll</HintPath>
+    <Reference Include="Panuon.WPF.UI, Version=1.1.13.7, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Panuon.WPF.UI.1.1.14\lib\net48\Panuon.WPF.UI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -119,6 +119,10 @@
     <Compile Include="Design\AutoUniformGrid.cs" />
     <Compile Include="Design\Converters\BoolToIntConverter.cs" />
     <Compile Include="Design\Converters\DiscountPriceConverter.cs" />
+    <Compile Include="Function\Win32.cs" />
+    <Compile Include="PetHelper.xaml.cs">
+      <DependentUpon>PetHelper.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinDesign\winBetterBuy.xaml.cs">
       <DependentUpon>winBetterBuy.xaml</DependentUpon>
     </Compile>
@@ -148,6 +152,10 @@
     <Compile Include="WinDesign\winReport.xaml.cs">
       <DependentUpon>winReport.xaml</DependentUpon>
     </Compile>
+    <Page Include="PetHelper.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WinDesign\winBetterBuy.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -255,6 +263,7 @@
     </Resource>
     <Resource Include="Res\TopLogo2019.PNG" />
     <Resource Include="Res\BetterBuy.png" />
+    <Resource Include="Res\vpeticon.png" />
     <Content Include="steam_api.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
