@@ -35,7 +35,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 版本号
         /// </summary>
-        public int verison { get; } = 21;
+        public int verison { get; } = 30;
         /// <summary>
         /// 版本号
         /// </summary>
@@ -126,16 +126,23 @@ namespace VPet_Simulator.Windows
         /// 加载帮助器
         /// </summary>
         public void LoadPetHelper()
-        {            
+        {
             petHelper = new PetHelper(this);
             petHelper.Show();
         }
-       
+
         public static void RunDIY(string content)
         {
             if (content.Contains("://") || content.Contains(@":\"))
             {
-                Process.Start(content);
+                try
+                {
+                    Process.Start(content);
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                }
             }
             else
             {

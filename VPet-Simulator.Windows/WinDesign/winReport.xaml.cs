@@ -28,7 +28,6 @@ namespace VPet_Simulator.Windows
                 tType.SelectedIndex = 0;
                 tContent.Text = errmsg;
                 tContent.IsReadOnly = true;
-                tContent.Height = 44;
             }
 
             if (!mw.IsSteamUser)

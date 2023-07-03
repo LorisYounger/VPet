@@ -19,7 +19,8 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 金钱
         /// </summary>
-        [Line(Type = LPSConvert.ConvertType.ToFloat, Name = "money")] public double Money { get; set; }
+        [Line(Type = LPSConvert.ConvertType.ToFloat, Name = "money")] 
+        public double Money { get; set; }
         /// <summary>
         /// 经验值
         /// </summary>

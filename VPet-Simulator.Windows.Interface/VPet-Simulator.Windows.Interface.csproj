@@ -89,10 +89,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LinePutScript.1.8.2\lib\net462\LinePutScript.dll</HintPath>
+      <HintPath>..\packages\LinePutScript.1.8.3\lib\net462\LinePutScript.dll</HintPath>
     </Reference>
     <Reference Include="LinePutScript.Localization.WPF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LinePutScript.Localization.WPF.1.0.4\lib\net462\LinePutScript.Localization.WPF.dll</HintPath>
+      <HintPath>..\packages\LinePutScript.Localization.WPF.1.0.6\lib\net462\LinePutScript.Localization.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Panuon.WPF, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Panuon.WPF.1.0.1\lib\net462\Panuon.WPF.dll</HintPath>
