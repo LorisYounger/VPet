@@ -1,15 +1,17 @@
-﻿<pu:WindowX x:Class="VPet_Simulator.Windows.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<pu:WindowX x:Class="VPet_Simulator.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" ResizeMode="NoResize"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" ShowInTaskbar="False"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" WindowStyle="None" Title="MainWindow"
-        Width="250" Background="{x:Null}" Topmost="True" Closed="Window_Closed" pu:WindowXCaption.Height="0"
-        SizeToContent="Height">
+        Width="250"  Topmost="True" Closed="Window_Closed" pu:WindowXCaption.Height="0"
+        SizeToContent="Height" Loaded="Window_SourceInitialized" LocationChanged="WindowX_LocationChanged" Background="{x:Null}">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" />
     </WindowChrome.WindowChrome>
-    <Grid><Label x:Name="LoadingText" HorizontalAlignment="Center" VerticalAlignment="Center"
+    <Grid>
+        <Label x:Name="LoadingText" HorizontalAlignment="Center" VerticalAlignment="Center"
                 Background="{DynamicResource DARKPrimaryLight}" Foreground="{DynamicResource DARKPrimaryText}"
                 Content="Loading" />
         <Border x:Name="DisplayGrid" />

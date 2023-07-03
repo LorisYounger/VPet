@@ -24,6 +24,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Linq;
 using LinePutScript.Localization.WPF;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
+using static VPet_Simulator.Windows.PerformanceDesktopTransparentWindow;
 
 namespace VPet_Simulator.Windows
 {
@@ -33,7 +36,9 @@ namespace VPet_Simulator.Windows
     public partial class MainWindow : WindowX
     {
         private NotifyIcon notifyIcon;
+        public PetHelper petHelper;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
+
         public MainWindow()
         {
             LocalizeCore.StoreTranslation = true;
@@ -65,6 +70,21 @@ namespace VPet_Simulator.Windows
             }
             else
                 Set = new Setting("Setting#VPET:|\n");
+
+            var visualTree = new FrameworkElementFactory(typeof(Border));
+            visualTree.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(Window.BackgroundProperty));
+            var childVisualTree = new FrameworkElementFactory(typeof(ContentPresenter));
+            childVisualTree.SetValue(UIElement.ClipToBoundsProperty, true);
+            visualTree.AppendChild(childVisualTree);
+
+            Template = new ControlTemplate
+            {
+                TargetType = typeof(Window),
+                VisualTree = visualTree,
+            };
+
+            _dwmEnabled = Win32.Dwmapi.DwmIsCompositionEnabled();
+            _hwnd = new WindowInteropHelper(this).EnsureHandle();
 
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json"))
                 CGPTClient = ChatGPTClient.Load(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json"));
@@ -117,6 +137,7 @@ namespace VPet_Simulator.Windows
             this.Closed += Restart_Closed;
             base.Close();
         }
+
 
         private void Restart_Closed(object sender, EventArgs e)
         {
@@ -355,7 +376,11 @@ namespace VPet_Simulator.Windows
                 notifyIcon.Text = "虚拟桌宠模拟器".Translate();
                 ContextMenu m_menu;
 
+                if (Set.PetHelper)
+                    LoadPetHelper();
+
                 m_menu = new ContextMenu();
+                m_menu.MenuItems.Add(new MenuItem("鼠标穿透".Translate(), (x, y) => { SetTransparentHitThrough(); }) { });
                 m_menu.MenuItems.Add(new MenuItem("操作教程".Translate(), (x, y) => { Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html"); }));
                 m_menu.MenuItems.Add(new MenuItem("重置状态".Translate(), (x, y) =>
                 {
@@ -441,7 +466,70 @@ namespace VPet_Simulator.Windows
             System.Environment.Exit(0);
         }
 
+        [DllImport("user32", EntryPoint = "SetWindowLong")]
+        private static extern uint SetWindowLong(IntPtr hwnd, int nIndex, uint dwNewLong);
 
+        [DllImport("user32", EntryPoint = "GetWindowLong")]
+        private static extern uint GetWindowLong(IntPtr hwnd, int nIndex);
+        private void Window_SourceInitialized(object sender, EventArgs e)
+        {
+            //const int WS_EX_TRANSPARENT = 0x20;
+            //const int GWL_EXSTYLE = -20;
+            //IntPtr hwnd = new WindowInteropHelper(this).Handle;
+            //uint extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+            //SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+            ((HwndSource)PresentationSource.FromVisual(this)).AddHook((IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) =>
+            {
+                //想要让窗口透明穿透鼠标和触摸等，需要同时设置 WS_EX_LAYERED 和 WS_EX_TRANSPARENT 样式，
+                //确保窗口始终有 WS_EX_LAYERED 这个样式，并在开启穿透时设置 WS_EX_TRANSPARENT 样式
+                //但是WPF窗口在未设置 AllowsTransparency = true 时，会自动去掉 WS_EX_LAYERED 样式（在 HwndTarget 类中)，
+                //如果设置了 AllowsTransparency = true 将使用WPF内置的低性能的透明实现，
+                //所以这里通过 Hook 的方式，在不使用WPF内置的透明实现的情况下，强行保证这个样式存在。
+                if (msg == (int)Win32.WM.STYLECHANGING && (long)wParam == (long)Win32.GetWindowLongFields.GWL_EXSTYLE)
+                {
+                    var styleStruct = (STYLESTRUCT)Marshal.PtrToStructure(lParam, typeof(STYLESTRUCT));
+                    styleStruct.styleNew |= (int)Win32.ExtendedWindowStyles.WS_EX_LAYERED;
+                    Marshal.StructureToPtr(styleStruct, lParam, false);
+                    handled = true;
+                }
+                return IntPtr.Zero;
+            });
+        }
+        private readonly bool _dwmEnabled;
+        private readonly IntPtr _hwnd;
+        public bool HitThrough { get; private set; } = false;
+        /// <summary>
+        /// 设置点击穿透到后面透明的窗口
+        /// </summary>
+        public void SetTransparentHitThrough()
+        {
+            if (_dwmEnabled)
+            {
+                //const int WS_EX_TRANSPARENT = 0x20;
+                //const int GWL_EXSTYLE = -20;
+                //IntPtr hwnd = new WindowInteropHelper(this).Handle;
+                //uint extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+                //SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+                HitThrough = !HitThrough;
+                if (HitThrough)
+                {
+                    Win32.User32.SetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE,
+                        (IntPtr)(int)((long)Win32.User32.GetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) | (long)Win32.ExtendedWindowStyles.WS_EX_TRANSPARENT));
+                    petHelper?.SetOpacity(false);
+                }
+                else
+                {
+                    Win32.User32.SetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE,
+                  (IntPtr)(int)((long)Win32.User32.GetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) & ~(long)Win32.ExtendedWindowStyles.WS_EX_TRANSPARENT));
+                    petHelper?.SetOpacity(true);
+
+                }
+            }
+        }
+        private void WindowX_LocationChanged(object sender, EventArgs e)
+        {
+            petHelper.SetLocation();
+        }
         //public void DEBUGValue()
         //{
         //  Dispatcher.Invoke(() =>
@@ -452,6 +540,6 @@ namespace VPet_Simulator.Windows
         //  Thread.Sleep(1000);
         //  DEBUGValue(); 
         //}
-
+        //
     }
 }

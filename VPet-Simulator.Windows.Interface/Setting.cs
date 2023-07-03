@@ -147,6 +147,22 @@ namespace VPet_Simulator.Windows.Interface
             set => SetBool("topmost", !value);
         }
         /// <summary>
+        /// 是否显示宠物帮助窗口
+        /// </summary>
+        public bool PetHelper
+        {
+            get => GetBool("pethelper");
+            set => SetBool("pethelper", value);
+        }
+        /// <summary>
+        /// 是否鼠标穿透
+        /// </summary>
+        public bool HitThrough
+        {
+            get => GetBool("hitthrough");
+            set => SetBool("hitthrough", value);
+        }
+        /// <summary>
         /// 上次清理缓存日期
         /// </summary>
         public DateTime LastCacheDate
@@ -220,6 +236,24 @@ namespace VPet_Simulator.Windows.Interface
             get => this["gameconfig"].GetDouble("logicinterval", 15);
             set => this["gameconfig"].SetDouble("logicinterval", value);
         }
+
+        /// <summary>
+        /// 计算间隔
+        /// </summary>
+        public double PetHelpLeft
+        {
+            get => this["pethelp"].GetFloat("left", 0);
+            set => this["pethelp"].SetFloat("left", value);
+        }
+        /// <summary>
+        /// 计算间隔
+        /// </summary>
+        public double PetHelpTop
+        {
+            get => this["pethelp"].GetFloat("top", 0);
+            set => this["pethelp"].SetFloat("top", value);
+        }
+
         bool allowmove;
         /// <summary>
         /// 允许移动事件

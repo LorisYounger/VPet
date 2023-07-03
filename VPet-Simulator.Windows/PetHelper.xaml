@@ -1,0 +1,23 @@
+﻿<pu:WindowX x:Class="VPet_Simulator.Windows.PetHelper" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" WindowStyle="None"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" ShowInTaskbar="False" pu:WindowXCaption.Height="0"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" ResizeMode="NoResize"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Opacity=".6"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Topmost="True" Title="PetHelper" Height="40"
+        Width="40" Loaded="Window_Loaded" MouseLeftButtonDown="Image_MouseLeftButtonDown"
+        MouseLeftButtonUp="Image_MouseLeftButtonUp" 
+        MouseRightButtonDown="WindowX_MouseRightButtonDown">
+    <pu:WindowX.Background>
+        <ImageBrush ImageSource="/Res/vpeticon.png" />
+    </pu:WindowX.Background>
+    <!--<pu:WindowX.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="{ll:Str '设置'}" />
+        </ContextMenu>
+    </pu:WindowX.ContextMenu>-->
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" />
+    </WindowChrome.WindowChrome>
+    
+</pu:WindowX>
