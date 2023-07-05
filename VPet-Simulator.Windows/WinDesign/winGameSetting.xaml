@@ -4,10 +4,10 @@
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Windows"
-        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Topmost="True"
         xmlns:system="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" Title="{ll:Str 设置}"
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" Closing="WindowX_Closing"
-        Width="500" Height="550" FontSize="16">
+        Width="{ll:Dbe SettingWidth, DefValue=500}" Height="550" FontSize="16">
     <!--<pu:WindowX.Resources>
         <DataTemplate x:Key="DIYDataTemplate">
 
@@ -53,7 +53,7 @@
                     </Grid.RowDefinitions>
                     <TextBlock Text="{ll:Str 快速切换}" VerticalAlignment="Center" Grid.Row="1" />
                     <TextBlock Text="{ll:Str 置于顶层}" VerticalAlignment="Center" />
-                    <Grid Grid.Row="0" Grid.Column="2" >
+                    <Grid Grid.Row="0" Grid.Column="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -74,19 +74,19 @@
                                 ToolTip="{ll:Str '鼠标将会穿过桌宠到下方内容,不打扰操作\&#13;该选项'}" Content="{ll:Str '鼠标穿透'}"
                                 Checked="HitThroughBox_Checked" Unchecked="HitThroughBox_Checked" />
                     </Grid>
-                    
+
                     <TextBlock Text="Language" VerticalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" />
-                    <ComboBox x:Name="LanguageBox" Grid.Row="2" Grid.Column="2" 
+                    <ComboBox x:Name="LanguageBox" Grid.Row="2" Grid.Column="2"
                             Style="{DynamicResource StandardComboBoxStyle}" Margin="0,3,0,2" FontSize="16"
                             SelectionChanged="LanguageBox_SelectionChanged" />
-                    
+
                     <pu:Switch x:Name="PetHelperBox" Grid.Column="2" BorderBrush="{DynamicResource PrimaryDark}"
                             CheckedBackground="{DynamicResource Primary}" CheckedBorderBrush="{DynamicResource Primary}"
                             Background="Transparent" BoxWidth="35" BoxHeight="18" ToggleSize="14"
                             ToggleShadowColor="{x:Null}" ToggleBrush="{DynamicResource PrimaryDark}"
-                            CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                            ToolTip="{ll:Str '添加快速切换小标,切换顶层或穿透'}" Grid.Row="1" Content="{ll:Str '添加小标,快速切换顶层或穿透'}" Checked="PetHelperBox_Checked" />
-                    
+                            CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="{ll:Str '添加快速切换小标,切换顶层或穿透'}"
+                            Grid.Row="1" Content="{ll:Str '添加小标,快速切换顶层或穿透'}" Checked="PetHelperBox_Checked" />
+
                     <TextBlock Grid.Row="3" Text="{ll:Str 更高缩放}" VerticalAlignment="Center" />
                     <pu:Switch x:Name="FullScreenBox" Grid.Row="3" Grid.Column="2" Content="{ll:Str 支持更大缩放倍率}"
                             BorderBrush="{DynamicResource PrimaryDark}" CheckedBackground="{DynamicResource Primary}"
@@ -267,7 +267,7 @@
                                     Style="{DynamicResource StandardComboBoxStyle}" FontSize="16" Grid.Column="2"
                                     Grid.Row="1" MouseEnter="CBSaveReLoad_MouseEnter" />
                         </Grid>
-                        
+
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
                                 TextWrapping="Wrap" Margin="0,10,0,0">
                     <Run FontWeight="Bold" FontSize="18" Text="{ll:Str 聊天设置}" /><LineBreak />
@@ -452,9 +452,9 @@
                                     Maximum="60" SmallChange=".5" Minimum="5" LargeChange="1" Value="15"
                                     ValueChanged="CalSlider_ValueChanged" />
                             <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"
-                                    Text="{Binding ElementName=CalSlider,Path=Value,StringFormat={}{0:f1} 秒}"
+                                    Text="{ll:Str '\{0:f1} 秒', ValueSource={Binding ElementName=CalSlider,Path=Value}}"
                                     Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
-                                    Background="{x:Null}" Width="60" />
+                                    Background="{x:Null}" MinWidth="60" />
                         </Grid>
                         <TextBlock Grid.Row="3" Text="{ll:Str '互动周期'}" VerticalAlignment="Center" />
                         <TextBlock Grid.Row="4" VerticalAlignment="Top" Grid.Column="2" FontSize="14">
@@ -509,7 +509,7 @@
                                     Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center" Maximum="5"
                                     SmallChange=".05" Minimum="0.05" LargeChange="0.1" Value="0.5"
                                     ValueChanged="PressLengthSlider_ValueChanged" />
-                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" Width="60"
+                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" 
                                     Text="{ll:Str '\{0:F2} 秒', ValueSource={Binding ElementName=PressLengthSlider,Path=Value}}"
                                     Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
                                     Background="{x:Null}" />
@@ -678,18 +678,23 @@
             <TabItem Header="{ll:Str '关于'}" BorderBrush="{DynamicResource PrimaryDarker}"
                     Foreground="{DynamicResource PrimaryText}">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
                     <Image x:Name="ImageWHY" Width="64" HorizontalAlignment="Right" VerticalAlignment="Top" Height="64"
-                            Source="/Res/TopLogo2019.PNG" Margin="0,325,55,0" />
-                    <TextBlock Margin="0,0,0,0" Text="{ll:Str '虚拟主播模拟器 规格'}" FontSize="20" FontWeight="Bold"
-                            VerticalAlignment="Top" />
-                    <TextBlock Margin="0,130,0,0" FontWeight="Bold" VerticalAlignment="Top">
+                            Source="/Res/TopLogo2019.PNG" Margin="0,325,55,0" Grid.Column="1" />
+                    <TextBlock Margin="0,0,0,0" Text="{ll:Str '虚拟桌宠模拟器 规格'}" FontSize="20" FontWeight="Bold"
+                            VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                    <TextBlock Margin="0,130,20,0" FontWeight="Bold" VerticalAlignment="Top" Grid.ColumnSpan="1">
                     <Run Text="{ll:Str 游戏策划}" /><LineBreak />
                     <Run Text="{ll:Str 'UI&amp;程序'}" /><LineBreak />
                     <Run Text="{ll:Str '动画绘制'}" /><LineBreak />                    
                     <Run Text="{ll:Str '开源项目'}" /><LineBreak /><LineBreak /><LineBreak />
-                    <Run Text="{ll:Str '项目页面'}" /><LineBreak />
-                    <LineBreak /><LineBreak />
-                    <LineBreak /><Run xml:space="preserve">Power By        </Run>
+                    <Run Text="{ll:Str '项目页面'}" />
+                    </TextBlock>
+                    <TextBlock Grid.ColumnSpan="2" VerticalAlignment="Bottom" Margin="0,0,0,20">
+                        <Run xml:space="preserve">Power By        </Run>
                     <Hyperlink TextDecorations="Underline" Foreground="Black" Click="VPET_Click">exLB.net</Hyperlink>
                     <Run> </Run>
                     <Hyperlink TextDecorations="Underline" Foreground="Black" Click="LB_Click">LBGame</Hyperlink>
@@ -699,21 +704,21 @@
                                 Click="VUP_Click" FontWeight="Normal"><Run Text="{ll:Str 虚拟主播模拟器}" /></Hyperlink>
                             <Hyperlink TextDecorations="Underline" Foreground="{DynamicResource DARKPrimaryDarker}"
                                 Click="Group_Click" FontWeight="Normal"><Run Text="{ll:Str 相关群}" /></Hyperlink>
-
                     </TextBlock>
                     <TextBlock Margin="0,30,0,0" FontWeight="Bold" VerticalAlignment="Top">
                     <Run Text="{ll:Str '用户名'}" /><LineBreak />
                     <Run Text="{ll:Str '版本'}" /><LineBreak />
                     <Run Text="{ll:Str '激活'}" /><LineBreak />
                     </TextBlock>
-                    <TextBlock VerticalAlignment="Top" Margin="100,30,0,0" TextWrapping="WrapWithOverflow">
+                    <TextBlock VerticalAlignment="Top" Margin="0,30,0,0" TextWrapping="WrapWithOverflow" Grid.Column="1">
                     <Run x:Name="runUserName">杨远洛里斯</Run><LineBreak />
                     <Run x:Name="runabVer">v1.0 (100)</Run><LineBreak />
                     <Run x:Name="runActivate">已通过Steam[uid]激活服务注册</Run><LineBreak />
                     </TextBlock>
                     <TextBlock Margin="0,100,0,0" Text="{ll:Str 制作组名单}" FontSize="20" FontWeight="Bold"
-                            HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <TextBlock Margin="100,130,0,0" VerticalAlignment="Top" TextWrapping="WrapWithOverflow">
+                            HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                    <TextBlock Margin="0,130,0,0" VerticalAlignment="Top" TextWrapping="WrapWithOverflow"
+                            Grid.Column="1">
                     <Run Text="{ll:Str '杨远洛里斯'}" />,  <Hyperlink Click="Mod_Click"
                                 Foreground="{DynamicResource PrimaryText}"><Run Text="{ll:Str 广大MOD作者}" /></Hyperlink><LineBreak /> 
                     <Run Text="{ll:Str '洛里斯杨远'}" />, トニーちゃん <Hyperlink Click="Git_Click"><Run Text="{ll:Str Git贡献名单}" /></Hyperlink><LineBreak />

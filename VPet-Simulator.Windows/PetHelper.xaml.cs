@@ -68,6 +68,7 @@ namespace VPet_Simulator.Windows
                         if (isclick)
                         {
                             isdragmove = Opacity == 0.8;
+                            Cursor = Cursors.Hand;
                             Opacity = 1;
                             DragMove();
                         }
@@ -84,6 +85,7 @@ namespace VPet_Simulator.Windows
             isclick = false;
             if (isdragmove.HasValue)
             {
+                Cursor = Cursors.Arrow;
                 SetOpacity(isdragmove.Value);
                 isdragmove = null;
                 x = Left - mw.Left;

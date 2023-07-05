@@ -7,7 +7,7 @@
 你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing#Your randomly tapping to speaking is part of the speaking system, but not do yet. It doing yet.:|
 你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧#Have you added VUP-Simulator and VPet-Simulator to your wishlist? Go ahead and add it:|
 这游戏开发这么慢,都怪画师太咕了#This game development is so slow, all due to the game artist:|
-长按脑袋拖动桌宠到你喜欢的任意位置#Hold the head and drag the table pet to any position you like:|
+长按脑袋拖动桌宠到你喜欢的任意位置#Hold the head and drag the desktop pet to any position you like:|
 欢迎加入 虚拟主播模拟器群 430081239#This open-source project address in https://github.com/LorisYounger/VPet:|
 关注 {0} 谢谢喵#Subscribe {0} thanks:|
 尝试加载动画和生成缓存#Try loading animations and generating caches:|
@@ -16,23 +16,23 @@
 图形#Graphics:|
 快速切换#Quick Switching:|
 置于顶层#Placed TopMost:|
-将桌宠置于顶层#Placed Desktop Pet TopMost:|
+将桌宠置于顶层#Placed TopMost:|
 鼠标将会穿过桌宠到下方内容,不打扰操作\r该选项#Mouse will pass through the desktop pet to the content below, without disturbing the operation\rthis option:|
 鼠标穿透#Mouse HitThrough:|
 添加快速切换小标,切换顶层或穿透#Add quick Switcher, switch TopMost or HitThrough:|
-添加小标,快速切换顶层或穿透#Add Switcher, switch TopMost or HitThrough:|
+添加小标,快速切换顶层或穿透#Add Switcher, switch TopMost/HitThrough:|
 更高缩放#Higher Zoom:|
-支持更大缩放倍率#Support larger Zoom Magnifications:|
+支持更大缩放倍率#Support larger zoom magnifications:|
 解锁缩放限制#Unlock the Zoom Limit:|
 缩放等级#Zoom Level:|
 主题#Theme:|
 字体#Font:|
 启动位置#Start Position:|
-退出位置#Exit Position:|
+退出位置#Exit Pos:|
 游戏退出位置为下次桌宠启动出现的位置#The game exit position is the position where the next table pet starts:|
 X轴#X-axis:|
 Y轴#Y-axis:|
-当前位置#Current Location:|
+当前位置#Current:|
 消息框#Message Box:|
 将消息框置于外部#Place Message Box Externally:|
 开机启动#Auto-start:|
@@ -62,22 +62,22 @@ Y轴#Y-axis:|
 使用ChatGPT进行聊天等相关设置#Use ChatGPT for chat and other related settings:|
 使用模式#Usage Patterns:|
 相关功能#Related Features:|
-使用从ChatGPT\r申请的的API#Use API requested\rfrom ChatGPTr:|
+使用从ChatGPT\r申请的的API#Use API requested\rfrom ChatGPT:|
 需要去OpenAI官网申请#Need to go to the OpenAI official website to apply:|
-使用桌宠开发者\r提供的免费API#Use desktop pet developerr\rfree API provided:|
+使用桌宠开发者\r提供的免费API#Use VPET developer\rprovided free API:|
 需遵循相关协议法律法规并有聊天字数限制#Applicable agreements, laws and regulations apply, and chat word limits apply:|
-初始化桌宠聊天程序#Initialize the desktop pet chat program:|
-互动#interaction:|
-互动设置#interaction settings:|
+初始化桌宠聊天程序#Initialize VPET chat program:|
+互动#Interact:|
+互动设置#Interaction Settings:|
 游戏互动相关设置#Game interaction related settings:|
-启用后桌宠会有状态变化,需要按时投喂等#After enabled, there will be a change in the status of the desktop pet, which needs to be fed on time, etc:|
+启用后桌宠会有状态变化,需要按时投喂等#Pet have status change, needs feed:|
 启用数据计算,桌宠会有状态变化,需要按时投喂等.\r如果嫌麻烦可以关掉#Enable data calculation, desktop pet will have a status change, need to feed on time, etc.\rIf you are troublesome, you can turn it off:|
 当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能\r将在下次交互时解除#When the player does not interact with the desktop pet at a specified time, the move function is intelligently disabled\rreleased in the next interaction:|
-当关闭数据计算时\r桌宠显示的状态#When data calculation turned off\rstatus displayed by the desktop pet:|
-启用桌宠移动#Enabled desktop pet move:|
+当关闭数据计算时\r桌宠显示的状态#status displayed when\rdata calculation turn off:|
+启用桌宠移动#Enabled:|
 启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.\r如果嫌麻烦可以关掉#Enable mobile interaction, desktop pet will move around on the screen, probability of mobile interaction is half that of normal interaction.\rIf it's troublesome, you can turn it off:|
 智能移动#Smart Moving:|
-智能移动判断时间间隔#Judgment time between Smart Moving:|
+智能移动判断时间间隔#Smart Moving Judgment:|
 30 秒#30 seconds:|
 1 分钟#1 minute:|
 2 分钟#2 minute:|
@@ -90,24 +90,24 @@ Y轴#Y-axis:|
 60 分钟#60 minute:|
 数据计算#Data Calculation:|
 显示状态#Display Status:|
-桌宠移动#Desktop pet Moving:|
+桌宠移动#Pet Moving:|
 计算间隔#Computing between:|
 数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.\r间隔越大越不容易打扰到当前工作#Time interval between data calculation and interaction\rcalculation, the shorter the interval, the frequency of\rinteraction may increaserThe larger the interval, less\rlikely it is to disturb the current work:|
 互动周期#Interaction Cycles:|
-每分钟计算#Calculated Per Minute:|
-次数值变化#Numerical changes:|
-大约#About:|
-分钟左右主动进行一次互动(走路发呆爬墙等)#minutes or so make a interaction by initiative(walking, in a daze, climbing a wall, etc.);:|
+每分钟计算#Calculate data calculations :|
+次数值变化# per minute:|
+大约#Proactively engage in interaction :|
+分钟左右主动进行一次互动(走路发呆爬墙等)# per minute:|
 互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动#Interaction cycle determines how many computational intervals have elapsed after the interaction ends, and act auto:|
-操作设置#Action Settings:|
+操作设置#Operation Settings:|
 游戏操作相关设置#Game Operation Related Settings:|
 长按间隔#Long Press Interval:|
 桌宠名字#Desktop Pet Name:|
 数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加\r间隔越大越不容易打扰到当前工作#Time interval between data calculation and interaction\rcalculation, the shorter the interval, the frequency of\rinteraction may increaserThe larger the interval, less\rlikely it is to disturb the current work:|
-{0:F2} 秒#{0:F2} Second:|
+{0:F2} 秒#{0:F2} Sec:|
 自定#DIY:|
 自定义链接#Custom Links:|
-在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能#Add Shortcuts/Webpages/Hot Keys to the custom bar to start the desired function on the go:|
+在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能#Add shortcuts/web pages/shortcuts in the customization bar to easily launch the desired functions:|
 键盘快捷键编写方法请参考#Change keyboard shortcuts see:|
 键盘快捷键 通用注解#Keyboard Shortcut Generic Annotations:|
 右键进行排序/删除等操作#Right-click to sort/delete and other operations:|
@@ -135,12 +135,12 @@ MOD管理#MOD Management:|
 游戏版本: #Game Version: :|
 MOD介绍#MOD Description:|
 内容#Content:|
-所在文件夹#The folder in which it is located:|
-启用该模组#Enable this mod:|
-停用该模组#Disable this mod:|
+所在文件夹#Located Folder:|
+启用该模组#Enable:|
+停用该模组#Disable:|
 更新至Steam#Update to Steam:|
 创意工坊页面#Workshop Page:|
-MOD设置#MOD Settings:|
+MOD设置#MOD:|
 启用代码插件#Enable code plugin:|
 启用该模组的代码内容,不能保证系统安全性#Enabling this code content of the module, does not guarantee system security:|
 关于#About:|
@@ -158,14 +158,14 @@ UI&程序#UI & Program:|
 激活#Activation:|
 制作组名单#List of development teams:|
 杨远洛里斯#YoungerLoris:|
-广大MOD作者#The numerous of mod authors:|
+广大MOD作者#Mod Authors:|
 洛里斯杨远#LorisYounger:|
-Git贡献名单#List of Git contributions:|
+Git贡献名单#Github Contributer:|
 叶书天#Ye Shutian:|
-查看引用名单#View the list of references:|
-访问Steam页面#Visit the Steam page:|
-访问Github页面#Visit the Github page:|
-由于游戏暂未开发完毕,该名单并非完整名单.将在正式版完成前修改#Since the game is not yet developed, this list is not complete. It will be revised before the official version is completed:|
+查看引用名单#List of references:|
+访问Steam页面#Steam page:|
+访问Github页面#Github page:|
+由于游戏暂未开发完毕,该名单并非完整名单.将在正式版完成前修改#Since the game is not yet developed, this list is not complete:|
 默认虚拟桌宠#Default desktop pet:|
 P猫#P cat:|
 虚拟主播模拟器默认人物形象#VUP-Simulator Default Persona:|
@@ -175,7 +175,7 @@ P猫#P cat:|
 删除#Delete:|
 显示名称#Display Name:|
 快捷键或文件位置或网站链接#Hot Keys or file locations or website links:|
-游戏版本v{0} x64#Game versionv{0} x64:|
+游戏版本#Game version :|
 已通过Steam[{0}]激活服务注册#Registered through the Steam [{0}] activation service:|
  (兼容)# (Compatible):|
 系统自带#The system comes with it:|
@@ -201,19 +201,19 @@ text#Text Set:|
 按体力#Stamina:|
 按心情#Mood:|
 按健康#Health:|
-升序#Ascending:|
-降序#Descending:|
+升序#Asc:|
+降序#Des:|
 停止工作#Stop Working:|
 详细#Detailed:|
 宠物已经生病, 通过服用药物可以恢复#Pet ill and can recover by taking medication:|
 已关闭数据计算, 可放心挂机#Data calculation has been turned off, and you can AFK with confidence:|
 金钱#Money:|
-经验#Experience:|
+经验#EXP:|
 体力#Stamina:|
 心情#Mood:|
 饱腹度#Hunger:|
 口渴度#Thirst:|
-投喂#Feeding:|
+投喂#Feed:|
 面板#Panel:|
 睡觉#Sleep:|
 学习#Learn:|
@@ -223,11 +223,11 @@ text#Text Set:|
 和桌宠说#Said with desktop pet:|
 按 Ctrl+Enter 发送#Press Ctrl+Enter to send:|
 正在加载游戏#Loading game:|
-退出桌宠#Exit the Desktop pet:|
-开发控制台#Development Console:|
-反馈中心#Feedback Hub:|
-设置面板#Settings Panel:|
-吃饭#Dine:|
+退出桌宠#Exit:|
+开发控制台#Console:|
+反馈中心#FeedBack:|
+设置面板#Settings:|
+吃饭#Food:|
 喝水#Drink:|
 虚拟桌宠模拟器#VPet-Simulator:|
 点击此处开关鼠标穿透\n右键开关置于顶层\n长按挪动位置\n可在设置中关闭#Click here toggle mouse HitThrough\nRight-click toggle place in TopMost\nPress and hold to move position\nCan be turned off in the settings:|
@@ -242,7 +242,7 @@ ChatGPT API 设置#ChatGPT API Settings:|
 最大花费#Maximum cost:|
 累计花费#Accumulated cost:|
 历史记录#History:|
-完成设置#Complete the setup:|
+完成设置#Complete:|
 API 链接 一般为 api.openai.com/v1/chat/completions#API Links are generally api.openai.com/v1/chat,pletions:|
 从 OpenAI 获得的 APIKEY 一般`sk-`开头#APIKEYS obtained from OpenAI generally start with 'sk-':|
 不会被忘记的初始化关键字, 字越多越贵#Initialization keywords that will not be forgotten, the more words, the more expensive:|
@@ -258,14 +258,14 @@ DLL引用名单#DLL Reference List:|
 桌宠管理开发控制台#Desktop Pet Management Development Console:|
 动画列表#List of animations:|
 双击查看动画效果#Double-click to see the animation:|
-选择状态模式:#Select the status mode::|
+选择状态模式:#Status::|
 动画播放#Animation playback:|
 双击添加/移除播放列表内容#Double-click Add/Remove Playlist Content:|
 显示逻辑#Display Logic:|
 双击运行显示效果#Double-click to run the display effect:|
 说话#Speak:|
 输入要说的话,按说话键发送#Enter the words you want to say, press the speak key to send:|
-选择说话类型:#Select the speaking type::|
+选择说话类型:#Speakin::|
 在这里输入要说话的内容#Enter what you want to speak here:|
 距离查看器#Distance Viewer:|
 启动距离查看器#Launch the Distance Viewer:|
@@ -297,16 +297,16 @@ DLL引用名单#DLL Reference List:|
 玩家取消上传存档#Player cancels uploading saved:|
 停止学习#Stop Learning:|
 当前已学习#Currently Learned:|
-秒#Second:|
+秒#Sec:|
 停止#Stop:|
 当前已#Currently:|
 您的桌宠等级不足{0}/10\n无法进行工作{1}#Your desktop pet don't have enough level{0}/10\nUnable to work{1}:|
 工作取消#Work Cancel:|
 搜索商品#Search for products:|
-购买后不自动关闭窗口#Window does not auto close after buy:|
+购买后不自动关闭窗口#don't close after buy:|
 凉茶#Cold Tea:|
 购买#Buy:|
-经验值#Experience:|
+经验值#EXP:|
 健康#Health:|
 怕上火，喝广东咖啡！#Afraid excessive internal heat? drink Guangdong coffee!:|
 收藏食物#Collect Food:|
@@ -317,7 +317,7 @@ DLL引用名单#DLL Reference List:|
 那个那个那个那个果汁分你一半#Thatthatthat juice, divide you in half:|
 可乐#Cola:|
 蓝色那个在日用品区谢谢#The blue one is in the daily products. Thank you:|
-盐汽水#salt Soda Water:|
+盐汽水#Salt Soda Water:|
 我一口盐汽水！#I'll take a sip of salt soda!:|
 维他奶#Vitasoy:|
 点止汽水咁简单#Not just soda:|
@@ -458,4 +458,7 @@ come on baby~#come on baby~:|
 没钱也能吃,可以用来拯救存档(生病), 没事别吃这个#Need no money to eat, it used to save game (sick). Don't eat this if you have nothing to do:|
 地球#Earth:|
 没钱也能吃,可以用来拯救存档(饥饿/口渴不足), 没事别吃这个#Need no money to eat, it used to save game (hunger/thirst). Don't eat this if you have nothing to do:|
-分钟#Minute:|
+分钟#Min:|
+钱#$:|
+{0:f1} 秒#{0:f1} Sec:|
+SettingWidth#600:|

@@ -98,7 +98,7 @@ namespace VPet_Simulator.Core
                             break;
                         case Main.WorkingState.WorkONE:
                         case Main.WorkingState.WorkTWO:
-                            tNumberUnit.Text = LocalizeCore.Translate("金钱");
+                            tNumberUnit.Text = LocalizeCore.Translate("钱");
                             break;
                     }
                     break;

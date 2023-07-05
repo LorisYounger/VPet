@@ -122,9 +122,9 @@ namespace VPet_Simulator.Windows
                 StackDIY.Children.Add(new DIYViewer(sub));
 
 #if X64
-            GameVerison.Content = "游戏版本v{0} x64".Translate(mw.Verison);
+            GameVerison.Content = "游戏版本".Translate() + $"v{mw.Verison} x64";
 #else
-            GameVerison.Content = "游戏版本v{0} x86".Translate(mw.Verison);
+            GameVerison.Content = "游戏版本".Translate() + $"v{mw.Verison} x86";
 #endif
             //关于ui
             if (mw.IsSteamUser)
@@ -596,11 +596,19 @@ namespace VPet_Simulator.Windows
 
         private void Group_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://jq.qq.com/?_wv=1027&k=zmeWNHyI");
+            if (LocalizeCore.CurrentCulture.StartsWith("zh"))
+                Process.Start("https://jq.qq.com/?_wv=1027&k=zmeWNHyI");
+            else
+                Process.Start("https://github.com/LorisYounger/VPet");
         }
         private void sendkey_click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://www.exlb.net/SendKeys");
+            if (LocalizeCore.CurrentCulture.StartsWith("zh"))
+                Process.Start("https://www.exlb.net/SendKeys");
+            else if (LocalizeCore.CurrentCulture == "null")
+                Process.Start("https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks");
+            else
+                Process.Start($"https://learn.microsoft.com/{LocalizeCore.CurrentCulture}/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks");
         }
         #endregion        
 
@@ -701,7 +709,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set.PetGraph = mw.Pets[PetBox.SelectedIndex].Name;
-            PetIntor.Text = mw.Pets[PetBox.SelectedIndex].Intor;
+            PetIntor.Text = mw.Pets[PetBox.SelectedIndex].Intor.Translate();
             ButtonRestartGraph.Visibility = Visibility.Visible;
         }
 

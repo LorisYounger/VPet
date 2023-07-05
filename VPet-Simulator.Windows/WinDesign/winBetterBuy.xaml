@@ -129,7 +129,7 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <TextBlock VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="16"
-                                        Foreground="{DynamicResource DARKPrimaryText}" Text="{Binding Name}" />
+                                        Foreground="{DynamicResource DARKPrimaryText}" Text="{Binding TranslateName}" />
                                 <ScrollViewer Grid.Row="1" Grid.RowSpan="4" Margin="0,7,0,0"
                                         pu:ScrollBarHelper.ThumbBackground="#44FFFFFF"
                                         PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"
