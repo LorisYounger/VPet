@@ -13,11 +13,11 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid x:Name="MainGrid" x:FieldModifier="public">
+    <Grid x:Name="MainGrid" x:FieldModifier="public" Visibility="Visible">
         <Border x:Name="BdrPanel" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24"
                 TextElement.FontSize="24" BorderBrush="{DynamicResource DARKPrimaryDarker}" BorderThickness="1"
                 Background="{DynamicResource DARKPrimaryText}" CornerRadius="5" MouseLeave="MenuPanel_MouseLeave"
-                Visibility="Collapsed" x:FieldModifier="public">
+               x:FieldModifier="public">
             <Grid Margin="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -38,9 +38,9 @@
                 </Grid.RowDefinitions>
                 <TextBlock x:Name="Tlv" Text="Lv 14" VerticalAlignment="Center"
                         Foreground="{DynamicResource DARKPrimary}" Grid.ColumnSpan="3" />
-                <Button Grid.Column="4" VerticalAlignment="Center" Background="Transparent"
+                <Button Grid.Column="2" VerticalAlignment="Center" Background="Transparent"
                         Foreground="{DynamicResource DARKPrimary}" Content="{ll:Str 详细}" Cursor="Hand" Click="MenuPanel_Click"
-                        IsEnabled="False">
+                        IsEnabled="False" Grid.ColumnSpan="3" HorizontalAlignment="Right">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" TextDecorations="Underline" />
