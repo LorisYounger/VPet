@@ -217,14 +217,6 @@ namespace VPet_Simulator.Windows
 
             Dispatcher.BeginInvoke(new Action(() => LoadingText.Content = "尝试加载游戏MOD".Translate()));
 
-            //MOD报错
-            foreach (CoreMOD cm in CoreMODs)
-                if (!cm.SuccessLoad)
-                    if (Set.IsPassMOD(cm.Name))
-                        MessageBoxX.Show("模组 {0} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题".Translate(cm.Name), "{0} 未加载代码插件".Translate(cm.Name));
-                    else if (Set.IsMSGMOD(cm.Name))
-                        MessageBoxX.Show("由于 {0} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件".Translate(cm.Name), "{0} 未加载代码插件".Translate(cm.Name));
-
             //加载游戏内容
             Core.Controller = new MWController(this);
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
@@ -439,7 +431,14 @@ namespace VPet_Simulator.Windows
                     "现已支持数据计算,桌宠现在需要进行吃饭喝水等\n更新了新的状态动画文件\n新增自动备份存档功能\n数据计算数据相关优化", ToolTipIcon.Info);
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);
                 }
-                Save();
+                //MOD报错
+                foreach (CoreMOD cm in CoreMODs)
+                    if (!cm.SuccessLoad)
+                        if (Set.IsPassMOD(cm.Name))
+                            MessageBoxX.Show("模组 {0} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题".Translate(cm.Name), "{0} 未加载代码插件".Translate(cm.Name));
+                        else if (Set.IsMSGMOD(cm.Name))
+                            MessageBoxX.Show("由于 {0} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件".Translate(cm.Name), "{0} 未加载代码插件".Translate(cm.Name));
+
             }));
 
 
@@ -453,7 +452,6 @@ namespace VPet_Simulator.Windows
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            Save();
             try
             {
                 //关闭所有插件
@@ -461,7 +459,16 @@ namespace VPet_Simulator.Windows
                     mp.EndGame();
             }
             catch { }
+            Save();
+            if (winSetting != null)
+            {
+                winSetting.Shutdown = true;
+                winSetting.Close();
+            }
+            petHelper?.Close();
+
             Main?.Dispose();
+            notifyIcon.Visible = false;
             notifyIcon?.Dispose();
             System.Environment.Exit(0);
         }

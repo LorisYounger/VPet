@@ -176,16 +176,16 @@ namespace VPet_Simulator.Windows
                                         && certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US")
                                     {//LBGame 信任的证书
                                         if (!Author.Contains("["))
-                                            Author += "[认证]";
+                                            Author += "[认证]".Translate();
                                     }
-                                    else if (!IsPassMOD(mw))
+                                    else if (certificate.Subject != "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" && !IsPassMOD(mw))
                                     {//不是通过模组,不加载
                                         SuccessLoad = false;
                                         continue;
                                     }
                                     else if (!Author.Contains("["))
                                     {
-                                        Author += "[签名]";
+                                        Author += "[签名]".Translate();
                                         Intro += $"Subject:{certificate.Subject}\nIssuer:{certificate.Subject}";
                                     }
                                 }
