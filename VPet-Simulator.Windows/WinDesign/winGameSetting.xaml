@@ -85,7 +85,8 @@
                             Background="Transparent" BoxWidth="35" BoxHeight="18" ToggleSize="14"
                             ToggleShadowColor="{x:Null}" ToggleBrush="{DynamicResource PrimaryDark}"
                             CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToolTip="{ll:Str '添加快速切换小标,切换顶层或穿透'}"
-                            Grid.Row="1" Content="{ll:Str '添加小标,快速切换顶层或穿透'}" Checked="PetHelperBox_Checked" />
+                            Grid.Row="1" Content="{ll:Str '添加小标,快速切换顶层或穿透'}" Checked="PetHelperBox_Checked"
+                            Unchecked="PetHelperBox_Checked" />
 
                     <TextBlock Grid.Row="3" Text="{ll:Str 更高缩放}" VerticalAlignment="Center" />
                     <pu:Switch x:Name="FullScreenBox" Grid.Row="3" Grid.Column="2" Content="{ll:Str 支持更大缩放倍率}"
