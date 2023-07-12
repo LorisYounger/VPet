@@ -139,7 +139,7 @@ namespace VPet_Simulator.Windows
                 {
                     Process.Start(content);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MessageBox.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
                 }
@@ -243,15 +243,15 @@ namespace VPet_Simulator.Windows
                     break;
             }
         }
-        int lowstrengthAskCountFood = 1;
-        int lowstrengthAskCountDrink = 1;
+        int lowstrengthAskCountFood = 20;
+        int lowstrengthAskCountDrink = 20;
         private void lowStrength()
         {
             if (Core.Save.Mode == GameSave.ModeType.Happy || Core.Save.Mode == GameSave.ModeType.Nomal)
             {
                 if (Core.Save.StrengthFood < 75 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
                 {
-                    lowstrengthAskCountFood = 20;
+                    lowstrengthAskCountFood = Set.InteractionCycle;
                     var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
                     var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like < like);
                     if (Core.Save.StrengthFood > 60)
@@ -274,7 +274,7 @@ namespace VPet_Simulator.Windows
                 }
                 if (Core.Save.StrengthDrink < 75 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
                 {
-                    lowstrengthAskCountDrink = 20;
+                    lowstrengthAskCountDrink = Set.InteractionCycle;
                     var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
                     var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like < like);
                     if (Core.Save.StrengthDrink > 60)
@@ -300,6 +300,7 @@ namespace VPet_Simulator.Windows
             {
                 if (Core.Save.StrengthFood < 60 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
                 {
+                    lowstrengthAskCountFood = Set.InteractionCycle;
                     var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
                     var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
                     if (Core.Save.StrengthFood > 40)
@@ -322,6 +323,7 @@ namespace VPet_Simulator.Windows
                 }
                 if (Core.Save.StrengthDrink < 60 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
                 {
+                    lowstrengthAskCountDrink = Set.InteractionCycle;
                     var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
                     var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
                     if (Core.Save.StrengthDrink > 40)

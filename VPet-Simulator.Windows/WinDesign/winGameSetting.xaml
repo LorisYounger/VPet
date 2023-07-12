@@ -510,7 +510,7 @@
                                     Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center" Maximum="5"
                                     SmallChange=".05" Minimum="0.05" LargeChange="0.1" Value="0.5"
                                     ValueChanged="PressLengthSlider_ValueChanged" />
-                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" 
+                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"
                                     Text="{ll:Str '\{0:F2} 秒', ValueSource={Binding ElementName=PressLengthSlider,Path=Value}}"
                                     Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
                                     Background="{x:Null}" />
@@ -601,10 +601,12 @@
                                         VerticalAlignment="Top" FontWeight="Bold" FontSize="20" Background="{x:Null}"
                                         Foreground="{DynamicResource PrimaryText}" />
                                 <TextBlock Margin="0,0,0,0" TextWrapping="Wrap">
-                                <Run Text="{ll:Str '模组作者: '}" /><LineBreak />
+                                <Run Text="{ll:Str '模组作者: '}" FontWeight="Bold" /><LineBreak />
                                 <Run x:Name="runMODAuthor" Text="LorisYounger" />
-                                <LineBreak /><Run Text="{ll:Str '模组版本: '}" /><Run x:Name="runMODVer" Text="1.0" />
-                                <LineBreak /><Run Text="{ll:Str '游戏版本: '}" /><Run x:Name="runMODGameVer" Text="1.0" />
+                                <LineBreak /><Run Text="{ll:Str '模组版本: '}" FontWeight="Bold" /><Run x:Name="runMODVer"
+                                            Text="1.0" />
+                                <LineBreak /><Run Text="{ll:Str '游戏版本: '}" FontWeight="Bold" /><Run
+                                            x:Name="runMODGameVer" Text="1.0" />
                                 </TextBlock>
                             </StackPanel>
                         </Grid>

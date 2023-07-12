@@ -156,6 +156,13 @@ namespace VPet_Simulator.Windows
                                 LocalizeCore.AddCulture(dis.Name, new LPS_D(File.ReadAllText(fi.FullName)));
                             }
                         }
+
+                        if (mw.Set.Language == "null")
+                        {
+                            LocalizeCore.LoadDefaultCulture();
+                        }
+                        else
+                            LocalizeCore.LoadCulture(mw.Set.Language);
                         break;
                     case "plugin":
                         Tag.Add("plugin");
