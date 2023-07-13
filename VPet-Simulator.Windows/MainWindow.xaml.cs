@@ -27,6 +27,8 @@ using LinePutScript.Localization.WPF;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using static VPet_Simulator.Windows.PerformanceDesktopTransparentWindow;
+using System.Windows.Shapes;
+using Line = LinePutScript.Line;
 
 namespace VPet_Simulator.Windows
 {
@@ -157,6 +159,21 @@ namespace VPet_Simulator.Windows
 
         private List<Tuple<string, Helper.SayType>> rndtext;
         public long lastclicktime { get; set; }
+
+        public void LoadLatestSave()
+        {
+            if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData"))
+            {
+                var latestsave = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\UserData")
+                    .GetFiles("*.lps").OrderByDescending(x => x.LastWriteTime).FirstOrDefault();
+                if(latestsave != null)
+                {
+                    Core.Save = GameSave.Load(new Line(File.ReadAllText(latestsave.FullName)));
+                    return;
+                }
+            }
+            Core.Save = new GameSave("萝莉斯".Translate());
+        }
         public void GameLoad()
         {
             //加载所有MOD
@@ -221,8 +238,8 @@ namespace VPet_Simulator.Windows
             Core.Controller = new MWController(this);
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
                 Core.Save = GameSave.Load(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First());
-            else
-                Core.Save = new GameSave("萝莉斯".Translate());
+            else//如果加载存档失败了,试试加载备份,如果没备份,就新建一个
+                LoadLatestSave();
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
 
