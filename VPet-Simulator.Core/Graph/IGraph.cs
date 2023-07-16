@@ -1,7 +1,14 @@
-﻿using System;
+﻿using LinePutScript;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Media;
 using static VPet_Simulator.Core.GraphCore;
+
+using static VPet_Simulator.Core.IGraph;
+using static VPet_Simulator.Core.Picture;
 
 namespace VPet_Simulator.Core
 {
@@ -30,22 +37,10 @@ namespace VPet_Simulator.Core
         /// 是否准备完成
         /// </summary>
         bool IsReady { get; }
-        ///// <summary>
-        ///// 从0开始运行该动画, 等待部署完成后执行
-        ///// </summary>
-        //void WaitForReadyRun(Border parant, Action EndAction = null);
-        ///// <summary>//经过测试,储存到内存好处多多,不储存也要占用很多内存,干脆存了吧
-        ///// 是否储存到内存以支持快速显示
-        ///// </summary>
-        //bool StoreMemory { get; }
         /// <summary>
-        /// 该动画模式
+        /// 该动画信息
         /// </summary>
-        GameSave.ModeType ModeType { get; }
-        /// <summary>
-        /// 该动画类型
-        /// </summary>
-        GraphType GraphType { get; }
+        GraphInfo GraphInfo { get; }
         /// <summary>
         /// 停止动画
         /// </summary>

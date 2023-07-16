@@ -295,13 +295,11 @@ DLL引用名单#DLL Reference List:|
 提供联系方式以获得反馈,可不填\reg:QQ430081239#Provide contact information for feedback, or not\reg:service@exlb.net:|
 提交#Submit:|
 玩家取消上传存档#Player cancels uploading saved:|
-停止学习#Stop Learning:|
-当前已学习#Currently Learned:|
 秒#Sec:|
 停止#Stop:|
 当前已#Currently:|
-您的桌宠等级不足{0}/10\n无法进行工作{1}#Your desktop pet don't have enough level{0}/10\nUnable to work{1}:|
-工作取消#Work Cancel:|
+您的桌宠等级不足{0}/{2}\n无法进行{1}#Your pet don't have enough level {0}/{2}\nUnable to {1}:|
+{0}取消#{0} Cancel:|
 搜索商品#Search for products:|
 购买后不自动关闭窗口#don't close after buy:|
 凉茶#Cold Tea:|

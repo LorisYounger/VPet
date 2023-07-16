@@ -1,19 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using System.Windows.Documents;
+using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Core
 {
     public partial class Main
     {
-        public const int DistanceMax = 100;
-        public const int DistanceMid = 100;
-        public const int DistanceMin = 50;
-        public const int LoopProMax = 20;
-        public const int LoopMax = 10;
-        public const int LoopMid = 7;
-        public const int LoopMin = 5;
         public const int TreeRND = 5;
 
         /// <summary>
@@ -32,29 +29,31 @@ namespace VPet_Simulator.Core
             AutoReset = true,
             Enabled = true
         };
-        readonly GraphCore.Helper.SayType[] sayTypes = new GraphCore.Helper.SayType[] { GraphCore.Helper.SayType.Serious, GraphCore.Helper.SayType.Shining, GraphCore.Helper.SayType.Self };
-        public void SayRnd(string text)
+        /// <summary>
+        /// 说话,使用随机表情
+        /// </summary>
+        public void SayRnd(string text, bool force = false)
         {
-            Say(text, sayTypes[Function.Rnd.Next(sayTypes.Length)]);
+            Say(text, Core.Graph.FindName(GraphType.Say), force);
         }
         /// <summary>
         /// 说话
         /// </summary>
         /// <param name="text">说话内容</param>
-        public void Say(string text, GraphCore.Helper.SayType type = GraphCore.Helper.SayType.Shining, bool force = false)
+        public void Say(string text, string graphname = null, bool force = false)
         {
             Task.Run(() =>
             {
                 OnSay?.Invoke(text);
-                if (force || type != GraphCore.Helper.SayType.None && DisplayType == GraphCore.GraphType.Default)
-                    Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.A_Start), () =>
+                if (force || string.IsNullOrWhiteSpace(graphname) && DisplayType.Type == GraphType.Default)
+                    Display(graphname, AnimatType.A_Start, () =>
                     {
-                        Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text, type));
-                        Saying(type);
+                        Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text, graphname));
+                        DisplayBLoopingForce(graphname);
                     });
                 else
                 {
-                    Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text, type));
+                    Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text));
                 }
             });
         }
@@ -112,10 +111,6 @@ namespace VPet_Simulator.Core
                 labeldisplaytimer.Start();
             });
         }
-        public void Saying(GraphCore.Helper.SayType type)
-        {
-            Display(GraphCore.Helper.Convert(type, GraphCore.Helper.AnimatType.B_Loop), () => Saying(type));
-        }
         /// <summary>
         /// 根据消耗计算相关数据
         /// </summary>
@@ -135,114 +130,101 @@ namespace VPet_Simulator.Core
                     //睡觉消耗
                     if (Core.Save.StrengthFood >= 25)
                     {
-                        Core.Save.StrengthChange(TimePass * 4);
-                        if (Core.Save.StrengthFood >= 75)
-                            Core.Save.Health += TimePass * 2;
-                    }
-                    Core.Save.StrengthChangeFood(-TimePass / 2);
-                    Core.Save.StrengthChangeDrink(-TimePass / 2);
-                    Core.Save.FeelingChange(-freedrop / 2);
-                    break;
-                case WorkingState.WorkONE:
-                    //工作
-                    if (Core.Save.StrengthFood <= 25)
-                    {
-                        if (Core.Save.Strength >= TimePass)
-                        {
-                            Core.Save.StrengthChange(-TimePass);
-                        }
-                        else
-                        {
-                            Core.Save.Health -= TimePass;
-                        }
-                        var addmoney = TimePass * 5;
-                        Core.Save.Money += addmoney;
-                        WorkTimer.GetCount += addmoney;
-                    }
-                    else
-                    {
-                        Core.Save.StrengthChangeFood(TimePass);
-                        if (Core.Save.StrengthFood >= 75)
-                            Core.Save.Health += TimePass;
-                        var addmoney = TimePass * (10 + Core.Save.Level / 2);
-                        Core.Save.Money += addmoney;
-                        WorkTimer.GetCount += addmoney;
-                    }
-                    Core.Save.StrengthChangeFood(-TimePass * 3.5);
-                    Core.Save.StrengthChangeDrink(-TimePass * 2.5);
-                    Core.Save.FeelingChange(-freedrop * 1.5);
-                    break;
-                case WorkingState.WorkTWO:
-                    //工作2 更加消耗体力
-                    if (Core.Save.StrengthFood <= 25)
-                    {
-                        if (Core.Save.Strength >= TimePass * 2)
-                        {
-                            Core.Save.StrengthChange(-TimePass * 2);
-                        }
-                        else
-                        {
-                            Core.Save.Health -= TimePass;
-                        }
-                        var addmoney = TimePass * 10;
-                        Core.Save.Money += addmoney;
-                        WorkTimer.GetCount += addmoney;
-                    }
-                    else
-                    {
-                        if (Core.Save.StrengthFood >= 75)
-                            Core.Save.Health += TimePass;
-                        var addmoney = TimePass * (20 + Core.Save.Level);
-                        Core.Save.Money += addmoney;
-                        WorkTimer.GetCount += addmoney;
-                    }
-                    Core.Save.StrengthChangeFood(-TimePass * 4.5);
-                    Core.Save.StrengthChangeDrink(-TimePass * 7.5);
-                    Core.Save.FeelingChange(-freedrop * 2.5);
-                    break;
-                case WorkingState.Study:
-                    //学习
-                    if (Core.Save.StrengthFood <= 25)
-                    {
-                        if (Core.Save.Strength >= TimePass)
-                        {
-                            Core.Save.StrengthChange(-TimePass);
-                        }
-                        else
-                        {
-                            Core.Save.Health -= TimePass;
-                        }
-                        var addmoney = TimePass * (10 + Core.Save.Level);
-                        Core.Save.Exp += addmoney;
-                        WorkTimer.GetCount += addmoney;
-                    }
-                    else
-                    {
-                        Core.Save.StrengthChange(TimePass);
-                        if (Core.Save.StrengthFood >= 75)
-                            Core.Save.Health += TimePass;
-                        var addmoney = TimePass * (30 + Core.Save.Level);
-                        Core.Save.Exp += addmoney;
-                        WorkTimer.GetCount += addmoney;
-                    }
-                    Core.Save.StrengthChangeFood(-TimePass * 1.5);
-                    Core.Save.StrengthChangeDrink(-TimePass * 2);
-                    Core.Save.FeelingChange(-freedrop * 3);
-                    goto default;
-                default://默认
-                    //饮食等乱七八糟的消耗
-                    if (Core.Save.StrengthFood >= 50)
-                    {
                         Core.Save.StrengthChange(TimePass * 2);
                         if (Core.Save.StrengthFood >= 75)
-                            Core.Save.Health += Function.Rnd.Next(0, 2) * TimePass;
+                            Core.Save.Health += TimePass * 2;
+                        Core.Save.StrengthChangeFood(-TimePass / 2);
+                    }
+                    if (Core.Save.StrengthDrink >= 25)
+                    {
+                        Core.Save.StrengthChange(TimePass * 2);
+                        if (Core.Save.StrengthDrink >= 75)
+                            Core.Save.Health += TimePass * 2;
+                        Core.Save.StrengthChangeDrink(-TimePass / 2);
+                    }
+                    Core.Save.FeelingChange(-freedrop / 2);
+                    break;
+                case WorkingState.Work:
+                    var nowwork = Core.Graph.GraphConfig.Works[StateID];
+                    var needfood = TimePass * nowwork.StrengthFood;
+                    var needdrink = TimePass * nowwork.StrengthDrink;
+                    double efficiency = 0;
+                    int addhealth = -2;
+                    if (Core.Save.StrengthFood <= 25)
+                    {//低状态低效率
+                        Core.Save.StrengthChangeFood(-needfood / 2);
+                        efficiency += 0.25;
+                        if (Core.Save.Strength >= needfood)
+                        {
+                            Core.Save.StrengthChange(-needfood);
+                            efficiency += 0.1;
+                        }
+                        addhealth -= 2;
+                    }
+                    else
+                    {
+                        Core.Save.StrengthChangeFood(-needfood);
+                        efficiency += 0.5;
+                        if (Core.Save.StrengthFood >= 75)
+                            addhealth += Function.Rnd.Next(1, 3);
+                    }
+                    if (Core.Save.StrengthDrink <= 25)
+                    {//低状态低效率
+                        Core.Save.StrengthChangeDrink(-needdrink / 2);
+                        efficiency += 0.25;
+                        if (Core.Save.Strength >= needdrink)
+                        {
+                            Core.Save.StrengthChange(-needdrink);
+                            efficiency += 0.1;
+                        }
+                        addhealth -= 2;
+                    }
+                    else
+                    {
+                        Core.Save.StrengthChangeDrink(-needdrink);
+                        efficiency += 0.5;
+                        if (Core.Save.StrengthDrink >= 75)
+                            addhealth += Function.Rnd.Next(1, 3);
+                    }
+                    var addmoney = Math.Max(0, TimePass * (nowwork.MoneyBase * (efficiency) + Core.Save.Level * nowwork.MoneyLevel * (efficiency - 0.5) * 2));
+                    if (nowwork.Type == GraphHelper.Work.WorkType.Work)
+                        Core.Save.Money += addmoney;
+                    else
+                        Core.Save.Exp += addmoney;
+                    WorkTimer.GetCount += addmoney;
+                    Core.Save.FeelingChange(-freedrop * nowwork.Feeling);
+                    break;
+                default://默认
+                    //饮食等乱七八糟的消耗
+                    addhealth = -2;
+                    if (Core.Save.StrengthFood >= 50)
+                    {
+                        Core.Save.StrengthChangeFood(-TimePass);
+                        Core.Save.StrengthChange(TimePass);
+                        if (Core.Save.StrengthFood >= 75)
+                            addhealth += Function.Rnd.Next(1, 3);
                     }
                     else if (Core.Save.StrengthFood <= 25)
                     {
-                        Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
+                        Core.Save.Health -= Function.Rnd.Next() * TimePass;
+                        addhealth -= 2;
                     }
-                    Core.Save.StrengthChangeFood(-TimePass * 1.5);
-                    Core.Save.StrengthChangeDrink(-TimePass * 1.5);
+                    if (Core.Save.StrengthDrink >= 50)
+                    {
+                        Core.Save.StrengthChangeDrink(-TimePass);
+                        Core.Save.StrengthChange(TimePass);
+                        if (Core.Save.StrengthDrink >= 75)
+                            addhealth += Function.Rnd.Next(1, 3);
+                    }
+                    else if (Core.Save.StrengthDrink <= 25)
+                    {
+                        Core.Save.Health -= Function.Rnd.Next() * TimePass;
+                        addhealth -= 2;
+                    }
+                    if (addhealth > 0)
+                        Core.Save.Health += addhealth * TimePass;
+                    Core.Save.StrengthChangeFood(-TimePass);
+                    Core.Save.StrengthChangeDrink(-TimePass);
                     Core.Save.FeelingChange(-freedrop);
                     break;
             }
@@ -281,14 +263,24 @@ namespace VPet_Simulator.Core
             {
                 //TODO:切换显示动画
                 Core.Save.Mode = newmod;
-                //TODO:看情况播放停止工作动画
+                //看情况播放停止工作动画
                 if (newmod == GameSave.ModeType.Ill && (State != WorkingState.Nomal || State != WorkingState.Sleep))
                 {
                     WorkTimer.Stop();
                 }
             }
         }
+        /// <summary>
+        /// 状态计算Handle
+        /// </summary>
         public event Action FunctionSpendHandle;
+        /// <summary>
+        /// 想要随机显示的接口 (return:是否成功)
+        /// </summary>
+        public List<Func<bool>> RandomInteractionAction = new List<Func<bool>>();
+        /// <summary>
+        /// 每隔指定时间自动触发计算 可以关闭EventTimer后手动计算
+        /// </summary>
         public void EventTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             //所有Handle
@@ -308,81 +300,62 @@ namespace VPet_Simulator.Core
             //UIHandle
             Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
 
-            if (DisplayType == GraphCore.GraphType.Default && !isPress)
-                if (Core.Save.Mode == GameSave.ModeType.Ill)
-                {//生病时候的随机
-
+            if (DisplayType.Type == GraphType.Default && !isPress)
+                switch (Function.Rnd.Next(Math.Max(20, Core.Controller.InteractionCycle - CountNomal)))
+                {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                        //显示移动
+                        DisplayMove();
+                        break;
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                        //显示待机
+                        DisplayIdel();
+                        break;
+                    case 8:
+                    case 9:
+                        DisplayIdel_StateONE();
+                        break;
+                    case 10:
+                    case 11:
+                    case 12:
+                    case 13:
+                        //case 14:
+                        //case 15:
+                        //给其他显示留个机会
+                        var list = RandomInteractionAction.ToList();
+                        for (int i = Function.Rnd.Next(list.Count); 0 != list.Count; i = Function.Rnd.Next(list.Count))
+                        {
+                            var act = list[i];
+                            if (act.Invoke())
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                list.RemoveAt(i);
+                            }
+                        }
+                        break;
+                    case 16:
+                        DisplaySleep();
+                        break;
                 }
-                else//TODO:制作随机列表
-                    switch (Function.Rnd.Next(Math.Max(20, Core.Controller.InteractionCycle - CountNomal)))
-                    {
-                        case 0:
-                            //随机向右
-                            DisplayWalk_Left();
-                            break;
-                        case 1:
-                            DisplayClimb_Left_UP();
-                            break;
-                        case 2:
-                            DisplayClimb_Left_DOWN();
-                            break;
-                        case 3:
-                            DisplayClimb_Right_UP();
-                            break;
-                        case 4:
-                            DisplayClimb_Right_DOWN();
-                            break;
-                        case 5:
-                            DisplayWalk_Right();
-                            break;
-                        case 6:
-                            DisplayFall_Left();
-                            break;
-                        case 7:
-                            DisplayFall_Right();
-                            break;
-                        case 8:
-                            DisplayClimb_Top_Right();
-                            break;
-                        case 9:
-                            DisplayClimb_Top_Left();
-                            break;
-                        case 10:
-                            DisplayCrawl_Left();
-                            break;
-                        case 11:
-                            DisplayCrawl_Right();
-                            break;
-                        case 13:
-                        case 14:
-                            DisplaySleep();
-                            break;
-                        case 15:
-                        case 16:
-                            DisplayBoring();
-                            break;
-                        case 18:
-                        case 17:
-                            DisplaySquat();
-                            break;
-                        case 12:
-                        case 19:
-                        case 20:
-                            DisplayIdel_StateONE();
-                            break;
-                        default:
-                            break;
-                    }
 
         }
         /// <summary>
         /// 定点移动位置向量
         /// </summary>
-        private Point MoveTimerPoint = new Point(0, 0);
+        public Point MoveTimerPoint = new Point(0, 0);
         /// <summary>
         /// 定点移动定时器
         /// </summary>
-        private Timer MoveTimer = new Timer(125)
+        public Timer MoveTimer = new Timer(125)
         {
             AutoReset = true,
         };
@@ -436,6 +409,10 @@ namespace VPet_Simulator.Core
         /// </summary>
         public WorkingState State = WorkingState.Nomal;
         /// <summary>
+        /// 当前状态辅助ID
+        /// </summary>
+        public int StateID = 0;
+        /// <summary>
         /// 当前正在的状态
         /// </summary>
         public enum WorkingState
@@ -445,25 +422,21 @@ namespace VPet_Simulator.Core
             /// </summary>
             Nomal,
             /// <summary>
-            /// 正在干活1
+            /// 正在干活/学习中
             /// </summary>
-            WorkONE,
-            /// <summary>
-            /// 正在干活1
-            /// </summary>
-            WorkTWO,
-            /// <summary>
-            /// 学习中 
-            /// </summary>
-            Study,
+            Work,
             /// <summary>
             /// 睡觉
             /// </summary>
             Sleep,
-            ///// <summary>
-            ///// 玩耍中
-            ///// </summary>
-            //Playing,
+            /// <summary>
+            /// 旅游中
+            /// </summary>
+            Travel,
+            /// <summary>
+            /// 其他状态,给开发者留个空位计算
+            /// </summary>
+            Empty,
         }
     }
 }

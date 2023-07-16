@@ -59,7 +59,7 @@ namespace VPet_Simulator.Windows.Interface
         /// 需要饮料时会说的话
         /// </summary>
         List<LowText> LowDrinkText { get; }
-         /// <summary>
+        /// <summary>
         /// 图片资源
         /// </summary>
         ImageResources ImageSources { get; }
@@ -77,14 +77,27 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         void LoadDIY();
         /// <summary>
-        /// 运行动作
+        /// 显示设置页面
         /// </summary>
-        /// <param name="action">动作名称</param>
-        void RunAction(string action);
-        ///// <summary>
-        ///// 语言字典
-        ///// </summary>
-        //Dictionary<string, LPS_D> GetLanguage();
+        /// <param name="page">设置页</param>
+        void ShowSetting(int page = -1);
+        /// <summary>
+        /// 显示更好买页面
+        /// </summary>
+        /// <param name="type">食物类型</param>
+        void ShowBetterBuy(Food.FoodType type);
+        /// <summary>
+        /// 关闭桌宠
+        /// </summary>
+        void Close();
+        /// <summary>
+        /// 重启桌宠
+        /// </summary>
+        void Restart();
+        /// <summary>
+        /// 鼠标穿透
+        /// </summary>
+        bool MouseHitThrough { get; set; }
     }
-    
+
 }

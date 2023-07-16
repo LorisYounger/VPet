@@ -14,6 +14,7 @@
     <WarningLevel>4</WarningLevel>
     <Deterministic>true</Deterministic>
     <LangVersion>latest</LangVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -79,8 +80,8 @@
     <Reference Include="Panuon.WPF, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Panuon.WPF.1.0.1\lib\net462\Panuon.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Panuon.WPF.UI, Version=1.1.13.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Panuon.WPF.UI.1.1.14\lib\net462\Panuon.WPF.UI.dll</HintPath>
+    <Reference Include="Panuon.WPF.UI, Version=1.1.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Panuon.WPF.UI.1.1.15\lib\net462\Panuon.WPF.UI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -127,10 +128,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Graph\EyeTracking.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Display\WorkTimer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -147,9 +144,8 @@
     </Compile>
     <Compile Include="Graph\FoodAnimation.cs" />
     <Compile Include="Graph\GraphCore.cs" />
-    <Compile Include="Graph\EyeTracking.xaml.cs">
-      <DependentUpon>EyeTracking.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Graph\GraphHelper.cs" />
+    <Compile Include="Graph\GraphInfo.cs" />
     <Compile Include="Graph\IGraph.cs" />
     <Compile Include="Graph\Picture.cs" />
     <Compile Include="Graph\PNGAnimation.cs" />

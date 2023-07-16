@@ -1,11 +1,16 @@
 ﻿using LinePutScript;
 using LinePutScript.Converter;
+using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Xml.Linq;
+using static VPet_Simulator.Core.GraphHelper;
+using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Core
 {
@@ -15,7 +20,6 @@ namespace VPet_Simulator.Core
     public class GraphCore
     {
 
-
         public GraphCore()
         {
             if (!Directory.Exists(CachePath))
@@ -24,326 +28,15 @@ namespace VPet_Simulator.Core
         }
 
         public static string CachePath = AppDomain.CurrentDomain.BaseDirectory + @"\cache";
-        /// <summary>
-        /// 动画类型
-        /// </summary>
-        public enum GraphType
-        {
-            //  名称 ?描述? ?动作? 大约时间(L:(1000+)M:(200-800)S:(125))
-            /// <summary>
-            /// 不被启用/使用的 不包含在GrapType S
-            /// </summary>
-            Not_Able,
-            /// <summary>
-            /// 被提起动态 (循环) L
-            /// </summary>
-            Raised_Dynamic,
-            /// <summary>
-            /// 被提起静态 (开始) L
-            /// </summary>
-            Raised_Static_A_Start,
-            /// <summary>
-            /// 被提起静态 (循环) L
-            /// </summary>
-            Raised_Static_B_Loop,
-            /// <summary>
-            /// 从上向右爬 (循环) M
-            /// </summary>
-            Climb_Top_Right,
-            /// <summary>
-            /// 从上向左爬 (循环) M
-            /// </summary>
-            Climb_Top_Left,
-            /// <summary>
-            /// 爬起向右 M
-            /// </summary>
-            Climb_Up_Right,
-            /// <summary>
-            /// 爬起向左 M
-            /// </summary>
-            Climb_Up_Left,
-            /// <summary>
-            /// 从右边爬 (开始) S
-            /// </summary>
-            Climb_Right_A_Start,
-            /// <summary>
-            /// 从左边爬 (开始) S
-            /// </summary>
-            Climb_Left_A_Start,
-            /// <summary>
-            /// 从右边爬 (循环) M
-            /// </summary>
-            Climb_Right_B_Loop,
-            /// <summary>
-            /// 从左边爬 (循环) M
-            /// </summary>
-            Climb_Left_B_Loop,
-            /// <summary>
-            /// 呼吸 (循环) L
-            /// </summary>
-            Default,
-            /// <summary>
-            /// 摸头 (开始) S
-            /// </summary>
-            Touch_Head_A_Start,
-            /// <summary>
-            /// 摸头 (循环) M
-            /// </summary>
-            Touch_Head_B_Loop,
-            /// <summary>
-            /// 摸头 (结束) S
-            /// </summary>
-            Touch_Head_C_End,
-            /// <summary>
-            /// 摸身体 (开始) S
-            /// </summary>
-            Touch_Body_A_Start,
-            /// <summary>
-            /// 摸身体 (循环) M
-            /// </summary>
-            Touch_Body_B_Loop,
-            /// <summary>
-            /// 摸身体 (结束) S
-            /// </summary>
-            Touch_Body_C_End,
-            /// <summary>
-            /// 爬行向右 (开始) S
-            /// </summary>
-            Crawl_Right_A_Start,
-            /// <summary>
-            /// 爬行向右 (循环) M
-            /// </summary>
-            Crawl_Right_B_Loop,
-            /// <summary>
-            /// 爬行向右 (结束) S
-            /// </summary>
-            Crawl_Right_C_End,
-            /// <summary>
-            /// 爬行向左 (开始) S
-            /// </summary>
-            Crawl_Left_A_Start,
-            /// <summary>
-            /// 爬行向左 (循环) M
-            /// </summary>
-            Crawl_Left_B_Loop,
-            /// <summary>
-            /// 爬行向左 (结束) S
-            /// </summary>
-            Crawl_Left_C_End,
-            /// <summary>
-            /// 下蹲 (开始) S
-            /// </summary>
-            Squat_A_Start,
-            /// <summary>
-            /// 下蹲 (循环) M
-            /// </summary>
-            Squat_B_Loop,
-            /// <summary>
-            /// 下蹲 (结束) S
-            /// </summary>
-            Squat_C_End,
-            /// <summary>
-            /// 下落向左 (开始) S
-            /// </summary>
-            Fall_Left_A_Start,
-            /// <summary>
-            /// 下落向左 (循环) M
-            /// </summary>
-            Fall_Left_B_Loop,
-            /// <summary>
-            /// 下落向左 (结束) S
-            /// </summary>
-            Fall_Left_C_End,
-            /// <summary>
-            /// 下落向右 (开始) S
-            /// </summary>
-            Fall_Right_A_Start,
-            /// <summary>
-            /// 下落向右 (循环) M
-            /// </summary>
-            Fall_Right_B_Loop,
-            /// <summary>
-            /// 下落向右 (结束) S
-            /// </summary>
-            Fall_Right_C_End,
-            /// <summary>
-            /// 走路向右 (开始) S
-            /// </summary>
-            Walk_Right_A_Start,
-            /// <summary>
-            /// 走路向右 (循环) M
-            /// </summary>
-            Walk_Right_B_Loop,
-            /// <summary>
-            /// 走路向右 (结束) S
-            /// </summary>
-            Walk_Right_C_End,
-            /// <summary>
-            /// 走路向左 (开始) S
-            /// </summary>
-            Walk_Left_A_Start,
-            /// <summary>
-            /// 走路向左 (循环) M
-            /// </summary>
-            Walk_Left_B_Loop,
-            /// <summary>
-            /// 走路向左 (结束) S
-            /// </summary>
-            Walk_Left_C_End,
-            /// <summary>
-            /// 无聊 (开始) S
-            /// </summary>
-            Boring_A_Start,
-            /// <summary>
-            /// 无聊 (循环) M
-            /// </summary>
-            Boring_B_Loop,
-            /// <summary>
-            /// 无聊 (结束) S
-            /// </summary>
-            Boring_C_End,
-            /// <summary>
-            /// 睡觉 (开始) S
-            /// </summary>
-            Sleep_A_Start,
-            /// <summary>
-            /// 睡觉 (循环) M
-            /// </summary>
-            Sleep_B_Loop,
-            /// <summary>
-            /// 睡觉 (结束) S
-            /// </summary>
-            Sleep_C_End,
-            /// <summary>
-            /// 说话 (开始) S
-            /// </summary>
-            Say_Serious_A_Start,
-            /// <summary>
-            /// 说话 (循环) M
-            /// </summary>
-            Say_Serious_B_Loop,
-            /// <summary>
-            /// 说话 (结束) S
-            /// </summary>
-            Say_Serious_C_End,
-            /// <summary>
-            /// 说话 (开始) S
-            /// </summary>
-            Say_Shining_A_Start,
-            /// <summary>
-            /// 说话 (循环) M
-            /// </summary>
-            Say_Shining_B_Loop,
-            /// <summary>
-            /// 说话 (结束) S
-            /// </summary>
-            Say_Shining_C_End,
-            /// <summary>
-            /// 说话 (开始) S
-            /// </summary>
-            Say_Self_A_Start,
-            /// <summary>
-            /// 说话 (循环) M
-            /// </summary>
-            Say_Self_B_Loop,
-            /// <summary>
-            /// 说话 (结束) S
-            /// </summary>
-            Say_Self_C_End,
-            /// <summary>
-            /// 待机 模式1 (开始) S
-            /// </summary>
-            Idel_StateONE_A_Start,
-            /// <summary>
-            /// 待机 模式1 (循环) M
-            /// </summary>
-            Idel_StateONE_B_Loop,
-            /// <summary>
-            /// 待机 模式1 (结束) S
-            /// </summary>
-            Idel_StateONE_C_End,
-            /// <summary>
-            /// 待机 模式2 (开始) S
-            /// </summary>
-            Idel_StateTWO_A_Start,
-            /// <summary>
-            /// 待机 模式2 (循环) M
-            /// </summary>
-            Idel_StateTWO_B_Loop,
-            /// <summary>
-            /// 待机 模式2 (结束) S
-            /// </summary>
-            Idel_StateTWO_C_End,
-            /// <summary>
-            /// 开机 M
-            /// </summary>
-            StartUP,
-            /// <summary>
-            /// 关机 M
-            /// </summary>
-            Shutdown,
-            /// <summary>
-            /// 学习 (开始) S
-            /// </summary>
-            Study_A_Start,
-            /// <summary>
-            /// 学习 (循环) M
-            /// </summary>
-            Study_B_Loop,
-            /// <summary>
-            /// 学习 (结束) S
-            /// </summary>
-            Study_C_End,
-            /// <summary>
-            /// 工作 (开始) S
-            /// </summary>
-            WorkONE_A_Start,
-            /// <summary>
-            /// 工作 (循环) M
-            /// </summary>
-            WorkONE_B_Loop,
-            /// <summary>
-            /// 工作 (结束) S
-            /// </summary>
-            WorkONE_C_End,
-            /// <summary>
-            /// 直播 (开始) S
-            /// </summary>
-            WorkTWO_A_Start,
-            /// <summary>
-            /// 直播 (循环) M
-            /// </summary>
-            WorkTWO_B_Loop,
-            /// <summary>
-            /// 直播 (结束) S
-            /// </summary>
-            WorkTWO_C_End,
-            /// <summary>
-            /// 口渴 M
-            /// </summary>
-            Switch_Thirsty,
-            /// <summary>
-            /// 饥饿 M
-            /// </summary>
-            Switch_Hunger,
-            /// <summary>
-            /// 吃东西 M
-            /// </summary>
-            Eat,
-            /// <summary>
-            /// 喝东西 M
-            /// </summary>
-            Drink,
-        }
 
         /// <summary>
-        /// 图像字典
+        /// 图像名字字典: 动画类型->动画名字
         /// </summary>
-        public Dictionary<GraphType, List<IGraph>> Graphs = new Dictionary<GraphType, List<IGraph>>();
+        public Dictionary<GraphType, HashSet<string>> GraphsName = new Dictionary<GraphType, HashSet<string>>();
         /// <summary>
-        /// 图像字典(不被主要引用)
+        /// 图像字典 动画名字->状态+动作->动画
         /// </summary>
-        public Dictionary<string, List<IGraph>> CommGraphs = new Dictionary<string, List<IGraph>>();
+        public Dictionary<string, Dictionary<AnimatType, List<IGraph>>> GraphsList = new Dictionary<string, Dictionary<AnimatType, List<IGraph>>>();
         /// <summary>
         /// 通用UI资源
         /// </summary>
@@ -356,99 +49,68 @@ namespace VPet_Simulator.Core
         /// 添加动画
         /// </summary>
         /// <param name="graph">动画</param>
-        /// <param name="type">类型</param>
-        public void AddGraph(IGraph graph, GraphType type)
+        public void AddGraph(IGraph graph)
         {
-            //switch (graph.GraphType)
-            //{
-            //    case GraphType.Default:
-            //    case GraphType.Boring_B_Loop:
-            //    case GraphType.Squat_B_Loop:
-            //        graph.IsLoop = true;
-            //        break;
-            //}//循环真要不得,要做随机循环
-            if (!Graphs.ContainsKey(type))
+            if (graph.GraphInfo.Type != GraphType.Common)
             {
-                Graphs.Add(type, new List<IGraph>());
+                if (!GraphsName.TryGetValue(graph.GraphInfo.Type, out var d2))
+                {
+                    d2 = new HashSet<string>();
+                    GraphsName.Add(graph.GraphInfo.Type, d2);
+                }
+                d2.Add(graph.GraphInfo.Name);
             }
-            Graphs[type].Add(graph);
-        }
-        /// <summary>
-        /// 添加动画
-        /// </summary>
-        /// <param name="graph">动画</param>
-        public void AddGraph(IGraph graph) => AddGraph(graph, graph.GraphType);
-        /// <summary>
-        /// 添加动画
-        /// </summary>
-        /// <param name="graph">动画</param>
-        /// <param name="type">类型</param>
-        public void AddCOMMGraph(IGraph graph, string Name)
-        {
-            if (!CommGraphs.ContainsKey(Name))
+            if (!GraphsList.TryGetValue(graph.GraphInfo.Name, out var d3))
             {
-                CommGraphs.Add(Name, new List<IGraph>());
+                d3 = new Dictionary<AnimatType, List<IGraph>>();
+                GraphsList.Add(graph.GraphInfo.Name, d3);
             }
-            CommGraphs[Name].Add(graph);
+            if (!d3.TryGetValue(graph.GraphInfo.Animat, out var l3))
+            {
+                l3 = new List<IGraph>();
+                d3.Add(graph.GraphInfo.Animat, l3);
+            }
+            l3.Add(graph);
         }
-        /// <summary>
-        /// 添加动画 自动创建
-        /// </summary>
-        /// <param name="path">位置</param>
-        /// <param name="modetype">状态类型</param>
-        /// <param name="graphtype">动画类型</param>
-        ///// <param name="storemem">是否储存到内存以节约加载</param>
-        public void AddGraph(string path, GameSave.ModeType modetype, GraphType graphtype)//, bool storemem = false)
-        {
-            var paths = new DirectoryInfo(path).GetFiles();
-            if (paths.Length == 0)
-                return;
-            if (paths.Length == 1)
-                AddGraph(new Picture(this, paths[0].FullName, modetype, graphtype,
-                    int.Parse(paths[0].Name.Split('.').Reverse().ToArray()[1].Split('_').Last())), graphtype);
-            else
-                AddGraph(new PNGAnimation(this, path, paths, modetype, graphtype), graphtype);
-        }
-        /// <summary>
-        /// 随机数字典(用于确保随机动画不会错位)
-        /// </summary>
-        public Dictionary<int, int> RndGraph = new Dictionary<int, int>();
 
+        /// <summary>
+        /// 获得随机动画名字
+        /// </summary>
+        /// <param name="type">动画类型</param>
+        /// <returns>动画名字,找不到则返回null</returns>
+        public string FindName(GraphType type)
+        {
+            if (GraphsName.TryGetValue(type, out var gl))
+            {
+                return gl.ElementAt(Function.Rnd.Next(gl.Count));
+            }
+            return null;
+        }
         /// <summary>
         /// 查找动画
         /// </summary>
         /// <param name="type">动画类型</param>
+        /// <param name="GraphName">动画名字</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
-        ///// <param name="storernd">是否储存随机数字典</param>
-        public IGraph FindGraph(GraphType type, GameSave.ModeType mode)
+        /// <param name="animat">动画的动作 Start Loop End</param>
+        public IGraph FindGraph(string GraphName, AnimatType animat, GameSave.ModeType mode)
         {
-            if (Graphs.ContainsKey(type))
+            if (GraphName == null)
+                return null;
+            if (GraphsList.TryGetValue(GraphName, out var d3) && d3.TryGetValue(animat, out var gl))
             {
-                var list = Graphs[type].FindAll(x => x.ModeType == mode);
+                var list = gl.FindAll(x => x.GraphInfo.ModeType == mode);
                 if (list.Count > 0)
                 {
                     if (list.Count == 1)
                         return list[0];
-                    if (GraphConfig.StoreRnd.Contains(type.ToString()))
-                        if (RndGraph.TryGetValue(list.Count, out int index))
-                        {
-                            return list[index];
-                        }
-                        else
-                        {
-                            index = Function.Rnd.Next(list.Count);
-                            RndGraph.Add(list.Count, index);
-                            return list[index];
-                        }
-                    else
-                        return list[Function.Rnd.Next(list.Count)];
-
+                    return list[Function.Rnd.Next(list.Count)];
                 }
                 int i = (int)mode + 1;
                 if (i < 3)
                 {
                     //向下兼容的动画
-                    list = Graphs[type].FindAll(x => x.ModeType == (GameSave.ModeType)i);
+                    list = gl.FindAll(x => x.GraphInfo.ModeType == (GameSave.ModeType)i);
                     if (list.Count > 0)
                         return list[Function.Rnd.Next(list.Count)];
                 }
@@ -456,78 +118,62 @@ namespace VPet_Simulator.Core
                 if (i >= 0)
                 {
                     //向上兼容的动画
-                    list = Graphs[type].FindAll(x => x.ModeType == (GameSave.ModeType)i);
+                    list = gl.FindAll(x => x.GraphInfo.ModeType == (GameSave.ModeType)i);
                     if (list.Count > 0)
                         return list[Function.Rnd.Next(list.Count)];
                 }
                 //如果实在找不到,就走随机数
                 //if (mode != GameSave.ModeType.Ill)
                 //{
-                list = Graphs[type];
+                list = gl;
                 if (list.Count > 0)
                     return list[Function.Rnd.Next(list.Count)];
-                //}
+                //}                
             }
             return null;// FindGraph(GraphType.Default, mode);
         }
         /// <summary>
-        /// 查找动画
+        /// 查找动画列表
         /// </summary>
         /// <param name="type">动画类型</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
-        ///// <param name="storernd">是否储存随机数字典</param>
-        public IGraph FindCOMMGraph(string Name, GameSave.ModeType mode)
+        /// <param name="animat">动画的动作 Start Loop End</param>
+        public List<IGraph> FindGraphs(string GraphName, AnimatType animat, GameSave.ModeType mode)
         {
-            if (CommGraphs.ContainsKey(Name))
+            if (GraphName == null)
+                return null;
+            if (GraphsList.TryGetValue(GraphName, out var d3) && d3.TryGetValue(animat, out var gl))
             {
-                var list = CommGraphs[Name].FindAll(x => x.ModeType == mode);
+                var list = gl.FindAll(x => x.GraphInfo.ModeType == mode);
                 if (list.Count > 0)
                 {
-                    if (list.Count == 1)
-                        return list[0];
-                    if (GraphConfig.StoreRnd.Contains(Name))
-                        if (RndGraph.TryGetValue(list.Count, out int index))
-                        {
-                            return list[index];
-                        }
-                        else
-                        {
-                            index = Function.Rnd.Next(list.Count);
-                            RndGraph.Add(list.Count, index);
-                            return list[index];
-                        }
-                    else
-                        return list[Function.Rnd.Next(list.Count)];
-
+                    return list;
                 }
-                if (mode != GameSave.ModeType.Ill)
+                int i = (int)mode + 1;
+                if (i < 3)
                 {
-                    list = CommGraphs[Name].FindAll(x => x.ModeType != GameSave.ModeType.Ill);
+                    //向下兼容的动画
+                    list = gl.FindAll(x => x.GraphInfo.ModeType == (GameSave.ModeType)i);
                     if (list.Count > 0)
-                        return list[Function.Rnd.Next(list.Count)];
+                        return list;
                 }
+                i = (int)mode - 1;
+                if (i >= 0)
+                {
+                    //向上兼容的动画
+                    list = gl.FindAll(x => x.GraphInfo.ModeType == (GameSave.ModeType)i);
+                    if (list.Count > 0)
+                        return list;
+                }
+                //如果实在找不到,就走随机数
+                //if (mode != GameSave.ModeType.Ill)
+                //{
+                list = gl;
+                if (list.Count > 0)
+                    return list;
+                //}                
             }
             return null;// FindGraph(GraphType.Default, mode);
-        }
-        static string[] graphtypevalue = null;
-        /// <summary>
-        /// 动画类型默认前文本
-        /// </summary>
-        public static string[] GraphTypeValue
-        {
-            get
-            {
-                if (graphtypevalue == null)
-                {
-                    List<string> gtv = new List<string>();
-                    foreach (string v in Enum.GetNames(typeof(GraphType)))
-                    {
-                        gtv.Add(v.Replace("_Start", "").Replace("_Loop", "").Replace("_End", "").ToLower());
-                    }
-                    graphtypevalue = gtv.ToArray();
-                }
-                return graphtypevalue;
-            }
         }
 
         public Config GraphConfig;
@@ -557,47 +203,28 @@ namespace VPet_Simulator.Core
             /// 提起定位点
             /// </summary>
             public Point[] RaisePoint;
+
             /// <summary>
-            /// 行走速度
+            /// 所有移动
             /// </summary>
-            public double SpeedWalk;
+            public List<Move> Moves = new List<Move>();
+
             /// <summary>
-            /// 侧边爬行速度
+            /// 所有工作/学习
             /// </summary>
-            public double SpeedClimb;
+            public List<Work> Works = new List<Work>();
+
+            public Line_D Str;
             /// <summary>
-            /// 顶部爬行速度
+            /// 持续时间
             /// </summary>
-            public double SpeedClimbTop;
+            public Line_D Duration;
             /// <summary>
-            /// 爬行速度
+            /// 获取持续时间
             /// </summary>
-            public double SpeedCrawl;
-            /// <summary>
-            /// 掉落速度 X轴
-            /// </summary>
-            public double SpeedFallX;
-            /// <summary>
-            /// 掉落速度 Y轴
-            /// </summary>
-            public double SpeedFallY;
-            /// <summary>
-            /// 定位爬行左边距离
-            /// </summary>
-            public double LocateClimbLeft;
-            /// <summary>
-            /// 定位爬行右边距离
-            /// </summary>
-            public double LocateClimbRight;
-            /// <summary>
-            /// 定位爬行上边距离
-            /// </summary>
-            public double LocateClimbTop;
-            public List<string> StoreRnd = new List<string>();
-            public ILine Str;
-            public WorkTimer.UIStyleConfig UIStyleWork1;
-            public WorkTimer.UIStyleConfig UIStyleWork2;
-            public WorkTimer.UIStyleConfig UIStyleStudy;
+            /// <param name="name">动画名称</param>
+            /// <returns>持续时间</returns>
+            public int GetDuration(string name) => Duration.GetInt(name, 20);
             /// <summary>
             /// 获得 Str 里面储存的文本 (已翻译)
             /// </summary>
@@ -630,31 +257,17 @@ namespace VPet_Simulator.Core
                     new Point(lps["raisepoint"][(gdbe)"poorcondition_x"], lps["raisepoint"][(gdbe)"poorcondition_y"]),
                     new Point(lps["raisepoint"][(gdbe)"ill_x"], lps["raisepoint"][(gdbe)"ill_y"])
                 };
-                var s = lps["speed"];
-                SpeedWalk = s[(gdbe)"walk"];
-                SpeedClimb = s[(gdbe)"climb"];
-                SpeedClimbTop = s[(gdbe)"climbtop"];
-                SpeedCrawl = s[(gdbe)"crawl"];
-                SpeedFallX = s[(gdbe)"fallx"];
-                SpeedFallY = s[(gdbe)"fally"];
 
-
-                s = lps["locate"];
-                LocateClimbLeft = s[(gdbe)"climbleft"];
-                LocateClimbRight = s[(gdbe)"climbright"];
-                LocateClimbTop = s[(gdbe)"climbtop"];
-
-                foreach (Sub sub in lps["storernd"])
+                foreach (var line in lps.FindAllLine("work"))
                 {
-                    StoreRnd.Add(sub.Name);
+                    Works.Add(LPSConvert.DeserializeObject<Work>(line));
                 }
-                var line = lps.FindLine("UIStyleConfig", "work1");
-                UIStyleWork1 = line == null ? new WorkTimer.UIStyleConfig() : LPSConvert.DeserializeObject<WorkTimer.UIStyleConfig>(line);
-                line = lps.FindLine("UIStyleConfig", "work2");
-                UIStyleWork2 = line == null ? new WorkTimer.UIStyleConfig() : LPSConvert.DeserializeObject<WorkTimer.UIStyleConfig>(line);
-                line = lps.FindLine("UIStyleConfig", "study");
-                UIStyleStudy = line == null ? new WorkTimer.UIStyleConfig() : LPSConvert.DeserializeObject<WorkTimer.UIStyleConfig>(line);
-                Str = lps["str"];
+                foreach (var line in lps.FindAllLine("move"))
+                {
+                    Moves.Add(LPSConvert.DeserializeObject<Move>(line));
+                }
+                Str = new Line_D(lps["str"]);
+                Duration = new Line_D(lps["duration"]);
             }
             /// <summary>
             /// 加载更多设置,新的替换后来的,允许空内容
@@ -687,79 +300,22 @@ namespace VPet_Simulator.Core
                     new Point(lps["raisepoint"].GetDouble("happy_x",RaisePoint[0].X), lps["raisepoint"].GetDouble("happy_y",RaisePoint[0].Y)),
                     new Point(lps["raisepoint"].GetDouble ("nomal_x",RaisePoint[1].X), lps["raisepoint"].GetDouble("nomal_y",RaisePoint[1].Y)),
                     new Point(lps["raisepoint"].GetDouble("poorcondition_x",RaisePoint[2].X), lps["raisepoint"].GetDouble("poorcondition_y",RaisePoint[2].Y)),
-                    new Point(lps["raisepoint"].GetDouble("ill_x",RaisePoint[3].X), lps["raisepoint"].GetDouble("ill_y",RaisePoint[3].Y))
-                };
+                    new Point(lps["raisepoint"].GetDouble("ill_x",RaisePoint[3].X), lps["raisepoint"].GetDouble("ill_y",RaisePoint[3].Y))};
                 }
-                var s = lps.FindLine("speed");
-                if (s != null)
+
+                Str.AddRange(lps["str"]);
+                Duration.AddRange(lps["duration"]);
+             
+                foreach (var line in lps.FindAllLine("work"))
                 {
-                    SpeedWalk = s.GetDouble("walk", SpeedWalk);
-                    SpeedClimb = s.GetDouble("climb", SpeedClimb);
-                    SpeedClimbTop = s.GetDouble("climbtop", SpeedClimbTop);
-                    SpeedCrawl = s.GetDouble("crawl", SpeedCrawl);
-                    SpeedFallX = s.GetDouble("fallx", SpeedFallX);
-                    SpeedFallY = s.GetDouble("fally", SpeedFallY);
+                    Works.Add(LPSConvert.DeserializeObject<Work>(line));
                 }
-                s = lps.FindLine("locate");
-                if (s != null)
+                foreach (var line in lps.FindAllLine("move"))
                 {
-                    LocateClimbLeft = s.GetDouble("climbleft", LocateClimbLeft);
-                    LocateClimbRight = s.GetDouble("climbright", LocateClimbRight);
-                    LocateClimbTop = s.GetDouble("climbtop", LocateClimbTop);
-                }
-                foreach (Sub sub in lps["storernd"])
-                {
-                    if (!StoreRnd.Contains(sub.Name))
-                        StoreRnd.Add(sub.Name);
-                }
-                foreach (Sub sub in lps["str"])
-                {
-                    if (!Str.Contains(sub.Name))
-                        Str.Add(sub);
+                    Moves.Add(LPSConvert.DeserializeObject<Move>(line));
                 }
             }
         }
 
-        public static class Helper
-        {
-            public enum AnimatType
-            {
-                A_Start,
-                B_Loop,
-                C_End,
-            }
-            public enum SayType
-            {
-                /// <summary>
-                /// 无:不执行动作
-                /// </summary>
-                None,
-                /// <summary>
-                /// 默认说话
-                /// </summary>
-                Default,
-                /// <summary>
-                /// 严肃
-                /// </summary>
-                Serious,
-                /// <summary>
-                /// 闪亮
-                /// </summary>
-                Shining,
-                /// <summary>
-                /// 自己
-                /// </summary>
-                Self,
-                /// <summary>
-                /// 错误
-                /// </summary>
-                Error
-            }
-            public static GraphType Convert(SayType sayType, AnimatType type)
-            {
-                string say = "Say_" + sayType.ToString() + '_' + type.ToString(); // (type == null ? "" : '_' + type.ToString());
-                return (GraphType)Enum.Parse(typeof(GraphType), say);
-            }
-        }
     }
 }

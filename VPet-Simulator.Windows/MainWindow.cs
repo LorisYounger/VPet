@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
+using static VPet_Simulator.Core.GraphInfo;
 using ToolBar = VPet_Simulator.Core.ToolBar;
 
 namespace VPet_Simulator.Windows
@@ -35,7 +36,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 版本号
         /// </summary>
-        public int verison { get; } = 30;
+        public int verison { get; } = 50;
         /// <summary>
         /// 版本号
         /// </summary>
@@ -150,98 +151,15 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        public void RunAction(string action)
+        public void ShowSetting(int page = -1)
         {
-            switch (action)
-            {
-                case "DisplayNomal":
-                    Main.DisplayNomal();
-                    break;
-                case "DisplayTouchHead":
-                    Main.DisplayTouchHead();
-                    break;
-                case "DisplayTouchBody":
-                    Main.DisplayTouchBody();
-                    break;
-                case "DisplayBoring":
-                    Main.DisplayBoring();
-                    break;
-                case "DisplaySquat":
-                    Main.DisplaySquat();
-                    break;
-                case "DisplaySleep":
-                    Main.DisplaySleep();
-                    break;
-                case "DisplayRaised":
-                    Main.DisplayRaised();
-                    break;
-                case "DisplayFalled_Left":
-                    Main.DisplayFalled_Left();
-                    break;
-                case "DisplayFalled_Right":
-                    Main.DisplayFalled_Right();
-                    break;
-                case "DisplayWalk":
-                    if (Function.Rnd.Next(2) == 0)
-                        Main.DisplayWalk_Left();
-                    else
-                        Main.DisplayWalk_Right();
-                    break;
-                case "DisplayWalk_Left":
-                    Main.DisplayWalk_Left();
-                    break;
-                case "DisplayWalk_Right":
-                    Main.DisplayWalk_Right();
-                    break;
-                case "DisplayCrawl":
-                    if (Function.Rnd.Next(2) == 0)
-                        Main.DisplayCrawl_Left();
-                    else
-                        Main.DisplayCrawl_Right();
-                    break;
-                case "DisplayCrawl_Left":
-                    Main.DisplayCrawl_Left();
-                    break;
-                case "DisplayCrawl_Right":
-                    Main.DisplayCrawl_Right();
-                    break;
-                case "DisplayClimb_Left_UP":
-                    Main.DisplayClimb_Left_UP();
-                    break;
-                case "DisplayClimb_Left_DOWN":
-                    Main.DisplayClimb_Left_DOWN();
-                    break;
-                case "DisplayClimb_Right_UP":
-                    Main.DisplayClimb_Right_UP();
-                    break;
-                case "DisplayClimb_Right_DOWN":
-                    Main.DisplayClimb_Right_DOWN();
-                    break;
-                case "DisplayClimb_Top_Right":
-                    Main.DisplayClimb_Top_Right();
-                    break;
-                case "DisplayClimb_Top_Left":
-                    Main.DisplayClimb_Top_Left();
-                    break;
-                case "DisplayFall":
-                    if (Function.Rnd.Next(2) == 0)
-                        Main.DisplayFall_Left();
-                    else
-                        Main.DisplayFall_Right();
-                    break;
-                case "DisplayFall_Left":
-                    Main.DisplayFall_Left();
-                    break;
-                case "DisplayFall_Right":
-                    Main.DisplayFall_Right();
-                    break;
-                case "DisplayIdel_StateONE":
-                    Main.DisplayIdel_StateONE();
-                    break;
-                case "DisplayIdel_StateTWO":
-                    Main.DisplayIdel_StateTWO();
-                    break;
-            }
+            if (page >= 0 && page <= 6)
+                winSetting.MainTab.SelectedIndex = page;
+            winSetting.Show();
+        }
+        public void ShowBetterBuy(Food.FoodType type)
+        {
+            winBetterBuy.Show(type);
         }
         int lowstrengthAskCountFood = 20;
         int lowstrengthAskCountDrink = 20;
@@ -257,19 +175,19 @@ namespace VPet_Simulator.Windows
                     if (Core.Save.StrengthFood > 60)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else if (Core.Save.StrengthFood > 40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
-                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Hunger, Main.DisplayToNomal));
+                    Task.Run(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
                 if (Core.Save.StrengthDrink < 75 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
@@ -280,19 +198,19 @@ namespace VPet_Simulator.Windows
                     if (Core.Save.StrengthDrink > 60)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else if (Core.Save.StrengthDrink > 40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
-                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Thirsty, Main.DisplayToNomal));
+                    Task.Run(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
             }
@@ -306,19 +224,19 @@ namespace VPet_Simulator.Windows
                     if (Core.Save.StrengthFood > 40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else if (Core.Save.StrengthFood > 20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
-                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Hunger, Main.DisplayToNomal));
+                    Task.Run(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
                 if (Core.Save.StrengthDrink < 60 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
@@ -329,19 +247,19 @@ namespace VPet_Simulator.Windows
                     if (Core.Save.StrengthDrink > 40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else if (Core.Save.StrengthDrink > 20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText, GraphCore.Helper.SayType.None);
+                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
-                    Task.Run(() => Main.Display(GraphCore.GraphType.Switch_Thirsty, Main.DisplayToNomal));
+                    Task.Run(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
             }

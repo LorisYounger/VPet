@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace VPet_Simulator.Core
 {
+    /// <summary>
+    /// 食物接口
+    /// </summary>
     public interface IFood
     {
         /// <summary>

@@ -10,6 +10,7 @@ using static VPet_Simulator.Core.IGraph;
 using LinePutScript;
 using System.IO;
 using static VPet_Simulator.Core.GraphCore;
+using System.Linq;
 
 namespace VPet_Simulator.Core
 {
@@ -23,18 +24,16 @@ namespace VPet_Simulator.Core
         /// 创建食物动画 第二层夹心为运行时提供
         /// </summary>
         /// <param name="graphCore">动画核心</param>
-        /// <param name="modetype">动画模式</param>
-        /// <param name="graphtype">动画类型</param>
+        /// <param name="graphinfo">动画信息</param>
         /// <param name="front_Lay">前层 动画名</param>
         /// <param name="back_Lay">后层 动画名</param>
         /// <param name="animations">中间层运动轨迹</param>
         /// <param name="isLoop">是否循环</param>
-        public FoodAnimation(GraphCore graphCore, GameSave.ModeType modetype, GraphCore.GraphType graphtype, string front_Lay,
+        public FoodAnimation(GraphCore graphCore, GraphInfo graphinfo, string front_Lay,
             string back_Lay, ILine animations, bool isLoop = false)
         {
             IsLoop = isLoop;
-            GraphType = graphtype;
-            ModeType = modetype;
+            GraphInfo = graphinfo;
             GraphCore = graphCore;
             Front_Lay = front_Lay;
             Back_Lay = back_Lay;
@@ -50,53 +49,9 @@ namespace VPet_Simulator.Core
 
         public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
         {
-            GameSave.ModeType modetype;
-            var path_name = path.FullName.Trim('_').ToLower();
-            if (!Enum.TryParse(info[(gstr)"mode"], true, out modetype))
-            {
-                if (path_name.Contains("happy"))
-                {
-                    modetype = GameSave.ModeType.Happy;
-                }
-                else if (path_name.Contains("nomal"))
-                {
-                    modetype = GameSave.ModeType.Nomal;
-                }
-                else if (path_name.Contains("poorcondition"))
-                {
-                    modetype = GameSave.ModeType.PoorCondition;
-                }
-                else if (path_name.Contains("ill"))
-                {
-                    modetype = GameSave.ModeType.Ill;
-                }
-                else
-                {
-                    modetype = GameSave.ModeType.Nomal;
-                }
-            }
-            GraphType graphtype = GraphType.Not_Able;
-            if (!Enum.TryParse(info[(gstr)"graph"], true, out graphtype))
-            {
-                for (int i = 0; i < GraphTypeValue.Length; i++)
-                {
-                    if (path_name.StartsWith(GraphTypeValue[i]))
-                    {
-                        graphtype = (GraphType)i;
-                        break;
-                    }
-                }
-            }
             bool isLoop = info[(gbol)"loop"];
-            FoodAnimation pa = new FoodAnimation(graph, modetype, graphtype, info[(gstr)"front_lay"], info[(gstr)"back_lay"], info, isLoop);
-            if (graphtype == GraphType.Not_Able)
-            {
-                graph.AddCOMMGraph(pa, info.info);
-            }
-            else
-            {
-                graph.AddGraph(pa, graphtype);
-            }
+            FoodAnimation pa = new FoodAnimation(graph, GraphHelper.GetGraphInfo(path, info), info[(gstr)"front_lay"], info[(gstr)"back_lay"], info, isLoop);
+            graph.AddGraph(pa);
         }
         /// <summary>
         /// 前层名字
@@ -126,10 +81,10 @@ namespace VPet_Simulator.Core
         /// 是否循环播放
         /// </summary>
         public bool IsContinue { get; set; } = false;
-
-        public GameSave.ModeType ModeType { get; private set; }
-
-        public GraphCore.GraphType GraphType { get; private set; }
+        /// <summary>
+        /// 动画信息
+        /// </summary>
+        public GraphInfo GraphInfo { get; private set; }
         /// <summary>
         /// 是否准备完成
         /// </summary>
@@ -309,7 +264,6 @@ namespace VPet_Simulator.Core
             nowid = 0;
             PlayState = true;
             DoEndAction = true;
-            GraphCore.RndGraph.Clear();
             parant.Dispatcher.Invoke(() =>
             {
                 parant.Tag = this;
@@ -321,8 +275,8 @@ namespace VPet_Simulator.Core
                     }
                     parant.Child = FoodGrid;
                 }
-                IImageRun FL = (IImageRun)GraphCore.FindCOMMGraph(Front_Lay, ModeType);
-                IImageRun BL = (IImageRun)GraphCore.FindCOMMGraph(Back_Lay, ModeType);
+                var FL = GraphCore.FindGraph(Front_Lay, GraphInfo.Animat, GraphInfo.ModeType);
+                var BL = GraphCore.FindGraph(Back_Lay, GraphInfo.Animat, GraphInfo.ModeType);
                 var t1 = FL?.Run(FoodGrid.Front);
                 var t2 = BL?.Run(FoodGrid.Back);
                 FoodGrid.Food.Source = image;

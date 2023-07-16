@@ -19,7 +19,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 金钱
         /// </summary>
-        [Line(Type = LPSConvert.ConvertType.ToFloat, Name = "money")] 
+        [Line(Type = LPSConvert.ConvertType.ToFloat, Name = "money")]
         public double Money { get; set; }
         /// <summary>
         /// 经验值
@@ -125,7 +125,22 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 心情
         /// </summary>
-        public double Feeling { get => feeling; set => feeling = Math.Min(100, Math.Max(0, value)); }
+        public double Feeling
+        {
+            get => feeling; set
+            {
+
+                value = Math.Min(100, value);
+                if (value <= 0)
+                {
+                    Health += value / 2;
+                    Likability += value / 2;
+                    feeling = 0;
+                }
+                else
+                    feeling = value;
+            }
+        }
 
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
         private double feeling { get; set; }

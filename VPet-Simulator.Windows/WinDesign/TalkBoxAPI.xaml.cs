@@ -44,7 +44,7 @@ namespace VPet_Simulator.Windows
             }
             if (mw.CGPTClient == null)
             {
-                m.Say("请先前往设置中设置 ChatGPT API".Translate(), GraphCore.Helper.SayType.Serious);
+                m.Say("请先前往设置中设置 ChatGPT API".Translate());
                 return;
             }
             Dispatcher.Invoke(() => this.IsEnabled = false);
@@ -60,7 +60,7 @@ namespace VPet_Simulator.Windows
                 {
                     str = "请检查API token设置".Translate();
                 }
-                m.Say("API调用失败".Translate() + $",{str}\n{e}", GraphCore.Helper.SayType.Serious);
+                m.Say("API调用失败".Translate() + $",{str}\n{e}");//, GraphCore.Helper.SayType.Serious);
             }
             Dispatcher.Invoke(() => this.IsEnabled = true);
         }

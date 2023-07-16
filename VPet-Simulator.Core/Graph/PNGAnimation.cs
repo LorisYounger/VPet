@@ -40,9 +40,11 @@ namespace VPet_Simulator.Core
         /// </summary>
         public bool IsContinue { get; set; } = false;
 
-        public GameSave.ModeType ModeType { get; private set; }
+        /// <summary>
+        /// 动画信息
+        /// </summary>
+        public GraphInfo GraphInfo { get; private set; }
 
-        public GraphCore.GraphType GraphType { get; private set; }
         /// <summary>
         /// 是否准备完成
         /// </summary>
@@ -63,13 +65,12 @@ namespace VPet_Simulator.Core
         /// <param name="path">文件夹位置</param>
         /// <param name="paths">文件内容列表</param>
         /// <param name="isLoop">是否循环</param>
-        public PNGAnimation(GraphCore graphCore, string path, FileInfo[] paths, GameSave.ModeType modetype, GraphCore.GraphType graphtype, bool isLoop = false)
+        public PNGAnimation(GraphCore graphCore, string path, FileInfo[] paths, GraphInfo graphinfo, bool isLoop = false)
         {
             Animations = new List<Animation>();
             IsLoop = isLoop;
             //StoreMemory = storemem;
-            GraphType = graphtype;
-            ModeType = modetype;
+            GraphInfo = graphinfo;
             GraphCore = graphCore;
             if (!GraphCore.CommConfig.ContainsKey("PA_Setup"))
             {
@@ -146,59 +147,16 @@ namespace VPet_Simulator.Core
 
         public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
         {
-            if(!(path is DirectoryInfo p))
+            if (!(path is DirectoryInfo p))
             {
                 Picture.LoadGraph(graph, path, info);
                 return;
             }
             var paths = p.GetFiles();
-            GameSave.ModeType modetype;
-            var path_name = path.FullName.Trim('_').ToLower();
-            if (!Enum.TryParse(info[(gstr)"mode"], true, out modetype))
-            {
-                if (path_name.Contains("happy"))
-                {
-                    modetype = GameSave.ModeType.Happy;
-                }
-                else if (path_name.Contains("nomal"))
-                {
-                    modetype = GameSave.ModeType.Nomal;
-                }
-                else if (path_name.Contains("poorcondition"))
-                {
-                    modetype = GameSave.ModeType.PoorCondition;
-                }
-                else if (path_name.Contains("ill"))
-                {
-                    modetype = GameSave.ModeType.Ill;
-                }
-                else
-                {
-                    modetype = GameSave.ModeType.Nomal;
-                }
-            }
-            GraphType graphtype = GraphType.Not_Able;
-            if (!Enum.TryParse(info[(gstr)"graph"], true, out graphtype))
-            {
-                for (int i = 0; i < GraphTypeValue.Length; i++)
-                {
-                    if (path_name.StartsWith(GraphTypeValue[i]))
-                    {
-                        graphtype = (GraphType)i;
-                        break;
-                    }
-                }
-            }
+
             bool isLoop = info[(gbol)"loop"];
-            PNGAnimation pa = new PNGAnimation(graph, path.FullName, paths, modetype, graphtype, isLoop);
-            if(graphtype == GraphType.Not_Able)
-            {
-                graph.AddCOMMGraph(pa, info.info);
-            }
-            else
-            {
-                graph.AddGraph(pa, graphtype);
-            }
+            PNGAnimation pa = new PNGAnimation(graph, path.FullName, paths, GraphHelper.GetGraphInfo(path, info), isLoop);
+            graph.AddGraph(pa);
         }
 
         public double Width;

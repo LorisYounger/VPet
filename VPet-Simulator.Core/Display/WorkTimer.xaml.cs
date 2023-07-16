@@ -6,6 +6,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using LinePutScript.Localization.WPF;
+using static VPet_Simulator.Core.GraphHelper;
+using static VPet_Simulator.Core.GraphInfo;
+
 namespace VPet_Simulator.Core
 {
     /// <summary>
@@ -38,10 +41,6 @@ namespace VPet_Simulator.Core
         /// </summary>
         public DateTime StartTime;
         /// <summary>
-        /// 最大时间(分钟)
-        /// </summary>
-        public int MaxTime;
-        /// <summary>
         /// UI相关显示
         /// </summary>
         /// <param name="m"></param>
@@ -50,36 +49,27 @@ namespace VPet_Simulator.Core
             if (Visibility == Visibility.Hidden) return;
             TimeSpan ts = DateTime.Now - StartTime;
             TimeSpan tleft;
-            if (ts.TotalMinutes > MaxTime)
+            if (ts.TotalMinutes > nowWork.Time)
             {
                 //学完了,停止
                 //ts = TimeSpan.FromMinutes(MaxTime);
                 //tleft = TimeSpan.Zero;
                 //PBLeft.Value = MaxTime;
-                switch (m.State)
+                if (nowWork.Type == Work.WorkType.Work)
                 {
-                    case Main.WorkingState.Study:
-                        m.Core.Save.Exp += GetCount * 0.2;
-                        Stop(() => m.Say(LocalizeCore.Translate("学习完成啦, 累计学会了 {0:f2} 经验值\n共计花费了{1}分钟",
-                            GetCount * 1.2, MaxTime), GraphCore.Helper.SayType.Shining, true));
-                        break;
-                    case Main.WorkingState.WorkONE:
-                        m.Core.Save.Money += GetCount * 0.15;
-                        Stop(() => m.Say(LocalizeCore.Translate("{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟", GetCount * 1.15,
-                            MaxTime, m.Core.Graph.GraphConfig.StrGetString("work1")), GraphCore.Helper.SayType.Shining, true));
-                        break;
-                    case Main.WorkingState.WorkTWO:
-                        m.Core.Save.Money += GetCount * 0.25;
-                        Stop(() => m.Say(LocalizeCore.Translate("{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟", GetCount * 1.25,
-                            MaxTime, m.Core.Graph.GraphConfig.StrGetString("work2")), GraphCore.Helper.SayType.Shining, true));
-                        break;
+                    m.Core.Save.Money += GetCount * nowWork.FinishBonus;
+                    Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟", GetCount * (1 + nowWork.FinishBonus),
+                        nowWork.Time, nowWork.NameTrans), true));
                 }
-
+                else
+                    m.Core.Save.Money += GetCount * nowWork.FinishBonus;
+                Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟", GetCount * (1 + nowWork.FinishBonus),
+                    nowWork.Time, nowWork.NameTrans), true));
                 return;
             }
             else
             {
-                tleft = TimeSpan.FromMinutes(MaxTime) - ts;
+                tleft = TimeSpan.FromMinutes(nowWork.Time) - ts;
                 PBLeft.Value = ts.TotalMinutes;
             }
             switch (DisplayType)
@@ -91,16 +81,10 @@ namespace VPet_Simulator.Core
                     ShowTimeSpan(tleft); break;
                 case 2:
                     tNumber.Text = GetCount.ToString("f0");
-                    switch (m.State)
-                    {
-                        case Main.WorkingState.Study:
-                            tNumberUnit.Text = "EXP";
-                            break;
-                        case Main.WorkingState.WorkONE:
-                        case Main.WorkingState.WorkTWO:
-                            tNumberUnit.Text = LocalizeCore.Translate("钱");
-                            break;
-                    }
+                    if (nowWork.Type == Work.WorkType.Work)
+                        tNumberUnit.Text = LocalizeCore.Translate("钱");
+                    else
+                        tNumberUnit.Text = LocalizeCore.Translate("EXP");
                     break;
             }
         }
@@ -124,49 +108,24 @@ namespace VPet_Simulator.Core
         }
         public void DisplayUI()
         {
-            switch (m.State)
-            {
-                case Main.WorkingState.Study:
-                    btnStop.Content = LocalizeCore.Translate("停止学习");
-                    switch (DisplayType)
-                    {
-                        default:
-                        case 0:
-                            tNow.Text = LocalizeCore.Translate("当前已学习");
-                            break;
-                        case 1:
-                            tNow.Text = LocalizeCore.Translate("剩余学习时间");
-                            break;
-                        case 2:
-                            tNow.Text = LocalizeCore.Translate("获得经验值");
-                            break;
-                    }
-                    break;
-                case Main.WorkingState.WorkONE:
-                    workdisplay(m.Core.Graph.GraphConfig.StrGetString("work1"));
-                    break;
-                case Main.WorkingState.WorkTWO:
-                    workdisplay(m.Core.Graph.GraphConfig.StrGetString("work2"));
-                    break;
-            }
-            M_TimeUIHandle(m);
-        }
-        private void workdisplay(string workname)
-        {
-            btnStop.Content = LocalizeCore.Translate("停止") + workname;
+            btnStop.Content = LocalizeCore.Translate("停止") + nowWork.NameTrans;
             switch (DisplayType)
             {
                 default:
                 case 0:
-                    tNow.Text = LocalizeCore.Translate("当前已") + workname;
+                    tNow.Text = LocalizeCore.Translate("当前已") + nowWork.NameTrans;
                     break;
                 case 1:
-                    tNow.Text = LocalizeCore.Translate("剩余{0}时间", workname);
+                    tNow.Text = LocalizeCore.Translate("剩余{0}时间", nowWork.NameTrans);
                     break;
                 case 2:
-                    tNow.Text = LocalizeCore.Translate("累计金钱收益");
+                    if (nowWork.Type == Work.WorkType.Work)
+                        tNow.Text = LocalizeCore.Translate("累计金钱收益");
+                    else
+                        tNow.Text = LocalizeCore.Translate("获得经验值");
                     break;
             }
+            M_TimeUIHandle(m);
         }
         private void SwitchState_Click(object sender, RoutedEventArgs e)
         {
@@ -176,99 +135,33 @@ namespace VPet_Simulator.Core
 
             DisplayUI();
         }
-        public void Start(Main.WorkingState state)
+        public void Start(Work work)
         {
             //if (state == Main.WorkingState.Nomal)
             //    return;
             Visibility = Visibility.Visible;
-            m.State = state;
+            m.State = Main.WorkingState.Work;
+            m.StateID = m.Core.Graph.GraphConfig.Works.IndexOf(work);
             StartTime = DateTime.Now;
             GetCount = 0;
-            switch (state)
-            {
-                case Main.WorkingState.Study:
-                    m.Core.Graph.GraphConfig.UIStyleStudy.SetStyle(this);
-                    MaxTime = 45;
-                    m.DisplayStudy();
-                    break;
-                case Main.WorkingState.WorkONE:
-                    m.Core.Graph.GraphConfig.UIStyleWork1.SetStyle(this);
-                    MaxTime = 60;
-                    m.DisplayWorkONE();
-                    break;
-                case Main.WorkingState.WorkTWO:
-                    m.Core.Graph.GraphConfig.UIStyleWork2.SetStyle(this);
-                    MaxTime = 180;
-                    m.DisplayWorkTWO();
-                    break;
-                default:
-                    return;
-            }
-            PBLeft.Maximum = MaxTime;
+
+            work.SetStyle(this);
+            work.Display(m);
+
+            PBLeft.Maximum = work.Time;
+            nowWork = work;
             DisplayUI();
         }
+        private Work nowWork;
         public void Stop(Action @then = null)
         {
             Visibility = Visibility.Collapsed;
-            switch (m.State)
-            {
-                case Main.WorkingState.Study:
-                    m.State = Main.WorkingState.Nomal;
-                    m.Display(GraphCore.GraphType.Study_C_End, then ?? m.DisplayNomal);
-                    return;
-                case Main.WorkingState.WorkONE:
-                    m.State = Main.WorkingState.Nomal;
-                    m.Display(GraphCore.GraphType.WorkONE_C_End, then ?? m.DisplayNomal);
-                    return;
-                case Main.WorkingState.WorkTWO:
-                    m.State = Main.WorkingState.Nomal;
-                    m.Display(GraphCore.GraphType.WorkTWO_C_End, then ?? m.DisplayNomal);
-                    break;
-                default:
-                    if (then == null)
-                        m.DisplayNomal();
-                    else
-                        then();
-                    return;
-            }
+            m.State = Main.WorkingState.Nomal;
+            m.Display(nowWork.Graph, AnimatType.C_End, then ?? m.DisplayNomal);
         }
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             Stop();
-        }
-
-        public class UIStyleConfig
-        {
-            [Line]
-            public string BorderBrush = "0290D5";
-            [Line]
-            public string Background = "81d4fa";
-            [Line]
-            public string ButtonBackground = "0286C6";
-            [Line]
-            public string ButtonForeground = "ffffff";
-            [Line]
-            public string Foreground = "0286C6";
-            [Line]
-            public double Left = 100;
-            [Line]
-            public double Top = 160;
-            [Line]
-            public double Width = 300;
-
-            public void SetStyle(WorkTimer wt)
-            {
-                wt.Margin = new Thickness(Left, Top, 0, 0);
-                wt.Width = Width;
-                wt.Height = Width / 300 * 180;
-                wt.Resources.Clear();
-                wt.Resources.Add("BorderBrush", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF" + BorderBrush)));
-                wt.Resources.Add("Background", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF" + Background)));
-                wt.Resources.Add("ButtonBackground", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#AA" + ButtonBackground)));
-                wt.Resources.Add("ButtonBackgroundHover", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF" + ButtonBackground)));
-                wt.Resources.Add("ButtonForeground", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF" + ButtonForeground)));
-                wt.Resources.Add("Foreground", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF" + Foreground)));
-            }
         }
     }
 }

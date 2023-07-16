@@ -48,6 +48,10 @@ namespace VPet_Simulator.Windows.Interface
             /// 药品
             /// </summary>
             Drug,
+            /// <summary>
+            /// 礼品 (没做)
+            /// </summary>
+            Gift,
         }
         /// <summary>
         /// 食物类型

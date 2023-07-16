@@ -9,6 +9,12 @@ using Panuon.WPF.UI;
 using System.Windows.Threading;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
+using static VPet_Simulator.Core.GraphInfo;
+using System.Collections.Generic;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
+using static VPet_Simulator.Core.GraphHelper;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace VPet_Simulator.Core
 {
@@ -36,7 +42,102 @@ namespace VPet_Simulator.Core
             closePanelTimer = new Timer();
             closePanelTimer.Elapsed += ClosePanelTimer_Tick;
             m.TimeUIHandle += M_TimeUIHandle;
+
         }
+
+        public void LoadWork()
+        {
+            MenuWork.Click -= MenuWork_Click;
+            MenuWork.Visibility = Visibility.Visible;
+            MenuStudy.Click -= MenuStudy_Click;
+            MenuStudy.Visibility = Visibility.Visible;
+
+            MenuWork.Items.Clear();
+            MenuStudy.Items.Clear();
+            List<Work> ws = new List<Work>();
+            List<Work> ss = new List<Work>();
+            foreach (var w in m.Core.Graph.GraphConfig.Works)
+            {
+                if (w.Type == Work.WorkType.Work)
+                {
+                    ws.Add(w);
+                }
+                else
+                {
+                    ss.Add(w);
+                }
+            }
+            if (ws.Count == 0)
+            {
+                MenuWork.Visibility = Visibility.Collapsed;
+            }
+            else if (ws.Count == 1)
+            {
+                MenuWork.Click += MenuWork_Click;
+                wwork = ws[0];
+                MenuWork.Header = ws[0].NameTrans;
+            }
+            else
+            {
+                foreach (var w in ws)
+                {
+                    var mi = new MenuItem()
+                    {
+                        Header = w.NameTrans
+                    };
+                    mi.Click += (s, e) => StartWork(w);
+                    MenuWork.Items.Add(mi);
+                }
+            }
+            if (ss.Count == 0)
+            {
+                MenuStudy.Visibility = Visibility.Collapsed;
+            }
+            else if (ss.Count == 1)
+            {
+                MenuStudy.Click += MenuStudy_Click;
+                wstudy = ss[0];
+                MenuStudy.Header = ss[0].NameTrans;
+            }
+            else
+            {
+                foreach (var w in ss)
+                {
+                    var mi = new MenuItem()
+                    {
+                        Header = w.NameTrans
+                    };
+                    mi.Click += (s, e) => StartWork(w);
+                    MenuStudy.Items.Add(mi);
+                }
+            }
+        }
+
+        private void MenuStudy_Click(object sender, RoutedEventArgs e)
+        {
+            StartWork(wstudy);
+        }
+        Work wwork;
+        Work wstudy;
+        public void StartWork(Work work)
+        {
+            if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
+                if (!m.Core.Controller.EnableFunction || m.Core.Save.Level >= work.LevelLimit)
+                    if (m.State == Main.WorkingState.Work && m.StateID == m.Core.Graph.GraphConfig.Works.IndexOf(work))
+                        m.WorkTimer.Stop();
+                    else m.WorkTimer.Start(work);
+                else
+                    MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/{2}\n无法进行{1}", m.Core.Save.Level.ToString()
+                        , work.NameTrans, work.LevelLimit), LocalizeCore.Translate("{0}取消", work.NameTrans));
+            else
+                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行{1}", m.Core.Save.Name,
+                  work.NameTrans), LocalizeCore.Translate("{0}取消", work.NameTrans));
+        }
+        private void MenuWork_Click(object sender, RoutedEventArgs e)
+        {
+            StartWork(wwork);
+        }
+
 
         private void M_TimeUIHandle(Main m)
         {
@@ -260,11 +361,6 @@ namespace VPet_Simulator.Core
             closePanelTimer.Start();
         }
 
-        private void MenuDIY_Click(object sender, RoutedEventArgs e)
-        {
-            //m.Say("您好,我是萝莉斯, 让我来帮您熟悉并掌握使用vos系统,成为永世流传的虚拟主播.");
-        }
-
         public void Dispose()
         {
             m = null;
@@ -277,7 +373,7 @@ namespace VPet_Simulator.Core
             this.Visibility = Visibility.Collapsed;
             if (m.Core.Save.Mode != GameSave.ModeType.Ill)
                 if (m.State == Main.WorkingState.Sleep)
-                    m.Display(GraphCore.GraphType.Sleep_C_End, m.DisplayNomal);
+                    m.Display(GraphType.Sleep, AnimatType.C_End, m.DisplayNomal);
                 else if (m.State == Main.WorkingState.Nomal)
                     m.DisplaySleep(true);
                 else
@@ -286,44 +382,44 @@ namespace VPet_Simulator.Core
                 }
         }
 
-        private void Study_Click(object sender, RoutedEventArgs e)
-        {
-            this.Visibility = Visibility.Collapsed;
-            if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
-                if (m.State == Main.WorkingState.Study)
-                    m.WorkTimer.Stop();
-                else m.WorkTimer.Start(Main.WorkingState.Study);
-            else
-                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行学习", m.Core.Save.Name), LocalizeCore.Translate("工作取消"));
-        }
+        //private void Study_Click(object sender, RoutedEventArgs e)
+        //{
+        //    this.Visibility = Visibility.Collapsed;
+        //    if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
+        //        if (m.State == Main.WorkingState.Study)
+        //            m.WorkTimer.Stop();
+        //        else m.WorkTimer.Start(Main.WorkingState.Study);
+        //    else
+        //        MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行学习", m.Core.Save.Name), LocalizeCore.Translate("工作取消"));
+        //}
 
-        private void Work1_Click(object sender, RoutedEventArgs e)
-        {
-            this.Visibility = Visibility.Collapsed;
-            if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
-                if (m.State == Main.WorkingState.WorkONE)
-                    m.WorkTimer.Stop();
-                else m.WorkTimer.Start(Main.WorkingState.WorkONE);
-            else
-                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行工作{1}", m.Core.Save.Name,
-                    m.Core.Graph.GraphConfig.StrGetString("work1")), LocalizeCore.Translate("工作取消"));
-        }
+        //private void Work1_Click(object sender, RoutedEventArgs e)
+        //{
+        //    this.Visibility = Visibility.Collapsed;
+        //    if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
+        //        if (m.State == Main.WorkingState.WorkONE)
+        //            m.WorkTimer.Stop();
+        //        else m.WorkTimer.Start(Main.WorkingState.WorkONE);
+        //    else
+        //        MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行工作{1}", m.Core.Save.Name,
+        //            m.Core.Graph.GraphConfig.StrGetString("work1")), LocalizeCore.Translate("工作取消"));
+        //}
 
-        private void Work2_Click(object sender, RoutedEventArgs e)
-        {
-            this.Visibility = Visibility.Collapsed;
+        //private void Work2_Click(object sender, RoutedEventArgs e)
+        //{
+        //    this.Visibility = Visibility.Collapsed;
 
-            if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
-                if (!m.Core.Controller.EnableFunction || m.Core.Save.Level >= 10)
-                    if (m.State == Main.WorkingState.WorkTWO)
-                        m.WorkTimer.Stop();
-                    else m.WorkTimer.Start(Main.WorkingState.WorkTWO);
-                else
-                    MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/10\n无法进行工作{1}", m.Core.Save.Level.ToString()
-                        , m.Core.Graph.GraphConfig.StrGetString("work2")), LocalizeCore.Translate("工作取消"));
-            else
-                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行工作{1}", m.Core.Save.Name,
-                   m.Core.Graph.GraphConfig.StrGetString("work2")), LocalizeCore.Translate("工作取消"));
-        }
+        //    if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
+        //        if (!m.Core.Controller.EnableFunction || m.Core.Save.Level >= 10)
+        //            if (m.State == Main.WorkingState.WorkTWO)
+        //                m.WorkTimer.Stop();
+        //            else m.WorkTimer.Start(Main.WorkingState.WorkTWO);
+        //        else
+        //            MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/10\n无法进行工作{1}", m.Core.Save.Level.ToString()
+        //                , m.Core.Graph.GraphConfig.StrGetString("work2")), LocalizeCore.Translate("工作取消"));
+        //    else
+        //        MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行工作{1}", m.Core.Save.Name,
+        //           m.Core.Graph.GraphConfig.StrGetString("work2")), LocalizeCore.Translate("工作取消"));
+        //}
     }
 }

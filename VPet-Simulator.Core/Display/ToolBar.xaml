@@ -109,14 +109,11 @@
             <MenuItem x:Name="MenuInteract" Header="{ll:Str 互动}" HorizontalContentAlignment="Center" Width="99"
                     Padding="0">
                 <MenuItem Header="{ll:Str 睡觉}" HorizontalContentAlignment="Center" Click="Sleep_Click" />
-                <MenuItem Header="{ll:Str 学习}" HorizontalContentAlignment="Center" Click="Study_Click" />
-                <MenuItem x:Name="MenuWork1" Header="工作1" HorizontalContentAlignment="Center" Click="Work1_Click"
-                        ToolTip="{ll:Str 工作}" />
-                <MenuItem x:Name="MenuWork2" Header="工作2" HorizontalContentAlignment="Center" Click="Work2_Click"
-                        ToolTip="{ll:Str 工作}" />
+                <MenuItem x:Name="MenuStudy" Header="{ll:Str 学习}" HorizontalContentAlignment="Center" />
+                <MenuItem x:Name="MenuWork" Header="{ll:Str 工作}" HorizontalContentAlignment="Center" />
                 <!--<MenuItem Header="说话" HorizontalContentAlignment="Center" IsEnabled="False" />-->
             </MenuItem>
-            <MenuItem x:Name="MenuDIY" Header="{ll:Str 自定}" HorizontalContentAlignment="Center" Click="MenuDIY_Click"
+            <MenuItem x:Name="MenuDIY" Header="{ll:Str 自定}" HorizontalContentAlignment="Center"
                     x:FieldModifier="public" Padding="0" />
             <MenuItem x:Name="MenuSetting" Header="{ll:Str 系统}" HorizontalContentAlignment="Center"
                     x:FieldModifier="public" Padding="0">

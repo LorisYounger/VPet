@@ -29,6 +29,7 @@ using System.Windows.Interop;
 using static VPet_Simulator.Windows.PerformanceDesktopTransparentWindow;
 using System.Windows.Shapes;
 using Line = LinePutScript.Line;
+using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Windows
 {
@@ -130,7 +131,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                Main.DisplayClose(() => Dispatcher.Invoke(base.Close));
+                Main.Display(GraphType.Shutdown, AnimatType.Single, () => Dispatcher.Invoke(base.Close));
             }
         }
         public void Restart()
@@ -157,7 +158,7 @@ namespace VPet_Simulator.Windows
             System.Environment.Exit(0);
         }
 
-        private List<Tuple<string, Helper.SayType>> rndtext;
+        private List<string> rndtext;
         public long lastclicktime { get; set; }
 
         public void LoadLatestSave()
@@ -249,27 +250,27 @@ namespace VPet_Simulator.Windows
                 AutoSaveTimer.Start();
             }
 
-            rndtext = new List<Tuple<string, Helper.SayType>>
+            rndtext = new List<string>
             {
-                  new Tuple<string, Helper.SayType>("你知道吗? 鼠标右键可以打开菜单栏".Translate(), Helper.SayType.Serious),
-                  new Tuple<string, Helper.SayType>("如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的".Translate(), Helper.SayType.Serious),
-                  new Tuple<string, Helper.SayType>("你知道吗? 你可以在设置里面修改游戏的缩放比例".Translate(), Helper.SayType.Serious),
-                  new Tuple<string, Helper.SayType>("想要宠物不乱动? 设置里可以设置智能移动或者关闭移动".Translate(), Helper.SayType.Serious),
-                  new Tuple<string, Helper.SayType>("有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧".Translate(), Helper.SayType.Serious),
-                  new Tuple<string, Helper.SayType>("你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing".Translate(), Helper.SayType.Serious),
-                  new Tuple<string, Helper.SayType>("你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧".Translate(), Helper.SayType.Serious),
-                  new Tuple<string, Helper.SayType>("这游戏开发这么慢,都怪画师太咕了".Translate(), Helper.SayType.Serious),
-                  new Tuple<string, Helper.SayType>("长按脑袋拖动桌宠到你喜欢的任意位置".Translate(), Helper.SayType.Serious),
-                  new Tuple<string, Helper.SayType>("欢迎加入 虚拟主播模拟器群 430081239".Translate(), Helper.SayType.Shining),
+                 "你知道吗? 鼠标右键可以打开菜单栏".Translate(),
+                 "如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的".Translate(),
+                 "你知道吗? 你可以在设置里面修改游戏的缩放比例".Translate(),
+                 "想要宠物不乱动? 设置里可以设置智能移动或者关闭移动".Translate(),
+                 "有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧".Translate(),
+                 "你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing".Translate(),
+                 "你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧".Translate(),
+                 "这游戏开发这么慢,都怪画师太咕了".Translate(),
+                 "长按脑袋拖动桌宠到你喜欢的任意位置".Translate(),
+                 "欢迎加入 虚拟主播模拟器群 430081239".Translate()
             };
             //给正在玩这个游戏的主播/游戏up主做个小功能
             if (IsSteamUser)
             {
-                rndtext.Add(new Tuple<string, Helper.SayType>("关注 {0} 谢谢喵".Translate(SteamClient.Name), Helper.SayType.Shining));
+                rndtext.Add("关注 {0} 谢谢喵".Translate(SteamClient.Name));
             }
             else
             {
-                rndtext.Add(new Tuple<string, Helper.SayType>("关注 {0} 谢谢喵".Translate(Environment.UserName), Helper.SayType.Shining));
+                rndtext.Add("关注 {0} 谢谢喵".Translate(Environment.UserName));
             }
 
             Dispatcher.Invoke(new Action(() =>
@@ -325,8 +326,7 @@ namespace VPet_Simulator.Windows
                     if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
                     {
                         lastclicktime = DateTime.Now.Ticks;
-                        var v = rndtext[Function.Rnd.Next(rndtext.Count)];
-                        Main.Say(v.Item1, v.Item2);
+                        Main.Say(rndtext[Function.Rnd.Next(rndtext.Count)]);
                     }
                 };
                 Main.PlayVoiceVolume = Set.VoiceVolume;
@@ -435,7 +435,7 @@ namespace VPet_Simulator.Windows
                         notifyIcon.ShowBalloonTip(10, "你好".Translate() + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
                         "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠".Translate(), ToolTipIcon.Info);
                         Thread.Sleep(2000);
-                        Main.Say("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate(), GraphCore.Helper.SayType.Shining);
+                        Main.Say("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate());
                     });
                 }
                 else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 6, 26) && LocalizeCore.CurrentCulture.StartsWith("cn"))
@@ -522,6 +522,15 @@ namespace VPet_Simulator.Windows
         private readonly bool _dwmEnabled;
         private readonly IntPtr _hwnd;
         public bool HitThrough { get; private set; } = false;
+        public bool MouseHitThrough
+        {
+            get => HitThrough;
+            set
+            {
+                if (value != HitThrough)
+                    SetTransparentHitThrough();
+            }
+        }
         /// <summary>
         /// 设置点击穿透到后面透明的窗口
         /// </summary>

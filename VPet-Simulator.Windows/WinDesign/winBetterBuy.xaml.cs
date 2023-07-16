@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphCore;
+using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Core.IGraph;
 
 namespace VPet_Simulator.Windows
@@ -177,17 +178,10 @@ namespace VPet_Simulator.Windows
             }
             if (!_puswitch.IsChecked.Value)
                 TryClose();
-            var ig = mw.Core.Graph.FindGraph(item.Type == Food.FoodType.Drink ? GraphType.Drink : GraphType.Eat, mw.Core.Save.Mode);
-            if (ig is IRunImage iri)
-            {
-                var b = mw.Main.FindDisplayBorder(iri);
-                iri.Run(b, item.ImageSource, mw.Main.DisplayToNomal);
-            }
-            else
-            {
-                mw.Main.Display(ig, mw.Main.DisplayToNomal);
-            }
-
+            var name = mw.Core.Graph.FindName(item.Type == Food.FoodType.Drink ? GraphType.Drink : GraphType.Eat);
+            var ig = mw.Core.Graph.FindGraph(name, AnimatType.Single, mw.Core.Save.Mode);
+            var b = mw.Main.FindDisplayBorder(ig);
+            ig.Run(b, item.ImageSource, mw.Main.DisplayToNomal);
         }
 
         private void BtnSearch_Click(object sender, RoutedEventArgs e)

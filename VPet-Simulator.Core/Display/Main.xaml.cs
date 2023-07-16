@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using static VPet_Simulator.Core.GraphCore;
+using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Core
 {
@@ -58,8 +58,6 @@ namespace VPet_Simulator.Core
             UIGrid.Children.Add(WorkTimer);
             ToolBar = new ToolBar(this);
             ToolBar.Visibility = Visibility.Collapsed;
-            ToolBar.MenuWork1.Header = core.Graph.GraphConfig.StrGetString("work1");
-            ToolBar.MenuWork2.Header = core.Graph.GraphConfig.StrGetString("work2");
             UIGrid.Children.Add(ToolBar);
             MsgBar = new MessageBar(this);
             MsgBar.Visibility = Visibility.Collapsed;
@@ -72,8 +70,8 @@ namespace VPet_Simulator.Core
             }
             if (!core.Controller.EnableFunction)
                 Core.Save.Mode = NoFunctionMOD;
-            var ig = Core.Graph.FindGraph(GraphCore.GraphType.StartUP, core.Save.Mode);
-            //var ig2 = Core.Graph.FindGraph(GraphCore.GraphType.Default, core.GameSave.Mode);
+            var ig = Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, core.Save.Mode);
+            //var ig2 = Core.Graph.FindGraph(GraphType.Default, core.GameSave.Mode);
             PetGrid2.Visibility = Visibility.Collapsed;
             Task.Run(() =>
             {
@@ -205,7 +203,7 @@ namespace VPet_Simulator.Core
         {
             isPress = true;
             CountNomal = 0;
-            if (DisplayType != GraphCore.GraphType.Default)
+            if (DisplayType.Type != GraphType.Default)
             {//不是nomal! 可能会卡timer,所有全部timer清空下
                 CleanState();
                 if (DisplayStopMove(DisplayToNomal))
@@ -371,14 +369,14 @@ namespace VPet_Simulator.Core
                 if (wavetimes++ > 4)
                     if (wavetop == true)
                     {
-                        if (wavetimes >= 10 || DisplayType == GraphCore.GraphType.Default || DisplayType == GraphType.Touch_Head_B_Loop || DisplayType == GraphType.Touch_Head_C_End)
+                        if (wavetimes >= 10 || DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Touch_Head)
                             DisplayTouchHead();
                         //Console.WriteLine(wavetimes);
                         LastInteractionTime = DateTime.Now;
                     }
                     else
                     {
-                        if (wavetimes >= 10 || DisplayType == GraphCore.GraphType.Default || DisplayType == GraphType.Touch_Body_B_Loop || DisplayType == GraphType.Touch_Body_C_End)
+                        if (wavetimes >= 10 || DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Touch_Body)
                             DisplayTouchBody();
                         LastInteractionTime = DateTime.Now;
                     }

@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static VPet_Simulator.Core.GameSave;
 using static VPet_Simulator.Core.GraphCore;
+
 
 namespace VPet_Simulator.Core
 {
@@ -20,7 +22,7 @@ namespace VPet_Simulator.Core
         {
             var g = new GraphCore();
             foreach (var p in path)
-                LoadGraph(g, new DirectoryInfo(p), "");
+                LoadGraph(g, new DirectoryInfo(p));
             g.GraphConfig = Config;
             return g;
         }
@@ -54,7 +56,7 @@ namespace VPet_Simulator.Core
             { "picture", Picture.LoadGraph },
             { "foodanimation", FoodAnimation.LoadGraph },
         };
-        public static void LoadGraph(GraphCore graph, DirectoryInfo di, string path_name)
+        public static void LoadGraph(GraphCore graph, DirectoryInfo di)
         {
             var list = di.EnumerateDirectories();
             if (File.Exists(di.FullName + @"\info.lps"))
@@ -88,49 +90,19 @@ namespace VPet_Simulator.Core
                 }
             }
             else if (list.Count() == 0)
-            {
-                //自动加载 PNG ANMIN
-                path_name = path_name.Trim('_').ToLower();
-                for (int i = 0; i < GraphTypeValue.Length; i++)
-                {
-                    if (path_name.StartsWith(GraphTypeValue[i]))
-                    {
-                        bool isused = false;
-                        if (path_name.Contains("happy"))
-                        {
-                            graph.AddGraph(di.FullName, GameSave.ModeType.Happy, (GraphType)i);
-                            isused = true;
-                        }
-                        if (path_name.Contains("nomal"))
-                        {
-                            graph.AddGraph(di.FullName, GameSave.ModeType.Nomal, (GraphType)i);
-                            isused = true;
-                        }
-                        if (path_name.Contains("poorcondition"))
-                        {
-                            graph.AddGraph(di.FullName, GameSave.ModeType.PoorCondition, (GraphType)i);
-                            isused = true;
-                        }
-                        if (path_name.Contains("ill"))
-                        {
-                            graph.AddGraph(di.FullName, GameSave.ModeType.Ill, (GraphType)i);
-                            isused = true;
-                        }
-                        if (!isused)
-                        {
-                            graph.AddGraph(di.FullName, GameSave.ModeType.Nomal, (GraphType)i);
-                        }
-                        return;
-                    }
-                }
-#if DEBUG
-                MessageBox.Show(LocalizeCore.Translate("未知的图像类型: ") + path_name);
-#endif
+            {//开始自动生成
+                var paths = di.GetFiles();
+                if (paths.Length == 0)
+                    return;
+                if (paths.Length == 1)
+                    Picture.LoadGraph(graph, paths[0], new Line("picture"));
+                else
+                    PNGAnimation.LoadGraph(graph, di, new Line("pnganimation"));
             }
             else
                 foreach (var p in list)
                 {
-                    LoadGraph(graph, p, path_name + "_" + p.Name);
+                    LoadGraph(graph, p);
                 }
         }
     }

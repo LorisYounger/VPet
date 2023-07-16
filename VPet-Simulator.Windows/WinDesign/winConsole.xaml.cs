@@ -1,4 +1,5 @@
-﻿using LinePutScript.Localization.WPF;
+﻿using LinePutScript;
+using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.GraphCore;
+using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Windows
 {
@@ -22,15 +24,20 @@ namespace VPet_Simulator.Windows
         {
             InitializeComponent();
             this.mw = mw;
-            foreach (string v in Enum.GetNames(typeof(GraphType)))
+            foreach (var v in mw.Core.Graph.GraphsList)
             {
-                GraphListBox.Items.Add(v);
-                GraphListPlayerBox.Items.Add(v);
+                foreach (AnimatType k in v.Value.Keys)
+                {
+                    var str = v.Key.ToString() + "++" + k.ToString();
+                    GraphListBox.Items.Add(v.Key);
+                    GraphListPlayerBox.Items.Add(v);
+                }
             }
-            foreach (string v in Enum.GetNames(typeof(GraphCore.Helper.SayType)))
-            {
-                CombSay.Items.Add(v);
-            }
+            if (mw.Core.Graph.GraphsName.TryGetValue(GraphType.Say, out var gl))
+                foreach (string v in gl)
+                {
+                    CombSay.Items.Add(v);
+                }
             DestanceTimer.Elapsed += DestanceTimer_Elapsed;
         }
 
@@ -44,7 +51,6 @@ namespace VPet_Simulator.Windows
                 RDown.Text = mw.Core.Controller.GetWindowsDistanceDown().ToString("f2");
             });
         }
-
         public void DisplayLoop(IGraph graph)
         {
             mw.Main.Display(graph, () => DisplayLoop(graph));
@@ -53,8 +59,8 @@ namespace VPet_Simulator.Windows
         {
             if (GraphListBox.SelectedItem == null)
                 return;
-            var graph = mw.Main.Core.Graph.FindGraph((GraphType)Enum.Parse(typeof(GraphType), (string)GraphListBox.SelectedItem),
-                 (GameSave.ModeType)Enum.Parse(typeof(GameSave.ModeType), (string)(((ComboBoxItem)ComboxMode.SelectedItem).Content)));
+            var kv = Sub.Split((string)GraphListBox.SelectedItem, "++");
+            var graph = mw.Main.Core.Graph.FindGraph(kv[0], (AnimatType)Enum.Parse(typeof(AnimatType), kv[1]), (GameSave.ModeType)ComboxMode.SelectedIndex);
             if (graph == null)
             {
                 LabelNowPlay.Content = "未找到对应类型图像资源".Translate();
@@ -69,18 +75,12 @@ namespace VPet_Simulator.Windows
             if (DisplayListBox.SelectedItem == null)
                 return;
             LabelSuccess.Content = "当前正在运行".Translate() + ": " + (string)((ListBoxItem)DisplayListBox.SelectedItem).Content;
-            mw.RunAction((string)((ListBoxItem)DisplayListBox.SelectedItem).Content);
+            //  mw.RunAction((string)((ListBoxItem)DisplayListBox.SelectedItem).Content);
         }
 
         private void Say_Click(object sender, RoutedEventArgs e)
         {
-            if (Enum.TryParse<Helper.SayType>(CombSay.Text, out var sayType))
-            {
-                mw.Main.Say(SayTextBox.Text, sayType);
-            }
-            else
-                mw.Main.Say("暂无该说话方法".Translate() + CombSay.Text, Helper.SayType.Serious);
-
+            mw.Main.Say(SayTextBox.Text, CombSay.Text, true);
         }
         Timer DestanceTimer = new Timer()
         {
@@ -98,19 +98,19 @@ namespace VPet_Simulator.Windows
         {
             DestanceTimer.Stop();
         }
-        List<Tuple<GraphType, GameSave.ModeType>> playlist = new List<Tuple<GraphType, GameSave.ModeType>>();
+        List<Tuple<string, GameSave.ModeType>> playlist = new List<Tuple<string, GameSave.ModeType>>();
         private void GraphListPlayerBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            playlist.Add(new Tuple<GraphType, GameSave.ModeType>((GraphType)Enum.Parse(typeof(GraphType), (string)GraphListPlayerBox.SelectedItem),
+            playlist.Add(new Tuple<string, GameSave.ModeType>((string)GraphListPlayerBox.SelectedItem,
                 (GameSave.ModeType)Enum.Parse(typeof(GameSave.ModeType), (string)(((ComboBoxItem)ComboxPlayMode.SelectedItem).Content))));
             GraphListWillPlayBox.Items.Add((string)GraphListPlayerBox.SelectedItem + "_" + (string)((ComboBoxItem)ComboxPlayMode.SelectedItem).Content);
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-            DisplayList(new Queue<Tuple<GraphType, GameSave.ModeType>>(playlist));
+            DisplayList(new Queue<Tuple<string, GameSave.ModeType>>(playlist));
         }
-        public void DisplayList(Queue<Tuple<GraphType, GameSave.ModeType>> list)
+        public void DisplayList(Queue<Tuple<string, GameSave.ModeType>> list)
         {
             if (list.Count == 0)
             {
@@ -118,7 +118,8 @@ namespace VPet_Simulator.Windows
                 return;
             }
             var v = list.Dequeue();
-            var graph = mw.Main.Core.Graph.FindGraph(v.Item1, v.Item2);
+            var kv = Sub.Split(v.Item1, "++");
+            var graph = mw.Main.Core.Graph.FindGraph(kv[0], (AnimatType)Enum.Parse(typeof(AnimatType), kv[1]), v.Item2);
             if (graph != null)
             {
                 mw.Main.Display(graph, () => DisplayList(list));

@@ -9,25 +9,25 @@ using LinePutScript;
 using static VPet_Simulator.Core.GraphCore;
 using static VPet_Simulator.Core.Picture;
 
+
 namespace VPet_Simulator.Core
 {
     /// <summary>
     /// Picture.xaml 的交互逻辑
     /// </summary>
-    public partial class Picture : IImageRun
+    public class Picture : IImageRun
     {
         /// <summary>
         /// 新建新静态图像
         /// </summary>
         /// <param name="path">图片路径</param>
-        public Picture(GraphCore graphCore, string path, GameSave.ModeType modetype, GraphCore.GraphType graphType, int length = 1000, bool isloop = false)
+        public Picture(GraphCore graphCore, string path, GraphInfo graphinfo, int length = 1000, bool isloop = false)
         {
-            ModeType = modetype;
+            GraphInfo = graphinfo;
             IsLoop = isloop;
             Length = length;
             GraphCore = graphCore;
             Path = path;
-            GraphType = graphType;
             if (!GraphCore.CommConfig.ContainsKey("PIC_Setup"))
             {
                 GraphCore.CommConfig["PIC_Setup"] = true;
@@ -43,43 +43,6 @@ namespace VPet_Simulator.Core
                 PNGAnimation.LoadGraph(graph, path, info);
                 return;
             }
-            GameSave.ModeType modetype;
-            var path_name = path.FullName.Trim('_').ToLower();
-            if (!Enum.TryParse(info[(gstr)"mode"], true, out modetype))
-            {
-                if (path_name.Contains("happy"))
-                {
-                    modetype = GameSave.ModeType.Happy;
-                }
-                else if (path_name.Contains("nomal"))
-                {
-                    modetype = GameSave.ModeType.Nomal;
-                }
-                else if (path_name.Contains("poorcondition"))
-                {
-                    modetype = GameSave.ModeType.PoorCondition;
-                }
-                else if (path_name.Contains("ill"))
-                {
-                    modetype = GameSave.ModeType.Ill;
-                }
-                else
-                {
-                    modetype = GameSave.ModeType.Nomal;
-                }
-            }
-            GraphType graphtype = GraphType.Not_Able;
-            if (!Enum.TryParse(info[(gstr)"graph"], true, out graphtype))
-            {
-                for (int i = 0; i < GraphTypeValue.Length; i++)
-                {
-                    if (path_name.StartsWith(GraphTypeValue[i]))
-                    {
-                        graphtype = (GraphType)i;
-                        break;
-                    }
-                }
-            }
             int length = info.GetInt("length");
             if (length == 0)
             {
@@ -87,21 +50,13 @@ namespace VPet_Simulator.Core
                     length = 1000;
             }
             bool isLoop = info[(gbol)"loop"];
-            Picture pa = new Picture(graph, path.FullName, modetype, graphtype, length, isLoop);
-            if (graphtype == GraphType.Not_Able)
-            {
-                graph.AddCOMMGraph(pa, info.info);
-            }
-            else
-            {
-                graph.AddGraph(pa, graphtype);
-            }
+            Picture pa = new Picture(graph, path.FullName, GraphHelper.GetGraphInfo(path, info), length, isLoop);
+            graph.AddGraph(pa);
         }
         /// <summary>
         /// 图片资源
         /// </summary>
         public string Path;
-        public GameSave.ModeType ModeType { get; private set; }
         private GraphCore GraphCore;
         public bool PlayState { get; set; }
         public bool IsLoop { get; set; }
@@ -109,7 +64,10 @@ namespace VPet_Simulator.Core
         //public bool StoreMemory => true;//经过测试,储存到内存好处多多,不储存也要占用很多内存,干脆存了吧
         public bool IsContinue { get; set; }
 
-        public GraphCore.GraphType GraphType { get; set; }
+        /// <summary>
+        /// 动画信息
+        /// </summary>
+        public GraphInfo GraphInfo { get; private set; }
 
         public bool IsReady => true;
 
