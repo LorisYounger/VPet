@@ -29,8 +29,8 @@ namespace VPet_Simulator.Windows
                 foreach (AnimatType k in v.Value.Keys)
                 {
                     var str = v.Key.ToString() + "++" + k.ToString();
-                    GraphListBox.Items.Add(v.Key);
-                    GraphListPlayerBox.Items.Add(v);
+                    GraphListBox.Items.Add(str);
+                    GraphListPlayerBox.Items.Add(str);
                 }
             }
             if (mw.Core.Graph.GraphsName.TryGetValue(GraphType.Say, out var gl))

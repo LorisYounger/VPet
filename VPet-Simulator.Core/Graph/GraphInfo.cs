@@ -97,10 +97,6 @@ namespace VPet_Simulator.Core
             /// </summary>
             Shutdown,
             /// <summary>
-            /// 学习 (开始&循环&结束) *
-            /// </summary>
-            Study,
-            /// <summary>
             /// 工作 (开始&循环&结束) *
             /// </summary>
             Work,

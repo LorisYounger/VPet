@@ -45,7 +45,7 @@ namespace VPet_Simulator.Core
             Task.Run(() =>
             {
                 OnSay?.Invoke(text);
-                if (force || string.IsNullOrWhiteSpace(graphname) && DisplayType.Type == GraphType.Default)
+                if (force || !string.IsNullOrWhiteSpace(graphname) && DisplayType.Type == GraphType.Default)
                     Display(graphname, AnimatType.A_Start, () =>
                     {
                         Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text, graphname));

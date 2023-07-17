@@ -62,6 +62,8 @@ namespace VPet_Simulator.Core
             var graph = Core.Graph.FindGraph(DisplayType.Name, AnimatType.C_End, Core.Save.Mode);
             if (graph != null)
             {
+                if(State == WorkingState.Sleep)
+                    State = WorkingState.Nomal;
                 Display(graph, EndAction);
                 return true;
             }
@@ -206,8 +208,8 @@ namespace VPet_Simulator.Core
             looptimes = 0;
             CountNomal = 0;
             var name = Core.Graph.FindName(GraphType.State_ONE);
-            var list = Core.Graph.FindGraphs(name, AnimatType.A_Start, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == GraphType.State_ONE);
-            if (list.Count > 0)
+            var list = Core.Graph.FindGraphs(name, AnimatType.A_Start, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == GraphType.State_ONE);
+            if (list != null && list.Count > 0)
                 Display(list[Function.Rnd.Next(list.Count)], () => DisplayIdel_StateONEing(name));
             else
                 Display(GraphType.State_ONE, AnimatType.A_Start, DisplayIdel_StateONEing);
@@ -344,6 +346,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         private void DisplayRaising(string name = null)
         {
+            Console.WriteLine(rasetype);
             switch (rasetype)
             {
                 case int.MinValue:
@@ -423,8 +426,8 @@ namespace VPet_Simulator.Core
         /// <param name="animat">动画的动作 Start Loop End</param>
         public void Display(string name, AnimatType animat, GraphType Type, Action<string> EndAction = null)
         {
-            var list = Core.Graph.FindGraphs(name, animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == Type);
-            if (list.Count > 0)
+            var list = Core.Graph.FindGraphs(name, animat, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == Type);
+            if (list != null && list.Count > 0)
                 Display(list[Function.Rnd.Next(list.Count)], () => EndAction(name));
             else
                 Display(Type, animat, EndAction);
@@ -438,7 +441,7 @@ namespace VPet_Simulator.Core
         /// <param name="animat">动画的动作 Start Loop End</param>
         public void Display(string name, AnimatType animat, GraphType Type, Action EndAction = null)
         {
-            var list = Core.Graph.FindGraphs(name, animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == Type);
+            var list = Core.Graph.FindGraphs(name, animat, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == Type);
             if (list.Count > 0)
                 Display(list[Function.Rnd.Next(list.Count)], EndAction);
             else

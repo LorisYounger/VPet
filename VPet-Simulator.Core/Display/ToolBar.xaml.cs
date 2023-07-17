@@ -42,7 +42,7 @@ namespace VPet_Simulator.Core
             closePanelTimer = new Timer();
             closePanelTimer.Elapsed += ClosePanelTimer_Tick;
             m.TimeUIHandle += M_TimeUIHandle;
-
+            LoadWork();
         }
 
         public void LoadWork()
@@ -132,6 +132,7 @@ namespace VPet_Simulator.Core
             else
                 MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行{1}", m.Core.Save.Name,
                   work.NameTrans), LocalizeCore.Translate("{0}取消", work.NameTrans));
+            Visibility = Visibility.Collapsed;
         }
         private void MenuWork_Click(object sender, RoutedEventArgs e)
         {

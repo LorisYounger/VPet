@@ -106,7 +106,7 @@ namespace VPet_Simulator.Windows
             }
             catch (Exception exp)
             {
-                m.Say(exp.ToString());//, GraphCore.Helper.SayType.Serious);
+                m.SayRnd(exp.ToString());//, GraphCore.Helper.SayType.Serious);
                 rettype = false;
             }
             Dispatcher.Invoke(() => this.IsEnabled = true);

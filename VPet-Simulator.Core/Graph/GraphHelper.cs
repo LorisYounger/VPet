@@ -84,22 +84,24 @@ namespace VPet_Simulator.Core
         /// <returns>动画信息</returns>
         public static GraphInfo GetGraphInfo(FileSystemInfo path, ILine info)
         {
-            var path_name = path.Name.Substring(0, path.Name.Length - path.Extension.Length).Replace('\\', '_').ToLower().Split('_').ToList();
+            var pn = Sub.Split(path.FullName.Substring(0, path.FullName.Length - path.Extension.Length).ToLower(), info[(gstr)"startuppath"].ToLower()).Last();
+            var path_name = pn.Replace('\\', '_').Split('_').ToList();
+            path_name.RemoveAll(string.IsNullOrWhiteSpace);
             if (!Enum.TryParse(info[(gstr)"mode"], true, out GameSave.ModeType modetype))
             {
-                if (path_name.Contains("happy"))
+                if (path_name.Remove("happy"))
                 {
                     modetype = GameSave.ModeType.Happy;
                 }
-                else if (path_name.Contains("nomal"))
+                else if (path_name.Remove("nomal"))
                 {
                     modetype = GameSave.ModeType.Nomal;
                 }
-                else if (path_name.Contains("poorcondition"))
+                else if (path_name.Remove("poorcondition"))
                 {
                     modetype = GameSave.ModeType.PoorCondition;
                 }
-                else if (path_name.Contains("ill"))
+                else if (path_name.Remove("ill"))
                 {
                     modetype = GameSave.ModeType.Ill;
                 }
@@ -129,6 +131,7 @@ namespace VPet_Simulator.Core
                         if (ismatch)
                         {
                             graphtype = (GraphType)i;
+                            path_name.RemoveRange(index, GraphTypeValue[i].Length);
                             break;
                         }
                     }
@@ -137,15 +140,15 @@ namespace VPet_Simulator.Core
 
             if (!Enum.TryParse(info[(gstr)"animat"], true, out AnimatType animatType))
             {
-                if (path_name.Contains("a") || path_name.Contains("start"))
+                if (path_name.Remove("a") || path_name.Remove("start"))
                 {
                     animatType = AnimatType.A_Start;
                 }
-                else if (path_name.Contains("b") || path_name.Contains("loop"))
+                else if (path_name.Remove("b") || path_name.Remove("loop"))
                 {
                     animatType = AnimatType.B_Loop;
                 }
-                else if (path_name.Contains("c") || path_name.Contains("end"))
+                else if (path_name.Remove("c") || path_name.Remove("end"))
                 {
                     animatType = AnimatType.C_End;
                 }
@@ -154,10 +157,19 @@ namespace VPet_Simulator.Core
                     animatType = AnimatType.Single;
                 }
             }
-            string name = info.Name;
+            string name = info.Info;
             if (string.IsNullOrWhiteSpace(name))
             {
-                name = graphtype.ToString();
+                while (path_name.Count > 0 && (double.TryParse(path_name.Last(), out _) || path_name.Last().StartsWith("~")))
+                {
+                    path_name.RemoveAt(path_name.Count - 1);
+                }
+                if (path_name.Count > 0)
+                    name = path_name.Last();
+            }
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                name = graphtype.ToString().ToLower();
             }
             return new GraphInfo(name, graphtype, animatType, modetype);// { Info = info };
         }
@@ -295,10 +307,10 @@ namespace VPet_Simulator.Core
                 Bottom = 8
             }
             /// <summary>
-            /// 定位类型
+            /// 定位类型: 需要固定到屏幕边缘启用这个
             /// </summary>
             [Line(ignoreCase: true)]
-            public DirectionType LocateType { get; set; }
+            public DirectionType LocateType { get; set; } = DirectionType.None;
             /// <summary>
             /// 移动间隔
             /// </summary>
@@ -454,6 +466,22 @@ namespace VPet_Simulator.Core
                 m.CountNomal = 0;
                 m.Display(Graph, AnimatType.A_Start, () =>
                 {
+                    switch (LocateType)
+                    {
+                        case DirectionType.Top:
+                            m.Core.Controller.MoveWindows(0, -m.Core.Controller.GetWindowsDistanceUp() / m.Core.Controller.ZoomRatio - LocateLength);
+                            break;
+                        case DirectionType.Bottom:
+                            m.Core.Controller.MoveWindows(0, m.Core.Controller.GetWindowsDistanceDown() / m.Core.Controller.ZoomRatio + LocateLength);
+                            break;
+                        case DirectionType.Left:
+                            m.Core.Controller.MoveWindows(-m.Core.Controller.GetWindowsDistanceLeft() / m.Core.Controller.ZoomRatio - LocateLength, 0);
+                            break;
+                        case DirectionType.Right:
+                            m.Core.Controller.MoveWindows(m.Core.Controller.GetWindowsDistanceRight() / m.Core.Controller.ZoomRatio + LocateLength, 0);
+                            break;
+                    }
+
                     m.MoveTimerPoint = new Point(SpeedX, SpeedY);
                     m.MoveTimer.Interval = Interval;
                     m.MoveTimer.Start();

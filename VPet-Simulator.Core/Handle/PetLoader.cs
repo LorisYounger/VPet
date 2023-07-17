@@ -22,7 +22,7 @@ namespace VPet_Simulator.Core
         {
             var g = new GraphCore();
             foreach (var p in path)
-                LoadGraph(g, new DirectoryInfo(p));
+                LoadGraph(g, new DirectoryInfo(p), p);
             g.GraphConfig = Config;
             return g;
         }
@@ -56,7 +56,13 @@ namespace VPet_Simulator.Core
             { "picture", Picture.LoadGraph },
             { "foodanimation", FoodAnimation.LoadGraph },
         };
-        public static void LoadGraph(GraphCore graph, DirectoryInfo di)
+        /// <summary>
+        /// 加载图像动画
+        /// </summary>
+        /// <param name="graph">要加载的动画核心</param>
+        /// <param name="di">当前历遍的目录</param>
+        /// <param name="startuppath">起始目录</param>
+        public static void LoadGraph(GraphCore graph, DirectoryInfo di, string startuppath)
         {
             var list = di.EnumerateDirectories();
             if (File.Exists(di.FullName + @"\info.lps"))
@@ -67,6 +73,7 @@ namespace VPet_Simulator.Core
                 {
                     if (IGraphConvert.TryGetValue(line.Name.ToLower(), out var func))
                     {
+                        line.Add(new Sub("startuppath", startuppath));
                         var str = line.GetString("path");
                         if (!string.IsNullOrEmpty(str))
                         {
@@ -95,14 +102,14 @@ namespace VPet_Simulator.Core
                 if (paths.Length == 0)
                     return;
                 if (paths.Length == 1)
-                    Picture.LoadGraph(graph, paths[0], new Line("picture"));
+                    Picture.LoadGraph(graph, paths[0], new Line("picture", "", "", new Sub("startuppath", startuppath)));
                 else
-                    PNGAnimation.LoadGraph(graph, di, new Line("pnganimation"));
+                    PNGAnimation.LoadGraph(graph, di, new Line("pnganimation", "", "", new Sub("startuppath", startuppath)));
             }
             else
                 foreach (var p in list)
                 {
-                    LoadGraph(graph, p);
+                    LoadGraph(graph, p, startuppath);
                 }
         }
     }

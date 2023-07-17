@@ -242,7 +242,7 @@ namespace VPet_Simulator.Core
         private void MainGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             isPress = false;
-            if (DisplayType.ToString().StartsWith("Raised"))
+            if (DisplayType.Type.ToString().StartsWith("Raised"))
             {
                 MainGrid.MouseMove -= MainGrid_MouseMove;
                 MainGrid.MouseMove += MainGrid_MouseWave;
@@ -272,7 +272,7 @@ namespace VPet_Simulator.Core
             var x = mp.X - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].X;
             var y = mp.Y - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].Y;
             Core.Controller.MoveWindows(x, y);
-            if (Math.Abs(x) + Math.Abs(y) > 10)
+            if (Math.Abs(x) + Math.Abs(y) > 20 && rasetype >= 1)
                 rasetype = 0;
         }
 

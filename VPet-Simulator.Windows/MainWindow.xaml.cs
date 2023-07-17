@@ -326,7 +326,7 @@ namespace VPet_Simulator.Windows
                     if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
                     {
                         lastclicktime = DateTime.Now.Ticks;
-                        Main.Say(rndtext[Function.Rnd.Next(rndtext.Count)]);
+                        Main.SayRnd(rndtext[Function.Rnd.Next(rndtext.Count)]);
                     }
                 };
                 Main.PlayVoiceVolume = Set.VoiceVolume;
@@ -435,7 +435,7 @@ namespace VPet_Simulator.Windows
                         notifyIcon.ShowBalloonTip(10, "你好".Translate() + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
                         "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠".Translate(), ToolTipIcon.Info);
                         Thread.Sleep(2000);
-                        Main.Say("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate());
+                        Main.SayRnd("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate());
                     });
                 }
                 else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 6, 26) && LocalizeCore.CurrentCulture.StartsWith("cn"))
