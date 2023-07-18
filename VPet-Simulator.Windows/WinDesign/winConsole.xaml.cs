@@ -75,7 +75,7 @@ namespace VPet_Simulator.Windows
             if (DisplayListBox.SelectedItem == null)
                 return;
             LabelSuccess.Content = "当前正在运行".Translate() + ": " + (string)((ListBoxItem)DisplayListBox.SelectedItem).Content;
-            //  mw.RunAction((string)((ListBoxItem)DisplayListBox.SelectedItem).Content);
+             mw.RunAction((string)((ListBoxItem)DisplayListBox.SelectedItem).Content);
         }
 
         private void Say_Click(object sender, RoutedEventArgs e)

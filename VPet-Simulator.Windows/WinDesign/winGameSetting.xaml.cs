@@ -928,7 +928,7 @@ namespace VPet_Simulator.Windows
                 return;
             mw.Set.CalFunState = (GameSave.ModeType)combCalFunState.SelectedIndex;
             mw.Main.NoFunctionMOD = (GameSave.ModeType)combCalFunState.SelectedIndex;
-            mw.Main.EventTimer_Elapsed(null, null);
+            mw.Main.EventTimer_Elapsed();
         }
 
         private void HitThroughBox_Checked(object sender, RoutedEventArgs e)

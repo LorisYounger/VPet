@@ -281,7 +281,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 每隔指定时间自动触发计算 可以关闭EventTimer后手动计算
         /// </summary>
-        public void EventTimer_Elapsed(object sender, ElapsedEventArgs e)
+        public void EventTimer_Elapsed()
         {
             //所有Handle
             TimeHandle?.Invoke(this);
@@ -306,27 +306,24 @@ namespace VPet_Simulator.Core
                     case 0:
                     case 1:
                     case 2:
-                    case 3:
                         //显示移动
                         DisplayMove();
                         break;
+                    case 3:                     
                     case 4:
                     case 5:
-                    case 6:
-                    case 7:
                         //显示待机
                         DisplayIdel();
                         break;
-                    case 8:
-                    case 9:
+                    case 6:
                         DisplayIdel_StateONE();
                         break;
-                    case 10:
-                    case 11:
-                    case 12:
-                    case 13:
-                        //case 14:
-                        //case 15:
+                    case 7:
+                        DisplaySleep();
+                        break;
+                    case 8:
+                    case 9:                       
+                    case 10:                   
                         //给其他显示留个机会
                         var list = RandomInteractionAction.ToList();
                         for (int i = Function.Rnd.Next(list.Count); 0 != list.Count; i = Function.Rnd.Next(list.Count))
@@ -341,10 +338,7 @@ namespace VPet_Simulator.Core
                                 list.RemoveAt(i);
                             }
                         }
-                        break;
-                    case 16:
-                        DisplaySleep();
-                        break;
+                        break;                       
                 }
 
         }

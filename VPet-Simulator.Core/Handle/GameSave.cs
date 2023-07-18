@@ -253,7 +253,6 @@ namespace VPet_Simulator.Core
             Health += food.Health;
             Likability += food.Likability;
         }
-
         /// <summary>
         /// 宠物状态模式
         /// </summary>

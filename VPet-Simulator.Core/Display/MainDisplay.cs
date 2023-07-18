@@ -55,9 +55,9 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示结束动画
         /// </summary>
-        /// <param name="EndAction">结束后接下来</param>
+        /// <param name="EndAction">结束后接下来,不结束不运行</param>
         /// <returns>是否成功结束</returns>
-        public bool DisplayStopMove(Action EndAction)
+        public bool DisplayStop(Action EndAction)
         {
             var graph = Core.Graph.FindGraph(DisplayType.Name, AnimatType.C_End, Core.Save.Mode);
             if (graph != null)
@@ -115,6 +115,15 @@ namespace VPet_Simulator.Core
             return false;
         }
         /// <summary>
+        /// 显示结束动画 无论是否结束,都强制结束
+        /// </summary>
+        /// <param name="EndAction">结束后接下来,不结束也运行</param>
+        public void DisplayStopForce(Action EndAction)
+        {
+            if(!DisplayStop(EndAction))
+                EndAction?.Invoke();
+        }
+        /// <summary>
         /// 尝试触发移动
         /// </summary>
         /// <returns></returns>
@@ -124,7 +133,7 @@ namespace VPet_Simulator.Core
             for (int i = Function.Rnd.Next(list.Count); 0 != list.Count; i = Function.Rnd.Next(list.Count))
             {
                 var move = list[i];
-                if (move.Triggered(Core.Controller))
+                if (move.Triggered(this))
                 {
                     move.Display(this);
                     return true;

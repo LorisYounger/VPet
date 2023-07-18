@@ -187,7 +187,7 @@ namespace VPet_Simulator.Windows
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
                         Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
-                    Task.Run(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
+                    Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
                 if (Core.Save.StrengthDrink < 75 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
@@ -210,7 +210,7 @@ namespace VPet_Simulator.Windows
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
                         Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
-                    Task.Run(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
+                    Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
             }
@@ -236,7 +236,7 @@ namespace VPet_Simulator.Windows
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
                         Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
-                    Task.Run(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
+                    Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
                 if (Core.Save.StrengthDrink < 60 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
@@ -259,12 +259,46 @@ namespace VPet_Simulator.Windows
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
                         Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
-                    Task.Run(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
+                    Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
             }
 
 
+        }
+
+        public void RunAction(string action)
+        {
+            switch (action)
+            {
+                case "DisplayNomal":
+                    Main.DisplayNomal();
+                    break;
+                case "DisplayToNomal":
+                    Main.DisplayToNomal();
+                    break;
+                case "DisplayTouchHead":
+                    Main.DisplayTouchHead();
+                    break;
+                case "DisplayTouchBody":
+                    Main.DisplayTouchBody();
+                    break;
+                case "DisplayIdel":
+                    Main.DisplayIdel();
+                    break;
+                case "DisplayIdel_StateONE":
+                    Main.DisplayIdel_StateONE();
+                    break;
+                case "DisplaySleep":
+                    Main.DisplaySleep();
+                    break;
+                case "DisplayRaised":
+                    Main.DisplayRaised();
+                    break;
+                case "DisplayMove":
+                    Main.DisplayMove();
+                    break;
+            }
         }
     }
 }

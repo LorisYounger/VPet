@@ -91,7 +91,7 @@ namespace VPet_Simulator.Core
                 });
             });
 
-            EventTimer.Elapsed += EventTimer_Elapsed;
+            EventTimer.Elapsed += (s, e) => EventTimer_Elapsed();
             MoveTimer.Elapsed += MoveTimer_Elapsed;
             SmartMoveTimer.Elapsed += SmartMoveTimer_Elapsed;
         }
@@ -188,8 +188,7 @@ namespace VPet_Simulator.Core
 
         private void MoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            string str = DisplayType.ToString();
-            if (MoveTimer.Enabled == false || (!str.Contains("Left") && !str.Contains("Right")))
+            if (MoveTimer.Enabled == false || DisplayType.Type != GraphType.Move)
             {
                 MoveTimer.Enabled = false;
                 return;
@@ -206,7 +205,7 @@ namespace VPet_Simulator.Core
             if (DisplayType.Type != GraphType.Default)
             {//不是nomal! 可能会卡timer,所有全部timer清空下
                 CleanState();
-                if (DisplayStopMove(DisplayToNomal))
+                if (DisplayStop(DisplayToNomal))
                     return;
             }
             Task.Run(() =>

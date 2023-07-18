@@ -304,7 +304,11 @@ namespace VPet_Simulator.Core
                 Left,
                 Right = 2,
                 Top = 4,
-                Bottom = 8
+                Bottom = 8,
+                LeftGreater = 16,
+                RightGreater = 32,
+                TopGreater = 64,
+                BottomGreater = 128,
             }
             /// <summary>
             /// 定位类型: 需要固定到屏幕边缘启用这个
@@ -326,6 +330,57 @@ namespace VPet_Simulator.Core
             {
                 get => (DirectionType)checkType;
                 set => checkType = (int)value;
+            }
+            [Line(ignoreCase: true)]
+            private int modeType { get; set; } = 30;
+
+            /// <summary>
+            /// 支持的动画模式
+            /// </summary>
+            public ModeType Mode
+            {
+                get => (ModeType)modeType;
+                set => checkType = (int)value;
+            }
+
+            /// <summary>
+            /// 宠物状态模式 (Flag版)
+            /// </summary>
+            [Flags]
+            public enum ModeType
+            {
+                /// <summary>
+                /// 高兴
+                /// </summary>
+                Happy = 2,
+                /// <summary>
+                /// 普通
+                /// </summary>
+                Nomal = 4,
+                /// <summary>
+                /// 状态不佳
+                /// </summary>
+                PoorCondition = 8,
+                /// <summary>
+                /// 生病(躺床)
+                /// </summary>
+                Ill = 16,
+            }
+            public static ModeType GetModeType(GameSave.ModeType type)
+            {
+                switch (type)
+                {
+                    case GameSave.ModeType.Happy:
+                        return ModeType.Happy;
+                    case GameSave.ModeType.Nomal:
+                        return ModeType.Nomal;
+                    case GameSave.ModeType.PoorCondition:
+                        return ModeType.PoorCondition;
+                    case GameSave.ModeType.Ill:
+                        return ModeType.Ill;
+                    default:
+                        return ModeType.Nomal;
+                }
             }
             /// <summary>
             /// 检查距离左边
@@ -390,16 +445,26 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 是否可以触发
             /// </summary>
-            public bool Triggered(IController c)
+            public bool Triggered(Main m)
             {
+                var c = m.Core.Controller;
+                if (!Mode.HasFlag(GetModeType(m.Core.Save.Mode))) return false;
                 if (TriggerType == DirectionType.None) return true;
-                if (TriggerType.HasFlag(DirectionType.Left) && c.GetWindowsDistanceLeft() < TriggerLeft * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Left) && c.GetWindowsDistanceLeft() > TriggerLeft * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.Right) && c.GetWindowsDistanceRight() < TriggerRight * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Right) && c.GetWindowsDistanceRight() > TriggerRight * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.Top) && c.GetWindowsDistanceUp() < TriggerTop * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Top) && c.GetWindowsDistanceUp() > TriggerTop * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.Bottom) && c.GetWindowsDistanceDown() < TriggerBottom * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Bottom) && c.GetWindowsDistanceDown() > TriggerBottom * c.ZoomRatio)
+                    return false;
+                if (TriggerType.HasFlag(DirectionType.LeftGreater) && c.GetWindowsDistanceLeft() < TriggerLeft * c.ZoomRatio)
+                    return false;
+                if (TriggerType.HasFlag(DirectionType.RightGreater) && c.GetWindowsDistanceRight() < TriggerRight * c.ZoomRatio)
+                    return false;
+                if (TriggerType.HasFlag(DirectionType.TopGreater) && c.GetWindowsDistanceUp() < TriggerTop * c.ZoomRatio)
+                    return false;
+                if (TriggerType.HasFlag(DirectionType.BottomGreater) && c.GetWindowsDistanceDown() < TriggerBottom * c.ZoomRatio)
                     return false;
                 return true;
             }
@@ -410,13 +475,21 @@ namespace VPet_Simulator.Core
             public bool Checked(IController c)
             {
                 if (CheckType == DirectionType.None) return true;
-                if (CheckType.HasFlag(DirectionType.Left) && c.GetWindowsDistanceLeft() < CheckLeft * c.ZoomRatio)
+                if (CheckType.HasFlag(DirectionType.Left) && c.GetWindowsDistanceLeft() > CheckLeft * c.ZoomRatio)
                     return false;
-                if (CheckType.HasFlag(DirectionType.Right) && c.GetWindowsDistanceRight() < CheckRight * c.ZoomRatio)
+                if (CheckType.HasFlag(DirectionType.Right) && c.GetWindowsDistanceRight() > CheckRight * c.ZoomRatio)
                     return false;
-                if (CheckType.HasFlag(DirectionType.Top) && c.GetWindowsDistanceUp() < CheckTop * c.ZoomRatio)
+                if (CheckType.HasFlag(DirectionType.Top) && c.GetWindowsDistanceUp() > CheckTop * c.ZoomRatio)
                     return false;
-                if (CheckType.HasFlag(DirectionType.Bottom) && c.GetWindowsDistanceDown() < CheckBottom * c.ZoomRatio)
+                if (CheckType.HasFlag(DirectionType.Bottom) && c.GetWindowsDistanceDown() > CheckBottom * c.ZoomRatio)
+                    return false;
+                if (CheckType.HasFlag(DirectionType.LeftGreater) && c.GetWindowsDistanceLeft() < CheckLeft * c.ZoomRatio)
+                    return false;
+                if (CheckType.HasFlag(DirectionType.RightGreater) && c.GetWindowsDistanceRight() < CheckRight * c.ZoomRatio)
+                    return false;
+                if (CheckType.HasFlag(DirectionType.TopGreater) && c.GetWindowsDistanceUp() < CheckTop * c.ZoomRatio)
+                    return false;
+                if (CheckType.HasFlag(DirectionType.BottomGreater) && c.GetWindowsDistanceDown() < CheckBottom * c.ZoomRatio)
                     return false;
                 return true;
             }
@@ -432,23 +505,23 @@ namespace VPet_Simulator.Core
                 bool y = SpeedY > 0;
                 foreach (Move m in main.Core.Graph.GraphConfig.Moves)
                 {
-                    if (m == this) continue;
+                    //if (m == this) continue;
                     int bns = 0;
                     if (SpeedX != 0 && m.SpeedX != 0)
                     {
-                        if ((m.SpeedX > 0) == x)
+                        if ((m.SpeedX > 0) != x)
                             bns--;
                         else
                             bns++;
                     }
                     if (SpeedY != 0 && m.SpeedY != 0)
                     {
-                        if ((m.SpeedY > 0) == y)
+                        if ((m.SpeedY > 0) != y)
                             bns--;
                         else
                             bns++;
                     }
-                    if (bns >= 0 && m.Triggered(main.Core.Controller))
+                    if (bns >= 0 && m.Triggered(main))
                     {
                         ms.Add(m);
                     }
@@ -495,7 +568,7 @@ namespace VPet_Simulator.Core
             public void Displaying(Main m)
             {
                 //看看距离是不是不足
-                if (Checked(m.Core.Controller))
+                if (!Checked(m.Core.Controller))
                 {//是,停下恢复默认 or/爬墙
                     if (Function.Rnd.Next(Main.TreeRND) <= 1)
                     {
@@ -514,6 +587,7 @@ namespace VPet_Simulator.Core
                 if (Function.Rnd.Next(walklength++) < Distance)
                 {
                     m.Display(Graph, AnimatType.B_Loop, () => Displaying(m));
+                    return;
                 }
                 else if (Function.Rnd.Next(Main.TreeRND) <= 1)
                 {//停下来

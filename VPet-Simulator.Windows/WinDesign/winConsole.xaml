@@ -61,26 +61,12 @@
                     <ListBoxItem Content="DisplayNomal" />
                     <ListBoxItem Content="DisplayTouchHead" />
                     <ListBoxItem Content="DisplayTouchBody" />
-                    <ListBoxItem Content="DisplayBoring" />
-                    <ListBoxItem Content="DisplaySquat" />
+                    <ListBoxItem Content="DisplayIdel" />
+                    <ListBoxItem Content="DisplayIdel_StateONE" />
                     <ListBoxItem Content="DisplaySleep" />
                     <ListBoxItem Content="DisplayRaised" />
-                    <ListBoxItem Content="DisplayFalled_Left" />
-                    <ListBoxItem Content="DisplayFalled_Right" />
-                    <ListBoxItem Content="DisplayWalk_Left" />
-                    <ListBoxItem Content="DisplayWalk_Right" />
-                    <ListBoxItem Content="DisplayCrawl_Left" />
-                    <ListBoxItem Content="DisplayCrawl_Right" />
-                    <ListBoxItem Content="DisplayClimb_Left_UP" />
-                    <ListBoxItem Content="DisplayClimb_Left_DOWN" />
-                    <ListBoxItem Content="DisplayClimb_Right_UP" />
-                    <ListBoxItem Content="DisplayClimb_Right_DOWN" />
-                    <ListBoxItem Content="DisplayClimb_Top_Right" />
-                    <ListBoxItem Content="DisplayClimb_Top_Left" />
-                    <ListBoxItem Content="DisplayFall_Left" />
-                    <ListBoxItem Content="DisplayFall_Right" />
-                    <ListBoxItem Content="DisplayIdel_StateONE" />
-                    <ListBoxItem Content="DisplayIdel_StateTWO" />
+                    <ListBoxItem Content="DisplayMove" />
+                    <ListBoxItem Content="DisplayToNomal" />
                 </ListBox>
             </Grid>
         </TabItem>
