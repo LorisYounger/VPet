@@ -62,7 +62,7 @@ namespace VPet_Simulator.Core
             var graph = Core.Graph.FindGraph(DisplayType.Name, AnimatType.C_End, Core.Save.Mode);
             if (graph != null)
             {
-                if(State == WorkingState.Sleep)
+                if (State == WorkingState.Sleep)
                     State = WorkingState.Nomal;
                 Display(graph, EndAction);
                 return true;
@@ -120,7 +120,7 @@ namespace VPet_Simulator.Core
         /// <param name="EndAction">结束后接下来,不结束也运行</param>
         public void DisplayStopForce(Action EndAction)
         {
-            if(!DisplayStop(EndAction))
+            if (!DisplayStop(EndAction))
                 EndAction?.Invoke();
         }
         /// <summary>
@@ -216,12 +216,12 @@ namespace VPet_Simulator.Core
         {
             looptimes = 0;
             CountNomal = 0;
-            var name = Core.Graph.FindName(GraphType.State_ONE);
-            var list = Core.Graph.FindGraphs(name, AnimatType.A_Start, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == GraphType.State_ONE);
+            var name = Core.Graph.FindName(GraphType.StateONE);
+            var list = Core.Graph.FindGraphs(name, AnimatType.A_Start, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == GraphType.StateONE);
             if (list != null && list.Count > 0)
                 Display(list[Function.Rnd.Next(list.Count)], () => DisplayIdel_StateONEing(name));
             else
-                Display(GraphType.State_ONE, AnimatType.A_Start, DisplayIdel_StateONEing);
+                Display(GraphType.StateONE, AnimatType.A_Start, DisplayIdel_StateONEing);
         }
         /// <summary>
         /// 显示待机(模式1)情况
@@ -235,12 +235,12 @@ namespace VPet_Simulator.Core
                         DisplayIdel_StateTWO(graphname);
                         break;
                     default:
-                        Display(graphname, AnimatType.C_End, GraphType.State_ONE, DisplayNomal);
+                        Display(graphname, AnimatType.C_End, GraphType.StateONE, DisplayNomal);
                         break;
                 }
             else
             {
-                Display(graphname, AnimatType.B_Loop, GraphType.State_ONE, DisplayIdel_StateONEing);
+                Display(graphname, AnimatType.B_Loop, GraphType.StateONE, DisplayIdel_StateONEing);
             }
         }
         /// <summary>
@@ -250,7 +250,7 @@ namespace VPet_Simulator.Core
         {
             looptimes = 0;
             CountNomal++;
-            Display(graphname, AnimatType.A_Start, GraphType.State_TWO, DisplayIdel_StateTWOing);
+            Display(graphname, AnimatType.A_Start, GraphType.StateTWO, DisplayIdel_StateTWOing);
         }
         /// <summary>
         /// 显示待机(模式2)情况
@@ -259,11 +259,11 @@ namespace VPet_Simulator.Core
         {
             if (Function.Rnd.Next(++looptimes) > Core.Graph.GraphConfig.GetDuration(graphname))
             {
-                Display(graphname, AnimatType.C_End, GraphType.State_TWO, DisplayIdel_StateONEing);
+                Display(graphname, AnimatType.C_End, GraphType.StateTWO, DisplayIdel_StateONEing);
             }
             else
             {
-                Display(graphname, AnimatType.B_Loop, GraphType.State_TWO, DisplayIdel_StateTWOing);
+                Display(graphname, AnimatType.B_Loop, GraphType.StateTWO, DisplayIdel_StateTWOing);
             }
         }
 
@@ -326,7 +326,7 @@ namespace VPet_Simulator.Core
                 Display(GraphType.Sleep, AnimatType.A_Start, DisplayBLoopingForce);
             }
             else
-                Display(GraphType.Sleep, AnimatType.A_Start, (x) => DisplayBLoopingToNomal(Core.Graph.GraphConfig.GetDuration(x)));
+                Display(GraphType.Sleep, AnimatType.A_Start, (x) => DisplayBLoopingToNomal(x, Core.Graph.GraphConfig.GetDuration(x)));
         }
         /// <summary>
         /// 显示B循环 (强制)

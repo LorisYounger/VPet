@@ -83,11 +83,11 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 待机 模式1 (开始&循环&结束)
             /// </summary>
-            State_ONE,
+            StateONE,
             /// <summary>
             /// 待机 模式2 (开始&循环&结束)
             /// </summary>
-            State_TWO,
+            StateTWO,
             /// <summary>
             /// 开机 *
             /// </summary>

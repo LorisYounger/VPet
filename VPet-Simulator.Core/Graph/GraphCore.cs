@@ -224,7 +224,7 @@ namespace VPet_Simulator.Core
             /// </summary>
             /// <param name="name">动画名称</param>
             /// <returns>持续时间</returns>
-            public int GetDuration(string name) => Duration.GetInt(name, 20);
+            public int GetDuration(string name) => Duration.GetInt(name ?? "", 10);
             /// <summary>
             /// 获得 Str 里面储存的文本 (已翻译)
             /// </summary>
