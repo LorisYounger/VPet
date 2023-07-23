@@ -1,4 +1,5 @@
 ﻿using IWshRuntimeLibrary;
+using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF;
 using Panuon.WPF.UI;
@@ -175,6 +176,33 @@ namespace VPet_Simulator.Windows
                 //开始加点
                 mw.Core.Save.EatFood(item);
                 mw.Core.Save.Money -= item.Price;
+                //统计
+                mw.Set.Statistics[(gint)("buy_" + item.Name)]++;
+                mw.Set.Statistics[(gdbe)"stat_betterbuy"] += item.Price;
+                switch (item.Type)
+                {
+                    case Food.FoodType.Food:
+                        mw.Set.Statistics[(gdbe)"stat_bb_food"] += item.Price;
+                        break;
+                    case Food.FoodType.Drink:
+                        mw.Set.Statistics[(gdbe)"stat_bb_drink"] += item.Price;
+                        break;
+                    case Food.FoodType.Drug:
+                        mw.Set.Statistics[(gdbe)"stat_bb_drug"] += item.Price;
+                        break;
+                    case Food.FoodType.Snack:
+                        mw.Set.Statistics[(gdbe)"stat_bb_snack"] += item.Price;
+                        break;
+                    case Food.FoodType.Functional:
+                        mw.Set.Statistics[(gdbe)"stat_bb_functional"] += item.Price;
+                        break;
+                    case Food.FoodType.Meal:
+                        mw.Set.Statistics[(gdbe)"stat_bb_meal"] += item.Price;
+                        break;
+                    case Food.FoodType.Gift:
+                        mw.Set.Statistics[(gdbe)"stat_bb_gift"] += item.Price;
+                        break;
+                }
             }
             if (!_puswitch.IsChecked.Value)
                 TryClose();

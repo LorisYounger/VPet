@@ -30,6 +30,8 @@ using static VPet_Simulator.Windows.PerformanceDesktopTransparentWindow;
 using System.Windows.Shapes;
 using Line = LinePutScript.Line;
 using static VPet_Simulator.Core.GraphInfo;
+using LinePutScript.Converter;
+using System.Windows.Markup;
 
 namespace VPet_Simulator.Windows
 {
@@ -167,7 +169,7 @@ namespace VPet_Simulator.Windows
             {
                 var latestsave = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\UserData")
                     .GetFiles("*.lps").OrderByDescending(x => x.LastWriteTime).FirstOrDefault();
-                if(latestsave != null)
+                if (latestsave != null)
                 {
                     Core.Save = GameSave.Load(new Line(File.ReadAllText(latestsave.FullName)));
                     return;
@@ -267,6 +269,8 @@ namespace VPet_Simulator.Windows
             if (IsSteamUser)
             {
                 rndtext.Add("关注 {0} 谢谢喵".Translate(SteamClient.Name));
+                //Steam成就
+                Set.Statistics.StatisticChanged += Statistics_StatisticChanged;
             }
             else
             {
@@ -330,6 +334,7 @@ namespace VPet_Simulator.Windows
                     }
                 };
                 Main.PlayVoiceVolume = Set.VoiceVolume;
+                Main.FunctionSpendHandle += StatisticsCalHandle;
                 DisplayGrid.Child = Main;
                 Task.Run(() =>
                 {
@@ -388,6 +393,8 @@ namespace VPet_Simulator.Windows
                 if (Set.PetHelper)
                     LoadPetHelper();
 
+
+
                 m_menu = new ContextMenu();
                 m_menu.MenuItems.Add(new MenuItem("鼠标穿透".Translate(), (x, y) => { SetTransparentHitThrough(); }) { });
                 m_menu.MenuItems.Add(new MenuItem("操作教程".Translate(), (x, y) => { Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html"); }));
@@ -420,6 +427,13 @@ namespace VPet_Simulator.Windows
                     Topmost = false;
                     winSetting.Show();
                 };
+
+                //成就和统计 
+                Set.Statistics[(gint)"stat_open_times"]++;
+                Main.MoveTimer.Elapsed += MoveTimer_Elapsed;
+                Main.OnSay += Main_OnSay;
+                Main.Event_TouchHead += Main_Event_TouchHead;
+                Main.Event_TouchBody += Main_Event_TouchBody;
 
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 6, 20))
                 {
@@ -461,6 +475,26 @@ namespace VPet_Simulator.Windows
 
         }
 
+        private void Main_Event_TouchBody()
+        {
+            Set.Statistics[(gint)"stat_touch_body"]++;
+        }
+
+        private void Main_Event_TouchHead()
+        {
+            Set.Statistics[(gint)"stat_touch_head"]++;
+        }
+
+        private void Main_OnSay(string obj)
+        {
+            Set.Statistics[(gint)"stat_say_times"]++;
+        }
+
+        private void MoveTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Set.Statistics[(gint)"stat_move_length"] += (int)(Math.Abs(Main.MoveTimerPoint.X) + Math.Abs(Main.MoveTimerPoint.Y));
+        }
+
         private void AutoSaveTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             Save();
@@ -485,8 +519,11 @@ namespace VPet_Simulator.Windows
             petHelper?.Close();
 
             Main?.Dispose();
-            notifyIcon.Visible = false;
-            notifyIcon?.Dispose();
+            if(notifyIcon != null)
+            {
+                notifyIcon.Visible = false;
+                notifyIcon.Dispose();
+            }            
             System.Environment.Exit(0);
         }
 

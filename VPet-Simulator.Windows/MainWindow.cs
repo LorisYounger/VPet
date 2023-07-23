@@ -58,6 +58,7 @@ namespace VPet_Simulator.Windows
                 petHelper.ReloadLocation();
             }
         }
+        //private DateTime timecount = DateTime.Now;
         /// <summary>
         /// 保存设置
         /// </summary>
@@ -75,6 +76,8 @@ namespace VPet_Simulator.Windows
                     List<string> list = new List<string>();
                     Foods.FindAll(x => x.Star).ForEach(x => list.Add(x.Name));
                     Set["betterbuy"]["star"].info = string.Join(",", list);
+                    //Set.Statistics[(gint)"stat_time"] = (int)(DateTime.Now - timecount).TotalMinutes;
+                    //timecount = DateTime.Now;
                 }
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
 
@@ -171,22 +174,23 @@ namespace VPet_Simulator.Windows
                 {
                     lowstrengthAskCountFood = Set.InteractionCycle;
                     var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
-                    var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like < like);
-                    if (Core.Save.StrengthFood > 60)
-                    {
-                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
-                    }
-                    else if (Core.Save.StrengthFood > 40)
-                    {
-                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
-                    }
-                    else
-                    {
-                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
-                    }
+                    var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like <= like);
+                    if (txt.Count != 0)
+                        if (Core.Save.StrengthFood > 60)
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        }
+                        else if (Core.Save.StrengthFood > 40)
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        }
+                        else
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        }
                     Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
@@ -194,22 +198,23 @@ namespace VPet_Simulator.Windows
                 {
                     lowstrengthAskCountDrink = Set.InteractionCycle;
                     var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
-                    var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like < like);
-                    if (Core.Save.StrengthDrink > 60)
-                    {
-                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
-                    }
-                    else if (Core.Save.StrengthDrink > 40)
-                    {
-                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
-                    }
-                    else
-                    {
-                        txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
-                    }
+                    var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like <= like);
+                    if (txt.Count != 0)
+                        if (Core.Save.StrengthDrink > 60)
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        }
+                        else if (Core.Save.StrengthDrink > 40)
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        }
+                        else
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        }
                     Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
@@ -300,5 +305,73 @@ namespace VPet_Simulator.Windows
                     break;
             }
         }
+        /// <summary>
+        /// Steam统计相关变化
+        /// </summary>
+        private void Statistics_StatisticChanged(Statistics sender, string name, SetObject value)
+        {
+            if (name.StartsWith("stat_"))
+            {
+                Steamworks.SteamUserStats.SetStat(name, (int)value);
+            }
+        }
+        /// <summary>
+        /// 计算统计数据
+        /// </summary>
+        private void StatisticsCalHandle()
+        {
+            var stat = Set.Statistics;
+            var save = Core.Save;
+            stat["stat_money"] = save.Money;
+            stat["stat_level"] = save.Level;
+            stat["stat_likability"] = save.Likability;
+
+            stat[(gi64)"stat_total_time"] += (int)Set.LogicInterval;
+            switch (Main.State)
+            {
+                case Main.WorkingState.Work:
+                    if (Core.Graph.GraphConfig.Works[Main.StateID].Type == GraphHelper.Work.WorkType.Work)
+                        stat[(gi64)"stat_work_time"] += (int)Set.LogicInterval;
+                    else
+                        stat[(gi64)"stat_study_time"] += (int)Set.LogicInterval;
+                    break;
+                case Main.WorkingState.Sleep:
+                    stat[(gi64)"stat_work_time"] += (int)Set.LogicInterval;
+                    break;
+            }
+            if (save.Mode == GameSave.ModeType.Ill)
+            {
+                if (save.Money < 10)
+                    stat["stat_ill_nomoney"] = 1;
+            }
+            if (save.Money < save.Level)
+            {
+                stat["stat_level_g_money"] = 1;
+            }
+            if (save.Feeling < 1)
+            {
+                stat["stat_0_feel"] = 1;
+                if (save.StrengthDrink < 1)
+                    stat["stat_0_f_sd"] = 1;
+            }
+            if (save.Strength < 1 && save.Feeling < 1 && save.StrengthFood < 1 && save.StrengthDrink < 1)
+                stat["stat_0_all"] = 1;
+            if (save.StrengthFood < 1)
+                stat["stat_0_strengthfood"] = 1;
+            if (save.StrengthDrink < 1)
+            {
+                stat["stat_0_strengthdrink"] = 1;
+                if (save.StrengthFood < 1)
+                    stat["stat_0_sd_sf"] = 1;
+            }
+            if (save.Strength > 99 && save.Feeling > 99 && save.StrengthFood > 99 && save.StrengthDrink > 99)
+                stat[(gint)"stat_100_all"]++;
+
+            if (IsSteamUser)
+            {
+                Task.Run(Steamworks.SteamUserStats.StoreStats);
+            }
+        }
+
     }
 }

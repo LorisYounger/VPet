@@ -1,6 +1,7 @@
 ﻿using LinePutScript;
 using LinePutScript.Dictionary;
 using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using VPet_Simulator.Core;
 
@@ -32,12 +33,17 @@ namespace VPet_Simulator.Windows.Interface
             allowmove = !this["gameconfig"].GetBool("allowmove");
             smartmove = this["gameconfig"].GetBool("smartmove");
             enablefunction = !this["gameconfig"].GetBool("nofunction");
-            Statistics = this["statistics"];
+            Statistics = new Statistics(this["statistics"].ToList());
+        }
+        public override string ToString()
+        {
+            this["statistics"] = new Line("statistics", "", "", Statistics.ToSubs().ToArray());
+            return base.ToString();
         }
         /// <summary>
         /// 统计数据信息
         /// </summary>
-        public ILine Statistics;
+        public Statistics Statistics;
 
         //public Size WindowsSize
         //{
@@ -229,7 +235,7 @@ namespace VPet_Simulator.Windows.Interface
             }
         }
         /// <summary>
-        /// 计算间隔
+        /// 计算间隔 (秒)
         /// </summary>
         public double LogicInterval
         {

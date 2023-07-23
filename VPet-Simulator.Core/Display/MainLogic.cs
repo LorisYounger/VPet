@@ -264,7 +264,7 @@ namespace VPet_Simulator.Core
                 //TODO:切换显示动画
                 Core.Save.Mode = newmod;
                 //看情况播放停止工作动画
-                if (newmod == GameSave.ModeType.Ill && (State != WorkingState.Nomal || State != WorkingState.Sleep))
+                if (newmod == GameSave.ModeType.Ill && State != WorkingState.Nomal && State != WorkingState.Sleep)
                 {
                     WorkTimer.Stop();
                 }

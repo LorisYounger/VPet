@@ -123,6 +123,7 @@ namespace VPet_Simulator.Core
             if (!DisplayStop(EndAction))
                 EndAction?.Invoke();
         }
+       
         /// <summary>
         /// 尝试触发移动
         /// </summary>
@@ -145,6 +146,10 @@ namespace VPet_Simulator.Core
             }
             return false;
         }
+        /// <summary>
+        /// 当发生摸头时触发改方法
+        /// </summary>
+        public event Action Event_TouchHead;
         /// <summary>
         /// 显示摸头情况
         /// </summary>
@@ -173,10 +178,15 @@ namespace VPet_Simulator.Core
                         return;
                     }
             }
+            Event_TouchHead?.Invoke();
             Display(GraphType.Touch_Head, AnimatType.A_Start, (graphname) =>
                Display(graphname, AnimatType.B_Loop, (graphname) =>
                DisplayCEndtoNomal(graphname)));
         }
+        /// <summary>
+        /// 当发生摸身体时触发改方法
+        /// </summary>
+        public event Action Event_TouchBody;
         /// <summary>
         /// 显示摸身体情况
         /// </summary>
@@ -205,6 +215,7 @@ namespace VPet_Simulator.Core
                         return;
                     }
             }
+            Event_TouchBody?.Invoke();
             Display(GraphType.Touch_Body, AnimatType.A_Start, (graphname) =>
              Display(graphname, AnimatType.B_Loop, (graphname) =>
              DisplayCEndtoNomal(graphname)));
