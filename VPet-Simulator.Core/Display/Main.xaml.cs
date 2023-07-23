@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
 using System.Linq;
@@ -180,20 +181,37 @@ namespace VPet_Simulator.Core
             PlayingVoice = false;
             VoicePlayer.Clock = null;
         }
-
+        public bool MoveTimerSmartMove = false;
         private void SmartMoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            MoveTimer.AutoReset = false;
+            MoveTimerSmartMove = false;
         }
 
         private void MoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (MoveTimer.Enabled == false || DisplayType.Type != GraphType.Move)
+            if (DisplayType.Type != GraphType.Move || !MoveTimerSmartMove)
             {
-                MoveTimer.Enabled = false;
                 return;
             }
             Core.Controller.MoveWindows(MoveTimerPoint.X, MoveTimerPoint.Y);
+
+            //if (Core.Controller.GetWindowsDistanceLeft() < -500)
+            //{
+            //    MessageBox.Show("当前动画移动设计错误: 已到达边界 左侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceLeft()), "MOD移动设计错误".Translate());
+            //}
+            //else if (Core.Controller.GetWindowsDistanceRight() < -500)
+            //{
+            //    MessageBox.Show("当前动画移动设计错误: 已到达边界 右侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceRight()), "MOD移动设计错误".Translate());
+            //}
+            //else if (Core.Controller.GetWindowsDistanceUp() < -500)
+            //{
+            //    MessageBox.Show("当前动画移动设计错误: 已到达边界 上侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceUp()), "MOD移动设计错误".Translate());
+            //}
+            //else if (Core.Controller.GetWindowsDistanceDown() < -500)
+            //{
+            //    MessageBox.Show("当前动画移动设计错误: 已到达边界 下侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceDown()), "MOD移动设计错误".Translate());
+            //}
+            MoveTimer.Start();
         }
         public Action DefaultClickAction;
         bool isPress = false;
@@ -256,7 +274,7 @@ namespace VPet_Simulator.Core
                 //}
                 if (SmartMove)
                 {
-                    MoveTimer.AutoReset = true;
+                    MoveTimerSmartMove = true;
                     SmartMoveTimer.Enabled = false;
                     SmartMoveTimer.Start();
                 }

@@ -349,10 +349,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 定点移动定时器
         /// </summary>
-        public Timer MoveTimer = new Timer(125)
-        {
-            AutoReset = true,
-        };
+        public Timer MoveTimer = new Timer();
         /// <summary>
         /// 设置计算间隔
         /// </summary>
@@ -380,7 +377,7 @@ namespace VPet_Simulator.Core
             MoveTimer.Enabled = false;
             if (AllowMove)
             {
-                MoveTimer.AutoReset = true;
+                MoveTimerSmartMove = true;
                 if (smartMove)
                 {
                     SmartMoveTimer.Interval = SmartMoveInterval;
@@ -395,7 +392,7 @@ namespace VPet_Simulator.Core
             }
             else
             {
-                MoveTimer.AutoReset = false;
+                MoveTimerSmartMove = false;
             }
         }
         /// <summary>
