@@ -68,128 +68,46 @@
 
 ## 软件结构
 
-* VPet-Simulator.Windows: 适用于桌面端的虚拟桌宠模拟器
+* **VPet-Simulator.Windows: 适用于桌面端的虚拟桌宠模拟器**
+  * *Function 功能性代码存放位置*
+    * CoreMOD Mod管理类
+    * MWController 窗体控制器
+  
+  * *WinDesign 窗口和UI设计
+    * winBetterBuy 更好买窗口
+    * winCGPTSetting ChatGPT 设置
+    * winSetting 软件设置/MOD 窗口
+    * winConsole 开发控制台
+    * winGameSetting 游戏设置
+    * winReport 反馈中心
+  
   * MainWindows 主窗体,存放和展示Core
-  * WinSetting.xaml 软件设置/MOD 窗口
-  * MWController.cs 窗体控制器
-* VPet-Simulator.Tool: 方便制作MOD的工具(eg:图片帧生成)
-* VPet-Simulator.Core: 软件核心 方便内置到任何WPF应用程序(例如:VUP-Simulator)
+  * PetHelper 快速切换小标
+* **VPet-Simulator.Tool: 方便制作MOD的工具(eg:图片帧生成)**
+* **VPet-Simulator.Core: 软件核心 方便内置到任何WPF应用程序(例如:VUP-Simulator)**
   * Handle 接口与控件
-    * IController 窗体控制器 (调用相关功能,例如移动到侧边等)
+    * IController 窗体控制器 (调用相关功能和设置,例如移动到侧边等)
     * Function 通用功能
     * GameCore 游戏核心,包含各种数据等内容
-    * Save 游戏存档等
-    * Setting 游戏设置
+    * GameSave 游戏存档
+    * IFood 食物/物品接口
+    * PetLoader 宠物图形加载器
   * Graph 图形渲染
-    * IGraph 图形基本接口
-    * IEyeTracking 眼部跟踪
-    * PNGAnimation 桌宠动画组件
-    * Picture 桌宠静态组件
-  * Item 所有物品
-    * Item 所有物品类
-    * Food 可以吃的食物
-    * Drink 可以喝的饮料
+    * IGraph 动画基本接口
+    * GraphCore 动画显示核心
+    * GraphHelper 动画帮助类
+    * GraphInfo 动画信息
+    * FoodAnimation 食物动画 支持显示前中后3层夹心动画 不一定只用于食物,只是叫这个名字
+    * PNGAnimation 桌宠动态动画组件
+    * Picture 桌宠静态动画组件
   * Display 显示
+    * basestyle/Theme 基本风格主题
     * Main.xaml 核心显示部件
       * MainDisplay 核心显示方法
       * MainLogic 核心显示逻辑
     * ToolBar 点击人物时候的工具栏
     * MessageBar 人物说话时候的说话栏
-    * Theme 主题
-
-## 游戏设计
-
-* 金钱 钱不是是万能的,没钱是万万不能的
-* 人物数据
-  * 经验/等级
-    * 盈利速度加成
-    * 解锁更多对话等
-  * 体力
-    * 工作/摸头/学习 消耗体力
-    * 自然百分比回复(在饱腹度>50%)
-    * 睡觉回复(饱腹度>=25)
-  * 饱腹度 固定上限100
-    * 工作/学习 消耗饱腹度
-    * 自然下降
-    * 进食 回复
-  * 心情 固定上限100
-    * 工作/学习消耗
-    * 摸头回复
-    * 心情>=75时同时增加经验
-  * 口渴度 固定上限100
-    * 自然下降
-    * 喝水回复
-    * 低于 25 加生病条
-  * 隐藏条:
-    * 生病条: 
-      * 生病的概率
-      * 心情<=25增加概率 心情>=75缓慢减少
-      * 打工/学习增加固定百分比
-      * 体力<=40 增加概率
-      * 降低心情
-    * 好感度
-      * 心情<=25 降低+与心情同步减少
-      * 心情>=90与心情同步增加
-* 人物互动
-  * 摸头
-  * 摸身子
-  * 喂食
-  * 喂水
-  * 去打工
-  * 去学习
-  * 去睡觉
-  * 玩耍
-* 人物隐藏互动
-  * 被拉起 (切换位置)
-  * 爬墙
-  * 爬地板
-  * 躲藏 (被发现加心情)
-
-## 图像资源
-
-图像资源可能需要拆分以至于支持动图
-
-* 模式 (其他状态得制作符合该模式的表情/动作) 部分模式无特殊动作
-  * 高兴 - 兴奋的表情/肢体动作
-  * 普通 - 一般的表情/肢体动作
-  * 状态不佳 - 情绪低落/肢体动作
-  * 生病(躺床) - 单独做个生病躺床的拆分
-* IDEL 待机状态
-  * 发呆 - (可以准备多个)
-  * 盯着鼠标看 (需要拆分眼睛和眨眼等)
-  * 等等 - 其他待机状态,例如不小心睡着等,或者换几个姿势(换姿势无生病)
-* 人物互动
-  * 摸头 - 摸头,包含高兴和附魔的手 可以准备不同的动画和表情
-  * 摸身子 - 嫌弃/害羞/弹问号/等
-  * 喂食 - 吃掉食物动作和动画
-    * 水果 ($15 生病条-2饱腹度+10)
-    * 汉堡 ($20 饱腹度+40 生病条+1 口渴-10)
-    * 沙拉 ($20 饱腹度+20 生病条-2)
-    * 药丸
-    * 更多
-  * 喂水 - 喝水和更多动作和动画
-    * 普通水
-    * 矿泉水
-    * 饮料
-    * 药水
-    * 更多
-  * 去打工 (无生病)
-    * 去当虚拟主播 (更高层次eg:高级设备) lv>=20
-    * 去当虚拟主播 (符合游戏设定 普通设备) lv>=10
-    * 去编写程序 lv>=5
-    * 去当外聘客服 全通用
-  * 去学习 (无生病)
-    * 看书 (不同的颜色决定等级)
-  * 去睡觉 
-  * 玩耍 (无生病)
-    * 玩游戏机
-    * 运动(打球等)
-    * 小游戏(可以后续设计,例如井字棋等等)
-* 人物隐藏互动 
-  * 被拉起 (切换位置)(无生病,生病时使用状态不佳)
-  * 爬墙 (无状态不佳/生病))
-  * 爬地板 (无状态不佳/生病))
-  * 躲藏 (被发现加心情 无状态不佳/生病)
+    * WorkTimer 工作时钟
 
 ## 参与开发
 
@@ -198,8 +116,10 @@
 
 当想法通过后,您可以通过 [fork](https://github.com/LorisYounger/VPet/fork) 功能拷贝代码至自己的github以方便编写自己的代码, 编写完毕后通过[pull requests](https://github.com/LorisYounger/VPet/compare) 提交<br/>
 如果您想法没有被通过,也可以另起炉灶,写个不同版本功能的桌宠软件. 但需遵守 [Apache License 2.0](https://github.com/LorisYounger/VPet/blob/main/LICENSE) 与 [动画版权声明与授权](https://github.com/LorisYounger/VPet#%E5%8A%A8%E7%94%BB%E7%89%88%E6%9D%83%E5%A3%B0%E6%98%8E%E4%B8%8E%E6%8E%88%E6%9D%83)
+注: 一般来讲, 添加新功能都可以通过编写代码插件MOD实现, 详情请参见 [VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo)
 
 我可能会对您的提交的代码进行修改,删减等以确保该功能/玩法适用于虚拟桌宠模拟器.
+
 
 感谢以下参与的开发人员(按贡献程度排序)
 
@@ -207,7 +127,7 @@
 
 ## 动画版权声明与授权
 
-在github中 [VPet/VPet-Simulator.Windows/mod/0000_core/pet/vup/](https://github.com/LorisYounger/VPet/tree/main/VPet-Simulator.Windows/mod/0000_core/pet/vup) 动画版权归 [虚拟主播模拟器制作组](https://www.exlb.net/VUP-Simulator)所有, 当使用本类库时,您可能需要自行准备动画文件,或遵循以下协议
+在github中 [桌宠动画文件](https://github.com/LorisYounger/VPet/tree/main/VPet-Simulator.Windows/mod/0000_core/pet/vup) 动画版权归 [虚拟主播模拟器制作组](https://www.exlb.net/VUP-Simulator)所有, 当使用本类库时,您可能需要自行准备动画文件,或遵循以下协议
 
 ### 非商用用途授权
 
@@ -237,4 +157,4 @@
    ![image-20230208004330895](README.assets/image-20230208004330895.png)
 3. 点击启动, 如果一切正常则会报错 `缺少模组Core,无法启动桌宠`
 4. 以管理员身份运行 `mklink.bat`, 这会让mod文件链接到生成位置
-5. 下次点击启动即可正常运行
+5. 再次点击启动即可正常运行
