@@ -15,9 +15,9 @@
     </UserControl.Resources>
     <Grid x:Name="MainGrid" x:FieldModifier="public">
         <Border x:Name="BdrPanel" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24"
-                Visibility="Collapsed" TextElement.FontSize="24" BorderBrush="{DynamicResource DARKPrimaryDarker}"
-                BorderThickness="1" Background="{DynamicResource DARKPrimaryText}" CornerRadius="5"
-                MouseLeave="MenuPanel_MouseLeave" x:FieldModifier="public">
+                TextElement.FontSize="24" BorderBrush="{DynamicResource DARKPrimaryDarker}" BorderThickness="1"
+                Background="{DynamicResource DARKPrimaryText}" CornerRadius="5" MouseLeave="MenuPanel_MouseLeave"
+                x:FieldModifier="public" Visibility="Collapsed">
             <Grid Margin="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -79,19 +79,28 @@
                 <TextBlock x:Name="tFeeling" Grid.Row="5" Grid.Column="4" HorizontalAlignment="Right" Text="+1/t"
                         Foreground="{DynamicResource DARKPrimary}" />
                 <TextBlock Grid.Row="6" Text="{ll:Str 饱腹度}" VerticalAlignment="Center" />
+                <ProgressBar x:Name="pStrengthFoodMax" Grid.Row="6" Grid.Column="2" Value="90" FontSize="20" Height="20"
+                        VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10" Opacity="0.5"
+                        Foreground="{DynamicResource ProgressBarForeground}" Background="#FFDDDDDD" />
                 <ProgressBar x:Name="pStrengthFood" Grid.Row="6" Grid.Column="2" Value="80" FontSize="20" Height="20"
                         VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
                         Foreground="{DynamicResource ProgressBarForeground}"
                         pu:ProgressBarHelper.IsPercentVisible="True"
-                        pu:ProgressBarHelper.GeneratingPercentText="PgbHunger_GeneratingPercentText" />
+                        pu:ProgressBarHelper.GeneratingPercentText="PgbHunger_GeneratingPercentText"
+                        Background="{x:Null}" />
+
                 <TextBlock x:Name="tStrengthFood" Grid.Row="6" Grid.Column="4" HorizontalAlignment="Right" Text="+1/t"
                         Foreground="{DynamicResource DARKPrimary}" />
                 <TextBlock Grid.Row="7" Text="{ll:Str 口渴度}" VerticalAlignment="Center" />
+                <ProgressBar x:Name="pStrengthDrinkMax" Grid.Row="7" Grid.Column="2" Value="90" FontSize="20"
+                        Height="20" VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
+                        Opacity="0.5" Foreground="{DynamicResource ProgressBarForeground}" Background="#FFDDDDDD" />
                 <ProgressBar x:Name="pStrengthDrink" Grid.Row="7" Grid.Column="2" Value="20" FontSize="20" Height="20"
                         VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
                         Foreground="{DynamicResource ProgressBarForeground}"
                         pu:ProgressBarHelper.IsPercentVisible="True"
-                        pu:ProgressBarHelper.GeneratingPercentText="PgbThirsty_GeneratingPercentText" />
+                        pu:ProgressBarHelper.GeneratingPercentText="PgbThirsty_GeneratingPercentText"
+                        Background="{x:Null}" />
                 <TextBlock x:Name="tStrengthDrink" Grid.Row="7" Grid.Column="4" HorizontalAlignment="Right" Text="+1/t"
                         Foreground="{DynamicResource DARKPrimary}" />
             </Grid>
@@ -113,8 +122,8 @@
                 <MenuItem x:Name="MenuWork" Header="{ll:Str 工作}" HorizontalContentAlignment="Center" />
                 <!--<MenuItem Header="说话" HorizontalContentAlignment="Center" IsEnabled="False" />-->
             </MenuItem>
-            <MenuItem x:Name="MenuDIY" Header="{ll:Str 自定}" HorizontalContentAlignment="Center"
-                    x:FieldModifier="public" Padding="0" />
+            <MenuItem x:Name="MenuDIY" Header="{ll:Str 自定}" HorizontalContentAlignment="Center" x:FieldModifier="public"
+                    Padding="0" />
             <MenuItem x:Name="MenuSetting" Header="{ll:Str 系统}" HorizontalContentAlignment="Center"
                     x:FieldModifier="public" Padding="0">
                 <MenuItem x:Name="MenuMODConfig" Header="{ll:Str MOD设置}" HorizontalContentAlignment="Center"

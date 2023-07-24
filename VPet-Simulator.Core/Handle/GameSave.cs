@@ -282,7 +282,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public ModeType CalMode()
         {
-            int realhel = 60 - (Feeling >= 80 ? 20 : 0) - (Likability >= 80 ? 20 : (Likability >= 40 ? 10 : 0));
+            int realhel = 60 - (Feeling >= 80 ? 12 : 0) - (Likability >= 80 ? 12 : (Likability >= 40 ? 6 : 0));
             //先从最次的开始
             if (Health <= realhel)
             {
