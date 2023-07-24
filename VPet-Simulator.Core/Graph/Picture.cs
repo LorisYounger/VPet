@@ -50,7 +50,7 @@ namespace VPet_Simulator.Core
                     length = 1000;
             }
             bool isLoop = info[(gbol)"loop"];
-            Picture pa = new Picture(graph, path.FullName, GraphHelper.GetGraphInfo(path, info), length, isLoop);
+            Picture pa = new Picture(graph, path.FullName, new GraphInfo(path, info), length, isLoop);
             graph.AddGraph(pa);
         }
         /// <summary>

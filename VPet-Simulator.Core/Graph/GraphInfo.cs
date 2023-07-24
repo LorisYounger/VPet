@@ -1,8 +1,11 @@
-﻿using System;
+﻿using LinePutScript;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static VPet_Simulator.Core.GraphHelper;
 
 namespace VPet_Simulator.Core
 {
@@ -32,7 +35,104 @@ namespace VPet_Simulator.Core
             Type = type;
             ModeType = modeType;
         }
+        /// <summary>
+        /// 通过文件位置和信息获取动画信息
+        /// </summary>
+        /// <param name="path">文件夹位置</param>
+        /// <param name="info">信息</param>
+        public GraphInfo(FileSystemInfo path, ILine info)
+        {
+            var pn = Sub.Split(path.FullName.Substring(0, path.FullName.Length - path.Extension.Length).ToLower(), info[(gstr)"startuppath"].ToLower()).Last();
+            var path_name = pn.Replace('\\', '_').Split('_').ToList();
+            path_name.RemoveAll(string.IsNullOrWhiteSpace);
+            if (!Enum.TryParse(info[(gstr)"mode"], true, out GameSave.ModeType modetype))
+            {
+                if (path_name.Remove("happy"))
+                {
+                    modetype = GameSave.ModeType.Happy;
+                }
+                else if (path_name.Remove("nomal"))
+                {
+                    modetype = GameSave.ModeType.Nomal;
+                }
+                else if (path_name.Remove("poorcondition"))
+                {
+                    modetype = GameSave.ModeType.PoorCondition;
+                }
+                else if (path_name.Remove("ill"))
+                {
+                    modetype = GameSave.ModeType.Ill;
+                }
+                else
+                {
+                    modetype = GameSave.ModeType.Nomal;
+                }
+            }
 
+            if (!Enum.TryParse(info[(gstr)"graph"], true, out GraphType graphtype))
+            {
+                graphtype = GraphInfo.GraphType.Common;
+                for (int i = 0; i < GraphTypeValue.Length; i++)
+                {//挨个找第一个匹配的
+                    if (path_name.Contains(GraphTypeValue[i][0]))
+                    {
+                        int index = path_name.IndexOf(GraphTypeValue[i][0]);
+                        bool ismatch = true;
+                        for (int b = 1; b < GraphTypeValue[i].Length && b + index < path_name.Count; b++)
+                        {
+                            if (path_name[index + b] != GraphTypeValue[i][b])
+                            {
+                                ismatch = false;
+                                break;
+                            }
+                        }
+                        if (ismatch)
+                        {
+                            graphtype = (GraphType)i;
+                            path_name.RemoveRange(index, GraphTypeValue[i].Length);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!Enum.TryParse(info[(gstr)"animat"], true, out AnimatType animatType))
+            {
+                if (path_name.Remove("a") || path_name.Remove("start"))
+                {
+                    animatType = AnimatType.A_Start;
+                }
+                else if (path_name.Remove("b") || path_name.Remove("loop"))
+                {
+                    animatType = AnimatType.B_Loop;
+                }
+                else if (path_name.Remove("c") || path_name.Remove("end"))
+                {
+                    animatType = AnimatType.C_End;
+                }
+                else
+                {
+                    animatType = AnimatType.Single;
+                }
+            }
+            Name = info.Info;
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                while (path_name.Count > 0 && (double.TryParse(path_name.Last(), out _) || path_name.Last().StartsWith("~")))
+                {
+                    path_name.RemoveAt(path_name.Count - 1);
+                }
+                if (path_name.Count > 0)
+                    Name = path_name.Last();
+            }
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                Name = graphtype.ToString().ToLower();
+            }
+            Type = graphtype;
+            Animat = animatType;
+            ModeType = modetype;
+        }
         /// <summary>
         /// 类型: 主要动作分类
         /// </summary>

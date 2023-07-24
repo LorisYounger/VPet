@@ -155,7 +155,7 @@ namespace VPet_Simulator.Core
             var paths = p.GetFiles();
 
             bool isLoop = info[(gbol)"loop"];
-            PNGAnimation pa = new PNGAnimation(graph, path.FullName, paths, GraphHelper.GetGraphInfo(path, info), isLoop);
+            PNGAnimation pa = new PNGAnimation(graph, path.FullName, paths, new GraphInfo(path, info), isLoop);
             graph.AddGraph(pa);
         }
 

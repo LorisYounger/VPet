@@ -206,7 +206,7 @@ namespace VPet_Simulator.Core
                     }
                     else if (Core.Save.StrengthFood <= 25)
                     {
-                        Core.Save.Health -= Function.Rnd.Next() * TimePass;
+                        Core.Save.Health -= Function.Rnd.NextDouble() * TimePass;
                         addhealth -= 2;
                     }
                     if (Core.Save.StrengthDrink >= 50)
@@ -218,7 +218,7 @@ namespace VPet_Simulator.Core
                     }
                     else if (Core.Save.StrengthDrink <= 25)
                     {
-                        Core.Save.Health -= Function.Rnd.Next() * TimePass;
+                        Core.Save.Health -= Function.Rnd.NextDouble() * TimePass;
                         addhealth -= 2;
                     }
                     if (addhealth > 0)
@@ -285,7 +285,6 @@ namespace VPet_Simulator.Core
         {
             //所有Handle
             TimeHandle?.Invoke(this);
-
             if (Core.Controller.EnableFunction)
             {
                 FunctionSpend(0.05);

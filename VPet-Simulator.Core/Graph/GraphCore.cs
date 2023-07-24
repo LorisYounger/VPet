@@ -106,6 +106,10 @@ namespace VPet_Simulator.Core
                         return list[0];
                     return list[Function.Rnd.Next(list.Count)];
                 }
+                if (mode == GameSave.ModeType.Ill)
+                {
+                    return null;
+                }
                 int i = (int)mode + 1;
                 if (i < 3)
                 {
@@ -115,20 +119,17 @@ namespace VPet_Simulator.Core
                         return list[Function.Rnd.Next(list.Count)];
                 }
                 i = (int)mode - 1;
-                if (i >= 0)
+                if (i >= 1)
                 {
                     //向上兼容的动画
                     list = gl.FindAll(x => x.GraphInfo.ModeType == (GameSave.ModeType)i);
                     if (list.Count > 0)
                         return list[Function.Rnd.Next(list.Count)];
                 }
-                //如果实在找不到,就走随机数
-                //if (mode != GameSave.ModeType.Ill)
-                //{
-                list = gl;
+                //如果实在找不到,就走随机数(无生病)
+                list = gl.FindAll(x => x.GraphInfo.ModeType != GameSave.ModeType.Ill);
                 if (list.Count > 0)
-                    return list[Function.Rnd.Next(list.Count)];
-                //}                
+                    return list[Function.Rnd.Next(list.Count)];              
             }
             return null;// FindGraph(GraphType.Default, mode);
         }
@@ -305,7 +306,7 @@ namespace VPet_Simulator.Core
 
                 Str.AddRange(lps["str"]);
                 Duration.AddRange(lps["duration"]);
-             
+
                 foreach (var line in lps.FindAllLine("work"))
                 {
                     Works.Add(LPSConvert.DeserializeObject<Work>(line));

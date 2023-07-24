@@ -50,7 +50,7 @@ namespace VPet_Simulator.Core
         public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
         {
             bool isLoop = info[(gbol)"loop"];
-            FoodAnimation pa = new FoodAnimation(graph, GraphHelper.GetGraphInfo(path, info), info[(gstr)"front_lay"], info[(gstr)"back_lay"], info, isLoop);
+            FoodAnimation pa = new FoodAnimation(graph, new GraphInfo(path, info), info[(gstr)"front_lay"], info[(gstr)"back_lay"], info, isLoop);
             graph.AddGraph(pa);
         }
         /// <summary>
