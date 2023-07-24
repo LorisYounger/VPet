@@ -123,7 +123,7 @@ namespace VPet_Simulator.Core
             if (!DisplayStop(EndAction))
                 EndAction?.Invoke();
         }
-       
+
         /// <summary>
         /// 尝试触发移动
         /// </summary>
@@ -490,6 +490,7 @@ namespace VPet_Simulator.Core
             Display(Core.Graph.FindGraph(name, animat, Core.Save.Mode), EndAction);
         }
         bool petgridcrlf = true;
+        int nodisplayLoop = 0;
         /// <summary>
         /// 显示动画 (自动多层切换)
         /// </summary>
@@ -499,8 +500,27 @@ namespace VPet_Simulator.Core
         {
             if (graph == null)
             {
-                EndAction?.Invoke();
+                if (nodisplayLoop++ > 20)
+                {//无动画时运行兼容性动画
+                    if (nodisplayLoop < 100)
+                        Display(GraphType.Default, AnimatType.Single, EndAction);
+                    else
+                    {//连Nomal都没有, 证明是未完成的动画, 修改设置+退出游戏
+                        Dispatcher.Invoke(() =>
+                        {
+                            LabelDisplay.Content = "未找到可播放动画, 已停止运行桌宠模块".Translate();
+                            LabelDisplay.Visibility = Visibility.Visible;
+                            IsEnabled = false;
+                        });
+                    }
+                }
+                else
+                    EndAction?.Invoke();
                 return;
+            }
+            else
+            {
+                nodisplayLoop = 0;
             }
             //if(graph.GraphType == GraphType.Climb_Up_Left)
             //{
