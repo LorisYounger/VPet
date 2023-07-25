@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 
@@ -81,6 +82,18 @@ namespace VPet_Simulator.Windows
             else
                 ItemID = 0;
             CacheDate = modlps.GetDateTime("cachedate", DateTime.MinValue);
+
+            //MOD未加载时支持翻译
+            foreach (var line in modlps.FindAllLine("lang"))
+            {
+                List<ILine> ls = new List<ILine>();
+                foreach (var sub in line)
+                {
+                    ls.Add(new Line(sub.Name, sub.info));
+                }
+                LocalizeCore.AddCulture(line.info, ls);
+            }
+
             if (!IsOnMOD(mw))
             {
                 //Content = "该模组已停用".Translate();

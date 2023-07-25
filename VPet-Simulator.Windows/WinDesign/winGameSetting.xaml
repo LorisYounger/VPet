@@ -610,7 +610,10 @@
                                 </TextBlock>
                             </StackPanel>
                         </Grid>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" Height="60" Margin="0,7,0,0"
+                        <Label Content="{ll:Str MOD介绍}" HorizontalAlignment="Left" Margin="-5,0,0,0"
+                                VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Background="{x:Null}"
+                                Padding="5,5,5,0" />
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Height="80"
                                 pu:ScrollViewerHelper.ScrollBarThickness="10" HorizontalAlignment="Left"
                                 VerticalAlignment="Top">
                             <TextBlock x:Name="GameInfo" TextWrapping="Wrap" FontSize="14"
@@ -622,7 +625,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <Label Content="{ll:Str MOD介绍}" HorizontalAlignment="Left" Margin="-5,0,0,0"
+                                <Label Content="{ll:Str 内容}" HorizontalAlignment="Left" Margin="-5,0,0,0"
                                         VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Background="{x:Null}" />
                                 <ScrollViewer VerticalScrollBarVisibility="Auto" Height="140" Margin="0,0,0,0"
                                         pu:ScrollViewerHelper.ScrollBarThickness="10" HorizontalAlignment="Left"
@@ -633,7 +636,7 @@
                                 </ScrollViewer>
                             </StackPanel>
                             <StackPanel Grid.Column="1">
-                                <Label Content="{ll:Str 内容}" HorizontalAlignment="Left" Margin="-5,0,0,0"
+                                <Label Content="{ll:Str 操作}" HorizontalAlignment="Left" Margin="-5,0,0,0"
                                         VerticalAlignment="Top" FontSize="18" FontWeight="Bold" Background="{x:Null}" />
                                 <TextBlock x:Name="ButtonOpenModFolder" Cursor="Hand" HorizontalAlignment="Left"
                                         Margin="0,0,0,0" TextWrapping="Wrap" Text="{ll:Str '所在文件夹'}"

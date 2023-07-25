@@ -185,7 +185,7 @@ namespace VPet_Simulator.Windows
         private void ShowMod(string modname)
         {
             mod = mw.CoreMODs.Find(x => x.Name == modname);
-            LabelModName.Content = mod.Name;
+            LabelModName.Content = mod.Name.Translate();
             runMODAuthor.Text = mod.Author;
             runMODGameVer.Text = CoreMOD.INTtoVER(mod.GameVer);
             runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
@@ -272,7 +272,7 @@ namespace VPet_Simulator.Windows
                 ButtonSteam.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
             }
             runMODVer.Text = CoreMOD.INTtoVER(mod.Ver);
-            GameInfo.Text = mod.Intro;
+            GameInfo.Text = mod.Intro.Translate();
             string content = "";
             foreach (string tag in mod.Tag)
             {
