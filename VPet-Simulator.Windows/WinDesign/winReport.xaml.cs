@@ -115,5 +115,23 @@ namespace VPet_Simulator.Windows
         {
             Height = MainGrid.ActualHeight + 50;
         }
+
+        private void tType_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (tType.SelectedIndex == 5)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (var v in LocalizeCore.StoreTranslationList)
+                {
+                    sb.AppendLine(v.Replace("\n", @"\n").Replace("\r", @"\r"));
+                }
+                tContent.Text = sb.ToString();
+                if (string.IsNullOrEmpty(tContent.Text))
+                {
+                    tContent.Text = "没有需要提交的翻译的内容".Translate();
+                }
+                tUpload.IsChecked = false;
+            }
+        }
     }
 }

@@ -12,12 +12,13 @@
                 FontSize="24" Margin="10,0,0,0" />
         <pu:FormGroup Header="{ll:Str '类型:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal"
                 Margin="0,2,0,0" Padding="1" FontSize="16" ToolTip="{ll:Str 需要反馈的类型}" HeaderWidth="Auto">
-            <ComboBox x:Name="tType" SelectedIndex="4">
+            <ComboBox x:Name="tType" SelectedIndex="4" SelectionChanged="tType_SelectionChanged">
                 <ComboBoxItem Content="{ll:Str '游戏内报错'}" />
                 <ComboBoxItem Content="{ll:Str '逻辑计算错误'}" />
                 <ComboBoxItem Content="{ll:Str '数值设计不合理'}" />
                 <ComboBoxItem Content="{ll:Str '玩法与功能建议'}" />
                 <ComboBoxItem Content="{ll:Str '游玩心得分享'}" />
+                <ComboBoxItem Content="{ll:Str '未翻译文档提交'}" />
             </ComboBox>
         </pu:FormGroup>
         <pu:FormGroup Header="{ll:Str '描述:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal"
