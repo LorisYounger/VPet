@@ -762,6 +762,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set["CGPT"].SetBool("enable", RBCGPTUseLB.IsChecked == false);
+            mw.Set["CGPT"].SetBool("enable", RBCGPTUseLB.IsChecked == false);
             if (mw.Set["CGPT"][(gbol)"enable"])
             {
                 BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
@@ -895,11 +896,12 @@ namespace VPet_Simulator.Windows
                 string path = AppDomain.CurrentDomain.BaseDirectory + @"\UserData\" + txt + ".lps";
                 if (File.Exists(path))
                 {
-                    GameSave gs = GameSave.Load(new Line(File.ReadAllText(path)));
+                    var l = new Line(File.ReadAllText(path));
+                    GameSave gs = GameSave.Load(l);
                     if (MessageBoxX.Show("存档名称:{0}\n存档等级:{1}\n存档金钱:{2}\n是否加载该备份存档? 当前游戏数据会丢失"
                         .Translate(gs.Name, gs.Level, gs.Money), "是否加载该备份存档? 当前游戏数据会丢失".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Info) == MessageBoxResult.Yes)
                     {
-                        mw.Core.Save = gs;
+                        mw.GameLoad(l);
                     }
                 }
             }

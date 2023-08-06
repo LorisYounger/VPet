@@ -18,20 +18,14 @@ using ChatGPT.API.Framework;
 using static VPet_Simulator.Core.GraphCore;
 using Panuon.WPF.UI;
 using VPet_Simulator.Windows.Interface;
-using static VPet_Simulator.Core.IGraph;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
 using System.Linq;
 using LinePutScript.Localization.WPF;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using static VPet_Simulator.Windows.PerformanceDesktopTransparentWindow;
-using System.Windows.Shapes;
 using Line = LinePutScript.Line;
 using static VPet_Simulator.Core.GraphInfo;
-using LinePutScript.Converter;
-using System.Windows.Markup;
 
 namespace VPet_Simulator.Windows
 {
@@ -171,7 +165,7 @@ namespace VPet_Simulator.Windows
                     .GetFiles("*.lps").OrderByDescending(x => x.LastWriteTime).FirstOrDefault();
                 if (latestsave != null)
                 {
-                    Core.Save = GameSave.Load(new Line(File.ReadAllText(latestsave.FullName)));
+                    GameLoad(new Line(File.ReadAllText(latestsave.FullName)));
                     return;
                 }
             }
@@ -240,7 +234,7 @@ namespace VPet_Simulator.Windows
             //加载游戏内容
             Core.Controller = new MWController(this);
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
-                Core.Save = GameSave.Load(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First());
+                GameLoad(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First());
             else//如果加载存档失败了,试试加载备份,如果没备份,就新建一个
                 LoadLatestSave();
 

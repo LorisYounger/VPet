@@ -98,6 +98,11 @@ namespace VPet_Simulator.Windows.Interface
         /// 鼠标穿透
         /// </summary>
         bool MouseHitThrough { get; set; }
+
+        /// <summary>
+        /// 存档 Hash检查 是否通过
+        /// </summary>
+        bool HashCheck { get; } 
     }
 
 }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using VPet_Simulator.Core;
@@ -45,7 +46,10 @@ namespace VPet_Simulator.Windows
         public List<LowText> LowFoodText { get; set; } = new List<LowText>();
 
         public List<LowText> LowDrinkText { get; set; } = new List<LowText>();
-
+        /// <summary>
+        /// 存档 Hash检查 是否通过
+        /// </summary>
+        public bool HashCheck { get; set; } = true;
         public void SetZoomLevel(double zl)
         {
             Set.ZoomLevel = zl;
@@ -97,7 +101,10 @@ namespace VPet_Simulator.Windows
 
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
                         File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
-                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", Core.Save.ToLine().ToString());
+                    var l = Core.Save.ToLine();
+                    int hs = l.GetHashCode();
+                    l[(gint)"hash"] = hs;
+                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", l.ToString());
                 }
                 if (CGPTClient != null)
                     File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json", CGPTClient.Save());
@@ -372,6 +379,14 @@ namespace VPet_Simulator.Windows
                 Task.Run(Steamworks.SteamUserStats.StoreStats);
             }
         }
-
+        public void GameLoad(ILine line)
+        {
+            Core.Save = GameSave.Load(line);
+            int hash = line.GetInt("hash");
+            if (line.Remove("hash"))
+            {
+                HashCheck = line.GetHashCode() == hash;
+            }
+        }
     }
 }
