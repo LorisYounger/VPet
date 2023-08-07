@@ -18,6 +18,9 @@
                 <TextBlock x:Name="TText" Text="我说话长这样,这是我说的话巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉"
                         TextWrapping="WrapWithOverflow" FontSize="24" x:FieldModifier="public" />
             </ScrollViewer>
+            <Grid x:Name="MessageBoxContent" x:FieldModifier="public">
+                
+            </Grid>
         </StackPanel>
     </Border>
 </UserControl>

@@ -30,7 +30,12 @@ namespace VPet_Simulator.Core
         {
             if (Dispatcher.Invoke(() => Opacity) <= 0.05)
             {
-                Dispatcher.Invoke(() => this.Visibility = Visibility.Collapsed);
+                Dispatcher.Invoke(() =>
+                {
+                    this.Visibility = Visibility.Collapsed;
+                    MessageBoxContent.Children.Clear();
+                });
+
                 EndAction?.Invoke();
             }
             else
@@ -96,7 +101,7 @@ namespace VPet_Simulator.Core
         {
             if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
             {
-                Panel.SetZIndex(this, m.UIGrid.Children.Count);
+                Panel.SetZIndex(this, m.UIGrid.Children.Count - 1);
             }
             TText.Text = "";
             outputtext = text.ToList();
@@ -132,6 +137,7 @@ namespace VPet_Simulator.Core
         {
             EndTimer.Stop(); ShowTimer.Stop(); CloseTimer.Close();
             this.Visibility = Visibility.Collapsed;
+            MessageBoxContent.Children.Clear();
             EndAction?.Invoke();
         }
         public void Dispose()

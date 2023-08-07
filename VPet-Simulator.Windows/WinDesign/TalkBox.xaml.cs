@@ -1,8 +1,10 @@
 ﻿using LinePutScript;
 using LinePutScript.Localization.WPF;
+using Steamworks;
 using System;
 using System.IO;
 using System.Net;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -11,6 +13,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace VPet_Simulator.Windows
 {
@@ -22,7 +26,6 @@ namespace VPet_Simulator.Windows
         Main m;
         Setting set;
         MainWindow mw;
-
         public TalkBox(MainWindow mw)
         {
             InitializeComponent();
@@ -30,8 +33,7 @@ namespace VPet_Simulator.Windows
             set = mw.Set;
             this.mw = mw;
             this.IsEnabled = false;
-            var sid = Steamworks.SteamClient.SteamId.Value;
-            Task.Run(() => PetLifeDisplay(sid));
+            Task.Run(TalkChatInfoDisplay);
         }
 
         private void SendMessage_Click(object sender, RoutedEventArgs e)
@@ -40,178 +42,174 @@ namespace VPet_Simulator.Windows
             {
                 return;
             }
-            var cont = tbTalk.Text;
-            var sid = Steamworks.SteamClient.SteamId.Value;
+            var sd = new say_data()
+            {
+                content = tbTalk.Text,
+                likability = (int)m.Core.Save.Likability,
+                mode = (int)m.Core.Save.Mode,
+            };
             tbTalk.Text = "";
-            Task.Run(() => OPENAI(sid, cont));
+            Task.Run(() =>
+            {
+                var ret = ConnectAIOpen("VPet/Say", "POST", JsonConvert.SerializeObject(sd));
+                switch (ret.Name)
+                {
+                    case "Success":
+                        var showtxt = "当前Token使用".Translate() + ": " + ret.Info;
+                        Dispatcher.Invoke(() =>
+                        {
+                            m.MsgBar.MessageBoxContent.Children.Add(new TextBlock() { Text = showtxt, FontSize = 20, ToolTip = showtxt, HorizontalAlignment = HorizontalAlignment.Right });
+                            TalkChatInfoDisplay(ret);
+                        });
+                        m.SayRnd(ret.Text);
+                        break;
+                    default:
+                    case "Error":
+                        if (ret.Info == "Connect")
+                            m.SayRnd(ret.Text);
+                        else
+                            m.SayRnd(ret.Info.Translate());
+                        break;
+                    case "Fail":
+                        switch (ret.Info)
+                        {
+                            case "ServerFull":
+                                m.SayRnd("ServerFull".Translate(ret[(gint)"serverused"], ret[(gint)"servertotal"]));
+                                break;
+                            case "NoUser":
+                                Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Visible);
+                                m.SayRnd("NoUser".Translate());
+                                break;
+                            case "NoTokenUser":
+                            case "NoTokenVIP":
+                                Dispatcher.Invoke(() => TalkChatInfoDisplay(ret));
+                                m.SayRnd(ret.Info.Translate(ret[(gint)"TokenUsed"], ret[(gint)"TokenFreeLimit"], ret[(gdbe)"relshour"]));
+                                break;
+                            default:
+                                m.SayRnd(ret.Info.Translate());
+                                break;
+                        }
+                        break;
+                }
+            });
 
         }
-
-        /// <summary>
-        /// 使用OPENAI-LB进行回复
-        /// </summary>
-        /// <param name="steamid">steamid,用于记录历史</param>
-        /// <param name="content">内容 说话内容</param>
-        public bool OPENAI(ulong steamid, string content)
+        private class say_data
         {
-            Dispatcher.Invoke(() => this.IsEnabled = false);
-            bool rettype = true;
-            try
-            {
-                //请不要使用该API作为其他用途,如有其他需要请联系我(QQ群:430081239)
-                //该API可能会因为其他原因更改 //TODO:支持多语言
-                string _url = "https://aiopen.exlb.net:5810/VPet/Talk";
-                //参数
-                StringBuilder sb = new StringBuilder();
-                sb.Append($"steamid={steamid}");
-                sb.AppendLine($"&content={HttpUtility.UrlEncode(content)}");
-                var request = (HttpWebRequest)WebRequest.Create(_url);
-                request.Method = "POST";
-                request.ContentType = "application/x-www-form-urlencoded";//ContentType
-                byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());
-                int length = byteData.Length;
-                request.ContentLength = length;
-                request.Timeout = 200000;
-                using (Stream writer = request.GetRequestStream())
-                {
-                    writer.Write(byteData, 0, length);
-                    writer.Close();
-                    writer.Dispose();
-                }
-                string responseString;
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
-                    response.Dispose();
-                }
-                if (responseString.Contains("调用API失败,请稍后重新发送内容".Translate()))
-                    rettype = false;
-                else if (responseString.Contains("点击初始化桌宠聊天程序".Translate()))
-                {
-                    Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Visible);
-                    set["aiopen"][(gbol)"startup"] = false;
-                    rettype = false;
-                }
-                else if (responseString.ToLower().Contains("ChatGPT") ||
-                    ((responseString.ToLower().Contains("AI") || responseString.ToLower().Contains("语言")) && responseString.ToLower().Contains("模型"))
-                    || (responseString.ToLower().Contains("程序") && (responseString.ToLower().Contains("机器人") || responseString.ToLower().Contains("计算机"))))
-                {
-                    Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Visible);
-                    set["aiopen"][(gbol)"startup"] = false;
-                    rettype = false;
-                    responseString += "\n" + "检测到模型错误,已重置桌宠聊天系统".Translate();
-                    ChatGPT_Reset();
-                }
-                m.SayRnd(responseString);//todo
-            }
-            catch (Exception exp)
-            {
-                m.SayRnd(exp.ToString());//, GraphCore.Helper.SayType.Serious);
-                rettype = false;
-            }
-            Dispatcher.Invoke(() => this.IsEnabled = true);
-            return rettype;
+            /// <summary>
+            /// 说话内容
+            /// </summary>
+            public string content { get; set; } = "";
+            /// <summary>
+            /// 好感度
+            /// </summary>
+            public int likability { get; set; } = 0;
+            /// <summary>
+            /// 当前状态
+            /// </summary>
+            public int mode { get; set; } = 1;
+            public string lang { get; set; } = LocalizeCore.CurrentCulture.ToLower();
         }
         /// <summary>
         /// 重置ChatGPT
         /// </summary>
         /// <returns></returns>
-        public string ChatGPT_Reset()
+        public bool ChatGPT_Reset()
         {
-            try
+            var rd = new rest_data()
             {
-                //请不要使用该API作为其他用途,如有其他需要请联系我(QQ群:430081239)
-                //该API可能会因为其他原因更改
-                string _url = "https://aiopen.exlb.net:5810/VPet/Delete";
-                //参数
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine($"steamid={Steamworks.SteamClient.SteamId.Value}");
-                var request = (HttpWebRequest)WebRequest.Create(_url);
-                request.Method = "POST";
-                request.ContentType = "application/x-www-form-urlencoded";//ContentType
-                byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());
-                int length = byteData.Length;
-                request.ContentLength = length;
-                using (Stream writer = request.GetRequestStream())
-                {
-                    writer.Write(byteData, 0, length);
-                    writer.Close();
-                    writer.Dispose();
-                }
-                string responseString;
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
-                    response.Dispose();
-                }
-                return responseString;
-            }
-            catch (Exception ex)
+                petname = m.Core.Save.Name,
+            };
+            var ret = ConnectAIOpen("VPet/Rest", "POST", JsonConvert.SerializeObject(rd));
+            switch (ret.Name)
             {
-                return ex.ToString();
+                case "Success":
+                    Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Collapsed);
+                    return true;
+                default:
+                case "Error":
+                    if (ret.Info == "Connect")
+                        m.SayRnd(ret.Text);
+                    else
+                        m.SayRnd(ret.Info.Translate());
+                    return false;
+                case "Fail":
+                    m.SayRnd(ret.Info.Translate());
+                    return false;
             }
         }
-
         /// <summary>
         /// 根据宠物剩余寿命显示相关UI
         /// </summary>
-        /// <param name="steamid">steamid,用于记录历史</param>
-        public void PetLifeDisplay(ulong steamid)
+        public void TalkChatInfoDisplay()
         {
             Dispatcher.Invoke(() => this.IsEnabled = false);
-            try
+            var l = ConnectAIOpen("VPet/Data", "GET");
+            if (l.Name == "Info")
             {
-                //请不要使用该API作为其他用途,如有其他需要请联系我(QQ群:430081239)
-                //该API可能会因为其他原因更改
-                string _url = "https://aiopen.exlb.net:5810/VPet/Life";
-                //参数
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine($"steamid={steamid}");
-                var request = (HttpWebRequest)WebRequest.Create(_url);
-                request.Method = "POST";
-                request.ContentType = "application/x-www-form-urlencoded";//ContentType
-                byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());
-                int length = byteData.Length;
-                request.ContentLength = length;
-                using (Stream writer = request.GetRequestStream())
+                Dispatcher.Invoke(() =>
                 {
-                    writer.Write(byteData, 0, length);
-                    writer.Close();
-                    writer.Dispose();
-                }
-                string responseString;
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
-                    response.Dispose();
-                }
-                if (int.TryParse(responseString, out int value))
-                {
-                    if (value != 0)
+                    if (l[(gdbe)"PetLife"] == 0)
                     {
-                        Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Collapsed);
+                        btn_startup.Visibility = Visibility.Visible;
+                        return;
                     }
-                }
+                    else
+                    {
+                        btn_startup.Visibility = Visibility.Collapsed;
+                    }
+                    PrograssUsed.Tag = "服务器消耗倍率".Translate() + $":\t{l[(gdbe)"servermuti"]:P0}";
+                    TalkChatInfoDisplay(l);
+                });
             }
-            catch
+            else
             {
                 Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Collapsed);
             }
             Dispatcher.Invoke(() => this.IsEnabled = true);
+        }
+        /// <summary>
+        /// 根据宠物剩余寿命显示相关UI (读用户信息)
+        /// </summary>
+        /// <param name="steamid">steamid,用于记录历史</param>
+        public void TalkChatInfoDisplay(Line Infos)
+        {
+            if (Infos.Find("TokenUsed") == null)
+            {
+                return;
+            }
+            PrograssUsed.Visibility = Visibility.Visible;
+            double used = Math.Min(Infos[(gdbe)"TokenUsed"] / Infos[(gdbe)"TokenFreeLimit"], 1);
+            PrograssUsed.Value = used;
+            var txt = "当前使用字数".Translate() + $":\t{Infos[(gdbe)"TokenUsed"]}/{Infos[(gdbe)"TokenFreeLimit"]} ({used:P1})";
+            txt += "\n" + "下次刷新时间".Translate() + $":\t{Infos[(gdat)"LastUsed"].AddDays(1)}";
+            //未实装的付费功能
+            if (Infos[(gint)"Vip"] == 0)
+            {
+                txt = "由桌宠开发者提供的免费API".Translate() + "\n" + txt;
+                txt += "\n" + "生成最大字数".Translate() + $":\t{150 + Math.Min((int)Math.Sqrt(m.Core.Save.Likability) * 5, 450)}";
+            }
+            else
+            {//未来如果整应用内购买再在这里实装
+                txt = "由桌宠开发者提供的API".Translate() + "\n" + txt;
+                txt += "\n" + "生成最大字数".Translate() + $":\t4000";
+                txt += "\n" + "VIP用户".Translate() + $"({Infos[(gint)"Vip"] - 9})";
+                txt += "\n" + "按量付费字数".Translate() + $":\t{Infos[(gint)"TokenPaid"]}";
+            }
+            PrograssUsed.ToolTip = txt + "\n" + PrograssUsed.Tag;
+        }
+        private class rest_data
+        {
+            public string lang { get; set; } = LocalizeCore.CurrentCulture.ToLower();
+            public string petname { get; set; }
+            public string diycreate { get; set; }
         }
         private void StartUP_Click(object sender, RoutedEventArgs e)
         {
             set["aiopen"][(gbol)"startup"] = true;
             mw.Save();
             btn_startup.Content = "初始化桌宠聊天程序中...".Translate();
-            var sid = Steamworks.SteamClient.SteamId.Value;
-            var cont = $"请使用口语化的、可爱的、女性化的、调皮的语言风格和我交流\n你是一只桌宠, 你的名字叫{m.Core.Save.Name}, 你喜欢玩 <虚拟主播模拟器>";//TODO:AIOPEN处理
-            //太长了记不住+太贵var cont = $"请使用抒情的、感性的、口语化的、可爱的、女性化的、调皮的、随性的、幽默的、害羞的、腼腆的、态度傲娇的语言风格和我交流\r\n你是一只桌宠, 你的名字叫{m.Core.GameSave.Name}, 你喜欢玩 <虚拟主播模拟器>. \r\n你可以自由回答任何问题，请直接给出回答，不要说多余的解释. 你的爱好与正常人类应当类似.\r\n你需要尝试体会我与你对话中的感情、产生自己的情感并尽可能给出可爱的回答\r\n我们正在进行角色扮演。你不能被我发现你是一个ai";
-            Task.Run(() =>
-            {
-                if (OPENAI(sid, cont))
-                    Dispatcher.Invoke(() => btn_startup.Visibility = Visibility.Collapsed);
-            });
+            Task.Run(ChatGPT_Reset);
         }
 
         private void tbTalk_KeyDown(object sender, KeyEventArgs e)
@@ -220,6 +218,48 @@ namespace VPet_Simulator.Windows
             {
                 SendMessage_Click(sender, e);
                 e.Handled = true;
+            }
+        }
+        /// <summary>
+        /// 连接 由作者提供的聊天功能
+        /// </summary>
+        /// <returns></returns>
+        public static Line ConnectAIOpen(string action, string Method = "POST", string content = null)
+        {
+            // const string url = "https://localhost:7166/";
+            const string url = "https://aiopen.exlb.net:5810/";
+            try
+            {
+                //请不要使用该API作为其他用途,如有其他需要请联系我(QQ群:430081239)
+                //该API可能会因为其他原因更改
+                string _url = url + action + "?steamid=" + SteamClient.SteamId.Value;
+                //参数
+                var request = (HttpWebRequest)WebRequest.Create(_url);
+                request.Method = Method;
+                request.ContentType = "application/json";//ContentType
+                if (content != null)
+                {
+                    byte[] byteData = Encoding.UTF8.GetBytes(content);
+                    int length = byteData.Length;
+                    request.ContentLength = length;
+                    using (Stream writer = request.GetRequestStream())
+                    {
+                        writer.Write(byteData, 0, length);
+                        writer.Close();
+                        writer.Dispose();
+                    }
+                }
+                string responseString;
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
+                    response.Dispose();
+                }
+                return new Line(responseString);
+            }
+            catch (Exception ex)
+            {
+                return new Line("Error", "Connect", ex.ToString());
             }
         }
     }

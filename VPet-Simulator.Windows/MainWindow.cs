@@ -102,8 +102,13 @@ namespace VPet_Simulator.Windows
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
                         File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", AppDomain.CurrentDomain.BaseDirectory + $"\\UserData\\Save_{st}.lps");
                     var l = Core.Save.ToLine();
-                    int hs = l.GetHashCode();
-                    l[(gint)"hash"] = hs;
+                    if (HashCheck)
+                    {
+                        int hs = l.GetHashCode();
+                        l[(gint)"hash"] = hs;
+                    }
+                    else
+                        l[(gint)"hash"] = -1;
                     File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", l.ToString());
                 }
                 if (CGPTClient != null)

@@ -50,7 +50,18 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(() => this.IsEnabled = false);
             try
             {
-                m.SayRnd(mw.CGPTClient.Ask("vpet", content).GetMessageContent());
+                var resp = mw.CGPTClient.Ask("vpet", content);
+                var reply = resp.GetMessageContent();
+                if (resp.choices[0].finish_reason == "length")
+                {
+                    reply += " ...";
+                }
+                var showtxt = "当前Token使用".Translate() + ": " + resp.usage.total_tokens;
+                Dispatcher.Invoke(() =>
+                {
+                    m.MsgBar.MessageBoxContent.Children.Add(new TextBlock() { Text = showtxt, FontSize = 20, ToolTip = showtxt, HorizontalAlignment = HorizontalAlignment.Right });
+                });
+                m.SayRnd(reply);
             }
             catch (Exception exp)
             {
