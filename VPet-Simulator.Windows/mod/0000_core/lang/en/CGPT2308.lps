@@ -1,0 +1,23 @@
+当前Token使用#Current Token Usage:|
+ServerFull#API call failed. Please resend the content later. The current server has exceeded the usage limit of {0}/{1} words per hour. Please wait for 1 hour and try again:|
+NoUser#Please initialize the desktop pet chat program first:|
+EmptyContent#The chat content is empty (note: generally, this error feedback will not be triggered):|
+SensitiveGive#Detected prohibited words: chat generation has been terminated:|
+NoTokenVIP#Pay-as-you-go Token count has been used up\nToday word count has been used up  \nCurrent word count used: {0}/{1}  \nWord count refresh remaining time: {2} hours:|
+NoTokenUser#Today's word count has been used up  \nCurrent word count used: {0}/{1}  \nWord refresh remaining time: {2} hours:|
+EmptyResponse#The server returned empty \nAPI call failed. Please resend the content later. If multiple returns are empty, please wait for 1 hour and try again:|
+SensitiveReturn#Detected prohibited words: chat return terminated:|
+DIYSensitive#Custom start contains prohibited words, vpet initialization failed:|
+NameEmpty#Table pet name cannot be empty:|
+Outdated#Outdated API, please update the desktop pet version:|
+Offline#API Temporary Maintenance:|
+Steam Not purchased#Steam has not been purchased, please obtain one for free on Steam to activate CGPT usage:|
+IP times Max#Your current IP address is temporarily banned. Please wait for one day and try again:|
+服务器消耗倍率#Server consumption rate:|
+当前使用字数#Current Token used:|
+下次刷新时间#Next refresh date :|
+由桌宠开发者提供的免费API#Free API provided by developers:|
+生成最大字数#Generate maximum number of Token:|
+由桌宠开发者提供的API#API provided by developers:|
+VIP用户#VIP users:|
+按量付费字数#Pay-as-you-go Token Count:|

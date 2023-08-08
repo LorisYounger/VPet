@@ -104,8 +104,7 @@ namespace VPet_Simulator.Windows
                     var l = Core.Save.ToLine();
                     if (HashCheck)
                     {
-                        int hs = l.GetHashCode();
-                        l[(gint)"hash"] = hs;
+                        l[(gi64)"hash"] = new Line(l.ToString()).GetLongHashCode();
                     }
                     else
                         l[(gint)"hash"] = -1;
@@ -387,10 +386,10 @@ namespace VPet_Simulator.Windows
         public void GameLoad(ILine line)
         {
             Core.Save = GameSave.Load(line);
-            int hash = line.GetInt("hash");
+            long hash = line.GetInt64("hash");
             if (line.Remove("hash"))
             {
-                HashCheck = line.GetHashCode() == hash;
+                HashCheck = line.GetLongHashCode() == hash;
             }
         }
     }

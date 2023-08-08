@@ -1,12 +1,14 @@
 ﻿using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
+using Steamworks;
 using Steamworks.Ugc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -137,16 +139,26 @@ namespace VPet_Simulator.Windows
                 runUserName.Text = Environment.UserName;
                 runActivate.Text = "尚未激活 您可能需要启动Steam或去Steam上免费领个".Translate();
                 RBCGPTUseLB.IsEnabled = false;
-                if (!mw.Set["CGPT"][(gbol)"enable"])
-                    BtnCGPTReSet.IsEnabled = false;
             }
-            if (mw.Set["CGPT"][(gbol)"enable"])
+            //CGPT
+            switch (mw.Set["CGPT"][(gstr)"type"])
             {
-                RBCGPTUseAPI.IsChecked = true;
-                BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
+                case "API":
+                    RBCGPTUseAPI.IsChecked = true;
+                    BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
+                    break;
+                case "LB":
+                    RBCGPTUseLB.IsChecked = true;
+                    BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
+                    if (!mw.IsSteamUser)
+                        BtnCGPTReSet.IsEnabled = false;
+                    break;
+                case "OFF":
+                default:
+                    RBCGPTClose.IsChecked = true;
+                    BtnCGPTReSet.Content = "聊天框已关闭".Translate();
+                    break;
             }
-            else
-                BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
             runabVer.Text = $"v{mw.Verison} ({mw.verison})";
 
             //mod列表
@@ -738,48 +750,71 @@ namespace VPet_Simulator.Windows
 
         private void ChatGPT_Reset_Click(object sender, RoutedEventArgs e)
         {
-            if (mw.Set["CGPT"][(gbol)"enable"])
+            switch (mw.Set["CGPT"][(gstr)"type"])
             {
-                new winCGPTSetting(mw).ShowDialog();
-            }
-            else
-            {
-                string responseString = ((TalkBox)mw.TalkBox).ChatGPT_Reset();
-                if (responseString == "SUCCESS")
-                {
-                    ((TalkBox)mw.TalkBox).btn_startup.Visibility = Visibility.Visible;
-                    MessageBoxX.Show("桌宠重置成功".Translate());
-                }
-                else
-                {
-                    MessageBoxX.Show(responseString, "桌宠重置失败".Translate());
-                }
-            }
+                case "API":
+                    new winCGPTSetting(mw).ShowDialog();
+                    break;
+                case "LB":
+                    Task.Run(() =>
+                    {
+                        if (((TalkBox)mw.TalkBox).ChatGPT_Reset())
+                        {
+                            ((TalkBox)mw.TalkBox).btn_startup.Visibility = Visibility.Visible;
+                            MessageBoxX.Show("桌宠重置成功".Translate());
+                        }
+                    });
+                    break;
+                case "OFF":
+                default:                    
+                    break;
+            }           
         }
 
         private void CGPType_Checked(object sender, RoutedEventArgs e)
         {
             if (!AllowChange)
                 return;
-            mw.Set["CGPT"].SetBool("enable", RBCGPTUseLB.IsChecked == false);
-            mw.Set["CGPT"].SetBool("enable", RBCGPTUseLB.IsChecked == false);
-            if (mw.Set["CGPT"][(gbol)"enable"])
+            if (RBCGPTUseLB.IsChecked == true)
             {
-                BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
-                BtnCGPTReSet.IsEnabled = true;
-                if (mw.TalkBox != null)
-                    mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
-                mw.TalkBox = new TalkBoxAPI(mw);
-                mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
+                mw.Set["CGPT"][(gstr)"type"] = "LB";
+            }
+            else if (RBCGPTUseAPI.IsChecked == true)
+            {
+                mw.Set["CGPT"][(gstr)"type"] = "API";
             }
             else
             {
-                BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
-                if (mw.TalkBox != null)
-                    mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
-                mw.TalkBox = new TalkBox(mw);
-                mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
+                mw.Set["CGPT"][(gstr)"type"] = "OFF";
             }
+
+
+            switch (mw.Set["CGPT"][(gstr)"type"])
+            {
+                case "API":
+                    BtnCGPTReSet.IsEnabled = true;
+                    BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
+                    if (mw.TalkBox != null)
+                        mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
+                    mw.TalkBox = new TalkBoxAPI(mw);
+                    mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
+                    break;
+                case "LB":
+                    BtnCGPTReSet.IsEnabled = true;
+                    BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
+                    if (mw.TalkBox != null)
+                        mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
+                    mw.TalkBox = new TalkBox(mw);
+                    mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
+                    break;
+                case "OFF":
+                default:
+                    if (mw.TalkBox != null)
+                        mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
+                    BtnCGPTReSet.IsEnabled = false;
+                    BtnCGPTReSet.Content = "聊天框已关闭".Translate();
+                    break;
+            }            
         }
 
         private void ButtonSetting_MouseDown(object sender, MouseButtonEventArgs e)
@@ -967,6 +1002,25 @@ namespace VPet_Simulator.Windows
                 return;
             LocalizeCore.LoadCulture((string)LanguageBox.SelectedItem);
             mw.Set.Language = LocalizeCore.CurrentCulture;
+        }
+
+        private void MainTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            switch (MainTab.SelectedIndex)
+            {
+                case 4:
+                    if (mw.HashCheck)
+                    {
+                        RHashCheck.Text = "通过".Translate();
+                    }
+                    else
+                    {
+                        RHashCheck.Text = "失败".Translate();
+                    }
+                    break;
+            }
         }
     }
 }

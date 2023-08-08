@@ -271,6 +271,21 @@ namespace VPet_Simulator.Windows
                 rndtext.Add("关注 {0} 谢谢喵".Translate(Environment.UserName));
             }
 
+            //旧版本设置兼容
+            var cgpteb = Set["CGPT"].Find("enable");
+            if (cgpteb != null)
+            {
+                if (Set["CGPT"][(gbol)"enable"])
+                {
+                    Set["CGPT"][(gstr)"type"] = "API";
+                }
+                else
+                {
+                    Set["CGPT"][(gstr)"type"] = "LB";
+                }
+                Set["CGPT"].Remove(cgpteb);
+            }
+
             Dispatcher.Invoke(new Action(() =>
             {
                 LoadingText.Content = "尝试加载动画和生成缓存".Translate();
@@ -282,16 +297,22 @@ namespace VPet_Simulator.Windows
                 winBetterBuy = new winBetterBuy(this);
                 Main = new Main(Core) { };
                 Main.NoFunctionMOD = Set.CalFunState;
-                if (!Set["CGPT"][(gbol)"enable"] && IsSteamUser)
+
+                switch (Set["CGPT"][(gstr)"type"])
                 {
-                    TalkBox = new TalkBox(this);
-                    Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                    case "API":
+                        TalkBox = new TalkBoxAPI(this);
+                        Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                        break;
+                    case "LB":
+                        if (IsSteamUser)
+                        {
+                            TalkBox = new TalkBox(this);
+                            Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                        }
+                        break;
                 }
-                else if (Set["CGPT"][(gbol)"enable"])
-                {
-                    TalkBox = new TalkBoxAPI(this);
-                    Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                }
+
                 LoadingText.Content = "正在加载游戏".Translate();
                 var m = new System.Windows.Controls.MenuItem()
                 {
@@ -513,11 +534,11 @@ namespace VPet_Simulator.Windows
             petHelper?.Close();
 
             Main?.Dispose();
-            if(notifyIcon != null)
+            if (notifyIcon != null)
             {
                 notifyIcon.Visible = false;
                 notifyIcon.Dispose();
-            }            
+            }
             System.Environment.Exit(0);
         }
 

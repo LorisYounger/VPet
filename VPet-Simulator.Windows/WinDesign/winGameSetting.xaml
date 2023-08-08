@@ -20,7 +20,7 @@
                 pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
                 pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"
                 pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
-                Foreground="{DynamicResource PrimaryText}">
+                Foreground="{DynamicResource PrimaryText}" SelectionChanged="MainTab_SelectionChanged">
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <Border Margin="5,10,5,20" CornerRadius="15" Background="{DynamicResource DARKPrimaryText}">
@@ -291,6 +291,10 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
                                 <RadioButton x:Name="RBCGPTUseAPI" Style="{DynamicResource StandardRadioButtonStyle}"
                                         Content="{ll:Str '使用从ChatGPT\&#13;申请的的API'}" ToolTip="{ll:Str 需要去OpenAI官网申请}"
                                         GroupName="cgpttype" Grid.Column="1" Checked="CGPType_Checked" />
@@ -298,6 +302,12 @@
                                         Content="{ll:Str '使用桌宠开发者\&#13;提供的免费API'}"
                                         ToolTip="{ll:Str 需遵循相关协议法律法规并有聊天字数限制}" GroupName="cgpttype" IsChecked="True"
                                         Checked="CGPType_Checked" />
+                                <RadioButton x:Name="RBCGPTClose" Style="{DynamicResource StandardRadioButtonStyle}"
+                                        Content="{ll:Str '关闭聊天框'}" GroupName="cgpttype" Checked="CGPType_Checked"
+                                        Grid.Row="1" />
+                                <RadioButton x:Name="RBCGPTDIY" Style="{DynamicResource StandardRadioButtonStyle}"
+                                        Content="{ll:Str '自定义聊天接口'}" GroupName="cgpttype" Checked="CGPType_Checked"
+                                        Grid.Row="1" Grid.Column="1" IsEnabled="False"/>
                             </Grid>
                             <Button x:Name="BtnCGPTReSet" pu:ButtonHelper.CornerRadius="4" Content="{ll:Str 初始化桌宠聊天程序}"
                                     Margin="4" Grid.Column="2" Background="{DynamicResource SecondaryLight}" Padding="1"
@@ -544,12 +554,14 @@
             </TabItem>
             <TabItem Header="{ll:Str 诊断}" BorderBrush="{DynamicResource PrimaryDarker}">
                 <StackPanel>
-                    <TextBlock HorizontalAlignment="Left" FontSize="11" VerticalAlignment="Top" Background="{x:Null}"
+                    <TextBlock HorizontalAlignment="Left" FontSize="13" VerticalAlignment="Top" Background="{x:Null}"
                             TextWrapping="Wrap">
                                         <Run FontWeight="Bold" FontSize="18" Text="{ll:Str 诊断与反馈}" /> <LineBreak />
                     <Run Text="{ll:Str '选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.'}" /><LineBreak />
                     <Run Text="{ll:Str '无论选择哪个选项,游戏都可以安全正常地运行.'}" /> <Hyperlink Click="hyper_moreInfo"><Run
                                     Text="{ll:Str 获取有关这些设置的更多信息}" /></Hyperlink>
+                        <LineBreak />   <Run Text="{ll:Str '当前存档Hash验证信息'}" FontWeight="Bold" /> : <Run
+                                x:Name="RHashCheck" Text="通过" FontWeight="Bold" />
                     </TextBlock>
                     <RadioButton x:Name="RBDiagnosisYES" Style="{DynamicResource StandardRadioButtonStyle}"
                             Content="{ll:Str '发送诊断数据: 发送游戏存档, 包括饱腹,状态等各种游戏内\&#13;数据. 可能会包括该游戏内存和CPU使用情况'}"
@@ -725,7 +737,7 @@
                             HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2" />
                     <TextBlock Margin="0,130,0,0" VerticalAlignment="Top" TextWrapping="WrapWithOverflow"
                             Grid.Column="1">
-                    <Run Text="{ll:Str '杨远洛里斯'}" />,  <Hyperlink Click="Mod_Click"
+                    <Run Text="{ll:Str '杨远洛里斯'}" />, <Run Text="{ll:Str '吉娜'}" />, <Hyperlink Click="Mod_Click"
                                 Foreground="{DynamicResource PrimaryText}"><Run Text="{ll:Str 广大MOD作者}" /></Hyperlink><LineBreak /> 
                     <Run Text="{ll:Str '洛里斯杨远'}" />, トニーちゃん <Hyperlink Click="Git_Click"><Run Text="{ll:Str Git贡献名单}" /></Hyperlink><LineBreak />
                     <Run Text="{ll:Str '叶书天'}" />,  <Hyperlink Click="Mod_Click"
