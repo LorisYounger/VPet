@@ -20,7 +20,7 @@
             <TextBox x:Name="tbTalk" Style="{DynamicResource StandardTextBoxStyle}" Height="Auto"
                     pu:TextBoxHelper.Watermark="{ll:Str 和桌宠说}" FontSize="30" AcceptsReturn="True"
                     TextWrapping="WrapWithOverflow" PreviewKeyDown="tbTalk_KeyDown" />
-            <Button pu:ButtonHelper.CornerRadius="4" Content="发送" BorderThickness="2"
+            <Button pu:ButtonHelper.CornerRadius="4" Content="{ll:Str '发送'}" BorderThickness="2"
                     Background="{DynamicResource SecondaryLight}" Grid.Column="2"
                     BorderBrush="{DynamicResource DARKPrimaryDarker}" FontSize="30" Click="SendMessage_Click"
                     ToolTip="{ll:Str '按 Ctrl+Enter 发送'}" />

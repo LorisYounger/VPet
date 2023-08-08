@@ -213,19 +213,20 @@ namespace VPet_Simulator.Core
             //}
             MoveTimer.Start();
         }
+        /// <summary>
+        /// 默认点击事件
+        /// </summary>
         public Action DefaultClickAction;
+        /// <summary>
+        /// 默认长按事件
+        /// </summary>
+        public Action DefaultPressAction;
         bool isPress = false;
         long presstime;
         private void MainGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             isPress = true;
             CountNomal = 0;
-            if (DisplayType.Type != GraphType.Default)
-            {//不是nomal! 可能会卡timer,所有全部timer清空下
-                CleanState();
-                if (DisplayStop(DisplayToNomal))
-                    return;
-            }
             Task.Run(() =>
             {
                 var pth = DateTime.Now.Ticks;
@@ -242,6 +243,7 @@ namespace VPet_Simulator.Core
                         if (x.IsPress == true && x.Touch(mp) && x.DoAction())
                             return;
                     }
+                    DefaultPressAction?.Invoke();
                 }
                 else
                 {//历遍点击事件
@@ -249,6 +251,13 @@ namespace VPet_Simulator.Core
                     foreach (var x in Core.TouchEvent)
                     {
                         if (x.IsPress == false && x.Touch(mp) && x.DoAction())
+                            return;
+                    }
+                    //普通点击验证
+                    if (DisplayType.Type != GraphType.Default)
+                    {//不是nomal! 可能会卡timer,所有全部timer清空下
+                        CleanState();
+                        if (DisplayStop(DisplayToNomal))
                             return;
                     }
                     DefaultClickAction?.Invoke();

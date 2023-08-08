@@ -162,6 +162,10 @@ namespace VPet_Simulator.Windows
                         break;
                     case "lang":
                         Tag.Add("lang");
+                        foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
+                        {
+                            LocalizeCore.AddCulture(fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length), new LPS_D(File.ReadAllText(fi.FullName)));
+                        }
                         foreach (DirectoryInfo dis in di.EnumerateDirectories())
                         {
                             foreach (FileInfo fi in dis.EnumerateFiles("*.lps"))
@@ -213,6 +217,7 @@ namespace VPet_Simulator.Windows
                                 {
                                     if (!IsPassMOD(mw))
                                     {//不是通过模组,不加载
+                                        SuccessLoad = false;
                                         continue;
                                     }
                                 }

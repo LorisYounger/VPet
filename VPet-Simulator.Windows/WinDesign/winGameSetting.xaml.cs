@@ -377,7 +377,7 @@ namespace VPet_Simulator.Windows
         private void ButtonEnable_MouseDown(object sender, MouseButtonEventArgs e)
         {
             mw.Set.OnMod(mod.Name);
-            ShowMod((string)LabelModName.Content);
+            ShowMod(mod.Name);
             ButtonRestart.Visibility = Visibility.Visible;
             //int seleid = ListMod.SelectedIndex();
             ShowModList();
@@ -505,7 +505,7 @@ namespace VPet_Simulator.Windows
                 "启用 {0} 的代码插件?".Translate(mod.Name), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
             {
                 mw.Set.PassMod(mod.Name);
-                ShowMod((string)LabelModName.Content);
+                ShowMod(mod.Name);
                 ButtonRestart.Visibility = Visibility.Visible;
             }
         }
