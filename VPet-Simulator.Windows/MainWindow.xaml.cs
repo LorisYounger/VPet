@@ -37,7 +37,6 @@ namespace VPet_Simulator.Windows
         private NotifyIcon notifyIcon;
         public PetHelper petHelper;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
-
         public MainWindow()
         {
             LocalizeCore.StoreTranslation = true;
@@ -157,7 +156,7 @@ namespace VPet_Simulator.Windows
         private List<string> rndtext;
         public long lastclicktime { get; set; }
 
-        public void LoadLatestSave()
+        public void LoadLatestSave(string petname)
         {
             if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData"))
             {
@@ -169,7 +168,7 @@ namespace VPet_Simulator.Windows
                     return;
                 }
             }
-            Core.Save = new GameSave("萝莉斯".Translate());
+            Core.Save = new GameSave(petname.Translate());
         }
         public void GameLoad()
         {
@@ -230,13 +229,16 @@ namespace VPet_Simulator.Windows
                 LocalizeCore.LoadCulture(Set.Language);
 
             Dispatcher.BeginInvoke(new Action(() => LoadingText.Content = "尝试加载游戏MOD".Translate()));
+            //当前桌宠动画
+            var petloader = Pets.Find(x => x.Name == Set.PetGraph);
+            petloader ??= Pets[0];
 
             //加载游戏内容
             Core.Controller = new MWController(this);
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
                 GameLoad(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First());
             else//如果加载存档失败了,试试加载备份,如果没备份,就新建一个
-                LoadLatestSave();
+                LoadLatestSave(petloader.PetName);
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
 
@@ -289,8 +291,8 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(new Action(() =>
             {
                 LoadingText.Content = "尝试加载动画和生成缓存".Translate();
-                var pl = Pets.Find(x => x.Name == Set.PetGraph);
-                Core.Graph = pl == null ? Pets[0].Graph() : pl.Graph();
+
+                Core.Graph = petloader.Graph();
                 LoadingText.Content = "正在加载CGPT".Translate();
 
                 winSetting = new winGameSetting(this);

@@ -31,18 +31,23 @@ namespace VPet_Simulator.Core
         /// </summary>
         public List<string> path = new List<string>();
         /// <summary>
-        /// 宠物名字
+        /// 宠物介绍名字
         /// </summary>
         public string Name;
         /// <summary>
         /// 宠物介绍
         /// </summary>
         public string Intor;
+        /// <summary>
+        /// 宠物默认名字
+        /// </summary>
+        public string PetName;
         public GraphCore.Config Config;
         public PetLoader(LpsDocument lps, DirectoryInfo directory)
         {
             Name = lps.First().Info;
             Intor = lps.First()["intor"].Info;
+            PetName = lps.First()["petname"].Info;
             path.Add(directory.FullName + "\\" + lps.First()["path"].Info);
             Config = new Config(lps);
         }

@@ -720,9 +720,17 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
+
+            var petloader = mw.Pets.Find(x => x.Name == mw.Set.PetGraph);
+            petloader ??= mw.Pets[0];
+            bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
+
             mw.Set.PetGraph = mw.Pets[PetBox.SelectedIndex].Name;
             PetIntor.Text = mw.Pets[PetBox.SelectedIndex].Intor.Translate();
             ButtonRestartGraph.Visibility = Visibility.Visible;
+
+            if (ischangename)
+                mw.Core.Save.Name = petloader.PetName.Translate();
         }
 
         private void TextBoxPetName_TextChanged(object sender, TextChangedEventArgs e)
@@ -766,9 +774,9 @@ namespace VPet_Simulator.Windows
                     });
                     break;
                 case "OFF":
-                default:                    
+                default:
                     break;
-            }           
+            }
         }
 
         private void CGPType_Checked(object sender, RoutedEventArgs e)
@@ -814,7 +822,7 @@ namespace VPet_Simulator.Windows
                     BtnCGPTReSet.IsEnabled = false;
                     BtnCGPTReSet.Content = "聊天框已关闭".Translate();
                     break;
-            }            
+            }
         }
 
         private void ButtonSetting_MouseDown(object sender, MouseButtonEventArgs e)
@@ -1000,8 +1008,13 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
+            var petloader = mw.Pets.Find(x => x.Name == mw.Set.PetGraph);
+            petloader ??= mw.Pets[0];
+            bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
             LocalizeCore.LoadCulture((string)LanguageBox.SelectedItem);
             mw.Set.Language = LocalizeCore.CurrentCulture;
+            if(ischangename)
+                mw.Core.Save.Name = petloader.PetName.Translate();
         }
 
         private void MainTab_SelectionChanged(object sender, SelectionChangedEventArgs e)

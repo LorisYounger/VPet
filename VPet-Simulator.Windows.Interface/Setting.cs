@@ -207,6 +207,10 @@ namespace VPet_Simulator.Windows.Interface
                 FindorAddLine("theme").Info = value;
             }
         }
+        /// <summary>
+        /// 当前宠物的储存数据
+        /// </summary>
+        public ILine PetData => this["petdata"];
 
         private int presslength;
         private int intercycle;
