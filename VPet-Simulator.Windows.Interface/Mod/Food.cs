@@ -124,23 +124,29 @@ namespace VPet_Simulator.Windows.Interface
                         sb.Append("健康".Translate() + ":\t").Append(Health > 0 ? "+" : "").Append(Health.ToString("f2")).Append("\t\t");
                     if (Likability != 0)
                         sb.Append("好感度".Translate() + ":\t").Append(Likability > 0 ? "+" : "").Append(Likability.ToString("f2"));
-                    sb.AppendLine().Append(Desc.Translate());
                     desc = sb.ToString();
                 }
                 DateTime now = DateTime.Now;
                 DateTime eattime = imw.Set.PetData.GetDateTime("buytime_" + Name, now);
-                double eattimes = 0;
                 string descs;
                 if (eattime <= now)
                 {
                     if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink)
-                        descs = "腻味程度".Translate();
+                        descs = "喜好度".Translate();
+                    else
+                        descs = "有效度".Translate();
+                    descs += ":\t100%";
                 }
                 else
                 {
-                    eattimes = (eattime - now).TotalHours;
+                    if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink)
+                        descs = "喜好度".Translate();
+                    else
+                        descs = "有效度".Translate();
+                    descs += Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
+                    descs += "\t\t" + "恢复".Translate() + ":\t" + (eattime).ToString("MM/dd HH");
                 }
-                return desc;
+                return desc + '\n' + descs + '\n' + Desc.Translate();
             }
         }
         /// <summary>

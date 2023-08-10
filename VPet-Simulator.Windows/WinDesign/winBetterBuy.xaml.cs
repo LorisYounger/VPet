@@ -193,6 +193,8 @@ namespace VPet_Simulator.Windows
                 //吃腻了
                 eattimes += 2;
                 mw.Set.PetData.SetDateTime("buytime_" + item.Name, now.AddHours(eattimes));
+                //通知
+                item.NotifyOfPropertyChange("Eattime");
 
                 mw.Core.Save.Money -= item.Price;
                 //统计

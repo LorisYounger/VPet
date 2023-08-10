@@ -37,7 +37,7 @@ namespace VPet_Simulator.Core
                     DisplaySleep(true);
                     return;
                 case WorkingState.Work:
-                    Core.Graph.GraphConfig.Works[StateID].Display(this);
+                    nowWork.Display(this);
                     return;
                 case WorkingState.Travel:
                     //TODO

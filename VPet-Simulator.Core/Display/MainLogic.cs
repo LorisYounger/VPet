@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using static VPet_Simulator.Core.GraphInfo;
 
@@ -145,7 +146,7 @@ namespace VPet_Simulator.Core
                     Core.Save.FeelingChange(-freedrop / 2);
                     break;
                 case WorkingState.Work:
-                    var nowwork = Core.Graph.GraphConfig.Works[StateID];
+                    var nowwork = nowWork;
                     var needfood = TimePass * nowwork.StrengthFood;
                     var needdrink = TimePass * nowwork.StrengthDrink;
                     double efficiency = 0;
@@ -261,13 +262,37 @@ namespace VPet_Simulator.Core
             var newmod = Core.Save.CalMode();
             if (Core.Save.Mode != newmod)
             {
-                //TODO:切换显示动画
+                //切换显示动画
+                playSwitchAnimat(Core.Save.Mode, newmod);
+
                 Core.Save.Mode = newmod;
                 //看情况播放停止工作动画
-                if (newmod == GameSave.ModeType.Ill && State != WorkingState.Nomal && State != WorkingState.Sleep)
+                if (newmod == GameSave.ModeType.Ill && State == WorkingState.Work)
                 {
                     WorkTimer.Stop();
                 }
+            }
+        }
+        private void playSwitchAnimat(GameSave.ModeType before, GameSave.ModeType after)
+        {
+            if (DisplayType.Type != GraphType.Default)
+            {
+                return;
+            }
+            else if (before == after)
+            {
+                DisplayToNomal();
+                return;
+            }
+            else if (before < after)
+            {
+                Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Down), AnimatType.Single, before),
+                    () => playSwitchAnimat((GameSave.ModeType)(((int)before) + 1), after));
+            }
+            else
+            {
+                Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Up), AnimatType.Single, before),
+                    () => playSwitchAnimat((GameSave.ModeType)(((int)before) - 1), after));
             }
         }
         /// <summary>
@@ -405,6 +430,10 @@ namespace VPet_Simulator.Core
         /// 当前状态辅助ID
         /// </summary>
         public int StateID = 0;
+        /// <summary>
+        /// 当前工作
+        /// </summary>
+        public GraphHelper.Work nowWork => Core.Graph.GraphConfig.Works[StateID];
         /// <summary>
         /// 当前正在的状态
         /// </summary>
