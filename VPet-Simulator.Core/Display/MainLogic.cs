@@ -45,7 +45,7 @@ namespace VPet_Simulator.Core
             Task.Run(() =>
             {
                 OnSay?.Invoke(text);
-                if (force || !string.IsNullOrWhiteSpace(graphname) && DisplayType.Type == GraphType.Default)
+                if (force || !string.IsNullOrWhiteSpace(graphname) && IsIdel)
                     Display(graphname, AnimatType.A_Start, () =>
                     {
                         Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text, graphname));
@@ -278,6 +278,9 @@ namespace VPet_Simulator.Core
         /// 想要随机显示的接口 (return:是否成功)
         /// </summary>
         public List<Func<bool>> RandomInteractionAction = new List<Func<bool>>();
+
+        public bool IsIdel => (DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Work) && !isPress;
+
         /// <summary>
         /// 每隔指定时间自动触发计算 可以关闭EventTimer后手动计算
         /// </summary>
@@ -297,9 +300,9 @@ namespace VPet_Simulator.Core
             }
 
             //UIHandle
-            Dispatcher.Invoke(() => TimeUIHandle.Invoke(this));
+            Dispatcher.Invoke(() => TimeUIHandle?.Invoke(this));
 
-            if (DisplayType.Type == GraphType.Default && !isPress)
+            if (IsIdel)
                 switch (Function.Rnd.Next(Math.Max(20, Core.Controller.InteractionCycle - CountNomal)))
                 {
                     case 0:
@@ -308,7 +311,7 @@ namespace VPet_Simulator.Core
                         //显示移动
                         DisplayMove();
                         break;
-                    case 3:                     
+                    case 3:
                     case 4:
                     case 5:
                         //显示待机
@@ -321,8 +324,8 @@ namespace VPet_Simulator.Core
                         DisplaySleep();
                         break;
                     case 8:
-                    case 9:                       
-                    case 10:                   
+                    case 9:
+                    case 10:
                         //给其他显示留个机会
                         var list = RandomInteractionAction.ToList();
                         for (int i = Function.Rnd.Next(list.Count); 0 != list.Count; i = Function.Rnd.Next(list.Count))
@@ -337,7 +340,7 @@ namespace VPet_Simulator.Core
                                 list.RemoveAt(i);
                             }
                         }
-                        break;                       
+                        break;
                 }
 
         }

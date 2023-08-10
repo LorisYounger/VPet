@@ -395,14 +395,14 @@ namespace VPet_Simulator.Core
                 if (wavetimes++ > 4)
                     if (wavetop == true)
                     {
-                        if (wavetimes >= 10 || DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Touch_Head)
+                        if (wavetimes >= 10 || IsIdel || DisplayType.Type == GraphType.Touch_Head)
                             DisplayTouchHead();
                         //Console.WriteLine(wavetimes);
                         LastInteractionTime = DateTime.Now;
                     }
                     else
                     {
-                        if (wavetimes >= 10 || DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Touch_Body)
+                        if (wavetimes >= 10 || IsIdel || DisplayType.Type == GraphType.Touch_Body)
                             DisplayTouchBody();
                         LastInteractionTime = DateTime.Now;
                     }

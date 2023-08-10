@@ -102,7 +102,12 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 存档 Hash检查 是否通过
         /// </summary>
-        bool HashCheck { get; } 
+        bool HashCheck { get; }
+
+        /// <summary>
+        /// 获得当前系统音乐播放音量
+        /// </summary>
+        float AudioPlayingVolume();
     }
 
 }

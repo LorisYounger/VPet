@@ -40,7 +40,7 @@
                         Foreground="{DynamicResource DARKPrimary}" Grid.ColumnSpan="3" />
                 <Button Grid.Column="2" VerticalAlignment="Center" Background="Transparent"
                         Foreground="{DynamicResource DARKPrimary}" Content="{ll:Str 详细}" Cursor="Hand"
-                        Click="MenuPanel_Click" IsEnabled="False" Grid.ColumnSpan="3" HorizontalAlignment="Right">
+                        Click="MenuPanel_Click" Visibility="Collapsed" Grid.ColumnSpan="3" HorizontalAlignment="Right">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" TextDecorations="Underline" />

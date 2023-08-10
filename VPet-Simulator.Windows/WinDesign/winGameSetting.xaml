@@ -270,9 +270,9 @@
                         </Grid>
 
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
-                                TextWrapping="Wrap" Margin="0,10,0,0">
-                    <Run FontWeight="Bold" FontSize="18" Text="{ll:Str 聊天设置}" /><LineBreak />
-                    <Run Text="{ll:Str 使用ChatGPT进行聊天等相关设置}" />
+                                TextWrapping="Wrap" Margin="0,5,0,0">
+                            <Run FontWeight="Bold" FontSize="18" Text="{ll:Str 聊天设置}" /><LineBreak />
+                            <Run Text="{ll:Str 使用ChatGPT进行聊天等相关设置}" />
                         </TextBlock>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -307,11 +307,51 @@
                                         Grid.Row="1" />
                                 <RadioButton x:Name="RBCGPTDIY" Style="{DynamicResource StandardRadioButtonStyle}"
                                         Content="{ll:Str '自定义聊天接口'}" GroupName="cgpttype" Checked="CGPType_Checked"
-                                        Grid.Row="1" Grid.Column="1" IsEnabled="False"/>
+                                        Grid.Row="1" Grid.Column="1" IsEnabled="False" />
                             </Grid>
                             <Button x:Name="BtnCGPTReSet" pu:ButtonHelper.CornerRadius="4" Content="{ll:Str 初始化桌宠聊天程序}"
                                     Margin="4" Grid.Column="2" Background="{DynamicResource SecondaryLight}" Padding="1"
                                     Grid.Row="1" Click="ChatGPT_Reset_Click" />
+                        </Grid>
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
+                                TextWrapping="Wrap" Margin="0,5,0,0">
+                            <Run FontWeight="Bold" FontSize="18" Text="{ll:Str 音乐识别设置}" /><LineBreak />
+                            <Run Text="{ll:Str 设置识别音乐播放特殊动作阈值}" /> <LineBreak />
+                             <Run Text="{ll:Str 当前播放音量大小}" />: <Run x:Name="RVoice" />
+                        </TextBlock>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35" />
+                                <RowDefinition Height="35" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="{ll:Str 触发音量}" VerticalAlignment="Center"
+                                    ToolTip="{ll:Str 当实时播放音量达到该值时运行音乐动作}" />
+                            <Slider x:Name="VoiceCatchSilder" TickFrequency="0.01" IsSnapToTickEnabled="True"
+                                    ToolTip="{ll:Str 当实时播放音量达到该值时运行音乐动作}" Style="{DynamicResource StandardSliderStyle}"
+                                    VerticalAlignment="Center" Maximum="1" SmallChange=".02" Minimum="0"
+                                    LargeChange=".5" Value="0.3" Grid.Column="2"
+                                    ValueChanged="VoiceCatchSilder_ValueChanged" />
+                            <TextBlock Grid.Column="3" Margin="15,0,0,0" VerticalAlignment="Center"
+                                    Text="{Binding ElementName=VoiceCatchSilder,Path=Value,StringFormat=p0}"
+                                    FontSize="18" Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
+                                    Background="{x:Null}" ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" />
+                            <TextBlock Grid.Row="1" Text="{ll:Str 高潮音量}" VerticalAlignment="Center"
+                                    ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" />
+                            <Slider x:Name="VoiceMaxSilder" TickFrequency="0.01" IsSnapToTickEnabled="True"
+                                    Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center" Maximum="1"
+                                    SmallChange=".01" Minimum="{Binding ElementName=VoiceCatchSilder,Path=Value}"
+                                    LargeChange=".05" Value="0.75" Grid.Row="1" Grid.Column="2"
+                                    ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" ValueChanged="VoiceCatchSilder_ValueChanged"/>
+                            <TextBlock Grid.Column="3" Margin="15,0,0,0" VerticalAlignment="Center"
+                                    Text="{Binding ElementName=VoiceMaxSilder,Path=Value,StringFormat=p0}" FontSize="18"
+                                    Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"
+                                    Background="{x:Null}" Grid.Row="1" ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" />
                         </Grid>
                     </StackPanel>
                 </ScrollViewer>

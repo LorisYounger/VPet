@@ -45,7 +45,7 @@ namespace VPet_Simulator.Windows
         public void ShowSetting()
         {
             mw.Topmost = false;
-            mw.winSetting.Show();
+            mw.ShowSetting();
         }
 
         public void ShowPanel()

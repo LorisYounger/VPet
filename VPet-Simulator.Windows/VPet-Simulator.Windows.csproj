@@ -94,6 +94,9 @@
     <Reference Include="ChatGPT.API.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ChatGPT.API.Framework.1.0.4\lib\net462\ChatGPT.API.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="CSCore, Version=1.2.1.2, Culture=neutral, PublicKeyToken=5a08f2b6f4415dea, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSCore.1.2.1.2\lib\net35-client\CSCore.dll</HintPath>
+    </Reference>
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LinePutScript.1.9.2\lib\net462\LinePutScript.dll</HintPath>
     </Reference>

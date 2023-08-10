@@ -390,5 +390,21 @@ namespace VPet_Simulator.Windows.Interface
                 line.SetDouble("y", value.Y);
             }
         }
+        /// <summary>
+        /// 当实时播放音量达到该值时运行音乐动作
+        /// </summary>
+        public double MusicCatch
+        {
+            get => this["gameconfig"].GetDouble("musiccatch", 0.3); 
+            set => this["gameconfig"].SetDouble("musiccatch", value);
+        }
+        /// <summary>
+        /// 当实时播放音量达到该值时运行特殊音乐动作
+        /// </summary>
+        public double MusicMax
+        {
+            get => this["gameconfig"].GetDouble("musicmax", 0.70);
+            set => this["gameconfig"].SetDouble("musicmax", value);
+        }
     }
 }

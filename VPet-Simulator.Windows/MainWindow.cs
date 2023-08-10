@@ -1,16 +1,21 @@
 ﻿using ChatGPT.API.Framework;
+using CSCore.CoreAudioAPI;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphInfo;
+using Timer = System.Timers.Timer;
 using ToolBar = VPet_Simulator.Core.ToolBar;
 
 namespace VPet_Simulator.Windows
@@ -392,5 +397,93 @@ namespace VPet_Simulator.Windows
                 HashCheck = line.GetLongHashCode() == hash;
             }
         }
+        /// <summary>
+        /// 获得当前系统音乐播放音量
+        /// </summary>
+        public float AudioPlayingVolume()
+        {
+            using (var enumerator = new MMDeviceEnumerator())
+            {
+                using (var meter = AudioMeterInformation.FromDevice(enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia)))
+                {
+                    return meter.GetPeakValue();
+                }
+            }
+        }
+        /// <summary>
+        /// 音乐检测器
+        /// </summary>
+        private void Handle_Music(Main obj)
+        {
+            if (MusicTimer.Enabled == false && Core.Graph.FindGraphs("Music", AnimatType.A_Start, Core.Save.Mode) != null &&
+                Main.IsIdel && AudioPlayingVolume() > Set.MusicCatch)
+            {
+                catch_MusicVolSum = 0;
+                catch_MusicVolCount = 0;
+                CurrMusicType = null;
+                MusicTimer.Start();
+                Task.Run(() =>
+                {//等2秒看看识别结果
+                    Thread.Sleep(2500);
+
+                    if (CurrMusicType != null && Main.IsIdel)
+                    {//识别通过,开始跑跳舞动画
+                        Main.Display(Core.Graph.FindGraph("Music", AnimatType.A_Start, Core.Save.Mode), Display_Music);
+                    }
+                    else
+                    { //失败或有东西阻塞,停止检测
+                        MusicTimer.Stop();
+                    }
+                });
+            }
+        }
+        private void Display_Music()
+        {
+            if (CurrMusicType.HasValue)
+            {
+                if (CurrMusicType.Value)
+                {//播放更刺激的
+                    var mg = Core.Graph.FindGraph("Music", AnimatType.Single, Core.Save.Mode);
+                    mg ??= Core.Graph.FindGraph("Music", AnimatType.B_Loop, Core.Save.Mode);
+                    Main.Display(mg, Display_Music);
+                }
+                else
+                {
+                    Main.Display(Core.Graph.FindGraph("Music", AnimatType.B_Loop, Core.Save.Mode), Display_Music);
+                }
+            }
+            else
+            {
+                Main.Display("Music", AnimatType.C_End);
+            }
+        }
+        private void MusicTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (catch_MusicVolCount >= 10)
+            {
+                double ans = catch_MusicVolSum / catch_MusicVolCount;
+                catch_MusicVolSum = 0;
+                catch_MusicVolCount = 0;
+                if (ans > Set.MusicCatch)
+                {
+                    var bef = CurrMusicType;
+                    CurrMusicType = ans > Set.MusicMax;
+                    if (bef != CurrMusicType)
+                        Display_Music();
+                    MusicTimer.Start();
+                }
+                else
+                {
+                    CurrMusicType = null;
+                    if (Main.DisplayType.Name == "Music")
+                        Main.Display("Music", AnimatType.C_End);
+                }
+            }
+        }
+
+        public Timer MusicTimer;
+        private double catch_MusicVolSum;
+        private int catch_MusicVolCount;
+        public bool? CurrMusicType { get; private set; }
     }
 }

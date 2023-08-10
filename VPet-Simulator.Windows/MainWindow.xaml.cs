@@ -287,6 +287,13 @@ namespace VPet_Simulator.Windows
                 }
                 Set["CGPT"].Remove(cgpteb);
             }
+            //音乐识别timer加载
+            MusicTimer = new System.Timers.Timer(200)
+            {
+                AutoReset = false
+            };
+            MusicTimer.Elapsed += MusicTimer_Elapsed;
+
 
             Dispatcher.Invoke(new Action(() =>
             {
@@ -297,7 +304,7 @@ namespace VPet_Simulator.Windows
 
                 winSetting = new winGameSetting(this);
                 winBetterBuy = new winBetterBuy(this);
-                Main = new Main(Core) { };
+                Main = new Main(Core);
                 Main.NoFunctionMOD = Set.CalFunState;
 
                 switch (Set["CGPT"][(gstr)"type"])
@@ -314,6 +321,7 @@ namespace VPet_Simulator.Windows
                         }
                         break;
                 }
+
 
                 LoadingText.Content = "正在加载游戏".Translate();
                 var m = new System.Windows.Controls.MenuItem()
@@ -341,7 +349,7 @@ namespace VPet_Simulator.Windows
                     new winReport(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString()).Show();
                 }
                 Foods.ForEach(item => item.LoadImageSource(this));
-
+                Main.TimeHandle += Handle_Music;
                 Main.DefaultClickAction = () =>
                 {
                     if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
@@ -492,6 +500,7 @@ namespace VPet_Simulator.Windows
 
         }
 
+     
         private void Main_Event_TouchBody()
         {
             Set.Statistics[(gint)"stat_touch_body"]++;

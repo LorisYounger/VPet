@@ -8,12 +8,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows
@@ -166,8 +168,33 @@ namespace VPet_Simulator.Windows
             ListMod.SelectedIndex = 0;
             ShowMod((string)((ListBoxItem)ListMod.SelectedItem).Content);
 
+            voicetimer = new DispatcherTimer()
+            {
+                Interval = TimeSpan.FromSeconds(0.2)
+            };
+            voicetimer.Tick += Voicetimer_Tick;
+
             AllowChange = true;
         }
+
+        private void Voicetimer_Tick(object sender, EventArgs e)
+        {
+            var v = mw.AudioPlayingVolume();
+            RVoice.Text = v.ToString("p2");
+            if (v > mw.Set.MusicCatch)
+            {
+                RVoice.Foreground = new SolidColorBrush(Colors.Green);
+                if (v > mw.Set.MusicMax)
+                {
+                    RVoice.FontWeight = FontWeights.Bold;
+                }
+                else
+                    RVoice.FontWeight = FontWeights.Normal;
+            }
+            else
+                RVoice.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
+        }
+
         public void ShowModList()
         {
             ListMod.Items.Clear();
@@ -524,12 +551,23 @@ namespace VPet_Simulator.Windows
             Process.Start("https://www.exlb.net/Diagnosis");
         }
         public bool Shutdown = false;
+
+        public new void Show()
+        {
+            if (MainTab.SelectedIndex == 1)
+            {
+                voicetimer.Start();
+            }
+            base.Show();
+        }
+
         private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (Shutdown)
                 return;
             mw.Topmost = mw.Set.TopMost;
             e.Cancel = true;
+            voicetimer.Stop();
             Hide();
         }
 
@@ -1013,7 +1051,7 @@ namespace VPet_Simulator.Windows
             bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
             LocalizeCore.LoadCulture((string)LanguageBox.SelectedItem);
             mw.Set.Language = LocalizeCore.CurrentCulture;
-            if(ischangename)
+            if (ischangename)
                 mw.Core.Save.Name = petloader.PetName.Translate();
         }
 
@@ -1021,8 +1059,12 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
+            voicetimer.Stop();
             switch (MainTab.SelectedIndex)
             {
+                case 1://启动音量探测
+                    voicetimer.Start();
+                    break;
                 case 4:
                     if (mw.HashCheck)
                     {
@@ -1034,6 +1076,15 @@ namespace VPet_Simulator.Windows
                     }
                     break;
             }
+        }
+        DispatcherTimer voicetimer;
+
+        private void VoiceCatchSilder_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.MusicCatch = VoiceCatchSilder.Value;
+            mw.Set.MusicMax = VoiceMaxSilder.Value;
         }
     }
 }
