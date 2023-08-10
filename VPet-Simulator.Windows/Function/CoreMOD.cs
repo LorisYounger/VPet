@@ -15,11 +15,12 @@ namespace VPet_Simulator.Windows
 {
     public class CoreMOD
     {
-        public static List<string> LoadedDLL { get; } = new List<string>()
+        public static HashSet<string> LoadedDLL { get; } = new HashSet<string>()
         {
             "ChatGPT.API.Framework.dll","Panuon.WPF.dll","steam_api.dll","Panuon.WPF.UI.dll","steam_api64.dll",
             "LinePutScript.dll","Newtonsoft.Json.dll","Facepunch.Steamworks.Win32.dll", "Facepunch.Steamworks.Win64.dll",
-            "VPet-Simulator.Core.dll","VPet-Simulator.Windows.Interface.dll","LinePutScript.Localization.WPF.dll"
+            "VPet-Simulator.Core.dll","VPet-Simulator.Windows.Interface.dll","LinePutScript.Localization.WPF.dll",
+            "CSCore.dll"
         };
         public static string NowLoading = null;
         public string Name;
@@ -257,6 +258,30 @@ namespace VPet_Simulator.Windows
     }
     public static class ExtensionSetting
     {
+        /// <summary>
+        /// 吃食物 附带倍率
+        /// </summary>
+        /// <param name="save">存档</param>
+        /// <param name="food">食物</param>
+        /// <param name="buff">默认1倍</param>
+        public static void EatFood(this GameSave save, IFood food, double buff)
+        {
+            save.Exp += food.Exp * buff;
+            var tmp = food.Strength / 2 * buff;
+            save.StrengthChange(tmp);
+            save.StoreStrength += tmp;
+            tmp = food.StrengthFood / 2 * buff;
+            save.StrengthChangeFood(tmp);
+            save.StoreStrengthFood += tmp;
+            tmp = food.StrengthDrink / 2 * buff;
+            save.StrengthChangeDrink(tmp);
+            save.StoreStrengthDrink += tmp;
+            tmp = food.Feeling / 2 * buff;
+            save.FeelingChange(tmp);
+            save.StoreFeeling += tmp * buff;
+            save.Health += food.Health * buff;
+            save.Likability += food.Likability * buff;
+        }
         public static bool IsOnMod(this Setting t, string ModName)
         {
             if (ModName == "Core")

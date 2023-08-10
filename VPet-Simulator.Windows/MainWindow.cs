@@ -4,10 +4,8 @@ using LinePutScript;
 using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -346,7 +344,7 @@ namespace VPet_Simulator.Windows
             switch (Main.State)
             {
                 case Main.WorkingState.Work:
-                    if (Core.Graph.GraphConfig.Works[Main.StateID].Type == GraphHelper.Work.WorkType.Work)
+                    if (Main.nowWork.Type == GraphHelper.Work.WorkType.Work)
                         stat[(gi64)"stat_work_time"] += (int)Set.LogicInterval;
                     else
                         stat[(gi64)"stat_study_time"] += (int)Set.LogicInterval;
@@ -459,11 +457,13 @@ namespace VPet_Simulator.Windows
         }
         private void MusicTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (catch_MusicVolCount >= 10)
+            catch_MusicVolSum += AudioPlayingVolume();
+            catch_MusicVolCount++;
+            if (catch_MusicVolCount >= 20)
             {
                 double ans = catch_MusicVolSum / catch_MusicVolCount;
-                catch_MusicVolSum = 0;
-                catch_MusicVolCount = 0;
+                catch_MusicVolSum /= 4;
+                catch_MusicVolCount /= 4;
                 if (ans > Set.MusicCatch)
                 {
                     var bef = CurrMusicType;

@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
+using static System.Windows.Forms.LinkLabel;
 using static VPet_Simulator.Core.GraphCore;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Core.IGraph;
@@ -173,8 +174,26 @@ namespace VPet_Simulator.Windows
                         , "金钱不足".Translate());
                     return;
                 }
+
+                //获取吃腻时间
+
+                DateTime now = DateTime.Now;
+                DateTime eattime = mw.Set.PetData.GetDateTime("buytime_" + item.Name, now);
+                double eattimes = 0;
+                if (eattime <= now)
+                {
+                    eattime = now;
+                }
+                else
+                {
+                    eattimes = (eattime - now).TotalHours;
+                }
                 //开始加点
-                mw.Core.Save.EatFood(item);
+                mw.Core.Save.EatFood(item, Math.Max(0.5, 1 - Math.Sqrt(eattimes) * 0.01));
+                //吃腻了
+                eattimes += 2;
+                mw.Set.PetData.SetDateTime("buytime_" + item.Name, now.AddHours(eattimes));
+
                 mw.Core.Save.Money -= item.Price;
                 //统计
                 mw.Set.Statistics[(gint)("buy_" + item.Name)]++;
@@ -203,13 +222,18 @@ namespace VPet_Simulator.Windows
                         mw.Set.Statistics[(gdbe)"stat_bb_gift"] += item.Price;
                         break;
                 }
+               
             }
             if (!_puswitch.IsChecked.Value)
                 TryClose();
             var name = mw.Core.Graph.FindName(item.Type == Food.FoodType.Drink ? GraphType.Drink : GraphType.Eat);
             var ig = mw.Core.Graph.FindGraph(name, AnimatType.Single, mw.Core.Save.Mode);
             var b = mw.Main.FindDisplayBorder(ig);
-            ig.Run(b, item.ImageSource, mw.Main.DisplayToNomal);
+            ig.Run(b, item.ImageSource, () =>
+            {
+                mw.Main.EventTimer_Elapsed();
+                mw.Main.DisplayToNomal();
+            });
         }
 
         private void BtnSearch_Click(object sender, RoutedEventArgs e)

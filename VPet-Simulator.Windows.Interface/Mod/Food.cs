@@ -127,6 +127,19 @@ namespace VPet_Simulator.Windows.Interface
                     sb.AppendLine().Append(Desc.Translate());
                     desc = sb.ToString();
                 }
+                DateTime now = DateTime.Now;
+                DateTime eattime = imw.Set.PetData.GetDateTime("buytime_" + Name, now);
+                double eattimes = 0;
+                string descs;
+                if (eattime <= now)
+                {
+                    if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink)
+                        descs = "腻味程度".Translate();
+                }
+                else
+                {
+                    eattimes = (eattime - now).TotalHours;
+                }
                 return desc;
             }
         }
@@ -143,6 +156,9 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Line(ignoreCase: true)]
         public string Image;
+
+        private IMainWindow imw;
+
         /// <summary>
         /// 加载物品图片
         /// </summary>
@@ -150,6 +166,7 @@ namespace VPet_Simulator.Windows.Interface
         {
             ImageSource = imw.ImageSources.FindImage(Image ?? Name, "food");
             Star = imw.Set["betterbuy"]["star"].GetInfos().Contains(Name);
+            this.imw = imw;
         }
     }
 }

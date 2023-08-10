@@ -288,7 +288,7 @@ namespace VPet_Simulator.Windows
                 Set["CGPT"].Remove(cgpteb);
             }
             //音乐识别timer加载
-            MusicTimer = new System.Timers.Timer(200)
+            MusicTimer = new System.Timers.Timer(100)
             {
                 AutoReset = false
             };
