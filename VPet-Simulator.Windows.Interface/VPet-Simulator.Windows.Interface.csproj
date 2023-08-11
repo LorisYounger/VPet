@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMainWindow.cs" />
+    <Compile Include="Mod\ClickText.cs" />
     <Compile Include="Mod\LowText.cs" />
     <Compile Include="Mod\Food.cs" />
     <Compile Include="MainPlugin.cs" />
