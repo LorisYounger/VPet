@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -104,6 +105,15 @@ namespace VPet_Simulator.Windows
                 TextBoxStartUpY.IsEnabled = true;
                 BtnStartUpGet.IsEnabled = true;
             }
+
+            if (mw.Set.Diagnosis)
+                RBDiagnosisYES.IsChecked = true;
+
+            List<int> cbDiagnosis = new List<int> { 200, 500, 1000, 2000, 5000, 10000, 20000 }
+            int ds = cbDiagnosis.IndexOf(mw.Set.DiagnosisInterval);
+            if (ds == -1)
+                ds = 1;
+            CBDiagnosis.SelectedIndex = ds;
 
             foreach (ComboBoxItem v in CBAutoSave.Items)
             {
@@ -375,17 +385,24 @@ namespace VPet_Simulator.Windows
 
         private void RBDiagnosisYES_Checked(object sender, RoutedEventArgs e)
         {
-
+            if (!AllowChange)
+                return;
+            mw.Set.Diagnosis = true;
         }
 
         private void RBDiagnosisNO_Checked(object sender, RoutedEventArgs e)
         {
-
+            if (!AllowChange)
+                return;
+            mw.Set.Diagnosis = false;
         }
 
         private void CBDiagnosis_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (!AllowChange)
+                return;
+            List<int> cbDiagnosis = new List<int> { 200, 500, 1000, 2000, 5000, 10000, 20000 };
+            mw.Set.DiagnosisInterval = cbDiagnosis[CBDiagnosis.SelectedIndex];
         }
 
         private void ListMod_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -22,7 +22,7 @@ namespace VPet_Simulator.Windows
         {
             InitializeComponent();
             mw = mainw;
-            save = mw.Core.Save.ToLine().ToString();
+            save = mw.Core.Save.ToLine().ToString() + mw.Set.ToString();
             if (errmsg != null)
             {
                 tType.SelectedIndex = 0;
@@ -38,9 +38,9 @@ namespace VPet_Simulator.Windows
         }
 
         private void tUpload_Click(object sender, RoutedEventArgs e)
-        {
+        {//游戏设置比存档更重要,桌宠大部分内容存设置里了,所以一起上传
             if (tUpload.IsChecked == true)
-                save = mw.Core.Save.ToLine().ToString();
+                save = mw.Core.Save.ToLine().ToString() + mw.Set.ToString();
             else
                 save = "玩家取消上传存档".Translate();
         }

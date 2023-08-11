@@ -97,12 +97,12 @@ namespace VPet_Simulator.Windows.Interface
             set => SetBool("bigscreen", value);
         }
         /// <summary>
-        /// 是否启用数据收集 //TODO:判断游戏是否是原版的
+        /// 是否启用数据收集
         /// </summary>
         public bool Diagnosis
         {
-            get => !this["diagnosis"].GetBool("disable");
-            set => this["diagnosis"].SetBool("disable", !value);
+            get => this["diagnosis"].GetBool("enable");
+            set => this["diagnosis"].SetBool("enable", value);
         }
         ///// <summary> //经过测试,储存到内存好处多多,不储存也要占用很多内存,干脆存了吧
         ///// 是将图片储存到内存
@@ -128,6 +128,7 @@ namespace VPet_Simulator.Windows.Interface
             get => Math.Max(this["diagnosis"].GetInt("interval", 500), 20000);
             set => this["diagnosis"].SetInt("interval", value);
         }
+
         /// <summary>
         /// 自动保存频率 (min)
         /// </summary>

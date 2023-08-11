@@ -6,9 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Web;
 using System.Windows;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
@@ -413,7 +416,7 @@ namespace VPet_Simulator.Windows
         /// </summary>
         private void Handle_Music(Main obj)
         {
-            if (MusicTimer.Enabled == false && Core.Graph.FindGraphs("Music", AnimatType.A_Start, Core.Save.Mode) != null &&
+            if (MusicTimer.Enabled == false && Core.Graph.FindGraphs("music", AnimatType.B_Loop, Core.Save.Mode) != null &&
                 Main.IsIdel && AudioPlayingVolume() > Set.MusicCatch)
             {
                 catch_MusicVolSum = 0;
@@ -426,7 +429,7 @@ namespace VPet_Simulator.Windows
 
                     if (CurrMusicType != null && Main.IsIdel)
                     {//识别通过,开始跑跳舞动画
-                        Main.Display(Core.Graph.FindGraph("Music", AnimatType.A_Start, Core.Save.Mode), Display_Music);
+                        Main.Display(Core.Graph.FindGraph("music", AnimatType.A_Start, Core.Save.Mode), Display_Music);
                     }
                     else
                     { //失败或有东西阻塞,停止检测
@@ -441,22 +444,24 @@ namespace VPet_Simulator.Windows
             {
                 if (CurrMusicType.Value)
                 {//播放更刺激的
-                    var mg = Core.Graph.FindGraph("Music", AnimatType.Single, Core.Save.Mode);
-                    mg ??= Core.Graph.FindGraph("Music", AnimatType.B_Loop, Core.Save.Mode);
+                    var mg = Core.Graph.FindGraph("music", AnimatType.Single, Core.Save.Mode);
+                    mg ??= Core.Graph.FindGraph("music", AnimatType.B_Loop, Core.Save.Mode);
                     Main.Display(mg, Display_Music);
                 }
                 else
                 {
-                    Main.Display(Core.Graph.FindGraph("Music", AnimatType.B_Loop, Core.Save.Mode), Display_Music);
+                    Main.Display(Core.Graph.FindGraph("music", AnimatType.B_Loop, Core.Save.Mode), Display_Music);
                 }
             }
             else
             {
-                Main.Display("Music", AnimatType.C_End);
+                Main.Display("music", AnimatType.C_End, Main.DisplayToNomal);
             }
         }
         private void MusicTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            if (!(Main.IsIdel || Main.DisplayType.Name == "music"))//不是音乐,被掐断
+                return;
             catch_MusicVolSum += AudioPlayingVolume();
             catch_MusicVolCount++;
             if (catch_MusicVolCount >= 20)
@@ -468,22 +473,86 @@ namespace VPet_Simulator.Windows
                 {
                     var bef = CurrMusicType;
                     CurrMusicType = ans > Set.MusicMax;
-                    if (bef != CurrMusicType)
+                    if (bef != null && bef != CurrMusicType)
                         Display_Music();
                     MusicTimer.Start();
                 }
                 else
                 {
                     CurrMusicType = null;
-                    if (Main.DisplayType.Name == "Music")
-                        Main.Display("Music", AnimatType.C_End);
+                    if (Main.DisplayType.Name == "music")
+                        Main.Display("music", AnimatType.C_End, Main.DisplayToNomal);
                 }
+            }
+            else
+            {
+                MusicTimer.Start();
             }
         }
 
         public Timer MusicTimer;
         private double catch_MusicVolSum;
         private int catch_MusicVolCount;
+        /// <summary>
+        /// 当前音乐播放状态
+        /// </summary>
         public bool? CurrMusicType { get; private set; }
+
+        int LastDiagnosisTime = 0;
+        /// <summary>
+        /// 上传遥测文件
+        /// </summary>
+        public void DiagnosisUPLoad()
+        {
+            if (!IsSteamUser)
+                return;//不遥测非Steam用户
+            if (!Set.DiagnosisDayEnable)
+                return;//不遥测不参加遥测的用户
+            if (!Set.Diagnosis)
+                return;//不遥测不参加遥测的用户
+            if (!HashCheck)
+                return;//不遥测数据修改过的用户
+            if (LastDiagnosisTime++ < Set.DiagnosisInterval)
+                return;//等待间隔
+            LastDiagnosisTime = 0;
+            string _url = "http://cn.exlb.org:5810/Report";
+            //参数
+            StringBuilder sb = new StringBuilder();
+            sb.Append("action=data");
+            sb.Append($"&steamid={Steamworks.SteamClient.SteamId.Value}");
+            sb.Append($"&ver={verison}");
+            sb.Append("&save=");
+            sb.AppendLine(HttpUtility.UrlEncode(Core.Save.ToLine().ToString() + Set.ToString()));
+            //游戏设置比存档更重要,桌宠大部分内容存设置里了,所以一起上传
+            var request = (HttpWebRequest)WebRequest.Create(_url);
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";//ContentType
+            byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());
+            int length = byteData.Length;
+            request.ContentLength = length;
+            using (Stream writer = request.GetRequestStream())
+            {
+                writer.Write(byteData, 0, length);
+                writer.Close();
+                writer.Dispose();
+            }
+            string responseString;
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
+                response.Dispose();
+            }
+            if (responseString == "IP times Max")
+            {
+                Set.DiagnosisDayEnable = false;
+            }
+#if DEBUG
+            else
+            {
+                throw new Exception("诊断上传失败");
+            }
+#endif
+
+        }
     }
 }

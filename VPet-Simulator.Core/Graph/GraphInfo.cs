@@ -109,6 +109,9 @@ namespace VPet_Simulator.Core
                 else if (path_name.Remove("c") || path_name.Remove("end"))
                 {
                     animatType = AnimatType.C_End;
+                }else if (path_name.Remove("single"))
+                {
+                    animatType = AnimatType.Single;
                 }
                 else
                 {
