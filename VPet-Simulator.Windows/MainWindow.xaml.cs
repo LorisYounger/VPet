@@ -479,14 +479,14 @@ namespace VPet_Simulator.Windows
                         Main.SayRnd("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate());
                     });
                 }
-                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 6, 26) && LocalizeCore.CurrentCulture.StartsWith("cn"))
+                else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 8, 11) && LocalizeCore.CurrentCulture.StartsWith("cn"))
                 {
-                    if (Set["SingleTips"].GetDateTime("update") > new DateTime(2023, 6, 23)) // 上次更新日期时间
-                        notifyIcon.ShowBalloonTip(10, "更新通知 06/23", //本次更新内容
-                        "MOD现已从默认启用变为默认关闭\n如需使用EdgeTTS或者DEMO时钟,请在设置中启用MOD\n互动将会提示获得的心情和消耗的体力数量", ToolTipIcon.Info);
+                    if (Set["SingleTips"].GetDateTime("update") > new DateTime(2023, 8, 1)) // 上次更新日期时间
+                        notifyIcon.ShowBalloonTip(10, "更新通知 08/11", //本次更新内容
+                        "新增跳舞功能,桌宠会在播放音乐的时候跳舞", ToolTipIcon.Info);
                     else// 累计更新内容
-                        notifyIcon.ShowBalloonTip(10, "更新通知 06/23",
-                    "现已支持数据计算,桌宠现在需要进行吃饭喝水等\n更新了新的状态动画文件\n新增自动备份存档功能\n数据计算数据相关优化", ToolTipIcon.Info);
+                        notifyIcon.ShowBalloonTip(10, "更新通知 08/01",
+                    "更新了新的动画系统", ToolTipIcon.Info);
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);
                 }
                 //MOD报错

@@ -187,6 +187,8 @@ namespace VPet_Simulator.Core
                         if (Core.Save.StrengthDrink >= 75)
                             addhealth += Function.Rnd.Next(1, 3);
                     }
+                    if (addhealth > 0)
+                        Core.Save.Health += addhealth * TimePass;
                     var addmoney = Math.Max(0, TimePass * (nowwork.MoneyBase * (efficiency) + Core.Save.Level * nowwork.MoneyLevel * (efficiency - 0.5) * 2));
                     if (nowwork.Type == GraphHelper.Work.WorkType.Work)
                         Core.Save.Money += addmoney;

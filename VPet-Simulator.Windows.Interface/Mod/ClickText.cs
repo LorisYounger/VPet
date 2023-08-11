@@ -12,11 +12,11 @@ namespace VPet_Simulator.Windows.Interface
     /// 点击桌宠时触发的乱说话
     /// </summary>
     public class ClickText
-    {     
+    {
         [Line(ignoreCase: true)]
-        private int mode { get; set; }
+        private int mode { get; set; } = 15;
         /// <summary>
-        /// 需求状态模式, 为空为任意
+        /// 需求状态模式
         /// </summary>      
         public ModeType Mode
         {
@@ -28,11 +28,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Flags]
         public enum ModeType
-        {
-            /// <summary>
-            /// 任意
-            /// </summary>
-            All = 0,
+        {           
             /// <summary>
             /// 高兴
             /// </summary>
@@ -50,7 +46,36 @@ namespace VPet_Simulator.Windows.Interface
             /// </summary>
             Ill = 8
         }
+        /// <summary>
+        /// 指定干活时说, 空为任意, sleep 为睡觉时
+        /// </summary>
+        [Line(ignoreCase: true)]
+        public string Working { get; set; } = null;
 
+        /// <summary>
+        /// 日期区间
+        /// </summary>
+        [Flags]
+        public enum DayTime
+        {            
+            Morning = 1,
+            Afternoon = 2,
+            Night = 4,
+            Midnight = 8,
+        }
+        /// <summary>
+        /// 当前时间
+        /// </summary>
+        [Line(ignoreCase: true)]
+        private int dayTime { get; set; } = 15;
+        /// <summary>
+        /// 日期区间
+        /// </summary>      
+        public DayTime DaiTime
+        {
+            get => (DayTime)dayTime;
+            set => dayTime = (int)value;
+        }
         /// <summary>
         /// 好感度要求:最小值
         /// </summary>
