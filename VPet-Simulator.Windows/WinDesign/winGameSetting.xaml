@@ -19,7 +19,7 @@
                 pu:TabControlHelper.ItemsCornerRadius="4"
                 pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
                 pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"
-                pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
+                pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}" pu:TabControlHelper.CanHeaderPanelScroll="True"
                 Foreground="{DynamicResource PrimaryText}" SelectionChanged="MainTab_SelectionChanged">
             <TabControl.ContentTemplate>
                 <DataTemplate>

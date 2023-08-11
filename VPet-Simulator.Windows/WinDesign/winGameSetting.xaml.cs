@@ -109,7 +109,7 @@ namespace VPet_Simulator.Windows
             if (mw.Set.Diagnosis)
                 RBDiagnosisYES.IsChecked = true;
 
-            List<int> cbDiagnosis = new List<int> { 200, 500, 1000, 2000, 5000, 10000, 20000 }
+            List<int> cbDiagnosis = new List<int> { 200, 500, 1000, 2000, 5000, 10000, 20000 };
             int ds = cbDiagnosis.IndexOf(mw.Set.DiagnosisInterval);
             if (ds == -1)
                 ds = 1;
@@ -957,7 +957,7 @@ namespace VPet_Simulator.Windows
                 mw.Main.MsgBar.SetPlaceIN();
         }
 
-        private void numBackupSaveMaxNum_ValueChanged(object sender, Panuon.WPF.SelectedValueChangedRoutedEventArgs<double> e)
+        private void numBackupSaveMaxNum_ValueChanged(object sender, Panuon.WPF.SelectedValueChangedRoutedEventArgs<double?> e)
         {
             if (!AllowChange)
                 return;
