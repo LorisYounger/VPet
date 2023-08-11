@@ -97,6 +97,9 @@
     <Reference Include="CSCore, Version=1.2.1.2, Culture=neutral, PublicKeyToken=5a08f2b6f4415dea, processorArchitecture=MSIL">
       <HintPath>..\packages\CSCore.1.2.1.2\lib\net35-client\CSCore.dll</HintPath>
     </Reference>
+    <Reference Include="Facepunch.Steamworks.Win64, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Facepunch.Steamworks.2.3.3\lib\net46\Facepunch.Steamworks.Win64.dll</HintPath>
+    </Reference>
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LinePutScript.1.9.2\lib\net462\LinePutScript.dll</HintPath>
     </Reference>
@@ -110,7 +113,7 @@
       <HintPath>..\packages\Panuon.WPF.1.0.2\lib\net462\Panuon.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Panuon.WPF.UI, Version=1.1.15.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Panuon.WPF.UI.1.1.15.3\lib\net462\Panuon.WPF.UI.dll</HintPath>
+      <HintPath>..\packages\Panuon.WPF.UI.1.1.15.4\lib\net462\Panuon.WPF.UI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -125,6 +128,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Update, Version=2.4.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Update.2.4.7\lib\net40\Update.exe</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -231,11 +237,6 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition="'$(Platform)' == 'x64'">
-    <Reference Include="Facepunch.Steamworks.Win64, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Facepunch.Steamworks.2.3.3\lib\net46\Facepunch.Steamworks.Win64.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -278,9 +279,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="steam_api64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Resource Include="vpeticon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -313,6 +311,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="steam_api64.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

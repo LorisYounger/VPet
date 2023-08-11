@@ -957,7 +957,7 @@ namespace VPet_Simulator.Windows
                 mw.Main.MsgBar.SetPlaceIN();
         }
 
-        private void numBackupSaveMaxNum_ValueChanged(object sender, Panuon.WPF.SelectedValueChangedRoutedEventArgs<double> e)
+        private void numBackupSaveMaxNum_ValueChanged(object sender, Panuon.WPF.SelectedValueChangedRoutedEventArgs<double?> e)
         {
             if (!AllowChange)
                 return;

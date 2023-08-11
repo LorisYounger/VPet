@@ -99,7 +99,7 @@
       <HintPath>..\packages\Panuon.WPF.1.0.2\lib\net462\Panuon.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Panuon.WPF.UI, Version=1.1.15.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Panuon.WPF.UI.1.1.15.3\lib\net462\Panuon.WPF.UI.dll</HintPath>
+      <HintPath>..\packages\Panuon.WPF.UI.1.1.15.4\lib\net462\Panuon.WPF.UI.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

@@ -238,22 +238,33 @@
                 </Grid>
             </Border>
         </Grid>
-        <Grid Margin="10" Grid.Column="1">
-            <ScrollViewer x:Name="PageDetail">
-                <ItemsControl x:Name="IcCommodity" VerticalAlignment="Top">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <local:AutoUniformGrid ItemsMinWidth="250" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <ContentControl Height="140" Margin="0,0,10,10" Content="{Binding}"
-                                    ContentTemplate="{StaticResource CommodityDataTemplate}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+        <Grid Margin="10"
+              Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ItemsControl x:Name="IcCommodity"
+                          SizeChanged="AutoUniformGrid_SizeChanged">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <local:AutoUniformGrid VerticalAlignment="Top"
+                                               ItemsMinWidth="250"
+                                               Changed="AutoUniformGrid_Changed"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl Height="140"
+                                        Margin="0,0,10,10"
+                                        Content="{Binding}"
+                                        ContentTemplate="{StaticResource CommodityDataTemplate}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <pu:Pagination x:Name="pagination" Grid.Row="1"
+                           Style="{DynamicResource StandardPaginationStyle}"
+                           CurrentPageChanged="pagination_CurrentPageChanged"/>
         </Grid>
     </Grid>
 </pu:WindowX>

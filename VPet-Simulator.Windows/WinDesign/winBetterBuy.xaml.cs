@@ -35,6 +35,8 @@ namespace VPet_Simulator.Windows
         MainWindow mw;
         private bool AllowChange = false;
         private Switch _puswitch;
+        private int _columns;
+        private int _rows;
 
         public winBetterBuy(MainWindow mw)
         {
@@ -133,7 +135,12 @@ namespace VPet_Simulator.Windows
                 }
                 Dispatcher.Invoke(() =>
                 {
-                    IcCommodity.ItemsSource = ordered;
+                    var totalCount = ordered.Count();
+                    var pageSize = _rows * _columns;
+                    pagination.MaxPage = (int)Math.Ceiling(totalCount * 1.0 / pageSize);
+                    var currentPage = Math.Max(0, Math.Min(pagination.MaxPage, pagination.CurrentPage) - 1);
+                    pagination.CurrentPage = currentPage + 1;
+                    IcCommodity.ItemsSource = ordered.Skip(pageSize * currentPage).Take(pageSize);
                 });
             });
         }
@@ -153,10 +160,10 @@ namespace VPet_Simulator.Windows
         //}
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
-            eventArg.RoutedEvent = UIElement.MouseWheelEvent;
-            eventArg.Source = sender;
-            PageDetail.RaiseEvent(eventArg);
+            //var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+            //eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+            //eventArg.Source = sender;
+            //PageDetail.RaiseEvent(eventArg);
         }
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
@@ -252,7 +259,12 @@ namespace VPet_Simulator.Windows
 
         private void Search()
         {
-            OrderItemSource((Food.FoodType)LsbCategory.SelectedIndex, LsbSortRule.SelectedIndex, LsbSortAsc.SelectedIndex == 0, _searchTextBox.Text);
+            var searchText = "";
+            if (_searchTextBox != null)
+            {
+                searchText = _searchTextBox.Text;
+            }
+            OrderItemSource((Food.FoodType)LsbCategory.SelectedIndex, LsbSortRule.SelectedIndex, LsbSortAsc.SelectedIndex == 0, searchText);
         }
 
         private void TbTitleSearch_Loaded(object sender, RoutedEventArgs e)
@@ -291,6 +303,34 @@ namespace VPet_Simulator.Windows
         private void Switch_Checked(object sender, RoutedEventArgs e)
         {
             mw.Set["betterbuy"].SetBool("noautoclose", _puswitch.IsChecked.Value);
+        }
+
+        private void AutoUniformGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var rows = Math.Max(0, (int)Math.Floor(IcCommodity.ActualHeight / 150d));
+            if (rows != _rows)
+            {
+                _rows = rows;
+                Search();
+            }
+            _rows = rows;
+        }
+
+        private void AutoUniformGrid_Changed(object sender, RoutedEventArgs e)
+        {
+            var uniformGrid = e.OriginalSource as AutoUniformGrid;
+            var columns = uniformGrid.Columns;
+            if (columns != _columns)
+            {
+                _columns = columns;
+                Search();
+            }
+            _columns = columns;
+        }
+
+        private void pagination_CurrentPageChanged(object sender, SelectedValueChangedRoutedEventArgs<int> e)
+        {
+            Search();
         }
     }
 }
