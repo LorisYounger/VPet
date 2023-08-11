@@ -347,7 +347,7 @@
                                     Style="{DynamicResource StandardSliderStyle}" VerticalAlignment="Center" Maximum="1"
                                     SmallChange=".01" Minimum="{Binding ElementName=VoiceCatchSilder,Path=Value}"
                                     LargeChange=".05" Value="0.75" Grid.Row="1" Grid.Column="2"
-                                    ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" ValueChanged="VoiceCatchSilder_ValueChanged"/>
+                                    ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" ValueChanged="VoiceCatchSilder_ValueChanged" />
                             <TextBlock Grid.Column="3" Margin="15,0,0,0" VerticalAlignment="Center"
                                     Text="{Binding ElementName=VoiceMaxSilder,Path=Value,StringFormat=p0}" FontSize="18"
                                     Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold"

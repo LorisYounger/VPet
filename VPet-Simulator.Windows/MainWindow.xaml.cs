@@ -350,6 +350,8 @@ namespace VPet_Simulator.Windows
                 }
                 Foods.ForEach(item => item.LoadImageSource(this));
                 Main.TimeHandle += Handle_Music;
+                Main.TimeHandle += (x) => DiagnosisUPLoad();
+
                 Main.DefaultClickAction = () =>
                 {
                     if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
@@ -500,7 +502,7 @@ namespace VPet_Simulator.Windows
 
         }
 
-     
+
         private void Main_Event_TouchBody()
         {
             Set.Statistics[(gint)"stat_touch_body"]++;
