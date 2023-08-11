@@ -103,6 +103,7 @@ namespace VPet_Simulator.Windows.Interface
         [Line(ignoreCase: true)]
         public string Desc { get; set; }
         private string desc = null;
+        private string descs = null;
         /// <summary>
         /// 描述(ToBetterBuy)
         /// </summary>
@@ -126,26 +127,7 @@ namespace VPet_Simulator.Windows.Interface
                         sb.Append("好感度".Translate() + ":\t").Append(Likability > 0 ? "+" : "").Append(Likability.ToString("f2"));
                     desc = sb.ToString();
                 }
-                DateTime now = DateTime.Now;
-                DateTime eattime = imw.Set.PetData.GetDateTime("buytime_" + Name, now);
-                string descs;
-                if (eattime <= now)
-                {
-                    if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink)
-                        descs = "喜好度".Translate();
-                    else
-                        descs = "有效度".Translate();
-                    descs += ":\t100%";
-                }
-                else
-                {
-                    if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink)
-                        descs = "喜好度".Translate();
-                    else
-                        descs = "有效度".Translate();
-                    descs += Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
-                    descs += "\t\t" + "恢复".Translate() + ":\t" + (eattime).ToString("MM/dd HH");
-                }
+                
                 return desc + '\n' + descs + '\n' + Desc.Translate();
             }
         }
@@ -163,7 +145,6 @@ namespace VPet_Simulator.Windows.Interface
         [Line(ignoreCase: true)]
         public string Image;
 
-        private IMainWindow imw;
 
         /// <summary>
         /// 加载物品图片
@@ -172,7 +153,30 @@ namespace VPet_Simulator.Windows.Interface
         {
             ImageSource = imw.ImageSources.FindImage(Image ?? Name, "food");
             Star = imw.Set["betterbuy"]["star"].GetInfos().Contains(Name);
-            this.imw = imw;
+            LoadEatTimeSource(imw);
+        }
+        public void LoadEatTimeSource(IMainWindow imw)
+        {
+            DateTime now = DateTime.Now;
+            DateTime eattime = imw.Set.PetData.GetDateTime("buytime_" + Name, now);
+            string descs;
+            if (eattime <= now)
+            {
+                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink)
+                    descs = "喜好度".Translate();
+                else
+                    descs = "有效度".Translate();
+                descs += ":\t100%";
+            }
+            else
+            {
+                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink)
+                    descs = "喜好度".Translate();
+                else
+                    descs = "有效度".Translate();
+                descs += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
+                descs += "\t\t" + "恢复".Translate() + ":\t" + (eattime).ToString("MM/dd HH");
+            }
         }
     }
 }

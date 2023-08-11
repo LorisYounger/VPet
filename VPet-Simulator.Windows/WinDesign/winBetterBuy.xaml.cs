@@ -189,11 +189,12 @@ namespace VPet_Simulator.Windows
                     eattimes = (eattime - now).TotalHours;
                 }
                 //开始加点
-                mw.Core.Save.EatFood(item, Math.Max(0.5, 1 - Math.Sqrt(eattimes) * 0.01));
+                mw.Core.Save.EatFood(item, Math.Max(0.5, 1 - Math.Pow(eattimes, 2) * 0.01));
                 //吃腻了
                 eattimes += 2;
                 mw.Set.PetData.SetDateTime("buytime_" + item.Name, now.AddHours(eattimes));
                 //通知
+                item.LoadEatTimeSource(mw);
                 item.NotifyOfPropertyChange("Eattime");
 
                 mw.Core.Save.Money -= item.Price;
@@ -224,7 +225,7 @@ namespace VPet_Simulator.Windows
                         mw.Set.Statistics[(gdbe)"stat_bb_gift"] += item.Price;
                         break;
                 }
-               
+
             }
             if (!_puswitch.IsChecked.Value)
                 TryClose();
