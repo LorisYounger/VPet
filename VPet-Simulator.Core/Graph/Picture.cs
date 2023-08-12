@@ -33,7 +33,6 @@ namespace VPet_Simulator.Core
                 GraphCore.CommConfig["PIC_Setup"] = true;
                 GraphCore.CommUIElements["Image1.Picture"] = new Image() { Width = 500, Height = 500 };
                 GraphCore.CommUIElements["Image2.Picture"] = new Image() { Width = 500, Height = 500 };
-                GraphCore.CommUIElements["Image3.Picture"] = new Image() { Width = 500, Height = 500 };
             }
         }
         public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
@@ -101,7 +100,7 @@ namespace VPet_Simulator.Core
                             }
                             else
                             {
-                                img = (Image)GraphCore.CommUIElements["Image3.Picture"];
+                                img = (Image)GraphCore.CommUIElements["Image1.Picture"];
                                 parant.Child = null;
                                 parant.Child = img;
                             }

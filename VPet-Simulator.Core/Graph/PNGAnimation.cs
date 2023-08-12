@@ -14,6 +14,7 @@ using static VPet_Simulator.Core.Picture;
 
 namespace VPet_Simulator.Core
 {
+
     /// <summary>
     /// PNGAnimation.xaml 的交互逻辑
     /// </summary>
@@ -77,7 +78,6 @@ namespace VPet_Simulator.Core
                 GraphCore.CommConfig["PA_Setup"] = true;
                 GraphCore.CommUIElements["Image1.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
                 GraphCore.CommUIElements["Image2.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
-                GraphCore.CommUIElements["Image3.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
             }
             Task.Run(() => startup(path, paths));
             //if (storemem)
@@ -334,7 +334,7 @@ namespace VPet_Simulator.Core
                         }
                         else
                         {
-                            img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image3.PNGAnimation"];
+                            img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image1.PNGAnimation"];
                             parant.Child = img;
                         }
                     }
