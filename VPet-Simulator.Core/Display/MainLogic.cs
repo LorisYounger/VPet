@@ -277,7 +277,7 @@ namespace VPet_Simulator.Core
         }
         private void playSwitchAnimat(GameSave.ModeType before, GameSave.ModeType after)
         {
-            if (DisplayType.Type != GraphType.Default)
+            if (!(DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Switch_Down || DisplayType.Type == GraphType.Switch_Up))
             {
                 return;
             }
