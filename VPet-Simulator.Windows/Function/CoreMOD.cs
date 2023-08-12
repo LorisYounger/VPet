@@ -185,6 +185,7 @@ namespace VPet_Simulator.Windows
                     case "plugin":
                         Tag.Add("plugin");
                         SuccessLoad = true;
+                        string authtype = "";
                         foreach (FileInfo tmpfi in di.EnumerateFiles("*.dll"))
                         {
                             try
@@ -200,25 +201,27 @@ namespace VPet_Simulator.Windows
                                     if (certificate.Subject == "CN=\"Shenzhen Lingban Computer Technology Co., Ltd.\", O=\"Shenzhen Lingban Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
                                         && certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US")
                                     {//LBGame 信任的证书
-                                        if (!Author.Contains("["))
-                                            Author += "[认证]".Translate();
+                                        if (authtype != "FAIL")
+                                            authtype = "[认证]".Translate();
                                     }
                                     else if (certificate.Subject != "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" && !IsPassMOD(mw))
                                     {//不是通过模组,不加载
                                         SuccessLoad = false;
                                         continue;
                                     }
-                                    else if (!Author.Contains("["))
+                                    else if (authtype != "")
                                     {
-                                        Author += "[签名]".Translate();
+                                        authtype = "[签名]".Translate();
                                         Intro += $"\nSubject:{certificate.Subject}\nIssuer:{certificate.Subject}";
                                     }
                                 }
                                 else
                                 {
+                                    authtype = "FAIL";
                                     if (!IsPassMOD(mw))
                                     {//不是通过模组,不加载
                                         SuccessLoad = false;
+                                        Author = modlps.FindSub("author").Info.Split('[').First();
                                         continue;
                                     }
                                 }
@@ -238,6 +241,8 @@ namespace VPet_Simulator.Windows
                                 new winReport(mw, errstr).Show();
                             }
                         }
+                        if (authtype != "FAIL")
+                            Author += authtype;
                         break;
                 }
             }
