@@ -135,6 +135,10 @@ namespace VPet_Simulator.Windows
             foreach (Sub sub in mw.Set["diy"])
                 StackDIY.Children.Add(new DIYViewer(sub));
 
+            SliderResolution.Maximum = Math.Min(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, 
+                System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
+            SliderResolution.Value = mw.Set.Resolution;
+
 #if X64
             GameVerison.Content = "游戏版本".Translate() + $"v{mw.Verison} x64";
 #else
@@ -1102,6 +1106,18 @@ namespace VPet_Simulator.Windows
                 return;
             mw.Set.MusicCatch = VoiceCatchSilder.Value;
             mw.Set.MusicMax = VoiceMaxSilder.Value;
+        }
+
+        private void cleancache_click(object sender, RoutedEventArgs e)
+        {
+            mw.Set.LastCacheDate = DateTime.MinValue;
+            MessageBoxX.Show("清理指令已下达,下次启动桌宠时生效".Translate());
+        }
+
+        private void SliderResolution_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            mw.Set.Resolution = (int)SliderResolution.Value;
+            ButtonRestartGraph.Visibility = Visibility.Visible;
         }
     }
 }

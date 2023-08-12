@@ -129,9 +129,6 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Update, Version=2.4.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Update.2.4.7\lib\net40\Update.exe</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

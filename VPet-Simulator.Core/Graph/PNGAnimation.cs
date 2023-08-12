@@ -165,7 +165,7 @@ namespace VPet_Simulator.Core
         {
             //新方法:加载大图片
             //生成大文件加载非常慢,先看看有没有缓存能用
-            Path = GraphCore.CachePath + $"\\{Sub.GetHashCode(path)}_{paths.Length}.png";
+            Path = GraphCore.CachePath + $"\\{GraphCore.Resolution}_{Sub.GetHashCode(path)}_{paths.Length}.png";
             Width = 500 * (paths.Length + 1);
             if (File.Exists(Path) || ((List<string>)GraphCore.CommConfig["Cache"]).Contains(path))
             {
@@ -184,6 +184,11 @@ namespace VPet_Simulator.Core
                     imgs.Add(System.Drawing.Image.FromFile(file.FullName));
                 int w = imgs[0].Width;
                 int h = imgs[0].Height;
+                if(w > GraphCore.Resolution)
+                {
+                    w = GraphCore.Resolution;
+                    h = (int)(h * (GraphCore.Resolution / (double)imgs[0].Width));
+                }
                 Bitmap joinedBitmap = new Bitmap(w * paths.Length, h);
                 var graph = Graphics.FromImage(joinedBitmap);
                 for (int i = 0; i < paths.Length; i++)

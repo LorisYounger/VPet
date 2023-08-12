@@ -235,9 +235,9 @@ namespace VPet_Simulator.Windows
 
             //加载游戏内容
             Core.Controller = new MWController(this);
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
-                GameLoad(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First());
-            else//如果加载存档失败了,试试加载备份,如果没备份,就新建一个
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps") &&
+                !GameLoad(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First()))
+                //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
                 LoadLatestSave(petloader.PetName);
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
@@ -299,7 +299,7 @@ namespace VPet_Simulator.Windows
             {
                 LoadingText.Content = "尝试加载动画和生成缓存".Translate();
 
-                Core.Graph = petloader.Graph();
+                Core.Graph = petloader.Graph(Set.Resolution);
                 LoadingText.Content = "正在加载CGPT".Translate();
 
                 winSetting = new winGameSetting(this);

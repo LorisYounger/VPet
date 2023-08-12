@@ -19,12 +19,16 @@ namespace VPet_Simulator.Core
     /// </summary>
     public class GraphCore
     {
-
-        public GraphCore()
+        /// <summary>
+        /// 桌宠图形渲染的分辨率,越高图形越清晰
+        /// </summary>
+        public int Resolution { get; set; } = 1000;
+        public GraphCore(int resolution)
         {
             if (!Directory.Exists(CachePath))
                 Directory.CreateDirectory(CachePath);
             CommConfig["Cache"] = new List<string>();
+            Resolution = resolution;
         }
 
         public static string CachePath = AppDomain.CurrentDomain.BaseDirectory + @"\cache";

@@ -18,9 +18,9 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 宠物图像
         /// </summary>
-        public GraphCore Graph()
+        public GraphCore Graph(int Resolution)
         {
-            var g = new GraphCore();
+            var g = new GraphCore(Resolution);
             foreach (var p in path)
                 LoadGraph(g, new DirectoryInfo(p), p);
             g.GraphConfig = Config;

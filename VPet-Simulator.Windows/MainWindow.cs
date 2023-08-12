@@ -389,14 +389,17 @@ namespace VPet_Simulator.Windows
                 Task.Run(Steamworks.SteamUserStats.StoreStats);
             }
         }
-        public void GameLoad(ILine line)
+        public bool GameLoad(ILine line)
         {
+            if (line == null)
+                return false;
             Core.Save = GameSave.Load(line);
             long hash = line.GetInt64("hash");
             if (line.Remove("hash"))
             {
                 HashCheck = line.GetLongHashCode() == hash;
             }
+            return true;
         }
         /// <summary>
         /// 获得当前系统音乐播放音量
