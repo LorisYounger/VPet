@@ -241,12 +241,15 @@ namespace VPet_Simulator.Windows
                 TryClose();
             var name = mw.Core.Graph.FindName(item.Type == Food.FoodType.Drink ? GraphType.Drink : GraphType.Eat);
             var ig = mw.Core.Graph.FindGraph(name, AnimatType.Single, mw.Core.Save.Mode);
-            var b = mw.Main.FindDisplayBorder(ig);
-            ig.Run(b, item.ImageSource, () =>
+            if (ig != null)
             {
-                mw.Main.EventTimer_Elapsed();
-                mw.Main.DisplayToNomal();
-            });
+                var b = mw.Main.FindDisplayBorder(ig);
+                ig.Run(b, item.ImageSource, () =>
+                {
+                    mw.Main.EventTimer_Elapsed();
+                    mw.Main.DisplayToNomal();
+                });
+            }           
         }
 
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
