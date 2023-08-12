@@ -972,9 +972,9 @@ namespace VPet_Simulator.Windows
                 reloadid = mw.Set.Statistics[(gint)"savetimes"];
                 CBSaveReLoad.SelectedItem = null;
                 CBSaveReLoad.Items.Clear();
-                if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData"))
+                if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"))
                 {
-                    foreach (var file in new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\UserData")
+                    foreach (var file in new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP")
                         .GetFiles().OrderByDescending(x => x.LastWriteTime))
                     {
                         if (file.Extension.ToLower() == ".lps")
@@ -992,7 +992,7 @@ namespace VPet_Simulator.Windows
             if (CBSaveReLoad.SelectedItem != null)
             {
                 string txt = (string)CBSaveReLoad.SelectedItem;
-                string path = AppDomain.CurrentDomain.BaseDirectory + @"\UserData\" + txt + ".lps";
+                string path = AppDomain.CurrentDomain.BaseDirectory + @"\BackUP\" + txt + ".lps";
                 if (File.Exists(path))
                 {
                     var l = new Line(File.ReadAllText(path));

@@ -159,9 +159,9 @@ namespace VPet_Simulator.Windows
 
         public void LoadLatestSave(string petname)
         {
-            if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData"))
+            if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"))
             {
-                var latestsave = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\UserData")
+                var latestsave = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP")
                     .GetFiles("*.lps").OrderByDescending(x => x.LastWriteTime).FirstOrDefault();
                 if (latestsave != null)
                 {
@@ -229,12 +229,33 @@ namespace VPet_Simulator.Windows
             else
                 LocalizeCore.LoadCulture(Set.Language);
 
+            //旧版本设置兼容
+            var cgpteb = Set["CGPT"].Find("enable");
+            if (cgpteb != null)
+            {
+                if (Set["CGPT"][(gbol)"enable"])
+                {
+                    Set["CGPT"][(gstr)"type"] = "API";
+                }
+                else
+                {
+                    Set["CGPT"][(gstr)"type"] = "LB";
+                }
+                Set["CGPT"].Remove(cgpteb);
+            }
+            if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData") && !Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"))
+            {
+                Directory.Move(AppDomain.CurrentDomain.BaseDirectory + @"\UserData", AppDomain.CurrentDomain.BaseDirectory + @"\BackUP");
+            }
+
+
             Dispatcher.BeginInvoke(new Action(() => LoadingText.Content = "尝试加载游戏MOD".Translate()));
+
             //当前桌宠动画
             var petloader = Pets.Find(x => x.Name == Set.PetGraph);
             petloader ??= Pets[0];
 
-            //加载游戏内容
+            //加载存档
             Core.Controller = new MWController(this);
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps") &&
                 !GameLoad(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First()))
@@ -274,20 +295,6 @@ namespace VPet_Simulator.Windows
                 rndtext.Add("关注 {0} 谢谢喵".Translate(Environment.UserName));
             }
 
-            //旧版本设置兼容
-            var cgpteb = Set["CGPT"].Find("enable");
-            if (cgpteb != null)
-            {
-                if (Set["CGPT"][(gbol)"enable"])
-                {
-                    Set["CGPT"][(gstr)"type"] = "API";
-                }
-                else
-                {
-                    Set["CGPT"][(gstr)"type"] = "LB";
-                }
-                Set["CGPT"].Remove(cgpteb);
-            }
             //音乐识别timer加载
             MusicTimer = new System.Timers.Timer(100)
             {

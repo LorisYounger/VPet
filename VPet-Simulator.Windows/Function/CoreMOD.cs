@@ -231,9 +231,11 @@ namespace VPet_Simulator.Windows
                                     }
                                 }
                             }
-                            catch
+                            catch (Exception Exception)
                             {
                                 SuccessLoad = false;
+                                string errstr = "MOD加载错误,是MOD({0})导致的\n如有可能请发送 错误信息截图和引发错误之前的操作 给开发者:service@exlb.net\n感谢您对游戏开发的支持\n".Translate() + Exception.ToString();
+                                new winReport(mw, errstr).Show();
                             }
                         }
                         break;
