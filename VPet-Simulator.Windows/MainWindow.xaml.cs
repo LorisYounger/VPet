@@ -483,10 +483,10 @@ namespace VPet_Simulator.Windows
                 {
                     if (Set["SingleTips"].GetDateTime("update") > new DateTime(2023, 8, 1)) // 上次更新日期时间
                         notifyIcon.ShowBalloonTip(10, "更新通知 08/11", //本次更新内容
-                        "新增跳舞功能,桌宠会在播放音乐的时候跳舞", ToolTipIcon.Info);
+                        "新增跳舞功能,桌宠会在播放音乐的时候跳舞\n新增不开心大部分系列动画\n更好买支持翻页", ToolTipIcon.Info);
                     else// 累计更新内容
                         notifyIcon.ShowBalloonTip(10, "更新通知 08/01",
-                    "更新了新的动画系统", ToolTipIcon.Info);
+                    "更新了新的动画系统\n新增桌宠会在播放音乐的时候跳舞\n新增不开心大部分系列动画\n更好买支持翻页", ToolTipIcon.Info);
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);
                 }
                 //MOD报错

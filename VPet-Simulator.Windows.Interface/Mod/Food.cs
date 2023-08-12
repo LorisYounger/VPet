@@ -159,7 +159,6 @@ namespace VPet_Simulator.Windows.Interface
         {
             DateTime now = DateTime.Now;
             DateTime eattime = imw.Set.PetData.GetDateTime("buytime_" + Name, now);
-            string descs;
             if (eattime <= now)
             {
                 if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink)
