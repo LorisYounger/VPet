@@ -211,7 +211,7 @@ namespace VPet_Simulator.Windows
                                     else if (!Author.Contains("["))
                                     {
                                         Author += "[签名]".Translate();
-                                        Intro += $"Subject:{certificate.Subject}\nIssuer:{certificate.Subject}";
+                                        Intro += $"\nSubject:{certificate.Subject}\nIssuer:{certificate.Subject}";
                                     }
                                 }
                                 else
