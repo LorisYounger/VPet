@@ -557,5 +557,9 @@ namespace VPet_Simulator.Windows
 #endif
 
         }
+        /// <summary>
+        /// 关闭指示器,默认为true
+        /// </summary>
+        public bool CloseConfirm { get; private set; } = true;
     }
 }

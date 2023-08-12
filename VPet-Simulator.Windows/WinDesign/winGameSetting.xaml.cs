@@ -571,7 +571,6 @@ namespace VPet_Simulator.Windows
         {
             Process.Start("https://www.exlb.net/Diagnosis");
         }
-        public bool Shutdown = false;
 
         public new void Show()
         {
@@ -584,10 +583,8 @@ namespace VPet_Simulator.Windows
 
         private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (Shutdown)
-                return;
             mw.Topmost = mw.Set.TopMost;
-            e.Cancel = true;
+            e.Cancel = mw.CloseConfirm;
             voicetimer.Stop();
             Hide();
         }

@@ -139,6 +139,7 @@ namespace VPet_Simulator.Windows
 
         private void Restart_Closed(object sender, EventArgs e)
         {
+            CloseConfirm = false;
             Save();
             try
             {
@@ -531,6 +532,7 @@ namespace VPet_Simulator.Windows
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            CloseConfirm = false;
             try
             {
                 //关闭所有插件
@@ -541,7 +543,6 @@ namespace VPet_Simulator.Windows
             Save();
             if (winSetting != null)
             {
-                winSetting.Shutdown = true;
                 winSetting.Close();
             }
             petHelper?.Close();

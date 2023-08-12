@@ -46,6 +46,7 @@ namespace VPet_Simulator.Windows
             LsbSortAsc.SelectedIndex = mw.Set["betterbuy"].GetBool("lastasc") ? 0 : 1;
             AllowChange = true;
         }
+        Run rMoney;
         public void Show(Food.FoodType type)
         {
             mw.Topmost = false;
@@ -55,6 +56,8 @@ namespace VPet_Simulator.Windows
                 OrderItemSource(type, LsbSortRule.SelectedIndex, LsbSortAsc.SelectedIndex == 0);
             else
                 LsbCategory.SelectedIndex = (int)type;
+            if (rMoney != null)
+                rMoney.Text = mw.Core.Save.Money.ToString("f2");
             Show();
         }
         public void OrderItemSource(Food.FoodType type, int sortrule, bool sortasc, string searchtext = null)
@@ -291,7 +294,7 @@ namespace VPet_Simulator.Windows
         private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             TryClose();
-            e.Cancel = true;
+            e.Cancel = mw.CloseConfirm;
         }
 
         private void Switch_Loaded(object sender, RoutedEventArgs e)
@@ -331,6 +334,12 @@ namespace VPet_Simulator.Windows
         private void pagination_CurrentPageChanged(object sender, SelectedValueChangedRoutedEventArgs<int> e)
         {
             Search();
+        }
+
+        private void rMoney_Loaded(object sender, RoutedEventArgs e)
+        {
+            rMoney = sender as Run;
+            rMoney.Text = mw.Core.Save.Money.ToString("f2");
         }
     }
 }

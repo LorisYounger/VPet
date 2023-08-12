@@ -5,9 +5,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="https://opensource.panuon.com/wpf-ui" xmlns:local="clr-namespace:VPet_Simulator.Windows"
-        mc:Ignorable="d" Title="{ll:Str 更好买}" Height="550" Width="800" FontSize="14" WindowStartupLocation="CenterScreen"
-        Background="#E0F6FF" pu:WindowXCaption.Height="45" pu:WindowXCaption.Background="{DynamicResource DARKPrimary}"
-        pu:WindowXCaption.Foreground="#FFFFFF" pu:WindowXCaption.Buttons="Close" Icon="/Res/BetterBuy.png"
+        mc:Ignorable="d" Title="{ll:Str 更好买}" Height="550" Width="800" FontSize="14"
+        WindowStartupLocation="CenterScreen" Background="#E0F6FF" pu:WindowXCaption.Height="45"
+        pu:WindowXCaption.Background="{DynamicResource DARKPrimary}" pu:WindowXCaption.Foreground="#FFFFFF"
+        pu:WindowXCaption.Buttons="Close" Icon="/Res/BetterBuy.png"
         pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}" Closing="WindowX_Closing">
     <pu:WindowXCaption.CloseButtonStyle>
         <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
@@ -37,9 +38,9 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="TbTitleSearch" Grid.ColumnSpan="2" VerticalAlignment="Center" Padding="7,0"
-                                pu:TextBoxHelper.Watermark="{ll:Str 搜索商品}" FontSize="14" Background="#33FFFFFF" Height="30"
-                                BorderThickness="0" pu:TextBoxHelper.CornerRadius="5" Loaded="TbTitleSearch_Loaded"
-                                Foreground="{DynamicResource DARKPrimaryText}" />
+                                pu:TextBoxHelper.Watermark="{ll:Str 搜索商品}" FontSize="14" Background="#33FFFFFF"
+                                Height="30" BorderThickness="0" pu:TextBoxHelper.CornerRadius="5"
+                                Loaded="TbTitleSearch_Loaded" Foreground="{DynamicResource DARKPrimaryText}" />
                         <Button Grid.Column="1" Margin="0,0,3,0" VerticalAlignment="Center" Height="28" Width="28"
                                 IsDefault="{Binding IsKeyboardFocusWithin, ElementName=TbTitleSearch}"
                                 BorderThickness="0" pu:ButtonHelper.CornerRadius="0,5,5,0" Background="Transparent"
@@ -47,6 +48,9 @@
                                 Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" Cursor="Hand"
                                 Click="BtnSearch_Click" />
                     </Grid>
+                    <TextBlock VerticalAlignment="Center" Margin="20,0,0,0" FontSize="16" FontWeight="Bold">
+                            <Run Text="{ll:Str 金钱}" />: $ <Run x:Name="rMoney" Loaded="rMoney_Loaded" Text=""/>
+                    </TextBlock>
                 </StackPanel>
                 <pu:Switch Content="{ll:Str 购买后不自动关闭窗口}" Grid.Column="2" FontSize="14" Margin="10,0,5,0" Height="20"
                         VerticalAlignment="Center" HorizontalAlignment="Right" BoxHeight="14" ToggleSize="18"
@@ -114,7 +118,8 @@
                                 </Border>-->
                                 <Button Grid.Row="4" Margin="0,7,0,0" Padding="7,5" Cursor="Hand"
                                         HorizontalAlignment="Left" pu:ButtonHelper.Icon="&#xF11A;"
-                                        Style="{DynamicResource ThemedButtonStyle}" Content="{ll:Str 购买}" Click="BtnBuy_Click" />
+                                        Style="{DynamicResource ThemedButtonStyle}" Content="{ll:Str 购买}"
+                                        Click="BtnBuy_Click" />
                             </Grid>
                         </Grid>
                     </Border>
@@ -159,8 +164,8 @@
                     <ToggleButton x:Name="TbtnDetail" Grid.ColumnSpan="2" Margin="0,5,8,0" HorizontalAlignment="Right"
                             VerticalAlignment="Top" Width="30" Height="30" Padding="0" FontSize="22"
                             Foreground="{DynamicResource DARKPrimaryDarker}" Background="Transparent"
-                            ToolTip="{ll:Str 物品详情}"
-                            pu:ToggleButtonHelper.CornerRadius="5" pu:ToggleButtonHelper.CheckedContent="&#xEF3D;"
+                            ToolTip="{ll:Str 物品详情}" pu:ToggleButtonHelper.CornerRadius="5"
+                            pu:ToggleButtonHelper.CheckedContent="&#xEF3D;"
                             pu:ToggleButtonHelper.CheckedForeground="{DynamicResource DARKPrimaryText}"
                             pu:IconHelper.Margin="0" FontFamily="/VPet-Simulator.Windows;component/Res/#remixicon"
                             Content="&#xEF3E;" />
@@ -205,7 +210,8 @@
                 <ListBoxItem Content="{ll:Str 功能性}" />
                 <ListBoxItem Content="{ll:Str 药品}" />
             </ListBox>
-            <TextBlock Grid.Row="2" Text="{ll:Str 排序方式}" Margin="5" FontSize="18" Foreground="{DynamicResource DARKPrimary}" />
+            <TextBlock Grid.Row="2" Text="{ll:Str 排序方式}" Margin="5" FontSize="18"
+                    Foreground="{DynamicResource DARKPrimary}" />
             <Border Grid.Row="3" Margin="0,10,0,0" MinHeight="100" CornerRadius="5">
                 <Grid VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
@@ -238,33 +244,27 @@
                 </Grid>
             </Border>
         </Grid>
-        <Grid Margin="10"
-              Grid.Column="1">
+        <Grid Margin="10" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <ItemsControl x:Name="IcCommodity"
-                          SizeChanged="AutoUniformGrid_SizeChanged">
+            <ItemsControl x:Name="IcCommodity" SizeChanged="AutoUniformGrid_SizeChanged">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <local:AutoUniformGrid VerticalAlignment="Top"
-                                               ItemsMinWidth="250"
-                                               Changed="AutoUniformGrid_Changed"/>
+                        <local:AutoUniformGrid VerticalAlignment="Top" ItemsMinWidth="250"
+                                Changed="AutoUniformGrid_Changed" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <ContentControl Height="140"
-                                        Margin="0,0,10,10"
-                                        Content="{Binding}"
-                                        ContentTemplate="{StaticResource CommodityDataTemplate}" />
+                        <ContentControl Height="140" Margin="0,0,10,10" Content="{Binding}"
+                                ContentTemplate="{StaticResource CommodityDataTemplate}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <pu:Pagination x:Name="pagination" Grid.Row="1"
-                           Style="{DynamicResource StandardPaginationStyle}"
-                           CurrentPageChanged="pagination_CurrentPageChanged"/>
+            <pu:Pagination x:Name="pagination" Grid.Row="1" Style="{DynamicResource StandardPaginationStyle}"
+                    CurrentPageChanged="pagination_CurrentPageChanged" />
         </Grid>
     </Grid>
 </pu:WindowX>
