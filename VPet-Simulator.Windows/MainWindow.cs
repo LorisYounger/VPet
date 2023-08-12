@@ -2,6 +2,7 @@
 using CSCore.CoreAudioAPI;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -400,6 +401,33 @@ namespace VPet_Simulator.Windows
                 HashCheck = line.GetLongHashCode() == hash;
             }
             return true;
+        }
+        private void Handle_Steam(Main obj)
+        {
+            if (Core.Save.Mode == GameSave.ModeType.Ill)
+            {
+                SteamFriends.SetRichPresence("steam_display", "#Status_Ill");
+            }
+            else
+            {
+                SteamFriends.SetRichPresence("mode", (Core.Save.Mode.ToString() + "ly").Translate());
+                switch (obj.State)
+                {
+                    case Main.WorkingState.Work:
+                        SteamFriends.SetRichPresence("work", obj.nowWork.Name.Translate());
+                        SteamFriends.SetRichPresence("steam_display", "#Status_Work");
+                        break;
+                    case Main.WorkingState.Sleep:
+                        SteamFriends.SetRichPresence("steam_display", "#Status_Sleep");
+                        break;
+                    default:
+                        if (obj.DisplayType.Name == "music")
+                            SteamFriends.SetRichPresence("steam_display", "#Status_Music");
+                        else
+                            SteamFriends.SetRichPresence("steam_display", "#Status_IDLE");
+                        break;
+                }
+            }
         }
         /// <summary>
         /// 获得当前系统音乐播放音量

@@ -289,6 +289,10 @@ namespace VPet_Simulator.Windows
                 rndtext.Add("关注 {0} 谢谢喵".Translate(SteamClient.Name));
                 //Steam成就
                 Set.Statistics.StatisticChanged += Statistics_StatisticChanged;
+                //Steam通知
+                SteamFriends.SetRichPresence("username", Core.Save.Name);
+                SteamFriends.SetRichPresence("mode", (Core.Save.Mode.ToString() + "ly").Translate());
+                SteamFriends.SetRichPresence("steam_display", "#Status_IDLE");
             }
             else
             {
@@ -358,6 +362,8 @@ namespace VPet_Simulator.Windows
                 }
                 Foods.ForEach(item => item.LoadImageSource(this));
                 Main.TimeHandle += Handle_Music;
+                if (IsSteamUser)
+                    Main.TimeHandle += Handle_Steam;
                 Main.TimeHandle += (x) => DiagnosisUPLoad();
 
                 Main.DefaultClickAction = () =>

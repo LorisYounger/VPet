@@ -1,0 +1,39 @@
+"lang"
+{
+	"schinese"
+	{
+		"tokens"
+		{
+			"#Status_IDLE"		"%username%在%mode%闲逛"
+			"#Status_Music"		"%username%在%mode%跳舞"
+			"#Status_Sleep"		"%username%在%mode%睡大觉"
+			"#Status_Work"		"%username%在%mode%%work%"
+			"#Status_DIY"		"%DIY%"
+			"#Status_Ill"		"%username% 生病了"
+		}
+	}
+	"tchinese"
+	{
+		"tokens"
+		{
+			"#Status_IDLE"		"%username%在%mode%閒逛"
+			"#Status_Music"		"%username%在%mode%跳舞"
+			"#Status_Sleep"		"%username%在%mode%睡大覺"
+			"#Status_Work"		"%username%在%mode%%work%"
+			"#Status_DIY"		"%DIY%"
+			"#Status_Ill"		"%username% 生病了"
+		}
+	}
+	"english"
+	{
+		"tokens"
+		{
+			"#Status_IDLE"		"%username% is %mode% idle"
+			"#Status_Music"		"%username% dancing %mode%"
+			"#Status_Sleep"		"%username% Sleep %mode%"
+			"#Status_Work"		"%username% %work% %mode%"
+			"#Status_DIY"		"%DIY%"
+			"#Status_Ill"		"%username% is sick"
+		}
+	}
+}

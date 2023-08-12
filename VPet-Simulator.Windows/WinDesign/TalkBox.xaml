@@ -30,7 +30,7 @@
                     Grid.ColumnSpan="3" />
             <ProgressBar x:Name="PrograssUsed" Grid.Row="2" Grid.ColumnSpan="3" Height="10"   BorderThickness="2"
                     pu:ProgressBarHelper.CornerRadius="4" Foreground="{DynamicResource ProgressBarForeground}" Visibility="Collapsed"
-                    Background="{DynamicResource Secondary}" Value="0.5" BorderBrush="{DynamicResource DARKPrimary}" Maximum="1" />
+                    Background="{DynamicResource Secondary}" Value="0.5" BorderBrush="{DynamicResource DARKPrimary}" Maximum="1" ToolTipOpening="PrograssUsed_ToolTipOpening" />
         </Grid>
     </Border>
 </UserControl>

@@ -33,6 +33,7 @@ namespace VPet_Simulator.Windows
             set = mw.Set;
             this.mw = mw;
             this.IsEnabled = false;
+            lastopeningtime = DateTime.Now;
             Task.Run(TalkChatInfoDisplay);
         }
 
@@ -261,6 +262,15 @@ namespace VPet_Simulator.Windows
             {
                 return new Line("Error", "Connect", ex.ToString());
             }
+        }
+        private DateTime lastopeningtime;
+        private void PrograssUsed_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            if ((DateTime.Now - lastopeningtime).TotalMinutes < 1)
+            {
+                return;
+            }
+            TalkChatInfoDisplay();
         }
     }
 }
