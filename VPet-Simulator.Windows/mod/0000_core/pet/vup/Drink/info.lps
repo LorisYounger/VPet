@@ -7,3 +7,8 @@ PNGAnimation#drink_back_lay:|path#PoorCondition\back_lay:|mode#PoorCondition:|gr
 FoodAnimation#drink:|mode#Happy:|graph#drink:|a0#1000:|a1#125,268,286,77,60:|a2#125,167,164,78:|a3#125,198,160,78:|a4#125,199,163,78:|a5#125,199,160,78:|a6#125,199,163,78:|a7#125,199,160,78:|a8#125,169,164,78:|a9#125,268,286,77,60:|a10#625:|front_lay#drink_front_lay:|back_lay#drink_back_lay:|
 FoodAnimation#drink:|mode#nomal:|graph#drink:|a0#1000:|a1#125,268,286,77,60:|a2#125,167,164,78:|a3#125,198,160,78:|a4#125,199,163,78:|a5#125,199,160,78:|a6#125,199,163,78:|a7#125,199,160,78:|a8#125,169,164,78:|a9#125,268,286,77,60:|a10#625:|front_lay#drink_front_lay:|back_lay#drink_back_lay:|
 FoodAnimation#drink:|mode#PoorCondition:|graph#drink:|a0#1000:|a1#125,268,286,77,60:|a2#125,167,164,78:|a3#125,198,160,78:|a4#125,199,163,78:|a5#125,199,160,78:|a6#125,199,163,78:|a7#125,199,160,78:|a8#125,169,164,78:|a9#125,268,286,77,60:|a10#625:|front_lay#drink_front_lay:|back_lay#drink_back_lay:|
+
+PNGAnimation#drink_back_lay:|path#Ill\back_lay:|mode#Ill:|graph#Common:|
+PNGAnimation#drink_front_lay:|path#Ill\front_lay:|mode#Ill:|graph#Common:|
+
+FoodAnimation#drink:|mode#Ill:|graph#drink:|a0#250:|a1#125,174,189,80,90:|a2#125,158,177,80,81:|a3#125,149,230,80,77.6:|a4#125,173,233,80,95:|a5#125,148,197,80,83:|a6#125,170,209,80,105:|a7#125,179,210,80,114:|a8#125,168,210,80,103:|a9#125,178,215,80,115:|a10#125,170,198,80,103:|a11#125,178,222,80,112:|a12#125,170,221,80,106:|a13#125,75,223,80,47:|a14#125,23,322,80,142:|a15#875:|front_lay#drink_front_lay:|back_lay#drink_back_lay:|
