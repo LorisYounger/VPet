@@ -7,3 +7,23 @@
 失败#Fail:|
 自定义聊天接口#Custom Chat Interface:|
 聊天框已关闭#Chat Box Closed:|
+尝试加载游戏存档#Trying to load a game archive:|
+尝试加载Steam内容#Trying to load Steam content:|
+尝试加载游戏动画#Try to load game animation:|
+有效度#Validity:|
+喜好度#Preference:|
+桌宠图形渲染的分辨率,越高图形越清晰\r但是高分辨率会占用更多内存\r重启后生效#The resolution at which the graphics are rendered on the table favor,the higher the graphics the clearer they are\r but higher resolutions will take up more memory\r it will take effect after a restart:|
+渲染分辨率#Rendering Resolution:|
+清理缓存#Clear Cache:|
+清理缓存的动画,声音文件#Clear the cache of animation and sound files.:|
+音乐识别设置#Music Recognition Settings:|
+设置识别音乐播放特殊动作阈值#Set the threshold for recognizing special music playback actions.:|
+当前播放音量大小#Current playback volume:|
+触发音量#Trigger volume:|
+当实时播放音量达到该值时运行音乐动作#Runs a music action when the live volume reaches this value.:|
+当实时播放音量达到该值时运行特殊音乐动作#Run special music action when real-time playback volume reaches this value:|
+高潮音量#Climax Volume:|
+Happyly#Happily:|
+Nomally#Nomally:|
+PoorConditionly#Sadly:|
+Illly#Sickly:|
