@@ -574,7 +574,7 @@ namespace VPet_Simulator.Windows
 
         public new void Show()
         {
-            if (MainTab.SelectedIndex == 1)
+            if (MainTab.SelectedIndex == 2)
             {
                 voicetimer.Start();
             }
@@ -1086,7 +1086,7 @@ namespace VPet_Simulator.Windows
             voicetimer.Stop();
             switch (MainTab.SelectedIndex)
             {
-                case 1://启动音量探测
+                case 2://启动音量探测
                     voicetimer.Start();
                     break;
                 case 4:
