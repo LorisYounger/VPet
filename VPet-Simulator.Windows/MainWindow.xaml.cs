@@ -154,7 +154,6 @@ namespace VPet_Simulator.Windows
             System.Environment.Exit(0);
         }
 
-        private List<string> rndtext;
         public long lastclicktime { get; set; }
 
         public void LoadLatestSave(string petname)
@@ -278,25 +277,27 @@ namespace VPet_Simulator.Windows
                 AutoSaveTimer.Interval = Set.AutoSaveInterval * 60000;
                 AutoSaveTimer.Start();
             }
+            ClickTexts.Add(new ClickText("你知道吗? 鼠标右键可以打开菜单栏"));
+            ClickTexts.Add(new ClickText("你知道吗? 你可以在设置里面修改游戏的缩放比例"));
+            ClickTexts.Add(new ClickText("想要宠物不乱动? 设置里可以设置智能移动或者关闭移动"));
+            ClickTexts.Add(new ClickText("有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧"));
+            ClickTexts.Add(new ClickText("长按脑袋拖动桌宠到你喜欢的任意位置"));
+            ClickTexts.Add(new ClickText("长按脑袋拖动桌宠到你喜欢的任意位置"));
+            //"如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的".Translate(),
+            //"你知道吗? 你可以在设置里面修改游戏的缩放比例".Translate(),
+            //"你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing".Translate(),
+            //"你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧".Translate(),
+            //"这游戏开发这么慢,都怪画师太咕了".Translate(),
+            //"欢迎加入 虚拟主播模拟器群 430081239".Translate()
 
-            rndtext = new List<string>
-            {
-                 "你知道吗? 鼠标右键可以打开菜单栏".Translate(),
-                 "如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的".Translate(),
-                 "你知道吗? 你可以在设置里面修改游戏的缩放比例".Translate(),
-                 "想要宠物不乱动? 设置里可以设置智能移动或者关闭移动".Translate(),
-                 "有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧".Translate(),
-                 "你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing".Translate(),
-                 "你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧".Translate(),
-                 "这游戏开发这么慢,都怪画师太咕了".Translate(),
-                 "长按脑袋拖动桌宠到你喜欢的任意位置".Translate(),
-                 "欢迎加入 虚拟主播模拟器群 430081239".Translate()
-            };
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载Steam内容".Translate()));
             //给正在玩这个游戏的主播/游戏up主做个小功能
             if (IsSteamUser)
             {
-                rndtext.Add("关注 {0} 谢谢喵".Translate(SteamClient.Name));
+                ClickTexts.Add(new ClickText("关注 {0} 谢谢喵")
+                {
+                    TranslateText = "关注 {0} 谢谢喵".Translate(SteamClient.Name)
+                });
                 //Steam成就
                 Set.Statistics.StatisticChanged += Statistics_StatisticChanged;
                 //Steam通知
@@ -306,7 +307,10 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                rndtext.Add("关注 {0} 谢谢喵".Translate(Environment.UserName));
+                ClickTexts.Add(new ClickText("关注 {0} 谢谢喵")
+                {
+                    TranslateText = "关注 {0} 谢谢喵".Translate(Environment.UserName)
+                });
             }
 
             //音乐识别timer加载
@@ -380,7 +384,9 @@ namespace VPet_Simulator.Windows
                     if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
                     {
                         lastclicktime = DateTime.Now.Ticks;
-                        Main.SayRnd(rndtext[Function.Rnd.Next(rndtext.Count)]);
+                        var rt = GetClickText();
+                        if (rt != null)
+                            Main.SayRnd(rt.TranslateText);
                     }
                 };
                 Main.PlayVoiceVolume = Set.VoiceVolume;

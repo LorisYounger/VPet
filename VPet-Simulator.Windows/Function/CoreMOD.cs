@@ -97,7 +97,7 @@ namespace VPet_Simulator.Windows
 
             if (!IsOnMOD(mw))
             {
-                //Content = "该模组已停用".Translate();
+                Tag.Add("该模组已停用");
                 return;
             }
 

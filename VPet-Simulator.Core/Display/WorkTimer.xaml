@@ -15,37 +15,42 @@
             <SolidColorBrush x:Key="Foreground" Color="#FF0286C6" />
         </ResourceDictionary>
     </Viewbox.Resources>
-    <Border BorderThickness="4" CornerRadius="5" Background="{DynamicResource Background}"
-            BorderBrush="{DynamicResource BorderBrush}" Height="180" Width="300">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*" />
-                <RowDefinition Height="4*" />
-                <RowDefinition Height="1.5*" />
-            </Grid.RowDefinitions>
-            <TextBlock x:Name="tNow" Foreground="{DynamicResource Foreground}" FontSize="36" FontWeight="Bold"
-                    HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0,5,0" Grid.ColumnSpan="2"
-                    Text="当前已工作" />
-            <TextBlock x:Name="tNumber" Background="{x:Null}" Text="15.0" Grid.Row="1" FontSize="80" FontWeight="Bold"
-                    HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource Foreground}" />
-            <TextBlock x:Name="tNumberUnit" Text="分钟" Foreground="{DynamicResource Foreground}" Grid.Row="1"
-                    Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,15"
-                    FontSize="36" />
-            <ProgressBar x:Name="PBLeft" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}"
-                    Foreground="{DynamicResource ButtonBackgroundHover}" Value="20" />
-            <Button x:Name="btnStop" Grid.Row="2" Grid.ColumnSpan="2" Foreground="{DynamicResource ButtonForeground}"
-                    Background="{DynamicResource ButtonBackground}" Content="{ll:Str 停止工作}" FontSize="24" Click="btnStop_Click"
-                    pu:ButtonHelper.HoverBackground="{DynamicResource ButtonBackgroundHover}" />
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Padding="5,5,8,7"
-                    Background="{DynamicResource BorderBrush}" pu:ButtonHelper.CornerRadius="5" Margin="10,0,0,0"
-                    Click="SwitchState_Click">
-                <Path Fill="{DynamicResource ButtonForeground}"
-                        Data="M3 2.9918C3 2.44405 3.44495 2 3.9934 2H20.0066C20.5552 2 21 2.45531 21 2.9918V21.0082C21 21.556 20.5551 22 20.0066 22H3.9934C3.44476 22 3 21.5447 3 21.0082V2.9918ZM19 11V4H5V11H19ZM19 13H5V20H19V13ZM9 6H15V8H9V6ZM9 15H15V17H9V15Z" />
-            </Button>
-        </Grid>
-    </Border>
+    <Grid Height="180" Width="300">
+        <Border x:Name="DisplayBorder" BorderThickness="4" CornerRadius="5" Background="{DynamicResource Background}"
+                BorderBrush="{DynamicResource BorderBrush}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="4*" />
+                    <RowDefinition Height="1.5*" />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="tNow" Foreground="{DynamicResource Foreground}" FontSize="36" FontWeight="Bold"
+                        HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0,5,0" Grid.ColumnSpan="2"
+                        Text="当前已工作" />
+                <TextBlock x:Name="tNumber" Background="{x:Null}" Text="15.0" Grid.Row="1" FontSize="80"
+                        FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Foreground="{DynamicResource Foreground}" />
+                <TextBlock x:Name="tNumberUnit" Text="分钟" Foreground="{DynamicResource Foreground}" Grid.Row="1"
+                        Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,15"
+                        FontSize="36" />
+                <ProgressBar x:Name="PBLeft" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}"
+                        Foreground="{DynamicResource ButtonBackgroundHover}" Value="20" />
+                <Button x:Name="btnStop" Grid.Row="2" Grid.ColumnSpan="2"
+                        Foreground="{DynamicResource ButtonForeground}" Background="{DynamicResource ButtonBackground}"
+                        Content="{ll:Str 停止工作}" FontSize="24" Click="btnStop_Click"
+                        pu:ButtonHelper.HoverBackground="{DynamicResource ButtonBackgroundHover}" />
+            </Grid>
+        </Border>
+        <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5,5,8,7"
+                Background="{DynamicResource BorderBrush}" pu:ButtonHelper.CornerRadius="5" Margin="10,10,0,0"
+                Click="SwitchState_Click">
+            <Path Fill="{DynamicResource ButtonForeground}"
+                    Data="M3 2.9918C3 2.44405 3.44495 2 3.9934 2H20.0066C20.5552 2 21 2.45531 21 2.9918V21.0082C21 21.556 20.5551 22 20.0066 22H3.9934C3.44476 22 3 21.5447 3 21.0082V2.9918ZM19 11V4H5V11H19ZM19 13H5V20H19V13ZM9 6H15V8H9V6ZM9 15H15V17H9V15Z" />
+        </Button>
+    </Grid>
+  
 </Viewbox>

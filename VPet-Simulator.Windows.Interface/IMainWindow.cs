@@ -60,6 +60,15 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         List<LowText> LowDrinkText { get; }
         /// <summary>
+        /// 点击时会说的话
+        /// </summary>
+        List<ClickText> ClickTexts { get; }
+        /// <summary>
+        /// 获得自动点击的文本
+        /// </summary>
+        /// <returns>说话内容</returns>
+        ClickText GetClickText();
+        /// <summary>
         /// 图片资源
         /// </summary>
         ImageResources ImageSources { get; }

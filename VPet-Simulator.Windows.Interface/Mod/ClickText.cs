@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VPet_Simulator.Core;
+using static VPet_Simulator.Core.Main;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -13,8 +15,17 @@ namespace VPet_Simulator.Windows.Interface
     /// </summary>
     public class ClickText
     {
+        public ClickText()
+        {
+
+        }
+        public ClickText(string text)
+        {
+            Text = text;
+        }
+
         [Line(ignoreCase: true)]
-        private int mode { get; set; } = 15;
+        private int mode { get; set; } = 7;
         /// <summary>
         /// 需求状态模式
         /// </summary>      
@@ -28,7 +39,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Flags]
         public enum ModeType
-        {           
+        {
             /// <summary>
             /// 高兴
             /// </summary>
@@ -57,7 +68,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Flags]
         public enum DayTime
-        {            
+        {
             Morning = 1,
             Afternoon = 2,
             Night = 4,
@@ -86,7 +97,11 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Line(IgnoreCase = true)]
         public int LikeMax = int.MaxValue;
-
+        /// <summary>
+        /// 工作状态
+        /// </summary>
+        [Line(IgnoreCase = true)]
+        public WorkingState State { get; set; } = WorkingState.Nomal;
         /// <summary>
         /// 说话的内容
         /// </summary>
@@ -106,6 +121,31 @@ namespace VPet_Simulator.Windows.Interface
                 }
                 return transText;
             }
+            set
+            {
+                transText = value;
+            }
+        }
+        /// <summary>
+        /// 检查部分状态是否满足需求
+        /// </summary>之所以不是全部的,是因为挨个取效率太差了      
+        public bool CheckState(Main m)
+        {
+            if (m.Core.Save.Likability < LikeMin || m.Core.Save.Likability > LikeMax)
+                return false;
+            if (string.IsNullOrWhiteSpace(Working))
+            {
+                if (State != m.State)
+                    return false;
+            }
+            else
+            {
+                if (State != WorkingState.Work)
+                    return false;
+                if (m.nowWork.Name != Working)
+                    return false;
+            }
+            return true;
         }
     }
 }

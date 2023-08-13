@@ -86,6 +86,8 @@ namespace VPet_Simulator.Core
                     else
                         tNumberUnit.Text = LocalizeCore.Translate("EXP");
                     break;
+                case 3:
+                    break;
             }
         }
         public void ShowTimeSpan(TimeSpan ts)
@@ -108,31 +110,38 @@ namespace VPet_Simulator.Core
         }
         public void DisplayUI()
         {
-            btnStop.Content = LocalizeCore.Translate("停止") + nowWork.NameTrans;
-            switch (DisplayType)
+            if (DisplayType == 3)
             {
-                default:
-                case 0:
-                    tNow.Text = LocalizeCore.Translate("当前已") + nowWork.NameTrans;
-                    break;
-                case 1:
-                    tNow.Text = LocalizeCore.Translate("剩余{0}时间", nowWork.NameTrans);
-                    break;
-                case 2:
-                    if (nowWork.Type == Work.WorkType.Work)
-                        tNow.Text = LocalizeCore.Translate("累计金钱收益");
-                    else
-                        tNow.Text = LocalizeCore.Translate("获得经验值");
-                    break;
+                DisplayBorder.Visibility = Visibility.Collapsed;
             }
+            else
+            {
+                DisplayBorder.Visibility = Visibility.Visible;
+                btnStop.Content = LocalizeCore.Translate("停止") + nowWork.NameTrans;
+                switch (DisplayType)
+                {
+                    default:
+                    case 0:
+                        tNow.Text = LocalizeCore.Translate("当前已") + nowWork.NameTrans;
+                        break;
+                    case 1:
+                        tNow.Text = LocalizeCore.Translate("剩余{0}时间", nowWork.NameTrans);
+                        break;
+                    case 2:
+                        if (nowWork.Type == Work.WorkType.Work)
+                            tNow.Text = LocalizeCore.Translate("累计金钱收益");
+                        else
+                            tNow.Text = LocalizeCore.Translate("获得经验值");
+                        break;                  
+                }
+            }           
             M_TimeUIHandle(m);
         }
         private void SwitchState_Click(object sender, RoutedEventArgs e)
         {
             DisplayType++;
-            if (DisplayType >= 3)
-                DisplayType = 0;
-
+            if (DisplayType >= 4)
+                DisplayType = 0;           
             DisplayUI();
         }
         public void Start(Work work)

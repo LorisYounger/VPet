@@ -53,6 +53,47 @@ namespace VPet_Simulator.Windows
         public List<LowText> LowFoodText { get; set; } = new List<LowText>();
 
         public List<LowText> LowDrinkText { get; set; } = new List<LowText>();
+
+        public List<ClickText> ClickTexts { get; set; } = new List<ClickText>();
+        /// <summary>
+        /// 获得自动点击的文本
+        /// </summary>
+        /// <returns>说话内容</returns>
+        public ClickText GetClickText()
+        {
+            ClickText.DayTime dt;
+            var now = DateTime.Now.Hour;
+            if (now < 6)
+                dt = ClickText.DayTime.Midnight;
+            else if (now < 12)
+                dt = ClickText.DayTime.Morning;
+            else if (now < 18)
+                dt = ClickText.DayTime.Afternoon;
+            else
+                dt = ClickText.DayTime.Night;
+
+            ClickText.ModeType mt;
+            switch (Core.Save.Mode)
+            {
+                case GameSave.ModeType.PoorCondition:
+                    mt = ClickText.ModeType.PoorCondition;
+                    break;
+                default:
+                case GameSave.ModeType.Nomal:
+                    mt = ClickText.ModeType.Nomal;
+                    break;
+                case GameSave.ModeType.Happy:
+                    mt = ClickText.ModeType.Happy;
+                    break;
+                case GameSave.ModeType.Ill:
+                    mt = ClickText.ModeType.Ill;
+                    break;
+            }
+            var list = ClickTexts.FindAll(x => x.DaiTime.HasFlag(dt) && x.Mode.HasFlag(mt) && x.CheckState(Main));
+            if (list.Count == 0)
+                return null;
+            return list[Function.Rnd.Next(list.Count)];
+        }
         /// <summary>
         /// 存档 Hash检查 是否通过
         /// </summary>

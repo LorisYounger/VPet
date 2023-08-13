@@ -135,7 +135,7 @@ namespace VPet_Simulator.Windows
             foreach (Sub sub in mw.Set["diy"])
                 StackDIY.Children.Add(new DIYViewer(sub));
 
-            SliderResolution.Maximum = Math.Min(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, 
+            SliderResolution.Maximum = Math.Min(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width,
                 System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
             SliderResolution.Value = mw.Set.Resolution;
 
@@ -786,7 +786,10 @@ namespace VPet_Simulator.Windows
             ButtonRestartGraph.Visibility = Visibility.Visible;
 
             if (ischangename)
+            {
                 mw.Core.Save.Name = petloader.PetName.Translate();
+                TextBoxPetName.Text = mw.Core.Save.Name;
+            }
         }
 
         private void TextBoxPetName_TextChanged(object sender, TextChangedEventArgs e)
@@ -1070,7 +1073,10 @@ namespace VPet_Simulator.Windows
             LocalizeCore.LoadCulture((string)LanguageBox.SelectedItem);
             mw.Set.Language = LocalizeCore.CurrentCulture;
             if (ischangename)
+            {
                 mw.Core.Save.Name = petloader.PetName.Translate();
+                TextBoxPetName.Text = mw.Core.Save.Name;
+            }
         }
 
         private void MainTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
