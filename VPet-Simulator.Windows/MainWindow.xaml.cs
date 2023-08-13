@@ -508,10 +508,18 @@ namespace VPet_Simulator.Windows
                         Set["SingleTips"].SetBool("helloworld", true);
                         notifyIcon.ShowBalloonTip(10, "你好".Translate() + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName),
                         "欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠".Translate(), ToolTipIcon.Info);
-                        Thread.Sleep(2000);
-                        Main.SayRnd("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate());
+                        //Thread.Sleep(2000);
+                        //Main.SayRnd("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate());
                     });
                 }
+#if DEMO
+                else
+                {
+                    notifyIcon.ShowBalloonTip(10, "正式版更新通知".Translate(), //本次更新内容
+                        "虚拟桌宠模拟器 现已发布正式版, 赶快前往下载吧!", ToolTipIcon.Info);
+                    Process.Start("https://store.steampowered.com/app/1920960/VPet/");
+                }
+#else
                 else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 8, 11) && LocalizeCore.CurrentCulture.StartsWith("cn"))
                 {
                     if (Set["SingleTips"].GetDateTime("update") > new DateTime(2023, 8, 1)) // 上次更新日期时间
@@ -522,6 +530,7 @@ namespace VPet_Simulator.Windows
                     "更新了新的动画系统\n新增桌宠会在播放音乐的时候跳舞\n新增不开心大部分系列动画\n更好买支持翻页", ToolTipIcon.Info);
                     Set["SingleTips"].SetDateTime("update", DateTime.Now);
                 }
+#endif
                 //MOD报错
                 foreach (CoreMOD cm in CoreMODs)
                     if (!cm.SuccessLoad)

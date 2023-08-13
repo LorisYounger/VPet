@@ -28,3 +28,8 @@ Nomally#Nomally:|
 PoorConditionly#Sadly:|
 Illly#Sickly:|
 plugin#Code Plugin:|
+MOD加载错误,是MOD({0})导致的\n如有可能请发送 错误信息截图和引发错误之前的操作 给开发者:service@exlb.net\n感谢您对游戏开发的支持\n#MOD loading error, caused by MOD({0})\nIf possible, Please send a screenshot of the error message and the action you took before triggering the error to developer: service@exlb.net\nThanks for your support of the game development\n:|
+游戏发生错误,可能是#An error occurred in the game, probably:|
+游戏致命性错误#Game Fatal Error:|
+游戏或者MOD#Game or Mod:|
+导致的\n如有可能请发送 错误信息截图和引发错误之前的操作 给开发者:service@exlb.net\n感谢您对游戏开发的支持\n#If possible, Please send a screenshot of the error message and the action you took before triggering the error to developer: service@exlb.net\nThanks for your support of the game development\n:|

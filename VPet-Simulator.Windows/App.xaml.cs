@@ -25,7 +25,7 @@ namespace VPet_Simulator.Windows
                 + e.Exception.ToString();
             if (MainWindow == null)
             {
-                MessageBox.Show(errstr, "游戏致命性错误");
+                MessageBox.Show(errstr, "游戏致命性错误".Translate());
                 return;
             }
             else

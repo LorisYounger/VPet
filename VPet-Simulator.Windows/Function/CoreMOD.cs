@@ -215,7 +215,7 @@ namespace VPet_Simulator.Windows
                                     else if (authtype != "")
                                     {
                                         authtype = "[签名]".Translate();
-                                        Intro += $"\nSubject:{certificate.Subject}\nIssuer:{certificate.Subject}";
+                                        //Intro += $"\nSubject:{certificate.Subject}\nIssuer:{certificate.Subject}";
                                     }
                                 }
                                 else
