@@ -101,7 +101,8 @@ namespace VPet_Simulator.Core
                             else
                             {
                                 img = (Image)GraphCore.CommUIElements["Image1.Picture"];
-                                parant.Child = null;
+                                if (img.Parent != null)
+                                    ((Decorator)img.Parent).Child = null;
                                 parant.Child = img;
                             }
                         }

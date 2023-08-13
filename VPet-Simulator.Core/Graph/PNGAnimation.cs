@@ -184,7 +184,7 @@ namespace VPet_Simulator.Core
                     imgs.Add(System.Drawing.Image.FromFile(file.FullName));
                 int w = imgs[0].Width;
                 int h = imgs[0].Height;
-                if(w > GraphCore.Resolution)
+                if (w > GraphCore.Resolution)
                 {
                     w = GraphCore.Resolution;
                     h = (int)(h * (GraphCore.Resolution / (double)imgs[0].Width));
@@ -340,6 +340,8 @@ namespace VPet_Simulator.Core
                         else
                         {
                             img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image1.PNGAnimation"];
+                            if (img.Parent != null)
+                                ((Decorator)img.Parent).Child = null;
                             parant.Child = img;
                         }
                     }

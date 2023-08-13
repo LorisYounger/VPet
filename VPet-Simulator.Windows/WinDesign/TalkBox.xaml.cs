@@ -144,7 +144,7 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public void TalkChatInfoDisplay()
         {
-            Dispatcher.Invoke(() => this.IsEnabled = false);
+            //Dispatcher.Invoke(() => this.IsEnabled = false);
             var l = ConnectAIOpen("VPet/Data", "GET");
             if (l.Name == "Info")
             {
