@@ -140,7 +140,7 @@ namespace VPet_Simulator.Windows.Interface
             }
             else
             {
-                if (State != WorkingState.Work)
+                if (m.State != WorkingState.Work)
                     return false;
                 if (m.nowWork.Name != Working)
                     return false;

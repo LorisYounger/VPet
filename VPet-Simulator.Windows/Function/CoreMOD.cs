@@ -157,6 +157,9 @@ namespace VPet_Simulator.Windows
                                     case "lowdrinktext":
                                         mw.LowDrinkText.Add(LPSConvert.DeserializeObject<LowText>(li));
                                         break;
+                                    case "clicktext":
+                                        mw.ClickTexts.Add(LPSConvert.DeserializeObject<ClickText>(li));
+                                        break;
                                 }
                             }
                         }

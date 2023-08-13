@@ -282,7 +282,6 @@ namespace VPet_Simulator.Windows
             ClickTexts.Add(new ClickText("想要宠物不乱动? 设置里可以设置智能移动或者关闭移动"));
             ClickTexts.Add(new ClickText("有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧"));
             ClickTexts.Add(new ClickText("长按脑袋拖动桌宠到你喜欢的任意位置"));
-            ClickTexts.Add(new ClickText("长按脑袋拖动桌宠到你喜欢的任意位置"));
             //"如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的".Translate(),
             //"你知道吗? 你可以在设置里面修改游戏的缩放比例".Translate(),
             //"你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing".Translate(),
