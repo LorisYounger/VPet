@@ -494,7 +494,12 @@ namespace VPet_Simulator.Windows
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 6, 20))
                 {
                     Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
-                    Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
+                    if (LocalizeCore.CurrentCulture == "zh-Hans")
+                        Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
+                    else if (LocalizeCore.CurrentCulture == "zh-Hant")
+                        Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_zht.html");
+                    else
+                        Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_en.html");
                 }
                 if (!Set["SingleTips"].GetBool("helloworld"))
                 {
