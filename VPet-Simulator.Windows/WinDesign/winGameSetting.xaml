@@ -31,7 +31,7 @@
             </TabControl.ContentTemplate>
             <TabItem Header="{ll:Str 图形}" Foreground="{DynamicResource PrimaryText}"
                     BorderBrush="{DynamicResource PrimaryDarker}">
-                <Grid>
+                <Grid Margin="0,0,-5,0">
                     <ScrollViewer>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -135,7 +135,7 @@
                                         Background="{x:Null}" Grid.Row="1"
                                         ToolTip="{ll:Str '桌宠图形渲染的分辨率,越高图形越清晰\&#13;但是高分辨率会占用更多内存\&#13;重启后生效'}" />
                             </Grid>
-                            <TextBlock Grid.Row="5" Text="{ll:Str 分辨率}" VerticalAlignment="Center" Grid.ColumnSpan="2" />
+                            <TextBlock Grid.Row="5" Text="{ll:Str 渲染分辨率}" VerticalAlignment="Center" Grid.ColumnSpan="2" />
                             <TextBlock Grid.Row="6" Text="{ll:Str 主题}" VerticalAlignment="Center" />
                             <ComboBox x:Name="ThemeBox" Grid.Row="6" Grid.Column="2" Margin="0,3,0,2"
                                     SelectionChanged="ThemeBox_SelectionChanged" IsEnabled="False"
@@ -627,7 +627,9 @@
                         <Button pu:ButtonHelper.CornerRadius="4" Content="{ll:Str 保存设置}" Margin="4" Grid.Column="1"
                                 Background="{DynamicResource SecondaryLight}" Padding="1" Click="DIY_Save_Click" />
                     </Grid>
-                    <StackPanel x:Name="StackDIY" />
+                    <ScrollViewer>
+                        <StackPanel x:Name="StackDIY" />
+                    </ScrollViewer>
                 </StackPanel>
 
             </TabItem>

@@ -231,19 +231,26 @@ namespace VPet_Simulator.Windows
                 LocalizeCore.LoadCulture(Set.Language);
 
             //旧版本设置兼容
-            var cgpteb = Set["CGPT"].Find("enable");
-            if (cgpteb != null)
+            var cgpte = Set.FindLine("CGPT");
+            if (cgpte != null)
             {
-                if (Set["CGPT"][(gbol)"enable"])
+                var cgpteb = cgpte.Find("enable");
+                if (cgpteb != null)
                 {
-                    Set["CGPT"][(gstr)"type"] = "API";
+                    if (Set["CGPT"][(gbol)"enable"])
+                    {
+                        Set["CGPT"][(gstr)"type"] = "API";
+                    }
+                    else
+                    {
+                        Set["CGPT"][(gstr)"type"] = "LB";
+                    }
+                    Set["CGPT"].Remove(cgpteb);
                 }
-                else
-                {
-                    Set["CGPT"][(gstr)"type"] = "LB";
-                }
-                Set["CGPT"].Remove(cgpteb);
             }
+            else//新玩家,默认设置为
+                Set["CGPT"][(gstr)"type"] = "LB";
+
             if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData") && !Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"))
             {
                 Directory.Move(AppDomain.CurrentDomain.BaseDirectory + @"\UserData", AppDomain.CurrentDomain.BaseDirectory + @"\BackUP");

@@ -66,11 +66,17 @@ namespace VPet_Simulator.Windows
                 Dispatcher.Invoke(() =>
                     {
                         if (isclick)
-                        {
-                            isdragmove = Opacity == 0.8;
-                            Cursor = Cursors.Hand;
-                            Opacity = 1;
-                            DragMove();
+                        {                            
+                            try
+                            {
+                                DragMove();
+                                isdragmove = Opacity == 0.8;
+                                Cursor = Cursors.Hand;
+                                Opacity = 1;
+                            }
+                            catch { 
+                            }
+
                         }
                     });
             });

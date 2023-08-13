@@ -246,8 +246,8 @@ namespace VPet_Simulator.Windows
                 var b = mw.Main.FindDisplayBorder(ig);
                 ig.Run(b, item.ImageSource, () =>
                 {
-                    mw.Main.EventTimer_Elapsed();
                     mw.Main.DisplayToNomal();
+                    mw.Main.EventTimer_Elapsed();
                 });
             }           
         }
