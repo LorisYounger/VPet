@@ -26,6 +26,7 @@ using System.Windows.Interop;
 using static VPet_Simulator.Windows.PerformanceDesktopTransparentWindow;
 using Line = LinePutScript.Line;
 using static VPet_Simulator.Core.GraphInfo;
+using System.Globalization;
 
 namespace VPet_Simulator.Windows
 {
@@ -40,7 +41,8 @@ namespace VPet_Simulator.Windows
         public MainWindow()
         {
             LocalizeCore.StoreTranslation = true;
-
+            CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
+            CultureInfo.CurrentCulture.NumberFormat = new CultureInfo("en-US").NumberFormat;
             //判断是不是Steam用户,因为本软件会发布到Steam
             //在 https://store.steampowered.com/app/1920960/VPet
             try
@@ -250,7 +252,7 @@ namespace VPet_Simulator.Windows
                 }
             }
             else//新玩家,默认设置为
-                Set["CGPT"][(gstr)"type"] = "LB";
+                Set["CGPT"][(gstr)"type"] = "OFF";
 
             if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData") && !Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"))
             {

@@ -789,6 +789,8 @@ namespace VPet_Simulator.Windows
             {
                 mw.Core.Save.Name = petloader.PetName.Translate();
                 TextBoxPetName.Text = mw.Core.Save.Name;
+                if(mw.IsSteamUser)
+                    SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
             }
         }
 
@@ -797,6 +799,8 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Core.Save.Name = TextBoxPetName.Text;
+            if (mw.IsSteamUser)
+                SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
         }
 
         private void DIY_ADD_Click(object sender, RoutedEventArgs e)
@@ -1076,6 +1080,8 @@ namespace VPet_Simulator.Windows
             {
                 mw.Core.Save.Name = petloader.PetName.Translate();
                 TextBoxPetName.Text = mw.Core.Save.Name;
+                if (mw.IsSteamUser)
+                    SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
             }
         }
 
