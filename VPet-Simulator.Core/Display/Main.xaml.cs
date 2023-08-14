@@ -51,7 +51,7 @@ namespace VPet_Simulator.Core
         public bool IsWorking { get; private set; } = false;
         public Main(GameCore core, bool loadtouchevent = true)
         {
-            Console.WriteLine(DateTime.Now.ToString("T:fff"));
+            //Console.WriteLine(DateTime.Now.ToString("T:fff"));
             InitializeComponent();
             Core = core;
             WorkTimer = new WorkTimer(this);

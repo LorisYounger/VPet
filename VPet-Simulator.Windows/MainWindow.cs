@@ -44,7 +44,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 版本号
         /// </summary>
-        public int verison { get; } = 90;
+        public int verison { get; } = 100;
         /// <summary>
         /// 版本号
         /// </summary>
