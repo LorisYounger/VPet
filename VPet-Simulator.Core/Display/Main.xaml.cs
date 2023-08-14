@@ -294,7 +294,14 @@ namespace VPet_Simulator.Core
 
         private void MainGrid_MouseMove(object sender, MouseEventArgs e)
         {
-            ((UIElement)e.Source).CaptureMouse();
+            if (!((UIElement)e.Source).CaptureMouse() || !isPress)
+            {
+                MainGrid.MouseMove -= MainGrid_MouseMove;
+                MainGrid.MouseMove += MainGrid_MouseWave;
+                rasetype = -1;
+                DisplayRaising();
+                return;
+            }
             var mp = e.GetPosition(MainGrid);
             var x = mp.X - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].X;
             var y = mp.Y - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].Y;
