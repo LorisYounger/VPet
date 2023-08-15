@@ -419,7 +419,7 @@ namespace VPet_Simulator.Windows
 
         private void ButtonOpenModFolder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            System.Diagnostics.Process.Start(mod.Path.FullName);
+            Process.Start(mod.Path.FullName);
         }
 
         private void ButtonEnable_MouseDown(object sender, MouseButtonEventArgs e)
@@ -542,8 +542,6 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            var modname = (string)((ListBoxItem)ListMod.SelectedItem).Content;
-            var mod = mw.CoreMODs.Find(x => x.Name == modname);
             System.Diagnostics.Process.Start("https://steamcommunity.com/sharedfiles/filedetails/?id=" + mod.ItemID);
         }
 
