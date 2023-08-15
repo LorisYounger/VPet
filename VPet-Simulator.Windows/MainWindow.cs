@@ -400,7 +400,7 @@ namespace VPet_Simulator.Windows
             }
             if (save.Mode == GameSave.ModeType.Ill)
             {
-                if (save.Money < 10)
+                if (save.Money < 100)
                     stat["stat_ill_nomoney"] = 1;
             }
             if (save.Money < save.Level)
