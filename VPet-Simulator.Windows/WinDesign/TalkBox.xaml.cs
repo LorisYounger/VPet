@@ -67,7 +67,7 @@ namespace VPet_Simulator.Windows
                     default:
                     case "Error":
                         if (ret.Info == "Connect")
-                            m.SayRnd(ret.Text);
+                            m.SayRnd("服务器超载,请稍后重试".Translate());
                         else
                             m.SayRnd(ret.Info.Translate());
                         break;
@@ -130,7 +130,7 @@ namespace VPet_Simulator.Windows
                 default:
                 case "Error":
                     if (ret.Info == "Connect")
-                        m.SayRnd(ret.Text);
+                        m.SayRnd("服务器超载,请稍后重试".Translate());
                     else
                         m.SayRnd(ret.Info.Translate());
                     return false;

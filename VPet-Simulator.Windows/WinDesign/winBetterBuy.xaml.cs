@@ -237,11 +237,7 @@ namespace VPet_Simulator.Windows
                 }
 
             }
-            if (!_puswitch.IsChecked.Value)
-            {
-                rMoney.Text = mw.Core.Save.Money.ToString("f2");
-                TryClose();
-            }
+           
             var name = mw.Core.Graph.FindName(item.Type == Food.FoodType.Drink ? GraphType.Drink : GraphType.Eat);
             var ig = mw.Core.Graph.FindGraph(name, AnimatType.Single, mw.Core.Save.Mode);
             if (ig != null)
@@ -252,7 +248,15 @@ namespace VPet_Simulator.Windows
                     mw.Main.DisplayToNomal();
                     mw.Main.EventTimer_Elapsed();
                 });
-            }           
+            }
+            if (!_puswitch.IsChecked.Value)
+            {
+                TryClose();
+            }
+            else
+            {
+                rMoney.Text = mw.Core.Save.Money.ToString("f2");
+            }
         }
 
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
