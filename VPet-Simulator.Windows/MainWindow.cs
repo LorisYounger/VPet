@@ -470,11 +470,35 @@ namespace VPet_Simulator.Windows
                 }
             }
         }
+        private bool? AudioPlayingVolumeOK = null;
         /// <summary>
         /// 获得当前系统音乐播放音量
         /// </summary>
         public float AudioPlayingVolume()
         {
+            if (AudioPlayingVolumeOK == null)
+            {
+                try
+                {
+                    float vol = 0;
+                    using (var enumerator = new MMDeviceEnumerator())
+                    {
+                        using (var meter = AudioMeterInformation.FromDevice(enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia)))
+                        {
+                            vol = meter.GetPeakValue();
+                            AudioPlayingVolumeOK = true;
+                        }
+                    }
+                }
+                catch
+                {
+                    AudioPlayingVolumeOK = false;
+                }
+            }
+            else if (AudioPlayingVolumeOK == false)
+            {
+                return -1;
+            }
             using (var enumerator = new MMDeviceEnumerator())
             {
                 using (var meter = AudioMeterInformation.FromDevice(enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia)))
