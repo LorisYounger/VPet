@@ -456,7 +456,15 @@ namespace VPet_Simulator.Windows
 
                 m_menu = new ContextMenu();
                 m_menu.MenuItems.Add(new MenuItem("鼠标穿透".Translate(), (x, y) => { SetTransparentHitThrough(); }) { });
-                m_menu.MenuItems.Add(new MenuItem("操作教程".Translate(), (x, y) => { Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html"); }));
+                m_menu.MenuItems.Add(new MenuItem("操作教程".Translate(), (x, y) =>
+                {
+                    if (LocalizeCore.CurrentCulture == "zh-Hans")
+                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
+                    else if (LocalizeCore.CurrentCulture == "zh-Hant")
+                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_zht.html");
+                    else
+                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_en.html");
+                }));
                 m_menu.MenuItems.Add(new MenuItem("重置状态".Translate(), (x, y) =>
                 {
                     Main.CleanState();
@@ -498,11 +506,11 @@ namespace VPet_Simulator.Windows
                 {
                     Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
                     if (LocalizeCore.CurrentCulture == "zh-Hans")
-                        Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
+                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
                     else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                        Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_zht.html");
+                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_zht.html");
                     else
-                        Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_en.html");
+                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_en.html");
                 }
                 if (!Set["SingleTips"].GetBool("helloworld"))
                 {

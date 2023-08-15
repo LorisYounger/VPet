@@ -4,6 +4,7 @@ using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -268,6 +269,19 @@ namespace VPet_Simulator.Windows
     }
     public static class ExtensionSetting
     {
+
+        public static void StartURL(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch
+            {
+                Process.Start("explorer.exe", url);
+            }
+        }
+
         /// <summary>
         /// 吃食物 附带倍率
         /// </summary>
