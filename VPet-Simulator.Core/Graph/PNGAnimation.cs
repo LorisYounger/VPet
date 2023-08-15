@@ -61,6 +61,11 @@ namespace VPet_Simulator.Core
         public string Path;
         private GraphCore GraphCore;
         /// <summary>
+        /// 反正一次性生成太多导致闪退
+        /// </summary>
+        public static int NowLoading = 0;
+        private static object nowLoadinglock = new object();
+        /// <summary>
         /// 新建 PNG 动画
         /// </summary>
         /// <param name="path">文件夹位置</param>
@@ -163,6 +168,12 @@ namespace VPet_Simulator.Core
 
         private void startup(string path, FileInfo[] paths)
         {
+            while (NowLoading > 20)
+            {
+                Thread.Sleep(100);
+            }
+            lock (nowLoadinglock)
+                NowLoading++;
             //新方法:加载大图片
             //生成大文件加载非常慢,先看看有没有缓存能用
             Path = GraphCore.CachePath + $"\\{GraphCore.Resolution}_{Sub.GetHashCode(path)}_{paths.Length}.png";
@@ -206,6 +217,8 @@ namespace VPet_Simulator.Core
             }
             //stream = new MemoryStream(File.ReadAllBytes(cp));
             IsReady = true;
+            lock (nowLoadinglock)
+                NowLoading--;
         }
 
 
