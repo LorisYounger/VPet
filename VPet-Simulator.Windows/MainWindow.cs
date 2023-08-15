@@ -477,7 +477,7 @@ namespace VPet_Simulator.Windows
         public float AudioPlayingVolume()
         {
             if (AudioPlayingVolumeOK == null)
-            {
+            {//第一调用检查是否支持
                 try
                 {
                     float vol = 0;
@@ -499,12 +499,19 @@ namespace VPet_Simulator.Windows
             {
                 return -1;
             }
-            using (var enumerator = new MMDeviceEnumerator())
-            {
-                using (var meter = AudioMeterInformation.FromDevice(enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia)))
+            try
+            {//后续容错可能是偶发性
+                using (var enumerator = new MMDeviceEnumerator())
                 {
-                    return meter.GetPeakValue();
+                    using (var meter = AudioMeterInformation.FromDevice(enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia)))
+                    {
+                        return meter.GetPeakValue();
+                    }
                 }
+            }
+            catch
+            {
+                return -1;
             }
         }
         /// <summary>
