@@ -78,7 +78,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public bool IsLoop { get; set; }
         /// <summary>
-        /// 是否循环播放
+        /// 是否继续播放
         /// </summary>
         public bool IsContinue { get; set; } = false;
         /// <summary>
@@ -88,7 +88,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 是否准备完成
         /// </summary>
-        public bool IsReady { get; private set; } = false;
+        public bool IsReady => true;
         /// <summary>
         /// 动画停止时运行的方法
         /// </summary>

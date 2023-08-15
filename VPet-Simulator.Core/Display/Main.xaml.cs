@@ -77,10 +77,24 @@ namespace VPet_Simulator.Core
             PetGrid2.Visibility = Visibility.Collapsed;
             Task.Run(() =>
             {
-                while (!ig.IsReady)
+                //while (!ig.IsReady)
+                //{
+                //    Thread.Sleep(100);
+                //}//新功能:等待所有图像加载完成再跑
+                foreach(var igs in Core.Graph.GraphsList.Values)
                 {
-                    Thread.Sleep(100);
+                    foreach(var ig2 in igs.Values)
+                    {
+                        foreach(var ig3 in ig2)
+                        {
+                            while (!ig3.IsReady)
+                            {
+                                Thread.Sleep(100);
+                            }
+                        }    
+                    }
                 }
+
                 ig.Run(PetGrid, () =>
                 {
                     IsWorking = true;
