@@ -460,17 +460,18 @@ namespace VPet_Simulator.Windows
         }
         private async void ButtonPublish_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            var mods = mod;
             if (!mw.IsSteamUser)
             {
                 MessageBoxX.Show("请先登录Steam后才能上传文件".Translate(), "上传MOD需要Steam登录".Translate(), MessageBoxIcon.Warning);
                 return;
             }
-            if (mod.Name.ToLower() == "core")
+            if (mods.Name.ToLower() == "core")
             {
                 MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法发布\n如需发布自定义内容,请复制并更改名称".Translate(), "MOD上传失败".Translate(), MessageBoxIcon.Error);
                 return;
             }
-            if (!File.Exists(mod.Path.FullName + @"\icon.png") || new FileInfo(mod.Path.FullName + @"\icon.png").Length > 524288)
+            if (!File.Exists(mods.Path.FullName + @"\icon.png") || new FileInfo(mods.Path.FullName + @"\icon.png").Length > 524288)
             {
                 MessageBoxX.Show("封面图片(icon.png)大于500kb,请修改后重试".Translate(), "MOD上传失败".Translate(), MessageBoxIcon.Error);
                 return;
@@ -482,59 +483,59 @@ namespace VPet_Simulator.Windows
             ButtonPublish.Text = "正在上传";
             ProgressBarUpload.Visibility = Visibility.Visible;
             ProgressBarUpload.Value = 0;
-            if (mod.ItemID == 0)
+            if (mods.ItemID == 0)
             {
                 var result = Editor.NewCommunityFile
-                        .WithTitle(mod.Name)
-                        .WithDescription(mod.Intro)
+                        .WithTitle(mods.Name)
+                        .WithDescription(mods.Intro)
                         .WithPublicVisibility()
-                        .WithPreviewFile(mod.Path.FullName + @"\icon.png")
-                        .WithContent(mod.Path.FullName);
-                foreach (string tag in mod.Tag)
+                        .WithPreviewFile(mods.Path.FullName + @"\icon.png")
+                        .WithContent(mods.Path.FullName);
+                foreach (string tag in mods.Tag)
                     result.WithTag(tag);
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
-                mod.AuthorID = Steamworks.SteamClient.SteamId.AccountId;
-                mod.WriteFile();
+                mods.AuthorID = Steamworks.SteamClient.SteamId.AccountId;
+                mods.WriteFile();
                 if (r.Success)
                 {
-                    mod.ItemID = r.FileId.Value;
-                    mod.WriteFile();
+                    mods.ItemID = r.FileId.Value;
+                    mods.WriteFile();
                     //ProgressBarUpload.Value = 0;
                     //await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
-                    if (MessageBoxX.Show("{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑详细介绍和图标?".Translate(mod.Name), "MOD上传成功".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
+                    if (MessageBoxX.Show("{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑详细介绍和图标?".Translate(mods.Name), "MOD上传成功".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
                     {
                         ExtensionSetting.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
                     }
                 }
                 else
                 {
-                    mod.AuthorID = 0; mod.WriteFile();
+                    mods.AuthorID = 0; mods.WriteFile();
                     MessageBoxX.Show("{0} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{1}"
-                        .Translate(mod.Name, r.Result), "MOD上传失败 {0}".Translate(r.Result));
+                        .Translate(mods.Name, r.Result), "MOD上传失败 {0}".Translate(r.Result));
                 }
             }
-            else if (mod.AuthorID == Steamworks.SteamClient.SteamId.AccountId)
+            else if (mods.AuthorID == Steamworks.SteamClient.SteamId.AccountId)
             {
-                var result = new Editor(new Steamworks.Data.PublishedFileId() { Value = mod.ItemID })
-                        .WithTitle(mod.Name)
-                        .WithDescription(mod.Intro)
-                        .WithPreviewFile(mod.Path.FullName + @"\icon.png")
-                        .WithContent(mod.Path);
-                foreach (string tag in mod.Tag)
+                var result = new Editor(new Steamworks.Data.PublishedFileId() { Value = mods.ItemID })
+                        .WithTitle(mods.Name)
+                        .WithDescription(mods.Intro)
+                        .WithPreviewFile(mods.Path.FullName + @"\icon.png")
+                        .WithContent(mods.Path);
+                foreach (string tag in mods.Tag)
                     result.WithTag(tag);
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
                 if (r.Success)
                 {
-                    mod.AuthorID = Steamworks.SteamClient.SteamId.AccountId;
-                    mod.ItemID = r.FileId.Value;
-                    mod.WriteFile();
-                    if (MessageBoxX.Show("{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑新内容?".Translate(mod.Name)
+                    mods.AuthorID = Steamworks.SteamClient.SteamId.AccountId;
+                    mods.ItemID = r.FileId.Value;
+                    mods.WriteFile();
+                    if (MessageBoxX.Show("{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑新内容?".Translate(mods.Name)
                         , "MOD更新成功".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
                         ExtensionSetting.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
                 }
                 else
                     MessageBoxX.Show("{0} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{1}"
-                        .Translate(mod.Name, r.Result), "MOD上传失败 {0}".Translate(r.Result));
+                        .Translate(mods.Name, r.Result), "MOD上传失败 {0}".Translate(r.Result));
             }
             ButtonPublish.IsEnabled = true;
             ButtonPublish.Text = "任务完成".Translate();
