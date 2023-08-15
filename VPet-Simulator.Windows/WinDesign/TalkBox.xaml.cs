@@ -266,11 +266,12 @@ namespace VPet_Simulator.Windows
         private DateTime lastopeningtime;
         private void PrograssUsed_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
-            if ((DateTime.Now - lastopeningtime).TotalMinutes < 1)
+            if ((DateTime.Now - lastopeningtime).TotalMinutes < 5)
             {
                 return;
             }
-            TalkChatInfoDisplay();
+            lastopeningtime = DateTime.Now;
+            Task.Run(TalkChatInfoDisplay);
         }
     }
 }

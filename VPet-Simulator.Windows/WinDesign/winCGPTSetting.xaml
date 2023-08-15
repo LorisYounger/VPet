@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VPet_Simulator.Windows"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" Topmost="True"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF" mc:Ignorable="d"
-        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Title="{ll:Str 'ChatGPT API 设置'}" Width="450" FontSize="16"
-        Height="Auto" ResizeMode="NoResize" WindowState="Normal" SizeToContent="Height">
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Title="{ll:Str 'ChatGPT API 设置'}" Width="450"
+        FontSize="16" Height="Auto" ResizeMode="NoResize" WindowState="Normal" SizeToContent="Height">
     <Grid Margin="16">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -40,9 +40,8 @@
                 ToolTip="{ll:Str '从 OpenAI 获得的 APIKEY 一般`sk-`开头'}" />
         <TextBox x:Name="tbSystem" Grid.Row="2" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
                 FontSize="16" pu:TextBoxHelper.Watermark="{ll:Str '不会被忘记的初始化关键字, 字越多越贵'}"
-                ToolTip="{ll:Str '不会被忘记的初始化关键字, 字越多越贵'}"
-                AcceptsReturn="True" TextWrapping="WrapWithOverflow" Height="Auto" MaxHeight="100"
-                VerticalScrollBarVisibility="Visible"
+                ToolTip="{ll:Str '不会被忘记的初始化关键字, 字越多越贵'}" AcceptsReturn="True" TextWrapping="WrapWithOverflow"
+                Height="Auto" MaxHeight="100" VerticalScrollBarVisibility="Visible"
                 Text="请使用口语化的、可爱的、女性化的、调皮的语言风格和我交流. &#13;你是一只桌宠, 你的名字叫{Name}, 你喜欢玩 虚拟主播模拟器. &#13;你需要尝试体会我与你对话中的感情、产生自己的情感并尽可能给出可爱的回答"
                 Margin="0,5,0,5" />
         <TextBox x:Name="tbTemp" Grid.Row="3" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
