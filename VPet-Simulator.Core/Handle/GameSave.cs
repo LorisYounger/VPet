@@ -29,7 +29,6 @@ namespace VPet_Simulator.Core
         /// 等级
         /// </summary>
         public virtual int Level => Exp < 0 ? 1 : (int)(Math.Sqrt(Exp) / 10) + 1;
-        private int level = -1; 
         /// <summary>
         /// 升级所需经验值
         /// </summary>
