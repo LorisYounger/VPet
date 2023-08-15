@@ -132,6 +132,9 @@ namespace VPet_Simulator.Windows
                 }
             }
 
+            VoiceCatchSilder.Value = mw.Set.MusicCatch;
+            VoiceMaxSilder.Value = mw.Set.MusicMax;
+
             foreach (Sub sub in mw.Set["diy"])
                 StackDIY.Children.Add(new DIYViewer(sub));
 
@@ -787,7 +790,7 @@ namespace VPet_Simulator.Windows
             {
                 mw.Core.Save.Name = petloader.PetName.Translate();
                 TextBoxPetName.Text = mw.Core.Save.Name;
-                if(mw.IsSteamUser)
+                if (mw.IsSteamUser)
                     SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
             }
         }

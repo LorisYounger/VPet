@@ -406,6 +406,15 @@ namespace VPet_Simulator.Windows
 
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
+                {
+                    if (LocalizeCore.CurrentCulture == "zh-Hans")
+                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
+                    else if (LocalizeCore.CurrentCulture == "zh-Hant")
+                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_zht.html");
+                    else
+                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_en.html");
+                });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板".Translate(), () =>
                 {
