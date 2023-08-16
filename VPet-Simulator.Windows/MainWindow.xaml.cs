@@ -165,6 +165,8 @@ namespace VPet_Simulator.Windows
         }
         private void Exit()
         {
+            if (IsSteamUser)
+                SteamClient.Shutdown();//关掉和Steam的连线
             if (Core != null)
             {
                 foreach (var igs in Core.Graph.GraphsList.Values)
