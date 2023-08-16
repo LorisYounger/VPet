@@ -171,6 +171,9 @@
     <Compile Include="WinDesign\winReport.xaml.cs">
       <DependentUpon>winReport.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WinDesign\winTrusteeShip.xaml.cs">
+      <DependentUpon>winTrusteeShip.xaml</DependentUpon>
+    </Compile>
     <Page Include="PetHelper.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -221,6 +224,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WinDesign\winReport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WinDesign\winTrusteeShip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

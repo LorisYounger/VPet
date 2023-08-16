@@ -339,6 +339,7 @@ namespace VPet_Simulator.Windows
         {
             _puswitch = sender as Switch;
             _puswitch.IsChecked = mw.Set["betterbuy"].GetBool("noautoclose");
+            _puswitch.Click += Switch_Checked;
         }
 
         private void Switch_Checked(object sender, RoutedEventArgs e)

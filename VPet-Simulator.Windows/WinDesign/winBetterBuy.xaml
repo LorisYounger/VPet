@@ -58,7 +58,7 @@
                         Background="Transparent" ToggleShadowColor="{x:Null}" IsChecked="{Binding StateOpen}"
                         CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
                         ToggleBrush="{DynamicResource PrimaryDark}" pu:WindowX.IsDragMoveArea="False" BoxWidth="30"
-                        Loaded="Switch_Loaded" Checked="Switch_Checked" Unchecked="Switch_Checked" />
+                        Loaded="Switch_Loaded" />
             </Grid>
         </DataTemplate>
     </pu:WindowXCaption.HeaderTemplate>
