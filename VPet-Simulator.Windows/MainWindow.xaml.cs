@@ -27,6 +27,7 @@ using static VPet_Simulator.Windows.PerformanceDesktopTransparentWindow;
 using Line = LinePutScript.Line;
 using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace VPet_Simulator.Windows
 {
@@ -118,6 +119,7 @@ namespace VPet_Simulator.Windows
                 Close();
                 return;
             }
+            Closed += ForceClose;
             Task.Run(GameLoad);
         }
         public new void Close()
@@ -137,12 +139,19 @@ namespace VPet_Simulator.Windows
             this.Closed += Restart_Closed;
             base.Close();
         }
-
+        private void ForceClose(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                Thread.Sleep(10000);
+                while (true)
+                    Environment.Exit(0);
+            });
+        }
 
         private void Restart_Closed(object sender, EventArgs e)
         {
             CloseConfirm = false;
-            Save();
             try
             {
                 //关闭所有插件
@@ -150,11 +159,46 @@ namespace VPet_Simulator.Windows
                     mp.EndGame();
             }
             catch { }
-            Main?.Dispose();
-            notifyIcon?.Dispose();
+            Save();
             System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            System.Environment.Exit(0);
+            Exit();
         }
+        private void Exit()
+        {
+            if (Core != null)
+            {
+                foreach (var igs in Core.Graph.GraphsList.Values)
+                {
+                    foreach (var ig2 in igs.Values)
+                    {
+                        foreach (var ig3 in ig2)
+                        {
+                            ig3.Stop();
+                        }
+                    }
+                }
+            }
+            if (Main != null)
+            {
+                Main.Dispose();
+            }
+            if (winSetting != null)
+            {
+                winSetting.Close();
+            }
+            AutoSaveTimer?.Stop();
+            MusicTimer?.Stop();
+            petHelper?.Close();
+            if (notifyIcon != null)
+            {
+                notifyIcon.Visible = false;
+                notifyIcon.Dispose();
+            }
+            notifyIcon?.Dispose();
+            while (true)
+                Environment.Exit(0);
+        }
+
 
         public long lastclicktime { get; set; }
 
@@ -603,19 +647,7 @@ namespace VPet_Simulator.Windows
             }
             catch { }
             Save();
-            if (winSetting != null)
-            {
-                winSetting.Close();
-            }
-            petHelper?.Close();
-
-            Main?.Dispose();
-            if (notifyIcon != null)
-            {
-                notifyIcon.Visible = false;
-                notifyIcon.Dispose();
-            }
-            System.Environment.Exit(0);
+            Exit();
         }
 
         [DllImport("user32", EntryPoint = "SetWindowLong")]
