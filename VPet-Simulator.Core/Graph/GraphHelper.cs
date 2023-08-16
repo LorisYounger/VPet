@@ -65,7 +65,7 @@ namespace VPet_Simulator.Core
         /// <param name="img">用于显示的Image</param>
         /// <param name="EndAction">结束动画</param>
         /// <returns>准备好的线程</returns>
-        public static Thread Run(this IGraph graph, Image img, Action EndAction = null)
+        public static Task Run(this IGraph graph, Image img, Action EndAction = null)
         {
             if (graph is IImageRun iri)
             {

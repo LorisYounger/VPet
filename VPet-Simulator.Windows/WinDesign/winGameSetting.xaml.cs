@@ -667,7 +667,7 @@ namespace VPet_Simulator.Windows
         private void Group_Click(object sender, RoutedEventArgs e)
         {
             if (LocalizeCore.CurrentCulture.StartsWith("zh"))
-                ExtensionSetting.StartURL("https://jq.qq.com/?_wv=1027&k=zmeWNHyI");
+                ExtensionSetting.StartURL("https://tieba.baidu.com/f?kw=%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%92%AD%E6%A8%A1%E6%8B%9F%E5%99%A8");
             else
                 ExtensionSetting.StartURL("https://github.com/LorisYounger/VPet");
         }

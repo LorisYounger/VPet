@@ -139,7 +139,7 @@ namespace VPet_Simulator.Core
             PlayState = false;
             this.DoEndAction = !StopEndAction;
         }
-        public Thread Run(System.Windows.Controls.Image img, Action EndAction = null)
+        public Task Run(System.Windows.Controls.Image img, Action EndAction = null)
         {
             PlayState = true;
             DoEndAction = true;
@@ -147,7 +147,7 @@ namespace VPet_Simulator.Core
             {
                 if (img.Tag == this)
                 {
-                    return new Thread(() =>
+                    return new Task(() =>
                     {
                         Thread.Sleep(Length);
                         if (IsLoop && PlayState)
@@ -165,7 +165,7 @@ namespace VPet_Simulator.Core
                 img.Tag = this;
                 img.Source = new BitmapImage(new Uri(Path));
                 img.Width = 500;
-                return new Thread(() =>
+                return new Task(() =>
                 {
                     Thread.Sleep(Length);
                     if (IsLoop && PlayState)
@@ -189,7 +189,7 @@ namespace VPet_Simulator.Core
             /// <param name="img">用于显示的Image</param>
             /// <param name="EndAction">结束动画</param>
             /// <returns>准备好的线程</returns>
-            Thread Run(System.Windows.Controls.Image img, Action EndAction = null);
+            Task Run(System.Windows.Controls.Image img, Action EndAction = null);
         }
     }
 

@@ -332,7 +332,7 @@ namespace VPet_Simulator.Core
             {
                 if (parant.Tag == this)
                 {
-                    new Thread(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, EndAction)).Start();
+                    Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, EndAction));
                     return;
                 }
                 System.Windows.Controls.Image img;
@@ -378,7 +378,7 @@ namespace VPet_Simulator.Core
         /// <param name="img">用于显示的Image</param>
         /// <param name="EndAction">结束动画</param>
         /// <returns>准备好的线程</returns>
-        public Thread Run(System.Windows.Controls.Image img, Action EndAction = null)
+        public Task Run(System.Windows.Controls.Image img, Action EndAction = null)
         {
             nowid = 0;
             PlayState = true;
@@ -387,12 +387,12 @@ namespace VPet_Simulator.Core
               {
                   if (img.Tag == this)
                   {
-                      return new Thread(() => Animations[0].Run(img, EndAction));
+                      return new Task(() => Animations[0].Run(img, EndAction));
                   }
                   img.Tag = this;
                   img.Source = new BitmapImage(new Uri(Path));
                   img.Width = Width;
-                  return new Thread(() => Animations[0].Run(img, EndAction));
+                  return new Task(() => Animations[0].Run(img, EndAction));
               });
         }
         public void Stop(bool StopEndAction = false)
