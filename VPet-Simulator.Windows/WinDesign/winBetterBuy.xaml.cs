@@ -58,6 +58,22 @@ namespace VPet_Simulator.Windows
                 LsbCategory.SelectedIndex = (int)type;
             if (rMoney != null)
                 rMoney.Text = mw.Core.Save.Money.ToString("f2");
+
+            //喜好度刷新
+            foreach (var sub in mw.Set.PetData)
+            {
+                if (sub.Name.StartsWith("buytime_"))
+                {
+                    var name = sub.Name.Substring(8);
+                    var food = mw.Foods.FirstOrDefault(x => x.Name == name);
+                    if(food != null)
+                    {
+                        food.LoadEatTimeSource(mw);
+                        food.NotifyOfPropertyChange("Eattime");
+                    }
+                }
+            }
+  
             Show();
         }
         public void OrderItemSource(Food.FoodType type, int sortrule, bool sortasc, string searchtext = null)
