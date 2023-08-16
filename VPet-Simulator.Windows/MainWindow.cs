@@ -209,7 +209,14 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                System.Windows.Forms.SendKeys.SendWait(content);
+                try
+                {
+                    System.Windows.Forms.SendKeys.SendWait(content);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                }
             }
         }
 
