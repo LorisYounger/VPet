@@ -237,8 +237,20 @@ namespace VPet_Simulator.Windows
                 }
 
             }
-           
-            var name = mw.Core.Graph.FindName(item.Type == Food.FoodType.Drink ? GraphType.Drink : GraphType.Eat);
+            GraphType gt;
+            switch (item.Type)
+            {
+                default:
+                    gt = GraphType.Eat;
+                    break;
+                case Food.FoodType.Drink:
+                    gt = GraphType.Drink;
+                    break;
+                case Food.FoodType.Gift:
+                    gt = GraphType.Gift;
+                    break;
+            }
+            var name = mw.Core.Graph.FindName(gt);
             var ig = mw.Core.Graph.FindGraph(name, AnimatType.Single, mw.Core.Save.Mode);
             if (ig != null)
             {

@@ -227,6 +227,10 @@ namespace VPet_Simulator.Core
             /// 喝东西
             /// </summary>
             Drink,
+            /// <summary>
+            /// 收到礼物
+            /// </summary>
+            Gift,
         }
         /// <summary>
         /// 动作: 动画的动作 Start Loop End

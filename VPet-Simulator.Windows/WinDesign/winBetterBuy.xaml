@@ -209,6 +209,7 @@
                 <ListBoxItem Content="{ll:Str 饮料}" />
                 <ListBoxItem Content="{ll:Str 功能性}" />
                 <ListBoxItem Content="{ll:Str 药品}" />
+                <!--<ListBoxItem Content="{ll:Str 礼品}" />-->
             </ListBox>
             <TextBlock Grid.Row="2" Text="{ll:Str 排序方式}" Margin="5" FontSize="18"
                     Foreground="{DynamicResource DARKPrimary}" />
