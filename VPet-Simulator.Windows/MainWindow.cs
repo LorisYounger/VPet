@@ -44,7 +44,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 版本号
         /// </summary>
-        public int verison { get; } = 100;
+        public int verison { get; } = 101;
         /// <summary>
         /// 版本号
         /// </summary>
@@ -441,6 +441,8 @@ namespace VPet_Simulator.Windows
         public bool GameLoad(ILine line)
         {
             if (line == null)
+                return false;
+            if (string.IsNullOrWhiteSpace(line.ToString()))
                 return false;
             Core.Save = GameSave.Load(line);
             long hash = line.GetInt64("hash");
