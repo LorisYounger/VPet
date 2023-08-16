@@ -395,7 +395,7 @@ namespace VPet_Simulator.Windows
                         stat[(gi64)"stat_study_time"] += (int)Set.LogicInterval;
                     break;
                 case Main.WorkingState.Sleep:
-                    stat[(gi64)"stat_work_time"] += (int)Set.LogicInterval;
+                    stat[(gi64)"stat_sleep_time"] += (int)Set.LogicInterval;
                     break;
             }
             if (save.Mode == GameSave.ModeType.Ill)
