@@ -471,6 +471,11 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法发布\n如需发布自定义内容,请复制并更改名称".Translate(), "MOD上传失败".Translate(), MessageBoxIcon.Error);
                 return;
             }
+            if (mods.Path.FullName.Contains("workshop"))
+            {
+                MessageBoxX.Show("创意工坊物品无法进行上传,请移动到mod文件夹后重试".Translate(), "MOD上传失败".Translate(), MessageBoxIcon.Error);
+                return;
+            }
             if (!File.Exists(mods.Path.FullName + @"\icon.png") || new FileInfo(mods.Path.FullName + @"\icon.png").Length > 524288)
             {
                 MessageBoxX.Show("封面图片(icon.png)大于500kb,请修改后重试".Translate(), "MOD上传失败".Translate(), MessageBoxIcon.Error);
