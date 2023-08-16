@@ -273,5 +273,17 @@ namespace VPet_Simulator.Windows
             lastopeningtime = DateTime.Now;
             Task.Run(TalkChatInfoDisplay);
         }
+
+        private void tbTalk_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (tbTalk.Text.Length > 0)
+            {
+                mw.Main.ToolBar.MenuPanel_MouseEnter();
+            }
+            else
+            {
+                mw.Main.ToolBar.MenuPanel_MouseLeave();
+            }
+        }
     }
 }
