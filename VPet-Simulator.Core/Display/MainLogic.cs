@@ -128,22 +128,21 @@ namespace VPet_Simulator.Core
             switch (State)
             {
                 case WorkingState.Sleep:
-                    //睡觉消耗
-                    if (Core.Save.StrengthFood >= 25)
+                    //睡觉不消耗
+                    Core.Save.StrengthChange(TimePass * 2);
+                    if (Core.Save.StrengthFood <= 25)
                     {
-                        Core.Save.StrengthChange(TimePass * 2);
-                        if (Core.Save.StrengthFood >= 75)
-                            Core.Save.Health += TimePass * 2;
-                        Core.Save.StrengthChangeFood(-TimePass / 2);
+                        Core.Save.StrengthChangeFood(TimePass / 2);
                     }
+                    else if (Core.Save.StrengthFood >= 75)
+                        Core.Save.Health += TimePass * 2;
                     if (Core.Save.StrengthDrink >= 25)
                     {
-                        Core.Save.StrengthChange(TimePass * 2);
-                        if (Core.Save.StrengthDrink >= 75)
-                            Core.Save.Health += TimePass * 2;
-                        Core.Save.StrengthChangeDrink(-TimePass / 2);
+                        Core.Save.StrengthChangeDrink(TimePass / 2);
                     }
-                    Core.Save.FeelingChange(-freedrop / 2);
+                    else if (Core.Save.StrengthDrink >= 75)
+                        Core.Save.Health += TimePass * 2;
+                    LastInteractionTime = DateTime.Now;
                     break;
                 case WorkingState.Work:
                     var nowwork = nowWork;
