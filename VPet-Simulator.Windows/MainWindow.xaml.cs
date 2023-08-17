@@ -165,38 +165,45 @@ namespace VPet_Simulator.Windows
         }
         private void Exit()
         {
-            if (IsSteamUser)
-                SteamClient.Shutdown();//关掉和Steam的连线
-            if (Core != null)
+            try
             {
-                foreach (var igs in Core.Graph.GraphsList.Values)
+                if (IsSteamUser)
+                    SteamClient.Shutdown();//关掉和Steam的连线
+                if (Core != null)
                 {
-                    foreach (var ig2 in igs.Values)
+                    foreach (var igs in Core.Graph.GraphsList.Values)
                     {
-                        foreach (var ig3 in ig2)
+                        foreach (var ig2 in igs.Values)
                         {
-                            ig3.Stop();
+                            foreach (var ig3 in ig2)
+                            {
+                                ig3.Stop();
+                            }
                         }
                     }
                 }
+                if (Main != null)
+                {
+                    Main.Dispose();
+                }
+                if (winSetting != null)
+                {
+                    winSetting.Close();
+                }
+                AutoSaveTimer?.Stop();
+                MusicTimer?.Stop();
+                petHelper?.Close();
+                if (notifyIcon != null)
+                {
+                    notifyIcon.Visible = false;
+                    notifyIcon.Dispose();
+                }
+                notifyIcon?.Dispose();
             }
-            if (Main != null)
+            finally
             {
-                Main.Dispose();
+                Environment.Exit(0);
             }
-            if (winSetting != null)
-            {
-                winSetting.Close();
-            }
-            AutoSaveTimer?.Stop();
-            MusicTimer?.Stop();
-            petHelper?.Close();
-            if (notifyIcon != null)
-            {
-                notifyIcon.Visible = false;
-                notifyIcon.Dispose();
-            }
-            notifyIcon?.Dispose();
             while (true)
                 Environment.Exit(0);
         }
