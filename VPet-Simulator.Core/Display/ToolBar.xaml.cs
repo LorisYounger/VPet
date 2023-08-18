@@ -51,21 +51,29 @@ namespace VPet_Simulator.Core
             MenuWork.Visibility = Visibility.Visible;
             MenuStudy.Click -= MenuStudy_Click;
             MenuStudy.Visibility = Visibility.Visible;
+            MenuPlay.Click -= MenuPlay_Click;
+
 
             MenuWork.Items.Clear();
             MenuStudy.Items.Clear();
+            MenuPlay.Items.Clear();
             List<Work> ws = new List<Work>();
             List<Work> ss = new List<Work>();
+            List<Work> ps = new List<Work>();
             foreach (var w in m.Core.Graph.GraphConfig.Works)
             {
-                if (w.Type == Work.WorkType.Work)
+                switch (w.Type)
                 {
-                    ws.Add(w);
-                }
-                else
-                {
-                    ss.Add(w);
-                }
+                    case Work.WorkType.Study:
+                        ss.Add(w);
+                        break;
+                    case Work.WorkType.Work:
+                        ws.Add(w);
+                        break;
+                    case Work.WorkType.Play:
+                        ps.Add(w);
+                        break;
+                }              
             }
             if (ws.Count == 0)
             {
@@ -111,6 +119,28 @@ namespace VPet_Simulator.Core
                     MenuStudy.Items.Add(mi);
                 }
             }
+            if (ps.Count == 0)
+            {
+                MenuPlay.Visibility = Visibility.Collapsed;
+            }
+            else if (ps.Count == 1)
+            {
+                MenuPlay.Click += MenuPlay_Click;
+                wplay = ps[0];
+                MenuPlay.Header = ps[0].NameTrans;
+            }
+            else
+            {
+                foreach (var w in ps)
+                {
+                    var mi = new MenuItem()
+                    {
+                        Header = w.NameTrans
+                    };
+                    mi.Click += (s, e) => StartWork(w);
+                    MenuPlay.Items.Add(mi);
+                }
+            }
         }
 
         private void MenuStudy_Click(object sender, RoutedEventArgs e)
@@ -119,6 +149,7 @@ namespace VPet_Simulator.Core
         }
         Work wwork;
         Work wstudy;
+        Work wplay;
         public void StartWork(Work work)
         {
             if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
@@ -138,7 +169,10 @@ namespace VPet_Simulator.Core
         {
             StartWork(wwork);
         }
-
+        private void MenuPlay_Click(object sender, RoutedEventArgs e)
+        {
+            StartWork(wplay);
+        }
 
         private void M_TimeUIHandle(Main m)
         {

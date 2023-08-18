@@ -194,7 +194,13 @@ namespace VPet_Simulator.Core
                     else
                         Core.Save.Exp += addmoney;
                     WorkTimer.GetCount += addmoney;
-                    Core.Save.FeelingChange(-freedrop * nowwork.Feeling);
+                    if (nowwork.Type == GraphHelper.Work.WorkType.Play)
+                    {
+                        LastInteractionTime = DateTime.Now;
+                        Core.Save.FeelingChange(nowwork.Feeling * TimePass);
+                    }
+                    else
+                        Core.Save.FeelingChange(-freedrop * nowwork.Feeling);
                     break;
                 default://默认
                     //饮食等乱七八糟的消耗
