@@ -521,11 +521,25 @@ namespace VPet_Simulator.Windows
             }
             else if (mods.AuthorID == Steamworks.SteamClient.SteamId.AccountId)
             {
-                var result = new Editor(new Steamworks.Data.PublishedFileId() { Value = mods.ItemID })
+                var item = Item.GetAsync(mod.ItemID).Result;
+                Editor result;
+                if (item == null)
+                {
+                    result = new Editor(new Steamworks.Data.PublishedFileId() { Value = mods.ItemID })
                         .WithTitle(mods.Name)
                         .WithDescription(mods.Intro)
                         .WithPreviewFile(mods.Path.FullName + @"\icon.png")
                         .WithContent(mods.Path);
+                }
+                else
+                {
+                    result = new Editor(new Steamworks.Data.PublishedFileId() { Value = mods.ItemID })
+                        .WithTitle(item.Value.Title)
+                        .WithDescription(item.Value.Description)
+                        .WithPreviewFile(mods.Path.FullName + @"\icon.png")
+                        .WithContent(mods.Path);
+                }
+            
                 foreach (string tag in mods.Tag)
                     result.WithTag(tag);
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
