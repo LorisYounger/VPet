@@ -86,7 +86,7 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 类型
             /// </summary>
-            public enum WorkType { Work, Study }
+            public enum WorkType { Work, Study, Play }
             /// <summary>
             /// 工作/学习
             /// </summary>

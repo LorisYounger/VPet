@@ -1,10 +1,18 @@
-﻿<UserControl x:Class="VPet_Simulator.Core.ToolBar" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Core"
-        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF" mc:Ignorable="d"
-        xmlns:pu="https://opensource.panuon.com/wpf-ui" MouseEnter="UserControl_MouseEnter"
-        MouseLeave="UserControl_MouseLeave" Height="500" Width="500" VerticalAlignment="Top">
+﻿<UserControl
+    x:Class="VPet_Simulator.Core.ToolBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+    xmlns:local="clr-namespace:VPet_Simulator.Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pu="https://opensource.panuon.com/wpf-ui"
+    Width="500"
+    Height="500"
+    VerticalAlignment="Top"
+    MouseEnter="UserControl_MouseEnter"
+    MouseLeave="UserControl_MouseLeave"
+    mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,10 +22,19 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid x:Name="MainGrid" x:FieldModifier="public">
-        <Border x:Name="BdrPanel" VerticalAlignment="Bottom" Margin="0,0,0,55" TextBlock.FontSize="24"
-                TextElement.FontSize="24" BorderBrush="{DynamicResource DARKPrimaryDarker}" BorderThickness="1"
-                Background="{DynamicResource DARKPrimaryText}" CornerRadius="5" MouseLeave="MenuPanel_MouseLeave"
-                x:FieldModifier="public" Visibility="Collapsed">
+        <Border
+            x:Name="BdrPanel"
+            Margin="0,0,0,55"
+            VerticalAlignment="Bottom"
+            x:FieldModifier="public"
+            Background="{DynamicResource DARKPrimaryText}"
+            BorderBrush="{DynamicResource DARKPrimaryDarker}"
+            BorderThickness="1"
+            CornerRadius="5"
+            MouseLeave="MenuPanel_MouseLeave"
+            TextBlock.FontSize="24"
+            TextElement.FontSize="24"
+            Visibility="Collapsed">
             <Grid Margin="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -36,98 +53,251 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="Tlv" Text="Lv 14" VerticalAlignment="Center"
-                        Foreground="{DynamicResource DARKPrimary}" Grid.ColumnSpan="3" />
-                <Button Grid.Column="2" VerticalAlignment="Center" Background="Transparent"
-                        Foreground="{DynamicResource DARKPrimary}" Content="{ll:Str 详细}" Cursor="Hand"
-                        Click="MenuPanel_Click" Visibility="Collapsed" Grid.ColumnSpan="3" HorizontalAlignment="Right">
+                <TextBlock
+                    x:Name="Tlv"
+                    Grid.ColumnSpan="3"
+                    VerticalAlignment="Center"
+                    Foreground="{DynamicResource DARKPrimary}"
+                    Text="Lv 14" />
+                <Button
+                    Grid.Column="2"
+                    Grid.ColumnSpan="3"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    Click="MenuPanel_Click"
+                    Content="{ll:Str 详细}"
+                    Cursor="Hand"
+                    Foreground="{DynamicResource DARKPrimary}"
+                    Visibility="Collapsed">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" TextDecorations="Underline" />
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
-                <TextBlock x:Name="till" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#FF4C4C" TextWrapping="Wrap"
-                        Text="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}" />
-                <TextBlock x:Name="tfun" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#4caf50" TextWrapping="Wrap"
-                        Text="{ll:Str 已关闭数据计算\, 可放心挂机}" />
-                <TextBlock Grid.Row="2" Text="{ll:Str 金钱}" VerticalAlignment="Center" />
-                <TextBlock x:Name="tMoney" Grid.Row="2" Grid.Column="2" Foreground="{DynamicResource DARKPrimary}"
-                        Text="$100,000" />
-                <TextBlock Grid.Row="3" Text="{ll:Str 经验}" VerticalAlignment="Center" />
-                <ProgressBar x:Name="pExp" Grid.Row="3" Grid.Column="2" Value="40" FontSize="20" Height="20"
-                        VerticalAlignment="Center" pu:ProgressBarHelper.CornerRadius="10"
-                        Foreground="{DynamicResource ProgressBarForeground}"
-                        pu:ProgressBarHelper.IsPercentVisible="True"
-                        pu:ProgressBarHelper.GeneratingPercentText="PgbExperience_GeneratingPercentText" />
-                <TextBlock x:Name="tExp" Grid.Row="3" Grid.Column="4" HorizontalAlignment="Right" Text="x1.0"
-                        Foreground="{DynamicResource DARKPrimary}" />
-                <TextBlock Grid.Row="4" Text="{ll:Str 体力}" VerticalAlignment="Center" />
-                <ProgressBar x:Name="pStrength" Grid.Row="4" Grid.Column="2" Value="40" FontSize="20" Height="20"
-                        VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
-                        Foreground="{DynamicResource ProgressBarForeground}"
-                        pu:ProgressBarHelper.IsPercentVisible="True"
-                        pu:ProgressBarHelper.GeneratingPercentText="PgbStrength_GeneratingPercentText" />
-                <TextBlock x:Name="tStrength" Grid.Row="4" Grid.Column="4" HorizontalAlignment="Right" Text="+1/t"
-                        Foreground="{DynamicResource DARKPrimary}" />
-                <TextBlock Grid.Row="5" Text="{ll:Str 心情}" VerticalAlignment="Center" />
-                <ProgressBar x:Name="pFeeling" Grid.Row="5" Grid.Column="2" Value="60" FontSize="20" Height="20"
-                        VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
-                        Foreground="{DynamicResource ProgressBarForeground}"
-                        pu:ProgressBarHelper.IsPercentVisible="True"
-                        pu:ProgressBarHelper.GeneratingPercentText="PgbSpirit_GeneratingPercentText" />
-                <TextBlock x:Name="tFeeling" Grid.Row="5" Grid.Column="4" HorizontalAlignment="Right" Text="+1/t"
-                        Foreground="{DynamicResource DARKPrimary}" />
-                <TextBlock Grid.Row="6" Text="{ll:Str 饱腹度}" VerticalAlignment="Center" />
-                <ProgressBar x:Name="pStrengthFoodMax" Grid.Row="6" Grid.Column="2" Value="90" FontSize="20" Height="20"
-                        VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10" Opacity="0.5"
-                        Foreground="{DynamicResource ProgressBarForeground}" Background="#FFDDDDDD" />
-                <ProgressBar x:Name="pStrengthFood" Grid.Row="6" Grid.Column="2" Value="80" FontSize="20" Height="20"
-                        VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
-                        Foreground="{DynamicResource ProgressBarForeground}"
-                        pu:ProgressBarHelper.IsPercentVisible="True"
-                        pu:ProgressBarHelper.GeneratingPercentText="PgbHunger_GeneratingPercentText"
-                        Background="{x:Null}" />
+                <TextBlock
+                    x:Name="till"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="5"
+                    Foreground="#FF4C4C"
+                    Text="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}"
+                    TextWrapping="Wrap" />
+                <TextBlock
+                    x:Name="tfun"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="5"
+                    Foreground="#4caf50"
+                    Text="{ll:Str 已关闭数据计算\, 可放心挂机}"
+                    TextWrapping="Wrap" />
+                <TextBlock
+                    Grid.Row="2"
+                    VerticalAlignment="Center"
+                    Text="{ll:Str 金钱}" />
+                <TextBlock
+                    x:Name="tMoney"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Foreground="{DynamicResource DARKPrimary}"
+                    Text="$100,000" />
+                <TextBlock
+                    Grid.Row="3"
+                    VerticalAlignment="Center"
+                    Text="{ll:Str 经验}" />
+                <ProgressBar
+                    x:Name="pExp"
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    pu:ProgressBarHelper.CornerRadius="10"
+                    pu:ProgressBarHelper.GeneratingPercentText="PgbExperience_GeneratingPercentText"
+                    pu:ProgressBarHelper.IsPercentVisible="True"
+                    FontSize="20"
+                    Foreground="{DynamicResource ProgressBarForeground}"
+                    Value="40" />
+                <TextBlock
+                    x:Name="tExp"
+                    Grid.Row="3"
+                    Grid.Column="4"
+                    HorizontalAlignment="Right"
+                    Foreground="{DynamicResource DARKPrimary}"
+                    Text="x1.0" />
+                <TextBlock
+                    Grid.Row="4"
+                    VerticalAlignment="Center"
+                    Text="{ll:Str 体力}" />
+                <ProgressBar
+                    x:Name="pStrength"
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    pu:ProgressBarHelper.CornerRadius="10"
+                    pu:ProgressBarHelper.GeneratingPercentText="PgbStrength_GeneratingPercentText"
+                    pu:ProgressBarHelper.IsPercentVisible="True"
+                    FontSize="20"
+                    Foreground="{DynamicResource ProgressBarForeground}"
+                    Maximum="100"
+                    Value="40" />
+                <TextBlock
+                    x:Name="tStrength"
+                    Grid.Row="4"
+                    Grid.Column="4"
+                    HorizontalAlignment="Right"
+                    Foreground="{DynamicResource DARKPrimary}"
+                    Text="+1/t" />
+                <TextBlock
+                    Grid.Row="5"
+                    VerticalAlignment="Center"
+                    Text="{ll:Str 心情}" />
+                <ProgressBar
+                    x:Name="pFeeling"
+                    Grid.Row="5"
+                    Grid.Column="2"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    pu:ProgressBarHelper.CornerRadius="10"
+                    pu:ProgressBarHelper.GeneratingPercentText="PgbSpirit_GeneratingPercentText"
+                    pu:ProgressBarHelper.IsPercentVisible="True"
+                    FontSize="20"
+                    Foreground="{DynamicResource ProgressBarForeground}"
+                    Maximum="100"
+                    Value="60" />
+                <TextBlock
+                    x:Name="tFeeling"
+                    Grid.Row="5"
+                    Grid.Column="4"
+                    HorizontalAlignment="Right"
+                    Foreground="{DynamicResource DARKPrimary}"
+                    Text="+1/t" />
+                <TextBlock
+                    Grid.Row="6"
+                    VerticalAlignment="Center"
+                    Text="{ll:Str 饱腹度}" />
+                <ProgressBar
+                    x:Name="pStrengthFoodMax"
+                    Grid.Row="6"
+                    Grid.Column="2"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    pu:ProgressBarHelper.CornerRadius="10"
+                    Background="#FFDDDDDD"
+                    FontSize="20"
+                    Foreground="{DynamicResource ProgressBarForeground}"
+                    Maximum="100"
+                    Opacity="0.5"
+                    Value="90" />
+                <ProgressBar
+                    x:Name="pStrengthFood"
+                    Grid.Row="6"
+                    Grid.Column="2"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    pu:ProgressBarHelper.CornerRadius="10"
+                    pu:ProgressBarHelper.GeneratingPercentText="PgbHunger_GeneratingPercentText"
+                    pu:ProgressBarHelper.IsPercentVisible="True"
+                    Background="{x:Null}"
+                    FontSize="20"
+                    Foreground="{DynamicResource ProgressBarForeground}"
+                    Maximum="100"
+                    Value="80" />
 
-                <TextBlock x:Name="tStrengthFood" Grid.Row="6" Grid.Column="4" HorizontalAlignment="Right" Text="+1/t"
-                        Foreground="{DynamicResource DARKPrimary}" />
-                <TextBlock Grid.Row="7" Text="{ll:Str 口渴度}" VerticalAlignment="Center" />
-                <ProgressBar x:Name="pStrengthDrinkMax" Grid.Row="7" Grid.Column="2" Value="90" FontSize="20"
-                        Height="20" VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
-                        Opacity="0.5" Foreground="{DynamicResource ProgressBarForeground}" Background="#FFDDDDDD" />
-                <ProgressBar x:Name="pStrengthDrink" Grid.Row="7" Grid.Column="2" Value="20" FontSize="20" Height="20"
-                        VerticalAlignment="Center" Maximum="100" pu:ProgressBarHelper.CornerRadius="10"
-                        Foreground="{DynamicResource ProgressBarForeground}"
-                        pu:ProgressBarHelper.IsPercentVisible="True"
-                        pu:ProgressBarHelper.GeneratingPercentText="PgbThirsty_GeneratingPercentText"
-                        Background="{x:Null}" />
-                <TextBlock x:Name="tStrengthDrink" Grid.Row="7" Grid.Column="4" HorizontalAlignment="Right" Text="+1/t"
-                        Foreground="{DynamicResource DARKPrimary}" />
+                <TextBlock
+                    x:Name="tStrengthFood"
+                    Grid.Row="6"
+                    Grid.Column="4"
+                    HorizontalAlignment="Right"
+                    Foreground="{DynamicResource DARKPrimary}"
+                    Text="+1/t" />
+                <TextBlock
+                    Grid.Row="7"
+                    VerticalAlignment="Center"
+                    Text="{ll:Str 口渴度}" />
+                <ProgressBar
+                    x:Name="pStrengthDrinkMax"
+                    Grid.Row="7"
+                    Grid.Column="2"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    pu:ProgressBarHelper.CornerRadius="10"
+                    Background="#FFDDDDDD"
+                    FontSize="20"
+                    Foreground="{DynamicResource ProgressBarForeground}"
+                    Maximum="100"
+                    Opacity="0.5"
+                    Value="90" />
+                <ProgressBar
+                    x:Name="pStrengthDrink"
+                    Grid.Row="7"
+                    Grid.Column="2"
+                    Height="20"
+                    VerticalAlignment="Center"
+                    pu:ProgressBarHelper.CornerRadius="10"
+                    pu:ProgressBarHelper.GeneratingPercentText="PgbThirsty_GeneratingPercentText"
+                    pu:ProgressBarHelper.IsPercentVisible="True"
+                    Background="{x:Null}"
+                    FontSize="20"
+                    Foreground="{DynamicResource ProgressBarForeground}"
+                    Maximum="100"
+                    Value="20" />
+                <TextBlock
+                    x:Name="tStrengthDrink"
+                    Grid.Row="7"
+                    Grid.Column="4"
+                    HorizontalAlignment="Right"
+                    Foreground="{DynamicResource DARKPrimary}"
+                    Text="+1/t" />
             </Grid>
         </Border>
-        <Menu VerticalAlignment="Bottom" Style="{DynamicResource ToolBarMenuStyle}" Width="500" pu:MenuHelper.SubmenuItemsHorizontalContentAlignment="Center" pu:MenuHelper.TopLevelItemsHorizontalContentAlignment="Center">
+        <Menu
+            Width="500"
+            VerticalAlignment="Bottom"
+            pu:MenuHelper.SubmenuItemsHorizontalContentAlignment="Center"
+            pu:MenuHelper.TopLevelItemsHorizontalContentAlignment="Center"
+            Style="{DynamicResource ToolBarMenuStyle}">
             <Menu.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="5" />
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
-            <MenuItem x:Name="MenuFeed" Header="{ll:Str 投喂}"  Padding="0"
-                    x:FieldModifier="public" />
-            <MenuItem x:Name="MenuPanel" Header="{ll:Str 面板}" MouseEnter="MenuPanel_MouseEnter"
-                    MouseLeave="MenuPanel_MouseLeave"  Padding="0" />
-            <MenuItem x:Name="MenuInteract" Header="{ll:Str 互动}"  Width="99"
-                    Padding="0">
-                <MenuItem Header="{ll:Str 睡觉}"  Click="Sleep_Click" />
-                <MenuItem x:Name="MenuStudy" Header="{ll:Str 学习}"  />
-                <MenuItem x:Name="MenuWork" Header="{ll:Str 工作}"  />
+            <MenuItem
+                x:Name="MenuFeed"
+                Padding="0"
+                x:FieldModifier="public"
+                Header="{ll:Str 投喂}" />
+            <MenuItem
+                x:Name="MenuPanel"
+                Padding="0"
+                Header="{ll:Str 面板}"
+                MouseEnter="MenuPanel_MouseEnter"
+                MouseLeave="MenuPanel_MouseLeave" />
+            <MenuItem
+                x:Name="MenuInteract"
+                Width="99"
+                Padding="0"
+                Header="{ll:Str 互动}">
+                <MenuItem Click="Sleep_Click" Header="{ll:Str 睡觉}" />
+                <MenuItem x:Name="MenuStudy" Header="{ll:Str 学习}" />
+                <MenuItem x:Name="MenuPlay" Header="{ll:Str 玩耍}" />
+                <MenuItem x:Name="MenuWork" Header="{ll:Str 工作}" />
                 <!--<MenuItem Header="说话"  IsEnabled="False" />-->
             </MenuItem>
-            <MenuItem x:Name="MenuDIY" Header="{ll:Str 自定}"  x:FieldModifier="public"
-                    Padding="0" />
-            <MenuItem x:Name="MenuSetting" Header="{ll:Str 系统}" 
-                    x:FieldModifier="public" Padding="0">
-                <MenuItem x:Name="MenuMODConfig" Header="{ll:Str MOD设置}" 
-                        Visibility="Collapsed" x:FieldModifier="public" />
+            <MenuItem
+                x:Name="MenuDIY"
+                Padding="0"
+                x:FieldModifier="public"
+                Header="{ll:Str 自定}" />
+            <MenuItem
+                x:Name="MenuSetting"
+                Padding="0"
+                x:FieldModifier="public"
+                Header="{ll:Str 系统}">
+                <MenuItem
+                    x:Name="MenuMODConfig"
+                    x:FieldModifier="public"
+                    Header="{ll:Str MOD设置}"
+                    Visibility="Collapsed" />
             </MenuItem>
         </Menu>
     </Grid>

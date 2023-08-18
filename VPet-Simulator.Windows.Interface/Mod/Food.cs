@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using VPet_Simulator.Core;
 using static LinePutScript.Converter.LPSConvert;
 
@@ -134,7 +135,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 显示的图片
         /// </summary>
-        public ImageSource ImageSource { get; set; }
+        public BitmapImage ImageSource { get; set; }
         /// <summary>
         /// 是否已收藏
         /// </summary>
