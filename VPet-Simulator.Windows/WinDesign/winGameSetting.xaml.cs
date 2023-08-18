@@ -1135,5 +1135,11 @@ namespace VPet_Simulator.Windows
             mw.Set.Resolution = (int)SliderResolution.Value;
             ButtonRestartGraph.Visibility = Visibility.Visible;
         }
+
+        private void save_click(object sender, RoutedEventArgs e)
+        {
+            mw.Save();
+            MessageBoxX.Show("保存成功".Translate());
+        }
     }
 }
