@@ -657,7 +657,7 @@ namespace VPet_Simulator.Windows
 
         private void LB_Click(object sender, RoutedEventArgs e)
         {
-            ExtensionSetting.StartURL("https://www.exlb.net/VPet");
+            ExtensionSetting.StartURL("https://space.bilibili.com/609610777");
         }
 
         private void VPET_Click(object sender, RoutedEventArgs e)
@@ -672,7 +672,7 @@ namespace VPet_Simulator.Windows
         private void Group_Click(object sender, RoutedEventArgs e)
         {
             if (LocalizeCore.CurrentCulture.StartsWith("zh"))
-                ExtensionSetting.StartURL("https://tieba.baidu.com/f?kw=%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%92%AD%E6%A8%A1%E6%8B%9F%E5%99%A8");
+                ExtensionSetting.StartURL("https://space.bilibili.com/690425399");
             else
                 ExtensionSetting.StartURL("https://github.com/LorisYounger/VPet");
         }

@@ -344,7 +344,8 @@
                             <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 游戏操作}" />
                         </TextBlock>
                         <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                Background="{DynamicResource SecondaryLight}" Click="save_click" Content="{ll:Str 保存游戏}" ToolTip="{ll:Str '手动保存桌宠存档,就算不手动保存,桌宠也会在退出的时候自动保存'}" />
+                                Background="{DynamicResource SecondaryLight}" Click="save_click" Content="{ll:Str 保存游戏}"
+                                ToolTip="{ll:Str '手动保存桌宠存档,就算不手动保存,桌宠也会在退出的时候自动保存'}" />
                         <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
                                 Background="{DynamicResource SecondaryLight}" Click="cleancache_click"
                                 Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
@@ -815,7 +816,7 @@
                         </Hyperlink>
                         <Run />
                         <Hyperlink Click="LB_Click" Foreground="Black" TextDecorations="Underline">
-                            LBGame
+                            洛里斯杨远
                         </Hyperlink>
                         <LineBreak /><LineBreak /> <Run Text="{ll:Str '相关链接'}" />
                         <Run xml:space="preserve">          </Run>
