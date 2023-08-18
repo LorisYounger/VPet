@@ -767,6 +767,8 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
+            if (StartUpBox.IsChecked == true)
+                MessageBoxX.Show("该游戏随着开机启动该程序\r如需卸载游戏\r请关闭该选项".Translate());
             mw.Set.StartUPBoot = StartUpBox.IsChecked == true;
             GenStartUP();
         }
