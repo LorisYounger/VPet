@@ -117,7 +117,7 @@ clicktext:|LikeMin#0:|State#Sleep:|Mode#1:|Text#诶嘻嘻嘻:|
 clicktext:|LikeMin#0:|State#Sleep:|Mode#2:|Text#诶嘿嘿嘿。。:|
 clicktext:|LikeMin#0:|State#Sleep:|Mode#3:|Text#呜。呼。呜。。呼:|
 clicktext:|LikeMin#0:|State#Sleep:|Mode#4:|Text#呜呜。。呜呜。。:|
-clicktext:|State#Nomal:|dayTime#1:|Text#早上主人~:|
+clicktext:|State#Nomal:|dayTime#1:|Text#早上好主人~:|
 clicktext:|State#Nomal:|dayTime#1:|Text#希望主人今天也有美好的一天:|
 clicktext:|State#Work:|Working#学习:|dayTime#1:|Text#早读~:|
 clicktext:|State#Work:|Working#学习:|dayTime#1:|Text#早起的虫子被鸟吃:|
