@@ -62,9 +62,11 @@ namespace VPet_Simulator.Core
                         nowWork.Time, nowWork.NameTrans), true));
                 }
                 else
-                    m.Core.Save.Money += GetCount * nowWork.FinishBonus;
-                Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟", GetCount * (1 + nowWork.FinishBonus),
-                    nowWork.Time, nowWork.NameTrans), true));
+                {
+                    m.Core.Save.Exp += GetCount * nowWork.FinishBonus;
+                    Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟", GetCount * (1 + nowWork.FinishBonus),
+                        nowWork.Time, nowWork.NameTrans), true));
+                }
                 return;
             }
             else
@@ -132,16 +134,16 @@ namespace VPet_Simulator.Core
                             tNow.Text = LocalizeCore.Translate("累计金钱收益");
                         else
                             tNow.Text = LocalizeCore.Translate("获得经验值");
-                        break;                  
+                        break;
                 }
-            }           
+            }
             M_TimeUIHandle(m);
         }
         private void SwitchState_Click(object sender, RoutedEventArgs e)
         {
             DisplayType++;
             if (DisplayType >= 4)
-                DisplayType = 0;           
+                DisplayType = 0;
             DisplayUI();
         }
         public void Start(Work work)
