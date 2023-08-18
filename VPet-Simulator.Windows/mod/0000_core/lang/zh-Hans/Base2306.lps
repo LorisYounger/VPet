@@ -243,7 +243,7 @@ ChatGPT API 设置#ChatGPT API 设置:|
 累计花费#累计花费:|
 历史记录#历史记录:|
 完成设置#完成设置:|
-API 链接 一般为 api.openai.com/v1/chat/completions#API 链接 一般为 api.openai.com/v1/chat/completions:|
+API 链接 一般为 api.openai.com/v1/chat/completions#API 链接 一般为 api.openai.com/v1/chat/!completions:|
 从 OpenAI 获得的 APIKEY 一般`sk-`开头#从 OpenAI 获得的 APIKEY 一般`sk-`开头:|
 不会被忘记的初始化关键字, 字越多越贵#不会被忘记的初始化关键字, 字越多越贵:|
 0-2之间 0.2更稳定 0.8更随机#0-2之间 0.2更稳定 0.8更随机:|
