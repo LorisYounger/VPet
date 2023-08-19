@@ -67,188 +67,194 @@ namespace VPet_Simulator.Windows
         }
         public CoreMOD(DirectoryInfo directory, MainWindow mw)
         {
-            Path = directory;
-            LpsDocument modlps = new LpsDocument(File.ReadAllText(directory.FullName + @"\info.lps"));
-            Name = modlps.FindLine("vupmod").Info;
-            NowLoading = Name;
-            Intro = modlps.FindLine("intro").Info;
-            GameVer = modlps.FindSub("gamever").InfoToInt;
-            Ver = modlps.FindSub("ver").InfoToInt;
-            Author = modlps.FindSub("author").Info.Split('[').First();
-            if (modlps.FindLine("authorid") != null)
-                AuthorID = modlps.FindLine("authorid").InfoToInt64;
-            else
-                AuthorID = 0;
-            if (modlps.FindLine("itemid") != null)
-                ItemID = Convert.ToUInt64(modlps.FindLine("itemid").info);
-            else
-                ItemID = 0;
-            CacheDate = modlps.GetDateTime("cachedate", DateTime.MinValue);
-
-            //MOD未加载时支持翻译
-            foreach (var line in modlps.FindAllLine("lang"))
+            try
             {
-                List<ILine> ls = new List<ILine>();
-                foreach (var sub in line)
+                Path = directory;
+                LpsDocument modlps = new LpsDocument(File.ReadAllText(directory.FullName + @"\info.lps"));
+                Name = modlps.FindLine("vupmod").Info;
+                NowLoading = Name;
+                Intro = modlps.FindLine("intro").Info;
+                GameVer = modlps.FindSub("gamever").InfoToInt;
+                Ver = modlps.FindSub("ver").InfoToInt;
+                Author = modlps.FindSub("author").Info.Split('[').First();
+                if (modlps.FindLine("authorid") != null)
+                    AuthorID = modlps.FindLine("authorid").InfoToInt64;
+                else
+                    AuthorID = 0;
+                if (modlps.FindLine("itemid") != null)
+                    ItemID = Convert.ToUInt64(modlps.FindLine("itemid").info);
+                else
+                    ItemID = 0;
+                CacheDate = modlps.GetDateTime("cachedate", DateTime.MinValue);
+
+                //MOD未加载时支持翻译
+                foreach (var line in modlps.FindAllLine("lang"))
                 {
-                    ls.Add(new Line(sub.Name, sub.info));
+                    List<ILine> ls = new List<ILine>();
+                    foreach (var sub in line)
+                    {
+                        ls.Add(new Line(sub.Name, sub.info));
+                    }
+                    LocalizeCore.AddCulture(line.info, ls);
                 }
-                LocalizeCore.AddCulture(line.info, ls);
-            }
 
-            if (!IsOnMOD(mw))
-            {
-                Tag.Add("该模组已停用");
-                return;
-            }
-
-            foreach (DirectoryInfo di in Path.EnumerateDirectories())
-            {
-                switch (di.Name.ToLower())
+                if (!IsOnMOD(mw))
                 {
-                    case "pet":
-                        //宠物模型
-                        Tag.Add("pet");
-                        foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
-                        {
-                            LpsDocument lps = new LpsDocument(File.ReadAllText(fi.FullName));
-                            if (lps.First().Name.ToLower() == "pet")
-                            {
-                                var name = lps.First().Info;
-                                var p = mw.Pets.FirstOrDefault(x => x.Name == name);
-                                if (p == null)
-                                    mw.Pets.Add(new PetLoader(lps, di));
-                                else
-                                {
-                                    p.path.Add(di.FullName + "\\" + lps.First()["path"].Info);
-                                    p.Config.Set(lps);
-                                }
-                            }
-                        }
-                        break;
-                    case "food":
-                        Tag.Add("food");
-                        foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
-                        {
-                            var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
-                            foreach (ILine li in tmp)
-                            {
-                                string tmps = li.Find("name").info;
-                                mw.Foods.RemoveAll(x => x.Name == tmps);
-                                mw.Foods.Add(LPSConvert.DeserializeObject<Food>(li));
-                            }
-                        }
-                        break;
-                    case "image":
-                        Tag.Add("image");
-                        LoadImage(mw, di);
-                        break;
-                    case "text":
-                        Tag.Add("text");
-                        foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
-                        {
-                            var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
-                            foreach (ILine li in tmp)
-                            {
-                                switch (li.Name.ToLower())
-                                {
-                                    case "lowfoodtext":
-                                        mw.LowFoodText.Add(LPSConvert.DeserializeObject<LowText>(li));
-                                        break;
-                                    case "lowdrinktext":
-                                        mw.LowDrinkText.Add(LPSConvert.DeserializeObject<LowText>(li));
-                                        break;
-                                    case "clicktext":
-                                        mw.ClickTexts.Add(LPSConvert.DeserializeObject<ClickText>(li));
-                                        break;
-                                }
-                            }
-                        }
-                        break;
-                    case "lang":
-                        Tag.Add("lang");
-                        foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
-                        {
-                            LocalizeCore.AddCulture(fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length), new LPS_D(File.ReadAllText(fi.FullName)));
-                        }
-                        foreach (DirectoryInfo dis in di.EnumerateDirectories())
-                        {
-                            foreach (FileInfo fi in dis.EnumerateFiles("*.lps"))
-                            {
-                                LocalizeCore.AddCulture(dis.Name, new LPS_D(File.ReadAllText(fi.FullName)));
-                            }
-                        }
-
-                        if (mw.Set.Language == "null")
-                        {
-                            LocalizeCore.LoadDefaultCulture();
-                        }
-                        else
-                            LocalizeCore.LoadCulture(mw.Set.Language);
-                        break;
-                    case "plugin":
-                        Tag.Add("plugin");
-                        SuccessLoad = true;
-                        string authtype = "";
-                        foreach (FileInfo tmpfi in di.EnumerateFiles("*.dll"))
-                        {
-                            try
-                            {
-                                var path = tmpfi.Name;
-                                if (LoadedDLL.Contains(path))
-                                    continue;
-                                LoadedDLL.Add(path);
-                                Assembly dll = Assembly.LoadFrom(tmpfi.FullName);
-                                var certificate = dll.GetModules()?.First()?.GetSignerCertificate();
-                                if (certificate != null)
-                                {
-                                    if (certificate.Subject == "CN=\"Shenzhen Lingban Computer Technology Co., Ltd.\", O=\"Shenzhen Lingban Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
-                                        && certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US")
-                                    {//LBGame 信任的证书
-                                        if (authtype != "FAIL")
-                                            authtype = "[认证]".Translate();
-                                    }
-                                    else if (certificate.Subject != "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" && !IsPassMOD(mw))
-                                    {//不是通过模组,不加载
-                                        SuccessLoad = false;
-                                        continue;
-                                    }
-                                    else if (authtype != "")
-                                    {
-                                        authtype = "[签名]".Translate();
-                                        //Intro += $"\nSubject:{certificate.Subject}\nIssuer:{certificate.Subject}";
-                                    }
-                                }
-                                else
-                                {
-                                    authtype = "FAIL";
-                                    if (!IsPassMOD(mw))
-                                    {//不是通过模组,不加载
-                                        SuccessLoad = false;
-                                        Author = modlps.FindSub("author").Info.Split('[').First();
-                                        continue;
-                                    }
-                                }
-                                var v = dll.GetExportedTypes();
-                                foreach (Type exportedType in v)
-                                {
-                                    if (exportedType.BaseType == typeof(MainPlugin))
-                                    {
-                                        mw.Plugins.Add((MainPlugin)Activator.CreateInstance(exportedType, mw));
-                                    }
-                                }
-                            }
-                            catch (Exception Exception)
-                            {
-                                SuccessLoad = false;
-                                string errstr = "MOD加载错误,是MOD({0})导致的\n如有可能请发送 错误信息截图和引发错误之前的操作 给开发者:service@exlb.net\n感谢您对游戏开发的支持\n".Translate() + Exception.ToString();
-                                new winReport(mw, errstr).Show();
-                            }
-                        }
-                        if (authtype != "FAIL")
-                            Author += authtype;
-                        break;
+                    Tag.Add("该模组已停用");
+                    return;
                 }
+
+                foreach (DirectoryInfo di in Path.EnumerateDirectories())
+                {
+                    switch (di.Name.ToLower())
+                    {
+                        case "pet":
+                            //宠物模型
+                            Tag.Add("pet");
+                            foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
+                            {
+                                LpsDocument lps = new LpsDocument(File.ReadAllText(fi.FullName));
+                                if (lps.First().Name.ToLower() == "pet")
+                                {
+                                    var name = lps.First().Info;
+                                    var p = mw.Pets.FirstOrDefault(x => x.Name == name);
+                                    if (p == null)
+                                        mw.Pets.Add(new PetLoader(lps, di));
+                                    else
+                                    {
+                                        p.path.Add(di.FullName + "\\" + lps.First()["path"].Info);
+                                        p.Config.Set(lps);
+                                    }
+                                }
+                            }
+                            break;
+                        case "food":
+                            Tag.Add("food");
+                            foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
+                            {
+                                var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
+                                foreach (ILine li in tmp)
+                                {
+                                    string tmps = li.Find("name").info;
+                                    mw.Foods.RemoveAll(x => x.Name == tmps);
+                                    mw.Foods.Add(LPSConvert.DeserializeObject<Food>(li));
+                                }
+                            }
+                            break;
+                        case "image":
+                            Tag.Add("image");
+                            LoadImage(mw, di);
+                            break;
+                        case "text":
+                            Tag.Add("text");
+                            foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
+                            {
+                                var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
+                                foreach (ILine li in tmp)
+                                {
+                                    switch (li.Name.ToLower())
+                                    {
+                                        case "lowfoodtext":
+                                            mw.LowFoodText.Add(LPSConvert.DeserializeObject<LowText>(li));
+                                            break;
+                                        case "lowdrinktext":
+                                            mw.LowDrinkText.Add(LPSConvert.DeserializeObject<LowText>(li));
+                                            break;
+                                        case "clicktext":
+                                            mw.ClickTexts.Add(LPSConvert.DeserializeObject<ClickText>(li));
+                                            break;
+                                    }
+                                }
+                            }
+                            break;
+                        case "lang":
+                            Tag.Add("lang");
+                            foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
+                            {
+                                LocalizeCore.AddCulture(fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length), new LPS_D(File.ReadAllText(fi.FullName)));
+                            }
+                            foreach (DirectoryInfo dis in di.EnumerateDirectories())
+                            {
+                                foreach (FileInfo fi in dis.EnumerateFiles("*.lps"))
+                                {
+                                    LocalizeCore.AddCulture(dis.Name, new LPS_D(File.ReadAllText(fi.FullName)));
+                                }
+                            }
+
+                            if (mw.Set.Language == "null")
+                            {
+                                LocalizeCore.LoadDefaultCulture();
+                            }
+                            else
+                                LocalizeCore.LoadCulture(mw.Set.Language);
+                            break;
+                        case "plugin":
+                            Tag.Add("plugin");
+                            SuccessLoad = true;
+                            string authtype = "";
+                            foreach (FileInfo tmpfi in di.EnumerateFiles("*.dll"))
+                            {
+                                try
+                                {
+                                    var path = tmpfi.Name;
+                                    if (LoadedDLL.Contains(path))
+                                        continue;
+                                    LoadedDLL.Add(path);
+                                    Assembly dll = Assembly.LoadFrom(tmpfi.FullName);
+                                    var certificate = dll.GetModules()?.First()?.GetSignerCertificate();
+                                    if (certificate != null)
+                                    {
+                                        if (certificate.Subject == "CN=\"Shenzhen Lingban Computer Technology Co., Ltd.\", O=\"Shenzhen Lingban Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
+                                            && certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US")
+                                        {//LBGame 信任的证书
+                                            if (authtype != "FAIL")
+                                                authtype = "[认证]".Translate();
+                                        }
+                                        else if (certificate.Subject != "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" && !IsPassMOD(mw))
+                                        {//不是通过模组,不加载
+                                            SuccessLoad = false;
+                                            continue;
+                                        }
+                                        else if (authtype != "")
+                                        {
+                                            authtype = "[签名]".Translate();
+                                            //Intro += $"\nSubject:{certificate.Subject}\nIssuer:{certificate.Subject}";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        authtype = "FAIL";
+                                        if (!IsPassMOD(mw))
+                                        {//不是通过模组,不加载
+                                            SuccessLoad = false;
+                                            Author = modlps.FindSub("author").Info.Split('[').First();
+                                            continue;
+                                        }
+                                    }
+                                    var v = dll.GetExportedTypes();
+                                    foreach (Type exportedType in v)
+                                    {
+                                        if (exportedType.BaseType == typeof(MainPlugin))
+                                        {
+                                            mw.Plugins.Add((MainPlugin)Activator.CreateInstance(exportedType, mw));
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    SuccessLoad = false;                                  
+                                }
+                            }
+                            if (authtype != "FAIL")
+                                Author += authtype;
+                            break;
+                    }
+                }
+            }
+            catch
+            {
+                Tag.Add("该模组已损坏");
+                SuccessLoad = false;
             }
         }
         public bool IsOnMOD(MainWindow mw) => mw.Set.IsOnMod(Name);

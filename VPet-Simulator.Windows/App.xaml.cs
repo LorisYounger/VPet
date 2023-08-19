@@ -23,7 +23,7 @@ namespace VPet_Simulator.Windows
             var expt = e.Exception.ToString();
             if (expt.Contains("value") && expt.Contains("Panuon.WPF.UI.Internal.Utils") && expt.Contains("NaN"))
             {
-                MessageBox.Show(expt, "由于修改游戏数据导致数据溢出,存档可能会出错\n开发者提醒您请不要使用过于超模的MOD".Translate()); 
+                MessageBox.Show("由于修改游戏数据导致数据溢出,存档可能会出错\n开发者提醒您请不要使用过于超模的MOD".Translate()); 
             }
 
             string errstr = "游戏发生错误,可能是".Translate() + (string.IsNullOrWhiteSpace(CoreMOD.NowLoading) ?

@@ -6,3 +6,4 @@
 保存游戏#Save game:|
 手动保存桌宠存档,就算不手动保存,桌宠也会在退出的时候自动保存#Manually save the desktop pet archive, even if you do not manually save, the desktop pet will automatically save when you exit.:|
 保存成功#Save successfully:|
+模组 {0} 插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题#Module {0} plug-in damage\nVirtual desktop pet simulator failed to load the plug-in\nPlease contact the author to fix the problem.:|
