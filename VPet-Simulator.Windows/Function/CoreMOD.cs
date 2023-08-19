@@ -101,6 +101,8 @@ namespace VPet_Simulator.Windows
                 if (!IsOnMOD(mw))
                 {
                     Tag.Add("该模组已停用");
+                    foreach (DirectoryInfo di in Path.EnumerateDirectories())
+                        Tag.Add(di.Name.ToLower());
                     return;
                 }
 
@@ -242,7 +244,7 @@ namespace VPet_Simulator.Windows
                                 }
                                 catch
                                 {
-                                    SuccessLoad = false;                                  
+                                    SuccessLoad = false;
                                 }
                             }
                             if (authtype != "FAIL")
