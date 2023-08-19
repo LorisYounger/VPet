@@ -497,7 +497,7 @@ namespace VPet_Simulator.Windows
                         .WithPreviewFile(mods.Path.FullName + @"\icon.png")
                         .WithContent(mods.Path.FullName);
                 foreach (string tag in mods.Tag)
-                    result.WithTag(tag);
+                    result = result.WithTag(tag);
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
                 mods.AuthorID = Steamworks.SteamClient.SteamId.AccountId;
                 mods.WriteFile();
@@ -539,9 +539,9 @@ namespace VPet_Simulator.Windows
                         .WithPreviewFile(mods.Path.FullName + @"\icon.png")
                         .WithContent(mods.Path);
                 }
-            
+
                 foreach (string tag in mods.Tag)
-                    result.WithTag(tag);
+                    result = result.WithTag(tag);
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
                 if (r.Success)
                 {
