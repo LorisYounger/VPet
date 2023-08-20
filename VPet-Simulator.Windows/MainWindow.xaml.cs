@@ -233,6 +233,7 @@ namespace VPet_Simulator.Windows
             Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
             if (IsSteamUser)//如果是steam用户,尝试加载workshop
             {
+                var workshop = Set["workshop"];
                 await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading Steam Workshop"));
                 int i = 1;
                 while (true)
@@ -243,13 +244,24 @@ namespace VPet_Simulator.Windows
                         foreach (Steamworks.Ugc.Item entry in page.Value.Entries)
                         {
                             if (entry.Directory != null)
+                            {
                                 Path.Add(new DirectoryInfo(entry.Directory));
+                                workshop.Add(new Sub(entry.Directory, ""));
+                            }
                         }
                     }
                     else
                     {
                         break;
                     }
+                }
+            }
+            else
+            {
+                var workshop = Set["workshop"];
+                foreach (Sub ws in workshop)
+                {
+                    Path.Add(new DirectoryInfo(ws.Name));
                 }
             }
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading MOD"));
