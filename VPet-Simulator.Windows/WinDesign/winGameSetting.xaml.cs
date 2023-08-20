@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using VPet_Simulator.Core;
+using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows
 {
@@ -339,11 +340,16 @@ namespace VPet_Simulator.Windows
 
             foreach (var mainplug in mw.Plugins)
             {
-                if (mainplug.PluginName == mod.Name)
+                try
                 {
-                    ButtonSetting.Visibility = Visibility.Visible;
-                    return;
+                    if (mainplug.GetType().GetMethod("Setting").DeclaringType != typeof(MainPlugin)
+                    && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
+                    {
+                        ButtonSetting.Visibility = Visibility.Visible;
+                        return;
+                    }
                 }
+                finally { }
             }
             ButtonSetting.Visibility = Visibility.Collapsed;
         }
@@ -915,11 +921,16 @@ namespace VPet_Simulator.Windows
         {
             foreach (var mainplug in mw.Plugins)
             {
-                if (mainplug.PluginName == mod.Name)
+                try
                 {
-                    mainplug.Setting();
-                    return;
+                    if (mainplug.GetType().GetMethod("Setting").DeclaringType != typeof(MainPlugin)
+                    && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
+                    {
+                        mainplug.Setting();
+                        return;
+                    }
                 }
+                finally { }
             }
         }
 
