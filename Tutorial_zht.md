@@ -12,29 +12,29 @@
 
 再次右鍵關閉
 
-![tut1](Tutorial.assets/Tutorial_CN/tut1.gif)
+![tut1](Tutorial.assets/CN/tut1.gif)
 
 ### 長按頭/身子提起進行移動
 
 可在設定中設定長按時間
 
-![tut5](Tutorial.assets/Tutorial_CN/tut5.gif)
+![tut5](Tutorial.assets/CN/tut5.gif)
 
 ### 點擊頭部摸頭
 
-![tut2](Tutorial.assets/Tutorial_CN/tut2.gif)
+![tut2](Tutorial.assets/CN/tut2.gif)
 
 ### 點擊身體說話
 
-![tut3](Tutorial.assets/Tutorial_CN/tut3.gif)
+![tut3](Tutorial.assets/CN/tut3.gif)
 
 ### 摸頭
 
-![tut4](Tutorial.assets/Tutorial_CN/tut4.gif)
+![tut4](Tutorial.assets/CN/tut4.gif)
 
 ### 摸身子
 
-![ss1](Tutorial.assets/Tutorial_CN/ss1.gif)
+![ss1](Tutorial.assets/CN/ss1.gif)
 
 ## 互動
 
@@ -42,13 +42,13 @@
 
 點擊投喂進行吃飯喝水，吃/喝完後會立即補充一半的飽腹和口渴，剩下一半將會緩慢新增
 
-![ss16](Tutorial.assets/Tutorial_CN/ss16.gif)
+![ss16](Tutorial.assets/CN/ss16.gif)
 
 ### 打工
 
 通過互動 **文案**或**直播** 進行賺錢，賺了錢後就可以給桌寵買食物飲料或者傢俱等(若有社區系統)
 
-![ss15](Tutorial.assets/Tutorial_CN/ss15.gif)
+![ss15](Tutorial.assets/CN/ss15.gif)
 
 ### 學習
 
@@ -62,7 +62,7 @@
 
 設定-互動中可以開關數據計算等相關操作
 
-![image-20230724101858667](Tutorial.assets/Tutorial_CN/image-20230724101858667.png)
+![image-20230724101858667](Tutorial.assets/CN/image-20230724101858667.png)
 
 ### 數據計算
 
@@ -79,7 +79,7 @@
 
 决定桌寵在多少週期後决定自主行動，例如到處亂走亂爬. 週期越長頻率越低
 
-![ss18](Tutorial.assets/Tutorial_CN/ss18.gif)
+![ss18](Tutorial.assets/CN/ss18.gif)
 
 ### 桌寵移動
 
@@ -95,11 +95,11 @@
 鍵盤快速鍵編寫方法請參攷[鍵盤快速鍵]( https://www.exlb.net/SendKeys )通用注解
 右鍵進行排序/删除等操作
 
-![image-20230620063315866](Tutorial.assets/Tutorial_CN/image-20230620063315866.png)
+![image-20230620063315866](Tutorial.assets/CN/image-20230620063315866.png)
 
 保存設置後，即可在桌寵功能表列看到自定義的快速鍵
 
-![image-20230620063216134](Tutorial.assets/Tutorial_CN/image-20230620063216134.png)
+![image-20230620063216134](Tutorial.assets/CN/image-20230620063216134.png)
 
 ## 數據介紹
 

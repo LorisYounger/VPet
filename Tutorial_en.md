@@ -3,7 +3,6 @@
 **This tutorial only automatically opens the first time you start the program and when you start it after an update** 
 *If you can see this file automatically open every time you start Desktop pet, that is a bug. Please report it to me*
 
-
 [Data Calculation](#Data Calculation), which affects the attribute changes for the Virtual Pet, is on by default, but can be toggled under System > Interact. Data Collection toggles whether or not consumption of the Virutal Pet's attributes, such as stamina, mood, hunger, and thirst, is on. 
 
 The core gameplay is the progression of the Virtual Pet, while automatic actions such as walking around, dazing, crouching, and so on needs the player to be present to witness them.
@@ -12,29 +11,29 @@ The core gameplay is the progression of the Virtual Pet, while automatic actions
 
 ### Right Click to Open/Close the Menu Bar
 
-![tut1](Tutorial.assets/tut1.gif)
+![tut1](Tutorial.assets/CN/tut1.gif)
 
 ### Long Press the Head/Body to Move
 
 The Long Press Interval can be set under Settings > Interact.
 
-![tut5](Tutorial.assets/tut5.gif)
+![tut5](Tutorial.assets/CN/tut5.gif)
 
 ### Click the Head to Pat the Head
 
-![tut2](Tutorial.assets/tut2.gif)
+![tut2](Tutorial.assets/CN/tut2.gif)
 
 ### Click the Body to Speak
 
-![tut3](Tutorial.assets/tut3.gif)
+![tut3](Tutorial.assets/CN/tut3.gif)
 
 ### Touch Head
 
-![tut4](Tutorial.assets/tut4.gif)
+![tut4](Tutorial.assets/CN/tut4.gif)
 
 ### Touch Body
 
-![ss1](Tutorial.assets/ss1.gif)
+![ss1](Tutorial.assets/CN/ss1.gif)
 
 ## Interact
 
@@ -42,13 +41,13 @@ The Long Press Interval can be set under Settings > Interact.
 
 Clicking on Feed > Food/Drink/Medicine will take you to Betterbuy's respective category. Immediately after purchasing something, the Virtual Pet will consume the product, and half of the associated hunger and thirst values will be replenished instantly, while the other half will be added gradually.
 
-![ss16](Tutorial.assets/ss16.gif)
+![ss16](Tutorial.assets/CN/ss16.gif)
 
 ### Work
 
 Make Money through Interact > Work > **Copywriting** or **Live** (unlocked at level 10), which can be used to buy food, drinks, and medicine from BetterMart. There may be furniture for the Virtual Pet available in the future.
 
-![ss15](Tutorial.assets/ss15.gif)
+![ss15](Tutorial.assets/CN/ss15.gif)
 
 ### Learn
 
@@ -62,7 +61,7 @@ Sleep lowers Stamina exertion and faster recovery of Stamina, which is better fo
 
 Settings > Interact can toggle data calculation and other related operations.
 
-![English Settings Screenshot](Tutorial.assets/Tutorial_EN/VPet_Settings.PNG)
+![English Settings Screenshot](Tutorial.assets/EN/VPet_Settings.PNG)
 
 ### Data Calculation
 
@@ -79,7 +78,7 @@ Calculate Virtual Pet Data Calculation interval. The longer the interval, the lo
 
 Decide after how many Data Calculation cycles the Virtual Pet decides to automatically move around. The longer the cycles, the lower the frequency of interactions.
 
-![ss18](Tutorial.assets/ss18.gif)
+![ss18](Tutorial.assets/CN/ss18.gif)
 
 ### Virtual Pet moving
 
@@ -94,11 +93,11 @@ When turned on, the Virtual Pet will only move with player interaction, otherwis
 Add shortcuts/webpages to the custom bar to start the desired function on the go
 For more information about how to write keyboard shortcuts, see [Keyboard shortcuts](https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks) Generic Annotations
 
-![image-20230620063315866](Tutorial.assets/image-20230620063315866.png)
+![image-20230620063315866](Tutorial.assets/CN/image-20230620063315866.png)
 
 After saving the settings, you can see the customized shortcut keys in the Virtual Pet menu bar.
 
-![image-20230620063216134](Tutorial.assets/image-20230620063216134.png)
+![image-20230620063216134](Tutorial.assets/CN/image-20230620063216134.png)
 
 ## Data Introduction
 

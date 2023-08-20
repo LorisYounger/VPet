@@ -12,29 +12,29 @@
 
 再次右键关闭
 
-![tut1](Tutorial.assets/Tutorial_CN/tut1.gif)
+![tut1](Tutorial.assets/CN/tut1.gif)
 
 ### 长按头/身子 提起进行移动
 
 可在设置中设置长按时间
 
-![tut5](Tutorial.assets/Tutorial_CN/tut5.gif)
+![tut5](Tutorial.assets/CN/tut5.gif)
 
 ### 点击头部摸头
 
-![tut2](Tutorial.assets/Tutorial_CN/tut2.gif)
+![tut2](Tutorial.assets/CN/tut2.gif)
 
 ### 点击身体说话
 
-![tut3](Tutorial.assets/Tutorial_CN/tut3.gif)
+![tut3](Tutorial.assets/CN/tut3.gif)
 
 ### 摸头
 
-![tut4](Tutorial.assets/Tutorial_CN/tut4.gif)
+![tut4](Tutorial.assets/CN/tut4.gif)
 
 ### 摸身子
 
-![ss1](Tutorial.assets/Tutorial_CN/ss1.gif)
+![ss1](Tutorial.assets/CN/ss1.gif)
 
 ## 互动
 
@@ -42,13 +42,13 @@
 
 点击投喂进行吃饭喝水, 吃/喝完后会立即补充一半的饱腹和口渴, 剩下一半将会缓慢增加
 
-![ss16](Tutorial.assets/Tutorial_CN/ss16.gif)
+![ss16](Tutorial.assets/CN/ss16.gif)
 
 ### 打工
 
 通过互动 **文案**或**直播** 进行赚钱, 赚了钱后就可以给桌宠买食物饮料或者家具等(若有社区系统)
 
-![ss15](Tutorial.assets/Tutorial_CN/ss15.gif)
+![ss15](Tutorial.assets/CN/ss15.gif)
 
 ### 学习
 
@@ -62,7 +62,7 @@
 
 设置-互动中可以开关数据计算等相关操作
 
-![image-20230724101858667](Tutorial.assets/Tutorial_CN/image-20230724101858667.png)
+![image-20230724101858667](Tutorial.assets/CN/image-20230724101858667.png)
 
 ### 数据计算
 
@@ -79,7 +79,7 @@
 
 决定桌宠在多少周期后决定自主行动,例如到处乱走乱爬. 周期越长频率越低
 
-![ss18](Tutorial.assets/Tutorial_CN/ss18.gif)
+![ss18](Tutorial.assets/CN/ss18.gif)
 
 ### 桌宠移动
 
@@ -95,11 +95,11 @@
 键盘快捷键编写方法请参考 [键盘快捷键](https://www.exlb.net/SendKeys) 通用注解
 右键进行排序/删除等操作
 
-![image-20230620063315866](Tutorial.assets/Tutorial_CN/image-20230620063315866.png)
+![image-20230620063315866](Tutorial.assets/CN/image-20230620063315866.png)
 
 保存设置后, 即可在桌宠菜单栏看到自定义的快捷键
 
-![image-20230620063216134](Tutorial.assets/Tutorial_CN/image-20230620063216134.png)
+![image-20230620063216134](Tutorial.assets/CN/image-20230620063216134.png)
 
 ## 数据介绍
 
