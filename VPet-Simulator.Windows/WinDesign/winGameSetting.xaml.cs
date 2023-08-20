@@ -342,7 +342,8 @@ namespace VPet_Simulator.Windows
             {
                 try
                 {
-                    if (mainplug.GetType().GetMethod("Setting").DeclaringType != typeof(MainPlugin)
+                    if (mainplug.PluginName == mod.Name &&
+                        mainplug.GetType().GetMethod("Setting").DeclaringType != typeof(MainPlugin)
                     && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
                     {
                         ButtonSetting.Visibility = Visibility.Visible;
@@ -923,7 +924,7 @@ namespace VPet_Simulator.Windows
             {
                 try
                 {
-                    if (mainplug.GetType().GetMethod("Setting").DeclaringType != typeof(MainPlugin)
+                    if (mainplug.PluginName == mod.Name && mainplug.GetType().GetMethod("Setting").DeclaringType != typeof(MainPlugin)
                     && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
                     {
                         mainplug.Setting();
