@@ -1,7 +1,6 @@
 ﻿using LinePutScript;
 using LinePutScript.Converter;
 using System;
-using System.Windows.Forms;
 
 namespace VPet_Simulator.Core
 {
@@ -281,32 +280,44 @@ namespace VPet_Simulator.Core
         /// </summary>
         public ModeType CalMode()
         {
-            int realhel = 60 - (Feeling >= 80 ? 12 : 0) - (Likability >= 80 ? 12 : (Likability >= 40 ? 6 : 0));
-            //先从最次的开始
-            if (Health <= realhel)
+            var healthFactor = GetHealthFactor();
+            if (Health <= healthFactor)
             {
-                //可以确认从状态不佳和生病二选一
-                if (Health <= realhel / 2)
-                {//生病
-                    return ModeType.Ill;
-                }
-                else
-                {
-                    return ModeType.PoorCondition;
-                }
+                return Health <= GetHalfFactor(healthFactor) ? ModeType.Ill : ModeType.PoorCondition;
             }
-            //然后判断是高兴还是普通
-            realhel = 90 - (Likability >= 80 ? 20 : (Likability >= 40 ? 10 : 0));
-            if (Feeling >= realhel)
+
+            var feelingFactor = GetFeelingFactor();
+            if (Feeling < feelingFactor)
+            {
+                return Feeling <= GetHalfFactor(feelingFactor) ? ModeType.PoorCondition : ModeType.Nomal;
+            }
+            else
             {
                 return ModeType.Happy;
             }
-            else if (Feeling <= realhel / 2)
+
+            int GetHalfFactor(int factor)
             {
-                return ModeType.PoorCondition;
+                return (int)factor / 2;
             }
-            return ModeType.Nomal;
         }
+
+        private int GetHealthFactor()
+        {
+            return 60 - (IsHighFeeling ? 12 : 0) - (IsHighestLikability ? 12 : IsNormalLikability ? 6 : 0);
+        }
+
+        private int GetFeelingFactor()
+        {
+            return 90 - (IsHighestLikability ? 20 : (IsNormalLikability ? 10 : 0));
+        }
+
+        private bool IsNormalLikability => Likability is >= 40 and < 80;
+
+        private bool IsHighestLikability => Likability >= 80;
+
+        private bool IsHighFeeling => Feeling >= 80;
+
         /// <summary>
         /// 新游戏
         /// </summary>

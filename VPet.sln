@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Windows", "V
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Windows.Interface", "VPet-Simulator.Windows.Interface\VPet-Simulator.Windows.Interface.csproj", "{DCAD838A-1A02-4BDF-962C-FD47C6006D28}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{93B65309-1865-4023-8BB6-5CCC52864CB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Core.Test", "tests\VPet-Simulator.Core.Test\VPet-Simulator.Core.Test.csproj", "{E91A83C9-655A-43C9-9BF9-245B62D28430}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,9 +73,24 @@ Global
 		{DCAD838A-1A02-4BDF-962C-FD47C6006D28}.Release|x64.Build.0 = Release|Any CPU
 		{DCAD838A-1A02-4BDF-962C-FD47C6006D28}.Release|x86.ActiveCfg = Release|Any CPU
 		{DCAD838A-1A02-4BDF-962C-FD47C6006D28}.Release|x86.Build.0 = Release|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Debug|x64.Build.0 = Debug|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Debug|x86.Build.0 = Debug|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Release|x64.ActiveCfg = Release|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Release|x64.Build.0 = Release|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Release|x86.ActiveCfg = Release|Any CPU
+		{E91A83C9-655A-43C9-9BF9-245B62D28430}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E91A83C9-655A-43C9-9BF9-245B62D28430} = {93B65309-1865-4023-8BB6-5CCC52864CB8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8877951A-CCAB-426E-86D3-0334FC2D8834}
