@@ -6,7 +6,7 @@
     public abstract class MainPlugin
     {
         /// <summary>
-        /// 通过插件名称定位插件
+        /// MOD名称 通过插件名称定位插件, 需和MOD名称一致
         /// </summary>
         public abstract string PluginName { get; }
         /// <summary>
