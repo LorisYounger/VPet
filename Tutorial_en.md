@@ -62,7 +62,7 @@ Sleep lowers Stamina exertion and faster recovery of Stamina, which is better fo
 
 Settings > Interact can toggle data calculation and other related operations.
 
-![image-20230724101858667](Tutorial.assets/image-20230724101858667.png)
+![English Settings Screenshot](Tutorial.assets/Tutorial_EN/VPet_Settings.PNG)
 
 ### Data Calculation
 
