@@ -34,11 +34,11 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 版本号
         /// </summary>
-        int verison { get; }
+        int version { get; }
         /// <summary>
         /// 版本号
         /// </summary>
-        string Verison { get; }
+        string Version { get; }
         /// <summary>
         /// 上次点击时间 (Tick)
         /// </summary>
