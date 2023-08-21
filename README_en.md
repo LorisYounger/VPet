@@ -36,7 +36,7 @@ See [image resources](https://github.com/LorisYounger/VPet#%E5%9B%BE%E5%83%8F%E8
 
 ### Free!
 
-This game is **100% free**! ~~If it looks good for you, trying it out won't hurt.~~ <br/>
+This game is **100% free**! ~~So if it looks good to you, try it out, it won't hurt.~~ <br/>
 Our main goal is to promote [VUP-Simulator](https://store.steampowered.com/app/1352140/_/) with it; the default character here is the main character there.
 
 ### Open source!
