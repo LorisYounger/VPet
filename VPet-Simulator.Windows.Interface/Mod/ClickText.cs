@@ -13,7 +13,7 @@ namespace VPet_Simulator.Windows.Interface
     /// <summary>
     /// 点击桌宠时触发的乱说话
     /// </summary>
-    public class ClickText
+    public class ClickText : ICheckText
     {
         public ClickText()
         {
@@ -24,39 +24,7 @@ namespace VPet_Simulator.Windows.Interface
             Text = text;
         }
 
-        [Line(ignoreCase: true)]
-        private int mode { get; set; } = 7;
-        /// <summary>
-        /// 需求状态模式
-        /// </summary>      
-        public ModeType Mode
-        {
-            get => (ModeType)mode;
-            set => mode = (int)value;
-        }
-        /// <summary>
-        /// 宠物状态模式
-        /// </summary>
-        [Flags]
-        public enum ModeType
-        {
-            /// <summary>
-            /// 高兴
-            /// </summary>
-            Happy = 1,
-            /// <summary>
-            /// 普通
-            /// </summary>
-            Nomal = 2,
-            /// <summary>
-            /// 状态不佳
-            /// </summary>
-            PoorCondition = 4,
-            /// <summary>
-            /// 生病(躺床)
-            /// </summary>
-            Ill = 8
-        }
+      
         /// <summary>
         /// 指定干活时说, 空为任意, sleep 为睡觉时
         /// </summary>
@@ -87,52 +55,21 @@ namespace VPet_Simulator.Windows.Interface
             get => (DayTime)dayTime;
             set => dayTime = (int)value;
         }
-        /// <summary>
-        /// 好感度要求:最小值
-        /// </summary>
-        [Line(IgnoreCase = true)]
-        public int LikeMin = 0;
-        /// <summary>
-        /// 好感度要求:最大值
-        /// </summary>
-        [Line(IgnoreCase = true)]
-        public int LikeMax = int.MaxValue;
+     
         /// <summary>
         /// 工作状态
         /// </summary>
         [Line(IgnoreCase = true)]
         public WorkingState State { get; set; } = WorkingState.Nomal;
-        /// <summary>
-        /// 说话的内容
-        /// </summary>
-        [Line(IgnoreCase = true)] public string Text { get; set; }
-
-        private string transText = null;
-        /// <summary>
-        /// 说话的内容 (翻译)
-        /// </summary>
-        public string TranslateText
-        {
-            get
-            {
-                if (transText == null)
-                {
-                    transText = LocalizeCore.Translate(Text);
-                }
-                return transText;
-            }
-            set
-            {
-                transText = value;
-            }
-        }
+      
         /// <summary>
         /// 检查部分状态是否满足需求
         /// </summary>之所以不是全部的,是因为挨个取效率太差了      
-        public bool CheckState(Main m)
+        public override bool CheckState(Main m)
         {
-            if (m.Core.Save.Likability < LikeMin || m.Core.Save.Likability > LikeMax)
+            if (!base.CheckState(m))
                 return false;
+
             if (string.IsNullOrWhiteSpace(Working))
             {
                 if (State != m.State)

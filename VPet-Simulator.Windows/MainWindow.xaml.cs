@@ -407,7 +407,7 @@ namespace VPet_Simulator.Windows
                     case "LB":
                         if (IsSteamUser)
                         {
-                            TalkBox = new TalkBox(this);
+                            TalkBox = new TalkSelect(this);
                             Main.ToolBar.MainGrid.Children.Add(TalkBox);
                         }
                         break;
