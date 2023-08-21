@@ -140,7 +140,7 @@ You **must** inform users of the source of our animation files, and provide a li
 
 ### For usage for commercial purposes
 
-* Please contact me [through e-mail](mailto:zoujin.dev@exlb.org).
+* Please contact me [through e-mail](mailto:zoujin.dev@exlb.org) first.
 * On the first use of your application, you **must** show a pop-up window that prominently informs the user of the source of our animation files, and provides a link to [this page](https://github.com/LorisYounger/VPet).
 * In a suitable page (that your users can easily access), you **must** inform the user of the source of our animation files, and provide a link to [this page](https://github.com/LorisYounger/VPet).
 * You **must not** profit from our animation files by selling them.
