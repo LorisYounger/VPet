@@ -142,6 +142,9 @@
     <Compile Include="PetHelper.xaml.cs">
       <DependentUpon>PetHelper.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WinDesign\TalkSelect.xaml.cs">
+      <DependentUpon>TalkSelect.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinDesign\winBetterBuy.xaml.cs">
       <DependentUpon>winBetterBuy.xaml</DependentUpon>
     </Compile>
@@ -175,6 +178,10 @@
       <DependentUpon>winTrusteeShip.xaml</DependentUpon>
     </Compile>
     <Page Include="PetHelper.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WinDesign\TalkSelect.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
