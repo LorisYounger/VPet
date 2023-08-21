@@ -16,7 +16,7 @@ This game was originally developed for *[VUP-Simulator](https://store.steampower
 
 ### Many interactions and animations!
 
-Up to 32<sub>(types)</sub> * 4<sub>(states)</sub> * 3<sub>(variants)</sub> = 384 animations included! (Note that some types don't have ill versions or loops etc., so the actual number is slightly lower.)
+Up to 32<sub>(types)</sub> * 4<sub>(states)</sub> * 3<sub>(variants)</sub> = 384 animations included! (Note that some types don't have ill versions or loops etc., so the actual number is slightly smaller.)
 
 #### Have some examples:
 
@@ -101,7 +101,7 @@ You can send your feedback and suggestions to:
     * GraphCore - core for animation displaying
     * GraphHelper - animation helper class
     * GraphInfo - animation information
-    * FoodAnimation - specialized support for displaying 3-layer sandwich animations. not necessarily just for food, it's just the name
+    * FoodAnimation - specialized support for displaying 3-layer sandwich animations (not necessarily just for food, it's just the name)
     * PNGAnimation - component for animated animations
     * Picture - component for static animations
   * Display - for displaying
@@ -111,7 +111,7 @@ You can send your feedback and suggestions to:
       * MainLogic - core display logic
     * ToolBar - toolbar that shows up when pets are clicked on
     * MessageBar - dialogue bubble for when pets speak
-    * WorkTimer - work timer
+    * WorkTimer - work timer (duh)
 
 ## Contributing
 

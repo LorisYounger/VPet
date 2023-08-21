@@ -54,7 +54,7 @@ Thanks to the following participating developers (in order of contribution):
     * GraphCore - core for animation displaying
     * GraphHelper - animation helper class
     * GraphInfo - animation information
-    * FoodAnimation - specialized support for displaying 3-layer sandwich animations. not necessarily just for food, it's just the name
+    * FoodAnimation - specialized support for displaying 3-layer sandwich animations (not necessarily just for food, it's just the name)
     * PNGAnimation - component for animated animations
     * Picture - component for static animations
   * Display - for displaying
@@ -64,7 +64,7 @@ Thanks to the following participating developers (in order of contribution):
       * MainLogic - core display logic
     * ToolBar - toolbar that shows up when pets are clicked on
     * MessageBar - dialogue bubble for when pets speak
-    * WorkTimer - work timer
+    * WorkTimer - work timer (duh)
 
 # Animation copyright notice and authorization terms
 
