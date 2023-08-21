@@ -4,7 +4,7 @@
 
 ![Header](README.assets/%E4%B8%BB%E5%9B%BE.png)
 
-An open source desktop pet/shimeji/v-pet app, that can be embedded into any Windows Presentation Framework app as well.
+An open source desktop pet/shimeji/virtual pet app, that can be embedded into any Windows Presentation Framework app as well.
 
 Get VPet-Simulator [on Steam](https://store.steampowered.com/app/1920960/VPet) for free, or install its core library to your WPF app with [NuGet](https://www.nuget.org/packages/VPet-Simulator.Core).
 
@@ -65,7 +65,7 @@ The following contents can be added or modified by Workshop mods:
 
 You can send your feedback and suggestions to:
   * The game's community on Steam
-  * GitHub Issues
+  * GitHub [Issues](https://github.com/LorisYounger/VPet/issues/new)
   * The [虚拟主播模拟器 "ba"/board](https://tieba.baidu.com/f?kw=%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%92%AD%E6%A8%A1%E6%8B%9F%E5%99%A8) on Baidu Tieba
   * The VUP-Simulator QQ group (430081239)
   * Or my e-mail ([service@exlb.net](mailto:service@exlb.net))
@@ -117,11 +117,11 @@ You can send your feedback and suggestions to:
 
 Welcome to participate in development! To ensure code maintainability and playability, if you wish to develop new features or gameplay, please first contact me (by sending a [mail](mailto:zoujin.dev@exlb.org) or opening an [Issue](https://github.com/LorisYounger/VPet/issues/new)) with your idea. This is to make sure your contribution fits the game, and will not get outright rejected for being unfitting (causing your effort to be wasted). You don't need to contact me regarding fixing errors or bugs - simply send a PR in that case.
 
-After I approve your idea, you may [fork](https://github.com/LorisYounger/VPet/fork) the code repository and make your changes, then submit them by opening a [pull request](https://github.com/LorisYounger/VPet/compare). If it doesn't get approved, you can always create your own version of this game (that will be subject to [Apache License version 2.0](LICENSE) and the [animation copyright notice and authorization terms](#animation-copyright-notice-and-authorization-terms)).
+After I approve your idea, you may [fork](https://github.com/LorisYounger/VPet/fork) the code repository and make your changes, then submit them by opening a [pull request](https://github.com/LorisYounger/VPet/compare). If it doesn't get approved, you can always make your own version of this game (that will be subject to [Apache License version 2.0](LICENSE) and the [animation copyright notice and authorization terms](#animation-copyright-notice-and-authorization-terms)).
 
-Note that the addition of new features can normally be accomplished with plugins - see [VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo) for more information.
+Note that to make sure the features/gameplay you contribute fit the game, I may make changes to your code.
 
-To make sure the features/gameplay you contribute fit the game, I may make changes to your code.
+Also note that the addition of new features can usually be accomplished with plugins - see [VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo) for more information.
 
 Thanks to the following participating developers (in order of contribution):
 
