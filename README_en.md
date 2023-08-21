@@ -1,4 +1,4 @@
-# VPet-Simulator
+# VPet
 
 [简体中文](./README.md) | English
 
@@ -6,11 +6,11 @@
 
 An open-source desktop pet/shimeji/virtual pet app, that can be embedded into any Windows Presentation Framework app as well.
 
-Get VPet-Simulator [on Steam](https://store.steampowered.com/app/1920960/VPet) for free, or install its core library to your WPF app with [NuGet](https://www.nuget.org/packages/VPet-Simulator.Core).
+Get VPet [on Steam](https://store.steampowered.com/app/1920960/VPet) for free, or install its core library to your WPF app with [NuGet](https://www.nuget.org/packages/VPet-Simulator.Core).
 
 ## Introduction
 
-***VPet-Simulator*** is a desktop pet app with various interactions implemented. It's open-source, free, and supports mods from the Steam Workshop. ~~Well, it's free, so why not try it out?~~
+***VPet*** is a desktop pet app with various interactions implemented. It's open-source, free, and supports mods from the Steam Workshop. ~~Well, it's free, so why not try it out?~~
 
 This game was originally developed for *[VUP-Simulator](https://store.steampowered.com/app/1352140/_/)*'s tutorial as an accompanying desktop pet, then split into an independent app. If you liked it, please consider adding VUP-Simulator to your wishlist.
 
