@@ -144,9 +144,9 @@ namespace VPet_Simulator.Windows
             SliderResolution.Value = mw.Set.Resolution;
 
 #if X64
-            GameVerison.Content = "游戏版本".Translate() + $"v{mw.Verison} x64";
+            GameVerison.Content = "游戏版本".Translate() + $"v{mw.version} x64";
 #else
-            GameVerison.Content = "游戏版本".Translate() + $"v{mw.Verison} x86";
+            GameVerison.Content = "游戏版本".Translate() + $"v{mw.version} x86";
 #endif
             //关于ui
             if (mw.IsSteamUser)
@@ -179,7 +179,7 @@ namespace VPet_Simulator.Windows
                     BtnCGPTReSet.Content = "聊天框已关闭".Translate();
                     break;
             }
-            runabVer.Text = $"v{mw.Verison} ({mw.verison})";
+            runabVer.Text = $"v{mw.version} ({mw.version})";
 
             //mod列表
             ShowModList();
@@ -227,7 +227,7 @@ namespace VPet_Simulator.Windows
                 }
                 else
                 {
-                    if (mod.GameVer / 10 == mw.verison / 10)
+                    if (mod.GameVer / 10 == mw.version / 10)
                     {
                         moditem.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
                     }
@@ -247,9 +247,9 @@ namespace VPet_Simulator.Windows
             runMODGameVer.Text = CoreMOD.INTtoVER(mod.GameVer);
             runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
             ImageMOD.Source = new BitmapImage(new Uri(mod.Path.FullName + @"\icon.png"));
-            if (mod.GameVer < mw.verison)
+            if (mod.GameVer < mw.version)
             {
-                if (mod.GameVer / 10 == mw.verison / 10)
+                if (mod.GameVer / 10 == mw.version / 10)
                 {
                     runMODGameVer.Text += " (兼容)".Translate();
                 }
@@ -259,9 +259,9 @@ namespace VPet_Simulator.Windows
                     runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
                 }
             }
-            else if (mod.GameVer > mw.verison)
+            else if (mod.GameVer > mw.version)
             {
-                if (mod.GameVer / 10 == mw.verison / 10)
+                if (mod.GameVer / 10 == mw.version / 10)
                 {
                     runMODGameVer.Text += " (兼容)".Translate();
                     runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
@@ -857,14 +857,15 @@ namespace VPet_Simulator.Windows
                     new winCGPTSetting(mw).ShowDialog();
                     break;
                 case "LB":
-                    Task.Run(() =>
-                    {
-                        if (((TalkBox)mw.TalkBox).ChatGPT_Reset())
-                        {
-                            ((TalkBox)mw.TalkBox).btn_startup.Visibility = Visibility.Visible;
-                            MessageBoxX.Show("桌宠重置成功".Translate());
-                        }
-                    });
+                    //Task.Run(() =>
+                    //{
+                    //    if (((TalkBox)mw.TalkBox).ChatGPT_Reset())
+                    //    {
+                    //        ((TalkBox)mw.TalkBox).btn_startup.Visibility = Visibility.Visible;
+                    //        MessageBoxX.Show("桌宠重置成功".Translate());
+                    //    }
+                    //});
+                    //TODO ((TalkSelect)mw.TalkBox)
                     break;
                 case "OFF":
                 default:
@@ -905,7 +906,7 @@ namespace VPet_Simulator.Windows
                     BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
                     if (mw.TalkBox != null)
                         mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
-                    mw.TalkBox = new TalkBox(mw);
+                    mw.TalkBox = new TalkSelect(mw);
                     mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
                     break;
                 case "OFF":
