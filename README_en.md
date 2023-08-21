@@ -4,13 +4,13 @@
 
 ![Header](README.assets/%E4%B8%BB%E5%9B%BE.png)
 
-An open source desktop pet/shimeji/virtual pet app, that can be embedded into any Windows Presentation Framework app as well.
+An open-source desktop pet/shimeji/virtual pet app, that can be embedded into any Windows Presentation Framework app as well.
 
 Get VPet-Simulator [on Steam](https://store.steampowered.com/app/1920960/VPet) for free, or install its core library to your WPF app with [NuGet](https://www.nuget.org/packages/VPet-Simulator.Core).
 
 ## Introduction
 
-***VPet-Simulator*** is an desktop pet app with various interactions implemented. It's open-source, free, and supports mods from the Steam Workshop. ~~Well, it's free, so why not try it out?~~
+***VPet-Simulator*** is a desktop pet app with various interactions implemented. It's open-source, free, and supports mods from the Steam Workshop. ~~Well, it's free, so why not try it out?~~
 
 This game was originally developed for *[VUP-Simulator](https://store.steampowered.com/app/1352140/_/)*'s tutorial as an accompanying desktop pet, then split into an independent app. If you liked it, please consider adding VUP-Simulator to your wishlist.
 
@@ -28,11 +28,11 @@ Up to 32<sub>(types)</sub> * 4<sub>(states)</sub> * 3<sub>(variants)</sub> = 384
 
 ![ss4](README.assets/ss4.gif) ![ss4](README.assets/ss8.gif)
 
-##### Wall climbing
+##### Wall-climbing
 
 ![ss7](README.assets/ss7.gif)
 
-See [image resources](#%E5%9B%BE%E5%83%8F%E8%B5%84%E6%BA%90) for more information. <!-- FIXME: dead link and IDK what this correspends to -->
+See [image resources](#%E5%9B%BE%E5%83%8F%E8%B5%84%E6%BA%90) for more information. <!-- FIXME: dead link and IDK what this corresponds to -->
 
 ### Free!
 
@@ -43,21 +43,21 @@ Our main goal is to promote [VUP-Simulator](https://store.steampowered.com/app/1
 
 The source of this game is available on GitHub. You can find it at: https://github.com/LorisYounger/VPet
 
-Feature requests and pull requests are welcome! You can take our code and modify it to your liking, too. (Though most content don't require that, and can be modded in.)
+Feature requests and pull requests are welcome! You can take our code and modify it to your liking, too. (Though most content doesn't require that, and can be modded in.)
 
 ### With Steam Workshop support!
 
-Steam Workshop mods are supported. With mods, you can add your own pets (animations/interactions), and share them to others through the Workshop.
+Steam Workshop mods are supported. With mods, you can add your own pets (animations/interactions), and share them with others through the Workshop.
 
 The following contents can be added or modified by Workshop mods:
 
 * Pet animations
-* Items, foods and drinks, etc.
+* Items, foods/drinks, etc.
 * Work
 * Dialogue
 * Themes
 * Plugins - adding extra content to pets with code. For example:
-  * New animation logic / solutions (e.g. Live2D and Spine)
+  * New animation logic/solutions (e.g. Live2D and Spine)
   * New features (e.g. alarm and notes)
   * Basically anything - see [VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo) for examples
 
