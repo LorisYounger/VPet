@@ -64,7 +64,7 @@ The following contents can be added or modified by Workshop mods:
 ### Contact us (for feedback and suggestions)
 
 You can send your feedback and suggestions to:
-  * The game's community on Steam
+  * Steam comments or community
   * GitHub [Issues](https://github.com/LorisYounger/VPet/issues/new)
   * The [虚拟主播模拟器 "ba"/board](https://tieba.baidu.com/f?kw=%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%92%AD%E6%A8%A1%E6%8B%9F%E5%99%A8) on Baidu Tieba
   * The VUP-Simulator QQ group (430081239)
