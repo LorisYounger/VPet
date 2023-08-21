@@ -14,7 +14,7 @@ Get VPet-Simulator [on Steam](https://store.steampowered.com/app/1920960/VPet) f
 
 This game was originally developed for *[VUP-Simulator](https://store.steampowered.com/app/1352140/_/)*'s tutorial as an accompanying desktop pet, then split into an independent app. If you liked it, please consider adding VUP-Simulator to your wishlist.
 
-### Many interactions and animations
+### Many interactions and animations!
 
 Up to 32<sub>(types)</sub> * 4<sub>(states)</sub> * 3<sub>(variants)</sub> = 384 animations included! (Note that some types don't have ill versions or loops etc., so the actual number is slightly lower.)
 
@@ -45,7 +45,7 @@ The source of this game is available on GitHub. You can find it at: https://gith
 
 Feature requests and pull requests are welcome! You can take our code and modify it to your liking, too. (Though most content don't require that, and can be modded in.)
 
-### Steam Workshop support
+### With Steam Workshop support!
 
 Steam Workshop mods are supported. With mods, you can add your own pets (animations/interactions), and share them to others through the Workshop.
 
@@ -138,12 +138,15 @@ The copyright of the [pet animation files](./VPet-Simulator.Windows/mod/0000_cor
 
 You **must** inform users of the source of our animation files, and provide a link to [this page](https://github.com/LorisYounger/VPet).
 
-### For usage for commercial purposes
+### For usage for commercial purposes (<100,000CN¥)
 
-* Please contact me [through mail](mailto:zoujin.dev@exlb.org) first.
 * On the first use of your application, you **must** show a pop-up window that prominently informs the user of the source of our animation files, and provides a link to [this page](https://github.com/LorisYounger/VPet).
 * In a suitable page (that your users can easily access), you **must** inform the user of the source of our animation files, and provide a link to [this page](https://github.com/LorisYounger/VPet).
 * You **must not** profit from our animation files by selling them.
+
+### For usage for commercial purposes (>=100,000CN¥ or others)
+
+* Please contact me [through e-mail](mailto:zoujin.dev@exlb.org).
 
 ### For distribution
 
