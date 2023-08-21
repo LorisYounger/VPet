@@ -20,7 +20,7 @@ Up to 32<sub>(types)</sub> * 4<sub>(states)</sub> * 3<sub>(variants)</sub> = 384
 
 #### Have some examples:
 
-##### Head patting
+##### Head-patting
 
 ![ss0](README.assets/ss0.gif)
 
