@@ -32,7 +32,7 @@ Up to 32<sub>(types)</sub> * 4<sub>(states)</sub> * 3<sub>(variants)</sub> = 384
 
 ![ss7](README.assets/ss7.gif)
 
-See [image resources](https://github.com/LorisYounger/VPet#%E5%9B%BE%E5%83%8F%E8%B5%84%E6%BA%90) for more information.
+See [image resources](#%E5%9B%BE%E5%83%8F%E8%B5%84%E6%BA%90) for more information. <!-- FIXME: dead link and IDK what this correspends to -->
 
 ### Free!
 
