@@ -77,15 +77,12 @@ The copyright of the [pet animation files](./VPet-Simulator.Windows/mod/0000_cor
 
 You **must** inform users of the source of our animation files, and provide a link to [this page](https://github.com/LorisYounger/VPet).
 
-### For usage for commercial purposes (<100,000CN¥)
+### For usage for commercial purposes
 
+* Please contact me [through e-mail](mailto:zoujin.dev@exlb.org).
 * On the first use of your application, you **must** show a pop-up window that prominently informs the user of the source of our animation files, and provides a link to [this page](https://github.com/LorisYounger/VPet).
 * In a suitable page (that your users can easily access), you **must** inform the user of the source of our animation files, and provide a link to [this page](https://github.com/LorisYounger/VPet).
 * You **must not** profit from our animation files by selling them.
-
-### For usage for commercial purposes (>=100,000CN¥ or others)
-
-* Please contact me [through e-mail](mailto:zoujin.dev@exlb.org).
 
 ### For distribution
 
