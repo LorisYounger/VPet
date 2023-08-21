@@ -44,11 +44,11 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 版本号
         /// </summary>
-        public int verison { get; } = 101;
+        public int version { get; } = 101;
         /// <summary>
         /// 版本号
         /// </summary>
-        public string Verison => $"{verison / 100}.{verison % 100}";
+        public string Version => $"{version / 100}.{version % 100}";
 
         public List<LowText> LowFoodText { get; set; } = new List<LowText>();
 
@@ -632,7 +632,7 @@ namespace VPet_Simulator.Windows
             StringBuilder sb = new StringBuilder();
             sb.Append("action=data");
             sb.Append($"&steamid={Steamworks.SteamClient.SteamId.Value}");
-            sb.Append($"&ver={verison}");
+            sb.Append($"&ver={version}");
             sb.Append("&save=");
             sb.AppendLine(HttpUtility.UrlEncode(Core.Save.ToLine().ToString() + Set.ToString()));
             //游戏设置比存档更重要,桌宠大部分内容存设置里了,所以一起上传
