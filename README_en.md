@@ -12,7 +12,7 @@ Get VPet [on Steam](https://store.steampowered.com/app/1920960/VPet) for free, o
 
 ***VPet*** is a desktop pet app with various interactions implemented. It's open-source, free, and supports mods from the Steam Workshop. ~~Well, it's free, so why not try it out?~~
 
-This game was originally developed for *[VUP-Simulator](https://store.steampowered.com/app/1352140/_/)*'s tutorial as an accompanying desktop pet, then split into an independent app. If you liked it, please consider adding VUP-Simulator to your wishlist.
+This game was originally developed for *[VUP-Simulator](https://store.steampowered.com/app/1352140/_/)*'s tutorial as an accompanying desktop pet, then split into an independent app. If you like it, please consider adding VUP-Simulator to your wishlist.
 
 ### Many interactions and animations!
 
