@@ -43,11 +43,11 @@ Our main goal is to promote [VUP-Simulator](https://store.steampowered.com/app/1
 
 The source of this game is available on GitHub. You can find it at: https://github.com/LorisYounger/VPet
 
-Feature requests and pull requests are welcome! You can take our code and modify it to your liking, too. (Though most content don't require that and can be modded in.)
+Feature requests and pull requests are welcome! You can take our code and modify it to your liking, too. (Though most content don't require that, and can be modded in.)
 
 ### Steam Workshop support
 
-Steam Workshop mods are supported. With mods, you can add your own pets (animations/interactions) and share them to others through the Workshop.
+Steam Workshop mods are supported. With mods, you can add your own pets (animations/interactions), and share them to others through the Workshop.
 
 The following contents can be added or modified by Workshop mods:
 
