@@ -528,7 +528,7 @@ namespace VPet_Simulator.Windows
             }
             else if (mods.AuthorID == Steamworks.SteamClient.SteamId.AccountId)
             {
-                var item = Item.GetAsync(mod.ItemID).Result;
+                var item = await Item.GetAsync(mod.ItemID);
                 Editor result;
                 if (item == null)
                 {
