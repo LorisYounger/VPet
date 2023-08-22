@@ -20,7 +20,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <ComboBox x:Name="tbTalk" Style="{DynamicResource StandardComboBoxStyle}" Height="Auto"
-                        pu:ComboBoxHelper.Watermark="{ll:Str 和桌宠说}" FontSize="30" />
+                        pu:ComboBoxHelper.Watermark="{ll:Str 和桌宠说}" FontSize="30" MaxDropDownHeight="500" />
                 <Button x:Name="btn_Send" pu:ButtonHelper.CornerRadius="4" Content="{ll:Str 发送}" BorderThickness="2"
                         Background="{DynamicResource PrimaryLight}" Grid.Column="2"
                         BorderBrush="{DynamicResource DARKPrimaryDarker}" FontSize="30" Click="btn_Send_Click" />

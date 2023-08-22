@@ -99,7 +99,7 @@ namespace VPet_Simulator.Windows
             }
             else if (prograss < 0)
             {
-                prograss = Math.Min(1, Math.Max(0, 1 - Math.Sqrt(1 - prograss / 2))) / 2;
+                prograss = Math.Min(1, Math.Max(0, min % 10)) / 2;
             }
             PrograssUsed.Value = prograss;
             PrograssUsed.ToolTip = "下次刷新剩余时间: {0:f1}分钟".Translate(min);
