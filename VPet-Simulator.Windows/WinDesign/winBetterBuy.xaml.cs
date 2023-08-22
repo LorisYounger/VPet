@@ -50,6 +50,7 @@ namespace VPet_Simulator.Windows
         public void Show(Food.FoodType type)
         {
             mw.Topmost = false;
+            IsEnabled = true;//逃出
             if (_searchTextBox != null)
                 _searchTextBox.Text = "";
             if (LsbCategory.SelectedIndex == (int)type)
@@ -66,14 +67,14 @@ namespace VPet_Simulator.Windows
                 {
                     var name = sub.Name.Substring(8);
                     var food = mw.Foods.FirstOrDefault(x => x.Name == name);
-                    if(food != null)
+                    if (food != null)
                     {
                         food.LoadEatTimeSource(mw);
                         food.NotifyOfPropertyChange("Eattime");
                     }
                 }
             }
-  
+
             Show();
         }
         public void OrderItemSource(Food.FoodType type, int sortrule, bool sortasc, string searchtext = null)
@@ -207,7 +208,7 @@ namespace VPet_Simulator.Windows
 
             var Button = sender as Button;
             var item = Button.DataContext as Food;
-
+            IsEnabled = false;
             //看是什么模式
             if (mw.Set.EnableFunction)
             {
@@ -239,7 +240,7 @@ namespace VPet_Simulator.Windows
                 mw.Set.PetData.SetDateTime("buytime_" + item.Name, now.AddHours(eattimes));
                 //通知
                 item.LoadEatTimeSource(mw);
-                item.NotifyOfPropertyChange("Eattime");
+                item.NotifyOfPropertyChange(DateTime.Now.ToString());
 
                 mw.Core.Save.Money -= item.Price;
                 //统计
@@ -291,6 +292,7 @@ namespace VPet_Simulator.Windows
                 var b = mw.Main.FindDisplayBorder(ig);
                 ig.Run(b, item.ImageSource, () =>
                 {
+                    Dispatcher.Invoke(() => IsEnabled = true);
                     mw.Main.DisplayToNomal();
                     mw.Main.EventTimer_Elapsed();
                 });

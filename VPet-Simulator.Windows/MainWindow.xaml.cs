@@ -317,8 +317,13 @@ namespace VPet_Simulator.Windows
                     Set["CGPT"].Remove(cgpteb);
                 }
             }
+            else if (Set["CGPT"][(gstr)"type"] == "OFF" && Set["CGPT"][(gint)"v"] == 0)
+            {//为老玩家开启选项聊天功能
+                Set["CGPT"][(gstr)"type"] = "LB";
+                Set["CGPT"][(gint)"v"] = 1;
+            }
             else//新玩家,默认设置为
-                Set["CGPT"][(gstr)"type"] = "OFF";
+                Set["CGPT"][(gstr)"type"] = "LB";
 
             if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData") && !Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"))
             {
@@ -407,7 +412,7 @@ namespace VPet_Simulator.Windows
                     case "LB":
                         if (IsSteamUser)
                         {
-                            TalkBox = new TalkBox(this);
+                            TalkBox = new TalkSelect(this);
                             Main.ToolBar.MainGrid.Children.Add(TalkBox);
                         }
                         break;

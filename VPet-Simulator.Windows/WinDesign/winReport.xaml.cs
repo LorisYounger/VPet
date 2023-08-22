@@ -68,7 +68,7 @@ namespace VPet_Simulator.Windows
                 sb.Append("&content=" + HttpUtility.UrlEncode(tContent.Text));
                 sb.Append("&contact=" + HttpUtility.UrlEncode(tContact.Text));
                 sb.Append($"&steamid={Steamworks.SteamClient.SteamId.Value}");
-                sb.Append($"&ver={mw.verison}");
+                sb.Append($"&ver={mw.version}");
                 sb.Append("&save=");
                 sb.AppendLine(HttpUtility.UrlEncode(save));
                 var request = (HttpWebRequest)WebRequest.Create(_url);

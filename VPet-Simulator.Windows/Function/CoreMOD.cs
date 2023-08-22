@@ -165,6 +165,9 @@ namespace VPet_Simulator.Windows
                                         case "clicktext":
                                             mw.ClickTexts.Add(LPSConvert.DeserializeObject<ClickText>(li));
                                             break;
+                                        case "selecttext":
+                                            mw.SelectTexts.Add(LPSConvert.DeserializeObject<SelectText>(li));
+                                            break;
                                     }
                                 }
                             }

@@ -1,5 +1,6 @@
 ﻿using LinePutScript.Localization.WPF;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -50,6 +51,18 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(() => this.IsEnabled = false);
             try
             {
+                if (mw.CGPTClient.Completions.TryGetValue("vpet", out var vpetapi))
+                {
+                    var last = vpetapi.messages.LastOrDefault();
+                    if (last != null)
+                    {
+                        if(last.role == ChatGPT.API.Framework.Message.RoleType.user)
+                        {
+                            vpetapi.messages.Remove(last);
+                        }
+                    }
+                }
+
                 var resp = mw.CGPTClient.Ask("vpet", content);
                 var reply = resp.GetMessageContent();
                 if (resp.choices[0].finish_reason == "length")
