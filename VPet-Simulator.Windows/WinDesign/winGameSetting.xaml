@@ -325,9 +325,9 @@
                                         Style="{DynamicResource StandardRadioButtonStyle}"
                                         ToolTip="{ll:Str 需要去OpenAI官网申请}" />
                                 <RadioButton x:Name="RBCGPTUseLB" Checked="CGPType_Checked"
-                                        Content="{ll:Str '使用桌宠开发者\&#13;提供的免费API'}" GroupName="cgpttype" IsChecked="True"
+                                        Content="{ll:Str '使用桌宠选项式\&#13;聊天功能'}" GroupName="cgpttype" IsChecked="True"
                                         Style="{DynamicResource StandardRadioButtonStyle}"
-                                        ToolTip="{ll:Str 需遵循相关协议法律法规并有聊天字数限制}" />
+                                        ToolTip="{ll:Str 支持MOD与创意工坊添加聊天内容}" />
                                 <RadioButton x:Name="RBCGPTClose" Grid.Row="1" Checked="CGPType_Checked"
                                         Content="{ll:Str '关闭聊天框'}" GroupName="cgpttype"
                                         Style="{DynamicResource StandardRadioButtonStyle}" />
