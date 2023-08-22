@@ -64,6 +64,10 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         List<ClickText> ClickTexts { get; }
         /// <summary>
+        /// 选择说的话
+        /// </summary>
+        List<SelectText> SelectTexts { get; }
+        /// <summary>
         /// 获得自动点击的文本
         /// </summary>
         /// <returns>说话内容</returns>
@@ -121,6 +125,8 @@ namespace VPet_Simulator.Windows.Interface
         /// 关闭指示器,默认为true
         /// </summary>
         bool CloseConfirm { get; }
+
+     
     }
 
 }

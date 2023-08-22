@@ -54,6 +54,8 @@ namespace VPet_Simulator.Windows
 
         public List<LowText> LowDrinkText { get; set; } = new List<LowText>();
 
+        public List<SelectText> SelectTexts { get; set; } = new List<SelectText>();
+
         public List<ClickText> ClickTexts { get; set; } = new List<ClickText>();
         /// <summary>
         /// 获得自动点击的文本
