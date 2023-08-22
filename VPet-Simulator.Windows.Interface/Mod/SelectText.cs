@@ -44,6 +44,21 @@ namespace VPet_Simulator.Windows.Interface
         [Line(IgnoreCase = true)]
         public List<string> Tags { get; set; } = new List<string>();
         /// <summary>
+        /// 查看标签是否命中
+        /// </summary>
+        /// <param name="totag">跳转到标签</param>
+        public bool ContainsTag(IEnumerable<string> totag)
+        {
+            foreach(var tag in totag)
+            {
+                if (Tags.Contains(tag))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        /// <summary>
         /// 跳转到标签
         /// </summary>
         public List<string> ToTags { get; set; } = new List<string>();

@@ -252,7 +252,10 @@ namespace VPet_Simulator.Core
             else
                 Dispatcher.Invoke(() => this.Visibility = Visibility.Collapsed);
         }
-
+        /// <summary>
+        /// ToolBar显示事件
+        /// </summary>
+        public event Action EventShow;
         public void Show()
         {
             if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
@@ -260,6 +263,7 @@ namespace VPet_Simulator.Core
                 Panel.SetZIndex(this, m.UIGrid.Children.Count);
             }
             Visibility = Visibility.Visible;
+            EventShow?.Invoke();
             if (CloseTimer.Enabled)
                 onFocus = true;
             else

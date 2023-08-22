@@ -9,3 +9,5 @@
 模组 {0} 插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题#Module {0} plug-in damage\nVirtual desktop pet simulator failed to load the plug-in\nPlease contact the author to fix the problem.:|
 缓存被其他软件删除,游戏无法继续运行\n请重启游戏重新生成缓存#Cache is deleted by other software, the game can not continue to run\nPlease restart the game to regenerate the cache.:|
 游戏内存不足,请修改设置中渲染分辨率以便降低内存使用#Game memory is insufficient, please modify the rendering resolution in the settings to reduce memory usage.:|
+没有可以说的话#There's nothing to say:|
+下次刷新剩余时间: {0:f1}分钟#Next refresh remaining time: {0:f1} minutes:|
