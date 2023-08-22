@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows.Interface
 {
     /// <summary>
     /// 供玩家选择说话的文本
     /// </summary>
-    public class SelectText : ICheckText
+    public class SelectText : ICheckText, IFood
     {
         /// <summary>
         /// 玩家选项名称
@@ -49,7 +50,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="totag">跳转到标签</param>
         public bool ContainsTag(IEnumerable<string> totag)
         {
-            foreach(var tag in totag)
+            foreach (var tag in totag)
             {
                 if (Tags.Contains(tag))
                 {
@@ -61,6 +62,24 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 跳转到标签
         /// </summary>
-        public List<string> ToTags { get; set; } = new List<string>();
+        [Line(IgnoreCase = true)] public List<string> ToTags { get; set; } = new List<string>();
+
+        [Line(ignoreCase: true)]
+        public double Money { get; set; }
+
+        [Line(ignoreCase: true)]
+        public int Exp { get; set; }
+        [Line(ignoreCase: true)]
+        public double Strength { get; set; }
+        [Line(ignoreCase: true)]
+        public double StrengthFood { get; set; }
+        [Line(ignoreCase: true)]
+        public double StrengthDrink { get; set; }
+        [Line(ignoreCase: true)]
+        public double Feeling { get; set; }
+        [Line(ignoreCase: true)]
+        public double Health { get; set; }
+        [Line(ignoreCase: true)]
+        public double Likability { get; set; }
     }
 }

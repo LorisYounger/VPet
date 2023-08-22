@@ -113,6 +113,9 @@ namespace VPet_Simulator.Windows
             }
             var say = textList[tbTalk.SelectedIndex];
             textList.RemoveAt(tbTalk.SelectedIndex);
+            //聊天效果
+            mw.Main.Core.Save.EatFood(say);
+            mw.Main.Core.Save.Money += say.Money;
 
             textSaid.Add(say.Choose);
             RelsTime = RelsTime.AddMinutes(5);
@@ -126,7 +129,7 @@ namespace VPet_Simulator.Windows
                     int sid = Function.Rnd.Next(list.Count);
                     var select = list[sid];
                     list.RemoveAt(sid);
-                    if (textList.Find(x => x.Choose == select.Choose) == null && select.CheckState(mw.Main))
+                    if (textList.Find(x => x.Choose == select.Choose) == null && !textSaid.Contains(select.Choose) && select.CheckState(mw.Main))
                     {
                         textList.Add(select);
                         break;
