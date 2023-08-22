@@ -145,6 +145,24 @@ namespace VPet_Simulator.Windows
                         else
                             ordered = foods.OrderByDescending(x => x.Feeling);
                         break;
+                    case 6: //按经验值
+                        if (sortasc)
+                            ordered = foods.OrderBy(x => x.Exp);
+                        else
+                            ordered = foods.OrderByDescending(x => x.Exp);
+                        break;
+                    case 7: //按喜好度
+                        if (sortasc)
+                            ordered = foods.OrderBy(x => x.Likability);
+                        else
+                            ordered = foods.OrderByDescending(x => x.Likability);
+                        break;
+                    case 8: //按有效度
+                        if (sortasc)
+                            ordered = foods.OrderBy(x => x.Likability);
+                        else
+                            ordered = foods.OrderByDescending(x => x.Likability);
+                        break;
                     default:
                         if (sortasc)
                             ordered = foods.OrderBy(x => x.Health);
@@ -313,6 +331,12 @@ namespace VPet_Simulator.Windows
             _searchTextBox = sender as TextBox;
         }
 
+        private void LsbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            LsbSortRule_SelectionVisibilityChanged();
+            LsbSortRule_SelectionChanged(sender, e);
+        }
+
         private void LsbSortRule_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!AllowChange)
@@ -323,6 +347,43 @@ namespace VPet_Simulator.Windows
             mw.Set["betterbuy"].SetBool("lastasc", asc);
             OrderItemSource((Food.FoodType)LsbCategory.SelectedIndex, order, asc, _searchTextBox?.Text);
         }
+
+        private void LsbSortRule_SelectionVisibilityChanged()
+        {
+            if (LsbSortRule == null)
+            {
+                return;
+            }
+            Food.FoodType type = (Food.FoodType)LsbCategory.SelectedIndex;
+            int curentSelectIdx = LsbSortRule.SelectedIndex;
+            if (LsbSortRule.Items.Count > 8)
+            {
+                LsbSortRule.Items.RemoveAt(8);
+            }
+            if (LsbSortRule.Items.Count > 8)
+            {
+                LsbSortRule.Items.RemoveAt(8);
+            }
+            ListBoxItem item = null;
+            if (type == Food.FoodType.Meal || type == Food.FoodType.Snack || type == Food.FoodType.Drink)
+            {
+                item = new ListBoxItem();
+                item.Content = "按喜好度";
+                LsbSortRule.Items.Add(item);
+            }
+            if (type == Food.FoodType.Functional || type == Food.FoodType.Drug)
+            {
+                item = new ListBoxItem();
+                item.Content = "按有效度";
+                LsbSortRule.Items.Add(item);
+            }
+            if (curentSelectIdx >= LsbSortRule.Items.Count)
+            {
+                curentSelectIdx = LsbSortRule.Items.Count - 1;
+            }
+            LsbSortRule.SelectedIndex = curentSelectIdx;
+        }
+
         public void TryClose()
         {
             IcCommodity.ItemsSource = null;

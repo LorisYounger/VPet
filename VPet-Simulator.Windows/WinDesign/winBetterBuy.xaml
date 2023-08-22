@@ -201,7 +201,7 @@
                     BorderThickness="0" SelectedIndex="0" pu:ListBoxHelper.ItemsPadding="15,8"
                     pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"
                     pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
-                    SelectionChanged="LsbSortRule_SelectionChanged">
+                    SelectionChanged="LsbCategory_SelectionChanged">
                 <ListBoxItem Content="{ll:Str 全部}" />
                 <ListBoxItem Content="{ll:Str 收藏}" />
                 <ListBoxItem Content="{ll:Str 正餐}" />
@@ -232,6 +232,9 @@
                         <ListBoxItem Content="{ll:Str 按体力}" />
                         <ListBoxItem Content="{ll:Str 按心情}" />
                         <ListBoxItem Content="{ll:Str 按健康}" />
+                        <ListBoxItem Content="{ll:Str 按经验值}" />
+                        <ListBoxItem Content="{ll:Str 按喜好度}" />
+                        <ListBoxItem Content="{ll:Str 按有效度}" />
                     </ListBox>
                     <Rectangle Grid.Column="1" Margin="10,0,10,0" Width="1" Fill="{DynamicResource DARKPrimaryTrans4}" />
                     <ListBox x:Name="LsbSortAsc" Grid.Column="2" Background="Transparent" BorderThickness="0"
