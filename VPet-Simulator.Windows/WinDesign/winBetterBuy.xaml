@@ -49,16 +49,31 @@
                                 Click="BtnSearch_Click" />
                     </Grid>
                     <TextBlock VerticalAlignment="Center" Margin="20,0,0,0" FontSize="16" FontWeight="Bold">
-                            <Run Text="{ll:Str 金钱}" />: $ <Run x:Name="rMoney" Loaded="rMoney_Loaded" Text=""/>
+                            <Run Text="{ll:Str 金钱}" />: $ <Run x:Name="rMoney" Loaded="rMoney_Loaded" Text="" />
                     </TextBlock>
                 </StackPanel>
-                <pu:Switch Content="{ll:Str 购买后不自动关闭窗口}" Grid.Column="2" FontSize="14" Margin="10,0,5,0" Height="20"
-                        VerticalAlignment="Center" HorizontalAlignment="Right" BoxHeight="14" ToggleSize="18"
-                        CheckedBackground="{DynamicResource Primary}" CheckedBorderBrush="{DynamicResource Primary}"
-                        Background="Transparent" ToggleShadowColor="{x:Null}" IsChecked="{Binding StateOpen}"
-                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                        ToggleBrush="{DynamicResource PrimaryDark}" pu:WindowX.IsDragMoveArea="False" BoxWidth="30"
-                        Loaded="Switch_Loaded" />
+                <Grid HorizontalAlignment="Right">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <pu:Switch Content="{ll:Str 购买后不自动关闭窗口}" Grid.Column="2" FontSize="14" Margin="10,0,5,0" Height="20"
+                            VerticalAlignment="Center" HorizontalAlignment="Left" BoxHeight="14" ToggleSize="18"
+                            CheckedBackground="{DynamicResource Primary}" CheckedBorderBrush="{DynamicResource Primary}"
+                            Background="Transparent" ToggleShadowColor="{x:Null}" IsChecked="{Binding StateOpen}"
+                            CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                            ToggleBrush="{DynamicResource PrimaryDark}" pu:WindowX.IsDragMoveArea="False" BoxWidth="30"
+                            Loaded="Switch_Loaded" />
+                    <pu:Switch Content="{ll:Str 让宠物自己买东西吃}" Grid.Column="2" FontSize="14" Margin="10,0,5,0" Height="20"
+                            VerticalAlignment="Center" HorizontalAlignment="Left" BoxHeight="14" ToggleSize="18"
+                            CheckedBackground="{DynamicResource Primary}" CheckedBorderBrush="{DynamicResource Primary}"
+                            Background="Transparent" ToggleShadowColor="{x:Null}" IsChecked="{Binding StateOpen}"
+                            CheckedToggleBrush="{DynamicResource DARKPrimaryText}"    Grid.Row="1"
+                            ToggleBrush="{DynamicResource PrimaryDark}" pu:WindowX.IsDragMoveArea="False" BoxWidth="30"
+                            ToolTip="{ll:Str '当宠物口渴或者饥饿的时候会自己买东西吃\&#13;请注意,宠物可能会乱花钱和吃错误的东西\&#13;额外加收20%外卖运送费用'}"
+                            Loaded="Switch_Loaded_1" />
+                </Grid>
+
             </Grid>
         </DataTemplate>
     </pu:WindowXCaption.HeaderTemplate>

@@ -9,6 +9,7 @@ using LinePutScript.Localization.WPF;
 using static VPet_Simulator.Core.GraphInfo;
 using System.Xml.Linq;
 using System.Linq;
+using System.Windows.Media;
 
 namespace VPet_Simulator.Core
 {
@@ -640,6 +641,22 @@ namespace VPet_Simulator.Core
                 return PetGrid;
             }
 
+        }
+        /// <summary>
+        /// 显示夹层动画
+        /// </summary>
+        /// <param name="Type">动画类型</param>
+        /// <param name="img">夹层内容</param>
+        /// <param name="EndAction">动画结束后操作</param>
+        public void Display(GraphType Type, ImageSource img, Action EndAction)
+        {
+            var name = Core.Graph.FindName(Type);
+            var ig = Core.Graph.FindGraph(name, AnimatType.Single, Core.Save.Mode);
+            if (ig != null)
+            {
+                var b = FindDisplayBorder(ig);
+                ig.Run(b, img, EndAction);
+            }
         }
     }
 }
