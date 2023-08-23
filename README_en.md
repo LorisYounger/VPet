@@ -32,8 +32,6 @@ Up to 32<sub>(types)</sub> * 4<sub>(states)</sub> * 3<sub>(variants)</sub> = 384
 
 ![ss7](README.assets/ss7.gif)
 
-See [image resources](#%E5%9B%BE%E5%83%8F%E8%B5%84%E6%BA%90) for more information. <!-- FIXME: dead link and IDK what this corresponds to -->
-
 ### Free!
 
 This game is **100% free**! ~~So if it looks good to you, try it out, it won't hurt.~~ <br/>
@@ -66,8 +64,6 @@ The following contents can be added or modified by Workshop mods:
 You can send your feedback and suggestions to:
   * Steam comments or community
   * GitHub [Issues](https://github.com/LorisYounger/VPet/issues/new)
-  * The [虚拟主播模拟器 "ba"/board](https://tieba.baidu.com/f?kw=%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%92%AD%E6%A8%A1%E6%8B%9F%E5%99%A8) on Baidu Tieba
-  * The VUP-Simulator QQ group (430081239)
   * Or my e-mail ([service@exlb.net](mailto:service@exlb.net))
 
 ## Software architecture
@@ -125,7 +121,15 @@ Also note that the addition of new features can usually be accomplished with plu
 
 Thanks to the following participating developers (in order of contribution):
 
-* [Wreathlit](https://github.com/Wreathlit)
+* Wreathlit
+* windofxy
+* bwnotfound
+* aalichao
+* Dobby233Liu
+* eltociear
+* yupix
+
+And  people who provide community translation and more content in steam workshop
 
 ## Animation copyright notice and authorization terms
 
