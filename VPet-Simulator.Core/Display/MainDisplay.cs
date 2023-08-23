@@ -160,6 +160,7 @@ namespace VPet_Simulator.Core
             {
                 Core.Save.StrengthChange(-2);
                 Core.Save.FeelingChange(1);
+                Core.Save.Mode = Core.Save.CalMode();
                 LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
             }
             if (DisplayType.Type == GraphType.Touch_Head)
@@ -197,6 +198,7 @@ namespace VPet_Simulator.Core
             {
                 Core.Save.StrengthChange(-2);
                 Core.Save.FeelingChange(1);
+                Core.Save.Mode = Core.Save.CalMode();
                 LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
             }
             if (DisplayType.Type == GraphType.Touch_Body)
