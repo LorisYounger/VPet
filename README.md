@@ -34,8 +34,6 @@
 
 ![ss7](README.assets/ss7.gif)
 
-详情请参见 开源文档中的 [图像资源](https://github.com/LorisYounger/VPet#%E5%9B%BE%E5%83%8F%E8%B5%84%E6%BA%90).
-
 ### 免费
 
 该游戏完全免费! 反正不要钱,试试不要紧(<br/>
@@ -66,7 +64,7 @@
 
 ### 反馈&建议&联系我们
 
-如果有建议或者意见,可以在Steam商店评论/社区,Github Issue,虚拟主播模拟器贴吧,虚拟主播模拟器群(430081239)或者邮件联系我 [mailto:service@exlb.net](mailto:service@exlb.net)
+如果有建议或者意见,可以在Steam商店评论/社区,Github Issue,虚拟主播模拟器贴吧,虚拟桌宠模拟器MODDer群(907101442)或者邮件联系我 [mailto:service@exlb.net](mailto:service@exlb.net)
 
 ## 软件结构
 
@@ -125,12 +123,28 @@
 
 感谢以下参与的开发人员(按贡献程度排序)
 
-* [Wreathlit](https://github.com/Wreathlit)
+* Wreathlit
+
+* windofxy
+
+* bwnotfound
+
+* aalichao
+
+* Dobby233Liu
+
+* eltociear
+
+* yupix
+
+和提供社区翻译和更多内容的创意工坊人员
 
 ## 动画版权声明与授权
 
 在github中 [桌宠动画文件](https://github.com/LorisYounger/VPet/tree/main/VPet-Simulator.Windows/mod/0000_core/pet/vup) 动画版权归 [虚拟主播模拟器制作组](https://www.exlb.net/VUP-Simulator)所有, 当使用本类库时,您可能需要自行准备动画文件,或遵循以下协议
-注: 本动画声明仅限于桌宠自带的动画, 若有画师/开发者画自己的动画适配给桌宠,并不遵循用本声明
+
+> **注 **
+> 本动画声明仅限于桌宠自带的动画, 若有画师/开发者画自己的动画适配给桌宠,并不遵循用本声明
 
 ### 非商用用途授权
 
