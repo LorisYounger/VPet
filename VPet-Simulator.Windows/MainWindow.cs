@@ -241,7 +241,7 @@ namespace VPet_Simulator.Windows
             {
                 var havemoney = Core.Save.Money * 1.2;
                 List<Food> food = Foods.FindAll(x => x.Price >= 2 && x.Health >= 0 && x.Exp >= 0 && x.Likability >= 0 && x.Price < havemoney //桌宠不吃负面的食物
-                 && x.IsOverLoad() // 不吃超模食物
+                 && !x.IsOverLoad() // 不吃超模食物
                 );
 
                 if (Core.Save.StrengthFood < 75)
