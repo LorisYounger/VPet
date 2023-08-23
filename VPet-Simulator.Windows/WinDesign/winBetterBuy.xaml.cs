@@ -50,7 +50,7 @@ namespace VPet_Simulator.Windows
         public void Show(Food.FoodType type)
         {
             mw.Topmost = false;
-            IsEnabled = true;//逃出
+            showeatanm = true;//逃出
             if (_searchTextBox != null)
                 _searchTextBox.Text = "";
             if (LsbCategory.SelectedIndex == (int)type)
@@ -110,6 +110,7 @@ namespace VPet_Simulator.Windows
                 IOrderedEnumerable<Food> ordered;
                 switch (sortrule)
                 {
+                    default:
                     case 0:
                         if (sortasc)
                             ordered = foods.OrderBy(x => x.TranslateName);
@@ -146,11 +147,17 @@ namespace VPet_Simulator.Windows
                         else
                             ordered = foods.OrderByDescending(x => x.Feeling);
                         break;
-                    default:
+                    case 6:
                         if (sortasc)
                             ordered = foods.OrderBy(x => x.Health);
                         else
                             ordered = foods.OrderByDescending(x => x.Health);
+                        break;
+                    case 7:
+                        if (sortasc)
+                            ordered = foods.OrderBy(x => x.Exp);
+                        else
+                            ordered = foods.OrderByDescending(x => x.Exp);
                         break;
                 }
                 Dispatcher.Invoke(() =>
@@ -185,12 +192,13 @@ namespace VPet_Simulator.Windows
             //eventArg.Source = sender;
             //PageDetail.RaiseEvent(eventArg);
         }
+        bool showeatanm = true;
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
 
             var Button = sender as Button;
             var item = Button.DataContext as Food;
-            IsEnabled = false;
+
             //看是什么模式
             if (mw.Set.EnableFunction)
             {
@@ -254,30 +262,34 @@ namespace VPet_Simulator.Windows
                 }
 
             }
-            GraphType gt;
-            switch (item.Type)
-            {
-                default:
-                    gt = GraphType.Eat;
-                    break;
-                case Food.FoodType.Drink:
-                    gt = GraphType.Drink;
-                    break;
-                case Food.FoodType.Gift:
-                    gt = GraphType.Gift;
-                    break;
-            }
-            var name = mw.Core.Graph.FindName(gt);
-            var ig = mw.Core.Graph.FindGraph(name, AnimatType.Single, mw.Core.Save.Mode);
-            if (ig != null)
-            {
-                var b = mw.Main.FindDisplayBorder(ig);
-                ig.Run(b, item.ImageSource, () =>
+            if (showeatanm)
+            {//显示动画
+                showeatanm = false;
+                GraphType gt;
+                switch (item.Type)
                 {
-                    Dispatcher.Invoke(() => IsEnabled = true);
-                    mw.Main.DisplayToNomal();
-                    mw.Main.EventTimer_Elapsed();
-                });
+                    default:
+                        gt = GraphType.Eat;
+                        break;
+                    case Food.FoodType.Drink:
+                        gt = GraphType.Drink;
+                        break;
+                    case Food.FoodType.Gift:
+                        gt = GraphType.Gift;
+                        break;
+                }
+                var name = mw.Core.Graph.FindName(gt);
+                var ig = mw.Core.Graph.FindGraph(name, AnimatType.Single, mw.Core.Save.Mode);
+                if (ig != null)
+                {
+                    var b = mw.Main.FindDisplayBorder(ig);
+                    ig.Run(b, item.ImageSource, () =>
+                    {
+                        showeatanm = true;
+                        mw.Main.DisplayToNomal();
+                        mw.Main.EventTimer_Elapsed();
+                    });
+                }
             }
             if (!_puswitch.IsChecked.Value)
             {
