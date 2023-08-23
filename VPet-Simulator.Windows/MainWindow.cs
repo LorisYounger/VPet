@@ -2,6 +2,7 @@
 using CSCore.CoreAudioAPI;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -236,7 +237,42 @@ namespace VPet_Simulator.Windows
         int lowstrengthAskCountDrink = 20;
         private void lowStrength()
         {
-            if (Core.Save.Mode == GameSave.ModeType.Happy || Core.Save.Mode == GameSave.ModeType.Nomal)
+            if (Set.AutoBuy && Core.Save.Money >= 100)
+            {
+                var havemoney = Core.Save.Money * 1.2;
+                List<Food> food = Foods.FindAll(x => x.Price >= 2 && x.Health >= 0 && x.Exp >= 0 && x.Likability >= 0 && x.Price < havemoney //桌宠不吃负面的食物
+                 && x.IsOverLoad() // 不吃超模食物
+                );
+
+                if (Core.Save.StrengthFood < 75)
+                {
+                    if (Core.Save.StrengthFood < 50)
+                    {//太饿了,找正餐
+                        food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > 20);
+                    }
+                    else
+                    {//找零食
+                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.StrengthFood > 10);
+                    }
+                    if (food.Count == 0)
+                        return;
+                    var item = food[Function.Rnd.Next(food.Count)];
+                    Core.Save.Money -= item.Price * 1.2;
+                    TakeItem(item);
+                    Main.Display(GraphType.Eat, item.ImageSource, Main.DisplayToNomal);
+                }
+                else if (Core.Save.StrengthDrink < 75)
+                {
+                    food = food.FindAll(x => x.Type == Food.FoodType.Drink && x.StrengthDrink > 10);
+                    if (food.Count == 0)
+                        return;
+                    var item = food[Function.Rnd.Next(food.Count)];
+                    Core.Save.Money -= item.Price * 1.2;
+                    TakeItem(item);
+                    Main.Display(GraphType.Drink, item.ImageSource, Main.DisplayToNomal);
+                }
+            }
+            else if (Core.Save.Mode == GameSave.ModeType.Happy || Core.Save.Mode == GameSave.ModeType.Nomal)
             {
                 if (Core.Save.StrengthFood < 75 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
                 {
@@ -339,6 +375,59 @@ namespace VPet_Simulator.Windows
 
 
         }
+        /// <summary>
+        /// 使用/食用物品 (不包括显示动画)
+        /// </summary>
+        /// <param name="item">物品</param>
+        public void TakeItem(Food item)
+        {
+            //获取吃腻时间
+            DateTime now = DateTime.Now;
+            DateTime eattime = Set.PetData.GetDateTime("buytime_" + item.Name, now);
+            double eattimes = 0;
+            if (eattime > now)
+            {
+                eattimes = (eattime - now).TotalHours;
+            }
+            //开始加点
+            Core.Save.EatFood(item, Math.Max(0.5, 1 - Math.Pow(eattimes, 2) * 0.01));
+            //吃腻了
+            eattimes += 2;
+            Set.PetData.SetDateTime("buytime_" + item.Name, now.AddHours(eattimes));
+            //通知
+            item.LoadEatTimeSource(this);
+            item.NotifyOfPropertyChange("Eattime");
+
+            Core.Save.Money -= item.Price;
+            //统计
+            Set.Statistics[(gint)("buy_" + item.Name)]++;
+            Set.Statistics[(gdbe)"stat_betterbuy"] += item.Price;
+            switch (item.Type)
+            {
+                case Food.FoodType.Food:
+                    Set.Statistics[(gdbe)"stat_bb_food"] += item.Price;
+                    break;
+                case Food.FoodType.Drink:
+                    Set.Statistics[(gdbe)"stat_bb_drink"] += item.Price;
+                    break;
+                case Food.FoodType.Drug:
+                    Set.Statistics[(gdbe)"stat_bb_drug"] += item.Price;
+                    break;
+                case Food.FoodType.Snack:
+                    Set.Statistics[(gdbe)"stat_bb_snack"] += item.Price;
+                    break;
+                case Food.FoodType.Functional:
+                    Set.Statistics[(gdbe)"stat_bb_functional"] += item.Price;
+                    break;
+                case Food.FoodType.Meal:
+                    Set.Statistics[(gdbe)"stat_bb_meal"] += item.Price;
+                    break;
+                case Food.FoodType.Gift:
+                    Set.Statistics[(gdbe)"stat_bb_gift"] += item.Price;
+                    break;
+            }
+        }
+
 
         public void RunAction(string action)
         {
