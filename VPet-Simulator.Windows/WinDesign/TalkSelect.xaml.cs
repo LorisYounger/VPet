@@ -111,6 +111,7 @@ namespace VPet_Simulator.Windows
             {
                 return;
             }
+            mw.Main.ToolBar.Visibility = Visibility.Collapsed;
             var say = textList[tbTalk.SelectedIndex];
             textList.RemoveAt(tbTalk.SelectedIndex);
             //聊天效果
