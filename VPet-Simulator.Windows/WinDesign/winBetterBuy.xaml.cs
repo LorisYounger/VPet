@@ -208,6 +208,17 @@ namespace VPet_Simulator.Windows
                         , "金钱不足".Translate());
                     return;
                 }
+                //看看是否超模
+                if (mw.HashCheck && item.IsOverLoad())
+                {
+                    if (MessageBoxX.Show("当前食物/物品属性超模,是否继续使用?\n使用超模食物可能会导致游戏发生不可预料的错误\n使用超模食物不影响大部分成就解锁\n本物品推荐价格为{0:f0}"
+                        .Translate(item.RealPrice), "超模食物/物品使用提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                    {
+                        return;
+                    }
+                    mw.HashCheck = false;
+                }
+
                 mw.TakeItem(item);
             }
             if (showeatanm)
