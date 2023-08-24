@@ -15,6 +15,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 using static VPet_Simulator.Core.GraphHelper;
 using System.ComponentModel;
 using System.Reflection;
+using static System.Windows.Forms.AxHost;
+using static VPet_Simulator.Core.Main;
 
 namespace VPet_Simulator.Core
 {
@@ -73,7 +75,7 @@ namespace VPet_Simulator.Core
                     case Work.WorkType.Play:
                         ps.Add(w);
                         break;
-                }              
+                }
             }
             if (ws.Count == 0)
             {
@@ -424,7 +426,10 @@ namespace VPet_Simulator.Core
             this.Visibility = Visibility.Collapsed;
             if (m.Core.Save.Mode != GameSave.ModeType.Ill)
                 if (m.State == Main.WorkingState.Sleep)
+                {
+                    m.State = WorkingState.Nomal;
                     m.Display(GraphType.Sleep, AnimatType.C_End, m.DisplayNomal);
+                }
                 else if (m.State == Main.WorkingState.Nomal)
                     m.DisplaySleep(true);
                 else
