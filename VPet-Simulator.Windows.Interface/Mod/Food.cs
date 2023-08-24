@@ -151,14 +151,18 @@ namespace VPet_Simulator.Windows.Interface
         public string Image;
         private bool? isoverload = null;
         /// <summary>
+        /// 当前物品推荐价格
+        /// </summary>
+        public double RealPrice => ((Exp / 4 + Strength / 5 + StrengthDrink / 3 + StrengthFood / 2 + Feeling / 6) / 3 + Health + Likability * 10);
+        /// <summary>
         /// 该食物是否超模
         /// </summary>
         public bool IsOverLoad()
         {
             if (isoverload == null)
             {
-                double realp = ((Exp / 4 + Strength / 5 + StrengthDrink / 3 + StrengthFood / 2 + Feeling / 6) / 3 + Health + Likability * 5);
-                isoverload = Price > realp * 1.3 || Price < realp * 0.7;//30%容错
+                double relp = RealPrice;
+                isoverload = Price > (relp + 10) * 1.3;// || Price < (relp - 10) * 0.7;//30%容错
             }
             return isoverload.Value;
         }

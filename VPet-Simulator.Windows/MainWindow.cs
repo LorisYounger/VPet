@@ -257,7 +257,7 @@ namespace VPet_Simulator.Windows
                     if (food.Count == 0)
                         return;
                     var item = food[Function.Rnd.Next(food.Count)];
-                    Core.Save.Money -= item.Price * 1.2;
+                    Core.Save.Money -= item.Price * 0.2;
                     TakeItem(item);
                     Main.Display(GraphType.Eat, item.ImageSource, Main.DisplayToNomal);
                 }
@@ -267,7 +267,7 @@ namespace VPet_Simulator.Windows
                     if (food.Count == 0)
                         return;
                     var item = food[Function.Rnd.Next(food.Count)];
-                    Core.Save.Money -= item.Price * 1.2;
+                    Core.Save.Money -= item.Price * 0.2;
                     TakeItem(item);
                     Main.Display(GraphType.Drink, item.ImageSource, Main.DisplayToNomal);
                 }
