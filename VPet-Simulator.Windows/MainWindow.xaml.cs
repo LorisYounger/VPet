@@ -627,7 +627,7 @@ namespace VPet_Simulator.Windows
                 foreach (CoreMOD cm in CoreMODs)
                     if (!cm.SuccessLoad)
                         if (cm.Tag.Contains("该模组已损坏"))
-                            MessageBoxX.Show("模组 {0} 插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题".Translate(cm.Name), "{0} 未加载代码插件".Translate(cm.Name));
+                            MessageBoxX.Show("模组 {0} 插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题".Translate(cm.Name), "该模组已损坏".Translate());
                         else if (Set.IsPassMOD(cm.Name))
                             MessageBoxX.Show("模组 {0} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题".Translate(cm.Name), "{0} 未加载代码插件".Translate(cm.Name));
                         else if (Set.IsMSGMOD(cm.Name))
