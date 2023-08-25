@@ -402,6 +402,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set.Diagnosis = true;
+            CBDiagnosis.IsEnabled = true;
         }
 
         private void RBDiagnosisNO_Checked(object sender, RoutedEventArgs e)
@@ -409,6 +410,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set.Diagnosis = false;
+            CBDiagnosis.IsEnabled = false;
         }
 
         private void CBDiagnosis_SelectionChanged(object sender, SelectionChangedEventArgs e)
