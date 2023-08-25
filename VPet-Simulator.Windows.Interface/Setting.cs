@@ -34,6 +34,7 @@ namespace VPet_Simulator.Windows.Interface
             smartmove = this["gameconfig"].GetBool("smartmove");
             enablefunction = !this["gameconfig"].GetBool("nofunction");
             Statistics = new Statistics(this["statistics"].ToList());
+            autobuy = this["gameconfig"].GetBool("autobuy");
         }
         public override string ToString()
         {
@@ -426,7 +427,7 @@ namespace VPet_Simulator.Windows.Interface
             set
             {
                 autobuy = value;
-                this["gameconfig"].SetBool("allowmove", !value);
+                this["gameconfig"].SetBool("autobuy", value);
             }
         }
     }

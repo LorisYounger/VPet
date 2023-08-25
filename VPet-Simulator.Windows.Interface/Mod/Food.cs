@@ -153,7 +153,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 当前物品推荐价格
         /// </summary>
-        public double RealPrice => ((Exp / 4 + Strength / 5 + StrengthDrink / 3 + StrengthFood / 2 + Feeling / 6) / 3 + Health + Likability * 10);
+        public double RealPrice => ((Exp / 4 + Strength / 5 + StrengthDrink / 3 + StrengthFood / 2 + Feeling / 5) / 3 + Health + Likability * 10);
         /// <summary>
         /// 该食物是否超模
         /// </summary>
