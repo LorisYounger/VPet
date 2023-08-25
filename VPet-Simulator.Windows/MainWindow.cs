@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Web;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
@@ -46,7 +48,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 版本号
         /// </summary>
-        public int version { get; } = 101;
+        public int version { get; } = 102;
         /// <summary>
         /// 版本号
         /// </summary>
@@ -98,10 +100,47 @@ namespace VPet_Simulator.Windows
                 return null;
             return list[Function.Rnd.Next(list.Count)];
         }
+        private Image hashcheckimg;
+        public void HashCheckOff()
+        {
+            HashCheck = false;
+        }
         /// <summary>
         /// 存档 Hash检查 是否通过
         /// </summary>
-        public bool HashCheck { get; set; } = true;
+        public bool HashCheck
+        {
+            get => hashCheck;
+            set
+            {
+                hashCheck = value;
+                Main?.Dispatcher.Invoke(() =>
+                {
+                    if (hashCheck)
+                    {
+                        if (hashcheckimg == null)
+                        {
+                            hashcheckimg = new Image();
+                            hashcheckimg.Source = new BitmapImage(new Uri("pack://application:,,,/Res/hash.png"));
+                            hashcheckimg.HorizontalAlignment = HorizontalAlignment.Right;
+                            hashcheckimg.ToolTip = "是没有修改过存档/使用超模MOD的玩家专属标志".Translate();
+                            Grid.SetColumn(hashcheckimg, 4);
+                            Grid.SetRowSpan(hashcheckimg, 2);
+                            Main.ToolBar.gdPanel.Children.Add(hashcheckimg);
+                        }
+                    }
+                    else
+                    {
+                        if (hashcheckimg != null)
+                        {
+                            Main.ToolBar.gdPanel.Children.Remove(hashcheckimg);
+                            hashcheckimg = null;
+                        }
+                    }
+                });
+
+            }
+        }
         public void SetZoomLevel(double zl)
         {
             Set.ZoomLevel = zl;
@@ -703,6 +742,8 @@ namespace VPet_Simulator.Windows
         public bool? CurrMusicType { get; private set; }
 
         int LastDiagnosisTime = 0;
+        private bool hashCheck = true;
+
         /// <summary>
         /// 上传遥测文件
         /// </summary>

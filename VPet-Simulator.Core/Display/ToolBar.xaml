@@ -18,8 +18,8 @@
         <Border x:Name="BdrPanel" Margin="0,0,0,55" VerticalAlignment="Bottom" x:FieldModifier="public"
                 Background="{DynamicResource DARKPrimaryText}" BorderBrush="{DynamicResource DARKPrimaryDarker}"
                 BorderThickness="1" CornerRadius="5" MouseLeave="MenuPanel_MouseLeave" TextBlock.FontSize="24"
-                TextElement.FontSize="24" Visibility="Collapsed">
-            <Grid Margin="15">
+                TextElement.FontSize="24" >
+            <Grid Margin="15" x:Name="gdPanel" x:FieldModifier="public">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />

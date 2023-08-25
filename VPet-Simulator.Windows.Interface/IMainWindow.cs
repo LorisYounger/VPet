@@ -125,8 +125,11 @@ namespace VPet_Simulator.Windows.Interface
         /// 关闭指示器,默认为true
         /// </summary>
         bool CloseConfirm { get; }
-
-     
+        /// <summary>
+        /// 关闭该玩家的HashCheck检查
+        /// 如果你的mod属于作弊mod/有作弊内容,请在作弊前调用这个方法
+        /// </summary>
+        void HashCheckOff();
     }
 
 }
