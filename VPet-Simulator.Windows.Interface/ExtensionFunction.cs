@@ -14,7 +14,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         /// <param name="work">工作</param>
         /// <returns>是否超模</returns>
-        public static bool IsOverLoad(Work work)
+        public static bool IsOverLoad(this Work work)
         {//判断这个工作是否超模
             var spend = (Math.Pow(work.StrengthFood * 2 + 1, 2) / 6 + Math.Pow(work.StrengthDrink * 2 + 1, 2) / 9 +
                 Math.Pow(work.Feeling * 2 + 1, 2) / 12) * (Math.Pow(work.LevelLimit / 2 + 1, 0.5) / 4 + 1) - 0.5;

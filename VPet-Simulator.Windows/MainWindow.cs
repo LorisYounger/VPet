@@ -17,6 +17,7 @@ using System.Web;
 using System.Windows;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
+using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
 using Timer = System.Timers.Timer;
 using ToolBar = VPet_Simulator.Core.ToolBar;
@@ -761,5 +762,30 @@ namespace VPet_Simulator.Windows
         /// 关闭指示器,默认为true
         /// </summary>
         public bool CloseConfirm { get; private set; } = true;
+        /// <summary>
+        /// 超模工作检查
+        /// </summary>
+        public bool WorkCheck(Work work)
+        {
+            //看看是否超模
+            if (HashCheck && work.IsOverLoad())
+            {
+                var spend = (Math.Pow(work.StrengthFood * 2 + 1, 2) / 6 + Math.Pow(work.StrengthDrink * 2 + 1, 2) / 9 +
+               Math.Pow(work.Feeling * 2 + 1, 2) / 12) * (Math.Pow(work.LevelLimit / 2 + 1, 0.5) / 4 + 1) - 0.5;
+                var get = (work.MoneyBase + work.MoneyLevel * 10) * (work.MoneyLevel + 1) * (1 + work.FinishBonus / 2);
+                if (work.Type != Work.WorkType.Work)
+                {
+                    get /= 12;//经验值换算
+                }
+                var rel = get / spend;
+                if (MessageBoxX.Show("当前工作数据属性超模,是否继续工作?\n超模工作可能会导致游戏发生不可预料的错误\n超模工作不影响大部分成就解锁\n当前数据比率 {0:f2}\n推荐比率<1.5"
+                    .Translate(rel), "超模工作提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+                HashCheck = false;
+            }
+            return true;
+        }
     }
 }

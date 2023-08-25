@@ -162,7 +162,7 @@ namespace VPet_Simulator.Windows.Interface
             if (isoverload == null)
             {
                 double relp = RealPrice;
-                isoverload = Price > (relp + 10) * 1.3;// || Price < (relp - 10) * 0.7;//30%容错
+                isoverload = Price < (relp - 10) * 0.7;// Price > (relp + 10) * 1.3;// || Price < (relp - 10) * 0.7;//30%容错
             }
             return isoverload.Value;
         }
