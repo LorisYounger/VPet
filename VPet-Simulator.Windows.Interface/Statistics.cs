@@ -13,6 +13,7 @@ namespace VPet_Simulator.Windows.Interface
     /// </summary>
     public class Statistics : IGetOBJ<SetObject>
     {
+        public Statistics() { }
         public Statistics(IEnumerable<ISub> subs)
         {
             AddRange(subs);

@@ -29,3 +29,7 @@
 当前工作数据属性超模,是否继续工作?\n超模工作可能会导致游戏发生不可预料的错误\n超模工作不影响大部分成就解锁\n当前数据比率 {0:f2}\n推荐比率<1.5#The current work data attribute supermodel, whether to continue to work?\nSupermodel work may cause the game to have unexpected errors\nSupermodel work does not affect most of the achievements to unlock\nCurrent data ratio {0:f2}\nRecommended ratio <1.5:|
 超模工作提醒#Supermodel work reminder:|
 是没有修改过存档/使用超模MOD的玩家专属标志#Is there no modified archive/supermodel MOD player exclusive logo:|
+重新开始#Restart:|
+重新开始新游戏,重置统计等信息\r对于想要获得脱离超模从而获得成就非常有帮助#Restart a new game, reset statistics and other information\rIt is very helpful for those who want to get out of the supermodel and get achievements.:|
+是否重置游戏数据重新开始?\n该操作无法撤回#Reset the game data to restart?\nThis operation can not be revoked:|
+重置成功#Reset successfully:|
