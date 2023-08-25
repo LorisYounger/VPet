@@ -147,9 +147,9 @@ namespace VPet_Simulator.Windows
             SliderResolution.Value = mw.Set.Resolution;
 
 #if X64
-            GameVerison.Content = "游戏版本".Translate() + $"v{mw.version} x64";
+            GameVerison.Content = "游戏版本".Translate() + $"v{mw.Version} x64";
 #else
-            GameVerison.Content = "游戏版本".Translate() + $"v{mw.version} x86";
+            GameVerison.Content = "游戏版本".Translate() + $"v{mw.Version} x86";
 #endif
             //关于ui
             if (mw.IsSteamUser)
@@ -182,7 +182,7 @@ namespace VPet_Simulator.Windows
                     BtnCGPTReSet.Content = "聊天框已关闭".Translate();
                     break;
             }
-            runabVer.Text = $"v{mw.version} ({mw.version})";
+            runabVer.Text = $"v{mw.Version} ({mw.version})";
 
             //mod列表
             ShowModList();

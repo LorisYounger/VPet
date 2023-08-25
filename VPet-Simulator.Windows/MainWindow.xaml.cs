@@ -636,6 +636,8 @@ namespace VPet_Simulator.Windows
                 Main.Event_TouchHead += Main_Event_TouchHead;
                 Main.Event_TouchBody += Main_Event_TouchBody;
 
+                HashCheck = hashCheck;
+
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 6, 20))
                 {
                     Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
