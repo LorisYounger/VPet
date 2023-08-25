@@ -371,7 +371,14 @@ namespace VPet_Simulator.Windows
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
 
-            if (Set.AutoSaveInterval > 0)
+            if(Set.Statistics[(gdbe)"stat_bb_food"] < 0 || Set.Statistics[(gdbe)"stat_bb_drink"] < 0 || Set.Statistics[(gdbe)"stat_bb_drug"] < 0
+                || Set.Statistics[(gdbe)"stat_bb_snack"] < 0 || Set.Statistics[(gdbe)"stat_bb_functional"] < 0 || Set.Statistics[(gdbe)"stat_bb_meal"] < 0
+                || Set.Statistics[(gdbe)"stat_bb_gift"] < 0)
+            {
+                hashCheck = false;
+            }
+
+                if (Set.AutoSaveInterval > 0)
             {
                 AutoSaveTimer.Interval = Set.AutoSaveInterval * 60000;
                 AutoSaveTimer.Start();
