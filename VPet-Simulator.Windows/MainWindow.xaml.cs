@@ -29,6 +29,7 @@ using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 using System.Diagnostics.Eventing.Reader;
+using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 
 namespace VPet_Simulator.Windows
 {
@@ -341,6 +342,18 @@ namespace VPet_Simulator.Windows
                 Directory.Move(AppDomain.CurrentDomain.BaseDirectory + @"\UserData", AppDomain.CurrentDomain.BaseDirectory + @"\BackUP");
             }
 
+            //加载数据合理化:食物
+            if (!Set["gameconfig"].GetBool("noAutoCal"))
+            {
+                foreach (Food f in Foods)
+                {
+                    if (f.IsOverLoad())
+                    {
+                        f.Price = Math.Max((int)f.RealPrice, 1);
+                    }
+                }
+            }
+
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏MOD".Translate()));
 
@@ -413,6 +426,34 @@ namespace VPet_Simulator.Windows
                 Core.Graph = petloader.Graph(Set.Resolution);
                 Main = new Main(Core);
                 Main.NoFunctionMOD = Set.CalFunState;
+
+                //加载数据合理化:工作
+                if (!Set["gameconfig"].GetBool("noAutoCal"))
+                {
+                    foreach (var work in Core.Graph.GraphConfig.Works)
+                    {
+                        if (work.IsOverLoad())
+                        {
+                            work.MoneyLevel = 0.5;
+                            work.MoneyBase = 8;
+                            if (work.Type == GraphHelper.Work.WorkType.Work)
+                            {
+                                work.StrengthDrink = 2.5;
+                                work.StrengthFood = 3.5;
+                                work.Feeling = 1.5;
+                                work.FinishBonus = 0;
+                            }
+                            else
+                            {
+                                work.Feeling = 1;
+                                work.FinishBonus = 0;
+                                work.StrengthDrink = 1;
+                                work.StrengthFood = 1;
+                            }
+                        }
+                    }
+                }
+
                 LoadingText.Content = "正在加载CGPT".Translate();
                 switch (Set["CGPT"][(gstr)"type"])
                 {
@@ -534,6 +575,8 @@ namespace VPet_Simulator.Windows
                 Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
                 if (Set.MessageBarOutside)
                     Main.MsgBar.SetPlaceOUT();
+
+                Main.ToolBar.WorkCheck = WorkCheck;
 
                 //加载图标
                 notifyIcon = new NotifyIcon();

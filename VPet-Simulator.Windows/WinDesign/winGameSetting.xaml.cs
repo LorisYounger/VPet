@@ -82,6 +82,9 @@ namespace VPet_Simulator.Windows
             combCalFunState.IsEnabled = !mw.Set.EnableFunction;
             CalTimeInteraction();
 
+            swAutoCal.IsChecked = !mw.Set["gameconfig"].GetBool("noAutoCal");
+
+
             LanguageBox.Items.Add("null");
             foreach (string v in LocalizeCore.AvailableCultures)
             {
@@ -1171,6 +1174,13 @@ namespace VPet_Simulator.Windows
         {
             mw.Save();
             MessageBoxX.Show("保存成功".Translate());
+        }
+
+        private void swAutoCal_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set["gameconfig"].SetBool("noAutoCal", !swAutoCal.IsChecked.Value);
         }
     }
 }
