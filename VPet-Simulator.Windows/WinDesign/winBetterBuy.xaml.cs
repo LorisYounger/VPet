@@ -200,8 +200,8 @@ namespace VPet_Simulator.Windows
             var item = Button.DataContext as Food;
             //看是什么模式
             if (mw.Set.EnableFunction)
-            {
-                if (item.Price >= mw.Core.Save.Money)
+            {//$10以内的食物允许赊账
+                if (item.Price >= 10 && item.Price >= mw.Core.Save.Money)
                 {//买不起
                     MessageBoxX.Show("您没有足够金钱来购买 {0}\n您需要 {1:f2} 金钱来购买\n您当前 {2:f2} 拥有金钱"
                         .Translate(item.TranslateName, item.Price, mw.Core.Save.Money)
