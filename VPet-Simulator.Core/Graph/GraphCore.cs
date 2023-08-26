@@ -48,7 +48,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 通用设置属性/方法
         /// </summary>
-        public Dictionary<string, dynamic> CommConfig = new Dictionary<string, dynamic>();
+        public Dictionary<string, object> CommConfig = new Dictionary<string, object>();
         /// <summary>
         /// 添加动画
         /// </summary>

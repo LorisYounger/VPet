@@ -1,7 +1,6 @@
 ﻿using LinePutScript;
 using LinePutScript.Converter;
 using System;
-using System.Windows.Forms;
 
 namespace VPet_Simulator.Core
 {
