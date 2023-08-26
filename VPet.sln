@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Core", "VPet-Simulator.Core\VPet-Simulator.Core.csproj", "{7BD4CB1D-C8F3-4349-9BF0-CD11789130BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VPet-Simulator.Core", "VPet-Simulator.Core\VPet-Simulator.Core.csproj", "{7BD4CB1D-C8F3-4349-9BF0-CD11789130BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Tool", "VPet-Simulator.Tool\VPet-Simulator.Tool.csproj", "{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VPet-Simulator.Tool", "VPet-Simulator.Tool\VPet-Simulator.Tool.csproj", "{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Windows", "VPet-Simulator.Windows\VPet-Simulator.Windows.csproj", "{B5C2DD17-735F-4F9F-82E4-B8692AEC03F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VPet-Simulator.Windows", "VPet-Simulator.Windows\VPet-Simulator.Windows.csproj", "{B5C2DD17-735F-4F9F-82E4-B8692AEC03F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Windows.Interface", "VPet-Simulator.Windows.Interface\VPet-Simulator.Windows.Interface.csproj", "{DCAD838A-1A02-4BDF-962C-FD47C6006D28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VPet-Simulator.Windows.Interface", "VPet-Simulator.Windows.Interface\VPet-Simulator.Windows.Interface.csproj", "{DCAD838A-1A02-4BDF-962C-FD47C6006D28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,14 +35,14 @@ Global
 		{7BD4CB1D-C8F3-4349-9BF0-CD11789130BA}.Release|x86.Build.0 = Release|Any CPU
 		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Debug|x64.ActiveCfg = Debug|x64
-		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Debug|x64.Build.0 = Debug|x64
-		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Debug|x86.ActiveCfg = Debug|x86
-		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Debug|x86.Build.0 = Debug|x86
+		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Debug|x64.Build.0 = Debug|Any CPU
+		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Debug|x86.Build.0 = Debug|Any CPU
 		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Release|x64.ActiveCfg = Release|x64
-		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Release|x64.Build.0 = Release|x64
+		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Release|x64.ActiveCfg = Release|Any CPU
+		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Release|x64.Build.0 = Release|Any CPU
 		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Release|x86.ActiveCfg = Release|x86
 		{692CE45E-01A9-4500-8B1D-AFC0FE2767FA}.Release|x86.Build.0 = Release|x86
 		{B5C2DD17-735F-4F9F-82E4-B8692AEC03F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

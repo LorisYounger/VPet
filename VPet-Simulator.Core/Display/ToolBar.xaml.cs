@@ -11,11 +11,9 @@ using LinePutScript;
 using LinePutScript.Localization.WPF;
 using static VPet_Simulator.Core.GraphInfo;
 using System.Collections.Generic;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 using static VPet_Simulator.Core.GraphHelper;
 using System.ComponentModel;
 using System.Reflection;
-using static System.Windows.Forms.AxHost;
 using static VPet_Simulator.Core.Main;
 
 namespace VPet_Simulator.Core
