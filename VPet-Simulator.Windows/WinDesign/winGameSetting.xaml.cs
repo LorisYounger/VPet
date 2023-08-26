@@ -173,8 +173,8 @@ namespace VPet_Simulator.Windows
                 case "LB":
                     RBCGPTUseLB.IsChecked = true;
                     BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
-                    if (!mw.IsSteamUser)
-                        BtnCGPTReSet.IsEnabled = false;
+                    //if (!mw.IsSteamUser)
+                    //    BtnCGPTReSet.IsEnabled = false;
                     break;
                 case "OFF":
                 default:

@@ -576,7 +576,8 @@ namespace VPet_Simulator.Windows
             if (string.IsNullOrWhiteSpace(line.ToString()))
                 return false;
             Core.Save = GameSave.Load(line);
-            if (Core.Save.Money == 0 && Core.Save.Likability == 0 && Core.Save.Exp == 0 && Core.Save.StrengthDrink == 0 && Core.Save.StrengthFood == 0)//数据全是0,可能是bug
+            if (Core.Save.Money == 0 && Core.Save.Likability == 0 && Core.Save.Exp == 0 
+                && Core.Save.StrengthDrink == 0 && Core.Save.StrengthFood == 0)//数据全是0,可能是bug
                 return false;
             long hash = line.GetInt64("hash");
             if (line.Remove("hash"))
