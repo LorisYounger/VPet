@@ -423,7 +423,6 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="Type">动画类型</param>
         /// <param name="EndAction">动画结束后操作(附带名字)</param>
-        ///// <param name="storernd">是否储存随机数字典</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
         public void Display(GraphType Type, AnimatType animat, Action<string> EndAction = null)
         {

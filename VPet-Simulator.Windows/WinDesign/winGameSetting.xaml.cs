@@ -1185,7 +1185,7 @@ namespace VPet_Simulator.Windows
 
         private void restart_click(object sender, RoutedEventArgs e)
         {
-            if (MessageBoxX.Show("是否重置游戏数据重新开始?\n该操作无法撤回".Translate(), "重新开始".Translate()) == MessageBoxResult.Yes)
+            if (MessageBoxX.Show("是否重置游戏数据重新开始?\n该操作无法撤回".Translate(), "重新开始".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 mw.Core.Save = new GameSave();
                 mw.Set.Statistics = new Statistics();
