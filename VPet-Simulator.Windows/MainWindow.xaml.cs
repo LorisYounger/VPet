@@ -469,11 +469,13 @@ namespace VPet_Simulator.Windows
                         Main.ToolBar.MainGrid.Children.Add(TalkBox);
                         break;
                     case "LB":
-                        if (IsSteamUser)
-                        {
-                            TalkBox = new TalkSelect(this);
-                            Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                        }
+                        //if (IsSteamUser)
+                        //{
+                        //    TalkBox = new TalkSelect(this);
+                        //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                        //}
+                        TalkBox = new TalkSelect(this);
+                        Main.ToolBar.MainGrid.Children.Add(TalkBox);
                         break;
                 }
 
