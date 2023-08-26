@@ -10,38 +10,38 @@
 长按脑袋拖动桌宠到你喜欢的任意位置#Hold the head and drag the desktop pet to any position you like:|
 欢迎加入 虚拟主播模拟器群 430081239#This open-source project address in https://github.com/LorisYounger/VPet:|
 关注 {0} 谢谢喵#Subscribe {0} thanks:|
-尝试加载动画和生成缓存#Try loading animations and generating caches:|
+尝试加载动画和生成缓存#Attempting to load animations and generate caches:|
 正在加载CGPT#Loading CGPT:|
 设置#Settings:|
 图形#Graphics:|
-快速切换#Quick Switching:|
-置于顶层#Placed TopMost:|
-将桌宠置于顶层#Placed TopMost:|
-鼠标将会穿过桌宠到下方内容,不打扰操作\r该选项#Mouse will pass through the desktop pet to the content below, without disturbing the operation\rthis option:|
-鼠标穿透#Mouse HitThrough:|
-添加快速切换小标,切换顶层或穿透#Add quick Switcher, switch TopMost or HitThrough:|
-添加小标,快速切换顶层或穿透#Add Switcher, switch TopMost/HitThrough:|
-更高缩放#Higher Zoom:|
-支持更大缩放倍率#Support larger zoom magnifications:|
-解锁缩放限制#Unlock the Zoom Limit:|
+快速切换#Quick Switcher:|
+置于顶层#Always On Top:|
+将桌宠置于顶层#Enable:|
+鼠标将会穿过桌宠到下方内容,不打扰操作\r该选项#Mouse will pass through the desktop pet to the content below, without interacting with the main window:|
+鼠标穿透#Click Through Window:|
+添加快速切换小标,切换顶层或穿透#Toggle:|
+添加小标,快速切换顶层或穿透#Add toggle to switch Always on top / Click through:|
+更高缩放#Increase Zoom:|
+支持更大缩放倍率#Support larger zoom levels:|
+解锁缩放限制#Increase zoom level limit:|
 缩放等级#Zoom Level:|
 主题#Theme:|
 字体#Font:|
 启动位置#Start Position:|
-退出位置#Exit Pos:|
-游戏退出位置为下次桌宠启动出现的位置#The game exit position is the position where the next table pet starts:|
+退出位置#Exit Pos.:|
+游戏退出位置为下次桌宠启动出现的位置#Set pet to start in the same position as it exits:|
 X轴#X-axis:|
 Y轴#Y-axis:|
 当前位置#Current:|
 消息框#Message Box:|
 将消息框置于外部#Place Message Box Externally:|
 开机启动#Auto-start:|
-该游戏随着开机启动该程序\r如需卸载游戏\r请关闭该选项#Game auto-start with power on\rif you want to uninstall the game\rturn off this option:|
+该游戏随着开机启动该程序\r如需卸载游戏\r请关闭该选项#Game auto-start on login\rDisable this option before uninstalling:|
 从Steam启动#Starting from Steam:|
 从Steam启动该游戏, 统计时长不能停#start the game from Steam, counting time cannot be stopped:|
 宠物动画#Pet animation:|
 动画描述动画描述动画描述动画描述动画描述#Animation description Animation description Animation description Animation description Animation description:|
-加载的宠物动画,重启后生效#Loaded pet animation, take effect after restarting:|
+加载的宠物动画,重启后生效#Loaded pet animation, changes will take effect after restart:|
 重启软件以应用更改#Restart the software to apply the changes:|
 系统#System:|
 自动保存频率#Autosave Frequency:|
@@ -53,7 +53,7 @@ Y轴#Y-axis:|
 每半小时一次#Every half hour:|
 每小时一次#Every a hour:|
 从备份中还原#Restore from backup:|
-虚拟桌宠模拟器在每次保存的时候都会备份上次储存的存档, 当原始存档丢失,受损或误操作时, 就可以还原他们#VPet-Simulator backs up the last saved file every time it is saved. When the original file is lost, break, or mishandled, it can be restored:|
+虚拟桌宠模拟器在每次保存的时候都会备份上次储存的存档, 当原始存档丢失,受损或误操作时, 就可以还原他们#VPet-Simulator backs up the last saved file every time it is saved. If the original file is lost or corrupt it can be restored from here:|
 备份数量#Number of Backups:|
 加载存档#Load Save:|
 加载#Load:|
@@ -71,13 +71,13 @@ Y轴#Y-axis:|
 互动设置#Interaction Settings:|
 游戏互动相关设置#Game interaction related settings:|
 启用后桌宠会有状态变化,需要按时投喂等#Pet have status change, needs feed:|
-启用数据计算,桌宠会有状态变化,需要按时投喂等.\r如果嫌麻烦可以关掉#Enable data calculation, desktop pet will have a status change, need to feed on time, etc.\rIf you are troublesome, you can turn it off:|
-当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能\r将在下次交互时解除#When the player does not interact with the desktop pet at a specified time, the move function is intelligently disabled\rreleased in the next interaction:|
-当关闭数据计算时\r桌宠显示的状态#status displayed when\rdata calculation turn off:|
+启用数据计算,桌宠会有状态变化,需要按时投喂等.\r如果嫌麻烦可以关掉#Enable data calculation: Desktop pet will change status, need to eat on time, etc.\rIf it's too much trouble you can disable it:|
+当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能\r将在下次交互时解除#When the player does not interact with the desktop pet for a specified time, the move function is automatically disabled\rre-enabled on the next interaction:|
+当关闭数据计算时\r桌宠显示的状态#Status to display when\rdata calculation is off:|
 启用桌宠移动#Enabled:|
-启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.\r如果嫌麻烦可以关掉#Enable mobile interaction, desktop pet will move around on the screen, probability of mobile interaction is half that of normal interaction.\rIf it's troublesome, you can turn it off:|
+启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.\r如果嫌麻烦可以关掉#Enable movement interaction: Desktop pet will be able to move around on the screen. Probability is half that of normal interaction.\rIf it's troublesome, you can turn it off:|
 智能移动#Smart Moving:|
-智能移动判断时间间隔#Smart Moving Judgment:|
+智能移动判断时间间隔#Smart Moving Period:|
 30 秒#30 seconds:|
 1 分钟#1 minute:|
 2 分钟#2 minute:|
@@ -201,8 +201,8 @@ text#Text Set:|
 按体力#Stamina:|
 按心情#Mood:|
 按健康#Health:|
-升序#Asc:|
-降序#Des:|
+升序#Asc.:|
+降序#Desc.:|
 停止工作#Stop Working:|
 详细#Detailed:|
 宠物已经生病, 通过服用药物可以恢复#Pet ill and can recover by taking medication:|
@@ -307,7 +307,7 @@ DLL引用名单#DLL Reference List:|
 经验值#EXP:|
 健康#Health:|
 怕上火，喝广东咖啡！#Afraid excessive internal heat? drink Guangdong coffee!:|
-收藏食物#Collect Food:|
+收藏食物#Favorite item:|
 物品详情#Item Details:|
 椰汁#Coconut Milk:|
 白白胖胖，曲线圆润，要喝不加香油的椰O牌椰汁#White and chubby, rounded curve, one should drink Vita caca coconut juice:|
