@@ -470,12 +470,12 @@ namespace VPet_Simulator.Core
             else
                 Display(Type, animat, EndAction);
         }
+
         /// <summary>
         /// 显示动画 (自动查找和匹配)
         /// </summary>
         /// <param name="Type">动画类型</param>
         /// <param name="EndAction">动画结束后操作</param>
-        ///// <param name="storernd">是否储存随机数字典</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
         public void Display(GraphType Type, AnimatType animat, Action EndAction = null)
         {

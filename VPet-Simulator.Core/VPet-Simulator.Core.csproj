@@ -20,6 +20,9 @@
 		<NoWarn>CS1591</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="LinePutScript" Version="1.9.2" />
 		<PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.6" />
 		<PackageReference Include="Panuon.WPF" Version="1.0.2" />
