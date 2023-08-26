@@ -71,7 +71,7 @@
 		<Resource Include="Res\Font\OPPOSans B.ttf" />
 		<Resource Include="Res\Font\OPPOSans R.ttf" />
 		<Resource Include="Res\remixicon.ttf" />
-		<Resource Include="vpeticon.ico"/>
+		<Resource Include="vpeticon.ico" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\VPet-Simulator.Core\VPet-Simulator.Core.csproj" />
@@ -97,6 +97,12 @@
 		<None Update="Properties\Settings.settings">
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+		<None Update="steam_api.dll">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="steam_api64.dll">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
