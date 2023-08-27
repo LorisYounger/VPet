@@ -1,4 +1,6 @@
-﻿using VPet_Simulator.Core;
+﻿using System.Windows.Forms;
+using System.Windows.Interop;
+using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows
 {
@@ -13,24 +15,36 @@ namespace VPet_Simulator.Windows
             this.mw = mw;
         }
 
-        public double GetWindowsDistanceDown()
-        {
-            return mw.Dispatcher.Invoke(() => System.Windows.SystemParameters.PrimaryScreenHeight - mw.Top - mw.Height);
-        }
-
         public double GetWindowsDistanceLeft()
         {
             return mw.Dispatcher.Invoke(() => mw.Left);
         }
 
-        public double GetWindowsDistanceRight()
-        {
-            return mw.Dispatcher.Invoke(() => System.Windows.SystemParameters.PrimaryScreenWidth - mw.Left - mw.Width);
-        }
-
         public double GetWindowsDistanceUp()
         {
             return mw.Dispatcher.Invoke(() => mw.Top);
+        }
+
+        public double GetWindowsDistanceRight()
+        {
+            return mw.Dispatcher.Invoke(() =>
+            {
+                var windowInteropHelper = new WindowInteropHelper(mw);
+                var currentScreen = Screen.FromHandle(windowInteropHelper.Handle);
+                var currentScreenBorder = currentScreen.Bounds;
+                return currentScreenBorder.Width - mw.Left - mw.Width;
+            });
+        }
+
+        public double GetWindowsDistanceDown()
+        {
+            return mw.Dispatcher.Invoke(() =>
+            {
+                var windowInteropHelper = new WindowInteropHelper(mw);
+                var currentScreen = Screen.FromHandle(windowInteropHelper.Handle);
+                var currentScreenBorder = currentScreen.Bounds;
+                return currentScreenBorder.Height - mw.Top - mw.Height;
+            });
         }
 
         public void MoveWindows(double X, double Y)
