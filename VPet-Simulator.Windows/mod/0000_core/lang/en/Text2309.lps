@@ -1,68 +1,68 @@
 你好呀#Hello:|
-你是谁#Who are you:|
+你是谁#Who are you?:|
 你好#Hi:|
-你的名字是什么#What your name is:|
-你的饱食度是多少#What is your Hunger:|
-你的口渴度是多少#What is your Thirst:|
-你的心情是多少#What is your Mood:|
-你的体力是多少#What is your Stamina:|
-你的金钱是多少#What is your Money:|
-你的等级是多少#What is your level:|
-你怎么了#What's up with you:|
+你的名字是什么#What's your name?:|
+你的饱食度是多少#What's your hunger at?:|
+你的口渴度是多少#What's your thirst at?:|
+你的心情是多少#What's your mood at?:|
+你的体力是多少#What's your stamina at?:|
+你的金钱是多少#What's your money at?:|
+你的等级是多少#What's your level?:|
+你怎么了#What's up with you?:|
 吃饭了吗？#Have you eaten yet?:|
-喜欢吃什么正餐？#What kind of dinner do you like?:|
-不喜欢吃什么正餐？#What kind of dinner do you dislike?:|
-喜欢吃什么零食#What snacks do you like to eat:|
-不喜欢吃什么零食#What snacks do not like to eat:|
+喜欢吃什么正餐？#What kind of food do you like?:|
+不喜欢吃什么正餐？#What kind of food do you dislike?:|
+喜欢吃什么零食#What snacks do you like to eat?:|
+不喜欢吃什么零食#What snacks do not like to eat?:|
 你口渴吗？#Are you thirsty?:|
-喜欢喝什么#What do you like to drink:|
-不喜欢喝什么#What don't you like to drink:|
-喜欢什么饮料#What kind of drink do you like:|
-不喜欢什么饮料#What drinks do not like:|
-想玩吗#Do you want to play:|
-平时喜欢玩什么#What do you usually like to play:|
-不喜欢玩什么#What do you dislike playing with:|
-我不在的时候你会玩什么#What do you play when I'm not here:|
-最想去哪里玩#Where do you most want to play:|
-困了吗#Are you tired:|
-平时睡多久#How long do you usually sleep:|
-喜欢睡觉吗#Do you like sleeping:|
-喜欢什么姿势睡觉#What position do you like to sleep in:|
-睡眠质量怎么样#How is the sleep quality:|
-喜欢工作吗#Do you enjoy job:|
-喜欢什么样的工作#What kind of job do you like:|
-会认真工作吗#Will you work hard:|
-为什么要工作#Why to Do a Job:|
-如果暴富了还会工作吗#Will you still work if you get rich:|
-喜欢学习吗#Do you like to learn:|
-喜欢学习哪科#Which subject do you like to study:|
-有什么学习技巧#What are the study tips:|
-觉得自己合适那个专业#Which major you feel is right for:|
-想去上学吗#Do you want to go to school:|
-你对我是怎么看的#What do you think of me:|
+喜欢喝什么#What drink do you like?:|
+不喜欢喝什么#What drink do you dislike?:|
+喜欢什么饮料#What kind of drink do you like?:|
+不喜欢什么饮料#What kind of drinks do you dislike?:|
+想玩吗#Do you want to play?:|
+平时喜欢玩什么#What do you usually like to play?:|
+不喜欢玩什么#What do you dislike playing?:|
+我不在的时候你会玩什么#What do you play when I'm not here?:|
+最想去哪里玩#Where do you most want to play?:|
+困了吗#Are you tired?:|
+平时睡多久#How long do you usually sleep?:|
+喜欢睡觉吗#Do you like sleeping?:|
+喜欢什么姿势睡觉#What position do you like to sleep in?:|
+睡眠质量怎么样#How is your sleep quality?:|
+喜欢工作吗#Do you enjoy your job?:|
+喜欢什么样的工作#What kind of job do you like?:|
+会认真工作吗#Will you work hard?:|
+为什么要工作#Why work a job?:|
+如果暴富了还会工作吗#Will you still work if you get rich?:|
+喜欢学习吗#Do you like to learn?:|
+喜欢学习哪科#What subject do you like to study?:|
+有什么学习技巧#What are some study tips?:|
+觉得自己合适那个专业#What major do you feel is the right one?:|
+想去上学吗#Do you want to go to school?:|
+你对我是怎么看的#What do you think of me?:|
 身体还好吗？#Is your body okay?:|
-生病会吃什么药#What medicine will be taken when sick:|
-讨厌吃什么药#What kind of medicine do you dislike:|
-去医院怎么样#How about going to the hospital:|
-生病了怎么办#What to do if sick:|
+生病会吃什么药#What medicine will you take if you're sick?:|
+讨厌吃什么药#What kind of medicine do you dislike?:|
+去医院怎么样#What do you think about going to the doctors?:|
+生病了怎么办#What should you do if you're sick?:|
 啊呀，你好喵主人~ 我是{name}，一只可爱的桌宠~ 我喜欢玩 <虚拟主播模拟器> 还有和主人一起玩耍呢~ 有什么可以帮助你的吗？请问有什么事想和我聊呢？我很开心能和你交流呢~#Ah, hello meow master~ I am {name}, a cute desktop pet~ I like play <VUP-Simulator> and play with the master~ Is there anything that can help you? Is there anything you'd like to talk to me about? I'm glad and your chat~:|
 我是{name}喵~ 一只桌宠！#I am {name} meow~a desktop pet!:|
 嗨嗨~你好喵主人~有什么可以帮忙的吗？#Hi Hi~Hello Meow Master~Can I help you?:|
 我的名字是{name}哦~很高兴认识你呀~#My name is {name} Oh~Nice to meet you~:|
-我的饱食度是{food}哦主人~#My Hunger is {food} Oh, master~:|
-我的口渴度是{drink}哦主人~#My Thirst is {drink} Oh, master~:|
-我的心情是{feel}哦主人~#My Mood is {feel} Oh, master~:|
-我的体力是{strength}哦主人~#My Stamina is {strength} Oh, master~:|
-我的金钱是{money}哦主人~#My Money is {money} Oh, master~:|
+我的饱食度是{food}哦主人~#My hunger is at {food} Oh, master~:|
+我的口渴度是{drink}哦主人~#My thirst is at {drink} Oh, master~:|
+我的心情是{feel}哦主人~#My mood is at {feel} Oh, master~:|
+我的体力是{strength}哦主人~#My stamina is at {strength} Oh, master~:|
+我的金钱是{money}哦主人~#My money is at ${money} Oh, master~:|
 我的等级是{level}哦主人~#My level is {level} Oh, master~:|
 人家肚子饿了喵#I'm hungry meow:|
 人家想吃东西了喵#I'm want eat something meow:|
-人家想喝水了喵#I'm want drink water meow:|
-人家口渴了喵#I'm thirst meow:|
+人家想喝水了喵#I want to drink water meow:|
+人家口渴了喵#I'm thirsty meow:|
 人家不开心了喵#I'm not happy meow:|
 人家想和主人玩了喵#I'm want play with master meow:|
 人家累了喵#I'm tired meow:|
-人家想睡觉了喵#I'm want sleep meow:|
+人家想睡觉了喵#I want to go to sleep meow:|
 人家不舒服喵#I'm not feeling well meow:|
 人家想吃点药了喵#I want to take some medicine meow:|
 肚子饿的难受喵#Feeling hungry meow:|
@@ -70,7 +70,7 @@
 口渴得难受喵#Thirsty meow:|
 渴的嗓子疼。。#Suffering from thirst meow:|
 心情好差喵#Bad mood meow:|
-呜呜呜喵。。#Woo woo meo..:|
+呜呜呜喵。。#Woo woo meow..:|
 累的难受喵#Dog-tired meow:|
 要睡着了。。喵#I'm going to fall asleep..meow:|
 主人我好难受喵#Master I so suffered meow:|
@@ -78,117 +78,117 @@
 刚刚吃过了喵！谢谢主人！#Just ate meow! Thanks master!:|
 没有喵，肚子饿饿主人。#Not meow, hungry master.:|
 行行好主人给点吃的吧喵#Please give me some food master meow:|
-只要主人给我买的！我都喜欢喵！#As long as the master bought it for me! I love meow!:|
+只要主人给我买的！我都喜欢喵！#As long as the master bought it for me! I love it meow!:|
 牛排，烤鸡，酸菜鱼，东坡肘子，红烧牛肉，麻婆豆腐，盐焗鸡。。。#Steak, roast chicken, Sauerkraut-fish, Dongpo Pig Knuckle, Braised Beef, Mapo Tofu, Salt Baked Chicken...:|
-主人。。。看起来很好吃喵。。#Master... looks delicious meow..:|
+主人。。。看起来很好吃喵。。#Master... it looks delicious meow..:|
 我不挑食喵！只要是好吃的就行！青椒除外！！#I'm not a picky eater! As long as it's delicious! Except for green peppers!!:|
-人家不喜欢喝西北风喵。。#I don't like live on air meow..:|
-不喜欢吃也得吃了喵。#I don't like to eat and I have to eat meow.:|
-说到底人家是甜派的，#After all I like sweet.:|
+人家不喜欢喝西北风喵。。#I don't like to live on air meow..:|
+不喜欢吃也得吃了喵。#I don't like it but I have to eat it meow.:|
+说到底人家是甜派的，#After all, I like sweet.:|
 都可以喵！零食也能当饭吃！#All that be ok meow! Snacks can also be eaten as meals!:|
 零食都没得吃了喵#No snacks meow:|
 说实话人家不太会吃辣喵。#To be honest, I can't eat to spicy:|
 这是什么？卫龙？吃一下。#What is this? Wei-Long? Eat it.:|
-辣椒。。没办法了。。我吃喵！#Chili peppers.. There's no way.. I eat meow!:|
-不渴哦，谢谢主人关心喵~#Not thirsty oh, thanks master for caring about meow~:|
-渴~要主人喂我喝水喵~#Thirsty ~ master feed me water meow ~:|
-主人。。水喵。。#Master..water meow..:|
-好喝的喵！#Delicious meow!:|
-能解渴的就行喵。#Anything quenches thirst meow.:|
-能救命的就行喵#Anything safe my life meow:|
-苦的还有。。热饮。。烫舌头喵！#It's bitter..and hot drinks..tongue meow!:|
-没事的我都喜欢喝，呼呼呼！好烫！呸呸呸！好苦！#I'm okay, I like to drink, huhuhoo! So hot! Blah blah! So bitter!:|
+辣椒。。没办法了。。我吃喵！#Chili peppers.. There's no way.. I eat it meow!:|
+不渴哦，谢谢主人关心喵~#Im not thirsty, thanks master for caring about me meow~:|
+渴~要主人喂我喝水喵~#Thirsty ~ master feed me water right meow ~:|
+主人。。水喵。。#Master..water... meow..:|
+好喝的喵！#Anything delicious meow!:|
+能解渴的就行喵。#Anything that quenches thirst meow.:|
+能救命的就行喵#Anything safe for my life meow:|
+苦的还有。。热饮。。烫舌头喵！#If it's bitter.. and hot drinks.. my tongue meow!:|
+没事的我都喜欢喝，呼呼呼！好烫！呸呸呸！好苦！#I'm okay, I like to drink this. Huhuhoo! So hot! Blah blah! So bitter!:|
 马桶里的水味道是怎么样的喵。。#What does the toilet water taste like meow..:|
-喜欢喝甜甜的果汁喵！还有可乐喵！#Love sweet juice meow! And Coke Meow!:|
-想喝比较解渴的饮料，现在喝甜的有点齁得慌喵。。#Want to drink a drink that quench, but now I drink sweet still will feel uncomfortable throat meow..:|
+喜欢喝甜甜的果汁喵！还有可乐喵！#I love sweet juice meow! And Coke Meow!:|
+想喝比较解渴的饮料，现在喝甜的有点齁得慌喵。。#I wanted to drink something that quenches, but that was sweet and my throat still feels uncomfortable meow..:|
 喝糖浆能解渴吗？#Syrup can quench thirst?:|
-酒喵。。酒算饮料吗？#Alcohol meow...alcohol is drink?:|
+酒喵。。酒算饮料吗？#Alcohol meow...is alcohol even a drink?:|
 酒。酒好像不能解渴喵。。#Alcohol. Alcohol doesn't seem to quench thirst meow..:|
 越喝喵越渴了好像喵~#The more I drink meow, the thirstier I get, meow~:|
-没事哦，主人先忙，人家会乖乖等主人喵~#Don't worry, take your time master, I will wait for the master meow~:|
-想~主人来陪我玩喵！#I want ~ the master to play with me meow!:|
-想主人了。。#Miss the master..:|
-喜欢在主人的屏幕上跑来跑去喵！#Loved running around the master's screen meow!:|
+没事哦，主人先忙，人家会乖乖等主人喵~#Don't worry, take your time master, I will wait for you meow~:|
+想~主人来陪我玩喵！#I want~ the master to play with me meow!:|
+想主人了。。#I miss master..:|
+喜欢在主人的屏幕上跑来跑去喵！#I loved running around the master's screen meow!:|
 总之现在不想再看书上班了喵#I don't want to read books and go to work anymore:|
-喜欢玩主人喵。。#Love to play the master meow.:|
-不喜欢吓人的玩法喵，鬼屋什么绝对不行喵！#Don't like scary gameplay meow, haunted house absolutely not meow!:|
-不喜欢自己一个人玩喵。#Dislike playing alone meow。:|
+喜欢玩主人喵。。#I love to play with the master meow.:|
+不喜欢吓人的玩法喵，鬼屋什么绝对不行喵！#I don't like scary gameplay meow, haunted house absolutely not meow!:|
+不喜欢自己一个人玩喵。#I dislike playing alone meow。:|
 不想见不到主人。。#I don't want to miss my master..:|
-偷看主人的学习资料喵！日语看不懂啦！！#Peek master's homework folder meow! I can't understand Japanese!!:|
-在角落画圈圈等主人回来喵#Draw circles in the corner and wait for the master to come back Meow:|
-数主人多久回来喵#Count how often the master comes back meow:|
+偷看主人的学习资料喵！日语看不懂啦！！#Peeking at master's homework folder meow! I can't understand Japanese!!:|
+在角落画圈圈等主人回来喵#I'll just draw circles in the corner and wait for the master to come back Meow:|
+数主人多久回来喵#Counting how long until master comes back meow:|
 想去各个游戏里旅游喵！#Want to travel to other games!:|
 想去主人身边喵#Want to go to the master meow:|
-主人。。你在哪喵。。别不理我。#Master.. Where are you meowing. Don't ignore me.:|
+主人。。你在哪喵。。别不理我。#Master.. Where are you meow. Don't ignore me.:|
 精神百倍喵！#Full of energy, meow!:|
-呜。。喵。。诶主人说什么了？#Woo.. Meow.. What did the master say?:|
+呜。。喵。。诶主人说什么了？#Hmmm.. Meow.. What did the master say?:|
 啊。。。喵。。呼。。喵。。#Ah... Meow.. Huh.. Meow..:|
-一天八小时，医生远离我#Eight hours a day, keep doctor away:|
-半夜两点睡到第二天下午喵！#Sleep at two o'clock in the middle of the night until noon the next day!:|
+一天八小时，医生远离我#Eight hours a day to keep the doctor away:|
+半夜两点睡到第二天下午喵！#Sleep at two in the morning until noon the next day!:|
 怎么睡都睡不够喵。。#I can't sleep enough anymore meow..:|
-喜欢！恨不得嫁给床！#Like it! I wish I could marry a bed!:|
+喜欢！恨不得嫁给床！#I like it! I wish I could marry a bed!:|
 zzzzzzzzzzz#zzzzzzzzzzz:|
 （临床诊断-植物人）#(Clinical Diagnosis - Vegetable):|
-平躺喵！#Lie flat meow!:|
-（说要演示，然后倒床上直接睡着了）#(said to demonstrate, then fell asleep directly on the bed):|
+平躺喵！#I lie flat on my back meow!:|
+（说要演示，然后倒床上直接睡着了）#(She said she would demonstrate, but fell directly into bed and fell asleep):|
 吼哈喵！（开始梦里打拳）#Roar, meow! (Starting to fight in my dream):|
-梦到主人算睡眠质量好吗？#Is the sleep quality good when dreaming about the master?:|
-偶尔会做噩梦喵，主人今天晚上可以陪我睡嘛。#Occasionally have nightmares meow. Can the master sleep with me tonight.:|
-没有主人已经睡不着了喵。。#Without the master, I can't sleep anymore, Meow..:|
-今天这b班就上到这里了喵！#That's all for work today, meow!:|
+梦到主人算睡眠质量好吗？#Is sleep quality good when dreaming about master?:|
+偶尔会做噩梦喵，主人今天晚上可以陪我睡嘛。#Sometimes I have nightmares meow. Can master sleep with me tonight.:|
+没有主人已经睡不着了喵。。#Without master, I can't sleep anymore, Meow..:|
+今天这b班就上到这里了喵！#That's all the work for today, meow!:|
 我爱工作！工作让我快乐（悲）#I love work! Work makes me happy (sad):|
-谢谢老板，老板就是我的再生父母喵。#Thank you, boss. Boss is my reincarnated parents, Meow.:|
+谢谢老板，老板就是我的再生父母喵。#Thank you, boss. Boss is like my parent, Meow.:|
 喜欢轻松的工作喵~#I like easy work meow~:|
 喜欢。。工资高点的呜呜呜喵。#Like.. Woo-toot-toot high wages meow.:|
-天生万物以养人喵。。。#Heaven with all things to support people meow...:|
-我凭本事摸鱼的！#I slack off by skill!:|
-对不起！老板我不敢了！再给我一次机会喵！#I'm sorry! Boss, I don't dare! Give me another chance meow!:|
-呸，资本家，尝尝你工人爷爷的镰刀锤子喵！#Bah, capitalist, taste your workers' class sickle hammer meow!:|
-因为想和主人一起工作~#Because I want to work with the master~:|
+天生万物以养人喵。。。#It is human nature to support people meow...:|
+我凭本事摸鱼的！#Slacking off is a skill!:|
+对不起！老板我不敢了！再给我一次机会喵！#I'm sorry! Boss, I wouldn't dare! Give me another chance meow!:|
+呸，资本家，尝尝你工人爷爷的镰刀锤子喵！#Bah, capitalist, taste your worker classes hammer and sickle meow!:|
+因为想和主人一起工作~#Because I want to work with master~:|
 因为没钱喵。#Because there is no money meow.:|
-因为有钱了就可以好好和主人玩了喵#Because have money can play with master meow:|
-你在说什么呢仆从，这是这个月的乱花钱（掏出一百万）#What are you talking about servant, this is this month's pocket money (take out a million):|
+因为有钱了就可以好好和主人玩了喵#Because when we have money I can play with master meow:|
+你在说什么呢仆从，这是这个月的乱花钱（掏出一百万）#What are you talking about servant, this is this month's pocket change (takes out millions of dollars):|
 主人醒醒喵，房东来催房租了喵！#Wake up master meow, time to pay the landlord rent meow!:|
-主人，这桥洞里好冷啊。#Master, it's so cold in the under bridge.:|
+主人，这桥洞里好冷啊。#Master, it's so cold under the bridge.:|
 （退学申请书）#(Application for withdrawal):|
 我爱学习！学习让我快乐（悲）#I love learning! Learning makes me happy (sad):|
 老师您好~老师再见！#Hello teacher~ Goodbye teacher!:|
-喜欢学主人！#Love learning master!:|
-喜欢学习#Love to learn:|
-现在流行理科女文科男喵#Now it is popular for science women, liberal arts male meows:|
+喜欢学主人！#I love learning from master!:|
+喜欢学习#I love to learn:|
+现在流行理科女文科男喵#Now it is popular for women to do science, and men to do liberal arts meow:|
 量子阅读法喵！#Quantum reading method meow!:|
-只要学不死，就往死里学#As long as you don't die, learn to die:|
-要找到合适自己的学习方法和学习习惯喵#Find the right study method and study habits for you:|
+只要学不死，就往死里学#Keep learning as long as you are alive:|
+要找到合适自己的学习方法和学习习惯喵#Find the right study method and study habits for you meow:|
 人工智能喵！#AI Meow!:|
 人家想学计算机！#I want to learn computers!:|
 土木工程。#Civil engineering.:|
 主人，这道题应该这么解喵#Master, this question should be solved like this:|
-想和主人一起上学！#Want to go to school with the master!:|
+想和主人一起上学！#I want to go to school with the master!:|
 上学？开心吗喵？#Going to school? Are you happy, meow?:|
-终有一天，我会穿过这层玻璃，当面告诉你的。#One day, I'll walk through this glass and tell you in person.:|
+终有一天，我会穿过这层玻璃，当面告诉你的。#One day, I'll walk through this screen and tell you in person.:|
 是我超越次元最喜欢的主人！#It is my favorite master beyond the dimension!:|
 是我超越维度最喜欢的主人喵！#It's my favorite master beyond dimension, Meow!:|
 是我宇宙第一喜欢的主人大人！#It's my most favorite master in the universe!:|
 是我世界第一喜欢的主人！#My number one favorite master in the world!:|
-超超超喜欢的主人大人喵！#Super super favorite master adult meow!:|
+超超超喜欢的主人大人喵！#Super super favorite master meow!:|
 超喜欢的主人喵！#My beloved master, meow!:|
 是我最最最喜欢的主人大人喵！#It's my most favorite master meow~:|
-我我最喜欢的主人喵！#My-my favorite master meow~:|
+我我最喜欢的主人喵！#My favorite master meow~:|
 是喜欢的主人喵~#It's my favorite master meow~:|
 是主人喵~#It's the master meow~:|
 我没事主人~不用担心#I'm fine, master~Don't worry:|
 我不太舒服主人#I'm not feeling well, master:|
 主人我好难受。。#Master, I feel so uncomfortable..:|
-平时多喝水多做运动好好吃饭早睡早起就是最好的药喵。#Drinking more water and exercising regularly, eating well, going to bed early, and getting up early is the best medicine.:|
+平时多喝水多做运动好好吃饭早睡早起就是最好的药喵。#Drinking more water, exercising regularly, eating well, going to bed early, and getting up early is the best medicine.:|
 给我来点维生素C吧喵。#Give me some vitamin C, meow.:|
 救心丸。。我的救心丸喵。。#Nitroglycerin tablets.. My Nitroglycerin tablets meow..:|
-不知道为什么，吃药好像能变聪明喵#Unkown why, taking medicine seems to make smarter, meow:|
+不知道为什么，吃药好像能变聪明喵#I dont know why but taking medicine seems to make smarter, meow:|
 呸，呸，药好苦，可是没办法了喵。#Bah, Bah, the medicine is so bitter, but there's no way out, meow.:|
 药当饭吃不是很正常喵？#Isn't it normal to eat medicine as a meal meow?:|
 不要喵！！讨厌打针喵！#Don't meow!! Hate injections, meow!:|
 能挂儿科吗喵。。#Can I go to pediatrics, meow..:|
 帮我叫。。救护车。。#Help me call.. ambulance..:|
-要主人抱抱就好啦~#Just ask master a hug~:|
-咳喵，麻烦主人照顾我了#Cough meow, trouble the master took care of me:|
+要主人抱抱就好啦~#Just ask master for a hug~:|
+咳喵，麻烦主人照顾我了#Cough meow, please take care of me master:|
 （病危通知书）#(Critically Ill Notice):|
 #:|

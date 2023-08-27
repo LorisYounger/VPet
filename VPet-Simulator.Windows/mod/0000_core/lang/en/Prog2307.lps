@@ -14,8 +14,8 @@
 萝莉斯#Lolis:|
 由于插件引起的游戏启动错误#Game launch error due to plugin:|
 你好#Hello:|
-欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠#Welcome to use VPet-Simulator!\nIf you can't found desktop pet, you can set the center or exit the desktop pet in here.:|
-欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议#Welcome to use VPet-Simulator\nThis is a beta version, If there are any bugs, please forgive me a lot\nWelcome to check https://github.com/LorisYounger/VPet, or at Menu - System - Feedback Hub for feedback:|
+欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠#Welcome to use VPet-Simulator!\nIf you can't find desktop pet, you can set the center or exit the desktop pet in here.:|
+欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议#Welcome to use VPet-Simulator\nThis is a beta version. Please forgive me for any bugs\n You're welcome to check https://github.com/LorisYounger/VPet, or leave feedback at Menu - System - Feedback:|
 {0} 未加载代码插件#Code plugin {0} not loaded:|
 模组 {0} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题#Mod {0} Code plugins broken\nVPet-Simulator failed to load the plugin\nPlease contact author to fix this problem:|
 由于 {0} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件#Since {0} contains code plugin\nVPet-Simulator auto stopped loading the plugin\nplease go to the settings to enabled the mod code plugin:|

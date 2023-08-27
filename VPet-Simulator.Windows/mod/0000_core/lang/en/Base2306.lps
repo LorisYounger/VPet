@@ -1,14 +1,14 @@
 尝试加载游戏MOD#Try loading game MOD:|
-你知道吗? 鼠标右键可以打开菜单栏#Do you know? Mouse right click to open the menu bar:|
-如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的#If you feel that there are too few functions at the moment, just keep AFK more. Pets will move on their own:|
-你知道吗? 你可以在设置里面修改游戏的缩放比例#Do you know? You can modify the game's zoom ratio in the settings:|
-想要宠物不乱动? 设置里可以设置智能移动或者关闭移动#Want your pet to stay still? Smart moving can be set or disabled in the settings:|
-有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧#Do you have any suggestions/game feedback? Let's go to the Menu - System - Feedback Hub for feedback:|
+你知道吗? 鼠标右键可以打开菜单栏#Did you know? Mouse right click to open the menu bar:|
+如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的#If you feel that there are too few functions at the moment, just stay AFK more. Pets will move on their own:|
+你知道吗? 你可以在设置里面修改游戏的缩放比例#Did you know? You can modify the game's zoom ratio in the settings:|
+想要宠物不乱动? 设置里可以设置智能移动或者关闭移动#Want your pet to stay still? Smart moving can be enabled in the settings:|
+有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧#Do you have any suggestions or game feedback? Let's go to the Menu - System - Feedback Hub for feedback:|
 你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing#Your randomly tapping to speaking is part of the speaking system, but not do yet. It doing yet.:|
-你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧#Have you added VUP-Simulator and VPet-Simulator to your wishlist? Go ahead and add it:|
-这游戏开发这么慢,都怪画师太咕了#This game development is so slow, all due to the game artist:|
-长按脑袋拖动桌宠到你喜欢的任意位置#Hold the head and drag the desktop pet to any position you like:|
-欢迎加入 虚拟主播模拟器群 430081239#This open-source project address in https://github.com/LorisYounger/VPet:|
+你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧#Have you added VUP-Simulator and VPet-Simulator to your wishlist? Go ahead and add them:|
+这游戏开发这么慢,都怪画师太咕了#This game's development is so slow all due to the game artist's procrastination:|
+长按脑袋拖动桌宠到你喜欢的任意位置#Hold the head and drag the desktop pet wherever you like:|
+欢迎加入 虚拟主播模拟器群 430081239#This open-source project is located at https://github.com/LorisYounger/VPet:|
 关注 {0} 谢谢喵#Subscribe {0} thanks:|
 尝试加载动画和生成缓存#Attempting to load animations and generate caches:|
 正在加载CGPT#Loading CGPT:|
@@ -20,7 +20,7 @@
 鼠标将会穿过桌宠到下方内容,不打扰操作\r该选项#Mouse will pass through the desktop pet to the content below, without interacting with the main window:|
 鼠标穿透#Click Through Window:|
 添加快速切换小标,切换顶层或穿透#Toggle:|
-添加小标,快速切换顶层或穿透#Add toggle to switch Always on top / Click through:|
+添加小标,快速切换顶层或穿透#Add switch to toggle Always on top & Click through:|
 更高缩放#Increase Zoom:|
 支持更大缩放倍率#Support larger zoom levels:|
 解锁缩放限制#Increase zoom level limit:|
@@ -38,11 +38,11 @@ Y轴#Y-axis:|
 开机启动#Auto-start:|
 该游戏随着开机启动该程序\r如需卸载游戏\r请关闭该选项#Game auto-start on login\rDisable this option before uninstalling:|
 从Steam启动#Starting from Steam:|
-从Steam启动该游戏, 统计时长不能停#start the game from Steam, counting time cannot be stopped:|
+从Steam启动该游戏, 统计时长不能停#Start the game from Steam. Will show as in-game:|
 宠物动画#Pet animation:|
 动画描述动画描述动画描述动画描述动画描述#Animation description Animation description Animation description Animation description Animation description:|
 加载的宠物动画,重启后生效#Loaded pet animation, changes will take effect after restart:|
-重启软件以应用更改#Restart the software to apply the changes:|
+重启软件以应用更改#Restart the game to apply the changes:|
 系统#System:|
 自动保存频率#Autosave Frequency:|
 在指定时间后自动保存游戏数据#Autosave game data after a specified time:|
@@ -64,7 +64,7 @@ Y轴#Y-axis:|
 相关功能#Related Features:|
 使用从ChatGPT\r申请的的API#Use API requested\rfrom ChatGPT:|
 需要去OpenAI官网申请#Need to go to the OpenAI official website to apply:|
-使用桌宠开发者\r提供的免费API#Use VPET developer\rprovided free API:|
+使用桌宠开发者\r提供的免费API#Use free VPET developer\rprovided API:|
 需遵循相关协议法律法规并有聊天字数限制#Applicable agreements, laws and regulations apply, and chat word limits apply:|
 初始化桌宠聊天程序#Initialize VPET chat program:|
 互动#Interact:|
@@ -91,23 +91,23 @@ Y轴#Y-axis:|
 数据计算#Data Calculation:|
 显示状态#Display Status:|
 桌宠移动#Pet Moving:|
-计算间隔#Computing between:|
-数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.\r间隔越大越不容易打扰到当前工作#Time interval between data calculation and interaction\rcalculation, the shorter the interval, the frequency of\rinteraction may increaserThe larger the interval, less\rlikely it is to disturb the current work:|
+计算间隔#Computation interval:|
+数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.\r间隔越大越不容易打扰到当前工作#Time between data calculation and interaction. A shorter interval will lead to\rmore interactions, a longer interval will lead to less interactions:|
 互动周期#Interaction Cycles:|
 每分钟计算#Calculate data calculations :|
 次数值变化# per minute:|
 大约#Proactively engage in interaction :|
 分钟左右主动进行一次互动(走路发呆爬墙等)# per minute:|
-互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动#Interaction cycle determines how many computational intervals have elapsed after the interaction ends, and act auto:|
+互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动#This determines how many computational cycles must elapse until automatic actions are performed again:|
 操作设置#Operation Settings:|
 游戏操作相关设置#Game Operation Related Settings:|
 长按间隔#Long Press Interval:|
 桌宠名字#Desktop Pet Name:|
-数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加\r间隔越大越不容易打扰到当前工作#Time interval between data calculation and interaction\rcalculation, the shorter the interval, the frequency of\rinteraction may increaserThe larger the interval, less\rlikely it is to disturb the current work:|
+数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加\r间隔越大越不容易打扰到当前工作#Time interval between data calculation and interaction\rcalculation, the shorter the interval, the frequency of\rinteraction may increase. The larger the interval, less\rlikely it is to disturb the current work:|
 {0:F2} 秒#{0:F2} Sec:|
 自定#DIY:|
 自定义链接#Custom Links:|
-在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能#Add shortcuts/web pages/shortcuts in the customization bar to easily launch the desired functions:|
+在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能#Add shortcuts/web pages in the customization bar to easily launch the desired functions:|
 键盘快捷键编写方法请参考#Change keyboard shortcuts see:|
 键盘快捷键 通用注解#Keyboard Shortcut Generic Annotations:|
 右键进行排序/删除等操作#Right-click to sort/delete and other operations:|
@@ -115,11 +115,11 @@ Y轴#Y-axis:|
 保存设置#Save the Settings:|
 诊断#Diagnostic:|
 诊断与反馈#Diagnostic & Feedback:|
-选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.#Select the diagnostic data to send to LBGame, which is used to protect and update the VPet-Simulator in a timely manner, solve problems and improve the product.:|
-无论选择哪个选项,游戏都可以安全正常地运行.#No matter which option you choose, the game will run safely and normally.:|
+选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.#Send diagnostic data to LBGame which is used to update, fix issues, and improve VPet-Simulator in a timely manner.:|
+无论选择哪个选项,游戏都可以安全正常地运行.#Whichever option you choose, the game will run safely and normally.:|
 获取有关这些设置的更多信息#Get more information about these settings:|
 发送诊断数据: 发送游戏存档, 包括饱腹,状态等各种游戏内\r数据. 可能会包括该游戏内存和CPU使用情况#Send diagnostic data: Send saved games, including hunger, status, and other in-game\rdata. This may include the game's memory and CPU usage:|
-不发送诊断数据: 适用于启用修改器,修改过游戏数据等不\r符合分析数据条件. 或不希望提供游戏数据的玩家#Not send diagnostic data: Suitable for enabling\rtrainer, modifying game data, etc. that do not meet\rthe criteria for analysis data. or players not want\rprovide game data:|
+不发送诊断数据: 适用于启用修改器,修改过游戏数据等不\r符合分析数据条件. 或不希望提供游戏数据的玩家#Don't send diagnostic data: This applies to players who have modified the base game.\rOr players who do not want to provide game data.:|
 反馈频率#Feedback Frequency:|
 VOS 应寻求我反馈按以下频率#VOS Should seek my feedback as follows:|
 每 两百 周期一次#Every 200 Cycles:|
@@ -142,7 +142,7 @@ MOD介绍#MOD Description:|
 创意工坊页面#Workshop Page:|
 MOD设置#MOD Setting:|
 启用代码插件#Enable code plugin:|
-启用该模组的代码内容,不能保证系统安全性#Enabling this code content of the module, does not guarantee system security:|
+启用该模组的代码内容,不能保证系统安全性#Enabling this code content of the module does not guarantee system security:|
 关于#About:|
 虚拟桌宠模拟器 规格#VPet-Simulator Specs:|
 游戏策划#Game Designer:|
@@ -160,12 +160,12 @@ UI&程序#UI & Program:|
 杨远洛里斯#YoungerLoris:|
 广大MOD作者#Mod Authors:|
 洛里斯杨远#LorisYounger:|
-Git贡献名单#Github Contributer:|
+Git贡献名单#Github Contributors:|
 叶书天#Ye Shutian:|
 查看引用名单#List of references:|
 访问Steam页面#Steam page:|
 访问Github页面#Github page:|
-由于游戏暂未开发完毕,该名单并非完整名单.将在正式版完成前修改#Since the game is not yet developed, this list is not complete:|
+由于游戏暂未开发完毕,该名单并非完整名单.将在正式版完成前修改#Since the game is not finished development, this list is not complete:|
 默认虚拟桌宠#Default desktop pet:|
 P猫#P cat:|
 虚拟主播模拟器默认人物形象#VUP-Simulator Default Persona:|
@@ -205,8 +205,8 @@ text#Text Set:|
 降序#Desc.:|
 停止工作#Stop Working:|
 详细#Detailed:|
-宠物已经生病, 通过服用药物可以恢复#Pet ill and can recover by taking medication:|
-已关闭数据计算, 可放心挂机#Data calculation has been turned off, and you can AFK with confidence:|
+宠物已经生病, 通过服用药物可以恢复#Pet is ill and can recover by taking medication:|
+已关闭数据计算, 可放心挂机#Data calculation has been turned off and you can AFK with confidence:|
 金钱#Money:|
 经验#EXP:|
 体力#Stamina:|
@@ -218,14 +218,14 @@ text#Text Set:|
 睡觉#Sleep:|
 学习#Learn:|
 工作#Work:|
-文案#Copy:|
-直播#Live:|
-和桌宠说#Said with desktop pet:|
+文案#Copywriting:|
+直播#Livestreaming:|
+和桌宠说#Send message:|
 按 Ctrl+Enter 发送#Press Ctrl+Enter to send:|
 正在加载游戏#Loading game:|
 退出桌宠#Exit:|
 开发控制台#Console:|
-反馈中心#FeedBack:|
+反馈中心#Feedback:|
 设置面板#Settings:|
 吃饭#Food:|
 喝水#Drink:|
@@ -264,8 +264,8 @@ DLL引用名单#DLL Reference List:|
 显示逻辑#Display Logic:|
 双击运行显示效果#Double-click to run the display effect:|
 说话#Speak:|
-输入要说的话,按说话键发送#Enter the words you want to say, press the speak key to send:|
-选择说话类型:#Speakin::|
+输入要说的话,按说话键发送#Enter text then click the button to speak:|
+选择说话类型:#Animation::|
 在这里输入要说话的内容#Enter what you want to speak here:|
 距离查看器#Distance Viewer:|
 启动距离查看器#Launch the Distance Viewer:|
@@ -301,12 +301,12 @@ DLL引用名单#DLL Reference List:|
 您的桌宠等级不足{0}/{2}\n无法进行{1}#Your pet don't have enough level {0}/{2}\nUnable to {1}:|
 {0}取消#{0} Cancel:|
 搜索商品#Search for products:|
-购买后不自动关闭窗口#don't close after buy:|
+购买后不自动关闭窗口#Don't close after purchase:|
 凉茶#Cold Tea:|
 购买#Buy:|
 经验值#EXP:|
 健康#Health:|
-怕上火，喝广东咖啡！#Afraid excessive internal heat? drink Guangdong coffee!:|
+怕上火，喝广东咖啡！#Afraid excessive internal heat? Drink Guangdong coffee!:|
 收藏食物#Favorite item:|
 物品详情#Item Details:|
 椰汁#Coconut Milk:|
@@ -459,4 +459,4 @@ come on baby~#come on baby~:|
 分钟#Min:|
 钱#$:|
 {0:f1} 秒#{0:f1} Sec:|
-SettingWidth#600:|
+SettingWidth#700:|
