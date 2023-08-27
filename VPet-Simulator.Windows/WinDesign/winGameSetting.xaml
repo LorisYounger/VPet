@@ -654,7 +654,7 @@
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
                             TextWrapping="Wrap">
                             <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 自动超模MOD优化}" /><LineBreak />
-                            <Run Text="{ll:Str '对于超模内容,游戏会自动计算合理价格\&#13;如果未使用任何超模数据,数据菜单栏将会显示图标方便您进行炫耀数据'}" />
+                            <Run Text="{ll:Str '对于超模内容,游戏会自动计算合理价格\&#13;如果未使用任何超模数据,数据菜单栏将显示图标以便炫耀'}" />
                     </TextBlock>
                     <pu:Switch x:Name="swAutoCal" Grid.Column="2" Background="Transparent" BorderBrush="{DynamicResource PrimaryDark}"
                             BoxHeight="18" BoxWidth="35"
@@ -667,25 +667,25 @@
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" FontSize="13"
                             TextWrapping="Wrap" Margin="0,20,0,0">
                         <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 诊断与反馈}" /> <LineBreak />
-                        <Run Text="{ll:Str '选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.'}" /><LineBreak />
-                        <Run Text="{ll:Str '无论选择哪个选项,游戏都可以安全正常地运行.'}" /> <Hyperlink Click="hyper_moreInfo">
-                            <Run Text="{ll:Str 获取有关这些设置的更多信息}" />
+                        <Run Text="{ll:Str '选择要发送给 LBGame 的诊断数据, 这些数据将帮助我们改进和维护 虚拟桌宠模拟器, 解决问题并为您提供更好的体验.'}" /><LineBreak />
+                        <Run Text="{ll:Str '此选项几乎不影响您的正常游戏体验.'}" /> <Hyperlink Click="hyper_moreInfo">
+                            <Run Text="{ll:Str 关于此设置的更多信息}" />
                         </Hyperlink>
-                        <LineBreak />   <Run FontWeight="Bold" Text="{ll:Str '当前存档Hash验证信息'}" />
+                        <LineBreak />   <Run FontWeight="Bold" Text="{ll:Str '当前存档Hash验证状态'}" />
                         :<Run x:Name="RHashCheck" FontWeight="Bold" Text="通过" />
                     </TextBlock>
                     <RadioButton x:Name="RBDiagnosisYES" Margin="10,10,10,0" HorizontalAlignment="Left"
                             VerticalAlignment="Top" Checked="RBDiagnosisYES_Checked"
-                            Content="{ll:Str '发送诊断数据: 发送游戏存档, 包括饱腹,状态等各种游戏内\&#13;数据. 可能会包括该游戏内存和CPU使用情况'}"
+                            Content="{ll:Str '发送诊断数据: 发送包括游戏存档,宠物状态等游戏内数据\&#13;与系统资源使用情况在内的数据'}"
                             GroupName="diagnosis" Style="{DynamicResource StandardRadioButtonStyle}" />
                     <RadioButton x:Name="RBDiagnosisNO" Margin="10,10,10,0" HorizontalAlignment="Left"
                             VerticalAlignment="Top" Checked="RBDiagnosisNO_Checked"
-                            Content="{ll:Str '不发送诊断数据: 适用于启用修改器,修改过游戏数据等不\&#13;符合分析数据条件. 或不希望提供游戏数据的玩家'}"
+                            Content="{ll:Str '不发送诊断数据: 适用于使用了破坏平衡性MOD,修改游戏数据等\&#13;不正常数据或不希望提供诊断数据的玩家'}"
                             GroupName="diagnosis" IsChecked="True" Style="{DynamicResource StandardRadioButtonStyle}" />
                     <TextBlock Margin="0,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                             Background="{x:Null}" TextWrapping="Wrap">
                         <Run FontWeight="Bold" Text="{ll:Str 反馈频率}" /><LineBreak />
-                        <Run Text="{ll:Str 'VOS 应寻求我反馈按以下频率'}" />
+                        <Run Text="{ll:Str 'VOS 将按以下频率发送反馈数据'}" />
                     </TextBlock>
                     <ComboBox x:Name="CBDiagnosis" Width="200" Margin="10,5,0,0" HorizontalAlignment="Left"
                             VerticalAlignment="Top" IsEnabled="False" SelectedIndex="1"
