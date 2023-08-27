@@ -650,6 +650,7 @@
 
             </TabItem>
             <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 诊断}">
+                <ScrollViewer>
                 <StackPanel>
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
                             TextWrapping="Wrap">
@@ -700,6 +701,7 @@
                         <ComboBoxItem Content="{ll:Str '每 两万 周期一次'}" />
                     </ComboBox>
                 </StackPanel>
+                </ScrollViewer>
             </TabItem>
             <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str MOD管理}">
                 <Grid>
