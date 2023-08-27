@@ -10,7 +10,7 @@
 长按脑袋拖动桌宠到你喜欢的任意位置#Hold the head and drag the desktop pet wherever you like:|
 欢迎加入 虚拟主播模拟器群 430081239#This open-source project is located at https://github.com/LorisYounger/VPet:|
 关注 {0} 谢谢喵#Subscribe {0} thanks:|
-尝试加载动画和生成缓存#Attempting to load animations and generate caches:|
+尝试加载动画和生成缓存#Attempting to load animations and generate cache:|
 正在加载CGPT#Loading CGPT:|
 设置#Settings:|
 图形#Graphics:|
@@ -70,7 +70,7 @@ Y轴#Y-axis:|
 互动#Interact:|
 互动设置#Interaction Settings:|
 游戏互动相关设置#Game interaction related settings:|
-启用后桌宠会有状态变化,需要按时投喂等#Pet have status change, needs feed:|
+启用后桌宠会有状态变化,需要按时投喂等#Allow status changes:|
 启用数据计算,桌宠会有状态变化,需要按时投喂等.\r如果嫌麻烦可以关掉#Enable data calculation: Desktop pet will change status, need to eat on time, etc.\rIf it's too much trouble you can disable it:|
 当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能\r将在下次交互时解除#When the player does not interact with the desktop pet for a specified time, the move function is automatically disabled\rre-enabled on the next interaction:|
 当关闭数据计算时\r桌宠显示的状态#Status to display when\rdata calculation is off:|
@@ -231,7 +231,7 @@ text#Text Set:|
 喝水#Drink:|
 虚拟桌宠模拟器#VPet-Simulator:|
 点击此处开关鼠标穿透\n右键开关置于顶层\n长按挪动位置\n可在设置中关闭#Click here toggle mouse HitThrough\nRight-click toggle place in TopMost\nPress and hold to move position\nCan be turned off in the settings:|
-操作教程#How-to Tutorials:|
+操作教程#Tutorial:|
 重置状态#Reset the Status:|
 桌宠重置成功#Desktop pet reset successful:|
 打开 ChatGPT API 设置#Open the ChatGPT API Settings:|
