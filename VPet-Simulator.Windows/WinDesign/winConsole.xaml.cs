@@ -152,6 +152,26 @@ namespace VPet_Simulator.Windows
             }
             LocalTextBox.Text = sb.ToString();
         }
+
+        private void Button_MoveToLeft_Click(object sender, RoutedEventArgs e)
+        {
+            mw.Core.Graph.GraphConfig.Moves[8].Display(mw.Main);
+        }
+
+        private void Button_MoveToUp_Click(object sender, RoutedEventArgs e)
+        {
+            //mw.Core.Graph.GraphConfig.Moves[8].Display(mw.Main);
+        }
+
+        private void Button_MoveToButton_Click(object sender, RoutedEventArgs e)
+        {
+            //mw.Core.Graph.GraphConfig.Moves[8].Display(mw.Main);
+        }
+
+        private void Button_MoveToRight_Click(object sender, RoutedEventArgs e)
+        {
+            mw.Core.Graph.GraphConfig.Moves[9].Display(mw.Main);
+        }
         //private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
         //   switch(((TabControl)sender).SelectedIndex)
