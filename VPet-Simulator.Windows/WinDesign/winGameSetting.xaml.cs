@@ -161,7 +161,6 @@ namespace VPet_Simulator.Windows
             {
                 runUserName.Text = Environment.UserName;
                 runActivate.Text = "尚未激活 您可能需要启动Steam或去Steam上免费领个".Translate();
-                RBCGPTUseLB.IsEnabled = false;
             }
             //CGPT
             switch (mw.Set["CGPT"][(gstr)"type"])
