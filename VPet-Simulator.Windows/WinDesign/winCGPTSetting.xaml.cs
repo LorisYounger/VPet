@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using static ChatGPT.API.Framework.Completions;
 
 namespace VPet_Simulator.Windows
 {
@@ -27,6 +29,7 @@ namespace VPet_Simulator.Windows
                 tbMaxToken.Text = mw.CGPTClient.Completions["vpet"].max_tokens.ToString();
                 tbSystem.Text = mw.CGPTClient.Completions["vpet"].messages[0].content;
                 tbTemp.Text = mw.CGPTClient.Completions["vpet"].temperature.ToString();
+                cbModel.SelectedIndex = mw.CGPTClient.Completions["vpet"].model == "gpt-3.5-turbo" ? 0 : 1;
                 var msgs = mw.CGPTClient.Completions["vpet"].messages.ToList();
                 msgs.RemoveAt(0);
                 tbHistory.Text = JsonConvert.SerializeObject(msgs);
@@ -44,11 +47,12 @@ namespace VPet_Simulator.Windows
                 TotalTokensUsage = totalused
             };
             mw.CGPTClient.CreateCompletions("vpet", tbSystem.Text.Replace("{Name}", mw.Core.Save.Name));
+            mw.CGPTClient.Completions["vpet"].model = (string)((ComboBoxItem)cbModel.SelectedItem).Content;
             mw.CGPTClient.Completions["vpet"].frequency_penalty = 0.2;
             mw.CGPTClient.Completions["vpet"].presence_penalty = 1;
             mw.CGPTClient.Completions["vpet"].max_tokens = Math.Min(Math.Max(int.Parse(tbMaxToken.Text), 10), 4000);
             mw.CGPTClient.Completions["vpet"].temperature = Math.Min(Math.Max(double.Parse(tbTemp.Text), 0.1), 2);
-            var l = JsonConvert.DeserializeObject<List<ChatGPT.API.Framework.Message>>(tbHistory.Text);
+            var l = JsonConvert.DeserializeObject<List<Message>>(tbHistory.Text);
             if (l != null)
                 mw.CGPTClient.Completions["vpet"].messages.AddRange(l);
             mw.Save();

@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="Auto" MinHeight="40" />
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
@@ -23,42 +24,49 @@
             <RowDefinition Height="Auto" MinHeight="40" />
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="API URL" VerticalAlignment="Center" />
+        <TextBlock Text="API URL" VerticalAlignment="Center" />
         <TextBlock Grid.Row="1" Text="API Key" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="2" Text="{ll:Str 初始化文本}" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="3" Text="{ll:Str 温度}" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="4" Text="{ll:Str 最大花费}" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="5" Text="{ll:Str 累计花费}" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="6" Text="{ll:Str 历史记录}" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="7" Text="{ll:Str 完成设置}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="2" Text="Model" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="3" Text="{ll:Str 初始化文本}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="4" Text="{ll:Str 温度}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="5" Text="{ll:Str 最大花费}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="6" Text="{ll:Str 累计花费}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="7" Text="{ll:Str 历史记录}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="8" Text="{ll:Str 完成设置}" VerticalAlignment="Center" />
         <TextBox x:Name="tbAPIURL" Grid.Row="0" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
                 FontSize="16" pu:TextBoxHelper.Watermark="{ll:Str 'API 链接 一般为 api.openai.com/v1/chat/completions'}"
                 Text="https://api.openai.com/v1/chat/completions"
-                ToolTip="{ll:Str 'API 链接 一般为 api.openai.com/v1/chat/completions'}" />
+                ToolTip="{ll:Str 'API 链接 一般为 api.openai.com/v1/chat/completions'}" Margin="0,5,0,5" />
         <TextBox x:Name="tbAPIKey" Grid.Row="1" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
                 FontSize="16" pu:TextBoxHelper.Watermark="{ll:Str '从 OpenAI 获得的 APIKEY 一般`sk-`开头'}"
-                ToolTip="{ll:Str '从 OpenAI 获得的 APIKEY 一般`sk-`开头'}" />
-        <TextBox x:Name="tbSystem" Grid.Row="2" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
+                ToolTip="{ll:Str '从 OpenAI 获得的 APIKEY 一般`sk-`开头'}" VerticalAlignment="Center" />
+        <ComboBox x:Name="cbModel" Style="{DynamicResource StandardComboBoxStyle}" Grid.Row="2" Grid.Column="2" SelectedIndex="0">
+            <ComboBoxItem Content="gpt-3.5-turbo" />
+            <ComboBoxItem Content="gpt-4" />
+        </ComboBox>
+        <TextBox x:Name="tbSystem" Grid.Row="3" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
                 FontSize="16" pu:TextBoxHelper.Watermark="{ll:Str '不会被忘记的初始化关键字, 字越多越贵'}"
                 ToolTip="{ll:Str '不会被忘记的初始化关键字, 字越多越贵'}" AcceptsReturn="True" TextWrapping="WrapWithOverflow"
                 Height="Auto" MaxHeight="100" VerticalScrollBarVisibility="Visible"
                 Text="请使用口语化的、可爱的、女性化的、调皮的语言风格和我交流. &#13;你是一只桌宠, 你的名字叫{Name}, 你喜欢玩 虚拟主播模拟器. &#13;你需要尝试体会我与你对话中的感情、产生自己的情感并尽可能给出可爱的回答"
                 Margin="0,5,0,5" />
-        <TextBox x:Name="tbTemp" Grid.Row="3" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
+        <TextBox x:Name="tbTemp" Grid.Row="4" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
                 FontSize="16" Text="0.6" pu:TextBoxHelper.InputLimit="Digit,Point"
-                pu:TextBoxHelper.Watermark="{ll:Str '0-2之间 0.2更稳定 0.8更随机'}" ToolTip="{ll:Str '0-2之间 0.2更稳定 0.8更随机'}" />
-        <TextBox x:Name="tbMaxToken" Grid.Row="4" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
+                pu:TextBoxHelper.Watermark="{ll:Str '0-2之间 0.2更稳定 0.8更随机'}" ToolTip="{ll:Str '0-2之间 0.2更稳定 0.8更随机'}"
+                Margin="0,5,0,5" />
+        <TextBox x:Name="tbMaxToken" Grid.Row="5" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
                 FontSize="16" Text="2048" pu:TextBoxHelper.InputLimit="Digit"
                 pu:TextBoxHelper.Watermark="{ll:Str '读取最大花费Token数量 1千Token=$0.02'}"
-                ToolTip="{ll:Str '读取最大花费Token数量 1千Token=$0.02'}" />
-        <TextBox x:Name="tbHistory" Grid.Row="6" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
+                ToolTip="{ll:Str '读取最大花费Token数量 1千Token=$0.02'}" Margin="0,5,0,5" />
+        <TextBox x:Name="tbHistory" Grid.Row="7" Grid.Column="2" Style="{DynamicResource StandardTextBoxStyle}"
                 FontSize="16" Text="[]" TextWrapping="WrapWithOverflow" pu:TextBoxHelper.Watermark="{ll:Str 聊天历史记录}"
                 ToolTip="{ll:Str 聊天历史记录}" Height="Auto" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"
                 MaxHeight="200" />
-        <Label x:Name="lbSpend" Grid.Row="5" Grid.Column="2" Content="0 Token" Background="{x:Null}"
+        <Label x:Name="lbSpend" Grid.Row="6" Grid.Column="2" Content="0 Token" Background="{x:Null}"
                 VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"
                 ToolTip="{ll:Str '累计在此花费的Token个数 1千Token=$0.02'}" />
-        <Button x:Name="btnSave" pu:ButtonHelper.CornerRadius="4" Content="{ll:Str 保存设置}" Margin="4" Grid.Column="2"
-                Background="{DynamicResource SecondaryLight}" Padding="1" Grid.Row="7" Click="btnSave_Click" />
+        <Button x:Name="btnSave" pu:ButtonHelper.CornerRadius="4" Content="{ll:Str 保存设置}" Margin="4,4,4,4"
+                Grid.Column="2" Background="{DynamicResource SecondaryLight}" Padding="1" Grid.Row="8"
+                Click="btnSave_Click" />
     </Grid>
 </pu:WindowX>
