@@ -33,6 +33,20 @@ namespace VPet_Simulator.Windows
             tbTalk.Text = "";
             Task.Run(() => OPENAI(cont));
         }
+        public static string[] like_str = new string[] { "陌生", "普通", "喜欢", "爱" };
+        public static int like_ts(int like)
+        {
+            if (like > 50)
+            {
+                if (like < 100)
+                    return 1;
+                else if (like < 200)
+                    return 2;
+                else
+                    return 3;
+            }
+            return 0;
+        }
         /// <summary>
         /// 使用OPENAI API进行回复
         /// </summary>
@@ -56,13 +70,13 @@ namespace VPet_Simulator.Windows
                     var last = vpetapi.messages.LastOrDefault();
                     if (last != null)
                     {
-                        if(last.role == ChatGPT.API.Framework.Message.RoleType.user)
+                        if (last.role == ChatGPT.API.Framework.Message.RoleType.user)
                         {
                             vpetapi.messages.Remove(last);
                         }
                     }
                 }
-
+                content = "[当前状态: {0}, 好感度:{1}({2})]".Translate(mw.Core.Save.Mode.ToString().Translate(), like_str[like_ts((int)mw.Core.Save.Likability)].Translate(), (int)mw.Core.Save.Likability) + content;
                 var resp = mw.CGPTClient.Ask("vpet", content);
                 var reply = resp.GetMessageContent();
                 if (resp.choices[0].finish_reason == "length")
