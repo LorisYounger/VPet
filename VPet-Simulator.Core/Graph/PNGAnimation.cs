@@ -64,7 +64,6 @@ namespace VPet_Simulator.Core
         /// 反正一次性生成太多导致闪退
         /// </summary>
         public static int NowLoading = 0;
-        private static object nowLoadinglock = new object();
         /// <summary>
         /// 新建 PNG 动画
         /// </summary>
@@ -172,53 +171,53 @@ namespace VPet_Simulator.Core
             {
                 Thread.Sleep(100);
             }
-            lock (nowLoadinglock)
-                NowLoading++;
+            Interlocked.Increment(ref NowLoading);
             //新方法:加载大图片
             //生成大文件加载非常慢,先看看有没有缓存能用
-            Path = GraphCore.CachePath + $"\\{GraphCore.Resolution}_{Sub.GetHashCode(path)}_{paths.Length}.png";
+            Path = System.IO.Path.Combine(GraphCore.CachePath, $"{GraphCore.Resolution}_{Sub.GetHashCode(path)}_{paths.Length}.png");
             Width = 500 * (paths.Length + 1);
-            if (File.Exists(Path) || ((List<string>)GraphCore.CommConfig["Cache"]).Contains(path))
-            {
-                for (int i = 0; i < paths.Length; i++)
-                {
-                    FileInfo file = paths[i];
-                    int time = int.Parse(file.Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
-                    Animations.Add(new Animation(this, time, -500 * i));
-                }
-            }
-            else
+            if (!File.Exists(Path) && !((List<string>)GraphCore.CommConfig["Cache"]).Contains(path))
             {
                 ((List<string>)GraphCore.CommConfig["Cache"]).Add(path);
-                List<System.Drawing.Image> imgs = new List<System.Drawing.Image>();
-                foreach (var file in paths)
-                    imgs.Add(System.Drawing.Image.FromFile(file.FullName));
-                int w = imgs[0].Width;
-                int h = imgs[0].Height;
-                if (w > GraphCore.Resolution)
+                int w = 0;
+                int h = 0;
+                FileInfo firstImage = paths[0];
+                var img = System.Drawing.Image.FromFile(firstImage.FullName);
+                w = img.Width;
+                h = img.Height;
+                if (w > 1000)
                 {
-                    w = GraphCore.Resolution;
-                    h = (int)(h * (GraphCore.Resolution / (double)imgs[0].Width));
+                    w = 1000;
+                    h = (int)(h * (1000 / (double)img.Width));
                 }
-                Bitmap joinedBitmap = new Bitmap(w * paths.Length, h);
-                var graph = Graphics.FromImage(joinedBitmap);
-                for (int i = 0; i < paths.Length; i++)
+
+                using (Bitmap joinedBitmap = new Bitmap(w * paths.Length, h))
+                using (Graphics graph = Graphics.FromImage(joinedBitmap))
                 {
-                    FileInfo file = paths[i];
-                    int time = int.Parse(file.Name.Split('.').Reverse().ToArray()[1].Split('_').Last());
-                    graph.DrawImage(imgs[i], w * i, 0, w, h);
-                    Animations.Add(new Animation(this, time, -500 * i));
+                    using (img)
+                        graph.DrawImage(img, 0, 0, w, h);
+                    Parallel.For(1, paths.Length, i =>
+                    {
+                        using (var img = System.Drawing.Image.FromFile(paths[i].FullName))
+                        {
+                            lock (graph)
+                                graph.DrawImage(img, w * i, 0, w, h);
+                        }
+                    });
+
+                    if (!File.Exists(Path))
+                        joinedBitmap.Save(Path);
                 }
-                if (!File.Exists(Path))
-                    joinedBitmap.Save(Path);
-                graph.Dispose();
-                joinedBitmap.Dispose();
-                imgs.ForEach(x => x.Dispose());
+            }
+            for (int i = 0; i < paths.Length; i++)
+            {
+                var noExtFileName = System.IO.Path.GetFileNameWithoutExtension(paths[i].Name);
+                int time = int.Parse(noExtFileName.Substring(noExtFileName.LastIndexOf('_') + 1));
+                Animations.Add(new Animation(this, time, -500 * i));
             }
             //stream = new MemoryStream(File.ReadAllBytes(cp));
             IsReady = true;
-            lock (nowLoadinglock)
-                NowLoading--;
+            Interlocked.Decrement(ref NowLoading);
         }
 
 
