@@ -821,7 +821,7 @@ namespace VPet_Simulator.Windows
 
             if (ischangename)
             {
-                mw.Core.Save.Name = petloader.PetName.Translate();
+                mw.Core.Save.Name = mw.Pets[PetBox.SelectedIndex].PetName.Translate();
                 TextBoxPetName.Text = mw.Core.Save.Name;
                 if (mw.IsSteamUser)
                     SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
@@ -869,7 +869,7 @@ namespace VPet_Simulator.Windows
                     //        MessageBoxX.Show("桌宠重置成功".Translate());
                     //    }
                     //});
-                    //TODO ((TalkSelect)mw.TalkBox)
+                    //((TalkSelect)mw.TalkBox).RelsTime
                     break;
                 case "OFF":
                 default:
