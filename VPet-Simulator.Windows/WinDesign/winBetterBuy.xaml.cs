@@ -223,21 +223,8 @@ namespace VPet_Simulator.Windows
             }
             if (showeatanm)
             {//显示动画
-                showeatanm = false;
-                GraphType gt;
-                switch (item.Type)
-                {
-                    default:
-                        gt = GraphType.Eat;
-                        break;
-                    case Food.FoodType.Drink:
-                        gt = GraphType.Drink;
-                        break;
-                    case Food.FoodType.Gift:
-                        gt = GraphType.Gift;
-                        break;
-                }
-                mw.Main.Display(gt, item.ImageSource, () =>
+                showeatanm = false;                
+                mw.Main.Display(item.GetGraph(), item.ImageSource, () =>
                 {
                     showeatanm = true;
                     mw.Main.DisplayToNomal();

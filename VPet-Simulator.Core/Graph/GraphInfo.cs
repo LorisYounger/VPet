@@ -219,18 +219,6 @@ namespace VPet_Simulator.Core
             /// 饥饿
             /// </summary>
             Switch_Hunger,
-            /// <summary>
-            /// 吃东西
-            /// </summary>
-            Eat,
-            /// <summary>
-            /// 喝东西
-            /// </summary>
-            Drink,
-            /// <summary>
-            /// 收到礼物
-            /// </summary>
-            Gift,
         }
         /// <summary>
         /// 动作: 动画的动作 Start Loop End
