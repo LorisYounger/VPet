@@ -1042,12 +1042,19 @@ namespace VPet_Simulator.Windows
                 string path = AppDomain.CurrentDomain.BaseDirectory + @"\BackUP\" + txt + ".lps";
                 if (File.Exists(path))
                 {
-                    var l = new Line(File.ReadAllText(path));
-                    GameSave gs = GameSave.Load(l);
-                    if (MessageBoxX.Show("存档名称:{0}\n存档等级:{1}\n存档金钱:{2}\n是否加载该备份存档? 当前游戏数据会丢失"
-                        .Translate(gs.Name, gs.Level, gs.Money), "是否加载该备份存档? 当前游戏数据会丢失".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Info) == MessageBoxResult.Yes)
+                    try
                     {
-                        mw.GameLoad(l);
+                        var l = new Line(File.ReadAllText(path));
+                        GameSave gs = GameSave.Load(l);
+                        if (MessageBoxX.Show("存档名称:{0}\n存档等级:{1}\n存档金钱:{2}\n是否加载该备份存档? 当前游戏数据会丢失"
+                            .Translate(gs.Name, gs.Level, gs.Money), "是否加载该备份存档? 当前游戏数据会丢失".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Info) == MessageBoxResult.Yes)
+                        {
+                            mw.GameLoad(l);
+                        }
+                    }
+                    catch (Exception exp)
+                    {
+                        MessageBoxX.Show("存档损毁,无法加载该备份\n请更换备份重试".Translate() + '\n' + exp.ToString(), "存档损毁".Translate());
                     }
                 }
             }
@@ -1190,8 +1197,8 @@ namespace VPet_Simulator.Windows
                 mw.Set.Statistics = new Statistics();
                 CBSaveReLoad.IsEnabled = false;
                 BtnSaveReload.IsEnabled = false;
-                MessageBoxX.Show("重置成功".Translate());                
-            }            
+                MessageBoxX.Show("重置成功".Translate());
+            }
         }
     }
 }
