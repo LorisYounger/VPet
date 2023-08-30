@@ -1049,7 +1049,15 @@ namespace VPet_Simulator.Windows
                         if (MessageBoxX.Show("存档名称:{0}\n存档等级:{1}\n存档金钱:{2}\n是否加载该备份存档? 当前游戏数据会丢失"
                             .Translate(gs.Name, gs.Level, gs.Money), "是否加载该备份存档? 当前游戏数据会丢失".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Info) == MessageBoxResult.Yes)
                         {
-                            mw.GameLoad(l);
+                            try
+                            {
+                                if (!mw.GameLoad(l))
+                                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
+                            }
                         }
                     }
                     catch (Exception exp)

@@ -36,3 +36,6 @@ MOD加载错误,是MOD({0})导致的\n如有可能请发送 错误信息截图�
 清理指令已下达,下次启动桌宠时生效#The cleanup command has been issued and will take effect the next time the table pet is started:|
 服务器超载,请稍后重试#Server overload, please try again later:|
 存档损毁,无法加载该备份\n请更换备份重试#Archive damage, unable to load the backup\nPlease replace the backup and try again:|
+存档损毁#Archive damage:|
+存档损毁,无法加载该存档\n可能是数据溢出/超模导致的#Archive damage, unable to load the archive\nIt may be caused by data overflow/overmodel:|
+存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档#Archive damage, unable to load the archive\nIt may be caused by an error in the last storage or Steam cloud synchronization\nPlease load the backup in the settings to restore the archive:|

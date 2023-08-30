@@ -232,8 +232,16 @@ namespace VPet_Simulator.Windows
                     .GetFiles("*.lps").OrderByDescending(x => x.LastWriteTime).FirstOrDefault();
                 if (latestsave != null)
                 {
-                    if (GameLoad(new Line(File.ReadAllText(latestsave.FullName))))
-                        return;
+                    try
+                    {
+                        if (GameLoad(new Line(File.ReadAllText(latestsave.FullName))))
+                            return;
+                        MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
+                    }
                 }
             }
             Core.Save = new GameSave(petname.Translate());
@@ -364,21 +372,37 @@ namespace VPet_Simulator.Windows
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏存档".Translate()));
             //加载存档
             Core.Controller = new MWController(this);
-            if (!(File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps") &&
-                GameLoad(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First())))
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
+                try
+                {
+                    if (GameLoad(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First()))
+                    {
+                        //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
+                        LoadLatestSave(petloader.PetName);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
+                    //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
+                    LoadLatestSave(petloader.PetName);
+                }
+            else
                 //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
                 LoadLatestSave(petloader.PetName);
 
+
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
 
-            if(Set.Statistics[(gdbe)"stat_bb_food"] < 0 || Set.Statistics[(gdbe)"stat_bb_drink"] < 0 || Set.Statistics[(gdbe)"stat_bb_drug"] < 0
+            if (Set.Statistics[(gdbe)"stat_bb_food"] < 0 || Set.Statistics[(gdbe)"stat_bb_drink"] < 0 || Set.Statistics[(gdbe)"stat_bb_drug"] < 0
                 || Set.Statistics[(gdbe)"stat_bb_snack"] < 0 || Set.Statistics[(gdbe)"stat_bb_functional"] < 0 || Set.Statistics[(gdbe)"stat_bb_meal"] < 0
                 || Set.Statistics[(gdbe)"stat_bb_gift"] < 0)
             {
                 hashCheck = false;
             }
 
-                if (Set.AutoSaveInterval > 0)
+            if (Set.AutoSaveInterval > 0)
             {
                 AutoSaveTimer.Interval = Set.AutoSaveInterval * 60000;
                 AutoSaveTimer.Start();
