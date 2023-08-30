@@ -608,7 +608,7 @@ namespace VPet_Simulator.Windows
                     else
                         ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_en.html");
                 }));
-                m_menu.MenuItems.Add(new MenuItem("重置状态".Translate(), (x, y) =>
+                m_menu.MenuItems.Add(new MenuItem("重置位置与状态".Translate(), (x, y) =>
                 {
                     Main.CleanState();
                     Main.DisplayToNomal();
