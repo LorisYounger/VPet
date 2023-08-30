@@ -299,7 +299,7 @@ namespace VPet_Simulator.Windows
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
                     TakeItem(item);
-                    Main.Display(GraphType.Eat, item.ImageSource, Main.DisplayToNomal);
+                    Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
                 else if (Core.Save.StrengthDrink < 75)
                 {
@@ -309,7 +309,7 @@ namespace VPet_Simulator.Windows
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
                     TakeItem(item);
-                    Main.Display(GraphType.Drink, item.ImageSource, Main.DisplayToNomal);
+                    Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
             }
             else if (Core.Save.Mode == GameSave.ModeType.Happy || Core.Save.Mode == GameSave.ModeType.Nomal)

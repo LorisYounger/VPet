@@ -657,5 +657,20 @@ namespace VPet_Simulator.Core
                 ig.Run(b, img, EndAction);
             }
         }
+        /// <summary>
+        /// 显示夹层动画
+        /// </summary>
+        /// <param name="name">动画名称</param>
+        /// <param name="img">夹层内容</param>
+        /// <param name="EndAction">动画结束后操作</param>
+        public void Display(string name, ImageSource img, Action EndAction)
+        {
+            var ig = Core.Graph.FindGraph(name, AnimatType.Single, Core.Save.Mode);
+            if (ig != null)
+            {
+                var b = FindDisplayBorder(ig);
+                ig.Run(b, img, EndAction);
+            }
+        }
     }
 }

@@ -197,5 +197,28 @@ namespace VPet_Simulator.Windows.Interface
                 descs += "\t\t" + "恢复".Translate() + ":\t" + (eattime).ToString("MM/dd HH");
             }
         }
+        /// <summary>
+        /// 食用时显示的动画
+        /// </summary>
+        [Line(ignoreCase: true)]
+        public string Graph { get; set; } = null;
+        /// <summary>
+        /// 获取食用时显示的动画
+        /// </summary>
+        public string GetGraph()
+        {
+            if (string.IsNullOrEmpty(Graph))
+                switch (Type)
+                {
+                    default:
+                        return "eat";
+                    case Food.FoodType.Drink:
+                        return "drink";
+                    case Food.FoodType.Gift:
+                        return "gift";
+                }
+            else
+                return Graph;
+        }
     }
 }
