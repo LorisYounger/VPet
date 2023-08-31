@@ -398,24 +398,15 @@ namespace VPet_Simulator.Core
                 return FindResource("DangerProgressBarForeground") as Brush;
             }
         }
-        public void MenuPanel_MouseEnter()
+        private void MenuPanel_MouseEnter(object sender, MouseEventArgs e)
         {
             BdrPanel.Visibility = Visibility.Visible;
             M_TimeUIHandle(m);
         }
 
-        public void MenuPanel_MouseLeave()
-        {
-            closePanelTimer.Start();
-        }
-        private void MenuPanel_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MenuPanel_MouseEnter();
-        }
-
         private void MenuPanel_MouseLeave(object sender, MouseEventArgs e)
         {
-            MenuPanel_MouseLeave();
+            closePanelTimer.Start();
         }
 
         public void Dispose()
