@@ -44,7 +44,7 @@ namespace VPet_Simulator.Windows
         public MainWindow()
         {
 #if X64
-            PNGAnimation.MaxLoadNumber = 1000;
+            PNGAnimation.MaxLoadNumber = 50;
 #else
             PNGAnimation.MaxLoadNumber = 20;
 #endif
@@ -302,8 +302,9 @@ namespace VPet_Simulator.Windows
 
             CoreMOD.NowLoading = null;
             //判断是否需要清空缓存
-            if (Set.LastCacheDate < CoreMODs.Max(x => x.CacheDate))
+            if (Set.LastCacheDate < CoreMODs.Max(x => x.CacheDate) || Set["CGPT"][(gint)"v"] <= 1)
             {//需要清理缓存
+                Set["CGPT"][(gint)"v"] = 2;
                 Set.LastCacheDate = DateTime.Now;
                 if (Directory.Exists(CachePath))
                 {
@@ -343,10 +344,9 @@ namespace VPet_Simulator.Windows
                     Set["CGPT"].Remove(cgpteb);
                 }
             }
-            else if (Set["CGPT"][(gstr)"type"] == "OFF" && Set["CGPT"][(gint)"v"] == 0)
+            else if (Set["CGPT"][(gstr)"type"] == "OFF")
             {//为老玩家开启选项聊天功能
                 Set["CGPT"][(gstr)"type"] = "LB";
-                Set["CGPT"][(gint)"v"] = 1;
             }
             else//新玩家,默认设置为
                 Set["CGPT"][(gstr)"type"] = "LB";
