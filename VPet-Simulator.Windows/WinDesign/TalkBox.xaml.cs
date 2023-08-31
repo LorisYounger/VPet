@@ -278,11 +278,11 @@ namespace VPet_Simulator.Windows
         {
             if (tbTalk.Text.Length > 0)
             {
-                mw.Main.ToolBar.MenuPanel_MouseEnter();
+                mw.Main.ToolBar.CloseTimer.Stop();
             }
             else
             {
-                mw.Main.ToolBar.MenuPanel_MouseLeave();
+                mw.Main.ToolBar.CloseTimer.Start();
             }
         }
     }
