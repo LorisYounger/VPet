@@ -197,7 +197,7 @@ namespace VPet_Simulator.Core
                 if(paths.Length * w >= 6000)
                 {//修复大长动画导致过长分辨率导致可能的报错
                     w = 6000 / paths.Length;
-                    h = (int)(h * (GraphCore.Resolution / (double)img.Width));
+                    h = (int)(h * (w / (double)img.Width));
                 }
 
                 using (Bitmap joinedBitmap = new Bitmap(w * paths.Length, h))
