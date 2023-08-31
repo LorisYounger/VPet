@@ -443,25 +443,27 @@ namespace VPet_Simulator.Core
                 m.CountNomal = 0;
                 m.Display(Graph, AnimatType.A_Start, () =>
                 {
-                    switch (LocateType)
+                    if (m.MoveTimerSmartMove)
                     {
-                        case DirectionType.Top:
-                            m.Core.Controller.MoveWindows(0, -m.Core.Controller.GetWindowsDistanceUp() / m.Core.Controller.ZoomRatio - LocateLength);
-                            break;
-                        case DirectionType.Bottom:
-                            m.Core.Controller.MoveWindows(0, m.Core.Controller.GetWindowsDistanceDown() / m.Core.Controller.ZoomRatio + LocateLength);
-                            break;
-                        case DirectionType.Left:
-                            m.Core.Controller.MoveWindows(-m.Core.Controller.GetWindowsDistanceLeft() / m.Core.Controller.ZoomRatio - LocateLength, 0);
-                            break;
-                        case DirectionType.Right:
-                            m.Core.Controller.MoveWindows(m.Core.Controller.GetWindowsDistanceRight() / m.Core.Controller.ZoomRatio + LocateLength, 0);
-                            break;
+                        switch (LocateType)
+                        {
+                            case DirectionType.Top:
+                                m.Core.Controller.MoveWindows(0, -m.Core.Controller.GetWindowsDistanceUp() / m.Core.Controller.ZoomRatio - LocateLength);
+                                break;
+                            case DirectionType.Bottom:
+                                m.Core.Controller.MoveWindows(0, m.Core.Controller.GetWindowsDistanceDown() / m.Core.Controller.ZoomRatio + LocateLength);
+                                break;
+                            case DirectionType.Left:
+                                m.Core.Controller.MoveWindows(-m.Core.Controller.GetWindowsDistanceLeft() / m.Core.Controller.ZoomRatio - LocateLength, 0);
+                                break;
+                            case DirectionType.Right:
+                                m.Core.Controller.MoveWindows(m.Core.Controller.GetWindowsDistanceRight() / m.Core.Controller.ZoomRatio + LocateLength, 0);
+                                break;
+                        }
+                        m.MoveTimerPoint = new Point(SpeedX, SpeedY);
+                        m.MoveTimer.Interval = Interval;
+                        m.MoveTimer.Start();
                     }
-
-                    m.MoveTimerPoint = new Point(SpeedX, SpeedY);
-                    m.MoveTimer.Interval = Interval;
-                    m.MoveTimer.Start();
                     Displaying(m);
                 });
             }
