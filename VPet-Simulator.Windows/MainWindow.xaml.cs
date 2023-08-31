@@ -375,7 +375,7 @@ namespace VPet_Simulator.Windows
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
                 try
                 {
-                    if (GameLoad(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First()))
+                    if (!GameLoad(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First()))
                     {
                         //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
                         LoadLatestSave(petloader.PetName);
