@@ -164,17 +164,21 @@ namespace VPet_Simulator.Core
         }
 
         public double Width;
+        /// <summary>
+        /// 最大同时加载数
+        /// </summary>
+        public static int MaxLoadNumber = 20;
 
         private void startup(string path, FileInfo[] paths)
         {
-            while (NowLoading > 20)
+            while (NowLoading > MaxLoadNumber)
             {
                 Thread.Sleep(100);
             }
             Interlocked.Increment(ref NowLoading);
             //新方法:加载大图片
             //生成大文件加载非常慢,先看看有没有缓存能用
-            Path = System.IO.Path.Combine(GraphCore.CachePath, $"{GraphCore.Resolution}_{Sub.GetHashCode(path)}_{paths.Length}.png");
+            Path = System.IO.Path.Combine(GraphCore.CachePath, $"{GraphCore.Resolution}_{Math.Abs(Sub.GetHashCode(path))}_{paths.Length}.png");
             Width = 500 * (paths.Length + 1);
             if (!File.Exists(Path) && !((List<string>)GraphCore.CommConfig["Cache"]).Contains(path))
             {
@@ -185,10 +189,15 @@ namespace VPet_Simulator.Core
                 var img = System.Drawing.Image.FromFile(firstImage.FullName);
                 w = img.Width;
                 h = img.Height;
-                if (w > 1000)
+                if (w > GraphCore.Resolution)
                 {
-                    w = 1000;
-                    h = (int)(h * (1000 / (double)img.Width));
+                    w = GraphCore.Resolution;
+                    h = (int)(h * (GraphCore.Resolution / (double)img.Width));
+                }
+                if(paths.Length * w >= 6000)
+                {//修复大长动画导致过长分辨率导致可能的报错
+                    w = 6000 / paths.Length;
+                    h = (int)(h * (GraphCore.Resolution / (double)img.Width));
                 }
 
                 using (Bitmap joinedBitmap = new Bitmap(w * paths.Length, h))
@@ -204,7 +213,6 @@ namespace VPet_Simulator.Core
                                 graph.DrawImage(img, w * i, 0, w, h);
                         }
                     });
-
                     if (!File.Exists(Path))
                         joinedBitmap.Save(Path);
                 }

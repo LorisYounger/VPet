@@ -43,6 +43,12 @@ namespace VPet_Simulator.Windows
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
         public MainWindow()
         {
+#if X64
+            PNGAnimation.MaxLoadNumber = 1000;
+#else
+            PNGAnimation.MaxLoadNumber = 20;
+#endif
+
             LocalizeCore.StoreTranslation = true;
             CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
             CultureInfo.CurrentCulture.NumberFormat = new CultureInfo("en-US").NumberFormat;
