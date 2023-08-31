@@ -1202,7 +1202,9 @@ namespace VPet_Simulator.Windows
             if (MessageBoxX.Show("是否重置游戏数据重新开始?\n该操作无法撤回".Translate(), "重新开始".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 mw.Core.Save = new GameSave(mw.Core.Save.Name);
-                mw.Set.Statistics = new Statistics();
+                if (!mw.HashCheck)
+                    mw.Set.Statistics = new Statistics();
+                mw.HashCheck = true;
                 CBSaveReLoad.IsEnabled = false;
                 BtnSaveReload.IsEnabled = false;
                 MessageBoxX.Show("重置成功".Translate());
