@@ -16,10 +16,14 @@ namespace VPet_Simulator.Windows.Interface
         /// <returns>是否超模</returns>
         public static bool IsOverLoad(this Work work)
         {//判断这个工作是否超模
-            var spend = (Math.Pow(work.StrengthFood * 2 + 1, 2) / 6 + Math.Pow(work.StrengthDrink * 2 + 1, 2) / 9 +
-                Math.Pow(work.Feeling * 2 + 1, 2) / 12) * (Math.Pow(work.LevelLimit / 2 + 1, 0.5) / 4 + 1) - 0.5;
+            var spend = ((work.StrengthFood >= 0 ? 1 : -1) * Math.Pow(work.StrengthFood * 2 + 1, 2) / 6 +
+                (work.StrengthDrink >= 0 ? 1 : -1) * Math.Pow(work.StrengthDrink * 2 + 1, 2) / 9 +
+               (work.Feeling >= 0 ? 1 : -1) * Math.Pow((work.Type == Work.WorkType.Play ? -1 : 1) * work.Feeling * 2 + 1, 2) / 12) *
+                (Math.Pow(work.LevelLimit / 2 + 1, 0.5) / 4 + 1) - 0.5;
+            if (spend <= 0)
+                return false;
             var get = (work.MoneyBase + work.MoneyLevel * 10) * (work.MoneyLevel + 1) * (1 + work.FinishBonus / 2);
-            if(work.Type != Work.WorkType.Work)
+            if (work.Type != Work.WorkType.Work)
             {
                 get /= 12;//经验值换算
             }
