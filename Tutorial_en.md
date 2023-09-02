@@ -3,9 +3,9 @@
 **This tutorial automatically opens only when you start the program for the first time or after an update** 
 *If this file pops up every time you start Desktop pet, that is a bug. Please report it to me*
 
-[Data Calculation](#data-calculation), which affects whether or not there will be changes in the Virtual Pet's attributes, including stamina, mood, hunger, and thirst, etc. This feature is turned on by default, but you can switch it off under System > Interact.
+[Data Calculation](#data-calculation), which affects whether or not there will be changes in the Pet's attributes, including stamina, mood, hunger, and thirst, etc. This feature is turned on by default, but you can switch it off under System > Interact.
 
-The core gameplay revolves taking care of your Virtual Pet. However, more automatic actions, such as wandering around, spacing out, squatting, etc., can be seen only when the game is idle.
+The core gameplay revolves taking care of your Pet. However, more automatic actions, such as wandering around, spacing out, squatting, etc., can be seen only when the game is idle.
 
 ## Basics
 
