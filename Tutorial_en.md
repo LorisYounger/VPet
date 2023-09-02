@@ -3,7 +3,7 @@
 **This tutorial only automatically opens the first time you start the program and when you start it after an update** 
 *If you can see this file automatically open every time you start Desktop pet, that is a bug. Please report it to me*
 
-[Data Calculation](#Data Calculation), which affects the attribute changes for the Virtual Pet, is on by default, but can be toggled under System > Interact. Data Collection toggles whether or not consumption of the Virutal Pet's attributes, such as stamina, mood, hunger, and thirst, is on. 
+[Data Calculation](#data-calculation), which affects the attribute changes for the Virtual Pet, is on by default, but can be toggled under System > Interact. Data Collection toggles whether or not consumption of the Virutal Pet's attributes, such as stamina, mood, hunger, and thirst, is on. 
 
 The core gameplay is the progression of the Virtual Pet, while automatic actions such as walking around, dazing, crouching, and so on needs the player to be present to witness them.
 
