@@ -1,0 +1,3 @@
+PNGAnimation#gift_back_lay:|path#back_lay:|mode#poorcondition:|graph#Common:|
+PNGAnimation#gift_front_lay:|path#front_lay:|mode#poorcondition:|graph#Common:|
+FoodAnimation#gift:|mode#poorcondition:|a0#250:|a1#125,205,31,70,60:|a2#125,199,24,82,60:|a3#125,200,110,83:|a4#125,199,198,86:|a5#125,197,185,87:|a6#125,202,182,86:|a7#125,204,187,86:|a8#500,201,189,87:|a9#1625:|front_lay#gift_front_lay:|back_lay#gift_back_lay:|///Time,MarginX,Y,Width,Rotate,Opacity
