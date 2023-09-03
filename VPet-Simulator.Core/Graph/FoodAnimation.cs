@@ -142,8 +142,8 @@ namespace VPet_Simulator.Core
                     IsVisiable = false;
                 else
                 {//1,2: Margin X,Y
-                    MarginWI = new Thickness(double.Parse(strs[1]), double.Parse(strs[2]), 0, 0);
                     Width = double.Parse(strs[3]);//3:Width
+                    MarginWI = new Thickness(double.Parse(strs[1]), double.Parse(strs[2]), 0, 0);
                     if (strs.Length > 4)
                     {
                         Rotate = double.Parse(strs[4]);//Rotate
@@ -165,8 +165,9 @@ namespace VPet_Simulator.Core
                         This.Visibility = Visibility.Visible;
                         This.Margin = MarginWI;
                         This.LayoutTransform = new RotateTransform(Rotate);
-                        This.Opacity = 1;
+                        This.Opacity = Opacity;
                         This.Width = Width;
+                        This.Height = Width;
                     }
                     else
                     {
@@ -192,6 +193,7 @@ namespace VPet_Simulator.Core
                             //parent.endwilldo = () => parent.Dispatcher.Invoke(Hidden);
                             //parent.Dispatcher.Invoke(Hidden);
                             parent.PlayState = false;
+                            //等待其他两个动画完成
                             if (parent.DoEndAction)
                                 EndAction?.Invoke();//运行结束动画时事件
                             parent.StopAction?.Invoke();
@@ -280,11 +282,11 @@ namespace VPet_Simulator.Core
                 var t1 = FL?.Run(FoodGrid.Front);
                 var t2 = BL?.Run(FoodGrid.Back);
                 FoodGrid.Food.Source = image;
-                Task.Run(() => Animations[0].Run(FoodGrid.Food, EndAction));
                 if (t1 != null)
-                    Task.Run(t1.Start);
+                    t1.Start();
                 if (t2 != null)
-                    Task.Run(t2.Start);
+                    t2.Start();
+                Task.Run(() => Animations[0].Run(FoodGrid.Food, EndAction));
             });
         }
 
