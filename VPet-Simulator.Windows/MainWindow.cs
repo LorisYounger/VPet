@@ -47,7 +47,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 版本号
         /// </summary>
-        public int version { get; } = 104;
+        public int version { get; } = 105;
         /// <summary>
         /// 版本号
         /// </summary>
@@ -808,6 +808,25 @@ namespace VPet_Simulator.Windows
         /// 关闭指示器,默认为true
         /// </summary>
         public bool CloseConfirm { get; private set; } = true;
+
+        public List<TalkBox> TalkAPI { get; } = new List<TalkBox>();
+        /// <summary>
+        /// 当前选择的对话框index
+        /// </summary>
+        public int TalkAPIIndex = -1;
+        /// <summary>
+        /// 当前对话框
+        /// </summary>
+        public TalkBox TalkBoxCurr
+        {
+            get
+            {
+                if (TalkAPIIndex == -1)
+                    return null;
+                return TalkAPI[TalkAPIIndex];
+            }
+        }
+
         /// <summary>
         /// 超模工作检查
         /// </summary>

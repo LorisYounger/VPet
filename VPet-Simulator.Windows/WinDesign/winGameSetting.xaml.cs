@@ -163,12 +163,29 @@ namespace VPet_Simulator.Windows
                 runActivate.Text = "尚未激活 您可能需要启动Steam或去Steam上免费领个".Translate();
             }
             //CGPT
+            if (mw.TalkAPI.Count > 0)
+            {
+                foreach (var v in mw.TalkAPI)
+                    cbChatAPISelect.Items.Add(v.APIName.Translate());
+                if (mw.TalkAPIIndex != -1)
+                    cbChatAPISelect.SelectedIndex = mw.TalkAPIIndex;
+            }
+            else
+            {
+                cbChatAPISelect.Items.Add("暂无聊天API, 您可以通过订阅MOD添加".Translate());
+                cbChatAPISelect.SelectedIndex = 0;
+                cbChatAPISelect.IsEnabled = false;
+            }
             switch (mw.Set["CGPT"][(gstr)"type"])
             {
                 //case "API":
                 //    RBCGPTUseAPI.IsChecked = true;
                 //    BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
                 //    break;
+                case "DIY":
+                    RBCGPTDIY.IsChecked = true;
+                    BtnCGPTReSet.Content = "打开 {0} 设置".Translate(mw.TalkBoxCurr?.APIName ?? "Steam Workshop");
+                    break;
                 case "LB":
                     RBCGPTUseLB.IsChecked = true;
                     BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
@@ -860,6 +877,9 @@ namespace VPet_Simulator.Windows
                 //case "API":
                 //    new winCGPTSetting(mw).ShowDialog();
                 //    break;
+                case "DIY":
+
+                    break;
                 case "LB":
                     //Task.Run(() =>
                     //{
