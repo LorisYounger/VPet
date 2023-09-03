@@ -14,13 +14,13 @@ Thanks to the following participating developers (in order of contribution):
 
 * [Wreathlit](https://github.com/Wreathlit)
 
-## How to deploy Vpet-Simulator.Windows
+## How to deploy VPet-Simulator.Windows
 
 1. Download the source code, and open `VPet.sln` with Visual Studio.
-2. Change the project to generate to `Vpet-Simulator.Windows`, and the configuration to `x64`.
+2. Change the project to generate to `VPet-Simulator.Windows`, and the configuration to `x64`.
    ![Demonstration of the above](README.assets/image-20230208004330895.png)
-3. Click on `Run`. If everything is OK, you will get the following message: `Lack Mod Core, Unable start desktop pet`
-4. Run `Vpet-Simulator.Windows/mklink.bat` as administrator. This links the `mod` folder to the build folder.
+3. Click on `Run`. If everything is OK, you will get the following message: `缺少模组Core,无法启动桌宠` (`Lack Mod Core, Unable start desktop pet`) <!-- Pretty sure VPet-Simulator.Windows can't even load localizations when Core is missing, correct me if I'm wrong. -->
+4. Run `VPet-Simulator.Windows/mklink.bat` as administrator. This links the `mod` folder to the build folder.
 5. Click on `Run` again, and this time the app will run.
 
 ## Software architecture
