@@ -137,7 +137,6 @@
 		<Reference Include="System.Web" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="ChatGPT.API.Framework" Version="1.0.4" />
 		<PackageReference Include="CSCore" Version="1.2.1.2" />
 		<PackageReference Include="Facepunch.Steamworks" Condition="'$(Platform)' == 'x64'" Version="2.3.3" />
 		<PackageReference Include="Facepunch.Steamworks.win32" Condition="'$(Platform)' == 'x86'" Version="2.3.3" />
@@ -145,6 +144,6 @@
 		<PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.6" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="Panuon.WPF" Version="1.0.2" />
-		<PackageReference Include="Panuon.WPF.UI" Version="1.1.15.5" />
+		<PackageReference Include="Panuon.WPF.UI" Version="1.1.15.8" />
 	</ItemGroup>
 </Project>

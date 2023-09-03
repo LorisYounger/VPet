@@ -13,8 +13,6 @@ using MenuItem = System.Windows.Forms.MenuItem;
 using Application = System.Windows.Application;
 using System.Timers;
 using LinePutScript;
-using System.Diagnostics;
-using ChatGPT.API.Framework;
 using static VPet_Simulator.Core.GraphCore;
 using Panuon.WPF.UI;
 using VPet_Simulator.Windows.Interface;
@@ -27,8 +25,6 @@ using static VPet_Simulator.Windows.PerformanceDesktopTransparentWindow;
 using Line = LinePutScript.Line;
 using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
-using System.Diagnostics.Eventing.Reader;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 
 namespace VPet_Simulator.Windows
@@ -96,8 +92,8 @@ namespace VPet_Simulator.Windows
                 _dwmEnabled = Win32.Dwmapi.DwmIsCompositionEnabled();
                 _hwnd = new WindowInteropHelper(this).EnsureHandle();
 
-                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json"))
-                    CGPTClient = ChatGPTClient.Load(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json"));
+                //if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json"))
+                //    CGPTClient = ChatGPTClient.Load(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json"));
                 //this.Width = 400 * ZoomSlider.Value;
                 //this.Height = 450 * ZoomSlider.Value;
                 InitializeComponent();
@@ -495,10 +491,10 @@ namespace VPet_Simulator.Windows
                 LoadingText.Content = "正在加载CGPT".Translate();
                 switch (Set["CGPT"][(gstr)"type"])
                 {
-                    case "API":
-                        TalkBox = new TalkBoxAPI(this);
-                        Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                        break;
+                    //case "API":
+                    //    TalkBox = new TalkBoxAPI(this);
+                    //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                    //    break;
                     case "LB":
                         //if (IsSteamUser)
                         //{
