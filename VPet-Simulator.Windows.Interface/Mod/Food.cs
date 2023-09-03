@@ -149,7 +149,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Line(ignoreCase: true)]
         public string Image;
-        private bool? isoverload = null;
+        public bool? isoverload = null;
         /// <summary>
         /// 当前物品推荐价格
         /// </summary>

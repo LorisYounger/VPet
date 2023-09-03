@@ -364,6 +364,7 @@ namespace VPet_Simulator.Windows
                     if (f.IsOverLoad())
                     {
                         f.Price = Math.Max((int)f.RealPrice, 1);
+                        f.isoverload = false;
                     }
                 }
             }
@@ -596,20 +597,25 @@ namespace VPet_Simulator.Windows
                 //    }
                 //);
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "吃饭".Translate(), () =>
-                    {
-                        winBetterBuy.Show(Food.FoodType.Meal);
-                    }
-                );
+                {
+                    winBetterBuy.Show(Food.FoodType.Meal);
+                });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喝水".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Drink);
-                }
-              );
+                });
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "收藏".Translate(), () =>
+                {
+                    winBetterBuy.Show(Food.FoodType.Star);
+                });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "药品".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Drug);
-                }
-              );
+                });
+                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "礼品".Translate(), () =>
+                {
+                    winBetterBuy.Show(Food.FoodType.Gift);
+                });
                 Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
                 Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
                 if (Set.MessageBarOutside)
