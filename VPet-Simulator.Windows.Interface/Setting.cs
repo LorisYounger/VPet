@@ -135,7 +135,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public int AutoSaveInterval
         {
-            get => Math.Max(GetInt("autosave", 20), 0);
+            get => Math.Max(GetInt("autosave", 10), -1);
             set => SetInt("autosave", value);
         }
         /// <summary>
@@ -143,7 +143,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public int BackupSaveMaxNum
         {
-            get => Math.Max(GetInt("bakupsave", 20), 1);
+            get => Math.Max(GetInt("bakupsave", 30), 1);
             set => SetInt("bakupsave", value);
         }
         /// <summary>
