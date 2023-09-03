@@ -1,5 +1,4 @@
-﻿using ChatGPT.API.Framework;
-using CSCore.CoreAudioAPI;
+﻿using CSCore.CoreAudioAPI;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
@@ -38,7 +37,7 @@ namespace VPet_Simulator.Windows
         public UIElement TalkBox;
         public winGameSetting winSetting { get; set; }
         public winBetterBuy winBetterBuy { get; set; }
-        public ChatGPTClient CGPTClient;
+        //public ChatGPTClient CGPTClient;
         public ImageResources ImageSources { get; set; } = new ImageResources();
         /// <summary>
         /// 所有三方插件
@@ -201,8 +200,6 @@ namespace VPet_Simulator.Windows
                         l[(gint)"hash"] = -1;
                     File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", l.ToString());
                 }
-                if (CGPTClient != null)
-                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json", CGPTClient.Save());
             }
         }
         /// <summary>

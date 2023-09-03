@@ -165,10 +165,10 @@ namespace VPet_Simulator.Windows
             //CGPT
             switch (mw.Set["CGPT"][(gstr)"type"])
             {
-                case "API":
-                    RBCGPTUseAPI.IsChecked = true;
-                    BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
-                    break;
+                //case "API":
+                //    RBCGPTUseAPI.IsChecked = true;
+                //    BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
+                //    break;
                 case "LB":
                     RBCGPTUseLB.IsChecked = true;
                     BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
@@ -857,9 +857,9 @@ namespace VPet_Simulator.Windows
         {
             switch (mw.Set["CGPT"][(gstr)"type"])
             {
-                case "API":
-                    new winCGPTSetting(mw).ShowDialog();
-                    break;
+                //case "API":
+                //    new winCGPTSetting(mw).ShowDialog();
+                //    break;
                 case "LB":
                     //Task.Run(() =>
                     //{
@@ -885,10 +885,10 @@ namespace VPet_Simulator.Windows
             {
                 mw.Set["CGPT"][(gstr)"type"] = "LB";
             }
-            else if (RBCGPTUseAPI.IsChecked == true)
-            {
-                mw.Set["CGPT"][(gstr)"type"] = "API";
-            }
+            //else if (RBCGPTUseAPI.IsChecked == true)
+            //{
+            //    mw.Set["CGPT"][(gstr)"type"] = "API";
+            //}
             else
             {
                 mw.Set["CGPT"][(gstr)"type"] = "OFF";
@@ -897,14 +897,14 @@ namespace VPet_Simulator.Windows
 
             switch (mw.Set["CGPT"][(gstr)"type"])
             {
-                case "API":
-                    BtnCGPTReSet.IsEnabled = true;
-                    BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
-                    if (mw.TalkBox != null)
-                        mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
-                    mw.TalkBox = new TalkBoxAPI(mw);
-                    mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
-                    break;
+                //case "API":
+                //    BtnCGPTReSet.IsEnabled = true;
+                //    BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
+                //    if (mw.TalkBox != null)
+                //        mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
+                //    mw.TalkBox = new TalkBoxAPI(mw);
+                //    mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
+                //    break;
                 case "LB":
                     BtnCGPTReSet.IsEnabled = true;
                     BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
