@@ -1,6 +1,5 @@
 # VPet Tutorial
 
-<!-- NTS: I'm not familiar with this game, but I'm taking "操作更新" literally here, as the app opens the tutorial if the last time it was seen is before a certain date; this date could be changed when a gameplay update occurs -->
 > **This tutorial will only open automatically when the game is started for the first time, or after a gameplay update.** If it opens *every time the game is started*, that is a bug - please report it.
 
 <!-- FIXME; The original sentence is confusing. -->
@@ -11,18 +10,16 @@ This game revolves around you taking care of your virtual pet by interacting wit
 
 ## Basics
 
-<!-- The code is ugly, I know :pensive: -->
+<!-- Ugly code, I know :pensive: -->
 
 ----------
 |![tut1](Tutorial.assets/CN/tut1.gif)|<img alt="tut5" src="Tutorial.assets/CN/tut5.gif" width="65%">|![tut2](Tutorial.assets/CN/tut2.gif)|
 |--|--|--|
 |Right click on your pet to toggle the menu bar.|Long press her head/body to drag her around.[^long-press]|Click on her head to pat her.|
 |![tut3](Tutorial.assets/CN/tut3.gif)|<img alt="tut4" src="Tutorial.assets/CN/tut4.gif" width="50%">|![ss1](Tutorial.assets/CN/ss1.gif)|
-|Click on her body to talk with her.|Maybe touch her head?|Touch her body, even?|
+|Click on her body to talk with her.|Maybe touch her head?|Touch her body, even? <!-- Humorous -->|
 
 [^long-press]: The Long Press Interval can be set under Settings > Interact.
-
-<!-- Humorous -->
 
 
 ## Interaction
@@ -91,8 +88,6 @@ After saving your links, you can see them in the menu bar.
 ![image-20230620063216134](Tutorial.assets/CN/image-20230620063216134.png)
 
 ## Introduction of Stats
-
-<!-- It's still called Likeability -->
 
 |Name|Description|
 |----|-----------|
