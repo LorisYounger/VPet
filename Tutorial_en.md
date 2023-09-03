@@ -16,9 +16,12 @@ This game revolves around you taking care of your virtual pet by interacting wit
 ----------
 |![tut1](Tutorial.assets/CN/tut1.gif)|<img alt="tut5" src="Tutorial.assets/CN/tut5.gif" width="65%">|![tut2](Tutorial.assets/CN/tut2.gif)|
 |--|--|--|
-|Right click on your pet to toggle the menu bar.|Long press her head/body to drag her around.<br/>The Long Press Interval can be set under Settings > Interact.|Click on her head to pat her.|
+|Right click on your pet to toggle the menu bar.|Long press her head/body to drag her around.[^long-press]|Click on her head to pat her.|
 |![tut3](Tutorial.assets/CN/tut3.gif)|<img alt="tut4" src="Tutorial.assets/CN/tut4.gif" width="50%">|![ss1](Tutorial.assets/CN/ss1.gif)|
 |Click on her body to talk with her.|Maybe touch her head?|Touch her body, even?|
+
+[^long-press]: The Long Press Interval can be set under Settings > Interact.
+
 <!-- Humorous -->
 
 
