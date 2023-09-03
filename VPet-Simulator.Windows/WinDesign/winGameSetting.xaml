@@ -239,6 +239,11 @@
                                     <system:Int32>-1</system:Int32>
                                 </ComboBoxItem.Tag>
                             </ComboBoxItem>
+                            <ComboBoxItem Content="{ll:Str 每2分钟一次}">
+                                <ComboBoxItem.Tag>
+                                    <system:Int32>2</system:Int32>
+                                </ComboBoxItem.Tag>
+                            </ComboBoxItem>
                             <ComboBoxItem Content="{ll:Str 每5分钟一次}">
                                 <ComboBoxItem.Tag>
                                     <system:Int32>5</system:Int32>

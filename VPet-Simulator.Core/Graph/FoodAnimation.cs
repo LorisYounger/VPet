@@ -284,10 +284,8 @@ namespace VPet_Simulator.Core
                 var t1 = FL?.Run(FoodGrid.Front);
                 var t2 = BL?.Run(FoodGrid.Back);
                 FoodGrid.Food.Source = image;
-                if (t1 != null)
-                    t1.Start();
-                if (t2 != null)
-                    t2.Start();
+                t1?.Start();
+                t2?.Start();
                 Task.Run(() => Animations[0].Run(FoodGrid.Food, EndAction));
             });
         }
