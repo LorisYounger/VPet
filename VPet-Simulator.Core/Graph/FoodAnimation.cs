@@ -235,6 +235,8 @@ namespace VPet_Simulator.Core
             {
                 Width = 500;
                 Height = 500;
+                VerticalAlignment = VerticalAlignment.Top;
+                HorizontalAlignment = HorizontalAlignment.Left;
                 Front = new Image();
                 Back = new Image();
                 Food = new Image
