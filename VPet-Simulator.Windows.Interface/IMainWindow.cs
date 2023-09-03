@@ -24,6 +24,14 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         List<PetLoader> Pets { get; }
         /// <summary>
+        /// 所有可用聊天API
+        /// </summary>
+        List<TalkBox> TalkAPI { get; }
+        /// <summary>
+        /// 当前正在使用的TalkBox
+        /// </summary>
+        TalkBox TalkBoxCurr { get; }
+        /// <summary>
         /// 桌宠数据核心
         /// </summary>
         GameCore Core { get; }

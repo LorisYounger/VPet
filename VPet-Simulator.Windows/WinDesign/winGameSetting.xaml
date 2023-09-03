@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
-        xmlns:system="clr-namespace:System;assembly=mscorlib" Title="{ll:Str 设置}" Width="{ll:Dbe SettingWidth, DefValue=500}" Height="550" Closing="WindowX_Closing" FontSize="16"
+        xmlns:system="clr-namespace:System;assembly=mscorlib" Title="{ll:Str 设置}" Width="{ll:Dbe SettingWidth,
+                   DefValue=500}" Height="550" Closing="WindowX_Closing" FontSize="16"
         Style="{DynamicResource BaseWindowXStyle}" Topmost="True" WindowStartupLocation="CenterScreen" mc:Ignorable="d">
     <!--<pu:WindowX.Resources>
         <DataTemplate x:Key="DIYDataTemplate">
@@ -238,11 +239,6 @@
                                     <system:Int32>-1</system:Int32>
                                 </ComboBoxItem.Tag>
                             </ComboBoxItem>
-                            <ComboBoxItem Content="{ll:Str 每2分钟一次}">
-                                <ComboBoxItem.Tag>
-                                    <system:Int32>2</system:Int32>
-                                </ComboBoxItem.Tag>
-                            </ComboBoxItem>
                             <ComboBoxItem Content="{ll:Str 每5分钟一次}">
                                 <ComboBoxItem.Tag>
                                     <system:Int32>5</system:Int32>
@@ -324,10 +320,10 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <!--<RadioButton x:Name="RBCGPTUseAPI" Grid.Column="1" Checked="CGPType_Checked"
+                                <RadioButton x:Name="RBCGPTUseAPI" Grid.Column="1" Checked="CGPType_Checked"
                                         Content="{ll:Str '使用从ChatGPT\&#13;申请的的API'}" GroupName="cgpttype"
                                         Style="{DynamicResource StandardRadioButtonStyle}"
-                                        ToolTip="{ll:Str 需要去OpenAI官网申请}" />-->
+                                        ToolTip="{ll:Str 需要去OpenAI官网申请}" />
                                 <RadioButton x:Name="RBCGPTUseLB" Checked="CGPType_Checked"
                                         Content="{ll:Str '使用桌宠选项式\&#13;聊天功能'}" GroupName="cgpttype" IsChecked="True"
                                         Style="{DynamicResource StandardRadioButtonStyle}"
