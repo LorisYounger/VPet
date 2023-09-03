@@ -4,7 +4,7 @@
 
 ![Header](README.assets/%E4%B8%BB%E5%9B%BE.png)
 
-An open-source desktop pet/shimeji/virtual pet app, that can be embedded into any Windows Presentation Framework app as well.
+An open-source virtual pet (desktop pet/shimeji) app, that can be embedded into any Windows Presentation Framework app as well.
 
 Get VPet [on Steam](https://store.steampowered.com/app/1920960/VPet) for free, or install its core library to your WPF app with [NuGet](https://www.nuget.org/packages/VPet-Simulator.Core).
 
