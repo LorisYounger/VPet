@@ -119,7 +119,7 @@ Note that to make sure the features/gameplay you contribute fit the game, I may 
 
 Also note that the addition of new features can usually be accomplished with plugins - see [VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo) for more information.
 
-Thanks to the following participating developers (in order of contribution):
+Thanks to the following participating developers (ordered by the degree of their contribution):
 
 * Wreathlit
 * windofxy
@@ -129,7 +129,7 @@ Thanks to the following participating developers (in order of contribution):
 * eltociear
 * yupix
 
-And  people who provide community translation and more content in steam workshop
+And the Steam Workshop users who have shared translations and more with the community.
 
 ## Animation copyright notice and authorization terms
 
