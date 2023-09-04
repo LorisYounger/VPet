@@ -61,6 +61,7 @@ namespace VPet_Simulator.Windows.Interface
             }
             var cont = tbTalk.Text;
             tbTalk.Text = "";
+            MainPlugin.MW.Main.ToolBar.Visibility = Visibility.Collapsed;
             Task.Run(() => Responded(cont));
         }
         /// <summary>
@@ -74,6 +75,7 @@ namespace VPet_Simulator.Windows.Interface
             {
                 Send_Click(sender, e);
                 e.Handled = true;
+                MainPlugin.MW.Main.ToolBar.Visibility = Visibility.Collapsed;
                 return;
             }
             if (tbTalk.Text.Length > 0)

@@ -878,7 +878,10 @@ namespace VPet_Simulator.Windows
                 //    new winCGPTSetting(mw).ShowDialog();
                 //    break;
                 case "DIY":
-                    mw.TalkBoxCurr?.Setting();
+                    if (mw.TalkBoxCurr != null)
+                        mw.TalkBoxCurr.Setting();
+                    else
+                        ExtensionSetting.StartURL("https://steamcommunity.com/app/1920960/workshop/");
                     break;
                 case "LB":
                     //Task.Run(() =>

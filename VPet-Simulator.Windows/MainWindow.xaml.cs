@@ -493,27 +493,6 @@ namespace VPet_Simulator.Windows
                     }
                 }
 
-                LoadingText.Content = "正在加载CGPT".Translate();
-                switch (Set["CGPT"][(gstr)"type"])
-                {
-                    case "DIY":
-                        TalkAPIIndex = TalkAPI.FindIndex(x => x.APIName == Set["CGPT"][(gstr)"DIY"]);
-                        LoadTalkDIY();
-                        break;
-                    //case "API":
-                    //    TalkBox = new TalkBoxAPI(this);
-                    //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                    //    break;
-                    case "LB":
-                        //if (IsSteamUser)
-                        //{
-                        //    TalkBox = new TalkSelect(this);
-                        //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                        //}
-                        TalkBox = new TalkSelect(this);
-                        Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                        break;
-                }
 
                 LoadingText.Content = "正在加载游戏".Translate();
                 var m = new System.Windows.Controls.MenuItem()
@@ -545,6 +524,27 @@ namespace VPet_Simulator.Windows
                 if (IsSteamUser)
                     Main.TimeHandle += Handle_Steam;
                 Main.TimeHandle += (x) => DiagnosisUPLoad();
+
+                switch (Set["CGPT"][(gstr)"type"])
+                {
+                    case "DIY":
+                        TalkAPIIndex = TalkAPI.FindIndex(x => x.APIName == Set["CGPT"][(gstr)"DIY"]);
+                        LoadTalkDIY();
+                        break;
+                    //case "API":
+                    //    TalkBox = new TalkBoxAPI(this);
+                    //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                    //    break;
+                    case "LB":
+                        //if (IsSteamUser)
+                        //{
+                        //    TalkBox = new TalkSelect(this);
+                        //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                        //}
+                        TalkBox = new TalkSelect(this);
+                        Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                        break;
+                }
 
                 //窗口部件
                 winSetting = new winGameSetting(this);
