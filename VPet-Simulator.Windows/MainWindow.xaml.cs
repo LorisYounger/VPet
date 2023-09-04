@@ -115,6 +115,11 @@ namespace VPet_Simulator.Windows
                     var point = Set.StartRecordPoint;
                     Left = point.X; Top = point.Y;
                 }
+                if (Set.TopMost)
+                {
+                    Topmost= true;
+                }
+
 
                 //不存在就关掉
                 var modpath = new DirectoryInfo(ModPath + @"\0000_core\pet\vup");
