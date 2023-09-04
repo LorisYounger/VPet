@@ -16,43 +16,74 @@ namespace VPet_Simulator.Windows
             this.mw = mw;
         }
 
-        private Rectangle? _screenBorder = null;
-        private Rectangle ScreenBorder
+        private bool _screenDetected = false;
+        private Rectangle _screenBorder;
+        private bool _isPrimaryScreen = true;
+        public bool IsPrimaryScreen
         {
             get
             {
-                if (_screenBorder == null)
-                {
-                    var windowInteropHelper = new WindowInteropHelper(mw);
-                    var currentScreen = Screen.FromHandle(windowInteropHelper.Handle);
-                    _screenBorder = currentScreen.Bounds;
-                }
-                return (Rectangle)_screenBorder;
+                if(!_screenDetected) DetectCurrentScreen();
+                return _isPrimaryScreen;
             }
+        }
+        public Rectangle ScreenBorder
+        {
+            get
+            {
+                if (!_screenDetected) DetectCurrentScreen();
+                return _screenBorder;
+            }
+        }
+        private void DetectCurrentScreen()
+        {
+            var windowInteropHelper = new WindowInteropHelper(mw);
+            var currentScreen = Screen.FromHandle(windowInteropHelper.Handle);
+            // TODO 多屏+非100%缩放下以上API跟Left、Top一样都是错的
+
+            _isPrimaryScreen = currentScreen.Primary;
+            _screenBorder = currentScreen.Bounds;
+            _screenDetected = true;
         }
         public void ClearScreenBorderCache()
         {
-            _screenBorder = null;
+            _screenDetected = false;
         }
 
         public double GetWindowsDistanceLeft()
         {
-            return mw.Dispatcher.Invoke(() => mw.Left - ScreenBorder.X);
+            return mw.Dispatcher.Invoke(() =>
+            {
+                if (IsPrimaryScreen) return mw.Left;
+                return mw.Left - ScreenBorder.X;
+            });
         }
 
         public double GetWindowsDistanceUp()
         {
-            return mw.Dispatcher.Invoke(() => mw.Top - ScreenBorder.Y);
+            return mw.Dispatcher.Invoke(() =>
+            {
+                if (IsPrimaryScreen) return mw.Top;
+                return mw.Top - ScreenBorder.Y;
+            });
         }
 
         public double GetWindowsDistanceRight()
         {
-            return mw.Dispatcher.Invoke(() => ScreenBorder.Width + ScreenBorder.X - mw.Left - mw.Width);
+            return mw.Dispatcher.Invoke(() =>
+            {
+                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenWidth - mw.Left - mw.Width;
+                return ScreenBorder.Width + ScreenBorder.X - mw.Left - mw.Width;
+            });
         }
 
         public double GetWindowsDistanceDown()
         {
-            return mw.Dispatcher.Invoke(() => ScreenBorder.Height + ScreenBorder.Y - mw.Top - mw.Height);
+            return mw.Dispatcher.Invoke(() =>
+            {
+                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenHeight - mw.Top - mw.Height;
+                return ScreenBorder.Height + ScreenBorder.Y - mw.Top - mw.Height;
+            });
         }
 
         public void MoveWindows(double X, double Y)
