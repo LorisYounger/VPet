@@ -26,11 +26,11 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 所有可用聊天API
         /// </summary>
-        List<TalkBox> TalkAPI { get; }
+        List<ITalkAPI> TalkAPI { get; }
         /// <summary>
         /// 当前正在使用的TalkBox
         /// </summary>
-        TalkBox TalkBoxCurr { get; }
+        ITalkAPI TalkBoxCurr { get; }
         /// <summary>
         /// 桌宠数据核心
         /// </summary>

@@ -610,7 +610,7 @@ namespace VPet_Simulator.Windows
                         if (obj.DisplayType.Name == "music")
                             SteamFriends.SetRichPresence("steam_display", "#Status_Music");
                         else
-                            SteamFriends.SetRichPresence("steam_display", "#Status_IDLE");
+                            SteamFriends.SetRichPresence("steam_display", "#Status_IDLE(test)");
                         break;
                 }
             }
@@ -809,7 +809,7 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public bool CloseConfirm { get; private set; } = true;
 
-        public List<TalkBox> TalkAPI { get; } = new List<TalkBox>();
+        public List<ITalkAPI> TalkAPI { get; } = new List<ITalkAPI>();
         /// <summary>
         /// 当前选择的对话框index
         /// </summary>
@@ -817,7 +817,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 当前对话框
         /// </summary>
-        public TalkBox TalkBoxCurr
+        public ITalkAPI TalkBoxCurr
         {
             get
             {
@@ -826,7 +826,30 @@ namespace VPet_Simulator.Windows
                 return TalkAPI[TalkAPIIndex];
             }
         }
-
+        /// <summary>
+        /// 移除所有聊天对话框
+        /// </summary>
+        public void RemoveTalkBox()
+        {
+            if (TalkBox != null)
+            {
+                Main.ToolBar.MainGrid.Children.Remove(TalkBox);
+                TalkBox = null;
+            }
+            if (TalkAPIIndex == -1)
+                return;
+            Main.ToolBar.MainGrid.Children.Remove(TalkAPI[TalkAPIIndex].This);
+        }
+        /// <summary>
+        /// 加载自定义对话框
+        /// </summary>
+        public void LoadTalkDIY()
+        {
+            RemoveTalkBox();
+            if (TalkAPIIndex == -1)
+                return;
+            Main.ToolBar.MainGrid.Children.Add(TalkAPI[TalkAPIIndex].This);
+        }
         /// <summary>
         /// 超模工作检查
         /// </summary>
@@ -852,5 +875,6 @@ namespace VPet_Simulator.Windows
             }
             return true;
         }
+
     }
 }
