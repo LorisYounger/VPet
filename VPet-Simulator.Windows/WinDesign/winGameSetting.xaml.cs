@@ -1238,5 +1238,17 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("重置成功".Translate());
             }
         }
+
+        private void cbChatAPISelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.TalkAPIIndex = cbChatAPISelect.SelectedIndex;
+            mw.Set["CGPT"][(gstr)"DIY"] = mw.TalkBoxCurr?.APIName ?? "";
+            if (RBCGPTDIY.IsChecked == true)
+                mw.LoadTalkDIY();
+            BtnCGPTReSet.Content = "打开 {0} 设置".Translate(mw.TalkBoxCurr?.APIName ?? "Steam Workshop");
+
+        }
     }
 }
