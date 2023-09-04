@@ -351,7 +351,7 @@
                                         <Label Content="{ll:Str '自定义聊天接口'}" Background="{x:Null}" />
                                         <ComboBox x:Name="cbChatAPISelect"
                                                 Style="{DynamicResource StandardComboBoxStyle}" Grid.Column="0"
-                                                Grid.Row="1" />
+                                                Grid.Row="1" SelectionChanged="cbChatAPISelect_SelectionChanged" />
                                     </Grid>
                                 </RadioButton>
                             </Grid>
