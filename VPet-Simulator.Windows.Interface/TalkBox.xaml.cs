@@ -18,7 +18,7 @@ namespace VPet_Simulator.Windows.Interface
     /// <summary>
     /// 聊天API接口/显示类
     /// </summary>
-    public abstract partial class TalkBox : UserControl
+    public abstract partial class TalkBox : UserControl, ITalkAPI
     {
         MainPlugin MainPlugin;
         public TalkBox(MainPlugin mainPlugin)
@@ -49,7 +49,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 聊天设置
         /// </summary>
-        public abstract void Setting();     
+        public abstract void Setting();
 
         private void tbTalk_KeyDown(object sender, KeyEventArgs e)
         {
@@ -68,5 +68,22 @@ namespace VPet_Simulator.Windows.Interface
                 MainPlugin.MW.Main.ToolBar.CloseTimer.Start();
             }
         }
+        public UIElement This => this;
+    }
+    public interface ITalkAPI
+    {
+        /// <summary>
+        /// 显示的窗口
+        /// </summary>
+        UIElement This { get; }
+
+        /// <summary>
+        /// 该聊天接口名字
+        /// </summary>
+        string APIName { get; }
+        /// <summary>
+        /// 聊天设置
+        /// </summary>
+        void Setting();
     }
 }

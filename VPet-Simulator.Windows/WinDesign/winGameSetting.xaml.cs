@@ -878,7 +878,7 @@ namespace VPet_Simulator.Windows
                 //    new winCGPTSetting(mw).ShowDialog();
                 //    break;
                 case "DIY":
-
+                    mw.TalkBoxCurr?.Setting();
                     break;
                 case "LB":
                     //Task.Run(() =>
@@ -905,6 +905,10 @@ namespace VPet_Simulator.Windows
             {
                 mw.Set["CGPT"][(gstr)"type"] = "LB";
             }
+            else if (RBCGPTDIY.IsChecked == true)
+            {
+                mw.Set["CGPT"][(gstr)"type"] = "DIY";
+            }
             //else if (RBCGPTUseAPI.IsChecked == true)
             //{
             //    mw.Set["CGPT"][(gstr)"type"] = "API";
@@ -925,18 +929,22 @@ namespace VPet_Simulator.Windows
                 //    mw.TalkBox = new TalkBoxAPI(mw);
                 //    mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
                 //    break;
+                case "DIY":
+                    BtnCGPTReSet.IsEnabled = true;
+                    mw.RemoveTalkBox();
+                    BtnCGPTReSet.Content = "打开 {0} 设置".Translate(mw.TalkBoxCurr?.APIName ?? "Steam Workshop");
+                    mw.LoadTalkDIY();
+                    break;
                 case "LB":
+                    mw.RemoveTalkBox();
                     BtnCGPTReSet.IsEnabled = true;
                     BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
-                    if (mw.TalkBox != null)
-                        mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
                     mw.TalkBox = new TalkSelect(mw);
                     mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
                     break;
                 case "OFF":
                 default:
-                    if (mw.TalkBox != null)
-                        mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
+                    mw.RemoveTalkBox();
                     BtnCGPTReSet.IsEnabled = false;
                     BtnCGPTReSet.Content = "聊天框已关闭".Translate();
                     break;

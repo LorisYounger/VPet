@@ -117,7 +117,7 @@ namespace VPet_Simulator.Windows
                 }
                 if (Set.TopMost)
                 {
-                    Topmost= true;
+                    Topmost = true;
                 }
 
 
@@ -496,6 +496,10 @@ namespace VPet_Simulator.Windows
                 LoadingText.Content = "正在加载CGPT".Translate();
                 switch (Set["CGPT"][(gstr)"type"])
                 {
+                    case "DIY":
+                        TalkAPIIndex = TalkAPI.FindIndex(x => x.APIName == Set["CGPT"][(gstr)"DIY"]);
+                        LoadTalkDIY();
+                        break;
                     //case "API":
                     //    TalkBox = new TalkBoxAPI(this);
                     //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
