@@ -655,7 +655,7 @@ namespace VPet_Simulator.Windows
                     Main.DisplayToNomal();
                     Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
                     Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
-                    //(Core.Controller as MWController).ClearScreenBorderCache();
+                    (Core.Controller as MWController).ClearScreenBorderCache();
                 }));
                 m_menu.MenuItems.Add(new MenuItem("反馈中心".Translate(), (x, y) => { new winReport(this).Show(); }));
                 m_menu.MenuItems.Add(new MenuItem("开发控制台".Translate(), (x, y) => { new winConsole(this).Show(); }));
