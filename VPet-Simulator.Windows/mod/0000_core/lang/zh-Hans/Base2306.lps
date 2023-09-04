@@ -236,20 +236,6 @@ text#文本集:|
 桌宠重置成功#桌宠重置成功:|
 打开 ChatGPT API 设置#打开 ChatGPT API 设置:|
 发送#发送:|
-ChatGPT API 设置#ChatGPT API 设置:|
-初始化文本#初始化文本:|
-温度#温度:|
-最大花费#最大花费:|
-累计花费#累计花费:|
-历史记录#历史记录:|
-完成设置#完成设置:|
-API 链接 一般为 api.openai.com/v1/chat/completions#API 链接 一般为 api.openai.com/v1/chat/!completions:|
-从 OpenAI 获得的 APIKEY 一般`sk-`开头#从 OpenAI 获得的 APIKEY 一般`sk-`开头:|
-不会被忘记的初始化关键字, 字越多越贵#不会被忘记的初始化关键字, 字越多越贵:|
-0-2之间 0.2更稳定 0.8更随机#0-2之间 0.2更稳定 0.8更随机:|
-读取最大花费Token数量 1千Token=$0.02#读取最大花费Token数量 1千Token=$0.02:|
-聊天历史记录#聊天历史记录:|
-累计在此花费的Token个数 1千Token=$0.02#累计在此花费的Token个数 1千Token=$0.02:|
 上传至Steam#上传至Steam:|
  (版本高)# (版本高):|
 plugin#plugin:|

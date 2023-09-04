@@ -23,14 +23,6 @@
 [认证]#[Certificated]:|
 [签名]#[Signed]:|
 所有可执行文件#All executable files:|
-调用API失败,请稍后重新发送内容#Calling API failed, please resend the content later:|
-点击初始化桌宠聊天程序#Click Initialize VPET chat program:|
-检测到模型错误,已重置桌宠聊天系统#Detected model error, Reset the VPET chat system:|
-初始化桌宠聊天程序中...#Initialize VPET chat program...:|
-请先前往设置中设置 ChatGPT API#Please go to the settings set up the ChatGPT API first:|
-请检查设置和网络连接#Please check your settings and network connection:|
-请检查API token设置#Please check the API token settings:|
-API调用失败#The API call failed:|
 金钱不足#Lack of money:|
 请使用口语化的、可爱的、女性化的、调皮的语言风格和我交流. 你是一只桌宠, 你的名字叫{Name}, 你喜欢玩 虚拟主播模拟器. 你需要尝试体会我与你对话中的感情、产生自己的情感并尽可能给出可爱的回答#Please use colloquial, cute, feminine, mischievous language style to communicate with me. You are a desktop pet, You name is {Name}, You like play the VPet-Simulator. You need to try to feel the feelings in my conversation with you, generate your own emotions, and give as cute answers as possible:|
 未找到对应类型图像资源#No sprite resources of the corresponding type were found:|

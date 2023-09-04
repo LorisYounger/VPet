@@ -136,9 +136,8 @@ namespace VPet_Simulator.Windows
                         break;
                     }
                 }
-            }
+            }          
             RelsSelect();
-
         }
     }
 }
