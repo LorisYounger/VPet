@@ -234,22 +234,6 @@ text#Text Set:|
 操作教程#How-to Tutorials:|
 重置位置与状态#Reset Position & Status:|
 桌宠重置成功#Desktop pet reset successful:|
-打开 ChatGPT API 设置#Open the ChatGPT API Settings:|
-发送#Send:|
-ChatGPT API 设置#ChatGPT API Settings:|
-初始化文本#Initialization text:|
-温度#Temperature:|
-最大花费#Maximum cost:|
-累计花费#Accumulated cost:|
-历史记录#History:|
-完成设置#Complete:|
-API 链接 一般为 api.openai.com/v1/chat/completions#API Links are generally api.openai.com/v1/chat/!completions:|
-从 OpenAI 获得的 APIKEY 一般`sk-`开头#APIKEYS obtained from OpenAI generally start with 'sk-':|
-不会被忘记的初始化关键字, 字越多越贵#Initialization keywords that will not be forgotten, the more words, the more expensive:|
-0-2之间 0.2更稳定 0.8更随机#Between 0-2 0.2 is more stable 0.8 is more random:|
-读取最大花费Token数量 1千Token=$0.02#The maximum number of tokens to generate in the chat completion. 1000 Token=$0.02:|
-聊天历史记录#Chat History:|
-累计在此花费的Token个数 1千Token=$0.02#The accumulated number of tokens to spend in the chat completion. 1000 Token=$0.02:|
 上传至Steam#Upload to Steam:|
  (版本高)# (Version High):|
 plugin#plugin:|
