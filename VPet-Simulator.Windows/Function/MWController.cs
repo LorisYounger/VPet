@@ -16,38 +16,30 @@ namespace VPet_Simulator.Windows
             this.mw = mw;
         }
 
-        private bool _screenDetected = false;
-        private Rectangle _screenBorder;
-        private bool _isPrimaryScreen = true;
-        public bool IsPrimaryScreen
+        private static Rectangle _screenBorder;
+        private static bool _isPrimaryScreen = true;
+        public static bool IsPrimaryScreen
         {
             get
             {
-                if(!_screenDetected) DetectCurrentScreen();
                 return _isPrimaryScreen;
             }
         }
-        public Rectangle ScreenBorder
+        public static Rectangle ScreenBorder
         {
             get
             {
-                if (!_screenDetected) DetectCurrentScreen();
                 return _screenBorder;
             }
+            set
+            {
+                _screenBorder = value;
+                _isPrimaryScreen = false;
+            }
         }
-        private void DetectCurrentScreen()
+        public static void ResetScreenBorder()
         {
-            var windowInteropHelper = new WindowInteropHelper(mw);
-            var currentScreen = Screen.FromHandle(windowInteropHelper.Handle);
-            // TODO 多屏+非100%缩放下以上API跟Left、Top一样都是错的
-
-            _isPrimaryScreen = currentScreen.Primary;
-            _screenBorder = currentScreen.Bounds;
-            _screenDetected = true;
-        }
-        public void ClearScreenBorderCache()
-        {
-            _screenDetected = false;
+            _isPrimaryScreen = true;
         }
 
         public double GetWindowsDistanceLeft()
@@ -92,7 +84,6 @@ namespace VPet_Simulator.Windows
             {
                 mw.Left += X * ZoomRatio;
                 mw.Top += Y * ZoomRatio;
-                ClearScreenBorderCache();
             });
         }
 
