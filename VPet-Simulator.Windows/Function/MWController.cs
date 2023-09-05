@@ -14,18 +14,25 @@ namespace VPet_Simulator.Windows
         public MWController(MainWindow mw)
         {
             this.mw = mw;
+            _isPrimaryScreen = mw.Set.MoveAreaDefault;
+            _screenBorder = mw.Set.MoveArea;
         }
 
-        private static Rectangle _screenBorder;
-        private static bool _isPrimaryScreen = true;
-        public static bool IsPrimaryScreen
+        private Rectangle _screenBorder;
+        private bool _isPrimaryScreen = true;
+        public bool IsPrimaryScreen
         {
             get
             {
                 return _isPrimaryScreen;
             }
+            private set
+            {
+                _isPrimaryScreen = value;
+                mw.Set.MoveAreaDefault = value;
+            }
         }
-        public static Rectangle ScreenBorder
+        public Rectangle ScreenBorder
         {
             get
             {
@@ -34,12 +41,13 @@ namespace VPet_Simulator.Windows
             set
             {
                 _screenBorder = value;
-                _isPrimaryScreen = false;
+                mw.Set.MoveArea = value;
+                IsPrimaryScreen = false;
             }
         }
-        public static void ResetScreenBorder()
+        public void ResetScreenBorder()
         {
-            _isPrimaryScreen = true;
+            IsPrimaryScreen = true;
         }
 
         public double GetWindowsDistanceLeft()

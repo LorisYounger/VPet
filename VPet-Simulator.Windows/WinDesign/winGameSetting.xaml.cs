@@ -212,6 +212,8 @@ namespace VPet_Simulator.Windows
             voicetimer.Tick += Voicetimer_Tick;
 
             AllowChange = true;
+
+            UpdateMoveAreaText();
         }
 
         private void Voicetimer_Tick(object sender, EventArgs e)
@@ -615,24 +617,42 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        private void BtnSetScreen_Default_Click(object sender, RoutedEventArgs e)
+        private void UpdateMoveAreaText()
         {
-            MWController.ResetScreenBorder();
+            var mwCtrl = mw.Core.Controller as MWController;
+            if (mwCtrl.IsPrimaryScreen)
+            {
+                textMoveArea.Text = "主屏幕".Translate();
+                return;
+            }
+            var rect = mwCtrl.ScreenBorder;
+            textMoveArea.Text = $"X:{rect.X};Y:{rect.Y};W:{rect.Width};H:{rect.Height}";
         }
 
-        private void BtnSetScreen_DetectScreen_Click(object sender, RoutedEventArgs e)
+        private void BtnSetMoveArea_Default_Click(object sender, RoutedEventArgs e)
+        {
+            var mwCtrl = mw.Core.Controller as MWController;
+            mwCtrl.ResetScreenBorder();
+            UpdateMoveAreaText();
+        }
+
+        private void BtnSetMoveArea_DetectScreen_Click(object sender, RoutedEventArgs e)
         {
             var windowInteropHelper = new System.Windows.Interop.WindowInteropHelper(mw);
             var currentScreen = System.Windows.Forms.Screen.FromHandle(windowInteropHelper.Handle);
-            MWController.ScreenBorder = currentScreen.Bounds;
+            var mwCtrl = mw.Core.Controller as MWController;
+            mwCtrl.ScreenBorder = currentScreen.Bounds;
+            UpdateMoveAreaText();
         }
 
-        private void BtnSetScreen_Window_Click(object sender, RoutedEventArgs e)
+        private void BtnSetMoveArea_Window_Click(object sender, RoutedEventArgs e)
         {
-            MWController.ScreenBorder = new System.Drawing.Rectangle(
+            var mwCtrl = mw.Core.Controller as MWController;
+            mwCtrl.ScreenBorder = new System.Drawing.Rectangle(
                 (int)Left, (int)Top, 
                 (int)Width, (int)Height
             );
+            UpdateMoveAreaText();
         }
 
         private void hyper_moreInfo(object sender, RoutedEventArgs e)
