@@ -153,7 +153,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 当前物品推荐价格
         /// </summary>
-        public double RealPrice => ((Exp / 4 + Strength / 5 + StrengthDrink / 3 + StrengthFood / 2 + Feeling / 5) / 3 + Health + Likability * 10);
+        public double RealPrice => ((Exp / 3 + Strength / 5 + StrengthDrink / 3 + StrengthFood / 2 + Feeling / 5) / 3 + Health + Likability * 10);
         /// <summary>
         /// 该食物是否超模
         /// </summary>
@@ -181,7 +181,7 @@ namespace VPet_Simulator.Windows.Interface
             DateTime eattime = imw.Set.PetData.GetDateTime("buytime_" + Name, now);
             if (eattime <= now)
             {
-                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink)
+                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)
                     descs = "喜好度".Translate();
                 else
                     descs = "有效度".Translate();
@@ -189,11 +189,14 @@ namespace VPet_Simulator.Windows.Interface
             }
             else
             {
-                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink)
+                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)
                     descs = "喜好度".Translate();
                 else
                     descs = "有效度".Translate();
-                descs += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
+                if (Type == FoodType.Gift)
+                    descs += ":\t" + Math.Max(0.4, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
+                else
+                    descs += ":\t" + Math.Max(0.2, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.02).ToString("p0");
                 descs += "\t\t" + "恢复".Translate() + ":\t" + (eattime).ToString("MM/dd HH");
             }
         }

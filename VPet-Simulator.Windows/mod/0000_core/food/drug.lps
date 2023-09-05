@@ -1,10 +1,10 @@
-food:|name#太阳系:|type#Drug:|Exp#-180:|Strength#-100:|Likability#-4:|Health#50:|Feeling#0:|price#0:|graph#eat:|desc#没钱也能吃,可以用来拯救存档(生病), 没事别吃这个:|
-food:|name#维生素C含片:|type#Drug:|Exp#40:|Health#10:|Feeling#0:|price#13.0:|graph#eat:|desc#本产品为保健品不能代替药品:|
-food:|name#钙片:|type#Drug:|Exp#80:|Strength#20:|StrengthFood#1:|Health#10:|Feeling#0:|price#18.0:|graph#eat:|desc#郑重声明，本产品与同名影视产品没有一点关系。:|
-food:|name#脑黑金:|type#Drug:|Exp#480:|Strength#20:|Health#15:|Feeling#-25:|price#54.5:|graph#eat:|desc#过年过节不收礼！__________！(3分):|
-food:|name#666感冒灵颗粒:|type#Drug:|Exp#160:|Health#20:|Feeling#0:|price#33.0:|graph#eat:|desc#老牌子，值得信任，有妈妈的味道。:|
-food:|name#健胃整肠丸:|type#Drug:|Exp#184:|Strength#20:|Health#25:|Feeling#0:|price#41.5:|graph#eat:|desc#这是什么？肚子疼？来两粒。这是什么？拉肚子？来两粒:|
-food:|name#布洛芬缓释胶囊:|type#Drug:|Exp#480:|Strength#20:|Health#35:|Feeling#0:|price#76.0:|graph#eat:|desc#在以前的大瘟疫时代，曾经作为货币使用，最高的时候价值连城:|
-food:|name#速效救心丸:|type#Drug:|Exp#640:|Health#75:|Feeling#0:|price#128.0:|graph#eat:|desc#急急急，等下有得你急的。:|
-food:|name#大力丸:|type#Drug:|Exp#240:|Strength#20:|Health#50:|Feeling#50:|price#74.0:|graph#eat:|desc#等我硬起来有你好受的！:|
-food:|name#阿司匹林:|type#Drug:|Exp#400:|Health#65:|Feeling#0:|price#98.0:|graph#eat:|desc#发烧去医院经常见的药，从小到大都不懂为什么长得和螺丝头一样:|
+food:|name#太阳系:|type#Drug:|Exp#-180:|Strength#-100:|Likability#-4:|Health#50:|Feeling#0:|price#-7.0:|graph#eat:|desc#没钱也能吃,可以用来拯救存档(生病), 没事别吃这个:|
+food:|name#维生素C含片:|type#Drug:|Exp#40:|Health#10:|Feeling#0:|price#16.5:|graph#eat:|desc#本产品为保健品不能代替药品:|
+food:|name#钙片:|type#Drug:|Exp#80:|Strength#20:|StrengthFood#1:|Health#10:|Feeling#0:|price#24.5:|graph#eat:|desc#郑重声明，本产品与同名影视产品没有一点关系。:|
+food:|name#脑黑金:|type#Drug:|Exp#480:|Strength#20:|Health#15:|Feeling#-25:|price#94.5:|graph#eat:|desc#过年过节不收礼！__________！(3分):|
+food:|name#666感冒灵颗粒:|type#Drug:|Exp#160:|Health#20:|Feeling#0:|price#46.5:|graph#eat:|desc#老牌子，值得信任，有妈妈的味道。:|
+food:|name#健胃整肠丸:|type#Drug:|Exp#184:|Strength#20:|Health#25:|Feeling#0:|price#57.0:|graph#eat:|desc#这是什么？肚子疼？来两粒。这是什么？拉肚子？来两粒:|
+food:|name#布洛芬缓释胶囊:|type#Drug:|Exp#480:|Strength#20:|Health#35:|Feeling#0:|price#116.0:|graph#eat:|desc#在以前的大瘟疫时代，曾经作为货币使用，最高的时候价值连城:|
+food:|name#速效救心丸:|type#Drug:|Exp#640:|Health#75:|Feeling#0:|price#181.5:|graph#eat:|desc#急急急，等下有得你急的。:|
+food:|name#大力丸:|type#Drug:|Exp#240:|Strength#20:|Health#50:|Feeling#50:|price#94.0:|graph#eat:|desc#等我硬起来有你好受的！:|
+food:|name#阿司匹林:|type#Drug:|Exp#400:|Health#65:|Feeling#0:|price#131.5:|graph#eat:|desc#发烧去医院经常见的药，从小到大都不懂为什么长得和螺丝头一样:|
