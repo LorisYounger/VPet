@@ -615,6 +615,25 @@ namespace VPet_Simulator.Windows
             }
         }
 
+        private void BtnSetScreen_Default_Click(object sender, RoutedEventArgs e)
+        {
+            MWController.ResetScreenBorder();
+        }
+
+        private void BtnSetScreen_DetectScreen_Click(object sender, RoutedEventArgs e)
+        {
+            var windowInteropHelper = new System.Windows.Interop.WindowInteropHelper(mw);
+            var currentScreen = System.Windows.Forms.Screen.FromHandle(windowInteropHelper.Handle);
+            MWController.ScreenBorder = currentScreen.Bounds;
+        }
+
+        private void BtnSetScreen_Window_Click(object sender, RoutedEventArgs e)
+        {
+            MWController.ScreenBorder = new System.Drawing.Rectangle(
+                (int)Left, (int)Top, 
+                (int)Width, (int)Height
+            );
+        }
 
         private void hyper_moreInfo(object sender, RoutedEventArgs e)
         {
