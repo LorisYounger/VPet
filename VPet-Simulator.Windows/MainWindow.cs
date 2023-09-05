@@ -610,7 +610,7 @@ namespace VPet_Simulator.Windows
                         if (obj.DisplayType.Name == "music")
                             SteamFriends.SetRichPresence("steam_display", "#Status_Music");
                         else
-                            SteamFriends.SetRichPresence("steam_display", "#Status_IDLE(test)");
+                            SteamFriends.SetRichPresence("steam_display", "#Status_IDLE");
                         break;
                 }
             }
