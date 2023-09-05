@@ -430,5 +430,44 @@ namespace VPet_Simulator.Windows.Interface
                 this["gameconfig"].SetBool("autobuy", value);
             }
         }
+
+        public bool MoveAreaDefault
+        {
+            get
+            {
+                var line = FindLine("movearea");
+                if (line == null)
+                    return true;
+                return line.GetBool("set");
+            }
+            set
+            {
+                var line = FindorAddLine("movearea");
+                line.SetBool("set", value);
+            }
+        }
+        public System.Drawing.Rectangle MoveArea
+        {
+            get
+            {
+                var line = FindLine("movearea");
+                if (line == null)
+                    return default(System.Drawing.Rectangle);
+                return new System.Drawing.Rectangle(
+                    line.GetInt("x", 0),
+                    line.GetInt("y", 0),
+                    line.GetInt("w", 114),
+                    line.GetInt("h", 514)
+                );
+            }
+            set
+            {
+                var line = FindorAddLine("movearea");
+                line.SetInt("x", value.X);
+                line.SetInt("y", value.Y);
+                line.SetInt("w", value.Width);
+                line.SetInt("h", value.Height);
+            }
+        }
     }
 }

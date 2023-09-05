@@ -504,17 +504,17 @@
                                     <RowDefinition Height="35" />
                                 </Grid.RowDefinitions>
                                 <TextBlock Grid.Row="0" Text="{ll:Str '当前区域：'}"/>
-                                <TextBlock Grid.Column="1" Grid.ColumnSpan="2" Text="{ll:Str '主屏幕'}"/>
-                                <Button x:Name="BtnSetScreen_Default" Grid.Row="1" Grid.Column="0" Margin="5,5,5,5" Padding="1"
+                                <TextBlock x:Name="textMoveArea" Grid.Column="1" Grid.ColumnSpan="2" Text="{ll:Str '主屏幕'}"/>
+                                <Button x:Name="BtnSetMoveArea_Default" Grid.Row="1" Grid.Column="0" Margin="5,5,5,5" Padding="1"
                                     pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
-                                    Click="BtnSetScreen_Default_Click" Content="{ll:Str 重置为主屏}"/>
-                                <Button x:Name="BtnSetScreen_DetectScreen" Grid.Row="1" Grid.Column="1" Margin="5,5,5,5" Padding="1"
+                                    Click="BtnSetMoveArea_Default_Click" Content="{ll:Str 重置为主屏}"/>
+                                <Button x:Name="BtnSetMoveArea_DetectScreen" Grid.Row="1" Grid.Column="1" Margin="5,5,5,5" Padding="1"
                                     pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
-                                    Click="BtnSetScreen_DetectScreen_Click" Content="{ll:Str 设为桌宠屏幕}"
+                                    Click="BtnSetMoveArea_DetectScreen_Click" Content="{ll:Str 设为桌宠屏幕}"
                                     ToolTip="{ll:Str 当屏幕分辨率不为100%时可能识别有误}"/>
-                                <Button x:Name="BtnSetScreen_Window" Grid.Row="1" Grid.Column="2" Margin="5,5,5,5" Padding="1"
+                                <Button x:Name="BtnSetMoveArea_Window" Grid.Row="1" Grid.Column="2" Margin="5,5,5,5" Padding="1"
                                     pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
-                                    Click="BtnSetScreen_Window_Click" Content="{ll:Str 设为窗口范围}">
+                                    Click="BtnSetMoveArea_Window_Click" Content="{ll:Str 设为窗口范围}">
                                     <Button.ToolTip>
                                         <TextBlock>
                                             <TextBlock Text="{ll:Str 使用设置窗口框选范围后点击}"/>
