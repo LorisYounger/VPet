@@ -645,13 +645,31 @@ namespace VPet_Simulator.Windows
             UpdateMoveAreaText();
         }
 
+        private static System.Reflection.FieldInfo leftGetter, topGetter;
         private void BtnSetMoveArea_Window_Click(object sender, RoutedEventArgs e)
         {
             var mwCtrl = mw.Core.Controller as MWController;
-            mwCtrl.ScreenBorder = new System.Drawing.Rectangle(
-                (int)Left, (int)Top, 
-                (int)Width, (int)Height
-            );
+            System.Drawing.Rectangle bounds;
+            if (WindowState == WindowState.Maximized)
+            {
+                // 反射捞一下左上角
+                if (leftGetter == null) leftGetter = typeof(Window).GetField("_actualLeft", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                if (topGetter == null) topGetter = typeof(Window).GetField("_actualTop", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var actualLeft = Convert.ToInt32(leftGetter.GetValue(this)); 
+                var actualTop = Convert.ToInt32(topGetter.GetValue(this));
+                bounds = new System.Drawing.Rectangle(
+                    actualLeft, actualTop,
+                    (int)ActualWidth, (int)ActualHeight
+                );
+            }
+            else
+            {
+                bounds = new System.Drawing.Rectangle(
+                    (int)Left, (int)Top,
+                    (int)Width, (int)Height
+                );
+            }
+            mwCtrl.ScreenBorder = bounds;
             UpdateMoveAreaText();
         }
 
