@@ -70,7 +70,7 @@ namespace VPet_Simulator.Windows
                     if (food != null)
                     {
                         food.LoadEatTimeSource(mw);
-                        food.NotifyOfPropertyChange("Eattime");
+                        food.NotifyOfPropertyChange("Description");
                     }
                 }
             }
