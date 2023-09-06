@@ -433,7 +433,7 @@ namespace VPet_Simulator.Windows
             Set.PetData.SetDateTime("buytime_" + item.Name, now.AddHours(eattimes));
             //通知
             item.LoadEatTimeSource(this);
-            item.NotifyOfPropertyChange("Eattime");
+            item.NotifyOfPropertyChange("Description");
 
             Core.Save.Money -= item.Price;
             //统计
