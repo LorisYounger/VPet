@@ -21,7 +21,7 @@ namespace VPet_Simulator.Windows.Interface
                (work.Feeling >= 0 ? 1 : -1) * Math.Pow((work.Type == Work.WorkType.Play ? -1 : 1) * work.Feeling * 2 + 1, 2) / 12) *
                 (Math.Pow(work.LevelLimit / 2 + 1, 0.5) / 4 + 1) - 0.5;
             if (spend <= 0)
-                return false;
+                return true;
             var get = (work.MoneyBase + work.MoneyLevel * 10) * (work.MoneyLevel + 1) * (1 + work.FinishBonus / 2);
             if (work.Type != Work.WorkType.Work)
             {
