@@ -212,6 +212,8 @@ namespace VPet_Simulator.Windows
             voicetimer.Tick += Voicetimer_Tick;
 
             AllowChange = true;
+
+            UpdateMoveAreaText();
         }
 
         private void Voicetimer_Tick(object sender, EventArgs e)
@@ -615,6 +617,61 @@ namespace VPet_Simulator.Windows
             }
         }
 
+        private void UpdateMoveAreaText()
+        {
+            var mwCtrl = mw.Core.Controller as MWController;
+            if (mwCtrl.IsPrimaryScreen)
+            {
+                textMoveArea.Text = "主屏幕".Translate();
+                return;
+            }
+            var rect = mwCtrl.ScreenBorder;
+            textMoveArea.Text = $"X:{rect.X};Y:{rect.Y};W:{rect.Width};H:{rect.Height}";
+        }
+
+        private void BtnSetMoveArea_Default_Click(object sender, RoutedEventArgs e)
+        {
+            var mwCtrl = mw.Core.Controller as MWController;
+            mwCtrl.ResetScreenBorder();
+            UpdateMoveAreaText();
+        }
+
+        private void BtnSetMoveArea_DetectScreen_Click(object sender, RoutedEventArgs e)
+        {
+            var windowInteropHelper = new System.Windows.Interop.WindowInteropHelper(mw);
+            var currentScreen = System.Windows.Forms.Screen.FromHandle(windowInteropHelper.Handle);
+            var mwCtrl = mw.Core.Controller as MWController;
+            mwCtrl.ScreenBorder = currentScreen.Bounds;
+            UpdateMoveAreaText();
+        }
+
+        private static System.Reflection.FieldInfo leftGetter, topGetter;
+        private void BtnSetMoveArea_Window_Click(object sender, RoutedEventArgs e)
+        {
+            var mwCtrl = mw.Core.Controller as MWController;
+            System.Drawing.Rectangle bounds;
+            if (WindowState == WindowState.Maximized)
+            {
+                // 反射捞一下左上角
+                if (leftGetter == null) leftGetter = typeof(Window).GetField("_actualLeft", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                if (topGetter == null) topGetter = typeof(Window).GetField("_actualTop", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var actualLeft = Convert.ToInt32(leftGetter.GetValue(this)); 
+                var actualTop = Convert.ToInt32(topGetter.GetValue(this));
+                bounds = new System.Drawing.Rectangle(
+                    actualLeft, actualTop,
+                    (int)ActualWidth, (int)ActualHeight
+                );
+            }
+            else
+            {
+                bounds = new System.Drawing.Rectangle(
+                    (int)Left, (int)Top,
+                    (int)Width, (int)Height
+                );
+            }
+            mwCtrl.ScreenBorder = bounds;
+            UpdateMoveAreaText();
+        }
 
         private void hyper_moreInfo(object sender, RoutedEventArgs e)
         {

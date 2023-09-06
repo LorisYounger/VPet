@@ -1,4 +1,7 @@
-﻿using VPet_Simulator.Core;
+﻿using System.Windows.Forms;
+using System.Windows.Interop;
+using System.Drawing;
+using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows
 {
@@ -11,26 +14,76 @@ namespace VPet_Simulator.Windows
         public MWController(MainWindow mw)
         {
             this.mw = mw;
+            _isPrimaryScreen = mw.Set.MoveAreaDefault;
+            _screenBorder = mw.Set.MoveArea;
         }
 
-        public double GetWindowsDistanceDown()
+        private Rectangle _screenBorder;
+        private bool _isPrimaryScreen = true;
+        public bool IsPrimaryScreen
         {
-            return mw.Dispatcher.Invoke(() => System.Windows.SystemParameters.PrimaryScreenHeight - mw.Top - mw.Height);
+            get
+            {
+                return _isPrimaryScreen;
+            }
+            private set
+            {
+                _isPrimaryScreen = value;
+                mw.Set.MoveAreaDefault = value;
+            }
+        }
+        public Rectangle ScreenBorder
+        {
+            get
+            {
+                return _screenBorder;
+            }
+            set
+            {
+                _screenBorder = value;
+                mw.Set.MoveArea = value;
+                IsPrimaryScreen = false;
+            }
+        }
+        public void ResetScreenBorder()
+        {
+            IsPrimaryScreen = true;
         }
 
         public double GetWindowsDistanceLeft()
         {
-            return mw.Dispatcher.Invoke(() => mw.Left);
-        }
-
-        public double GetWindowsDistanceRight()
-        {
-            return mw.Dispatcher.Invoke(() => System.Windows.SystemParameters.PrimaryScreenWidth - mw.Left - mw.Width);
+            return mw.Dispatcher.Invoke(() =>
+            {
+                if (IsPrimaryScreen) return mw.Left;
+                return mw.Left - ScreenBorder.X;
+            });
         }
 
         public double GetWindowsDistanceUp()
         {
-            return mw.Dispatcher.Invoke(() => mw.Top);
+            return mw.Dispatcher.Invoke(() =>
+            {
+                if (IsPrimaryScreen) return mw.Top;
+                return mw.Top - ScreenBorder.Y;
+            });
+        }
+
+        public double GetWindowsDistanceRight()
+        {
+            return mw.Dispatcher.Invoke(() =>
+            {
+                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenWidth - mw.Left - mw.Width;
+                return ScreenBorder.Width + ScreenBorder.X - mw.Left - mw.Width;
+            });
+        }
+
+        public double GetWindowsDistanceDown()
+        {
+            return mw.Dispatcher.Invoke(() =>
+            {
+                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenHeight - mw.Top - mw.Height;
+                return ScreenBorder.Height + ScreenBorder.Y - mw.Top - mw.Height;
+            });
         }
 
         public void MoveWindows(double X, double Y)
