@@ -6,16 +6,16 @@ Mod制作器#Mod Maker:|
 当前移动区域：#The current movement area::|
 主屏幕#Home Screen:|
 重置为主屏#Reset to home screen:|
-设置桌宠只在主屏幕进行移动#Set table favor to move only on the home screen:|
+设置桌宠只在主屏幕进行移动#Set VPET to move only on the home screen:|
 设为当前屏幕#Set to current screen:|
-设置桌宠只在当前桌宠所在的屏幕范围进行移动#Sets the table favor to move only within the current screen range of the table favor.:|
+设置桌宠只在当前桌宠所在的屏幕范围进行移动#Sets the VPET to move only within the current screen range of the VPET.:|
 自定移动范围#Customize range of movement:|
 手动设置桌宠可移动范围#Manually set the range of movement for your favorite:|
 work#Work:|
-桌宠移动范围#Move range of table favor:|
+桌宠移动范围#Move range of VPET:|
 鼠标左键拖动范围\r调整边框调整大小#Left mouse button to drag the range \r adjust the border to adjust the size:|
 设置当前范围为移动范围#Set the current range as the moving range:|
-未找到可播放动画, 已停止运行桌宠模块#No playable animation found, Stopped running Table Favor Module:|
+未找到可播放动画, 已停止运行桌宠模块#No playable animation found, Stopped running VPET Module:|
 工作取消#Job canceled.:|
 {2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟#{2}Completed, accumulated {0:f2} experience\n Total time spent {1}minutes.:|
 EXP#EXP:|
