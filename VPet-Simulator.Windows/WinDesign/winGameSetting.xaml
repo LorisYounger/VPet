@@ -502,9 +502,11 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="{ll:Str '当前移动区域：'}" />
-                                <TextBlock x:Name="textMoveArea" Grid.Column="1" Grid.ColumnSpan="2"
-                                        Text="{ll:Str '主屏幕'}" />
+                                <WrapPanel Grid.ColumnSpan="3" >
+                                    <TextBlock Text="{ll:Str '当前移动区域：'}" />
+                                    <TextBlock x:Name="textMoveArea" Text="{ll:Str '主屏幕'}" />
+                                </WrapPanel>
+                                
                                 <Button x:Name="BtnSetMoveArea_Default" Grid.Row="1" Grid.Column="0" Margin="5,5,5,5"
                                         Padding="1" pu:ButtonHelper.CornerRadius="4"
                                         Background="{DynamicResource SecondaryLight}"
