@@ -235,13 +235,18 @@ namespace VPet_Simulator.Windows
         {
             if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"))
             {
-                var latestsave = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP")
-                    .GetFiles("*.lps").OrderByDescending(x => x.LastWriteTime).FirstOrDefault();
+                var ds = new List<string>(Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
+                {
+                    if (int.TryParse(x.Split('_')[1], out int i))
+                        return i;
+                    return 0;
+                }).ToList();
+                var latestsave = ds.LastOrDefault();
                 if (latestsave != null)
                 {
                     try
                     {
-                        if (GameLoad(new Line(File.ReadAllText(latestsave.FullName))))
+                        if (GameLoad(new Line(File.ReadAllText(latestsave))))
                             return;
                         MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
                     }

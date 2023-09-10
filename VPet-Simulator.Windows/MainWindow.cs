@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -180,7 +181,12 @@ namespace VPet_Simulator.Windows
 
                 if (Core != null && Core.Save != null)
                 {
-                    var ds = new List<string>(Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"));
+                    var ds = new List<string>(Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
+                    {
+                        if (int.TryParse(x.Split('_')[1], out int i))
+                            return i;
+                        return 0;
+                    }).ToList();
                     while (ds.Count > Set.BackupSaveMaxNum)
                     {
                         File.Delete(ds[0]);
