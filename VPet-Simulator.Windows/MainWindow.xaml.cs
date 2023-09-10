@@ -130,11 +130,12 @@ namespace VPet_Simulator.Windows
                 var modpath = new DirectoryInfo(ModPath + @"\0000_core\pet\vup");
                 if (!modpath.Exists)
                 {
-                    MessageBox.Show("缺少模组Core,无法启动桌宠".Translate(), "启动错误".Translate(), MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("缺少模组Core,无法启动桌宠", "启动错误", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(0);
                     return;
                 }
                 Closed += ForceClose;
+
                 Task.Run(GameLoad);
             }
             catch (Exception e)
@@ -467,6 +468,8 @@ namespace VPet_Simulator.Windows
             };
             MusicTimer.Elapsed += MusicTimer_Elapsed;
 
+
+
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
             await Dispatcher.InvokeAsync(new Action(() =>
             {
@@ -751,7 +754,17 @@ namespace VPet_Simulator.Windows
 
             }));
 
-
+            //游戏提示
+            if (Set["SingleTips"][(gint)"open"] == 0 && Set.StartUPBoot == true && Set.StartUPBootSteam == true)
+            {
+                await Dispatcher.InvokeAsync(new Action(() =>
+                {
+                    MessageBoxX.Show("检测到您开启了开机启动, 以下是开机启动相关提示信息: (仅显示一次)".Translate() + "\n------\n" +
+                         "游戏开机启动的实现方式是创建快捷方式,不是注册表,更健康,所以游戏卸了也不知道\n如果游戏打不开,可以去这里手动删除游戏开机启动快捷方式:\n%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\".Translate()
+                      , "关于卸载不掉的问题是因为开启了开机启动".Translate(), Panuon.WPF.UI.MessageBoxIcon.Info);
+                    Set["SingleTips"][(gint)"open"] = 1;
+                }));
+            }
         }
 
 

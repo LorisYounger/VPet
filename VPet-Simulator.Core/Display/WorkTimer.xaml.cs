@@ -86,7 +86,7 @@ namespace VPet_Simulator.Core
                     if (nowWork.Type == Work.WorkType.Work)
                         tNumberUnit.Text = LocalizeCore.Translate("钱");
                     else
-                        tNumberUnit.Text = LocalizeCore.Translate("EXP");
+                        tNumberUnit.Text = "EXP";
                     break;
                 case 3:
                     break;

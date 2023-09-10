@@ -432,45 +432,5 @@ namespace VPet_Simulator.Core
                     m.WorkTimer.Stop(() => m.DisplaySleep(true));
                 }
         }
-
-        //private void Study_Click(object sender, RoutedEventArgs e)
-        //{
-        //    this.Visibility = Visibility.Collapsed;
-        //    if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
-        //        if (m.State == Main.WorkingState.Study)
-        //            m.WorkTimer.Stop();
-        //        else m.WorkTimer.Start(Main.WorkingState.Study);
-        //    else
-        //        MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行学习", m.Core.Save.Name), LocalizeCore.Translate("工作取消"));
-        //}
-
-        //private void Work1_Click(object sender, RoutedEventArgs e)
-        //{
-        //    this.Visibility = Visibility.Collapsed;
-        //    if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
-        //        if (m.State == Main.WorkingState.WorkONE)
-        //            m.WorkTimer.Stop();
-        //        else m.WorkTimer.Start(Main.WorkingState.WorkONE);
-        //    else
-        //        MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行工作{1}", m.Core.Save.Name,
-        //            m.Core.Graph.GraphConfig.StrGetString("work1")), LocalizeCore.Translate("工作取消"));
-        //}
-
-        //private void Work2_Click(object sender, RoutedEventArgs e)
-        //{
-        //    this.Visibility = Visibility.Collapsed;
-
-        //    if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
-        //        if (!m.Core.Controller.EnableFunction || m.Core.Save.Level >= 10)
-        //            if (m.State == Main.WorkingState.WorkTWO)
-        //                m.WorkTimer.Stop();
-        //            else m.WorkTimer.Start(Main.WorkingState.WorkTWO);
-        //        else
-        //            MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/10\n无法进行工作{1}", m.Core.Save.Level.ToString()
-        //                , m.Core.Graph.GraphConfig.StrGetString("work2")), LocalizeCore.Translate("工作取消"));
-        //    else
-        //        MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行工作{1}", m.Core.Save.Name,
-        //           m.Core.Graph.GraphConfig.StrGetString("work2")), LocalizeCore.Translate("工作取消"));
-        //}
     }
 }
