@@ -130,7 +130,7 @@ namespace VPet_Simulator.Windows
                 var modpath = new DirectoryInfo(ModPath + @"\0000_core\pet\vup");
                 if (!modpath.Exists)
                 {
-                    MessageBox.Show("缺少模组Core,无法启动桌宠", "启动错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBoxX.Show("缺少模组Core,无法启动桌宠\nMissing module Core, can't start up", "启动错误 boot error", Panuon.WPF.UI.MessageBoxIcon.Error);
                     Environment.Exit(0);
                     return;
                 }
@@ -144,7 +144,7 @@ namespace VPet_Simulator.Windows
               "游戏或者MOD".Translate() : $"MOD({CoreMOD.NowLoading})") +
               "导致的\n如有可能请发送 错误信息截图和引发错误之前的操作 给开发者:service@exlb.net\n感谢您对游戏开发的支持\n".Translate()
               + e.ToString();
-                MessageBox.Show(errstr, "游戏致命性错误".Translate() + ' ' + "启动错误".Translate(), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxX.Show(errstr, "游戏致命性错误".Translate() + ' ' + "启动错误".Translate(), Panuon.WPF.UI.MessageBoxIcon.Error);
                 Environment.Exit(0);
             }
         }
