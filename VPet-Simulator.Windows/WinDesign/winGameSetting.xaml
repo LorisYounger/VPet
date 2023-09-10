@@ -529,7 +529,7 @@
                                         Padding="1" pu:ButtonHelper.CornerRadius="4"
                                         Background="{DynamicResource SecondaryLight}"
                                         Click="BtnSetMoveArea_Default_Click" Content="{ll:Str 重置为主屏}"
-                                        ToolTip="{ll:Str `设置桌宠只在主屏幕进行移动`}" />
+                                        ToolTip="{ll:Str '设置桌宠只在主屏幕进行移动'}" />
                                 <Button x:Name="BtnSetMoveArea_DetectScreen" Grid.Row="1" Grid.Column="1"
                                         Margin="5,5,5,5" Padding="1" pu:ButtonHelper.CornerRadius="4"
                                         Background="{DynamicResource SecondaryLight}"

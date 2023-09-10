@@ -617,7 +617,7 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        private void UpdateMoveAreaText()
+        public void UpdateMoveAreaText()
         {
             var mwCtrl = mw.Core.Controller as MWController;
             if (mwCtrl.IsPrimaryScreen)
@@ -645,32 +645,20 @@ namespace VPet_Simulator.Windows
             UpdateMoveAreaText();
         }
 
-        private static System.Reflection.FieldInfo leftGetter, topGetter;
+        internal static System.Reflection.FieldInfo leftGetter, topGetter;
         private void BtnSetMoveArea_Window_Click(object sender, RoutedEventArgs e)
         {
+            var wma = new winMoveArea(mw);
             var mwCtrl = mw.Core.Controller as MWController;
-            System.Drawing.Rectangle bounds;
-            if (WindowState == WindowState.Maximized)
+            if (!mwCtrl.IsPrimaryScreen)
             {
-                // 反射捞一下左上角
-                if (leftGetter == null) leftGetter = typeof(Window).GetField("_actualLeft", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (topGetter == null) topGetter = typeof(Window).GetField("_actualTop", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                var actualLeft = Convert.ToInt32(leftGetter.GetValue(this)); 
-                var actualTop = Convert.ToInt32(topGetter.GetValue(this));
-                bounds = new System.Drawing.Rectangle(
-                    actualLeft, actualTop,
-                    (int)ActualWidth, (int)ActualHeight
-                );
-            }
-            else
-            {
-                bounds = new System.Drawing.Rectangle(
-                    (int)Left, (int)Top,
-                    (int)Width, (int)Height
-                );
-            }
-            mwCtrl.ScreenBorder = bounds;
-            UpdateMoveAreaText();
+                var rect = mwCtrl.ScreenBorder;
+                wma.Width = rect.Width;
+                wma.Height = rect.Height;
+                wma.Left = rect.X;
+                wma.Top = rect.Y;
+            }            
+            wma.ShowDialog();
         }
 
         private void hyper_moreInfo(object sender, RoutedEventArgs e)
