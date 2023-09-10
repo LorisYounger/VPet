@@ -121,9 +121,18 @@ namespace VPet_Simulator.Windows
                                     var name = lps.First().Info;
                                     var p = mw.Pets.FirstOrDefault(x => x.Name == name);
                                     if (p == null)
-                                        mw.Pets.Add(new PetLoader(lps, di));
+                                    {
+                                        p = new PetLoader(lps, di);
+                                        if (p.Config.Works.Count > 0)
+                                            Tag.Add("work");
+                                        mw.Pets.Add(p);
+                                    }
                                     else
                                     {
+                                        if (lps.FindAllLine("work").Length >= 0)
+                                        {
+
+                                        }
                                         p.path.Add(di.FullName + "\\" + lps.First()["path"].Info);
                                         p.Config.Set(lps);
                                     }
