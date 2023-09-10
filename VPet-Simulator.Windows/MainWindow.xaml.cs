@@ -120,6 +120,10 @@ namespace VPet_Simulator.Windows
                 {
                     Topmost = true;
                 }
+                if (Set.HitThrough)
+                {
+                    SetTransparentHitThrough();
+                }
 
 
                 //不存在就关掉
