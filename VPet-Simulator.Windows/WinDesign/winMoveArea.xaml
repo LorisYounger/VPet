@@ -1,0 +1,42 @@
+﻿<pu:WindowX x:Class="VPet_Simulator.Windows.winMoveArea"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" pu:WindowXCaption.Height="0"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Topmost="True" AllowsTransparency="True"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" WindowStyle="None" Title="winMoveArea"
+        Height="450" Width="450" Background="{DynamicResource PrimaryTrans4}" ResizeMode="CanResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height=".3*" />
+            <RowDefinition Height=".7*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width=".7*" />
+            <ColumnDefinition Width=".3*" />
+        </Grid.ColumnDefinitions>
+        <Border Background="{DynamicResource PrimaryTrans4}" PreviewMouseDown="Grid_PreviewMouseDown"
+                Grid.ColumnSpan="4" Grid.RowSpan="6" BorderBrush="{DynamicResource DARKPrimary}" BorderThickness="4" />
+        <Viewbox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" PreviewMouseDown="Grid_PreviewMouseDown">
+            <Label Content="{ll:Str '桌宠移动范围'}" Background="{x:Null}" />
+        </Viewbox>
+        <Viewbox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                PreviewMouseDown="Grid_PreviewMouseDown">
+            <Label Content="{ll:Str '鼠标左键拖动范围\&#13;调整边框调整大小'}" Background="{x:Null}" />
+        </Viewbox>
+        <Viewbox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Button Style="{DynamicResource ThemedButtonStyle}" Content="{ll:Str '设置当前范围为移动范围'}" MinWidth="120"
+                    Click="Save_Click" />
+        </Viewbox>
+        <Viewbox Grid.Column="3" HorizontalAlignment="Right">
+            <Button Style="{DynamicResource ThemedButtonStyle}" Content="X" Click="Close_Click" />
+        </Viewbox>
+    </Grid>
+</pu:WindowX>
