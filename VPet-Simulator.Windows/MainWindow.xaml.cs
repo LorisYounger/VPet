@@ -44,6 +44,7 @@ namespace VPet_Simulator.Windows
 #else
             PNGAnimation.MaxLoadNumber = 20;
 #endif
+            ExtensionValue.BaseDirectory = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName;
 
             LocalizeCore.StoreTranslation = true;
             CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
@@ -70,9 +71,9 @@ namespace VPet_Simulator.Windows
             try
             {
                 //加载游戏设置
-                if (new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps").Exists)
+                if (new FileInfo(ExtensionValue.BaseDirectory + @"\Setting.lps").Exists)
                 {
-                    Set = new Setting(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps"));
+                    Set = new Setting(File.ReadAllText(ExtensionValue.BaseDirectory + @"\Setting.lps"));
                 }
                 else
                     Set = new Setting("Setting#VPET:|\n");
@@ -92,8 +93,8 @@ namespace VPet_Simulator.Windows
                 _dwmEnabled = Win32.Dwmapi.DwmIsCompositionEnabled();
                 _hwnd = new WindowInteropHelper(this).EnsureHandle();
 
-                //if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json"))
-                //    CGPTClient = ChatGPTClient.Load(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\ChatGPTSetting.json"));
+                //if (File.Exists(ExtensionValue.BaseDirectory + @"\ChatGPTSetting.json"))
+                //    CGPTClient = ChatGPTClient.Load(File.ReadAllText(ExtensionValue.BaseDirectory + @"\ChatGPTSetting.json"));
                 //this.Width = 400 * ZoomSlider.Value;
                 //this.Height = 450 * ZoomSlider.Value;
                 InitializeComponent();
@@ -233,9 +234,9 @@ namespace VPet_Simulator.Windows
 
         public void LoadLatestSave(string petname)
         {
-            if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"))
+            if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
             {
-                var ds = new List<string>(Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
+                var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\BackUP", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
                 {
                     if (int.TryParse(x.Split('_')[1], out int i))
                         return i;
@@ -357,9 +358,9 @@ namespace VPet_Simulator.Windows
             else//新玩家,默认设置为
                 Set["CGPT"][(gstr)"type"] = "LB";
 
-            if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\UserData") && !Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"))
+            if (Directory.Exists(ExtensionValue.BaseDirectory + @"\UserData") && !Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
             {
-                Directory.Move(AppDomain.CurrentDomain.BaseDirectory + @"\UserData", AppDomain.CurrentDomain.BaseDirectory + @"\BackUP");
+                Directory.Move(ExtensionValue.BaseDirectory + @"\UserData", ExtensionValue.BaseDirectory + @"\BackUP");
             }
 
             //加载数据合理化:食物
@@ -385,10 +386,10 @@ namespace VPet_Simulator.Windows
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏存档".Translate()));
             //加载存档
             Core.Controller = new MWController(this);
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
+            if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
                 try
                 {
-                    if (!GameLoad(new LpsDocument(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps")).First()))
+                    if (!GameLoad(new LpsDocument(File.ReadAllText(ExtensionValue.BaseDirectory + @"\Save.lps")).First()))
                     {
                         //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
                         LoadLatestSave(petloader.PetName);
@@ -582,11 +583,11 @@ namespace VPet_Simulator.Windows
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
                 {
                     if (LocalizeCore.CurrentCulture == "zh-Hans")
-                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
+                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
                     else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_zht.html");
+                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
                     else
-                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_en.html");
+                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
                 });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板".Translate(), () =>
@@ -648,11 +649,11 @@ namespace VPet_Simulator.Windows
                 m_menu.MenuItems.Add(new MenuItem("操作教程".Translate(), (x, y) =>
                 {
                     if (LocalizeCore.CurrentCulture == "zh-Hans")
-                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
+                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
                     else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_zht.html");
+                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
                     else
-                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_en.html");
+                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
                 }));
                 m_menu.MenuItems.Add(new MenuItem("重置位置与状态".Translate(), (x, y) =>
                 {
@@ -693,15 +694,15 @@ namespace VPet_Simulator.Windows
 
                 HashCheck = hashCheck;
 
-                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 6, 20))
+                if (File.Exists(ExtensionValue.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 6, 20))
                 {
                     Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
                     if (LocalizeCore.CurrentCulture == "zh-Hans")
-                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial.html");
+                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
                     else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_zht.html");
+                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
                     else
-                        ExtensionSetting.StartURL(AppDomain.CurrentDomain.BaseDirectory + @"\Tutorial_en.html");
+                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
                 }
                 if (!Set["SingleTips"].GetBool("helloworld"))
                 {

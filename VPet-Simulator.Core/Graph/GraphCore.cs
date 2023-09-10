@@ -31,7 +31,7 @@ namespace VPet_Simulator.Core
             Resolution = resolution;
         }
 
-        public static string CachePath = AppDomain.CurrentDomain.BaseDirectory + @"\cache";
+        public static string CachePath = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName + @"\cache";
 
         /// <summary>
         /// 图像名字字典: 动画类型->动画名字
