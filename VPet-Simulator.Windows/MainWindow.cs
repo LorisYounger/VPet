@@ -174,14 +174,14 @@ namespace VPet_Simulator.Windows
                     //Set.Statistics[(gint)"stat_time"] = (int)(DateTime.Now - timecount).TotalMinutes;
                     //timecount = DateTime.Now;
                 }
-                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Setting.lps", Set.ToString());
+                File.WriteAllText(ExtensionValue.BaseDirectory + @"\Setting.lps", Set.ToString());
 
-                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"))
-                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP");
+                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
+                    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\BackUP");
 
                 if (Core != null && Core.Save != null)
                 {
-                    var ds = new List<string>(Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
+                    var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\BackUP", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
                     {
                         if (int.TryParse(x.Split('_')[1], out int i))
                             return i;
@@ -192,11 +192,11 @@ namespace VPet_Simulator.Windows
                         File.Delete(ds[0]);
                         ds.RemoveAt(0);
                     }
-                    if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + $"\\BackUP\\Save_{st}.lps"))
-                        File.Delete(AppDomain.CurrentDomain.BaseDirectory + $"\\BackUP\\Save_{st}.lps");
+                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\BackUP\\Save_{st}.lps"))
+                        File.Delete(ExtensionValue.BaseDirectory + $"\\BackUP\\Save_{st}.lps");
 
-                    if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps"))
-                        File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", AppDomain.CurrentDomain.BaseDirectory + $"\\BackUP\\Save_{st}.lps");
+                    if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
+                        File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + $"\\BackUP\\Save_{st}.lps");
                     var l = Core.Save.ToLine();
                     if (HashCheck)
                     {
@@ -204,7 +204,7 @@ namespace VPet_Simulator.Windows
                     }
                     else
                         l[(gint)"hash"] = -1;
-                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\Save.lps", l.ToString());
+                    File.WriteAllText(ExtensionValue.BaseDirectory + @"\Save.lps", l.ToString());
                 }
             }
         }

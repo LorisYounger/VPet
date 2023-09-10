@@ -1,8 +1,12 @@
-﻿using System;
+﻿using LinePutScript.Localization.WPF;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using static VPet_Simulator.Core.GraphHelper;
 
 namespace VPet_Simulator.Windows.Interface
@@ -30,5 +34,12 @@ namespace VPet_Simulator.Windows.Interface
             var rel = get / spend;
             return rel > 2; // 推荐rel为1.0-1.4之间 超过2.0就是超模
         }
+    }
+    public static class ExtensionValue
+    {
+        /// <summary>
+        /// 当前运行目录
+        /// </summary>
+        public static string BaseDirectory = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName;
     }
 }

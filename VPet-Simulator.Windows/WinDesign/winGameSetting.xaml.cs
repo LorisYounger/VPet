@@ -844,9 +844,9 @@ namespace VPet_Simulator.Windows
 
                 IWshRuntimeLibrary.IWshShortcut shortcut = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(path);
                 shortcut.Description = "VPet Simulator";
-                shortcut.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                shortcut.WorkingDirectory = ExtensionValue.BaseDirectory;
                 shortcut.TargetPath = shortcutAddress;
-                shortcut.IconLocation = AppDomain.CurrentDomain.BaseDirectory + @"vpeticon.ico";
+                shortcut.IconLocation = ExtensionValue.BaseDirectory + @"vpeticon.ico";
                 try
                 {
                     shortcut.Save();
@@ -1107,9 +1107,9 @@ namespace VPet_Simulator.Windows
                 reloadid = mw.Set.Statistics[(gint)"savetimes"];
                 CBSaveReLoad.SelectedItem = null;
                 CBSaveReLoad.Items.Clear();
-                if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP"))
+                if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
                 {
-                    foreach (var file in new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"\BackUP")
+                    foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\BackUP")
                         .GetFiles().OrderByDescending(x => x.LastWriteTime))
                     {
                         if (file.Extension.ToLower() == ".lps")
@@ -1127,7 +1127,7 @@ namespace VPet_Simulator.Windows
             if (CBSaveReLoad.SelectedItem != null)
             {
                 string txt = (string)CBSaveReLoad.SelectedItem;
-                string path = AppDomain.CurrentDomain.BaseDirectory + @"\BackUP\" + txt + ".lps";
+                string path = ExtensionValue.BaseDirectory + @"\BackUP\" + txt + ".lps";
                 if (File.Exists(path))
                 {
                     try
