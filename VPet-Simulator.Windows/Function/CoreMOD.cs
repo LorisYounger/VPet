@@ -111,8 +111,7 @@ namespace VPet_Simulator.Windows
                     switch (di.Name.ToLower())
                     {
                         case "pet":
-                            //宠物模型
-                            Tag.Add("pet");
+                            //宠物模型                           
                             foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
                             {
                                 LpsDocument lps = new LpsDocument(File.ReadAllText(fi.FullName));
@@ -122,6 +121,7 @@ namespace VPet_Simulator.Windows
                                     var p = mw.Pets.FirstOrDefault(x => x.Name == name);
                                     if (p == null)
                                     {
+                                        Tag.Add("pet");
                                         p = new PetLoader(lps, di);
                                         if (p.Config.Works.Count > 0)
                                             Tag.Add("work");
@@ -131,8 +131,11 @@ namespace VPet_Simulator.Windows
                                     {
                                         if (lps.FindAllLine("work").Length >= 0)
                                         {
-
+                                            Tag.Add("work");
                                         }
+                                        var dis = new DirectoryInfo(di.FullName + "\\" + lps.First()["path"].Info);
+                                        if (dis.Exists && dis.GetDirectories().Length > 0)
+                                            Tag.Add("pet");
                                         p.path.Add(di.FullName + "\\" + lps.First()["path"].Info);
                                         p.Config.Set(lps);
                                     }
