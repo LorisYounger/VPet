@@ -49,7 +49,6 @@ namespace VPet_Simulator.Windows
         Run rMoney;
         public void Show(Food.FoodType type)
         {
-            mw.Topmost = false;
             showeatanm = true;//逃出
             if (_searchTextBox != null)
                 _searchTextBox.Text = "";
@@ -280,7 +279,7 @@ namespace VPet_Simulator.Windows
         public void TryClose()
         {
             IcCommodity.ItemsSource = null;
-            mw.Topmost = mw.Set.TopMost;
+            //mw.Topmost = mw.Set.TopMost;
             Hide();
         }
         private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)

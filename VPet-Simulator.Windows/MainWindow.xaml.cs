@@ -516,7 +516,6 @@ namespace VPet_Simulator.Windows
                 m.Click += (x, y) =>
                 {
                     Main.ToolBar.Visibility = Visibility.Collapsed;
-                    Topmost = false;
                     winSetting.MainTab.SelectedIndex = 5;
                     winSetting.Show();
                 };
@@ -600,7 +599,6 @@ namespace VPet_Simulator.Windows
                 Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板".Translate(), () =>
                 {
                     Main.ToolBar.Visibility = Visibility.Collapsed;
-                    Topmost = false;
                     winSetting.Show();
                 });
 
@@ -674,7 +672,6 @@ namespace VPet_Simulator.Windows
 
                 m_menu.MenuItems.Add(new MenuItem("设置面板".Translate(), (x, y) =>
                 {
-                    Topmost = false;
                     winSetting.Show();
                 }));
                 m_menu.MenuItems.Add(new MenuItem("退出桌宠".Translate(), (x, y) => Close()));
@@ -688,7 +685,6 @@ namespace VPet_Simulator.Windows
                 notifyIcon.Visible = true;
                 notifyIcon.BalloonTipClicked += (a, b) =>
                 {
-                    Topmost = false;
                     winSetting.Show();
                 };
 
