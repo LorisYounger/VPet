@@ -644,7 +644,7 @@ namespace VPet_Simulator.Windows
                 notifyIcon.Text = "虚拟桌宠模拟器".Translate();
                 ContextMenu m_menu;
 
-                if (Set.PetHelper)
+                if (Set.PetHelper || Set.HitThrough)
                     LoadPetHelper();
 
 
