@@ -687,9 +687,21 @@ namespace VPet_Simulator.Windows
                 {
                     winSetting.Show();
                 };
+                if (Set.StartUPBoot == true && !Set["v"][(gbol)"newverstartup"])
+                {//更新到最新版开机启动方式
+                    try
+                    {
+                        winSetting.GenStartUP();
+                    }
+                    catch
+                    {
 
-                //成就和统计 
-                Set.Statistics[(gint)"stat_open_times"]++;
+                    }
+                }
+
+
+                    //成就和统计 
+                    Set.Statistics[(gint)"stat_open_times"]++;
                 Main.MoveTimer.Elapsed += MoveTimer_Elapsed;
                 Main.OnSay += Main_OnSay;
                 Main.Event_TouchHead += Main_Event_TouchHead;
@@ -750,17 +762,18 @@ namespace VPet_Simulator.Windows
 
             }));
 
-            //游戏提示
-            if (Set["SingleTips"][(gint)"open"] == 0 && Set.StartUPBoot == true && Set.StartUPBootSteam == true)
-            {
-                await Dispatcher.InvokeAsync(new Action(() =>
-                {
-                    MessageBoxX.Show("检测到您开启了开机启动, 以下是开机启动相关提示信息: (仅显示一次)".Translate() + "\n------\n" +
-                         "游戏开机启动的实现方式是创建快捷方式,不是注册表,更健康,所以游戏卸了也不知道\n如果游戏打不开,可以去这里手动删除游戏开机启动快捷方式:\n%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\".Translate()
-                      , "关于卸载不掉的问题是因为开启了开机启动".Translate(), Panuon.WPF.UI.MessageBoxIcon.Info);
-                    Set["SingleTips"][(gint)"open"] = 1;
-                }));
-            }
+            ////游戏提示
+            //if (Set["SingleTips"][(gint)"open"] == 0 && Set.StartUPBoot == true && Set.StartUPBootSteam == true)
+            //{
+            //    await Dispatcher.InvokeAsync(new Action(() =>
+            //    {
+            //        MessageBoxX.Show("检测到您开启了开机启动, 以下是开机启动相关提示信息: (仅显示一次)".Translate() + "\n------\n" +
+            //             "游戏开机启动的实现方式是创建快捷方式,不是注册表,更健康,所以游戏卸了也不知道\n如果游戏打不开,可以去这里手动删除游戏开机启动快捷方式:\n%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\".Translate()
+            //          , "关于卸载不掉的问题是因为开启了开机启动".Translate(), Panuon.WPF.UI.MessageBoxIcon.Info);
+            //        Set["SingleTips"][(gint)"open"] = 1;
+            //    }));
+            //}
+           
         }
 
 
