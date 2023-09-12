@@ -116,10 +116,6 @@
       <Project>{dcad838a-1a02-4bdf-962c-fd47c6006d28}</Project>
       <Name>VPet-Simulator.Windows.Interface</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VPet-Simulator.Windows\VPet-Simulator.Windows.csproj">
-      <Project>{b5c2dd17-735f-4f9f-82e4-b8692aec03f1}</Project>
-      <Name>VPet-Simulator.Windows</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

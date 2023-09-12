@@ -22,6 +22,11 @@ namespace VPet.Solution
     {
         public MainWindow()
         {
+            if (App.IsDone)
+            {
+                Close();
+                return;
+            }
             InitializeComponent();
         }
     }
