@@ -61,4 +61,4 @@ food:|name#芝士焗虾:|type#Meal:|Exp#100:|Strength#80:|StrengthFood#70:|Feeli
 food:|name#纸包鸡:|type#Meal:|Exp#80:|Strength#85:|StrengthFood#75:|Feeling#75:|price#35.5:|graph#eat:|desc#纸包鸡包纸包鸡包鸡包纸:|
 food:|name#炸鸡腿:|type#Meal:|Exp#40:|Strength#40:|StrengthFood#40:|Feeling#50:|price#18.5:|graph#eat:|desc#你每吃一个炸鸡腿，就有0.5只鸡受到伤害。保护鸡鸡，从一次吃两个炸鸡腿做起！:|
 food:|name#汉堡:|type#Meal:|Exp#40:|Strength#60:|StrengthFood#60:|Feeling#50:|price#23.0:|graph#eat:|desc#还想要汉O王？这价格不是华O士已经对你很好了。:|
-food:|name#地球:|type#Functional:|Exp#-60:|Strength#-60:|StrengthDrink#75:|StrengthFood#75:|Likability#-1:|price#1.5:|graph#eat:|desc#没钱也能吃,可以用来拯救存档(饥饿/口渴不足), 没事别吃这个:|
+food:|name#地球:|type#Functional:|Exp#-60:|Strength#-60:|StrengthDrink#75:|StrengthFood#75:|Likability#-1:|price#0:|graph#eat:|desc#没钱也能吃,可以用来拯救存档(饥饿/口渴不足), 没事别吃这个:|

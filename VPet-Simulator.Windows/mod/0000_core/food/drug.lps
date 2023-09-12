@@ -1,4 +1,4 @@
-food:|name#太阳系:|type#Drug:|Exp#-180:|Strength#-100:|Likability#-4:|Health#50:|Feeling#0:|price#-7.0:|graph#eat:|desc#没钱也能吃,可以用来拯救存档(生病), 没事别吃这个:|
+food:|name#太阳系:|type#Drug:|Exp#-180:|Strength#-100:|Likability#-4:|Health#50:|Feeling#0:|price#0:|graph#eat:|desc#没钱也能吃,可以用来拯救存档(生病), 没事别吃这个:|
 food:|name#维生素C含片:|type#Drug:|Exp#40:|Health#10:|Feeling#0:|price#16.5:|graph#eat:|desc#本产品为保健品不能代替药品:|
 food:|name#钙片:|type#Drug:|Exp#80:|Strength#20:|StrengthFood#1:|Health#10:|Feeling#0:|price#24.5:|graph#eat:|desc#郑重声明，本产品与同名影视产品没有一点关系。:|
 food:|name#脑黑金:|type#Drug:|Exp#480:|Strength#20:|Health#15:|Feeling#-25:|price#94.5:|graph#eat:|desc#过年过节不收礼！__________！(3分):|

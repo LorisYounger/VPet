@@ -856,12 +856,12 @@ namespace VPet_Simulator.Windows
                 if (MessageBoxX.Show("该游戏随着开机启动该程序\r如需卸载游戏\r请关闭该选项".Translate() + "\n------\n" + "我已确认,并在卸载游戏前会关闭该功能".Translate(), "开机启动重要消息".Translate(),
                     MessageBoxButton.YesNo, MessageBoxIcon.Warning) != MessageBoxResult.Yes)
                     return;
-                else
-                {
-                    mw.Set["SingleTips"][(gint)"open"] = 1;
-                    MessageBoxX.Show("游戏开机启动的实现方式是创建快捷方式,不是注册表,更健康,所以游戏卸了也不知道\n如果游戏打不开,可以去这里手动删除游戏开机启动快捷方式:\n%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\".Translate()
-                        , "关于卸载不掉的问题是因为开启了开机启动".Translate(), MessageBoxIcon.Info);
-                }
+                //else
+                //{
+                //    mw.Set["SingleTips"][(gint)"open"] = 1;
+                //    MessageBoxX.Show("游戏开机启动的实现方式是创建快捷方式,不是注册表,更健康,所以游戏卸了也不知道\n如果游戏打不开,可以去这里手动删除游戏开机启动快捷方式:\n%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\".Translate()
+                //        , "关于卸载不掉的问题是因为开启了开机启动".Translate(), MessageBoxIcon.Info);
+                //}
 
             mw.Set.StartUPBoot = StartUpBox.IsChecked == true;
             GenStartUP();
