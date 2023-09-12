@@ -222,7 +222,7 @@ namespace VPet_Simulator.Windows
             }
             if (showeatanm)
             {//显示动画
-                showeatanm = false;                
+                showeatanm = false;
                 mw.Main.Display(item.GetGraph(), item.ImageSource, () =>
                 {
                     showeatanm = true;
@@ -338,7 +338,7 @@ namespace VPet_Simulator.Windows
         {
             _puswitchautobuy = sender as Switch;
             _puswitchautobuy.IsChecked = mw.Set.AutoBuy;
-            _puswitchautobuy.Click += Switch_AutoBuy_Checked;
+            _puswitchautobuy.Click += Switch_AutoBuy_Checked;        
         }
         private void Switch_AutoBuy_Checked(object sender, RoutedEventArgs e)
         {
@@ -348,7 +348,31 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show(mw, "余额不足100，无法开启自动购买".Translate(), "更好买".Translate());
                 return;
             }
-            mw.Set.AutoBuy = _puswitchautobuy.IsChecked.Value;
+            if (_puswitchautobuy.IsChecked.Value)
+            {
+                mw.Set.AutoBuy = true;
+                _puswitchautogift.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                mw.Set.AutoBuy = false;                
+                _puswitchautogift.Visibility = Visibility.Collapsed;
+            }
+        }
+        private Switch _puswitchautogift;
+        private void Switch_Loaded_2(object sender, RoutedEventArgs e)
+        {
+            _puswitchautogift = sender as Switch;
+            _puswitchautogift.IsChecked = mw.Set.AutoGift;
+            _puswitchautogift.Click += Switch_AutoGift_Checked;
+            if (mw.Set.AutoBuy)
+            {
+                _puswitchautogift.Visibility = Visibility.Visible;
+            }
+        }
+        private void Switch_AutoGift_Checked(object sender, RoutedEventArgs e)
+        {            
+            mw.Set.AutoGift = _puswitchautogift.IsChecked.Value;
         }
     }
 }
