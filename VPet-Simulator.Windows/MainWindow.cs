@@ -315,6 +315,16 @@ namespace VPet_Simulator.Windows
                     TakeItem(item);
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
+                else if (Core.Save.Feeling < 50)
+                {
+                    food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > 10);
+                    if (food.Count == 0)
+                        return;
+                    var item = food[Function.Rnd.Next(food.Count)];
+                    Core.Save.Money -= item.Price * 0.2;
+                    TakeItem(item);
+                    Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
+                }
             }
             else if (Core.Save.Mode == GameSave.ModeType.Happy || Core.Save.Mode == GameSave.ModeType.Nomal)
             {
