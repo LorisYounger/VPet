@@ -35,6 +35,7 @@ namespace VPet_Simulator.Windows.Interface
             enablefunction = !this["gameconfig"].GetBool("nofunction");
             Statistics = new Statistics(this["statistics"].ToList());
             autobuy = this["gameconfig"].GetBool("autobuy");
+            autogift = this["gameconfig"].GetBool("autogift");
         }
         public override string ToString()
         {
@@ -397,7 +398,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public double MusicCatch
         {
-            get => this["gameconfig"].GetDouble("musiccatch", 0.3); 
+            get => this["gameconfig"].GetDouble("musiccatch", 0.3);
             set => this["gameconfig"].SetDouble("musiccatch", value);
         }
         /// <summary>
@@ -428,6 +429,19 @@ namespace VPet_Simulator.Windows.Interface
             {
                 autobuy = value;
                 this["gameconfig"].SetBool("autobuy", value);
+            }
+        }
+        bool autogift;
+        /// <summary>
+        /// 允许桌宠自动购买礼物
+        /// </summary>
+        public bool AutoGift
+        {
+            get => autogift;
+            set
+            {
+                autogift = value;
+                this["gameconfig"].SetBool("autogift", value);
             }
         }
 
