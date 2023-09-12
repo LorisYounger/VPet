@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using VPet_Simulator.Windows.Interface;
 
 namespace VPet.Solution
 {
@@ -24,10 +26,13 @@ namespace VPet.Solution
                 {
                     case "removestarup":
                         var path = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + @"\VPET_Simulator.lnk";
-                        if(File.Exists(path))
+                        if (File.Exists(path))
                         {
                             File.Delete(path);
-                        }                        
+                        }
+                        return;
+                    case "launchsteam":
+                        Process.Start("steam://rungameid/1920960");
                         return;
                 }
             }

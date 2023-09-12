@@ -812,28 +812,26 @@ namespace VPet_Simulator.Windows
                 return;
             mw.Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
         }
-        private void GenStartUP()
+        public void GenStartUP()
         {
+            mw.Set["v"][(gbol)"newverstartup"] = true;
             var path = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + @"\VPET_Simulator.lnk";
             if (mw.Set.StartUPBoot)
             {
                 if (File.Exists(path))
                     File.Delete(path);
                 IWshRuntimeLibrary.WshShell shell = new IWshRuntimeLibrary.WshShell();
-                string shortcutAddress;
-                if (mw.Set.StartUPBootSteam)
-#if DEMO
-                    shortcutAddress = "steam://rungameid/2293870";
-#else
-                    shortcutAddress = "steam://rungameid/1920960";
-#endif
-                else
-                    shortcutAddress = System.Reflection.Assembly.GetExecutingAssembly().Location;
-
                 IWshRuntimeLibrary.IWshShortcut shortcut = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(path);
+                if (mw.Set.StartUPBootSteam)
+                {
+                    shortcut.TargetPath = ExtensionValue.BaseDirectory + @"\VPet.Solution.exe";
+                    shortcut.Arguments = "launchsteam";
+                }
+                else
+                    shortcut.TargetPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
                 shortcut.Description = "VPet Simulator";
                 shortcut.WorkingDirectory = ExtensionValue.BaseDirectory;
-                shortcut.TargetPath = shortcutAddress;
                 shortcut.IconLocation = ExtensionValue.BaseDirectory + @"vpeticon.ico";
                 try
                 {
@@ -855,7 +853,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             if (StartUpBox.IsChecked == true)
-                if (MessageBoxX.Show("该游戏随着开机启动该程序\r如需卸载游戏\r请关闭该选项".Translate() + "\n------\n" + "我已确认,并在卸载游戏前会关闭该功能".Translate(), "开机启动重要消息".Translate(), 
+                if (MessageBoxX.Show("该游戏随着开机启动该程序\r如需卸载游戏\r请关闭该选项".Translate() + "\n------\n" + "我已确认,并在卸载游戏前会关闭该功能".Translate(), "开机启动重要消息".Translate(),
                     MessageBoxButton.YesNo, MessageBoxIcon.Warning) != MessageBoxResult.Yes)
                     return;
                 else
