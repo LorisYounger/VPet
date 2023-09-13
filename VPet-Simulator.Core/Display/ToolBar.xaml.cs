@@ -196,15 +196,28 @@ namespace VPet_Simulator.Core
                     till.Visibility = Visibility.Collapsed;
                     tfun.Visibility = Visibility.Visible;
                 }
-                pExp.Maximum = m.Core.Save.LevelUpNeed();
+                var max = m.Core.Save.LevelUpNeed();
+                if (max > pExp.Minimum)
+                {
+                    pExp.Maximum = max;
+                }
                 if (m.Core.Save.Exp < 0)
                 {
                     pExp.Minimum = m.Core.Save.Exp;
                 }
                 else
                 {
-                    pExp.Minimum = 0;
+                    var bl = m.Core.Save.Level - 2;
+                    if (bl <= 0)
+                        pExp.Minimum = 0;
+                    else
+                        pExp.Minimum = (int)(Math.Pow((bl) * 10, 2));
                 }
+                if (max < pExp.Minimum)
+                {
+                    pExp.Maximum = max;
+                }
+
                 pExp.Value = m.Core.Save.Exp;
 
                 pStrength.Value = m.Core.Save.Strength;
