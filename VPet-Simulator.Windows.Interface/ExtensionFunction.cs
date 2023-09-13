@@ -32,6 +32,8 @@ namespace VPet_Simulator.Windows.Interface
             var rel = get / spend;
             if (rel < 0)
                 return true;
+            if (Math.Abs(get) > (work.LevelLimit + 4) * 5) //等级获取速率限制
+                return true;
             return rel > 2; // 推荐rel为1.0-1.4之间 超过2.0就是超模
         }
     }
