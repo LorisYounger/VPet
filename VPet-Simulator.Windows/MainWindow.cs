@@ -315,7 +315,7 @@ namespace VPet_Simulator.Windows
                     TakeItem(item);
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
-                else if (Core.Save.Feeling < 50)
+                else if (Set.AutoGift && Core.Save.Feeling < 50)
                 {
                     food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > 10);
                     if (food.Count == 0)
