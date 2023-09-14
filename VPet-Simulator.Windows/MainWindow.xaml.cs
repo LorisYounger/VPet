@@ -122,7 +122,13 @@ namespace VPet_Simulator.Windows
                 }
                 if (Set.HitThrough)
                 {
-                    SetTransparentHitThrough();
+                    if (!Set["v"][(gbol)"HitThrough"])
+                    {
+                        Set["v"][(gbol)"HitThrough"] = true;
+                        Set.HitThrough = false;
+                    }
+                    else
+                        SetTransparentHitThrough();
                 }
 
 
@@ -644,7 +650,7 @@ namespace VPet_Simulator.Windows
                 notifyIcon.Text = "虚拟桌宠模拟器".Translate();
                 ContextMenu m_menu;
 
-                if (Set.PetHelper || Set.HitThrough)
+                if (Set.PetHelper)
                     LoadPetHelper();
 
 
@@ -692,6 +698,7 @@ namespace VPet_Simulator.Windows
                     try
                     {
                         winSetting.GenStartUP();
+                        Set["v"][(gbol)"newverstartup"] = true;
                     }
                     catch
                     {
@@ -700,8 +707,8 @@ namespace VPet_Simulator.Windows
                 }
 
 
-                    //成就和统计 
-                    Set.Statistics[(gint)"stat_open_times"]++;
+                //成就和统计 
+                Set.Statistics[(gint)"stat_open_times"]++;
                 Main.MoveTimer.Elapsed += MoveTimer_Elapsed;
                 Main.OnSay += Main_OnSay;
                 Main.Event_TouchHead += Main_Event_TouchHead;
@@ -773,7 +780,7 @@ namespace VPet_Simulator.Windows
             //        Set["SingleTips"][(gint)"open"] = 1;
             //    }));
             //}
-           
+
         }
 
 
