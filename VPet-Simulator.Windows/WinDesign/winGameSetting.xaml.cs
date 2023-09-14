@@ -1181,6 +1181,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
+            mw.Set["v"][(gbol)"HitThrough"] = true;
             mw.Set.HitThrough = HitThroughBox.IsChecked.Value;
             if (HitThroughBox.IsChecked.Value != mw.HitThrough)
                 mw.SetTransparentHitThrough();
