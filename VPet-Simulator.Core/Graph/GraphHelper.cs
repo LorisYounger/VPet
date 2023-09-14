@@ -101,7 +101,6 @@ namespace VPet_Simulator.Core
             /// 工作名称 已翻译
             /// </summary>
             public string NameTrans => Name.Translate();
-            public string DoingTrans => (Name + "中").Translate();
             /// <summary>
             /// 使用动画名称
             /// </summary>

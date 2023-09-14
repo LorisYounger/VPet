@@ -119,12 +119,12 @@ namespace VPet_Simulator.Core
             else
             {
                 DisplayBorder.Visibility = Visibility.Visible;
-                btnStop.Content = LocalizeCore.Translate("停止") + nowWork.DoingTrans;
+                btnStop.Content = LocalizeCore.Translate("停止") + nowWork.NameTrans;
                 switch (DisplayType)
                 {
                     default:
                     case 0:
-                        tNow.Text = LocalizeCore.Translate("当前已{0}", nowWork.DoingTrans);
+                        tNow.Text = LocalizeCore.Translate("当前已{0}", nowWork.NameTrans);
                         break;
                     case 1:
                         tNow.Text = LocalizeCore.Translate("剩余{0}时间", nowWork.NameTrans);

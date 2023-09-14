@@ -78,11 +78,11 @@ namespace VPet_Simulator.Windows
             {
                 if (mw.Set.PetData[(gbol)"self"])
                 {
-                    MessageBoxX.Show("更好买老顾客大优惠!桌宠的食物钱我来出!\n更好买提示您:$10以下的食物/药品等随便赊账");
+                    MessageBoxX.Show("更好买老顾客大优惠!桌宠的食物钱我来出!\n更好买提示您:$10以下的食物/药品等随便赊账".Translate());
                 }
                 else
                 {
-                    MessageBoxX.Show("看到您囊中羞涩,桌宠拿出了1000块私房钱出来给你");
+                    MessageBoxX.Show("看到您囊中羞涩,桌宠拿出了1000块私房钱出来给你".Translate());
                     mw.Set.PetData[(gbol)"self"] = true;
                     mw.Core.Save.Money += 1000;
                 } 
