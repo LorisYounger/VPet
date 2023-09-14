@@ -73,6 +73,20 @@ namespace VPet_Simulator.Windows
                     }
                 }
             }
+            //没钱了,宠物给你私房钱 (开罗传统)
+            if (mw.Core.Save.Money <= 1)
+            {
+                if (mw.Set.PetData[(gbol)"self"])
+                {
+                    MessageBoxX.Show("更好买老顾客大优惠!桌宠的食物钱我来出!\n更好买提示您:$10以下的食物/药品等随便赊账");
+                }
+                else
+                {
+                    MessageBoxX.Show("看到您囊中羞涩,桌宠拿出了1000块私房钱出来给你");
+                    mw.Set.PetData[(gbol)"self"] = true;
+                    mw.Core.Save.Money += 1000;
+                } 
+            }
 
             Show();
         }
@@ -344,7 +358,7 @@ namespace VPet_Simulator.Windows
         {
             _puswitchautobuy = sender as Switch;
             _puswitchautobuy.IsChecked = mw.Set.AutoBuy;
-            _puswitchautobuy.Click += Switch_AutoBuy_Checked;        
+            _puswitchautobuy.Click += Switch_AutoBuy_Checked;
         }
         private void Switch_AutoBuy_Checked(object sender, RoutedEventArgs e)
         {
@@ -361,7 +375,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                mw.Set.AutoBuy = false;                
+                mw.Set.AutoBuy = false;
                 _puswitchautogift.Visibility = Visibility.Collapsed;
             }
         }
@@ -377,7 +391,7 @@ namespace VPet_Simulator.Windows
             }
         }
         private void Switch_AutoGift_Checked(object sender, RoutedEventArgs e)
-        {            
+        {
             mw.Set.AutoGift = _puswitchautogift.IsChecked.Value;
         }
     }
