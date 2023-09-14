@@ -220,6 +220,11 @@ text#Text Set:|
 工作#Work:|
 文案#Copywriting:|
 直播#Livestreaming:|
+睡觉中#Sleeping:|
+学习中#Learning:|
+工作中#Working:|
+文案中#Copywriting:|
+直播中#Livestreaming:|
 和桌宠说#Send message:|
 按 Ctrl+Enter 发送#Press Ctrl+Enter to send:|
 正在加载游戏#Loading game:|
@@ -227,8 +232,10 @@ text#Text Set:|
 开发控制台#Console:|
 反馈中心#Feedback:|
 设置面板#Settings:|
-吃饭#Food:|
+吃饭#Eat:|
 喝水#Drink:|
+吃饭中#Eating:|
+喝水中#Drinking:|
 虚拟桌宠模拟器#VPet-Simulator:|
 点击此处开关鼠标穿透\n右键开关置于顶层\n长按挪动位置\n可在设置中关闭#Click here toggle mouse HitThrough\nRight-click toggle place in TopMost\nPress and hold to move position\nCan be turned off in the settings:|
 操作教程#How-to Tutorials:|
@@ -280,8 +287,8 @@ DLL引用名单#DLL Reference List:|
 提交#Submit:|
 玩家取消上传存档#Player cancels uploading saved:|
 秒#Sec:|
-停止#Stop:|
-当前已#Currently:|
+停止#Stop :|
+当前已{0}#{0} for:|
 您的桌宠等级不足{0}/{2}\n无法进行{1}#Your pet don't have enough level {0}/{2}\nUnable to {1}:|
 {0}取消#{0} Cancel:|
 搜索商品#Search for products:|
