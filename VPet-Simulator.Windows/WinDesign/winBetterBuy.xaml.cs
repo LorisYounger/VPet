@@ -158,6 +158,12 @@ namespace VPet_Simulator.Windows
                         else
                             ordered = foods.OrderByDescending(x => x.Exp);
                         break;
+                    case 8:
+                        if (sortasc)
+                            ordered = foods.OrderBy(x => x.Likability);
+                        else
+                            ordered = foods.OrderByDescending(x => x.Likability);
+                        break;
                 }
                 Dispatcher.Invoke(() =>
                 {
