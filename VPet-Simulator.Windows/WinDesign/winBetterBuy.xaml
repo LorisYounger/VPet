@@ -166,8 +166,34 @@
                                         pu:ScrollBarHelper.ThumbBackground="#44FFFFFF"
                                         PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"
                                         pu:ScrollBarHelper.HoverThumbBackground="#88FFFFFF">
-                                    <TextBlock TextWrapping="Wrap" Background="Transparent" FontSize="12" Padding="0"
-                                            Foreground="{DynamicResource DARKPrimaryText}" Text="{Binding Description}" />
+                                    <StackPanel x:Name="StkContainer">
+                                        <ItemsControl ItemsSource="{Binding DescriptionValues}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Width="{Binding ActualWidth, Converter={StaticResource {x:Static pu:ConverterKeys.DoubleDivideByConverter}},ConverterParameter=2, ElementName=StkContainer}">
+                                                        <TextBlock Foreground="{DynamicResource DARKPrimaryText}" FontSize="12" Width="37"
+                                                                   Padding="0" VerticalAlignment="Center" Text="{Binding Key}" />
+                                                        <TextBlock Text="："
+                                                                   Foreground="{DynamicResource DARKPrimaryText}" FontSize="12" />
+                                                        <TextBlock Foreground="{DynamicResource DARKPrimaryText}" FontSize="12" Padding="0"
+                                                                   VerticalAlignment="Center" Text="{Binding Value}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock TextWrapping="Wrap"
+                                                   Background="Transparent"
+                                                   FontSize="12"
+                                                   Padding="0"
+                                                   Foreground="{DynamicResource DARKPrimaryText}"
+                                                   Text="{Binding Description}" />
+                                    </StackPanel>
                                 </ScrollViewer>
                             </Grid>
                         </Grid>

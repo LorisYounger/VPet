@@ -112,30 +112,34 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 描述(ToBetterBuy)
         /// </summary>
+
         public string Description
         {
             get
             {
-                if (desc == null)
-                {
-                    StringBuilder sb = new StringBuilder();
-                    if (Exp != 0)
-                        sb.Append(LocalizeCore.Translate("经验值") + ":\t").Append(Exp > 0 ? "+" : "").Append(Exp.ToString("f2")).AppendLine();
-                    if (StrengthFood != 0) sb.Append(LocalizeCore.Translate("饱腹度") + ":\t").Append(StrengthFood > 0 ? "+" : "").Append(StrengthFood.ToString("f2")).Append("\t\t");
-                    if (StrengthDrink != 0) sb.Append(LocalizeCore.Translate("口渴度") + ":\t").Append(StrengthDrink > 0 ? "+" : "").Append(StrengthDrink.ToString("f2")).AppendLine();
-                    if (Strength != 0) sb.Append(LocalizeCore.Translate("体力") + ":\t").Append(Strength > 0 ? "+" : "").Append(Strength.ToString("f2")).Append("\t\t");
-                    if (Feeling != 0)
-                        sb.Append("心情".Translate() + ":\t").Append(Feeling > 0 ? "+" : "").Append(Feeling.ToString("f2")).AppendLine();
-                    if (Health != 0)
-                        sb.Append("健康".Translate() + ":\t").Append(Health > 0 ? "+" : "").Append(Health.ToString("f2")).Append("\t\t");
-                    if (Likability != 0)
-                        sb.Append("好感度".Translate() + ":\t").Append(Likability > 0 ? "+" : "").Append(Likability.ToString("f2"));
-                    desc = sb.ToString();
-                }
-
-                return desc + '\n' + descs + '\n' + Desc.Translate();
+                return descs + '\n' + Desc.Translate();
             }
         }
+
+        public IDictionary<string, string> DescriptionValues
+        {
+            get
+            {
+                var dic = new Dictionary<string, double>()
+                {
+                    { LocalizeCore.Translate("经验值"), (double)Exp },
+                    { LocalizeCore.Translate("饱腹度"), StrengthFood },
+                    { LocalizeCore.Translate("口渴度"), StrengthDrink },
+                    { LocalizeCore.Translate("体力"), Strength },
+                    { LocalizeCore.Translate("心情"), Feeling },
+                    { LocalizeCore.Translate("健康"), Health },
+                    { LocalizeCore.Translate("好感度"), Likability },
+                };
+                return dic.Where(kv => kv.Value != 0)
+                    .ToDictionary(kv => kv.Key, kv => $"{(kv.Value > 0 ? "+" : "")}{kv.Value.ToString("f2")}");
+            }
+        }
+
         /// <summary>
         /// 显示的图片
         /// </summary>
