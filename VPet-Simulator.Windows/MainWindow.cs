@@ -174,7 +174,7 @@ namespace VPet_Simulator.Windows
                     //Set.Statistics[(gint)"stat_time"] = (int)(DateTime.Now - timecount).TotalMinutes;
                     //timecount = DateTime.Now;
                 }
-                Set.StartRecordLastPoint = new Point(Left, Top);
+                Set.StartRecordLastPoint = new Point(Dispatcher.Invoke(() => Left), Dispatcher.Invoke(() => Top));
                 File.WriteAllText(ExtensionValue.BaseDirectory + @"\Setting.lps", Set.ToString());
 
                 if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
