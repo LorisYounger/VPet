@@ -7,7 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
         xmlns:system="clr-namespace:System;assembly=mscorlib" Title="{ll:Str 设置}"
-        Width="{ll:Dbe SettingWidth, DefValue=500}" Height="550" Closing="WindowX_Closing" FontSize="16"
+        Width="{ll:Dbe SettingWidth, DefValue=500}" Height="650" Closing="WindowX_Closing" FontSize="16"
         Style="{DynamicResource BaseWindowXStyle}" Topmost="True" WindowStartupLocation="CenterScreen" mc:Ignorable="d">
     <!--<pu:WindowX.Resources>
         <DataTemplate x:Key="DIYDataTemplate">
@@ -41,6 +41,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
@@ -214,6 +215,14 @@
                             <ComboBox x:Name="PetBox" Grid.Row="11" Grid.Column="2" Margin="0,3,0,2" FontSize="16"
                                     SelectionChanged="PetBox_SelectionChanged"
                                     Style="{DynamicResource StandardComboBoxStyle}" ToolTip="{ll:Str '加载的宠物动画,重启后生效'}" />
+                            <TextBlock Grid.Row="13" VerticalAlignment="Center" Text="{ll:Str 隐藏窗口}" />
+                            <pu:Switch x:Name="SwitchHideFromTaskControl" Grid.Row="13" Grid.Column="2" Background="Transparent"
+                                    BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
+                                    Checked="SwitchHideFromTaskControl_OnChecked" CheckedBackground="{DynamicResource Primary}"
+                                    CheckedBorderBrush="{DynamicResource Primary}"
+                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str '在任务切换器中隐藏窗口'}"
+                                    ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
+                                    ToggleSize="14" ToolTip="{ll:Str '在Alt+Tab中隐藏'}" Unchecked="SwitchHideFromTaskControl_OnChecked" />
                         </Grid>
                     </ScrollViewer>
                     <Button x:Name="ButtonRestartGraph" VerticalAlignment="Bottom"

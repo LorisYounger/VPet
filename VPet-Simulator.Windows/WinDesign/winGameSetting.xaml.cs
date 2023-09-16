@@ -61,6 +61,7 @@ namespace VPet_Simulator.Windows
             SmartMoveEventBox.IsChecked = mw.Set.SmartMove;
             PressLengthSlider.Value = mw.Set.PressLength / 1000.0;
             SwitchMsgOut.IsChecked = mw.Set.MessageBarOutside;
+            SwitchHideFromTaskControl.IsChecked = mw.Set.HideFromTaskControl;
 
             StartUpBox.IsChecked = mw.Set.StartUPBoot;
             StartUpSteamBox.IsChecked = mw.Set.StartUPBootSteam;
@@ -1305,6 +1306,14 @@ namespace VPet_Simulator.Windows
                 mw.LoadTalkDIY();
             BtnCGPTReSet.Content = "打开 {0} 设置".Translate(mw.TalkBoxCurr?.APIName ?? "Steam Workshop");
 
+        }
+
+        private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.HideFromTaskControl = SwitchHideFromTaskControl.IsChecked == true;
+            ButtonRestartGraph.Visibility = Visibility.Visible;
         }
     }
 }
