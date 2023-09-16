@@ -364,7 +364,7 @@ namespace VPet_Simulator.Windows.Interface
             {
                 var line = FindLine("startrecordlast");
                 if (line == null)
-                    return new Point();
+                    return new Point(100, 100);
                 return new Point(line.GetDouble("x", 0), line.GetDouble("y", 0));
             }
             set
