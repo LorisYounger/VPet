@@ -847,6 +847,13 @@ namespace VPet_Simulator.Windows
                 {
                     var styleStruct = (STYLESTRUCT)Marshal.PtrToStructure(lParam, typeof(STYLESTRUCT));
                     styleStruct.styleNew |= (int)Win32.ExtendedWindowStyles.WS_EX_LAYERED;
+
+                    // Hide windows from alt+tab: https://stackoverflow.com/questions/357076/best-way-to-hide-a-window-from-the-alt-tab-program-switcher
+                    if (Set.HideFromTaskControl)
+                    {
+                        styleStruct.styleNew |= (int)Win32.ExtendedWindowStyles.WS_EX_TOOLWINDOW;
+                    }
+
                     Marshal.StructureToPtr(styleStruct, lParam, false);
                     handled = true;
                 }

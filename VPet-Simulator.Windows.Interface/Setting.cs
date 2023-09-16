@@ -444,6 +444,14 @@ namespace VPet_Simulator.Windows.Interface
                 this["gameconfig"].SetBool("autogift", value);
             }
         }
+        /// <summary>
+        /// 在任务切换器(Alt+Tab)中隐藏窗口
+        /// </summary>
+        public bool HideFromTaskControl
+        {
+            get => this["gameconfig"].GetBool("hide_from_task_control");
+            set => this["gameconfig"].SetBool("hide_from_task_control", value);
+        }
 
         public bool MoveAreaDefault
         {
