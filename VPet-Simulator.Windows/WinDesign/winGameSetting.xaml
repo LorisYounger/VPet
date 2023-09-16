@@ -377,7 +377,6 @@
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
-                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <pu:Switch x:Name="CalFunctionBox" Grid.Column="2" Background="Transparent"
                                     BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
@@ -405,7 +404,7 @@
                                     <ComboBoxItem Content="Ill" />
                                 </ComboBox>
                             </Grid>
-                            <Grid Grid.Row="5" Grid.RowSpan="4" Grid.Column="2">
+                            <Grid Grid.Row="5" Grid.RowSpan="2" Grid.Column="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
@@ -492,38 +491,7 @@
                                     </ComboBoxItem>
                                 </ComboBox>
                             </Grid>
-                            <Grid Grid.Row="7" Grid.Column="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <WrapPanel Grid.ColumnSpan="3" >
-                                    <TextBlock Text="{ll:Str '当前移动区域：'}" />
-                                    <TextBlock x:Name="textMoveArea" Text="{ll:Str '主屏幕'}" />
-                                </WrapPanel>
-                                
-                                <Button x:Name="BtnSetMoveArea_Default" Grid.Row="1" Grid.Column="0" Margin="5,5,5,5"
-                                        Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                        Background="{DynamicResource SecondaryLight}"
-                                        Click="BtnSetMoveArea_Default_Click" Content="{ll:Str 重置为主屏}"
-                                        ToolTip="{ll:Str '设置桌宠只在主屏幕进行移动'}" />
-                                <Button x:Name="BtnSetMoveArea_DetectScreen" Grid.Row="1" Grid.Column="1"
-                                        Margin="5,5,5,5" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                        Background="{DynamicResource SecondaryLight}"
-                                        Click="BtnSetMoveArea_DetectScreen_Click" Content="{ll:Str 设为当前屏幕}"
-                                        ToolTip="{ll:Str '设置桌宠只在当前桌宠所在的屏幕范围进行移动'}" />
-                                <Button x:Name="BtnSetMoveArea_Window" Grid.Row="1" Grid.Column="2" Margin="5,5,5,5"
-                                        Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                        Background="{DynamicResource SecondaryLight}"
-                                        Click="BtnSetMoveArea_Window_Click" Content="{ll:Str 自定移动范围}"
-                                        ToolTip="{ll:Str '手动设置桌宠可移动范围'}"
-                                        />
-                            </Grid>
+
                             <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 数据计算}" />
                             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 显示状态}" />
                             <TextBlock Grid.Row="5" VerticalAlignment="Center" Text="{ll:Str 桌宠移动}" />
