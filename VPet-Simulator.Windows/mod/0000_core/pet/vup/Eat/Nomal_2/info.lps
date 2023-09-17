@@ -1,3 +1,0 @@
-PNGAnimation#eat_back_lay_2:|path#back_lay:|mode#nomal:|graph#Common:|
-PNGAnimation#eat_front_lay_2:|path#front_lay:|mode#nomal:|graph#Common:|
-FoodAnimation#eat:|mode#nomal:|graph#Eat:|a0#175,205,23,60,0,0.375:|a1#125,220,88,60,25,0.4375:|a2#125,222,83,60,-20:|a3#125,216,178,57,-5.5:|a4#750,212,196,65:|a5#125,210,163,65:|a6#375,212,194,65:|a7#125,210,158,65:|a8#750:|front_lay#eat_front_lay_2:|back_lay#eat_back_lay_2:|
