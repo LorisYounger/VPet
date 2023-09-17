@@ -57,14 +57,25 @@ namespace VPet_Simulator.Core
             {
                 if (m.PlayingVoice)
                 {
-                    TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
-                    if (ts.TotalSeconds > 2)
+                    if (m.windowMediaPlayerAvailable)
                     {
-                        return;
+                        TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                        if (ts.TotalSeconds > 2)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            Console.WriteLine(1);
+                        }
                     }
                     else
                     {
-                        Console.WriteLine(1);
+                        if (m.soundPlayer.IsLoadCompleted)
+                        {
+                            m.PlayingVoice = false;
+                            m.soundPlayer.PlaySync();
+                        }
                     }
                 }
                 Task.Run(() =>
