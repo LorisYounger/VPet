@@ -3,6 +3,7 @@ using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
 using System.Linq;
+using System.Media;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -49,6 +50,8 @@ namespace VPet_Simulator.Core
         /// 是否开始运行
         /// </summary>
         public bool IsWorking { get; private set; } = false;
+        public SoundPlayer soundPlayer = new SoundPlayer();
+        public bool windowMediaPlayerAvailable = true;
         public Main(GameCore core, bool loadtouchevent = true)
         {
             //Console.WriteLine(DateTime.Now.ToString("T:fff"));
@@ -163,21 +166,30 @@ namespace VPet_Simulator.Core
         public void PlayVoice(Uri VoicePath)//, TimeSpan timediff = TimeSpan.Zero) TODO
         {
             PlayingVoice = true;
-            Dispatcher.Invoke(() =>
+            if (windowMediaPlayerAvailable)
             {
-                VoicePlayer.Clock = new MediaTimeline(VoicePath).CreateClock();
-                VoicePlayer.Clock.Completed += Clock_Completed;
-                VoicePlayer.Play();
-                //Task.Run(() =>
-                //{
-                //    Thread.Sleep(1000);
-                //    Dispatcher.Invoke(() =>
-                //    {
-                //        if (VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true)
-                //            PlayEndTime += VoicePlayer.Clock.NaturalDuration.TimeSpan - TimeSpan.FromSeconds(0.8);
-                //    });
-                //});
-            });
+                Dispatcher.Invoke(() =>
+                {
+                    VoicePlayer.Clock = new MediaTimeline(VoicePath).CreateClock();
+                    VoicePlayer.Clock.Completed += Clock_Completed;
+                    VoicePlayer.MediaFailed += MediaPlayer_MediaFailed;
+                    VoicePlayer.Play();
+                    //Task.Run(() =>
+                    //{
+                    //    Thread.Sleep(1000);
+                    //    Dispatcher.Invoke(() =>
+                    //    {
+                    //        if (VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true)
+                    //            PlayEndTime += VoicePlayer.Clock.NaturalDuration.TimeSpan - TimeSpan.FromSeconds(0.8);
+                    //    });
+                    //});
+                });
+            }
+            else
+            {
+                soundPlayer.SoundLocation = VoicePath.LocalPath;
+                soundPlayer.LoadAsync();
+            }
         }
         /// <summary>
         /// 声音音量
@@ -191,6 +203,12 @@ namespace VPet_Simulator.Core
         /// 当前是否正在播放
         /// </summary>
         public bool PlayingVoice = false;
+        private void MediaPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            windowMediaPlayerAvailable = false;
+            PlayingVoice = false;
+            MessageBoxX.Show("音频播放失败，已尝试自动切换到备用播放器。如果问题持续，请检查是否已安装WindowsMediaPlayer。\nAudio playback failed, attempted automatic switch to backup player. If the issue persists, please check if Windows Media Player is installed.", "音频错误 audio error", Panuon.WPF.UI.MessageBoxIcon.Warning);
+        }
         private void Clock_Completed(object sender, EventArgs e)
         {
             PlayingVoice = false;
