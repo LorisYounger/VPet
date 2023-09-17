@@ -48,7 +48,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 版本号
         /// </summary>
-        public int version { get; } = 105;
+        public int version { get; } = 106;
         /// <summary>
         /// 版本号
         /// </summary>
@@ -875,16 +875,18 @@ namespace VPet_Simulator.Windows
             //看看是否超模
             if (HashCheck && work.IsOverLoad())
             {
-                var spend = (Math.Pow(work.StrengthFood * 2 + 1, 2) / 6 + Math.Pow(work.StrengthDrink * 2 + 1, 2) / 9 +
-               Math.Pow(work.Feeling * 2 + 1, 2) / 12) * (Math.Pow(work.LevelLimit / 2 + 1, 0.5) / 4 + 1) - 0.5;
+                var spend = ((work.StrengthFood >= 0 ? 1 : -1) * Math.Pow(work.StrengthFood * 2 + 1, 2) / 6 +
+                (work.StrengthDrink >= 0 ? 1 : -1) * Math.Pow(work.StrengthDrink * 2 + 1, 2) / 9 +
+                (work.Feeling >= 0 ? 1 : -1) * Math.Pow((work.Type == Work.WorkType.Play ? -1 : 1) * work.Feeling * 2 + 1, 2) / 12) *
+                (Math.Pow(work.LevelLimit / 2 + 1, 0.5) / 4 + 1) - 0.5;
                 var get = (work.MoneyBase + work.MoneyLevel * 10) * (work.MoneyLevel + 1) * (1 + work.FinishBonus / 2);
                 if (work.Type != Work.WorkType.Work)
                 {
                     get /= 12;//经验值换算
                 }
                 var rel = get / spend;
-                if (MessageBoxX.Show("当前工作数据属性超模,是否继续工作?\n超模工作可能会导致游戏发生不可预料的错误\n超模工作不影响大部分成就解锁\n当前数据比率 {0:f2}\n推荐比率<1.5"
-                    .Translate(rel), "超模工作提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                if (MessageBoxX.Show("当前工作数据属性超模,是否继续工作?\n超模工作可能会导致游戏发生不可预料的错误\n超模工作不影响大部分成就解锁\n当前数据比率 {0:f2} 推荐<1.5\n盈利速度:{1:f0} 推荐<{2}"
+                    .Translate(rel, get, (work.LevelLimit + 4) * 6), "超模工作提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 {
                     return false;
                 }
