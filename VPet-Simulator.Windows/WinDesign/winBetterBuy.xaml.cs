@@ -49,6 +49,8 @@ namespace VPet_Simulator.Windows
         Run rMoney;
         public void Show(Food.FoodType type)
         {
+            if (!AllowChange)
+                return;
             showeatanm = true;//逃出
             if (_searchTextBox != null)
                 _searchTextBox.Text = "";
@@ -273,6 +275,8 @@ namespace VPet_Simulator.Windows
 
         private void Search()
         {
+            if (!AllowChange)
+                return;
             var searchText = "";
             if (_searchTextBox != null)
             {
