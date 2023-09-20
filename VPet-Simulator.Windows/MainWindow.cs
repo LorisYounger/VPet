@@ -61,6 +61,8 @@ namespace VPet_Simulator.Windows
         public List<SelectText> SelectTexts { get; set; } = new List<SelectText>();
 
         public List<ClickText> ClickTexts { get; set; } = new List<ClickText>();
+
+        public GameSave_v2 GameSave_v2 { get; set; }
         /// <summary>
         /// 获得自动点击的文本
         /// </summary>
