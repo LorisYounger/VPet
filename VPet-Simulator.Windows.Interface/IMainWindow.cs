@@ -138,6 +138,8 @@ namespace VPet_Simulator.Windows.Interface
         /// 如果你的mod属于作弊mod/有作弊内容,请在作弊前调用这个方法
         /// </summary>
         void HashCheckOff();
+
+        GameSave_v2 GameSave_v2 { get; }
     }
 
 }
