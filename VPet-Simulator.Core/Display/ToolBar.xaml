@@ -122,11 +122,11 @@
             <MenuItem x:Name="MenuInteract" Width="99" Padding="0" Header="{ll:Str 互动}">
                 <MenuItem Click="Sleep_Click" Header="{ll:Str 睡觉}" />                
                 <MenuItem x:Name="MenuStudy" Header="{ll:Str 学习}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        pu:DropDownHelper.MaxHeight="100" />
+                        pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public"/>
                 <MenuItem x:Name="MenuPlay" Header="{ll:Str 玩耍}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        pu:DropDownHelper.MaxHeight="100" />
+                        pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public"/>
                 <MenuItem x:Name="MenuWork" Header="{ll:Str 工作}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        pu:DropDownHelper.MaxHeight="100" />
+                        pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public"/>
                 <!--<MenuItem Header="说话"  IsEnabled="False" />-->
             </MenuItem>
             <MenuItem x:Name="MenuDIY" Padding="0" x:FieldModifier="public" Header="{ll:Str 自定}" />
