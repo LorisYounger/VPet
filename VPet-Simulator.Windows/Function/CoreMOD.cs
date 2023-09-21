@@ -41,6 +41,7 @@ namespace VPet_Simulator.Windows
         public HashSet<string> Tag = new HashSet<string>();
         public bool SuccessLoad = true;
         public DateTime CacheDate;
+        public string ErrorMessage;
         public static string INTtoVER(int ver) => $"{ver / 100}.{ver % 100:00}";
         public static void LoadImage(MainWindow mw, DirectoryInfo di)
         {
@@ -257,8 +258,9 @@ namespace VPet_Simulator.Windows
                                         }
                                     }
                                 }
-                                catch
+                                catch (Exception e)
                                 {
+                                    ErrorMessage = e.Message;                                    
                                     SuccessLoad = false;
                                 }
                             }
@@ -268,8 +270,9 @@ namespace VPet_Simulator.Windows
                     }
                 }
             }
-            catch
+            catch(Exception e)
             {
+                ErrorMessage = e.Message;
                 Tag.Add("该模组已损坏");
                 SuccessLoad = false;
             }
