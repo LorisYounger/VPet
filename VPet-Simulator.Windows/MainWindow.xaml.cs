@@ -116,6 +116,15 @@ namespace VPet_Simulator.Windows
                     var point = Set.StartRecordPoint;
                     Left = point.X; Top = point.Y;
                 }
+
+                // control position inside bounds
+                Core.Controller = new MWController(this);
+                double dist;
+                if ((dist = Core.Controller.GetWindowsDistanceLeft()) < 0) Left -= dist;
+                if ((dist = Core.Controller.GetWindowsDistanceRight()) < 0) Left += dist;
+                if ((dist = Core.Controller.GetWindowsDistanceUp()) < 0) Top -= dist;
+                if ((dist = Core.Controller.GetWindowsDistanceDown()) < 0) Top += dist;
+
                 if (Set.TopMost)
                 {
                     Topmost = true;
@@ -396,7 +405,6 @@ namespace VPet_Simulator.Windows
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏存档".Translate()));
             //加载存档
-            Core.Controller = new MWController(this);
             if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
                 try
                 {
