@@ -370,8 +370,8 @@ namespace VPet_Simulator.Windows.Interface
             set
             {
                 var line = FindorAddLine("startrecordlast");
-                line.SetDouble("x", value.X);
-                line.SetDouble("y", value.Y);
+                line.SetDouble("x", Math.Min(Math.Max(value.X, -65000), 65000));
+                line.SetDouble("y", Math.Min(Math.Max(value.Y, -65000), 65000));
             }
         }
         /// <summary>
@@ -389,8 +389,8 @@ namespace VPet_Simulator.Windows.Interface
             set
             {
                 var line = FindorAddLine("startrecord");
-                line.SetDouble("x", value.X);
-                line.SetDouble("y", value.Y);
+                line.SetDouble("x", Math.Min(Math.Max(value.X, -65000), 65000));
+                line.SetDouble("y", Math.Min(Math.Max(value.Y, -65000), 65000));
             }
         }
         /// <summary>
