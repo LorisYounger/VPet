@@ -18,11 +18,14 @@ namespace VPet_Simulator.Windows
             _screenBorder = mw.Set.MoveArea;
 
             // control position inside bounds
-            double dist;
-            if ((dist = GetWindowsDistanceLeft()) < 0) mw.Left -= dist;
-            if ((dist = GetWindowsDistanceRight()) < 0) mw.Left += dist;
-            if ((dist = GetWindowsDistanceUp()) < 0) mw.Top -= dist;
-            if ((dist = GetWindowsDistanceDown()) < 0) mw.Top += dist;
+            mw.Dispatcher.Invoke(() =>
+            {
+                double dist;
+                if ((dist = GetWindowsDistanceLeft()) < 0) mw.Left -= dist;
+                if ((dist = GetWindowsDistanceRight()) < 0) mw.Left += dist;
+                if ((dist = GetWindowsDistanceUp()) < 0) mw.Top -= dist;
+                if ((dist = GetWindowsDistanceDown()) < 0) mw.Top += dist;
+            });
         }
 
         private Rectangle _screenBorder;
