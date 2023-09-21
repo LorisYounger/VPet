@@ -102,28 +102,32 @@ namespace VPet_Simulator.Windows
                 //this.Height = 500 * Set.ZoomLevel;
                 this.Width = 500 * Set.ZoomLevel;
 
+                double L = 0, T = 0;
                 if (Set.StartRecordLast)
                 {
                     var point = Set.StartRecordLastPoint;
                     if (point.X != 0 || point.Y != 0)
                     {
-                        this.Left = point.X;
-                        this.Top = point.Y;
+                        L= point.X;
+                     T = point.Y;
                     }
                 }
                 else
                 {
                     var point = Set.StartRecordPoint;
-                    Left = point.X; Top = point.Y;
+                    L = point.X; T = point.Y;
                 }
 
                 // control position inside bounds
                 Core.Controller = new MWController(this);
                 double dist;
-                if ((dist = Core.Controller.GetWindowsDistanceLeft()) < 0) Left -= dist;
-                if ((dist = Core.Controller.GetWindowsDistanceRight()) < 0) Left += dist;
-                if ((dist = Core.Controller.GetWindowsDistanceUp()) < 0) Top -= dist;
-                if ((dist = Core.Controller.GetWindowsDistanceDown()) < 0) Top += dist;
+                if ((dist = Core.Controller.GetWindowsDistanceLeft()) < 0) L -= dist;
+                if ((dist = Core.Controller.GetWindowsDistanceRight()) < 0) L += dist;
+                if ((dist = Core.Controller.GetWindowsDistanceUp()) < 0) T -= dist;
+                if ((dist = Core.Controller.GetWindowsDistanceDown()) < 0) T += dist;
+
+                Left = L;
+                Top = T;
 
                 if (Set.TopMost)
                 {
