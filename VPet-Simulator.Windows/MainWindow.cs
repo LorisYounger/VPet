@@ -175,7 +175,7 @@ namespace VPet_Simulator.Windows
             //游戏存档
             if (Set != null)
             {
-                var st = Set.SaveTimes;
+                var st = Set.SaveTimesPP;
                 if (Main != null)
                 {
                     Set.VoiceVolume = Main.PlayVoiceVolume;

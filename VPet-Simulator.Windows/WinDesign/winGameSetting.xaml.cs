@@ -1098,9 +1098,9 @@ namespace VPet_Simulator.Windows
         int reloadid = 0;
         private void CBSaveReLoad_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (reloadid != mw.GameSavesData.Statistics[(gint)"savetimes"])
+            if (reloadid != mw.Set.SaveTimes)
             {
-                reloadid = mw.GameSavesData.Statistics[(gint)"savetimes"];
+                reloadid = mw.Set.SaveTimes;
                 CBSaveReLoad.SelectedItem = null;
                 CBSaveReLoad.Items.Clear();
                 if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))

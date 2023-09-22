@@ -57,7 +57,7 @@ namespace VPet_Simulator.Windows.Interface
                 hash = lps.GetInt64("hash");
                 if (lps.Remove("hash"))
                 {
-                    HashCheck = lps.GetLongHashCode() == hash;
+                    HashCheck = Sub.GetHashCode(lps.ToString()) == hash;
                 }
             }
 
@@ -108,7 +108,7 @@ namespace VPet_Simulator.Windows.Interface
             lps.Remove("hash");
             if (HashCheck)
             {
-                lps[(gi64)"hash"] = new LPS(lps).GetLongHashCode();
+                lps[(gi64)"hash"] = Sub.GetHashCode(lps.ToString());
             }
             else
                 lps[(gint)"hash"] = -1;
