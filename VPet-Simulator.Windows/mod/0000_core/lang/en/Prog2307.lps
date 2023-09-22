@@ -64,5 +64,5 @@ MOD更新成功#Mod update success:|
 反馈提交失败,遇到错误#Feedback submit failed with error:|
 反馈上传失败\n欢迎加入虚拟主播模拟器群430081239手动反馈问题\n服务器消息:#Feedback submit failed\nWelcome to the https://github.com/LorisYounger/VPet for feedback\nServer Message::|
 反馈上传失败,可能是网络或其他问题导致无法上传\n欢迎加入虚拟主播模拟器群430081239手动反馈问题\n#Feedback submit failed, may be a network or other issue preventing the upload\nWelcome to the https://github.com/LorisYounger/VPet for feedback\n:|
-存档名称:{0}\n存档等级:{1}\n存档金钱:{2}\n是否加载该备份存档? 当前游戏数据会丢失#Save name:{0}\nSave level:{1}\nSave money:{2}\nLoad the backup save? Current game data will be lost:|
+存档名称:{0}\n存档等级:{1}\n存档金钱:{2}\nHashCheck:{3}\n是否加载该备份存档? 当前游戏数据会丢失#Save name:{0}\nSave level:{1}\nSave money:{2}\nHashCheck:{3}\nLoad the backup save? Current game data will be lost:|
 {0} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{1}#{0} Upload to WorkShop server failed\nPlease check the network and try again\nPlease note: Uploading and downloading workshop items may require good internet conditions\nReason for failure: {1}:|
