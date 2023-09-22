@@ -118,13 +118,13 @@ namespace VPet_Simulator.Windows
                     L = point.X; T = point.Y;
                 }
 
-                // control position inside bounds
-                Core.Controller = new MWController(this);
-                double dist;
-                if ((dist = Core.Controller.GetWindowsDistanceLeft()) < 0) L -= dist;
-                if ((dist = Core.Controller.GetWindowsDistanceRight()) < 0) L += dist;
-                if ((dist = Core.Controller.GetWindowsDistanceUp()) < 0) T -= dist;
-                if ((dist = Core.Controller.GetWindowsDistanceDown()) < 0) T += dist;
+                //// control position inside bounds
+                //Core.Controller = new MWController(this);
+                //double dist;
+                //if ((dist = Core.Controller.GetWindowsDistanceLeft()) < 0) L -= dist;
+                //if ((dist = Core.Controller.GetWindowsDistanceRight()) < 0) L += dist;
+                //if ((dist = Core.Controller.GetWindowsDistanceUp()) < 0) T -= dist;
+                //if ((dist = Core.Controller.GetWindowsDistanceDown()) < 0) T += dist;
 
                 Left = L;
                 Top = T;
@@ -281,7 +281,8 @@ namespace VPet_Simulator.Windows
                     }
                 }
             }
-            Core.Save = new GameSave(petname.Translate());
+            GameSavesData = new GameSave_v2(petname.Translate());
+            Core.Save = GameSavesData.GameSave;
         }
         public async void GameLoad()
         {

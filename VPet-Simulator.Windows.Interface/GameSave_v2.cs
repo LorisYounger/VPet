@@ -19,9 +19,9 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 新存档
         /// </summary>
-        public GameSave_v2()
+        public GameSave_v2(string petname)
         {
-            GameSave = new GameSave();
+            GameSave = new GameSave(petname);
             Statistics = new Statistics();
         }
         protected void load(ILPS lps, Statistics oldStatistics = null, GameSave oldGameSave = null, ILPS olddata = null)
