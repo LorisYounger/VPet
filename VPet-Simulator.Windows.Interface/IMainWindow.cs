@@ -139,7 +139,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         void HashCheckOff();
 
-        GameSave_v2 GameSave_v2 { get; }
+        GameSave_v2 GameSavesData { get; }
     }
 
 }

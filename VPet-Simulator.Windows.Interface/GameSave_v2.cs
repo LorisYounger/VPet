@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using VPet_Simulator.Core;
@@ -33,14 +34,33 @@ namespace VPet_Simulator.Windows.Interface
             {
                 Statistics = new Statistics(lps["statistics"].ToList());
             }
-            if (lps.FindLine("vpet") != null)
+            ILine vpet = lps.FindLine("vpet");
+            bool nohashcheck = true;
+            long hash;
+            if (vpet != null)
             {
-                GameSave = GameSave.Load(lps.FindLine("vpet"));
+                GameSave = GameSave.Load(vpet);
+                hash = vpet.GetInt64("hash");
+                if (vpet.Remove("hash"))
+                {
+                    HashCheck = vpet.GetLongHashCode() == hash;
+                    nohashcheck = false;
+                }
             }
             else if (oldGameSave != null)
             {
                 GameSave = oldGameSave;
             }
+
+            if (nohashcheck)
+            {
+                hash = vpet.GetInt64("hash");
+                if (lps.Remove("hash"))
+                {
+                    HashCheck = vpet.GetLongHashCode() == hash;
+                }
+            }
+
             if (olddata != null)
                 Data.AddRange(olddata);
             Data.AddRange(lps);
@@ -79,13 +99,24 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public Statistics Statistics = null;
 
-        public ILPS Save()
+        public ILPS ToLPS()
         {
             var lps = new LPS_D();
             lps.AddRange(Data);
             lps.AddLine(GameSave.ToLine());
             lps.Add(new Line("statistics", "", Statistics.ToSubs()));
             return lps;
+        }
+        /// <summary>
+        /// Hash检查
+        /// </summary>
+        public bool HashCheck { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public void HashCheckOff ()
+        {
+            HashCheck = false;
         }
     }
 }

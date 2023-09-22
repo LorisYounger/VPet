@@ -62,7 +62,7 @@ namespace VPet_Simulator.Windows
 
         public List<ClickText> ClickTexts { get; set; } = new List<ClickText>();
 
-        public GameSave_v2 GameSave_v2 { get; set; }
+        public GameSave_v2 GameSavesData { get; set; }
         /// <summary>
         /// 获得自动点击的文本
         /// </summary>
@@ -112,13 +112,16 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public bool HashCheck
         {
-            get => hashCheck;
+            get => GameSavesData.HashCheck;
             set
             {
-                hashCheck = value;
+                if(!value)
+                {
+                    GameSavesData.HashCheckOff();
+                }
                 Main?.Dispatcher.Invoke(() =>
                 {
-                    if (hashCheck)
+                    if (GameSavesData.HashCheck)
                     {
                         if (hashcheckimg == null)
                         {
@@ -166,14 +169,14 @@ namespace VPet_Simulator.Windows
             //游戏存档
             if (Set != null)
             {
-                var st = Set.Statistics[(gint)"savetimes"]++;
+                var st = GameSavesData.Statistics[(gint)"savetimes"]++;
                 if (Main != null)
                 {
                     Set.VoiceVolume = Main.PlayVoiceVolume;
                     List<string> list = new List<string>();
                     Foods.FindAll(x => x.Star).ForEach(x => list.Add(x.Name));
                     Set["betterbuy"]["star"].info = string.Join(",", list);
-                    //Set.Statistics[(gint)"stat_time"] = (int)(DateTime.Now - timecount).TotalMinutes;
+                    //GameSavesData.Statistics[(gint)"stat_time"] = (int)(DateTime.Now - timecount).TotalMinutes;
                     //timecount = DateTime.Now;
                 }
                 Set.StartRecordLastPoint = new Point(Dispatcher.Invoke(() => Left), Dispatcher.Invoke(() => Top));
@@ -200,7 +203,7 @@ namespace VPet_Simulator.Windows
 
                     if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
                         File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + $"\\BackUP\\Save_{st}.lps");
-                    var l = Core.Save.ToLine();
+                    var l = GameSavesData.ToLPS();
                     if (HashCheck)
                     {
                         l[(gi64)"hash"] = new Line(l.ToString()).GetLongHashCode();
@@ -456,30 +459,30 @@ namespace VPet_Simulator.Windows
 
             Core.Save.Money -= item.Price;
             //统计
-            Set.Statistics[(gint)("buy_" + item.Name)]++;
-            Set.Statistics[(gdbe)"stat_betterbuy"] += item.Price;
+            GameSavesData.Statistics[(gint)("buy_" + item.Name)]++;
+            GameSavesData.Statistics[(gdbe)"stat_betterbuy"] += item.Price;
             switch (item.Type)
             {
                 case Food.FoodType.Food:
-                    Set.Statistics[(gdbe)"stat_bb_food"] += item.Price;
+                    GameSavesData.Statistics[(gdbe)"stat_bb_food"] += item.Price;
                     break;
                 case Food.FoodType.Drink:
-                    Set.Statistics[(gdbe)"stat_bb_drink"] += item.Price;
+                    GameSavesData.Statistics[(gdbe)"stat_bb_drink"] += item.Price;
                     break;
                 case Food.FoodType.Drug:
-                    Set.Statistics[(gdbe)"stat_bb_drug"] += item.Price;
+                    GameSavesData.Statistics[(gdbe)"stat_bb_drug"] += item.Price;
                     break;
                 case Food.FoodType.Snack:
-                    Set.Statistics[(gdbe)"stat_bb_snack"] += item.Price;
+                    GameSavesData.Statistics[(gdbe)"stat_bb_snack"] += item.Price;
                     break;
                 case Food.FoodType.Functional:
-                    Set.Statistics[(gdbe)"stat_bb_functional"] += item.Price;
+                    GameSavesData.Statistics[(gdbe)"stat_bb_functional"] += item.Price;
                     break;
                 case Food.FoodType.Meal:
-                    Set.Statistics[(gdbe)"stat_bb_meal"] += item.Price;
+                    GameSavesData.Statistics[(gdbe)"stat_bb_meal"] += item.Price;
                     break;
                 case Food.FoodType.Gift:
-                    Set.Statistics[(gdbe)"stat_bb_gift"] += item.Price;
+                    GameSavesData.Statistics[(gdbe)"stat_bb_gift"] += item.Price;
                     break;
             }
         }
@@ -533,7 +536,7 @@ namespace VPet_Simulator.Windows
         /// </summary>
         private void StatisticsCalHandle()
         {
-            var stat = Set.Statistics;
+            var stat = GameSavesData.Statistics;
             var save = Core.Save;
             stat["stat_money"] = save.Money;
             stat["stat_level"] = save.Level;
@@ -588,23 +591,24 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 加载游戏
         /// </summary>
-        public bool GameLoad(ILine line)
+        public bool GameLoad(ILPS lps)
         {
-            if (line == null)
+            if (lps == null)
                 return false;
-            if (string.IsNullOrWhiteSpace(line.ToString()))
+            if (string.IsNullOrWhiteSpace(lps.ToString()))
                 return false;
-
-            Core.Save = GameSave.Load(line);
-
-            if (Core.Save.Money == 0 && Core.Save.Likability == 0 && Core.Save.Exp == 0
-                && Core.Save.StrengthDrink == 0 && Core.Save.StrengthFood == 0)//数据全是0,可能是bug
+            GameSave_v2 tmp;
+            if (GameSavesData != null)
+                tmp = new GameSave_v2(lps, GameSavesData);
+            else
+                tmp = new GameSave_v2(lps, Set.Statistics_OLD);
+            if(tmp.GameSave == null)
                 return false;
-            long hash = line.GetInt64("hash");
-            if (line.Remove("hash"))
-            {
-                HashCheck = line.GetLongHashCode() == hash;
-            }
+            if (tmp.GameSave.Money == 0 && tmp.GameSave.Likability == 0 && tmp.GameSave.Exp == 0
+                && tmp.GameSave.StrengthDrink == 0 && tmp.GameSave.StrengthFood == 0)//数据全是0,可能是bug
+                return false;
+            GameSavesData = tmp;
+            Core.Save = tmp.GameSave;
             return true;
         }
         private void Handle_Steam(Main obj)
@@ -766,7 +770,6 @@ namespace VPet_Simulator.Windows
         public bool? CurrMusicType { get; private set; }
 
         int LastDiagnosisTime = 0;
-        private bool hashCheck = true;
 
         /// <summary>
         /// 上传遥测文件

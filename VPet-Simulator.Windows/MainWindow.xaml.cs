@@ -271,7 +271,7 @@ namespace VPet_Simulator.Windows
                 {
                     try
                     {
-                        if (GameLoad(new Line(File.ReadAllText(latestsave))))
+                        if (GameLoad(new LPS(File.ReadAllText(latestsave))))
                             return;
                         MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
                     }
@@ -412,7 +412,7 @@ namespace VPet_Simulator.Windows
             if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
                 try
                 {
-                    if (!GameLoad(new LpsDocument(File.ReadAllText(ExtensionValue.BaseDirectory + @"\Save.lps")).First()))
+                    if (!GameLoad(new LpsDocument(File.ReadAllText(ExtensionValue.BaseDirectory + @"\Save.lps"))))
                     {
                         //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
                         LoadLatestSave(petloader.PetName);
@@ -432,11 +432,11 @@ namespace VPet_Simulator.Windows
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
 
-            if (Set.Statistics[(gdbe)"stat_bb_food"] < 0 || Set.Statistics[(gdbe)"stat_bb_drink"] < 0 || Set.Statistics[(gdbe)"stat_bb_drug"] < 0
-                || Set.Statistics[(gdbe)"stat_bb_snack"] < 0 || Set.Statistics[(gdbe)"stat_bb_functional"] < 0 || Set.Statistics[(gdbe)"stat_bb_meal"] < 0
-                || Set.Statistics[(gdbe)"stat_bb_gift"] < 0)
+            if (GameSavesData.Statistics[(gdbe)"stat_bb_food"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_drink"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_drug"] < 0
+                || GameSavesData.Statistics[(gdbe)"stat_bb_snack"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_functional"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_meal"] < 0
+                || GameSavesData.Statistics[(gdbe)"stat_bb_gift"] < 0)
             {
-                hashCheck = false;
+                HashCheck = false;
             }
 
             if (Set.AutoSaveInterval > 0)
@@ -465,7 +465,7 @@ namespace VPet_Simulator.Windows
                     TranslateText = "关注 {0} 谢谢喵".Translate(SteamClient.Name)
                 });
                 //Steam成就
-                Set.Statistics.StatisticChanged += Statistics_StatisticChanged;
+                GameSavesData.Statistics.StatisticChanged += Statistics_StatisticChanged;
                 //Steam通知
                 SteamFriends.SetRichPresence("username", Core.Save.Name);
                 SteamFriends.SetRichPresence("mode", (Core.Save.Mode.ToString() + "ly").Translate());
@@ -720,13 +720,13 @@ namespace VPet_Simulator.Windows
 
 
                 //成就和统计 
-                Set.Statistics[(gint)"stat_open_times"]++;
+                GameSavesData.Statistics[(gint)"stat_open_times"]++;
                 Main.MoveTimer.Elapsed += MoveTimer_Elapsed;
                 Main.OnSay += Main_OnSay;
                 Main.Event_TouchHead += Main_Event_TouchHead;
                 Main.Event_TouchBody += Main_Event_TouchBody;
 
-                HashCheck = hashCheck;
+                HashCheck = HashCheck;
 
                 if (File.Exists(ExtensionValue.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 6, 20))
                 {
@@ -798,22 +798,22 @@ namespace VPet_Simulator.Windows
 
         private void Main_Event_TouchBody()
         {
-            Set.Statistics[(gint)"stat_touch_body"]++;
+            GameSavesData.Statistics[(gint)"stat_touch_body"]++;
         }
 
         private void Main_Event_TouchHead()
         {
-            Set.Statistics[(gint)"stat_touch_head"]++;
+            GameSavesData.Statistics[(gint)"stat_touch_head"]++;
         }
 
         private void Main_OnSay(string obj)
         {
-            Set.Statistics[(gint)"stat_say_times"]++;
+            GameSavesData.Statistics[(gint)"stat_say_times"]++;
         }
 
         private void MoveTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Set.Statistics[(gint)"stat_move_length"] += (int)(Math.Abs(Main.MoveTimerPoint.X) + Math.Abs(Main.MoveTimerPoint.Y));
+            GameSavesData.Statistics[(gint)"stat_move_length"] += (int)(Math.Abs(Main.MoveTimerPoint.X) + Math.Abs(Main.MoveTimerPoint.Y));
         }
 
         private void AutoSaveTimer_Elapsed(object sender, ElapsedEventArgs e)
