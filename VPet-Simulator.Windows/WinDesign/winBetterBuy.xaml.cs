@@ -62,32 +62,29 @@ namespace VPet_Simulator.Windows
                 rMoney.Text = mw.Core.Save.Money.ToString("f2");
 
             //喜好度刷新
-            foreach (var sub in mw.Set.PetData)
+            foreach (var sub in mw.GameSavesData["buytime"])
             {
-                if (sub.Name.StartsWith("buytime_"))
+                var name = sub.Name;
+                var food = mw.Foods.FirstOrDefault(x => x.Name == name);
+                if (food != null)
                 {
-                    var name = sub.Name.Substring(8);
-                    var food = mw.Foods.FirstOrDefault(x => x.Name == name);
-                    if (food != null)
-                    {
-                        food.LoadEatTimeSource(mw);
-                        food.NotifyOfPropertyChange("Description");
-                    }
+                    food.LoadEatTimeSource(mw);
+                    food.NotifyOfPropertyChange("Description");
                 }
             }
             //没钱了,宠物给你私房钱 (开罗传统)
             if (mw.Core.Save.Money <= 1)
             {
-                if (mw.Set.PetData[(gbol)"self"])
+                if (mw.GameSavesData[(gbol)"self"])
                 {
                     MessageBoxX.Show("更好买老顾客大优惠!桌宠的食物钱我来出!\n更好买提示您:$10以下的食物/药品等随便赊账".Translate());
                 }
                 else
                 {
                     MessageBoxX.Show("看到您囊中羞涩,桌宠拿出了1000块私房钱出来给你".Translate());
-                    mw.Set.PetData[(gbol)"self"] = true;
+                    mw.GameSavesData[(gbol)"self"] = true;
                     mw.Core.Save.Money += 1000;
-                } 
+                }
             }
 
             Show();
