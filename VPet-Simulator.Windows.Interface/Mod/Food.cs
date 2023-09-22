@@ -182,7 +182,7 @@ namespace VPet_Simulator.Windows.Interface
         public void LoadEatTimeSource(IMainWindow imw)
         {
             DateTime now = DateTime.Now;
-            DateTime eattime = imw.Set.PetData.GetDateTime("buytime_" + Name, now);
+            DateTime eattime = imw.GameSavesData["buytime"].GetDateTime(Name, now);
             if (eattime <= now)
             {
                 if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)

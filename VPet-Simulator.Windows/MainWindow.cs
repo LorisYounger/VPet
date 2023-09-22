@@ -1,5 +1,6 @@
 ﻿using CSCore.CoreAudioAPI;
 using LinePutScript;
+using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using Steamworks;
@@ -103,6 +104,11 @@ namespace VPet_Simulator.Windows
             return list[Function.Rnd.Next(list.Count)];
         }
         private Image hashcheckimg;
+
+        /// <summary>
+        /// 关闭该玩家的HashCheck检查
+        /// 如果你的mod属于作弊mod/有作弊内容,请在作弊前调用这个方法
+        /// </summary>
         public void HashCheckOff()
         {
             HashCheck = false;
@@ -115,7 +121,7 @@ namespace VPet_Simulator.Windows
             get => GameSavesData.HashCheck;
             set
             {
-                if(!value)
+                if (!value)
                 {
                     GameSavesData.HashCheckOff();
                 }
@@ -169,7 +175,7 @@ namespace VPet_Simulator.Windows
             //游戏存档
             if (Set != null)
             {
-                var st = GameSavesData.Statistics[(gint)"savetimes"]++;
+                var st = Set.SaveTimes;
                 if (Main != null)
                 {
                     Set.VoiceVolume = Main.PlayVoiceVolume;
@@ -203,14 +209,8 @@ namespace VPet_Simulator.Windows
 
                     if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
                         File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + $"\\BackUP\\Save_{st}.lps");
-                    var l = GameSavesData.ToLPS();
-                    if (HashCheck)
-                    {
-                        l[(gi64)"hash"] = new Line(l.ToString()).GetLongHashCode();
-                    }
-                    else
-                        l[(gint)"hash"] = -1;
-                    File.WriteAllText(ExtensionValue.BaseDirectory + @"\Save.lps", l.ToString());
+                    
+                    File.WriteAllText(ExtensionValue.BaseDirectory + @"\Save.lps", GameSavesData.ToLPS().ToString());
                 }
             }
         }
@@ -442,7 +442,7 @@ namespace VPet_Simulator.Windows
         {
             //获取吃腻时间
             DateTime now = DateTime.Now;
-            DateTime eattime = Set.PetData.GetDateTime("buytime_" + item.Name, now);
+            DateTime eattime = GameSavesData["buytime"].GetDateTime(item.Name, now);
             double eattimes = 0;
             if (eattime > now)
             {
@@ -452,7 +452,7 @@ namespace VPet_Simulator.Windows
             Core.Save.EatFood(item, Math.Max(0.5, 1 - Math.Pow(eattimes, 2) * 0.01));
             //吃腻了
             eattimes += 2;
-            Set.PetData.SetDateTime("buytime_" + item.Name, now.AddHours(eattimes));
+            GameSavesData["buytime"].SetDateTime(item.Name, now.AddHours(eattimes));
             //通知
             item.LoadEatTimeSource(this);
             item.NotifyOfPropertyChange("Description");
@@ -601,8 +601,21 @@ namespace VPet_Simulator.Windows
             if (GameSavesData != null)
                 tmp = new GameSave_v2(lps, GameSavesData);
             else
-                tmp = new GameSave_v2(lps, Set.Statistics_OLD);
-            if(tmp.GameSave == null)
+            {
+                var data = new LPS_D();
+                foreach (var item in Set.PetData_OLD)
+                {
+                    if (item.Name.Contains("_"))
+                    {
+                        var strs = Sub.Split(item.Name, "_", 1);
+                        data[strs[0]][(gstr)strs[1]] = item.Info;
+                    }
+                    else
+                        data.Add(new Line(item.Name, item.Info));
+                }
+                tmp = new GameSave_v2(lps, Set.Statistics_OLD, olddata: data);
+            }
+            if (tmp.GameSave == null)
                 return false;
             if (tmp.GameSave.Money == 0 && tmp.GameSave.Likability == 0 && tmp.GameSave.Exp == 0
                 && tmp.GameSave.StrengthDrink == 0 && tmp.GameSave.StrengthFood == 0)//数据全是0,可能是bug

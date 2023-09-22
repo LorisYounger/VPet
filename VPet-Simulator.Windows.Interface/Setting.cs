@@ -213,7 +213,19 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 当前宠物的储存数据
         /// </summary>
-        public ILine PetData => this["petdata"];
+        public ILine PetData_OLD => this["petdata"];
+        /// <summary>
+        /// 储存顺序次数
+        /// </summary>
+        public int SaveTimes
+        {
+            get
+            {
+                int list = GetInt("savetimes", 100000) + 1 ;
+                SetInt("savetimes", list);
+                return list;
+            }
+        }
 
         private int presslength;
         private int intercycle;
