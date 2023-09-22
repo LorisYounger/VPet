@@ -262,7 +262,7 @@ namespace VPet_Simulator.Windows
             {
                 var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\BackUP", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
                 {
-                    if (int.TryParse(x.Split('_')[1], out int i))
+                    if (int.TryParse(x.Split('_')[1].Split('.')[0], out int i))
                         return i;
                     return 0;
                 }).ToList();
