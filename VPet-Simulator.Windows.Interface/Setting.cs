@@ -215,9 +215,9 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public ILine PetData_OLD => this["petdata"];
         /// <summary>
-        /// 储存顺序次数
+        /// 储存顺序次数++
         /// </summary>
-        public int SaveTimes
+        public int SaveTimesPP
         {
             get
             {
@@ -225,6 +225,13 @@ namespace VPet_Simulator.Windows.Interface
                 SetInt("savetimes", list);
                 return list;
             }
+        }
+        /// <summary>
+        /// 储存顺序次数
+        /// </summary>
+        public int SaveTimes
+        {
+            get => GetInt("savetimes", 100000);
         }
 
         private int presslength;
