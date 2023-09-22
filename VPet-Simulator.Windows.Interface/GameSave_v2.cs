@@ -108,7 +108,7 @@ namespace VPet_Simulator.Windows.Interface
             lps.Remove("hash");
             if (HashCheck)
             {
-                lps[(gi64)"hash"] = lps.GetLongHashCode();
+                lps[(gi64)"hash"] = new LPS(lps).GetLongHashCode();
             }
             else
                 lps[(gint)"hash"] = -1;
@@ -119,7 +119,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public bool HashCheck { get; private set; } = true;
 
-   
+
 
         /// <summary>
         /// 关闭该玩家的HashCheck检查
