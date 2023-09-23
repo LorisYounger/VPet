@@ -1286,10 +1286,11 @@ namespace VPet_Simulator.Windows
         {
             if (MessageBoxX.Show("是否重置游戏数据重新开始?\n该操作无法撤回".Translate(), "重新开始".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
+                var oldsave = mw.GameSavesData;
                 mw.GameSavesData = new GameSave_v2(mw.Core.Save.Name);
                 mw.Core.Save = mw.GameSavesData.GameSave;
-                if (!mw.HashCheck)
-                    mw.GameSavesData.Statistics = new Statistics();
+                if (oldsave.HashCheck) // 对于重开无作弊的玩家保留统计
+                    mw.GameSavesData.Statistics = oldsave.Statistics;
                 mw.HashCheck = true;
                 CBSaveReLoad.IsEnabled = false;
                 BtnSaveReload.IsEnabled = false;
