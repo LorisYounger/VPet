@@ -119,7 +119,7 @@ namespace VPet_Simulator.Windows
                 }
 
                 //// control position inside bounds
-                //Core.Controller = new MWController(this);
+                Core.Controller = new MWController(this);
                 //double dist;
                 //if ((dist = Core.Controller.GetWindowsDistanceLeft()) < 0) L -= dist;
                 //if ((dist = Core.Controller.GetWindowsDistanceRight()) < 0) L += dist;
