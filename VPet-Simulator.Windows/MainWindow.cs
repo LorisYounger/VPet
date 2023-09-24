@@ -459,6 +459,7 @@ namespace VPet_Simulator.Windows
 
             Core.Save.Money -= item.Price;
             //统计
+            GameSavesData.Statistics[(gint)"stat_buytimes"]++;
             GameSavesData.Statistics[(gint)("buy_" + item.Name)]++;
             GameSavesData.Statistics[(gdbe)"stat_betterbuy"] += item.Price;
             switch (item.Type)
@@ -471,6 +472,7 @@ namespace VPet_Simulator.Windows
                     break;
                 case Food.FoodType.Drug:
                     GameSavesData.Statistics[(gdbe)"stat_bb_drug"] += item.Price;
+                    GameSavesData.Statistics[(gdbe)"stat_bb_drug_exp"] += item.Exp;
                     break;
                 case Food.FoodType.Snack:
                     GameSavesData.Statistics[(gdbe)"stat_bb_snack"] += item.Price;
@@ -483,6 +485,7 @@ namespace VPet_Simulator.Windows
                     break;
                 case Food.FoodType.Gift:
                     GameSavesData.Statistics[(gdbe)"stat_bb_gift"] += item.Price;
+                    GameSavesData.Statistics[(gdbe)"stat_bb_gift_like"] += item.Likability;
                     break;
             }
         }
@@ -714,6 +717,8 @@ namespace VPet_Simulator.Windows
 
                     if (CurrMusicType != null && Main.IsIdel)
                     {//识别通过,开始跑跳舞动画
+                        //先统计下
+                        GameSavesData.Statistics[(gint)"stat_music"]++;
                         Main.Display(Core.Graph.FindGraph("music", AnimatType.A_Start, Core.Save.Mode), Display_Music);
                     }
                     else

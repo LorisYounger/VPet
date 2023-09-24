@@ -545,6 +545,7 @@ namespace VPet_Simulator.Windows
                     winSetting.Show();
                 };
                 Main.FunctionSpendHandle += lowStrength;
+                Main.WorkTimer.E_FinishWork += WorkTimer_E_FinishWork;
                 Main.ToolBar.MenuMODConfig.Items.Add(m);
                 try
                 {
@@ -802,6 +803,17 @@ namespace VPet_Simulator.Windows
 
         }
 
+        private void WorkTimer_E_FinishWork(WorkTimer.FinishWorkInfo obj)
+        {
+            if (obj.work.Type == GraphHelper.Work.WorkType.Work)
+            {
+                GameSavesData.Statistics[(gint)"stat_single_profit_money"] = (int)obj.count;
+            }
+            else
+            {
+                GameSavesData.Statistics[(gint)"stat_single_profit_exp"] = (int)obj.count;
+            }
+        }
 
         private void Main_Event_TouchBody()
         {
