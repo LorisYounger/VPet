@@ -188,12 +188,12 @@ namespace VPet_Simulator.Windows
                 Set.StartRecordLastPoint = new Point(Dispatcher.Invoke(() => Left), Dispatcher.Invoke(() => Top));
                 File.WriteAllText(ExtensionValue.BaseDirectory + @"\Setting.lps", Set.ToString());
 
-                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
-                    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\BackUP");
+                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
+                    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
 
                 if (Core != null && Core.Save != null)
                 {
-                    var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\BackUP", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
+                    var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\Saves", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
                     {
                         if (int.TryParse(x.Split('_')[1].Split('.')[0], out int i))
                             return i;
@@ -204,13 +204,13 @@ namespace VPet_Simulator.Windows
                         File.Delete(ds[0]);
                         ds.RemoveAt(0);
                     }
-                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\BackUP\\Save_{st}.lps"))
-                        File.Delete(ExtensionValue.BaseDirectory + $"\\BackUP\\Save_{st}.lps");
+                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps"))
+                        File.Delete(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps");
 
                     if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
-                        File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + $"\\BackUP\\Save_{st}.lps");
+                        File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + @"\Save.bkp");
                     
-                    File.WriteAllText(ExtensionValue.BaseDirectory + @"\Save.lps", GameSavesData.ToLPS().ToString());
+                    File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps", GameSavesData.ToLPS().ToString());
                 }
             }
         }

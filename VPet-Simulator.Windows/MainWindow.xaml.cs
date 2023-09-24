@@ -108,8 +108,8 @@ namespace VPet_Simulator.Windows
                     var point = Set.StartRecordLastPoint;
                     if (point.X != 0 || point.Y != 0)
                     {
-                        L= point.X;
-                     T = point.Y;
+                        L = point.X;
+                        T = point.Y;
                     }
                 }
                 else
@@ -154,6 +154,17 @@ namespace VPet_Simulator.Windows
                     return;
                 }
                 Closed += ForceClose;
+
+                //更新存档系统
+                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
+                {
+                    if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
+                    {
+                        Directory.Move(ExtensionValue.BaseDirectory + @"\BackUP", ExtensionValue.BaseDirectory + @"\Saves");
+                    }
+                    else
+                        Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
+                }
 
                 Task.Run(GameLoad);
             }
@@ -258,9 +269,9 @@ namespace VPet_Simulator.Windows
 
         public void LoadLatestSave(string petname)
         {
-            if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
+            if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
             {
-                var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\BackUP", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
+                var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\Saves", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
                 {
                     if (int.TryParse(x.Split('_')[1].Split('.')[0], out int i))
                         return i;
@@ -383,11 +394,6 @@ namespace VPet_Simulator.Windows
             else//新玩家,默认设置为
                 Set["CGPT"][(gstr)"type"] = "LB";
 
-            if (Directory.Exists(ExtensionValue.BaseDirectory + @"\UserData") && !Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
-            {
-                Directory.Move(ExtensionValue.BaseDirectory + @"\UserData", ExtensionValue.BaseDirectory + @"\BackUP");
-            }
-
             //加载数据合理化:食物
             if (!Set["gameconfig"].GetBool("noAutoCal"))
             {
@@ -410,7 +416,7 @@ namespace VPet_Simulator.Windows
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏存档".Translate()));
             //加载存档
-            if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
+            if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps")) //有老的旧存档,优先旧存档
                 try
                 {
                     if (!GameLoad(new LpsDocument(File.ReadAllText(ExtensionValue.BaseDirectory + @"\Save.lps"))))
