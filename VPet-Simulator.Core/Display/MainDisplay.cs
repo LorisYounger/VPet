@@ -449,7 +449,7 @@ namespace VPet_Simulator.Core
         public void Display(string name, AnimatType animat, GraphType Type, Action<string> EndAction = null)
         {
             var list = Core.Graph.FindGraphs(name, animat, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == Type);
-            if (list != null && list.Count > 0)
+            if ((list?.Count ?? -1) > 0)
                 Display(list[Function.Rnd.Next(list.Count)], () => EndAction(name));
             else
                 Display(Type, animat, EndAction);
@@ -464,7 +464,7 @@ namespace VPet_Simulator.Core
         public void Display(string name, AnimatType animat, GraphType Type, Action EndAction = null)
         {
             var list = Core.Graph.FindGraphs(name, animat, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == Type);
-            if (list.Count > 0)
+            if ((list?.Count ?? -1) > 0)
                 Display(list[Function.Rnd.Next(list.Count)], EndAction);
             else
                 Display(Type, animat, EndAction);
