@@ -142,30 +142,33 @@ namespace VPet_Simulator.Windows.Interface
                 transText = value;
             }
         }
-
         /// <summary>
         /// 检查部分状态是否满足需求
         /// </summary>之所以不是全部的,是因为挨个取效率太差了
-        public virtual bool CheckState(Main m)
+        public virtual bool CheckState(GameSave save)
         {
-            if (m.Core.Save.Likability < LikeMin || m.Core.Save.Likability > LikeMax)
+            if (save.Likability < LikeMin || save.Likability > LikeMax)
                 return false;
-            if (m.Core.Save.Health < HealthMin || m.Core.Save.Health > HealthMax)
+            if (save.Health < HealthMin || save.Health > HealthMax)
                 return false;
-            if (m.Core.Save.Level < LevelMin || m.Core.Save.Level > LevelMax)
+            if (save.Level < LevelMin || save.Level > LevelMax)
                 return false;
-            if (m.Core.Save.Money < MoneyMin || m.Core.Save.Money > MoneyMax)
+            if (save.Money < MoneyMin || save.Money > MoneyMax)
                 return false;
-            if (m.Core.Save.StrengthFood < FoodMin || m.Core.Save.StrengthFood > FoodMax)
+            if (save.StrengthFood < FoodMin || save.StrengthFood > FoodMax)
                 return false;
-            if (m.Core.Save.StrengthDrink < DrinkMin || m.Core.Save.StrengthDrink > DrinkMax)
+            if (save.StrengthDrink < DrinkMin || save.StrengthDrink > DrinkMax)
                 return false;
-            if (m.Core.Save.Feeling < FeelMin || m.Core.Save.Feeling > FeelMax)
+            if (save.Feeling < FeelMin || save.Feeling > FeelMax)
                 return false;
-            if (m.Core.Save.Strength < StrengthMin || m.Core.Save.Strength > StrengthMax)
+            if (save.Strength < StrengthMin || save.Strength > StrengthMax)
                 return false;
             return true;
         }
+        /// <summary>
+        /// 检查部分状态是否满足需求
+        /// </summary>之所以不是全部的,是因为挨个取效率太差了
+        public virtual bool CheckState(Main m) => CheckState(m.Core.Save);
 
         /// <summary>
         /// 将文本转换成实际值
