@@ -156,14 +156,21 @@ namespace VPet_Simulator.Windows
                 Closed += ForceClose;
 
                 //更新存档系统
+                if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
+                {
+                    if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
+                        Directory.Move(ExtensionValue.BaseDirectory + @"\BackUP", ExtensionValue.BaseDirectory + @"\Saves");
+                    else
+                    {
+                        foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\BackUP").GetFiles())
+                            if (!File.Exists(ExtensionValue.BaseDirectory + @"\Saves\" + file.Name))
+                                file.MoveTo(ExtensionValue.BaseDirectory + @"\Saves\" + file.Name);
+                        Directory.Delete(ExtensionValue.BaseDirectory + @"\BackUP");
+                    }
+                }
                 if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
                 {
-                    if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
-                    {
-                        Directory.Move(ExtensionValue.BaseDirectory + @"\BackUP", ExtensionValue.BaseDirectory + @"\Saves");
-                    }
-                    else
-                        Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
+                    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
                 }
 
                 Task.Run(GameLoad);
@@ -484,7 +491,7 @@ namespace VPet_Simulator.Windows
                 }
                 else
                 {
-                    SteamFriends.SetRichPresence("lv", "");
+                    SteamFriends.SetRichPresence("lv", " ");
                 }
             }
             else
