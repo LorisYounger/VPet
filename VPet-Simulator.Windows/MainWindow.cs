@@ -209,7 +209,7 @@ namespace VPet_Simulator.Windows
 
                     if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
                         File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + @"\Save.bkp");
-                    
+
                     File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps", GameSavesData.ToLPS().ToString());
                 }
             }
@@ -633,6 +633,14 @@ namespace VPet_Simulator.Windows
         }
         private void Handle_Steam(Main obj)
         {
+            if (HashCheck)
+            {
+                SteamFriends.SetRichPresence("lv", $" (lv{GameSavesData.GameSave.Level})");
+            }
+            else
+            {
+                SteamFriends.SetRichPresence("lv", "");
+            }
             if (Core.Save.Mode == GameSave.ModeType.Ill)
             {
                 SteamFriends.SetRichPresence("steam_display", "#Status_Ill");
@@ -653,7 +661,23 @@ namespace VPet_Simulator.Windows
                         if (obj.DisplayType.Name == "music")
                             SteamFriends.SetRichPresence("steam_display", "#Status_Music");
                         else
+                        {
+                            switch (obj.DisplayType.Type)
+                            {
+                                case GraphType.Move:
+                                    SteamFriends.SetRichPresence("idel", "乱爬".Translate());
+                                    break;
+                                case GraphType.Idel:
+                                case GraphType.StateONE:
+                                case GraphType.StateTWO:
+                                    SteamFriends.SetRichPresence("idel", "发呆".Translate());
+                                    break;
+                                default:
+                                    SteamFriends.SetRichPresence("idel", "闲逛".Translate());
+                                    break;
+                            }
                             SteamFriends.SetRichPresence("steam_display", "#Status_IDLE");
+                        }
                         break;
                 }
             }

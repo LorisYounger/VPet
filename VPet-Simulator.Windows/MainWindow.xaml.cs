@@ -477,6 +477,15 @@ namespace VPet_Simulator.Windows
                 SteamFriends.SetRichPresence("username", Core.Save.Name);
                 SteamFriends.SetRichPresence("mode", (Core.Save.Mode.ToString() + "ly").Translate());
                 SteamFriends.SetRichPresence("steam_display", "#Status_IDLE");
+                SteamFriends.SetRichPresence("idel", "闲逛".Translate());
+                if (HashCheck)
+                {
+                    SteamFriends.SetRichPresence("lv", $" (lv{GameSavesData.GameSave.Level})");
+                }
+                else
+                {
+                    SteamFriends.SetRichPresence("lv", "");
+                }
             }
             else
             {
