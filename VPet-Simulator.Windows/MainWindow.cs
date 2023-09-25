@@ -639,7 +639,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                SteamFriends.SetRichPresence("lv", "");
+                SteamFriends.SetRichPresence("lv", " ");
             }
             if (Core.Save.Mode == GameSave.ModeType.Ill)
             {
