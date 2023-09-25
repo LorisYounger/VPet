@@ -88,7 +88,7 @@ namespace VPet_Simulator.Core
                 //ts = TimeSpan.FromMinutes(MaxTime);
                 //tleft = TimeSpan.Zero;
                 //PBLeft.Value = MaxTime;
-                var fwi = new FinishWorkInfo(nowWork, GetCount);
+                FinishWorkInfo fwi = new FinishWorkInfo(nowWork, GetCount);
                 E_FinishWork?.Invoke(fwi);
                 if (nowWork.Type == Work.WorkType.Work)
                 {

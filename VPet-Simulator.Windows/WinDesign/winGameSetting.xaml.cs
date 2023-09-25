@@ -1075,6 +1075,11 @@ namespace VPet_Simulator.Windows
             {
                 mw.Set.EnableFunction = false;
                 combCalFunState.IsEnabled = true;
+                if (mw.Main.State != Main.WorkingState.Nomal)
+                {
+                    mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
+                    mw.Main.State = Main.WorkingState.Nomal;
+                }
             }
         }
 
@@ -1132,8 +1137,13 @@ namespace VPet_Simulator.Windows
                         {
                             try
                             {
+                                if (mw.Main.State != Main.WorkingState.Nomal)
+                                {
+                                    mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
+                                    mw.Main.State = Main.WorkingState.Nomal;
+                                }
                                 if (!mw.GameLoad(l))
-                                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
+                                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());                               
                             }
                             catch (Exception ex)
                             {

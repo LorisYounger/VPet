@@ -165,6 +165,8 @@ namespace VPet_Simulator.Windows
                         foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\BackUP").GetFiles())
                             if (!File.Exists(ExtensionValue.BaseDirectory + @"\Saves\" + file.Name))
                                 file.MoveTo(ExtensionValue.BaseDirectory + @"\Saves\" + file.Name);
+                            else
+                                file.Delete();
                         Directory.Delete(ExtensionValue.BaseDirectory + @"\BackUP");
                     }
                 }
