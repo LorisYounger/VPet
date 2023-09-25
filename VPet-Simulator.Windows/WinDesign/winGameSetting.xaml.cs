@@ -1075,6 +1075,11 @@ namespace VPet_Simulator.Windows
             {
                 mw.Set.EnableFunction = false;
                 combCalFunState.IsEnabled = true;
+                if (mw.Main.State != Main.WorkingState.Nomal)
+                {
+                    mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
+                    mw.Main.State = Main.WorkingState.Nomal;
+                }
             }
         }
 
@@ -1103,15 +1108,12 @@ namespace VPet_Simulator.Windows
                 reloadid = mw.Set.SaveTimes;
                 CBSaveReLoad.SelectedItem = null;
                 CBSaveReLoad.Items.Clear();
-                if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
+                if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
                 {
-                    foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\BackUP")
-                        .GetFiles().OrderByDescending(x => x.LastWriteTime))
+                    foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves")
+                        .GetFiles("Save*.lps").OrderByDescending(x => x.LastWriteTime))
                     {
-                        if (file.Extension.ToLower() == ".lps")
-                        {
-                            CBSaveReLoad.Items.Add(file.Name.Split('.').First());
-                        }
+                        CBSaveReLoad.Items.Add(file.Name.Split('.').First());
                     }
                     CBSaveReLoad.SelectedIndex = 0;
                 }
@@ -1123,7 +1125,7 @@ namespace VPet_Simulator.Windows
             if (CBSaveReLoad.SelectedItem != null)
             {
                 string txt = (string)CBSaveReLoad.SelectedItem;
-                string path = ExtensionValue.BaseDirectory + @"\BackUP\" + txt + ".lps";
+                string path = ExtensionValue.BaseDirectory + @"\Saves\" + txt + ".lps";
                 if (File.Exists(path))
                 {
                     try
@@ -1135,8 +1137,13 @@ namespace VPet_Simulator.Windows
                         {
                             try
                             {
+                                if (mw.Main.State != Main.WorkingState.Nomal)
+                                {
+                                    mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
+                                    mw.Main.State = Main.WorkingState.Nomal;
+                                }
                                 if (!mw.GameLoad(l))
-                                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
+                                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());                               
                             }
                             catch (Exception ex)
                             {

@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
-        xmlns:system="clr-namespace:System;assembly=mscorlib" Title="{ll:Str 设置}" Width="{ll:Dbe SettingWidth,
-                   DefValue=500}" Height="550" Closing="WindowX_Closing" FontSize="16"
+        xmlns:system="clr-namespace:System;assembly=mscorlib" Title="{ll:Str 设置}"
+        Width="{ll:Dbe SettingWidth, DefValue=500}" Height="550" Closing="WindowX_Closing" FontSize="16"
         Style="{DynamicResource BaseWindowXStyle}" Topmost="True" WindowStartupLocation="CenterScreen" mc:Ignorable="d">
     <!--<pu:WindowX.Resources>
         <DataTemplate x:Key="DIYDataTemplate">
@@ -41,6 +41,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
@@ -214,6 +215,16 @@
                             <ComboBox x:Name="PetBox" Grid.Row="11" Grid.Column="2" Margin="0,3,0,2" FontSize="16"
                                     SelectionChanged="PetBox_SelectionChanged"
                                     Style="{DynamicResource StandardComboBoxStyle}" ToolTip="{ll:Str '加载的宠物动画,重启后生效'}" />
+                            <TextBlock Grid.Row="13" VerticalAlignment="Center" Text="{ll:Str 隐藏窗口}" />
+                            <pu:Switch x:Name="SwitchHideFromTaskControl" Grid.Row="13" Grid.Column="2"
+                                    Background="Transparent" BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18"
+                                    BoxWidth="35" Checked="SwitchHideFromTaskControl_OnChecked"
+                                    CheckedBackground="{DynamicResource Primary}"
+                                    CheckedBorderBrush="{DynamicResource Primary}"
+                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                                    Content="{ll:Str '在任务切换器中隐藏窗口'}" ToggleBrush="{DynamicResource PrimaryDark}"
+                                    ToggleShadowColor="{x:Null}" ToggleSize="14" ToolTip="{ll:Str '在Alt+Tab中隐藏'}"
+                                    Unchecked="SwitchHideFromTaskControl_OnChecked" />
                         </Grid>
                     </ScrollViewer>
                     <Button x:Name="ButtonRestartGraph" VerticalAlignment="Bottom"
@@ -237,6 +248,11 @@
                             <ComboBoxItem Content="{ll:Str 关闭自动保存}">
                                 <ComboBoxItem.Tag>
                                     <system:Int32>-1</system:Int32>
+                                </ComboBoxItem.Tag>
+                            </ComboBoxItem>
+                            <ComboBoxItem Content="{ll:Str 每2分钟一次}">
+                                <ComboBoxItem.Tag>
+                                    <system:Int32>2</system:Int32>
                                 </ComboBoxItem.Tag>
                             </ComboBoxItem>
                             <ComboBoxItem Content="{ll:Str 每5分钟一次}">
@@ -297,7 +313,7 @@
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
                             <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 聊天设置}" /><LineBreak />
-                            <Run Text="{ll:Str 使用ChatGPT进行聊天等相关设置}" />
+                            <Run Text="{ll:Str 聊天框等相关设置}" />
                         </TextBlock>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -309,7 +325,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="35" />
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 使用模式}" />
+                            <TextBlock x:Name="tbMode" Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 使用模式}" />
                             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 相关功能}" />
                             <Grid Grid.Column="2">
                                 <Grid.ColumnDefinitions>
@@ -320,20 +336,35 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <RadioButton x:Name="RBCGPTUseAPI" Grid.Column="1" Checked="CGPType_Checked"
+                                <!--<RadioButton x:Name="RBCGPTUseAPI" Grid.Column="1" Checked="CGPType_Checked"
                                         Content="{ll:Str '使用从ChatGPT\&#13;申请的的API'}" GroupName="cgpttype"
                                         Style="{DynamicResource StandardRadioButtonStyle}"
-                                        ToolTip="{ll:Str 需要去OpenAI官网申请}" />
+                                        ToolTip="{ll:Str 需要去OpenAI官网申请}" />-->
                                 <RadioButton x:Name="RBCGPTUseLB" Checked="CGPType_Checked"
                                         Content="{ll:Str '使用桌宠选项式\&#13;聊天功能'}" GroupName="cgpttype" IsChecked="True"
                                         Style="{DynamicResource StandardRadioButtonStyle}"
                                         ToolTip="{ll:Str 支持MOD与创意工坊添加聊天内容}" />
-                                <RadioButton x:Name="RBCGPTClose" Grid.Row="1" Checked="CGPType_Checked"
+                                <RadioButton x:Name="RBCGPTClose" Grid.Column="1" Checked="CGPType_Checked"
                                         Content="{ll:Str '关闭聊天框'}" GroupName="cgpttype"
                                         Style="{DynamicResource StandardRadioButtonStyle}" />
-                                <RadioButton x:Name="RBCGPTDIY" Grid.Row="1" Grid.Column="1" Checked="CGPType_Checked"
-                                        Content="{ll:Str '自定义聊天接口'}" GroupName="cgpttype" IsEnabled="False"
-                                        Style="{DynamicResource StandardRadioButtonStyle}" />
+                                <RadioButton x:Name="RBCGPTDIY" Grid.Row="1" Checked="CGPType_Checked"
+                                        GroupName="cgpttype" Style="{DynamicResource StandardRadioButtonStyle}"
+                                        Grid.ColumnSpan="2">
+                                    <Grid Width="{Binding ActualWidth,ElementName=RBCGPTDIY}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="40" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="{ll:Str '自定义聊天接口'}" Background="{x:Null}" />
+                                        <ComboBox x:Name="cbChatAPISelect"
+                                                Style="{DynamicResource StandardComboBoxStyle}" Grid.Column="0"
+                                                Grid.Row="1" SelectionChanged="cbChatAPISelect_SelectionChanged" />
+                                    </Grid>
+                                </RadioButton>
                             </Grid>
                             <Button x:Name="BtnCGPTReSet" Grid.Row="1" Grid.Column="2" Margin="4" Padding="1"
                                     pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
@@ -347,8 +378,8 @@
                                 Background="{DynamicResource SecondaryLight}" Click="save_click" Content="{ll:Str 保存游戏}"
                                 ToolTip="{ll:Str '手动保存桌宠存档,就算不手动保存,桌宠也会在退出的时候自动保存'}" />
                         <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                Background="{DynamicResource SecondaryLight}" 
-                                Content="{ll:Str 重新开始}" ToolTip="{ll:Str '重新开始新游戏,重置统计等信息\&#13;对于想要获得脱离超模从而获得成就非常有帮助'}" Click="restart_click" />
+                                Background="{DynamicResource SecondaryLight}" Content="{ll:Str 重新开始}"
+                                ToolTip="{ll:Str '重新开始新游戏,重置统计等信息\&#13;对于想要获得脱离超模从而获得成就非常有帮助'}" Click="restart_click" />
                         <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
                                 Background="{DynamicResource SecondaryLight}" Click="cleancache_click"
                                 Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
@@ -377,6 +408,7 @@
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <pu:Switch x:Name="CalFunctionBox" Grid.Column="2" Background="Transparent"
                                     BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
@@ -404,7 +436,7 @@
                                     <ComboBoxItem Content="Ill" />
                                 </ComboBox>
                             </Grid>
-                            <Grid Grid.Row="5" Grid.RowSpan="2" Grid.Column="2">
+                            <Grid Grid.Row="5" Grid.RowSpan="4" Grid.Column="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
@@ -491,7 +523,37 @@
                                     </ComboBoxItem>
                                 </ComboBox>
                             </Grid>
+                            <Grid Grid.Row="7" Grid.Column="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <WrapPanel Grid.ColumnSpan="3">
+                                    <TextBlock Text="{ll:Str '当前移动区域：'}" />
+                                    <TextBlock x:Name="textMoveArea" Text="{ll:Str '主屏幕'}" />
+                                </WrapPanel>
 
+                                <Button x:Name="BtnSetMoveArea_Default" Grid.Row="1" Grid.Column="0" Margin="5,5,5,5"
+                                        Padding="1" pu:ButtonHelper.CornerRadius="4"
+                                        Background="{DynamicResource SecondaryLight}"
+                                        Click="BtnSetMoveArea_Default_Click" Content="{ll:Str 重置为主屏}"
+                                        ToolTip="{ll:Str '设置桌宠只在主屏幕进行移动'}" />
+                                <Button x:Name="BtnSetMoveArea_DetectScreen" Grid.Row="1" Grid.Column="1"
+                                        Margin="5,5,5,5" Padding="1" pu:ButtonHelper.CornerRadius="4"
+                                        Background="{DynamicResource SecondaryLight}"
+                                        Click="BtnSetMoveArea_DetectScreen_Click" Content="{ll:Str 设为当前屏幕}"
+                                        ToolTip="{ll:Str '设置桌宠只在当前桌宠所在的屏幕范围进行移动'}" />
+                                <Button x:Name="BtnSetMoveArea_Window" Grid.Row="1" Grid.Column="2" Margin="5,5,5,5"
+                                        Padding="1" pu:ButtonHelper.CornerRadius="4"
+                                        Background="{DynamicResource SecondaryLight}"
+                                        Click="BtnSetMoveArea_Window_Click" Content="{ll:Str 自定移动范围}"
+                                        ToolTip="{ll:Str '手动设置桌宠可移动范围'}" />
+                            </Grid>
                             <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 数据计算}" />
                             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 显示状态}" />
                             <TextBlock Grid.Row="5" VerticalAlignment="Center" Text="{ll:Str 桌宠移动}" />
@@ -650,56 +712,59 @@
 
             </TabItem>
             <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 诊断}">
-                <StackPanel>
-                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
-                            TextWrapping="Wrap">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 自动超模MOD优化}" /><LineBreak />
-                            <Run Text="{ll:Str '对于超模内容,游戏会自动计算合理价格\&#13;如果未使用任何超模数据,数据菜单栏将会显示图标方便您进行炫耀数据'}" />
-                    </TextBlock>
-                    <pu:Switch x:Name="swAutoCal" Grid.Column="2" Background="Transparent" BorderBrush="{DynamicResource PrimaryDark}"
-                            BoxHeight="18" BoxWidth="35"
-                            CheckedBackground="{DynamicResource Primary}" CheckedBorderBrush="{DynamicResource Primary}"
-                            CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str '自动计算合理价格'}"
-                            ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}" ToggleSize="14"
-                            ToolTip="{ll:Str '该选项重启后生效'}" HorizontalAlignment="Left"
-                            Margin="20,0,0,0"
-                            Checked="swAutoCal_Checked" Unchecked="swAutoCal_Checked" />
-                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" FontSize="13"
-                            TextWrapping="Wrap" Margin="0,20,0,0">
-                        <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 诊断与反馈}" /> <LineBreak />
-                        <Run Text="{ll:Str '选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.'}" /><LineBreak />
-                        <Run Text="{ll:Str '无论选择哪个选项,游戏都可以安全正常地运行.'}" /> <Hyperlink Click="hyper_moreInfo">
-                            <Run Text="{ll:Str 获取有关这些设置的更多信息}" />
-                        </Hyperlink>
-                        <LineBreak />   <Run FontWeight="Bold" Text="{ll:Str '当前存档Hash验证信息'}" />
-                        :<Run x:Name="RHashCheck" FontWeight="Bold" Text="通过" />
-                    </TextBlock>
-                    <RadioButton x:Name="RBDiagnosisYES" Margin="10,10,10,0" HorizontalAlignment="Left"
-                            VerticalAlignment="Top" Checked="RBDiagnosisYES_Checked"
-                            Content="{ll:Str '发送诊断数据: 发送游戏存档, 包括饱腹,状态等各种游戏内\&#13;数据. 可能会包括该游戏内存和CPU使用情况'}"
-                            GroupName="diagnosis" Style="{DynamicResource StandardRadioButtonStyle}" />
-                    <RadioButton x:Name="RBDiagnosisNO" Margin="10,10,10,0" HorizontalAlignment="Left"
-                            VerticalAlignment="Top" Checked="RBDiagnosisNO_Checked"
-                            Content="{ll:Str '不发送诊断数据: 适用于启用修改器,修改过游戏数据等不\&#13;符合分析数据条件. 或不希望提供游戏数据的玩家'}"
-                            GroupName="diagnosis" IsChecked="True" Style="{DynamicResource StandardRadioButtonStyle}" />
-                    <TextBlock Margin="0,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Background="{x:Null}" TextWrapping="Wrap">
-                        <Run FontWeight="Bold" Text="{ll:Str 反馈频率}" /><LineBreak />
-                        <Run Text="{ll:Str 'VOS 应寻求我反馈按以下频率'}" />
-                    </TextBlock>
-                    <ComboBox x:Name="CBDiagnosis" Width="200" Margin="10,5,0,0" HorizontalAlignment="Left"
-                            VerticalAlignment="Top" IsEnabled="False" SelectedIndex="1"
-                            SelectionChanged="CBDiagnosis_SelectionChanged"
-                            Style="{DynamicResource StandardComboBoxStyle}">
-                        <ComboBoxItem Content="{ll:Str '每 两百 周期一次'}" />
-                        <ComboBoxItem Content="{ll:Str '每 五百 周期一次'}" />
-                        <ComboBoxItem Content="{ll:Str '每 一千 周期一次'}" />
-                        <ComboBoxItem Content="{ll:Str '每 两千 周期一次'}" />
-                        <ComboBoxItem Content="{ll:Str '每 五千 周期一次'}" />
-                        <ComboBoxItem Content="{ll:Str '每 一万 周期一次'}" />
-                        <ComboBoxItem Content="{ll:Str '每 两万 周期一次'}" />
-                    </ComboBox>
-                </StackPanel>
+                <ScrollViewer>
+                    <StackPanel>
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
+                                TextWrapping="Wrap">
+                                <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 自动超模MOD优化}" /><LineBreak />
+                                <Run Text="{ll:Str '对于超模内容,游戏会自动计算合理价格\&#13;如果未使用任何超模数据,数据菜单栏将会显示图标方便您进行炫耀数据'}" />
+                        </TextBlock>
+                        <pu:Switch x:Name="swAutoCal" Grid.Column="2" Background="Transparent"
+                                BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
+                                CheckedBackground="{DynamicResource Primary}"
+                                CheckedBorderBrush="{DynamicResource Primary}"
+                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str '自动计算合理价格'}"
+                                ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}" ToggleSize="14"
+                                ToolTip="{ll:Str '该选项重启后生效'}" HorizontalAlignment="Left" Margin="20,0,0,0"
+                                Checked="swAutoCal_Checked" Unchecked="swAutoCal_Checked" />
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
+                                FontSize="13" TextWrapping="Wrap" Margin="0,20,0,0">
+                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 诊断与反馈}" /> <LineBreak />
+                            <Run Text="{ll:Str '选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.'}" /><LineBreak />
+                            <Run Text="{ll:Str '无论选择哪个选项,游戏都可以安全正常地运行.'}" /> <Hyperlink Click="hyper_moreInfo">
+                                <Run Text="{ll:Str 获取有关这些设置的更多信息}" />
+                            </Hyperlink>
+                            <LineBreak />   <Run FontWeight="Bold" Text="{ll:Str '当前存档Hash验证信息'}" />
+                            :<Run x:Name="RHashCheck" FontWeight="Bold" Text="通过" />
+                        </TextBlock>
+                        <RadioButton x:Name="RBDiagnosisYES" Margin="10,10,10,0" HorizontalAlignment="Left"
+                                VerticalAlignment="Top" Checked="RBDiagnosisYES_Checked"
+                                Content="{ll:Str '发送诊断数据: 发送游戏存档, 包括饱腹,状态等各种游戏内\&#13;数据. 可能会包括该游戏内存和CPU使用情况'}"
+                                GroupName="diagnosis" Style="{DynamicResource StandardRadioButtonStyle}" />
+                        <RadioButton x:Name="RBDiagnosisNO" Margin="10,10,10,0" HorizontalAlignment="Left"
+                                VerticalAlignment="Top" Checked="RBDiagnosisNO_Checked"
+                                Content="{ll:Str '不发送诊断数据: 适用于启用修改器,修改过游戏数据等不\&#13;符合分析数据条件. 或不希望提供游戏数据的玩家'}"
+                                GroupName="diagnosis" IsChecked="True"
+                                Style="{DynamicResource StandardRadioButtonStyle}" />
+                        <TextBlock Margin="0,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                Background="{x:Null}" TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Text="{ll:Str 反馈频率}" /><LineBreak />
+                            <Run Text="{ll:Str 'VOS 应寻求我反馈按以下频率'}" />
+                        </TextBlock>
+                        <ComboBox x:Name="CBDiagnosis" Width="200" Margin="10,5,0,0" HorizontalAlignment="Left"
+                                VerticalAlignment="Top" IsEnabled="False" SelectedIndex="1"
+                                SelectionChanged="CBDiagnosis_SelectionChanged"
+                                Style="{DynamicResource StandardComboBoxStyle}">
+                            <ComboBoxItem Content="{ll:Str '每 两百 周期一次'}" />
+                            <ComboBoxItem Content="{ll:Str '每 五百 周期一次'}" />
+                            <ComboBoxItem Content="{ll:Str '每 一千 周期一次'}" />
+                            <ComboBoxItem Content="{ll:Str '每 两千 周期一次'}" />
+                            <ComboBoxItem Content="{ll:Str '每 五千 周期一次'}" />
+                            <ComboBoxItem Content="{ll:Str '每 一万 周期一次'}" />
+                            <ComboBoxItem Content="{ll:Str '每 两万 周期一次'}" />
+                        </ComboBox>
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
             <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str MOD管理}">
                 <Grid>

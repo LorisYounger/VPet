@@ -41,6 +41,39 @@ namespace VPet_Simulator.Core
         /// </summary>
         public DateTime StartTime;
         /// <summary>
+        /// 任务完成时调用该参数
+        /// </summary>
+        public event Action<FinishWorkInfo> E_FinishWork;
+        /// <summary>
+        /// 完成工作信息
+        /// </summary>
+        public struct FinishWorkInfo
+        {
+            /// <summary>
+            /// 当前完成工作
+            /// </summary>
+            public Work work;
+            /// <summary>
+            /// 当前完成工作收入
+            /// </summary>
+            public double count;
+            /// <summary>
+            /// 当前完成工作花费时间
+            /// </summary>
+            public double spendtime;
+            /// <summary>
+            /// 完成工作信息
+            /// </summary>
+            /// <param name="work">当前工作</param>
+            /// <param name="count">当前盈利(自动计算附加)</param>
+            public FinishWorkInfo(Work work, double count)
+            {
+                this.work = work;
+                this.count = count * (1 + work.FinishBonus);
+                this.spendtime = work.Time;
+            }
+        }
+        /// <summary>
         /// UI相关显示
         /// </summary>
         /// <param name="m"></param>
@@ -55,17 +88,19 @@ namespace VPet_Simulator.Core
                 //ts = TimeSpan.FromMinutes(MaxTime);
                 //tleft = TimeSpan.Zero;
                 //PBLeft.Value = MaxTime;
+                FinishWorkInfo fwi = new FinishWorkInfo(nowWork, GetCount);
+                E_FinishWork?.Invoke(fwi);
                 if (nowWork.Type == Work.WorkType.Work)
                 {
                     m.Core.Save.Money += GetCount * nowWork.FinishBonus;
-                    Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟", GetCount * (1 + nowWork.FinishBonus),
-                        nowWork.Time, nowWork.NameTrans), true));
+                    Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟", fwi.count,
+                        fwi.spendtime, fwi.work.NameTrans), true));
                 }
                 else
                 {
                     m.Core.Save.Exp += GetCount * nowWork.FinishBonus;
-                    Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟", GetCount * (1 + nowWork.FinishBonus),
-                        nowWork.Time, nowWork.NameTrans), true));
+                    Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟", fwi.count,
+                        fwi.spendtime, fwi.work.NameTrans), true));
                 }
                 return;
             }

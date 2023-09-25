@@ -4,10 +4,10 @@
 	{
 		"tokens"
 		{
-			"#Status_IDLE"		"%username%在%mode%闲逛"
-			"#Status_Music"		"%username%在%mode%跳舞"
-			"#Status_Sleep"		"%username%在%mode%睡大觉"
-			"#Status_Work"		"%username%在%mode%%work%"
+			"#Status_IDLE"		"%username%在%mode%%idel%%lv%"
+			"#Status_Music"		"%username%在%mode%跳舞%lv%"
+			"#Status_Sleep"		"%username%在%mode%睡大觉%lv%"
+			"#Status_Work"		"%username%在%mode%%work%%lv%"
 			"#Status_DIY"		"%DIY%"
 			"#Status_Ill"		"%username% 生病了"
 		}
@@ -16,10 +16,10 @@
 	{
 		"tokens"
 		{
-			"#Status_IDLE"		"%username%在%mode%閒逛"
-			"#Status_Music"		"%username%在%mode%跳舞"
-			"#Status_Sleep"		"%username%在%mode%睡大覺"
-			"#Status_Work"		"%username%在%mode%%work%"
+			"#Status_IDLE"		"%username%在%mode%%idel%%lv%"
+			"#Status_Music"		"%username%在%mode%跳舞%lv%"
+			"#Status_Sleep"		"%username%在%mode%睡大覺%lv%"
+			"#Status_Work"		"%username%在%mode%%work%%lv%"
 			"#Status_DIY"		"%DIY%"
 			"#Status_Ill"		"%username% 生病了"
 		}
@@ -28,10 +28,10 @@
 	{
 		"tokens"
 		{
-			"#Status_IDLE"		"%username% is %mode% idle"
-			"#Status_Music"		"%username% dancing %mode%"
-			"#Status_Sleep"		"%username% Sleep %mode%"
-			"#Status_Work"		"%username% %work% %mode%"
+			"#Status_IDLE"		"%username% is %mode% %idel%%lv%"
+			"#Status_Music"		"%username% dancing %mode%%lv%"
+			"#Status_Sleep"		"%username% Sleep %mode%%lv%"
+			"#Status_Work"		"%username% %work% %mode%%lv%"
 			"#Status_DIY"		"%DIY%"
 			"#Status_Ill"		"%username% is sick"
 		}

@@ -188,12 +188,12 @@ namespace VPet_Simulator.Windows
                 Set.StartRecordLastPoint = new Point(Dispatcher.Invoke(() => Left), Dispatcher.Invoke(() => Top));
                 File.WriteAllText(ExtensionValue.BaseDirectory + @"\Setting.lps", Set.ToString());
 
-                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
-                    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\BackUP");
+                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
+                    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
 
                 if (Core != null && Core.Save != null)
                 {
-                    var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\BackUP", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
+                    var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\Saves", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
                     {
                         if (int.TryParse(x.Split('_')[1].Split('.')[0], out int i))
                             return i;
@@ -204,13 +204,13 @@ namespace VPet_Simulator.Windows
                         File.Delete(ds[0]);
                         ds.RemoveAt(0);
                     }
-                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\BackUP\\Save_{st}.lps"))
-                        File.Delete(ExtensionValue.BaseDirectory + $"\\BackUP\\Save_{st}.lps");
+                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps"))
+                        File.Delete(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps");
 
                     if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
-                        File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + $"\\BackUP\\Save_{st}.lps");
-                    
-                    File.WriteAllText(ExtensionValue.BaseDirectory + @"\Save.lps", GameSavesData.ToLPS().ToString());
+                        File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + @"\Save.bkp");
+
+                    File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps", GameSavesData.ToLPS().ToString());
                 }
             }
         }
@@ -308,6 +308,7 @@ namespace VPet_Simulator.Windows
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
                     TakeItem(item);
+                    GameSavesData.Statistics[(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
                 else if (Core.Save.StrengthDrink < 75)
@@ -318,6 +319,7 @@ namespace VPet_Simulator.Windows
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
                     TakeItem(item);
+                    GameSavesData.Statistics[(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
                 else if (Set.AutoGift && Core.Save.Feeling < 50)
@@ -328,6 +330,7 @@ namespace VPet_Simulator.Windows
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
                     TakeItem(item);
+                    GameSavesData.Statistics[(gint)"stat_autogift"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
             }
@@ -459,6 +462,7 @@ namespace VPet_Simulator.Windows
 
             Core.Save.Money -= item.Price;
             //统计
+            GameSavesData.Statistics[(gint)"stat_buytimes"]++;
             GameSavesData.Statistics[(gint)("buy_" + item.Name)]++;
             GameSavesData.Statistics[(gdbe)"stat_betterbuy"] += item.Price;
             switch (item.Type)
@@ -471,6 +475,7 @@ namespace VPet_Simulator.Windows
                     break;
                 case Food.FoodType.Drug:
                     GameSavesData.Statistics[(gdbe)"stat_bb_drug"] += item.Price;
+                    GameSavesData.Statistics[(gdbe)"stat_bb_drug_exp"] += item.Exp;
                     break;
                 case Food.FoodType.Snack:
                     GameSavesData.Statistics[(gdbe)"stat_bb_snack"] += item.Price;
@@ -483,6 +488,7 @@ namespace VPet_Simulator.Windows
                     break;
                 case Food.FoodType.Gift:
                     GameSavesData.Statistics[(gdbe)"stat_bb_gift"] += item.Price;
+                    GameSavesData.Statistics[(gdbe)"stat_bb_gift_like"] += item.Likability;
                     break;
             }
         }
@@ -627,6 +633,14 @@ namespace VPet_Simulator.Windows
         }
         private void Handle_Steam(Main obj)
         {
+            if (HashCheck)
+            {
+                SteamFriends.SetRichPresence("lv", $" (lv{GameSavesData.GameSave.Level})");
+            }
+            else
+            {
+                SteamFriends.SetRichPresence("lv", " ");
+            }
             if (Core.Save.Mode == GameSave.ModeType.Ill)
             {
                 SteamFriends.SetRichPresence("steam_display", "#Status_Ill");
@@ -647,7 +661,23 @@ namespace VPet_Simulator.Windows
                         if (obj.DisplayType.Name == "music")
                             SteamFriends.SetRichPresence("steam_display", "#Status_Music");
                         else
+                        {
+                            switch (obj.DisplayType.Type)
+                            {
+                                case GraphType.Move:
+                                    SteamFriends.SetRichPresence("idel", "乱爬".Translate());
+                                    break;
+                                case GraphType.Idel:
+                                case GraphType.StateONE:
+                                case GraphType.StateTWO:
+                                    SteamFriends.SetRichPresence("idel", "发呆".Translate());
+                                    break;
+                                default:
+                                    SteamFriends.SetRichPresence("idel", "闲逛".Translate());
+                                    break;
+                            }
                             SteamFriends.SetRichPresence("steam_display", "#Status_IDLE");
+                        }
                         break;
                 }
             }
@@ -714,6 +744,8 @@ namespace VPet_Simulator.Windows
 
                     if (CurrMusicType != null && Main.IsIdel)
                     {//识别通过,开始跑跳舞动画
+                        //先统计下
+                        GameSavesData.Statistics[(gint)"stat_music"]++;
                         Main.Display(Core.Graph.FindGraph("music", AnimatType.A_Start, Core.Save.Mode), Display_Music);
                     }
                     else
