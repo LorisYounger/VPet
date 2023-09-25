@@ -676,6 +676,7 @@ namespace VPet_Simulator.Windows
 
 
                 m_menu = new ContextMenu();
+                m_menu.Popup += (x, y) => { GameSavesData.Statistics[(gint)"stat_menu_pop"]++; };
                 m_menu.MenuItems.Add(new MenuItem("鼠标穿透".Translate(), (x, y) => { SetTransparentHitThrough(); }) { });
                 m_menu.MenuItems.Add(new MenuItem("操作教程".Translate(), (x, y) =>
                 {
@@ -801,6 +802,11 @@ namespace VPet_Simulator.Windows
             //    }));
             //}
 
+        }
+
+        private void M_menu_Popup(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void WorkTimer_E_FinishWork(WorkTimer.FinishWorkInfo obj)

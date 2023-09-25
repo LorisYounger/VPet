@@ -308,6 +308,7 @@ namespace VPet_Simulator.Windows
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
                     TakeItem(item);
+                    GameSavesData.Statistics[(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
                 else if (Core.Save.StrengthDrink < 75)
@@ -318,6 +319,7 @@ namespace VPet_Simulator.Windows
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
                     TakeItem(item);
+                    GameSavesData.Statistics[(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
                 else if (Set.AutoGift && Core.Save.Feeling < 50)
@@ -328,6 +330,7 @@ namespace VPet_Simulator.Windows
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
                     TakeItem(item);
+                    GameSavesData.Statistics[(gint)"stat_autogift"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
             }
