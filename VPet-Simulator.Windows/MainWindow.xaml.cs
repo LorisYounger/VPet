@@ -167,13 +167,13 @@ namespace VPet_Simulator.Windows
                                 file.MoveTo(ExtensionValue.BaseDirectory + @"\Saves\" + file.Name);
                             else
                                 file.Delete();
-                        Directory.Delete(ExtensionValue.BaseDirectory + @"\BackUP");
+                        Directory.Delete(ExtensionValue.BaseDirectory + @"\BackUP", true);
                     }
                 }
-                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
-                {
-                    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
-                }
+                //if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
+                //{
+                //    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
+                //}
 
                 Task.Run(GameLoad);
             }
