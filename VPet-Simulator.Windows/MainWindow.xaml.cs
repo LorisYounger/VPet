@@ -467,6 +467,25 @@ namespace VPet_Simulator.Windows
                 //{
                 //    MessageBox.Show(food.RealPrice.ToString());
                 //}
+                foreach (var selet in ClickTexts)
+                {
+                    selet.Exp = Math.Max(Math.Min(selet.Exp, 1000), -1000);
+                    //food.Exp += selet.Exp;
+                    selet.Feeling = Math.Max(Math.Min(selet.Feeling, 1000), -1000);
+                    //food.Feeling += selet.Feeling;
+                    selet.Health = Math.Max(Math.Min(selet.Feeling, 100), -100);
+                    //food.Health += selet.Health;
+                    selet.Likability = Math.Max(Math.Min(selet.Likability, 50), -50);
+                    //food.Likability += selet.Likability;
+                    selet.Money = Math.Max(Math.Min(selet.Money, 1000), -1000);
+                    //food.Price -= selet.Money;
+                    selet.Strength = Math.Max(Math.Min(selet.Strength, 1000), -1000);
+                    //food.Strength += selet.Strength;
+                    selet.StrengthDrink = Math.Max(Math.Min(selet.StrengthDrink, 1000), -1000);
+                    //food.StrengthDrink += selet.StrengthDrink;
+                    selet.StrengthFood = Math.Max(Math.Min(selet.StrengthFood, 1000), -1000);
+                    //food.StrengthFood += selet.StrengthFood;
+                }
             }
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
@@ -636,7 +655,35 @@ namespace VPet_Simulator.Windows
                         lastclicktime = DateTime.Now.Ticks;
                         var rt = GetClickText();
                         if (rt != null)
+                        {
+                            //聊天效果
+                            if (rt.Exp != 0)
+                            {
+                                if (rt.Exp > 0)
+                                {
+                                    GameSavesData.Statistics[(gint)"stat_rt_exp_p"]++;
+                                }
+                                else
+                                    GameSavesData.Statistics[(gint)"stat_rt_exp_d"]++;
+                            }
+                            if (rt.Likability != 0)
+                            {
+                                if (rt.Likability > 0)
+                                    GameSavesData.Statistics[(gint)"stat_rt_like_p"]++;
+                                else
+                                    GameSavesData.Statistics[(gint)"stat_rt_like_d"]++;
+                            }
+                            if (rt.Money != 0)
+                            {
+                                if (rt.Money > 0)
+                                    GameSavesData.Statistics[(gint)"stat_rt_money_p"]++;
+                                else
+                                    GameSavesData.Statistics[(gint)"stat_rt_money_d"]++;
+                            }
+                            Main.Core.Save.EatFood(rt);
+                            Main.Core.Save.Money += rt.Money;
                             Main.SayRnd(rt.TranslateText);
+                        }
                     }
                 };
                 Main.PlayVoiceVolume = Set.VoiceVolume;

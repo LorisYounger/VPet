@@ -13,7 +13,7 @@ namespace VPet_Simulator.Windows.Interface
     /// <summary>
     /// 点击桌宠时触发的乱说话
     /// </summary>
-    public class ClickText : ICheckText
+    public class ClickText : ICheckText, IFood
     {
         public ClickText()
         {
@@ -84,5 +84,22 @@ namespace VPet_Simulator.Windows.Interface
             }
             return true;
         }
+        [Line(ignoreCase: true)]
+        public double Money { get; set; }
+
+        [Line(ignoreCase: true)]
+        public int Exp { get; set; }
+        [Line(ignoreCase: true)]
+        public double Strength { get; set; }
+        [Line(ignoreCase: true)]
+        public double StrengthFood { get; set; }
+        [Line(ignoreCase: true)]
+        public double StrengthDrink { get; set; }
+        [Line(ignoreCase: true)]
+        public double Feeling { get; set; }
+        [Line(ignoreCase: true)]
+        public double Health { get; set; }
+        [Line(ignoreCase: true)]
+        public double Likability { get; set; }
     }
 }
