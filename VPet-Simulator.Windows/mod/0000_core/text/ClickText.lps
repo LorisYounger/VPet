@@ -108,7 +108,7 @@ clicktext:|LikeMin#900:|State#Sleep:|Text#喜欢。。。主人。。:|
 clicktext:|LikeMin#1000:|State#Sleep:|Text#终于到主人身边了嘿嘿嘿。。:|
 clicktext:|LikeMin#0:|State#Sleep:|Text#我已经吃不下了啦:|
 clicktext:|LikeMin#0:|State#Sleep:|Text#。。。。:|
-clicktext:|LikeMin#0:|State#Sleep:|Text#我吃不了这么多。。。:|
+clicktext:|LikeMin#0:|State#Sleep:|Text#我吃不了这么多。。。:|Exp#15:|
 clicktext:|LikeMin#0:|State#Sleep:|Text#呜喵。。:|
 clicktext:|LikeMin#0:|State#Sleep:|Text#草莓牛奶。。嘻嘻。。:|
 clicktext:|LikeMin#0:|State#Sleep:|Mode#1:|Text#诶嘻嘻嘻:|
