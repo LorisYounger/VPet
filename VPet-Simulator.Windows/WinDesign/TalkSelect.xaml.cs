@@ -132,7 +132,7 @@ namespace VPet_Simulator.Windows
                 else
                     mw.GameSavesData.Statistics[(gint)"stat_say_like_d"]++;
             }
-            if(say.Money != 0)
+            if (say.Money != 0)
             {
                 if (say.Money > 0)
                     mw.GameSavesData.Statistics[(gint)"stat_say_money_p"]++;
@@ -145,7 +145,7 @@ namespace VPet_Simulator.Windows
             textSaid.Add(say.Choose);
             RelsTime = RelsTime.AddMinutes(5);
 
-            mw.Main.SayRnd(say.ConverText(mw.Main));
+            mw.Main.SayRnd(say.ConverText(mw.Main), desc: say.FoodToDescription());
             if (say.ToTags.Count > 0)
             {
                 var list = mw.SelectTexts.FindAll(x => x.ContainsTag(say.ToTags)).ToList();

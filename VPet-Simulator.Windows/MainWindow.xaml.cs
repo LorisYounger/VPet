@@ -26,6 +26,7 @@ using Line = LinePutScript.Line;
 using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
+using System.Web.UI.WebControls;
 
 namespace VPet_Simulator.Windows
 {
@@ -403,7 +404,7 @@ namespace VPet_Simulator.Windows
             else//新玩家,默认设置为
                 Set["CGPT"][(gstr)"type"] = "LB";
 
-            
+
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏MOD".Translate()));
 
             //当前桌宠动画
@@ -445,7 +446,7 @@ namespace VPet_Simulator.Windows
                 }
                 //var food = new Food();
                 foreach (var selet in SelectTexts)
-                {                  
+                {
                     selet.Exp = Math.Max(Math.Min(selet.Exp, 1000), -1000);
                     //food.Exp += selet.Exp;
                     selet.Feeling = Math.Max(Math.Min(selet.Feeling, 1000), -1000);
@@ -682,7 +683,7 @@ namespace VPet_Simulator.Windows
                             }
                             Main.Core.Save.EatFood(rt);
                             Main.Core.Save.Money += rt.Money;
-                            Main.SayRnd(rt.TranslateText);
+                            Main.SayRnd(rt.TranslateText, desc: rt.FoodToDescription());
                         }
                     }
                 };
