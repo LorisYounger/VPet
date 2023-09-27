@@ -207,10 +207,14 @@ namespace VPet_Simulator.Windows
                     if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps"))
                         File.Delete(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps");
 
+                    File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps", GameSavesData.ToLPS().ToString());
+
+                    if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.bkp"))
+                        File.Delete(ExtensionValue.BaseDirectory + @"\Save.bkp");
+
                     if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
                         File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + @"\Save.bkp");
 
-                    File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps", GameSavesData.ToLPS().ToString());
                 }
             }
         }
