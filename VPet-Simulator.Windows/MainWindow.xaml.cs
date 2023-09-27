@@ -26,6 +26,7 @@ using Line = LinePutScript.Line;
 using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
+using System.Web.UI.WebControls;
 
 namespace VPet_Simulator.Windows
 {
@@ -167,13 +168,13 @@ namespace VPet_Simulator.Windows
                                 file.MoveTo(ExtensionValue.BaseDirectory + @"\Saves\" + file.Name);
                             else
                                 file.Delete();
-                        Directory.Delete(ExtensionValue.BaseDirectory + @"\BackUP");
+                        Directory.Delete(ExtensionValue.BaseDirectory + @"\BackUP", true);
                     }
                 }
-                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
-                {
-                    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
-                }
+                //if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
+                //{
+                //    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
+                //}
 
                 Task.Run(GameLoad);
             }
@@ -403,19 +404,6 @@ namespace VPet_Simulator.Windows
             else//新玩家,默认设置为
                 Set["CGPT"][(gstr)"type"] = "LB";
 
-            //加载数据合理化:食物
-            if (!Set["gameconfig"].GetBool("noAutoCal"))
-            {
-                foreach (Food f in Foods)
-                {
-                    if (f.IsOverLoad())
-                    {
-                        f.Price = Math.Max((int)f.RealPrice, 1);
-                        f.isoverload = false;
-                    }
-                }
-            }
-
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏MOD".Translate()));
 
@@ -445,6 +433,61 @@ namespace VPet_Simulator.Windows
                 //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
                 LoadLatestSave(petloader.PetName);
 
+            //加载数据合理化:食物
+            if (!Set["gameconfig"].GetBool("noAutoCal"))
+            {
+                foreach (Food f in Foods)
+                {
+                    if (f.IsOverLoad())
+                    {
+                        f.Price = Math.Max((int)f.RealPrice, 1);
+                        f.isoverload = false;
+                    }
+                }
+                //var food = new Food();
+                foreach (var selet in SelectTexts)
+                {
+                    selet.Exp = Math.Max(Math.Min(selet.Exp, 1000), -1000);
+                    //food.Exp += selet.Exp;
+                    selet.Feeling = Math.Max(Math.Min(selet.Feeling, 1000), -1000);
+                    //food.Feeling += selet.Feeling;
+                    selet.Health = Math.Max(Math.Min(selet.Feeling, 100), -100);
+                    //food.Health += selet.Health;
+                    selet.Likability = Math.Max(Math.Min(selet.Likability, 50), -50);
+                    //food.Likability += selet.Likability;
+                    selet.Money = Math.Max(Math.Min(selet.Money, 1000), -1000);
+                    //food.Price -= selet.Money;
+                    selet.Strength = Math.Max(Math.Min(selet.Strength, 1000), -1000);
+                    //food.Strength += selet.Strength;
+                    selet.StrengthDrink = Math.Max(Math.Min(selet.StrengthDrink, 1000), -1000);
+                    //food.StrengthDrink += selet.StrengthDrink;
+                    selet.StrengthFood = Math.Max(Math.Min(selet.StrengthFood, 1000), -1000);
+                    //food.StrengthFood += selet.StrengthFood;
+                }
+                //if (food.IsOverLoad())
+                //{
+                //    MessageBox.Show(food.RealPrice.ToString());
+                //}
+                foreach (var selet in ClickTexts)
+                {
+                    selet.Exp = Math.Max(Math.Min(selet.Exp, 1000), -1000);
+                    //food.Exp += selet.Exp;
+                    selet.Feeling = Math.Max(Math.Min(selet.Feeling, 1000), -1000);
+                    //food.Feeling += selet.Feeling;
+                    selet.Health = Math.Max(Math.Min(selet.Feeling, 100), -100);
+                    //food.Health += selet.Health;
+                    selet.Likability = Math.Max(Math.Min(selet.Likability, 50), -50);
+                    //food.Likability += selet.Likability;
+                    selet.Money = Math.Max(Math.Min(selet.Money, 1000), -1000);
+                    //food.Price -= selet.Money;
+                    selet.Strength = Math.Max(Math.Min(selet.Strength, 1000), -1000);
+                    //food.Strength += selet.Strength;
+                    selet.StrengthDrink = Math.Max(Math.Min(selet.StrengthDrink, 1000), -1000);
+                    //food.StrengthDrink += selet.StrengthDrink;
+                    selet.StrengthFood = Math.Max(Math.Min(selet.StrengthFood, 1000), -1000);
+                    //food.StrengthFood += selet.StrengthFood;
+                }
+            }
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
 
@@ -613,7 +656,35 @@ namespace VPet_Simulator.Windows
                         lastclicktime = DateTime.Now.Ticks;
                         var rt = GetClickText();
                         if (rt != null)
-                            Main.SayRnd(rt.TranslateText);
+                        {
+                            //聊天效果
+                            if (rt.Exp != 0)
+                            {
+                                if (rt.Exp > 0)
+                                {
+                                    GameSavesData.Statistics[(gint)"stat_rt_exp_p"]++;
+                                }
+                                else
+                                    GameSavesData.Statistics[(gint)"stat_rt_exp_d"]++;
+                            }
+                            if (rt.Likability != 0)
+                            {
+                                if (rt.Likability > 0)
+                                    GameSavesData.Statistics[(gint)"stat_rt_like_p"]++;
+                                else
+                                    GameSavesData.Statistics[(gint)"stat_rt_like_d"]++;
+                            }
+                            if (rt.Money != 0)
+                            {
+                                if (rt.Money > 0)
+                                    GameSavesData.Statistics[(gint)"stat_rt_money_p"]++;
+                                else
+                                    GameSavesData.Statistics[(gint)"stat_rt_money_d"]++;
+                            }
+                            Main.Core.Save.EatFood(rt);
+                            Main.Core.Save.Money += rt.Money;
+                            Main.SayRnd(rt.TranslateText, desc: rt.FoodToDescription());
+                        }
                     }
                 };
                 Main.PlayVoiceVolume = Set.VoiceVolume;

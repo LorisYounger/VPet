@@ -33,15 +33,15 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 说话,使用随机表情
         /// </summary>
-        public void SayRnd(string text, bool force = false)
+        public void SayRnd(string text, bool force = false, string desc = null)
         {
-            Say(text, Core.Graph.FindName(GraphType.Say), force);
+            Say(text, Core.Graph.FindName(GraphType.Say), force, desc);
         }
         /// <summary>
         /// 说话
         /// </summary>
         /// <param name="text">说话内容</param>
-        public void Say(string text, string graphname = null, bool force = false)
+        public void Say(string text, string graphname = null, bool force = false, string desc = null)
         {
             Task.Run(() =>
             {
@@ -49,12 +49,22 @@ namespace VPet_Simulator.Core
                 if (force || !string.IsNullOrWhiteSpace(graphname) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
                     Display(graphname, AnimatType.A_Start, () =>
                     {
-                        Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text, graphname));
+                        Dispatcher.Invoke(() =>
+                        {
+                            if (!string.IsNullOrWhiteSpace(desc))
+                                MsgBar.MessageBoxContent.Children.Add(new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = System.Windows.HorizontalAlignment.Right });
+                            MsgBar.Show(Core.Save.Name, text, graphname);
+                        });
                         DisplayBLoopingForce(graphname);
                     });
                 else
                 {
-                    Dispatcher.Invoke(() => MsgBar.Show(Core.Save.Name, text));
+                    Dispatcher.Invoke(() =>
+                    {
+                        if (!string.IsNullOrWhiteSpace(desc))
+                            MsgBar.MessageBoxContent.Children.Add(new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = System.Windows.HorizontalAlignment.Right });
+                        MsgBar.Show(Core.Save.Name, text);
+                    });
                 }
             });
         }

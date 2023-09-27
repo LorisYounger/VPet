@@ -201,6 +201,11 @@ namespace VPet_Simulator.Core
         private Work nowWork;
         public void Stop(Action @then = null)
         {
+            if (m.State == Main.WorkingState.Work && nowWork != null)
+            {
+                FinishWorkInfo fwi = new FinishWorkInfo(nowWork, GetCount);
+                E_FinishWork?.Invoke(fwi);
+            }
             Visibility = Visibility.Collapsed;
             m.State = Main.WorkingState.Nomal;
             m.Display(nowWork.Graph, AnimatType.C_End, then ?? m.DisplayNomal);

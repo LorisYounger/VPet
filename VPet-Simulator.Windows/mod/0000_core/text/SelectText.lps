@@ -114,7 +114,7 @@ SelectText:|Choose#有什么学习技巧:|LevelMin#10:|Text#只要学不死，�
 SelectText:|Choose#有什么学习技巧:|Text#要找到合适自己的学习方法和学习习惯喵:|Tags#Level:|Totags#Level:|Exp#1:|
 SelectText:|Choose#觉得自己合适那个专业:|LevelMin#20:|Text#人工智能喵！:|Tags#Level:|Totags#Level:|Exp#100:|Likability#1:|
 SelectText:|Choose#觉得自己合适那个专业:|LevelMin#10:|Text#人家想学计算机！:|Tags#Level:|Totags#Level:|Exp#10:|
-SelectText:|Choose#觉得自己合适那个专业:|Text#土木工程。:|Tags#Level:|Totags#Level:|Exp#1:|
+SelectText:|Choose#觉得自己合适那个专业:|Text#土木工程。:|Tags#Level:|Totags#Level:|Exp#-1:|Money#-1:|
 SelectText:|Choose#想去上学吗:|LevelMin#20:|Text#主人，这道题应该这么解喵:|Tags#Level:|Totags#Level:|Exp#100:|
 SelectText:|Choose#想去上学吗:|LevelMin#10:|Text#想和主人一起上学！:|Tags#Level:|Totags#Level:|Exp#10:|
 SelectText:|Choose#想去上学吗:|Text#上学？开心吗喵？:|Tags#Level:|Totags#Level:|Exp#1:|
@@ -132,15 +132,15 @@ SelectText:|Choose#你对我是怎么看的:|Text#是主人喵~:|Tags#Like:|Tota
 SelectText:|Choose#身体还好吗？:|HealthMin#50:|Text#我没事主人~不用担心:|Tags#Health:|Totags#Health:|Feeling#1:|Likability#1:|
 SelectText:|Choose#身体还好吗？:|HealthMin#25:|HealthMax#50:|Text#我不太舒服主人:|Tags#Health:|Totags#Health:|Exp#1:|Health#1:|
 SelectText:|Choose#身体还好吗？:|HealthMax#25:|Text#主人我好难受。。:|Tags#Health:|Totags#Health:|Feeling#-1:|Likability#-1:|
-SelectText:|Choose#生病会吃什么药:|HealthMin#50:|Text#平时多喝水多做运动好好吃饭早睡早起就是最好的药喵。:|Tags#Health:|Totags#Health:|Feeling#1:|Likability#1:|
-SelectText:|Choose#生病会吃什么药:|HealthMin#25:|HealthMax#50:|Text#给我来点维生素C吧喵。:|Tags#Health:|Totags#Health:|Exp#1:|Health#1:|
-SelectText:|Choose#生病会吃什么药:|HealthMax#25:|Text#救心丸。。我的救心丸喵。。:|Tags#Health:|Totags#Health:|Feeling#-1:|Likability#-1:|
+SelectText:|Choose#生病会吃什么药:|HealthMin#50:|Text#平时多喝水多做运动好好吃饭早睡早起就是最好的药喵。:|Tags#Health:|Totags#Health:|Feeling#1:|Likability#1:|Money#-1:|
+SelectText:|Choose#生病会吃什么药:|HealthMin#25:|HealthMax#50:|Text#给我来点维生素C吧喵。:|Tags#Health:|Totags#Health:|Exp#1:|Health#1:|Money#-1:|
+SelectText:|Choose#生病会吃什么药:|HealthMax#25:|Text#救心丸。。我的救心丸喵。。:|Tags#Health:|Totags#Health:|Feeling#-1:|Likability#-1:|Money#-1:|
 SelectText:|Choose#讨厌吃什么药:|HealthMin#50:|Text#不知道为什么，吃药好像能变聪明喵:|Tags#Health:|Totags#Health:|Feeling#1:|Likability#1:|
 SelectText:|Choose#讨厌吃什么药:|HealthMin#25:|HealthMax#50:|Text#呸，呸，药好苦，可是没办法了喵。:|Tags#Health:|Totags#Health:|Exp#1:|Health#1:|
 SelectText:|Choose#讨厌吃什么药:|HealthMax#25:|Text#药当饭吃不是很正常喵？:|Tags#Health:|Totags#Health:|Feeling#-1:|Likability#-1:|
-SelectText:|Choose#去医院怎么样:|HealthMin#50:|Text#不要喵！！讨厌打针喵！:|Tags#Health:|Totags#Health:|Feeling#1:|Likability#1:|
-SelectText:|Choose#去医院怎么样:|HealthMin#25:|HealthMax#50:|Text#能挂儿科吗喵。。:|Tags#Health:|Totags#Health:|Exp#1:|Health#1:|
-SelectText:|Choose#去医院怎么样:|HealthMax#25:|Text#帮我叫。。救护车。。:|Tags#Health:|Totags#Health:|Feeling#-1:|Likability#-1:|
+SelectText:|Choose#去医院怎么样:|HealthMin#50:|Text#不要喵！！讨厌打针喵！:|Tags#Health:|Totags#Health:|Feeling#1:|Likability#1:|Money#-1:|
+SelectText:|Choose#去医院怎么样:|HealthMin#25:|HealthMax#50:|Text#能挂儿科吗喵。。:|Tags#Health:|Totags#Health:|Exp#1:|Health#1:|Money#-1:|
+SelectText:|Choose#去医院怎么样:|HealthMax#25:|Text#帮我叫。。救护车。。:|Tags#Health:|Totags#Health:|Feeling#-1:|Likability#-1:|Money#-1:|
 SelectText:|Choose#生病了怎么办:|HealthMin#50:|Text#要主人抱抱就好啦~:|Tags#Health:|Totags#Health:|Feeling#1:|Likability#1:|
 SelectText:|Choose#生病了怎么办:|HealthMin#25:|HealthMax#50:|Text#咳喵，麻烦主人照顾我了:|Tags#Health:|Totags#Health:|Exp#1:|Health#1:|
 SelectText:|Choose#生病了怎么办:|HealthMax#25:|Text#（病危通知书）:|Tags#Health:|Totags#Health:|Feeling#-1:|Likability#-1:|
