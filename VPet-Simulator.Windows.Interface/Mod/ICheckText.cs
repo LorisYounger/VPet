@@ -16,7 +16,7 @@ namespace VPet_Simulator.Windows.Interface
     public class ICheckText
     {
         [Line(ignoreCase: true)]
-        private int mode { get; set; } = 7;
+        public int mode { get; set; } = 7;
         /// <summary>
         /// 需求状态模式
         /// </summary>      

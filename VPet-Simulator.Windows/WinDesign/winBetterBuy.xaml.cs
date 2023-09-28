@@ -112,7 +112,7 @@ namespace VPet_Simulator.Windows
                         foods = mw.Foods.FindAll(x => x.Star);
                         break;
                     default:
-                        foods = mw.Foods.FindAll(x => x.Type == type);
+                        foods = mw.Foods.FindAll(x => x.Type == type);// || x.Type == Food.FoodType.Limit);
                         break;
                 }
                 if (!string.IsNullOrEmpty(searchtext))
