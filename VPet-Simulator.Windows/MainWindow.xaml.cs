@@ -313,6 +313,7 @@ namespace VPet_Simulator.Windows
             if (IsSteamUser)//如果是steam用户,尝试加载workshop
             {
                 var workshop = Set["workshop"];
+                workshop.Clear();
                 await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading Steam Workshop"));
                 int i = 1;
                 while (true)
