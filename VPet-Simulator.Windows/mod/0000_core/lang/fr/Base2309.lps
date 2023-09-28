@@ -1,0 +1,41 @@
+聊天框等相关设置#Chat box and other related settings:|
+暂无聊天API, 您可以通过订阅MOD添加#There is no chat API yet, you can add it by subscribing to the mod.:|
+打开 {0} 设置#Open {0} Settings:|
+恢复#Restore:|
+Mod制作器#Mod Maker:|
+当前移动区域：#The current movement area::|
+主屏幕#Home Screen:|
+重置为主屏#Reset to home screen:|
+设置桌宠只在主屏幕进行移动#Set VPET to move only on the home screen:|
+设为当前屏幕#Set to current screen:|
+设置桌宠只在当前桌宠所在的屏幕范围进行移动#Sets the VPET to move only within the current screen range of the VPET.:|
+自定移动范围#Customize range of movement:|
+手动设置桌宠可移动范围#Manually set the range of movement for your favorite:|
+work#Work:|
+桌宠移动范围#Move range of VPET:|
+鼠标左键拖动范围\r调整边框调整大小#Left mouse button to drag the range \r adjust the border to adjust the size:|
+设置当前范围为移动范围#Set the current range as the moving range:|
+未找到可播放动画, 已停止运行桌宠模块#No playable animation found, Stopped running VPET Module:|
+工作取消#Job canceled.:|
+{2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟#{2}Completed, accumulated {0:f2} experience\n Total time spent {1}minutes.:|
+EXP#EXP:|
+检测到您开启了开机启动, 以下是开机启动相关提示信息: (仅显示一次)#We have detected that you have booted up the game, the following is a message about booting up the game: (shown only once):|
+游戏开机启动的实现方式是创建快捷方式,不是注册表,更健康,所以游戏卸了也不知道\n如果游戏打不开,可以去这里手动删除游戏开机启动快捷方式:\n%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\#The way to realize the game startup is to create shortcuts, not the registry, healthier, so the game uninstalled also do not know \n If the game can not open, you can go here to manually delete the game startup shortcuts:\n%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\:|
+关于卸载不掉的问题是因为开启了开机启动#The problem of uninstallation is due to the startup being turned on.:|
+该模组已损坏#The module is corrupted.:|
+开机启动重要消息#Important news about startup.:|
+我已确认,并在卸载游戏前会关闭该功能#I have confirmed and will disable it before uninstalling the game.:|
+没有需要提交的翻译的内容#There are no translations that need to be submitted:|
+当宠物不开心的时候会自己给自己买礼物\r请注意,宠物可能会乱花钱,而且礼物一般都非常贵\r额外加收20%运送费用#When the pet is unhappy, it will buy gifts for itself\rPlease note that pets may spend money indiscriminately, and gifts are generally very expensive\rAdditional 20% shipping costs:|
+让宠物自己买礼物#Let the pet buy gifts for itself:|
+按好感度#By favorability:|
+更好买老顾客大优惠!桌宠的食物钱我来出!\n更好买提示您:$10以下的食物/药品等随便赊账#Better buy old customers big discounts! I'll pay for the food money of the VPET!\nBetter buy tips you: $10 or less food / medicine, etc. can be charged at will:|
+看到您囊中羞涩,桌宠拿出了1000块私房钱出来给你#Seeing that you are shy in your pocket, the VPET took out 1000 yuan of private money to give you:|
+隐藏窗口#Hide Window:|
+在任务切换器中隐藏窗口#Hide window from task switcher:|
+在Alt+Tab中隐藏#Hide from Alt+Tab:|
+音频播放失败,已尝试自动切换到备用播放器. 如果问题持续,请检查是否已安装WindowsMediaPlayer#Audio playback failed, attempted automatic switch to backup player. If the issue persists, please check if Windows Media Player is installed.:|
+音频错误#audio error:|
+闲逛#Idle:|
+乱爬#Climb:|
+发呆#Stare:|

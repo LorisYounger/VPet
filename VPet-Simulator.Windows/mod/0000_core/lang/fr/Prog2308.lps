@@ -1,0 +1,34 @@
+创意工坊物品无法进行上传,请移动到mod文件夹后重试#Creative Workshop items can not be uploaded, please move to `mod` folder and try again.:|
+由于修改游戏数据导致数据溢出,存档可能会出错\n开发者提醒您请不要使用过于超模的MOD#Due to the modification of the game data caused by data overflow, the archive may be wrong\nThe developer reminds you not to use too much supermodel MOD.:|
+玩耍#Play:|
+研究#Research:|
+玩游戏#Play game:|
+保存游戏#Save game:|
+手动保存桌宠存档,就算不手动保存,桌宠也会在退出的时候自动保存#Manually save the desktop pet archive, even if you do not manually save, the desktop pet will automatically save when you exit.:|
+保存成功#Save successfully:|
+模组 {0} 插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题#Module {0} plug-in damage\nVirtual desktop pet simulator failed to load the plug-in\nPlease contact the author to fix the problem.:|
+缓存被其他软件删除,游戏无法继续运行\n请重启游戏重新生成缓存#Cache is deleted by other software, the game can not continue to run\nPlease restart the game to regenerate the cache.:|
+游戏内存不足,请修改设置中渲染分辨率以便降低内存使用#Game memory is insufficient, please modify the rendering resolution in the settings to reduce memory usage.:|
+没有可以说的话#There's nothing to say:|
+下次刷新剩余时间: {0:f1}分钟#Next refresh remaining time: {0:f1} minutes:|
+使用桌宠选项式\r聊天功能#Use vpet type\rchat function:|
+支持MOD与创意工坊添加聊天内容#Support MOD and creative workshop add chat content:|
+按经验值#Exp:|
+删错误#Delete error:|
+余额不足100，无法开启自动购买#Balance is less than 100, unable to open automatic purchase:|
+让宠物自己买东西吃#Let pet purchase on their own:|
+当宠物口渴或者饥饿的时候会自己买东西吃\r请注意,宠物可能会乱花钱和吃错误的东西\r额外加收20%外卖运送费用#When the pet is thirsty or hungry, it will buy something to eat on its own\rPlease note that the pet may spend money and eat the wrong things\rExtra 20% takeout delivery fee:|
+清屏#Clean screen:|
+游戏操作#Game operation:|
+自动超模MOD优化#Automatic supermodel MOD optimization:|
+对于超模内容,游戏会自动计算合理价格\r如果未使用任何超模数据,数据菜单栏将会显示图标方便您进行炫耀数据#For supermodel content, the game will automatically calculate the reasonable price\rIf no supermodel data is used, the data menu bar will display the icon to facilitate your data.:|
+自动计算合理价格#Automatically calculate reasonable price:|
+该选项重启后生效#This option takes effect after restart:|
+当前食物/物品属性超模,是否继续使用?\n使用超模食物可能会导致游戏发生不可预料的错误\n使用超模食物不影响大部分成就解锁\n本物品推荐价格为{0:f0}#The current food/item attribute supermodel, whether to continue to use?\nUsing supermodel food may cause the game to have unexpected errors\nUsing supermodel food does not affect most of the achievements to unlock\nThe recommended price for this item is {0:f0}:|
+超模食物/物品使用提醒#Supermodel food/item use reminder:|
+当前工作数据属性超模,是否继续工作?\n超模工作可能会导致游戏发生不可预料的错误\n超模工作不影响大部分成就解锁\n当前数据比率 {0:f2} 推荐<1.5\n盈利速度:{1:f0} 推荐<{2}#The current work data attribute supermodel, whether to continue to work?\nSupermodel work may cause the game to have unexpected errors\nSupermodel work does not affect most of the achievements to unlock\nCurrent data ratio {0:f2} recommended <1.5\nProfit speed: {1:f0} recommended <{2}:|
+是没有修改过存档/使用超模MOD的玩家专属标志#Is there no modified archive/supermodel MOD player exclusive logo:|
+重新开始#Restart New Game:|
+重新开始新游戏,重置统计等信息\r对于想要获得脱离超模从而获得成就非常有帮助#Restart a new game, reset statistics and other information\rIt is very helpful for those who want to get out of the supermodel and get achievements.:|
+是否重置游戏数据重新开始?\n该操作无法撤回#Reset the game data to restart?\nThis operation can not be revoked:|
+重置成功#Reset successfully:|

@@ -1,0 +1,453 @@
+尝试加载游戏MOD#Essai de charger le jeu MOD:|
+你知道吗? 鼠标右键可以打开菜单栏#Le saviez-vous ? Cliquer sur le bouton droit de la souris pour ouvrir la barre de menu:|
+如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的#Si vous estimez qu'il y a trop peu de fonctions pour le moment, restez simplement AFK plus longtemps. Les animaux se déplaceront d'eux-mêmes:|
+你知道吗? 你可以在设置里面修改游戏的缩放比例#Le saviez-vous ? Vous pouvez modifier le taux de zoom du jeu dans les paramètres:|
+想要宠物不乱动? 设置里可以设置智能移动或者关闭移动#Vous voulez que votre animal reste immobile ? Les déplacements intelligents peuvent être activés dans les paramètres:|
+有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧#Avez-vous des suggestions ou des commentaires sur le jeu ? Accéder au menu - System - Feedback Hub pour un retour d'information:|
+你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing#Le fait de taper au hasard fait partie du système d'expression orale, mais n'est pas encore fonctionnnel. Il le fait pas encore.:|
+你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧#Avez-vous ajouté VUP-Simulator et VPet-Simulator à votre liste de souhaits ? Allez-y et ajoutez-les:|
+这游戏开发这么慢,都怪画师太咕了#La lenteur du développement de ce jeu est due à la procrastination de l'artiste du jeu.:|
+长按脑袋拖动桌宠到你喜欢的任意位置#Tenez la tête et faites glisser l'animal de bureau où vous le souhaitez:|
+欢迎加入 虚拟主播模拟器群 430081239#Ce projet à code source ouvert est situé à l'adresse suivante https://github.com/LorisYounger/VPet:|
+关注 {0} 谢谢喵#Abonnez-vous {0} merci:|
+尝试加载动画和生成缓存#Tentative de chargement des animations et de génération de caches:|
+正在加载CGPT#Chargement CGPT:|
+设置#Paramètres:|
+图形#Graphique:|
+快速切换#Quick Switcher:|
+置于顶层#Toujours au sommet:|
+将桌宠置于顶层#Activer:|
+鼠标将会穿过桌宠到下方内容,不打扰操作\r该选项#La souris passera à travers le pet du bureau jusqu'au contenu ci-dessous, sans interagir avec la fenêtre principale.:|
+鼠标穿透#Cliquer sur la fenêtre:|
+添加快速切换小标,切换顶层或穿透#Toggle:|
+添加小标,快速切换顶层或穿透#Ajouter un interrupteur pour basculer vers le haut et clicker:|
+更高缩放#Increase Zoom:|
+支持更大缩放倍率#Support larger zoom levels:|
+解锁缩放限制#Increase zoom level limit:|
+缩放等级#Zoom Level:|
+主题#Theme:|
+字体#Font:|
+启动位置#Start Position:|
+退出位置#Exit Pos.:|
+游戏退出位置为下次桌宠启动出现的位置#Set pet to start in the same position as it exits:|
+X轴#X-axis:|
+Y轴#Y-axis:|
+当前位置#Current:|
+消息框#Message Box:|
+将消息框置于外部#Place Message Box Externally:|
+开机启动#Auto-start:|
+该游戏随着开机启动该程序\r如需卸载游戏\r请关闭该选项#Game auto-start on login\rDisable this option before uninstalling:|
+从Steam启动#Starting from Steam:|
+从Steam启动该游戏, 统计时长不能停#Start the game from Steam. Will show as in-game:|
+宠物动画#Pet animation:|
+动画描述动画描述动画描述动画描述动画描述#Animation description Animation description Animation description Animation description Animation description:|
+加载的宠物动画,重启后生效#Loaded pet animation, changes will take effect after restart:|
+重启软件以应用更改#Restart the game to apply the changes:|
+系统#System:|
+自动保存频率#Autosave Frequency:|
+在指定时间后自动保存游戏数据#Autosave game data after a specified time:|
+关闭自动保存#Turn off autosave:|
+每5分钟一次#Every 5 minutes:|
+每10分钟一次#Every 10 minutes:|
+每20分钟一次#Every 20 minutes:|
+每半小时一次#Every half hour:|
+每小时一次#Every a hour:|
+从备份中还原#Restore from backup:|
+虚拟桌宠模拟器在每次保存的时候都会备份上次储存的存档, 当原始存档丢失,受损或误操作时, 就可以还原他们#VPet-Simulator backs up the last saved file every time it is saved. If the original file is lost or corrupt it can be restored from here:|
+备份数量#Number of Backups:|
+加载存档#Load Save:|
+加载#Load:|
+加载上次保存的存档#Load Latest Save:|
+聊天设置#Chat Settings:|
+使用ChatGPT进行聊天等相关设置#Use ChatGPT for chat and other related settings:|
+使用模式#Usage Patterns:|
+相关功能#Related Features:|
+使用从ChatGPT\r申请的的API#Use API requested\rfrom ChatGPT:|
+需要去OpenAI官网申请#Need to go to the OpenAI official website to apply:|
+使用桌宠开发者\r提供的免费API#Use free VPET developer\rprovided API:|
+需遵循相关协议法律法规并有聊天字数限制#Applicable agreements, laws and regulations apply, and chat word limits apply:|
+初始化桌宠聊天程序#Initialize VPET chat program:|
+互动#Interact:|
+互动设置#Interaction Settings:|
+游戏互动相关设置#Game interaction related settings:|
+启用后桌宠会有状态变化,需要按时投喂等#Pet have status change, needs feed:|
+启用数据计算,桌宠会有状态变化,需要按时投喂等.\r如果嫌麻烦可以关掉#Enable data calculation: Desktop pet will change status, need to eat on time, etc.\rIf it's too much trouble you can disable it:|
+当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能\r将在下次交互时解除#When the player does not interact with the desktop pet for a specified time, the move function is automatically disabled\rre-enabled on the next interaction:|
+当关闭数据计算时\r桌宠显示的状态#Status to display when\rdata calculation is off:|
+启用桌宠移动#Enabled:|
+启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.\r如果嫌麻烦可以关掉#Enable movement interaction: Desktop pet will be able to move around on the screen. Probability is half that of normal interaction.\rIf it's troublesome, you can turn it off:|
+智能移动#Smart Moving:|
+智能移动判断时间间隔#Smart Moving Period:|
+30 秒#30 seconds:|
+1 分钟#1 minute:|
+2 分钟#2 minute:|
+5 分钟#5 minute:|
+10 分钟#10 minute:|
+20 分钟#20 minute:|
+30 分钟#30 minute:|
+40 分钟#40 minute:|
+50 分钟#50 minute:|
+60 分钟#60 minute:|
+数据计算#Data Calculation:|
+显示状态#Display Status:|
+桌宠移动#Pet Moving:|
+计算间隔#Computation interval:|
+数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.\r间隔越大越不容易打扰到当前工作#Time between data calculation and interaction. A shorter interval will lead to\rmore interactions, a longer interval will lead to less interactions:|
+互动周期#Interaction Cycles:|
+每分钟计算#Calculate data calculations :|
+次数值变化# per minute:|
+大约#Proactively engage in interaction :|
+分钟左右主动进行一次互动(走路发呆爬墙等)# per minute:|
+互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动#This determines how many computational cycles must elapse until automatic actions are performed again:|
+操作设置#Operation Settings:|
+游戏操作相关设置#Game Operation Related Settings:|
+长按间隔#Long Press Interval:|
+桌宠名字#Desktop Pet Name:|
+数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加\r间隔越大越不容易打扰到当前工作#Time interval between data calculation and interaction\rcalculation, the shorter the interval, the frequency of\rinteraction may increase. The larger the interval, less\rlikely it is to disturb the current work:|
+{0:F2} 秒#{0:F2} Sec:|
+自定#DIY:|
+自定义链接#Custom Links:|
+在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能#Add shortcuts/web pages in the customization bar to easily launch the desired functions:|
+键盘快捷键编写方法请参考#Change keyboard shortcuts see:|
+键盘快捷键 通用注解#Keyboard Shortcut Generic Annotations:|
+右键进行排序/删除等操作#Right-click to sort/delete and other operations:|
+添加新链接#Add a new link:|
+保存设置#Save the Settings:|
+诊断#Diagnostic:|
+诊断与反馈#Diagnostic & Feedback:|
+选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.#Send diagnostic data to LBGame which is used to update, fix issues, and improve VPet-Simulator in a timely manner.:|
+无论选择哪个选项,游戏都可以安全正常地运行.#Whichever option you choose, the game will run safely and normally.:|
+获取有关这些设置的更多信息#Get more information about these settings:|
+发送诊断数据: 发送游戏存档, 包括饱腹,状态等各种游戏内\r数据. 可能会包括该游戏内存和CPU使用情况#Send diagnostic data: Send saved games, including hunger, status, and other in-game\rdata. This may include the game's memory and CPU usage:|
+不发送诊断数据: 适用于启用修改器,修改过游戏数据等不\r符合分析数据条件. 或不希望提供游戏数据的玩家#Don't send diagnostic data: This applies to players who have modified the base game.\rOr players who do not want to provide game data.:|
+反馈频率#Feedback Frequency:|
+VOS 应寻求我反馈按以下频率#VOS Should seek my feedback as follows:|
+每 两百 周期一次#Every 200 Cycles:|
+每 五百 周期一次#Every 500 Cycles:|
+每 一千 周期一次#Every 1000 Cycles:|
+每 两千 周期一次#Every 2000 Cycles:|
+每 五千 周期一次#Every 5000 Cycles:|
+每 一万 周期一次#Every 10000 Cycles:|
+每 两万 周期一次#Every 20000 Cycles:|
+MOD管理#MOD Management:|
+模组作者: #MOD Author: :|
+模组版本: #MOD Version: :|
+游戏版本: #Game Version: :|
+MOD介绍#MOD Description:|
+内容#Content:|
+所在文件夹#Located Folder:|
+启用该模组#Enable:|
+停用该模组#Disable:|
+更新至Steam#Update to Steam:|
+创意工坊页面#Workshop Page:|
+MOD设置#MOD Setting:|
+启用代码插件#Enable code plugin:|
+启用该模组的代码内容,不能保证系统安全性#Enabling this code content of the module does not guarantee system security:|
+关于#About:|
+虚拟桌宠模拟器 规格#VPet-Simulator Specs:|
+游戏策划#Game Designer:|
+UI&程序#UI & Program:|
+动画绘制#Animation Drawing:|
+开源项目#Open Source Projects:|
+项目页面#Project Page:|
+相关链接#Related Links:|
+虚拟主播模拟器#VUP-Simulator:|
+相关群#Github:|
+用户名#User name:|
+版本#Version:|
+激活#Activation:|
+制作组名单#List of development teams:|
+杨远洛里斯#YoungerLoris:|
+广大MOD作者#Mod Authors:|
+洛里斯杨远#LorisYounger:|
+Git贡献名单#Github Contributors:|
+叶书天#Ye Shutian:|
+查看引用名单#List of references:|
+访问Steam页面#Steam page:|
+访问Github页面#Github page:|
+由于游戏暂未开发完毕,该名单并非完整名单.将在正式版完成前修改#Since the game is not finished development, this list is not complete:|
+默认虚拟桌宠#Default desktop pet:|
+P猫#P cat:|
+虚拟主播模拟器默认人物形象#VUP-Simulator Default Persona:|
+置于底层#Place at the bottom:|
+快捷方式: 选择文件位置#Shortcut: Select the file location:|
+快捷键: 捕获按键#Hot Key: Catch keystrokes:|
+删除#Delete:|
+显示名称#Display Name:|
+快捷键或文件位置或网站链接#Hot Keys or file locations or website links:|
+游戏版本#Game version :|
+已通过Steam[{0}]激活服务注册#Registered through the Steam [{0}] activation service:|
+ (兼容)# (Compatible):|
+系统自带#The system comes with it:|
+food#Food:|
+image#Image:|
+lang#Language Pack:|
+pet#Pet animation:|
+text#Text Set:|
+更好买#Betterbuy:|
+商品分类#Product Category:|
+全部#All:|
+收藏#Favorites:|
+正餐#Dinner:|
+零食#Snacks:|
+饮料#Drink:|
+功能性#Functionality:|
+药品#Medicine:|
+排序方式#Sort by:|
+按名字#Name:|
+按价格#Price:|
+按饱腹度#Hunger:|
+按口渴度#Thirst:|
+按体力#Stamina:|
+按心情#Mood:|
+按健康#Health:|
+升序#Asc.:|
+降序#Desc.:|
+停止工作#Stop Working:|
+详细#Detailed:|
+宠物已经生病, 通过服用药物可以恢复#Pet is ill and can recover by taking medication:|
+已关闭数据计算, 可放心挂机#Data calculation has been turned off and you can AFK with confidence:|
+金钱#Money:|
+经验#EXP:|
+体力#Stamina:|
+心情#Mood:|
+饱腹度#Hunger:|
+口渴度#Thirst:|
+投喂#Feed:|
+面板#Panel:|
+睡觉#Sleep:|
+学习#Learn:|
+工作#Work:|
+文案#Copywriting:|
+直播#Livestreaming:|
+睡觉中#Sleeping:|
+学习中#Learning:|
+工作中#Working:|
+文案中#Copywriting:|
+直播中#Livestreaming:|
+和桌宠说#Send message:|
+按 Ctrl+Enter 发送#Press Ctrl+Enter to send:|
+正在加载游戏#Loading game:|
+退出桌宠#Exit:|
+开发控制台#Console:|
+反馈中心#Feedback:|
+设置面板#Settings:|
+吃饭#Eat:|
+喝水#Drink:|
+吃饭中#Eating:|
+喝水中#Drinking:|
+虚拟桌宠模拟器#VPet-Simulator:|
+点击此处开关鼠标穿透\n右键开关置于顶层\n长按挪动位置\n可在设置中关闭#Click here toggle mouse HitThrough\nRight-click toggle place in TopMost\nPress and hold to move position\nCan be turned off in the settings:|
+操作教程#How-to Tutorials:|
+重置位置与状态#Reset Position & Status:|
+桌宠重置成功#Desktop pet reset successful:|
+上传至Steam#Upload to Steam:|
+ (版本高)# (Version High):|
+plugin#plugin:|
+感谢以下MOD开发人员#Thanks to the following mod developers:|
+DLL引用名单#DLL Reference List:|
+桌宠管理开发控制台#Desktop Pet Management Development Console:|
+动画列表#List of animations:|
+双击查看动画效果#Double-click to see the animation:|
+选择状态模式:#Status::|
+动画播放#Animation playback:|
+双击添加/移除播放列表内容#Double-click Add/Remove Playlist Content:|
+显示逻辑#Display Logic:|
+双击运行显示效果#Double-click to run the display effect:|
+说话#Speak:|
+输入要说的话,按说话键发送#Enter text then click the button to speak:|
+选择说话类型:#Animation::|
+在这里输入要说话的内容#Enter what you want to speak here:|
+距离查看器#Distance Viewer:|
+启动距离查看器#Launch the Distance Viewer:|
+屏幕边缘距离#Screen edge distance:|
+左侧#Left:|
+右侧#Right:|
+上侧#Upper:|
+下侧#Under:|
+未翻译文档#Untranslated Documents:|
+导出未翻译文档#Export untranslated documents:|
+反馈与错误提交#Feedback and bug submission:|
+类型:#Type::|
+需要反馈的类型#The type of feedback required:|
+游戏内报错#An in-game error is reported:|
+逻辑计算错误#Logical calculation error:|
+数值设计不合理#Value design not reasonable:|
+玩法与功能建议#Gameplay and feature suggestions:|
+游玩心得分享#Play experience sharing:|
+描述:#Description::|
+对于反馈的详细描述#Detailed description of the feedback:|
+详细描述\reg:如何触发这个报错#Detailed Description\reg:How to trigger this error:|
+内容:#Content::|
+提交:#Submit::|
+上传游戏存档#Upload Game Saved:|
+联系:#Contact::|
+提供联系方式以获得反馈,可不填#Provide contact information for feedback, or not:|
+提供联系方式以获得反馈,可不填\reg:QQ430081239#Provide contact information for feedback, or not\reg:service@exlb.net:|
+提交#Submit:|
+玩家取消上传存档#Player cancels uploading saved:|
+秒#Sec:|
+停止#Stop :|
+当前已{0}#{0} for:|
+您的桌宠等级不足{0}/{2}\n无法进行{1}#Your pet don't have enough level {0}/{2}\nUnable to {1}:|
+{0}取消#{0} Cancel:|
+搜索商品#Search for products:|
+购买后不自动关闭窗口#Don't close after purchase:|
+凉茶#Cold Tea:|
+购买#Buy:|
+经验值#EXP:|
+健康#Health:|
+怕上火，喝广东咖啡！#Afraid excessive internal heat? Drink Guangdong coffee!:|
+收藏食物#Favorite item:|
+物品详情#Item Details:|
+椰汁#Coconut Milk:|
+白白胖胖，曲线圆润，要喝不加香油的椰O牌椰汁#White and chubby, rounded curve, one should drink Vita caca coconut juice:|
+果汁#Fruit Juice:|
+那个那个那个那个果汁分你一半#Thatthatthat juice, divide you in half:|
+可乐#Cola:|
+蓝色那个在日用品区谢谢#The blue one is in the daily products. Thank you:|
+盐汽水#Salt Soda Water:|
+我一口盐汽水！#I'll take a sip of salt soda!:|
+维他奶#Vitasoy:|
+点止汽水咁简单#Not just soda:|
+雷碧#Faery:|
+透心扬，心飞凉#Penetrating soaring,Coolness spirit.:|
+ab钙奶#AD Calcium Milk:|
+健康美味，经济实惠#Healthy, delicious, and affordable:|
+速效救心丸#Nitroglycerin Tablets:|
+急急急，等下有得你急的。#Urgent, there will be something urgent for you later.:|
+阿司匹林#Aspirin:|
+发烧去医院经常见的药，从小到大都不懂为什么长得和螺丝头一样#Medicines that are commonly seen in hospitals for fever, and I have never understood why they look like screw heads since childhood:|
+香煎牛仔骨#Pan Fried Short Ribs:|
+好感度#Likeablilty:|
+开瓶红酒吧，上流#Open a bottle of wine, that call upper class:|
+布洛芬缓释胶囊#Ibuprofen Sustained Release Capsules:|
+在以前的大瘟疫时代，曾经作为货币使用，最高的时候价值连城#In the previous era of the Great Plague, it was once used as currency and at its highest value, it was priceless:|
+大力丸#Mestinon:|
+等我硬起来有你好受的！#You'll feel good when I get tough!:|
+西冷牛排#Sirloin:|
+开瓶拉菲吧，上流#Open a bottle of Lafite, that call upper class:|
+煎西冷牛排#Fried Sirloin:|
+开瓶可乐吧，上流#Open a bottle of cola, that call upper class:|
+脑黑金#Brain Rhodita:|
+过年过节不收礼！__________！(3分)#1.What gifts should you give during the festival and the New Year?:|
+红烧牛肉#Braised Beef:|
+不是4块钱的，请放心#Not 4 buck, please rest assured:|
+辣子鸡#Spicy Chicken:|
+当红辣子鸡哟#Deep fried chicken:|
+酸菜鱼#Sauerkraut-fish:|
+人人皆是酸菜鱼#Everyone is Sauerkraut-fish:|
+健胃整肠丸#Wintex Tong Stomach-Ache Pills:|
+这是什么？肚子疼？来两粒。这是什么？拉肚子？来两粒#What is it? Stomach pain? Two pills. What is it? Diarrhea? Two pills:|
+烧鹅#Roast Goose:|
+官方特意调整成鹅的，这让我文案不好做啊，我就要在这里写上烧鸡两个大字！#Developer purposely adjusted it to 'roast goose', which makes it difficult for me to copy. I want to write big wording' roast chicken 'here!:|
+红烧狮子头#Stewed Pork Ball in Brown Sauce:|
+芋头西米露#Sweet Soup with Taros:|
+沙拉#salad:|
+沙拉沙拉啦啦啦#Saladsalad:|
+东坡肘子#Dongpo Pig Knuckle:|
+小知识：东坡肘子其实并非苏东坡之功，而是其妻子王弗的妙作#Trivia: Dongpo Pig Knuckle is not actually Su Dongpo's work, but his wife Wang Fu's hyped.:|
+罗宋汤#Borscht:|
+咲夜！“给我吃!”#Sakuya! "Eat it!":|
+披萨#Pizza:|
+不要放菠萝！！！#Don't put pineapple!!:|
+盐焗鸡#Salt Baked Chicken:|
+谁说的腌鸡！站出来！#Who said preserved chicken! Stand up!:|
+番茄意面#Tomato Pasta:|
+只要不是巧克力酱什么都好说。。#As long as it's not chocolate sauce, anything it's okay.:|
+梅菜扣肉#Preserved Vegetable:|
+不会咬人的谢谢#Won't bite thanks:|
+麻婆豆腐#Mapo Tofu:|
+麻婆豆腐之所以叫麻婆豆腐是因为麻婆喜欢吃#Mapo tofu is called Mapo tofu because Mapo likes to eat it:|
+666感冒灵颗粒#Zylenol:|
+老牌子，值得信任，有妈妈的味道。#Old-brand, trustworthy, with the smell of mother.:|
+芝士焗虾#Baked-prawn-with-cheese:|
+焗虾闭嘴#Baked Shrimp Shut up:|
+华夫饼#Baklava:|
+蜜饼！小刻最爱！#Baklava! Ceobe favorite!:|
+纸包鸡#Paper-wrapped chicken:|
+纸包鸡包纸包鸡包鸡包纸#Paper wrapped chicken wrapped paper wrapped chicken wrapped chicken wrapped paper:|
+南瓜吐司#Pumpkin Toast:|
+加了南瓜！是的！我加了南瓜！#Added pumpkin! Yes! I added pumpkin!:|
+酿豆腐#Stuffed Tofu:|
+你中有我，我中有你#There's me in you, there's you in me:|
+三明治#Sandwich:|
+两面包夹芝士#Two bread sandwiches with cheese:|
+鸡翅#Chicken Wings:|
+红烧翅膀~我喜欢吃~#Braised Wings in Brown Sauce~I like to eat them~:|
+面包#Bread:|
+你还记得你吃过多少块面包吗#Do you remember how many pieces of bread you ate?:|
+汉堡#Hamburg:|
+还想要汉O王？这价格不是华O士已经对你很好了。#This burger looks seriously different from the real thing, and is obviously bigger than the promotional image. It is said that this burger will increase in size by 4% every year, and in terms of time, it may expand to the day when the universe is destroyed.:|
+臭豆腐#Stinky Tofu:|
+闻起来臭，吃起来也臭，就是越吃越香。#Smells stinky, eat stinky, but more and more, taste fragrant.:|
+压缩饼干#Compressed Biscuit:|
+饼干.rar#Biscuits. rar:|
+钙片#Calcium Tablet:|
+郑重声明，本产品与同名影视产品没有一点关系。#Solemnly declare that this product has nothing to do with the film and television product of the same name.:|
+土力架#Soickers:|
+横扫自己，做回饥饿#Soickers satisfies!:|
+炸鸡腿#Fried Chicken Leg:|
+你每吃一个炸鸡腿，就有0.5只鸡受到伤害。保护鸡鸡，从一次吃两个炸鸡腿做起！#For every fried chicken leg you eat, 0.5 chickens are injured. Protect chickens by starting with two fried chicken legs at once!:|
+黄牛#Scalper:|
+放心，喝他的饮料不是他出钱你出命#Rest assured, drinking his drink is not his money for your life:|
+猪肉脯#Pork Jerky:|
+你感觉在吃牛皮。。#You feel like you're eating cowhide.:|
+能量饮料#Energy Drink:|
+能量饮料能够瞬间给予角色40点能量加成。使用时执行某些动作将会取消使用，有4秒使用时间。（以上都没有）#Energy drink can instantly give a character 40 points of energy bonus. Performing certain actions during use will cancel the use, with a usage time of 4 seconds. (The above is fabricated):|
+维生素C含片#Vitamin C lozenges:|
+本产品为保健品不能代替药品#This product is a health product and cannot replace medicines:|
+大鹏特饮#Dapeng Special Drink:|
+困了累了，大鹏特饮#Sleepy and tired, Dapeng drinks specially:|
+巧克力#Chocolate:|
+纵享丝滑#Enjoy a silky and smooth ride:|
+冰激凌#Ice Cream:|
+中国人免费领#Chinese people free of charge:|
+咖啡饮料#Coffee Beverage:|
+不小心倒在键盘上效果更好哦！#It's better to accidentally fall on the keyboard!:|
+核桃仁#Walnut Meat:|
+这次不用自己带锤子了#You don't need to bring your own hammer this time:|
+瓜子#Melon Seeds:|
+嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱嘎吱#Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak Creak:|
+火腿肠#Ham Sausage:|
+肉做的棒子#A stick made of meat:|
+爆米花#Popcorn:|
+电影必备，吃不完也要买#Movie essential, even if you can't finish eating them, you should buy them:|
+散射雪糕#Scattered Ice Cream:|
+三倍的快乐#Triple Happiness:|
+奶糖#Toffee:|
+小白兔牌#Little White Rabbit:|
+薯片#Potato Chips:|
+开趴必备#Party essential:|
+雪饼#Rice Crackers:|
+小时候的一口吃不下#I couldn't finish a single one as a child:|
+娃仔小馒头#Baby Mantou:|
+这是我们的宝贝~~#This is our treasure~~:|
+牛扎糖#Nougat:|
+好甜，像你一样#So sweet, the same will you:|
+泡泡糖#Bubble Gum:|
+就吹吧你#Just full of hot air.:|
+花生米#Peanut:|
+但凡有一粒花生米。。。#Whenever there is a peanut...:|
+老冰棍#Old Ice Lolly:|
+厂家正在考虑与辐射4联动中#Manufacturer is considering colab with Fallout 4:|
+小布丁#Milk Bottles:|
+没关系，小小的也很好吃#It's okay, the small one is also delicious:|
+软糖#Gummy:|
+come on baby~#come on baby~:|
+绿色心情#Good Mood:|
+几年前还是一块钱的呜呜呜#A few years ago, it just sell one buck:|
+奶片#Milk Tablets:|
+希望你们永远不会知道这个药。。。#Hope you never will know about this medicine...:|
+牛板筋#Beef Tendon:|
+只要来一根，大家都是好兄弟#Just for one skewer, all we are broski:|
+戒指糖#Sugar Ring:|
+这不比那个不能吃的破石头有用多了#That's more useful than that silly stone that cannot be eaten:|
+太阳系#Solar System:|
+没钱也能吃,可以用来拯救存档(生病), 没事别吃这个#Need no money to eat, it used to save game (sick). Don't eat this if you have nothing to do:|
+地球#Earth:|
+没钱也能吃,可以用来拯救存档(饥饿/口渴不足), 没事别吃这个#Need no money to eat, it used to save game (hunger/thirst). Don't eat this if you have nothing to do:|
+分钟#Min:|
+钱#$:|
+{0:f1} 秒#{0:f1} Sec:|
+SettingWidth#700:|

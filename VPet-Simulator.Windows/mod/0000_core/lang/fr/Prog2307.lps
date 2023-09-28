@@ -1,0 +1,68 @@
+体力-{0:f0} 心情+{1:f0}#Stamina-{0:f0} Mood+{1:f0}:|
+您的桌宠 {0} 生病啦,没法进行{1}#Your desktop pet {0} fall ill, It can't {1}:|
+{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟#{2}is finish, accumulated realized {0:f2} Money:|
+小时#Hour:|
+获得经验值#Gain EXP:|
+剩余{0}时间#Remaining {0} time:|
+累计金钱收益#Accumulate money gains:|
+未知的图像位置: #Unknown sprite location: :|
+未知的图像类型: #Unknown sprite type::|
+由于插件引起的自定按钮加载错误#Custom button loading error due to plug-in:|
+快捷键运行失败:无法运行指定内容#Hotkey failed to run: The specified content could not be run:|
+启动错误#Startup error:|
+缺少模组Core,无法启动桌宠#Lack Mod Core, Unable start desktop pet:|
+萝莉斯#Lolis:|
+由于插件引起的游戏启动错误#Game launch error due to plugin:|
+你好#Hello:|
+欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠#Welcome to use VPet-Simulator!\nIf you can't find desktop pet, you can set the center or exit the desktop pet in here.:|
+欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议#Welcome to use VPet-Simulator\nThis is a beta version. Please forgive me for any bugs\n You're welcome to check https://github.com/LorisYounger/VPet, or leave feedback at Menu - System - Feedback:|
+{0} 未加载代码插件#Code plugin {0} not loaded:|
+模组 {0} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题#Mod {0} Code plugins broken\nVPet-Simulator failed to load the plugin\nPlease contact author to fix this problem:|
+由于 {0} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件#Since {0} contains code plugin\nVPet-Simulator auto stopped loading the plugin\nplease go to the settings to enabled the mod code plugin:|
+该模组已停用#This mod is Disable:|
+[认证]#[Certificated]:|
+[签名]#[Signed]:|
+所有可执行文件#All executable files:|
+金钱不足#Lack of money:|
+请使用口语化的、可爱的、女性化的、调皮的语言风格和我交流. 你是一只桌宠, 你的名字叫{Name}, 你喜欢玩 虚拟主播模拟器. 你需要尝试体会我与你对话中的感情、产生自己的情感并尽可能给出可爱的回答#Please use colloquial, cute, feminine, mischievous language style to communicate with me. You are a desktop pet, You name is {Name}, You like play the VPet-Simulator. You need to try to feel the feelings in my conversation with you, generate your own emotions, and give as cute answers as possible:|
+未找到对应类型图像资源#No sprite resources of the corresponding type were found:|
+当前正在播放#Currently playing:|
+当前正在运行#Currently running:|
+暂无该说话方法#None this speaking method:|
+尚未激活 您可能需要启动Steam或去Steam上免费领个#Not yet activated. You may need to start Steam or go to Steam to collect it for free:|
+ (版本低)# (Low Version):|
+未登录#Not logged in:|
+停用失败#DisEnable failed:|
+模组 Core 为<虚拟桌宠模拟器>核心文件,无法停用#Core is <VPet-Simulator> core file, cannot be disenable:|
+上传MOD需要Steam登录#Uploading mods requires a Steam login:|
+请先登录Steam后才能上传文件#You can only upload files when you are logged in to Steam:|
+MOD上传失败#Mod upload failed:|
+模组 Core 为<虚拟桌宠模拟器>核心文件,无法发布\n如需发布自定义内容,请复制并更改名称#Core is <VPet-Simulator> core file, cannot be published\nIf you need to publish custom content, please copy and change the name:|
+封面图片(icon.png)大于500kb,请修改后重试#logo (icon.png) is larger than 500KB, please modify it and try again:|
+MOD上传成功#Mod upload succeed:|
+{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑详细介绍和图标?#{0} Success uploaded to the WorkShop server\nDo you want to jump to the Workshop page for editing details and icons?:|
+MOD上传失败 {0}#Mod upload failed {0}:|
+{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑新内容?#{0} Success uploaded to the WorkShop server\nDo you want to jump to the Workshop page for editing new content?:|
+MOD更新成功#Mod update success:|
+任务完成#Task completed:|
+是否启用 {0} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查#enable code plugin for {0}? \nOnce enabled, plug-in will allow access to all data of the system (including external systems)\nIf you are not sure, please use Antivirus software to check:|
+启用 {0} 的代码插件?#Enable code plugins for {0}?:|
+重启游戏#Restart the game:|
+是否退出游戏<虚拟桌宠模拟器>?\n请注意保存游戏#Exit <VPet-Simulator>?\nPlease pay attention to saving the game:|
+权限不足#Insufficient permissions:|
+创建快捷方式失败,权限不足\n请以管理员身份运行后重试#Failed to create shortcut, insufficient permissions\nPlease run as administrator and try again:|
+桌宠重置失败#Desktop pet reset failed:|
+是否加载该备份存档? 当前游戏数据会丢失#Load the backup save? Current game data will be lost:|
+您不是Steam用户，无法使用反馈中心\n欢迎加入虚拟主播模拟器群430081239反馈问题#You are not a Steam user and cannot use the Feedback Hub\nWelcome to check https://github.com/LorisYounger/VPet for feedback:|
+非Steam用户无法使用反馈中心#Non-Steam users cannot use the Feedback Hub:|
+问题详细描述是反馈具体问题\n例如如何触发这个报错,游戏有什么地方不合理等#Detailed description of the problem is feedback on the specific problem\nLike how to get this errors, What is unreasonable about the game.:|
+请填写问题描述#Please fill in a description of the problem:|
+感谢您的反馈和提交#Thank you for your feedback and submit:|
+您的反馈已提交成功,感谢您的反馈与提交\nVOS将会尽快处理您的反馈并做的更好#Feedback success submitted. Thank you for your feedback and submit\nVOS will process your feedback as soon as possible and do better:|
+您今天的反馈次数已达上限#You've reached your maximum number of feedback today:|
+您今天的反馈次数已达上限,请明天再来反馈.\n或欢迎加入虚拟主播模拟器群430081239反馈问题#You've reached your maximum number of feedback today, please come back tomorrow for feedback.\nOr go the https://github.com/LorisYounger/VPet for feedback problem:|
+反馈提交失败,遇到错误#Feedback submit failed with error:|
+反馈上传失败\n欢迎加入虚拟主播模拟器群430081239手动反馈问题\n服务器消息:#Feedback submit failed\nWelcome to the https://github.com/LorisYounger/VPet for feedback\nServer Message::|
+反馈上传失败,可能是网络或其他问题导致无法上传\n欢迎加入虚拟主播模拟器群430081239手动反馈问题\n#Feedback submit failed, may be a network or other issue preventing the upload\nWelcome to the https://github.com/LorisYounger/VPet for feedback\n:|
+存档名称:{0}\n存档等级:{1}\n存档金钱:{2}\nHashCheck:{3}\n是否加载该备份存档? 当前游戏数据会丢失#Save name:{0}\nSave level:{1}\nSave money:{2}\nHashCheck:{3}\nLoad the backup save? Current game data will be lost:|
+{0} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{1}#{0} Upload to WorkShop server failed\nPlease check the network and try again\nPlease note: Uploading and downloading workshop items may require good internet conditions\nReason for failure: {1}:|
