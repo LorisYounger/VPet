@@ -1,6 +1,6 @@
 # VPet-Simulator
 
-简体中文 | [English](./README_en.md)
+简体中文 | [English](./README_en.md) | [French](./README_fr.md) 
 
 虚拟桌宠模拟器 一个开源的桌宠软件, 可以内置到任何WPF应用程序
 
