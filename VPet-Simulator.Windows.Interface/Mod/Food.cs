@@ -53,10 +53,10 @@ namespace VPet_Simulator.Windows.Interface
             /// 礼品 (没做)
             /// </summary>
             Gift,
-            /// <summary>
-            /// 不超模的好食物
-            /// </summary>
-            NoOverLoad,
+            ///// <summary>
+            ///// 限定食物优先显示
+            ///// </summary>
+            //Limit,
         }
         /// <summary>
         /// 食物类型
@@ -185,7 +185,7 @@ namespace VPet_Simulator.Windows.Interface
             DateTime eattime = imw.GameSavesData["buytime"].GetDateTime(Name, now);
             if (eattime <= now)
             {
-                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)
+                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)// || Type == FoodType.Limit)
                     descs = "喜好度".Translate();
                 else
                     descs = "有效度".Translate();
@@ -193,7 +193,7 @@ namespace VPet_Simulator.Windows.Interface
             }
             else
             {
-                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)
+                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)// || Type == FoodType.Limit)
                     descs = "喜好度".Translate();
                 else
                     descs = "有效度".Translate();
