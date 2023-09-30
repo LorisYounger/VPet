@@ -663,24 +663,24 @@ namespace VPet_Simulator.Windows
                             {
                                 if (rt.Exp > 0)
                                 {
-                                    GameSavesData.Statistics[(gint)"stat_rt_exp_p"]++;
+                                    GameSavesData.Statistics[(gint)"stat_say_exp_p"]++;
                                 }
                                 else
-                                    GameSavesData.Statistics[(gint)"stat_rt_exp_d"]++;
+                                    GameSavesData.Statistics[(gint)"stat_say_exp_d"]++;
                             }
                             if (rt.Likability != 0)
                             {
                                 if (rt.Likability > 0)
-                                    GameSavesData.Statistics[(gint)"stat_rt_like_p"]++;
+                                    GameSavesData.Statistics[(gint)"stat_say_like_p"]++;
                                 else
-                                    GameSavesData.Statistics[(gint)"stat_rt_like_d"]++;
+                                    GameSavesData.Statistics[(gint)"stat_say_like_d"]++;
                             }
                             if (rt.Money != 0)
                             {
                                 if (rt.Money > 0)
-                                    GameSavesData.Statistics[(gint)"stat_rt_money_p"]++;
+                                    GameSavesData.Statistics[(gint)"stat_say_money_p"]++;
                                 else
-                                    GameSavesData.Statistics[(gint)"stat_rt_money_d"]++;
+                                    GameSavesData.Statistics[(gint)"stat_say_money_d"]++;
                             }
                             Main.Core.Save.EatFood(rt);
                             Main.Core.Save.Money += rt.Money;
