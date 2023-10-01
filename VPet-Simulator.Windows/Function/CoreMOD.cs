@@ -171,15 +171,19 @@ namespace VPet_Simulator.Windows
                                     {
                                         case "lowfoodtext":
                                             mw.LowFoodText.Add(LPSConvert.DeserializeObject<LowText>(li));
+                                            Tag.Add("lowtext");
                                             break;
                                         case "lowdrinktext":
                                             mw.LowDrinkText.Add(LPSConvert.DeserializeObject<LowText>(li));
+                                            Tag.Add("lowtext");
                                             break;
                                         case "clicktext":
                                             mw.ClickTexts.Add(LPSConvert.DeserializeObject<ClickText>(li));
+                                            Tag.Add("clicktext");
                                             break;
                                         case "selecttext":
                                             mw.SelectTexts.Add(LPSConvert.DeserializeObject<SelectText>(li));
+                                            Tag.Add("selecttext");
                                             break;
                                     }
                                 }
