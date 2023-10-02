@@ -287,20 +287,24 @@ namespace VPet_Simulator.Windows
                         return i;
                     return 0;
                 }).ToList();
-                var latestsave = ds.LastOrDefault();
-                if (latestsave != null)
+                for (int i = ds.Count - 1; i >= 0; i--)
                 {
-                    try
+                    var latestsave = ds[i];
+                    if (latestsave != null)
                     {
-                        if (GameLoad(new LPS(File.ReadAllText(latestsave))))
-                            return;
-                        MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
+                        try
+                        {
+                            if (GameLoad(new LPS(File.ReadAllText(latestsave))))
+                                return;
+                            //MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
+                        }
+                        catch // (Exception ex)
+                        {
+                            //MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
+                        }
                     }
                 }
+
             }
             GameSavesData = new GameSave_v2(petname.Translate());
             Core.Save = GameSavesData.GameSave;
