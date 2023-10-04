@@ -499,6 +499,18 @@ namespace VPet_Simulator.Windows
                 }
             }
 
+            //桌宠生日:第一次启动日期
+            if (GameSavesData.Data.FindLine("birthday") == null)
+            {
+                var sf = new FileInfo(ExtensionValue.BaseDirectory + @"\Setting.lps");
+                if (sf.Exists)
+                {
+                    GameSavesData[(gdat)"birthday"] = sf.CreationTime.Date;
+                }
+                else
+                    GameSavesData[(gdat)"birthday"] = DateTime.Now.Date;
+            }
+
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
 
             if (GameSavesData.Statistics[(gdbe)"stat_bb_food"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_drink"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_drug"] < 0
