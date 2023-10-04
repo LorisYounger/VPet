@@ -287,10 +287,14 @@ namespace VPet_Simulator.Windows
                         return i;
                     return 0;
                 }).ToList();
-                int.TryParse(ds.Last().Split('_')[1].Split('.')[0], out int lastid);
-                if (Set.SaveTimes < lastid)
+
+                if (ds.Count != 0)
                 {
-                    Set.SaveTimes = lastid;
+                    int.TryParse(ds.Last().Split('_')[1].Split('.')[0], out int lastid);
+                    if (Set.SaveTimes < lastid)
+                    {
+                        Set.SaveTimes = lastid;
+                    }
                 }
                 for (int i = ds.Count - 1; i >= 0; i--)
                 {
