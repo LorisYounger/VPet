@@ -287,6 +287,12 @@ namespace VPet_Simulator.Windows
                         return i;
                     return 0;
                 }).ToList();
+                if(ds.Count == 0)
+                {
+                    GameSavesData = new GameSave_v2(petname.Translate());
+                    Core.Save = GameSavesData.GameSave;
+                    return;
+                }
                 int.TryParse(ds.Last().Split('_')[1].Split('.')[0], out int lastid);
                 if (Set.SaveTimes < lastid)
                 {
@@ -311,8 +317,11 @@ namespace VPet_Simulator.Windows
                 }
 
             }
-            GameSavesData = new GameSave_v2(petname.Translate());
-            Core.Save = GameSavesData.GameSave;
+            else
+            {
+                GameSavesData = new GameSave_v2(petname.Translate());
+                Core.Save = GameSavesData.GameSave;
+            }
         }
         public async void GameLoad()
         {
