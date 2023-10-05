@@ -287,6 +287,15 @@ namespace VPet_Simulator.Windows
                         return i;
                     return 0;
                 }).ToList();
+
+                if (ds.Count != 0)
+                {
+                    int.TryParse(ds.Last().Split('_')[1].Split('.')[0], out int lastid);
+                    if (Set.SaveTimes < lastid)
+                    {
+                        Set.SaveTimes = lastid;
+                    }
+                }
                 for (int i = ds.Count - 1; i >= 0; i--)
                 {
                     var latestsave = ds[i];
@@ -492,6 +501,18 @@ namespace VPet_Simulator.Windows
                     selet.StrengthFood = Math.Max(Math.Min(selet.StrengthFood, 1000), -1000);
                     //food.StrengthFood += selet.StrengthFood;
                 }
+            }
+
+            //桌宠生日:第一次启动日期
+            if (GameSavesData.Data.FindLine("birthday") == null)
+            {
+                var sf = new FileInfo(ExtensionValue.BaseDirectory + @"\Setting.lps");
+                if (sf.Exists)
+                {
+                    GameSavesData[(gdat)"birthday"] = sf.CreationTime.Date;
+                }
+                else
+                    GameSavesData[(gdat)"birthday"] = DateTime.Now.Date;
             }
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;

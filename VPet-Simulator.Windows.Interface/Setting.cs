@@ -232,6 +232,7 @@ namespace VPet_Simulator.Windows.Interface
         public int SaveTimes
         {
             get => GetInt("savetimes", 100000);
+            set => SetInt("savetimes", value);
         }
 
         private int presslength;
