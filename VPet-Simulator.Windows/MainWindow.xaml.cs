@@ -792,7 +792,12 @@ namespace VPet_Simulator.Windows
 
                 m_menu = new ContextMenu();
                 m_menu.Popup += (x, y) => { GameSavesData.Statistics[(gint)"stat_menu_pop"]++; };
-                m_menu.MenuItems.Add(new MenuItem("鼠标穿透".Translate(), (x, y) => { SetTransparentHitThrough(); }) { });
+                var hitThrough = new MenuItem("鼠标穿透".Translate(), (x, y) => { SetTransparentHitThrough(); })
+                {
+                    Name = "NotifyIcon_HitThrough",
+                    Checked = HitThrough
+                };
+                m_menu.MenuItems.Add(hitThrough);
                 m_menu.MenuItems.Add(new MenuItem("操作教程".Translate(), (x, y) =>
                 {
                     if (LocalizeCore.CurrentCulture == "zh-Hans")
@@ -1037,6 +1042,7 @@ namespace VPet_Simulator.Windows
                 //uint extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
                 //SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
                 HitThrough = !HitThrough;
+                notifyIcon.ContextMenu.MenuItems.Find("NotifyIcon_HitThrough", false).First().Checked = HitThrough;
                 if (HitThrough)
                 {
                     Win32.User32.SetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE,
