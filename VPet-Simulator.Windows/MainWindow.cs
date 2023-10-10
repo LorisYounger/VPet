@@ -31,6 +31,8 @@ namespace VPet_Simulator.Windows
     {
         public readonly string ModPath = Environment.CurrentDirectory + @"\mod";
         public bool IsSteamUser { get; }
+        public LPS_D Args { get; }
+        public string PrefixSave { get; } = "";
         public Setting Set { get; set; }
         public List<PetLoader> Pets { get; set; } = new List<PetLoader>();
         public List<CoreMOD> CoreMODs = new List<CoreMOD>();
@@ -186,16 +188,16 @@ namespace VPet_Simulator.Windows
                     //timecount = DateTime.Now;
                 }
                 Set.StartRecordLastPoint = new Point(Dispatcher.Invoke(() => Left), Dispatcher.Invoke(() => Top));
-                File.WriteAllText(ExtensionValue.BaseDirectory + @"\Setting.lps", Set.ToString());
+                File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps", Set.ToString());
 
                 if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
                     Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
 
                 if (Core != null && Core.Save != null)
                 {
-                    var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\Saves", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
+                    var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\Saves", $"Save{PrefixSave}_*.lps")).OrderBy(x =>
                     {
-                        if (int.TryParse(x.Split('_')[1].Split('.')[0], out int i))
+                        if (int.TryParse(x.Split('_').Last().Split('.')[0], out int i))
                             return i;
                         return 0;
                     }).ToList();
@@ -204,16 +206,17 @@ namespace VPet_Simulator.Windows
                         File.Delete(ds[0]);
                         ds.RemoveAt(0);
                     }
-                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps"))
-                        File.Delete(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps");
+                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps"))
+                        File.Delete(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps");
 
-                    File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save_{st}.lps", GameSavesData.ToLPS().ToString());
-
-                    if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.bkp"))
-                        File.Delete(ExtensionValue.BaseDirectory + @"\Save.bkp");
+                    File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps", GameSavesData.ToLPS().ToString());
 
                     if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
+                    {
+                        if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.bkp"))
+                            File.Delete(ExtensionValue.BaseDirectory + @"\Save.bkp");
                         File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + @"\Save.bkp");
+                    }
 
                 }
             }

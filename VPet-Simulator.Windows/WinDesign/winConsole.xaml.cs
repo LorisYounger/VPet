@@ -23,6 +23,7 @@ namespace VPet_Simulator.Windows
         public winConsole(MainWindow mw)
         {
             InitializeComponent();
+            Title = "桌宠管理开发控制台".Translate() + ' ' + mw.PrefixSave;
             this.mw = mw;
             foreach (var v in mw.Core.Graph.GraphsList)
             {

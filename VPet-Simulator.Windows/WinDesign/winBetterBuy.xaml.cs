@@ -42,6 +42,7 @@ namespace VPet_Simulator.Windows
         {
             InitializeComponent();
             this.mw = mw;
+            Title = "更好买".Translate() + ' ' + mw.PrefixSave;
             LsbSortRule.SelectedIndex = mw.Set["betterbuy"].GetInt("lastorder");
             LsbSortAsc.SelectedIndex = mw.Set["betterbuy"].GetBool("lastasc") ? 0 : 1;
             AllowChange = true;

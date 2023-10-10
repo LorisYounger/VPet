@@ -51,7 +51,7 @@ namespace VPet_Simulator.Windows
 
             //存档前缀
             if (Args.ContainsLine("prefix"))
-                PrefixSave = '_' + Args["prefix"].Info;
+                PrefixSave = '-' + Args["prefix"].Info;
 
 #if X64
             PNGAnimation.MaxLoadNumber = 50;
@@ -296,16 +296,17 @@ namespace VPet_Simulator.Windows
         {
             if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
             {
-                var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\Saves", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
-                {
-                    if (int.TryParse(x.Split('_')[1].Split('.')[0], out int i))
-                        return i;
-                    return 0;
-                }).ToList();
+                var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\Saves", $@"Save{PrefixSave}_*.lps"))
+                    .OrderBy(x =>
+                 {
+                     if (int.TryParse(x.Split('_').Last().Split('.')[0], out int i))
+                         return i;
+                     return 0;
+                 }).ToList();
 
                 if (ds.Count != 0)
                 {
-                    int.TryParse(ds.Last().Split('_')[1].Split('.')[0], out int lastid);
+                    int.TryParse(ds.Last().Split('_').Last().Split('.')[0], out int lastid);
                     if (Set.SaveTimes < lastid)
                     {
                         Set.SaveTimes = lastid;

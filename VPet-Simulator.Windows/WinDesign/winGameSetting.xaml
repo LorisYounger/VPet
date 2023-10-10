@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
-        xmlns:system="clr-namespace:System;assembly=mscorlib" Title="{ll:Str 设置}"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         Width="{ll:Dbe SettingWidth, DefValue=500}" Height="550" Closing="WindowX_Closing" FontSize="16"
         Style="{DynamicResource BaseWindowXStyle}" Topmost="True" WindowStartupLocation="CenterScreen" mc:Ignorable="d">
     <!--<pu:WindowX.Resources>
