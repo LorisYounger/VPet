@@ -27,6 +27,7 @@ using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 using System.Web.UI.WebControls;
+using LinePutScript.Dictionary;
 
 namespace VPet_Simulator.Windows
 {
@@ -38,8 +39,20 @@ namespace VPet_Simulator.Windows
         private NotifyIcon notifyIcon;
         public PetHelper petHelper;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
+
         public MainWindow()
         {
+            //处理ARGS
+            Args = new LPS_D();
+            foreach (var str in App.Args)
+            {
+                Args.Add(new Line(str));
+            }
+
+            //存档前缀
+            if (Args.ContainsLine("prefix"))
+                PrefixSave = '_' + Args["prefix"].Info;
+
 #if X64
             PNGAnimation.MaxLoadNumber = 50;
 #else
@@ -50,6 +63,8 @@ namespace VPet_Simulator.Windows
             LocalizeCore.StoreTranslation = true;
             CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
             CultureInfo.CurrentCulture.NumberFormat = new CultureInfo("en-US").NumberFormat;
+
+
             //判断是不是Steam用户,因为本软件会发布到Steam
             //在 https://store.steampowered.com/app/1920960/VPet
             try
@@ -72,9 +87,9 @@ namespace VPet_Simulator.Windows
             try
             {
                 //加载游戏设置
-                if (new FileInfo(ExtensionValue.BaseDirectory + @"\Setting.lps").Exists)
+                if (new FileInfo(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps").Exists)
                 {
-                    Set = new Setting(File.ReadAllText(ExtensionValue.BaseDirectory + @"\Setting.lps"));
+                    Set = new Setting(File.ReadAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps"));
                 }
                 else
                     Set = new Setting("Setting#VPET:|\n");
@@ -325,8 +340,7 @@ namespace VPet_Simulator.Windows
             Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
             if (IsSteamUser)//如果是steam用户,尝试加载workshop
             {
-                var workshop = Set["workshop"];
-                workshop.Clear();
+                var workshop = new Line_D();
                 await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading Steam Workshop"));
                 int i = 1;
                 while (true)
@@ -348,6 +362,8 @@ namespace VPet_Simulator.Windows
                         break;
                     }
                 }
+                if (workshop.Count != 0)
+                    Set["workshop"] = workshop;
             }
             else
             {
@@ -506,7 +522,7 @@ namespace VPet_Simulator.Windows
             //桌宠生日:第一次启动日期
             if (GameSavesData.Data.FindLine("birthday") == null)
             {
-                var sf = new FileInfo(ExtensionValue.BaseDirectory + @"\Setting.lps");
+                var sf = new FileInfo(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps");
                 if (sf.Exists)
                 {
                     GameSavesData[(gdat)"birthday"] = sf.CreationTime.Date;
