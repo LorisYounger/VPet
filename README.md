@@ -121,21 +121,11 @@
 我可能会对您的提交的代码进行修改,删减等以确保该功能/玩法适用于虚拟桌宠模拟器.
 
 
-感谢以下参与的开发人员(按贡献程度排序)
+感谢以下参与的开发和翻译人员
 
-* Wreathlit
-
-* windofxy
-
-* bwnotfound
-
-* aalichao
-
-* Dobby233Liu
-
-* eltociear
-
-* yupix
+<a href="https://github.com/LorisYounger/VPet/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=LorisYounger/VPet" />
+</a>
 
 和提供社区翻译和更多内容的创意工坊人员
 
