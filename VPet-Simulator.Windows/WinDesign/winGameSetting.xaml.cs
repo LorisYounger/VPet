@@ -39,6 +39,9 @@ namespace VPet_Simulator.Windows
             //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
             ////ImageWHY.Source = bit;
             //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
+
+            Title = "设置".Translate() + ' ' + mw.PrefixSave;
+
             TopMostBox.IsChecked = mw.Set.TopMost;
             if (mw.Set.IsBiggerScreen)
             {
@@ -1324,5 +1327,7 @@ namespace VPet_Simulator.Windows
             mw.Set.HideFromTaskControl = SwitchHideFromTaskControl.IsChecked == true;
             ButtonRestartGraph.Visibility = Visibility.Visible;
         }
+
+
     }
 }

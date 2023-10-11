@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
-        xmlns:system="clr-namespace:System;assembly=mscorlib" Title="{ll:Str 设置}"
-        Width="{ll:Dbe SettingWidth, DefValue=500}" Height="550" Closing="WindowX_Closing" FontSize="16"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        Width="{ll:Dbe SettingWidth, DefValue=650}" Height="550" Closing="WindowX_Closing" FontSize="16"
         Style="{DynamicResource BaseWindowXStyle}" Topmost="True" WindowStartupLocation="CenterScreen" mc:Ignorable="d">
     <!--<pu:WindowX.Resources>
         <DataTemplate x:Key="DIYDataTemplate">
@@ -15,6 +15,10 @@
         </DataTemplate>
     </pu:WindowX.Resources>-->
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
         <TabControl x:Name="MainTab" Margin="5" pu:TabControlHelper.CanHeaderPanelScroll="True"
                 pu:TabControlHelper.ItemsCornerRadius="4" pu:TabControlHelper.ItemsHeight="NaN"
                 pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
@@ -22,11 +26,11 @@
                 pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"
                 pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}" Background="Transparent"
                 BorderThickness="0" Foreground="{DynamicResource PrimaryText}"
-                SelectionChanged="MainTab_SelectionChanged">
+                SelectionChanged="MainTab_SelectionChanged" Grid.Column="1">
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <Border Margin="5,10,5,20" Background="{DynamicResource DARKPrimaryText}" CornerRadius="15">
-                        <ContentControl Margin="15,10" Content="{Binding}" />
+                    <Border Margin="0,5,0,10" Background="{DynamicResource DARKPrimaryText}" CornerRadius="15">
+                        <ContentControl Margin="10,5" Content="{Binding}" />
                     </Border>
                 </DataTemplate>
             </TabControl.ContentTemplate>
@@ -957,6 +961,6 @@
             </TabItem>
         </TabControl>
         <Label x:Name="GameVerison" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="{x:Null}"
-                Content="版本v1.0 (655366666)" FontSize="10" Foreground="Green" />
+                Content="版本v1.0 (655366666)" FontSize="10" Foreground="Green" Grid.ColumnSpan="2" />
     </Grid>
 </pu:WindowX>

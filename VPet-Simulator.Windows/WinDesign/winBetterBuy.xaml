@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="https://opensource.panuon.com/wpf-ui" xmlns:local="clr-namespace:VPet_Simulator.Windows"
-        mc:Ignorable="d" Title="{ll:Str 更好买}" Height="550" Width="800" FontSize="14"
+        mc:Ignorable="d" Height="550" Width="800" FontSize="14"
         WindowStartupLocation="CenterScreen" Background="#E0F6FF" pu:WindowXCaption.Height="45"
         pu:WindowXCaption.Background="{DynamicResource DARKPrimary}" pu:WindowXCaption.Foreground="#FFFFFF"
         pu:WindowXCaption.Buttons="Close" Icon="/Res/BetterBuy.png"
@@ -30,8 +30,8 @@
                     <Image x:Name="ImageWHY" Width="28" Height="28" Source="/Res/BetterBuy.png"
                             VerticalAlignment="Center" Margin="30,0,0,0" />
                     <Button Style="{DynamicResource TextButtonStyle}" Foreground="{DynamicResource DARKPrimaryText}"
-                            Content="{ll:Str 更好买}" VerticalAlignment="Center" FontSize="20" Click="BtnTitle_Click"
-                            pu:WindowX.IsDragMoveArea="False" Margin="10,0,0,0" />
+                            VerticalAlignment="Center" FontSize="20" Click="BtnTitle_Click"
+                            pu:WindowX.IsDragMoveArea="False" Margin="10,0,0,0" Loaded="Button_Loaded" />
                     <Grid Grid.Column="1" Margin="15,0,0,0" pu:WindowX.IsDragMoveArea="False" Width="200">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />

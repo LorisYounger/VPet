@@ -42,6 +42,7 @@ namespace VPet_Simulator.Windows
         {
             InitializeComponent();
             this.mw = mw;
+            Title = "更好买".Translate() + ' ' + mw.PrefixSave;
             LsbSortRule.SelectedIndex = mw.Set["betterbuy"].GetInt("lastorder");
             LsbSortAsc.SelectedIndex = mw.Set["betterbuy"].GetBool("lastasc") ? 0 : 1;
             AllowChange = true;
@@ -81,10 +82,16 @@ namespace VPet_Simulator.Windows
                 }
                 else
                 {
-                    MessageBoxX.Show("看到您囊中羞涩,桌宠拿出了1000块私房钱出来给你".Translate());
+                    MessageBoxX.Show("看到您囊中羞涩,{0}拿出了1000块私房钱出来给你".Translate());
                     mw.GameSavesData[(gbol)"self"] = true;
                     mw.Core.Save.Money += 1000;
                 }
+            }
+            else if (mw.Core.Save.Money >= 11000 && mw.GameSavesData[(gbol)"self"])
+            {
+                mw.Core.Save.Money -= 1000;
+                mw.GameSavesData[(gbol)"self"] = false;
+                MessageBoxX.Show("{0}偷偷藏了1000块私房钱".Translate());
             }
 
             Show();
@@ -394,6 +401,12 @@ namespace VPet_Simulator.Windows
         private void Switch_AutoGift_Checked(object sender, RoutedEventArgs e)
         {
             mw.Set.AutoGift = _puswitchautogift.IsChecked.Value;
+        }
+
+        private void Button_Loaded(object sender, RoutedEventArgs e)
+        {
+            ((Button)sender).Content = "更好买".Translate() + mw.PrefixSave;
+            ;
         }
     }
 }

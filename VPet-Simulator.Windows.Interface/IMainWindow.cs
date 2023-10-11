@@ -12,6 +12,14 @@ namespace VPet_Simulator.Windows.Interface
     public interface IMainWindow
     {
         /// <summary>
+        /// 存档前缀, 用于多开游戏, 为空时使用默认存档, 不为空时前缀的前缀一般为'-'
+        /// </summary>
+        string PrefixSave { get; }
+        /// <summary>
+        /// 启动参数
+        /// </summary>
+        LPS_D Args { get; }
+        /// <summary>
         /// 是否为Steam用户
         /// </summary>
         bool IsSteamUser { get; }
