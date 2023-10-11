@@ -17,7 +17,7 @@ work#Work:|
 设置当前范围为移动范围#Set the current range as the moving range:|
 未找到可播放动画, 已停止运行桌宠模块#No playable animation found, Stopped running VPET Module:|
 工作取消#Job canceled.:|
-{2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟#{2} Completed: earned {0:f2} experience\n Total time spent: {1} minutes:|
+{2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟#{2} completed: earned {0:f2} experience\n Total time spent: {1} minutes:|
 EXP#EXP:|
 检测到您开启了开机启动, 以下是开机启动相关提示信息: (仅显示一次)#We have detected that you have booted up the game, the following is a message about booting up the game: (shown only once):|
 游戏开机启动的实现方式是创建快捷方式,不是注册表,更健康,所以游戏卸了也不知道\n如果游戏打不开,可以去这里手动删除游戏开机启动快捷方式:\n%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\#The way to realize the game startup is to create shortcuts, not the registry, healthier, so the game uninstalled also do not know \n If the game can not open, you can go here to manually delete the game startup shortcuts:\n%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\:|
