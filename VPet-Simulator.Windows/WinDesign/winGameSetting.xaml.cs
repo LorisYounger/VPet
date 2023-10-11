@@ -1327,5 +1327,7 @@ namespace VPet_Simulator.Windows
             mw.Set.HideFromTaskControl = SwitchHideFromTaskControl.IsChecked == true;
             ButtonRestartGraph.Visibility = Visibility.Visible;
         }
+
+
     }
 }
