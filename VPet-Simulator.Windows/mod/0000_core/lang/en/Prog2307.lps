@@ -1,6 +1,6 @@
 体力-{0:f0} 心情+{1:f0}#Stamina: -{0:f0}, Mood: +{1:f0}:|
 您的桌宠 {0} 生病啦,没法进行{1}#Your desktop pet {0} fell ill, It can't {1}:|
-{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟#{2}is finish, accumulated realized {0:f2} Money:|
+{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟#{2} completed: earned {0:f2} Vpet-bucks:|
 小时#Hour:|
 获得经验值#Gain EXP:|
 剩余{0}时间#Remaining {0} time:|
