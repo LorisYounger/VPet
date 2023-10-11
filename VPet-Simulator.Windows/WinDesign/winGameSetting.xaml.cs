@@ -6,6 +6,7 @@ using Steamworks.Ugc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -41,7 +42,7 @@ namespace VPet_Simulator.Windows
             //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
 
             Title = "设置".Translate() + ' ' + mw.PrefixSave;
-
+            SettingMenuWidth.Width = new GridLength(LocalizeCore.GetDouble("SettingMenuWidth", 150));
             TopMostBox.IsChecked = mw.Set.TopMost;
             if (mw.Set.IsBiggerScreen)
             {
@@ -218,8 +219,57 @@ namespace VPet_Simulator.Windows
             AllowChange = true;
 
             UpdateMoveAreaText();
+
+            //为侧边添加目录           
+            ListMenu.Items.Add(listmenuswith("置于顶层", 0, TopMostBox));
+            ListMenu.Items.Add(listmenuswith("开机启动", 0, StartUpBox));
+            ListMenu.Items.Add(listmenuswith("宠物动画", 0, PetBox));
+            ListMenu.Items.Add(listmenuswith("隐藏窗口", 0, SwitchHideFromTaskControl));
+
+            ListMenu.Items.Add(listmenuswith("自动保存频率", 1, CBAutoSave));
+            ListMenu.Items.Add(listmenuswith("从备份中还原", 1, numBackupSaveMaxNum));
+            ListMenu.Items.Add(listmenuswith("聊天设置", 1, RBCGPTUseLB));
+            ListMenu.Items.Add(listmenuswith("游戏操作", 1, btn_cleancache));
+
+            ListMenu.Items.Add(listmenuswith("互动设置", 2, CalFunctionBox));
+            ListMenu.Items.Add(listmenuswith("计算间隔", 2, CalSlider));
+            ListMenu.Items.Add(listmenuswith("桌宠移动", 2, MoveEventBox));
+            ListMenu.Items.Add(listmenuswith("操作设置", 2, PressLengthSlider));
+            ListMenu.Items.Add(listmenuswith("桌宠名字", 2, TextBoxPetName));
+            ListMenu.Items.Add(listmenuswith("音乐识别设置", 2, VoiceMaxSilder));
+
+            ListMenu.Items.Add(listmenuswith("自定义链接", 3, btn_DIY));
+
+            ListMenu.Items.Add(listmenuswith("自动超模MOD优化", 4, swAutoCal));
+            ListMenu.Items.Add(listmenuswith("诊断与反馈", 4, RBDiagnosisYES));
+
+            ListMenu.Items.Add(listmenuswith("MOD管理", 5, ButtonOpenModFolder));
+
+            ListMenu.Items.Add(listmenuswith("关于", 6, ImageWHY));
+
+
         }
 
+        private ListBoxItem listmenuswith(string content, int page, FrameworkElement element)
+        {
+            var lbi = new ListBoxItem() { Content = content.Translate() };
+            lbi.PreviewMouseLeftButtonDown += (_, _) =>
+            {
+                if (page >= 0 && page <= 6)
+                    MainTab.SelectedIndex = page;
+                if (page == 2)
+                {
+                    voicetimer.Start();
+                }
+                Task.Run(() =>
+                {
+                    Thread.Sleep(100);
+                    Dispatcher.Invoke(element.BringIntoView);
+                });
+               
+            };
+            return lbi;
+        }
         private void Voicetimer_Tick(object sender, EventArgs e)
         {
             var v = mw.AudioPlayingVolume();
@@ -1146,7 +1196,7 @@ namespace VPet_Simulator.Windows
                                     mw.Main.State = Main.WorkingState.Nomal;
                                 }
                                 if (!mw.GameLoad(l))
-                                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());                               
+                                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
                             }
                             catch (Exception ex)
                             {

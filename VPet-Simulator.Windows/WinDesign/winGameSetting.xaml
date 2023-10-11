@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
-        xmlns:system="clr-namespace:System;assembly=mscorlib"
-        Width="{ll:Dbe SettingWidth, DefValue=650}" Height="550" Closing="WindowX_Closing" FontSize="16"
-        Style="{DynamicResource BaseWindowXStyle}" Topmost="True" WindowStartupLocation="CenterScreen" mc:Ignorable="d">
+        xmlns:system="clr-namespace:System;assembly=mscorlib" Width="{ll:Dbe SettingWidth, DefValue=650}" Height="550"
+        Closing="WindowX_Closing" FontSize="16" Style="{DynamicResource BaseWindowXStyle}" Topmost="True"
+        WindowStartupLocation="CenterScreen" mc:Ignorable="d">
     <!--<pu:WindowX.Resources>
         <DataTemplate x:Key="DIYDataTemplate">
 
@@ -16,9 +16,15 @@
     </pu:WindowX.Resources>-->
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition x:Name="SettingMenuWidth" Width="150" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+        <ListBox x:Name="ListMenu" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="3,3,6,3" BorderBrush="{DynamicResource Primary}"
+                pu:ListBoxHelper.CornerRadius="5" BorderThickness="2" Background="{DynamicResource SecondaryLighter}"
+                pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
+                pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource SecondaryLight}" />
+        <GridSplitter Width="3" Background="{DynamicResource PrimaryDarker}" />
         <TabControl x:Name="MainTab" Margin="5" pu:TabControlHelper.CanHeaderPanelScroll="True"
                 pu:TabControlHelper.ItemsCornerRadius="4" pu:TabControlHelper.ItemsHeight="NaN"
                 pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
@@ -384,9 +390,14 @@
                         <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
                                 Background="{DynamicResource SecondaryLight}" Content="{ll:Str 重新开始}"
                                 ToolTip="{ll:Str '重新开始新游戏,重置统计等信息\&#13;对于想要获得脱离超模从而获得成就非常有帮助'}" Click="restart_click" />
-                        <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                Background="{DynamicResource SecondaryLight}" Click="cleancache_click"
-                                Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
+                        <Button x:Name="btn_cleancache" Grid.Row="1" Grid.Column="2" Margin="4" Padding="1"
+                                pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
+                                Click="cleancache_click" Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
+                        <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                Background="{x:Null}" TextWrapping="Wrap">
+                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 桌宠多开}" />
+                        </TextBlock>
+
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -702,7 +713,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
+                        <Button x:Name="btn_DIY" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
                                 Background="{DynamicResource SecondaryLight}" Click="DIY_ADD_Click"
                                 Content="{ll:Str 添加新链接}" />
                         <Button Grid.Column="1" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
@@ -960,7 +971,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label x:Name="GameVerison" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="{x:Null}"
+        <Label x:Name="GameVerison" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="{x:Null}"
                 Content="版本v1.0 (655366666)" FontSize="10" Foreground="Green" Grid.ColumnSpan="2" />
     </Grid>
 </pu:WindowX>
