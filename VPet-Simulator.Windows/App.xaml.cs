@@ -1,5 +1,8 @@
 ﻿using LinePutScript.Localization.WPF;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows;
+using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows
 {
@@ -16,10 +19,27 @@ namespace VPet_Simulator.Windows
             //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
         public static string[] Args { get; set; }
+        /// <summary>
+        /// 多存档系统名称
+        /// </summary>
+        public static List<string> MutiSaves { get; set; } = new List<string>();
+
+        public static List<MainWindow> MainWindows { get; set; } = new List<MainWindow>();
 
         protected override void OnStartup(StartupEventArgs e)
         {
             Args = e.Args;
+
+            foreach (var mss in new DirectoryInfo(ExtensionValue.BaseDirectory).GetFiles("Setting*.lps"))
+            {
+                var n = mss.Name.Substring(7).Trim('-');
+                MutiSaves.Add(n.Substring(0, n.Length - 4));
+            }
+
+            if (MutiSaves.Count == 0)
+            {
+                MutiSaves.Add("");
+            }
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

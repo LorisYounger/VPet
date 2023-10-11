@@ -26,7 +26,6 @@ using Line = LinePutScript.Line;
 using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
-using System.Web.UI.WebControls;
 using LinePutScript.Dictionary;
 
 namespace VPet_Simulator.Windows
@@ -51,8 +50,10 @@ namespace VPet_Simulator.Windows
 
             //存档前缀
             if (Args.ContainsLine("prefix"))
+            {
                 PrefixSave = '-' + Args["prefix"].Info;
-
+            }
+            App.MainWindows.Add(this);
 #if X64
             PNGAnimation.MaxLoadNumber = 50;
 #else
@@ -203,6 +204,8 @@ namespace VPet_Simulator.Windows
                 Environment.Exit(0);
             }
         }
+
+     
         public new void Close()
         {
             if (Main == null)

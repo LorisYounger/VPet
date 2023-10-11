@@ -89,6 +89,15 @@ namespace VPet_Simulator.Windows
 
             swAutoCal.IsChecked = !mw.Set["gameconfig"].GetBool("noAutoCal");
 
+            foreach (var str in App.MutiSaves)
+            {
+                var rn = str;
+                if (str == "")
+                    rn = "默认存档".Translate();
+                if (str == mw.PrefixSave.Trim('-'))
+                    rn += ' ' + "(当前存档)".Translate();
+                LBHave.Items.Add(rn);
+            }
 
             LanguageBox.Items.Add("null");
             foreach (string v in LocalizeCore.AvailableCultures)
@@ -230,6 +239,7 @@ namespace VPet_Simulator.Windows
             ListMenu.Items.Add(listmenuswith("从备份中还原", 1, numBackupSaveMaxNum));
             ListMenu.Items.Add(listmenuswith("聊天设置", 1, RBCGPTUseLB));
             ListMenu.Items.Add(listmenuswith("游戏操作", 1, btn_cleancache));
+            ListMenu.Items.Add(listmenuswith("桌宠多开", 1, btn_mutidel));
 
             ListMenu.Items.Add(listmenuswith("互动设置", 2, CalFunctionBox));
             ListMenu.Items.Add(listmenuswith("计算间隔", 2, CalSlider));
@@ -266,7 +276,7 @@ namespace VPet_Simulator.Windows
                     Thread.Sleep(100);
                     Dispatcher.Invoke(element.BringIntoView);
                 });
-               
+
             };
             return lbi;
         }
@@ -1368,6 +1378,44 @@ namespace VPet_Simulator.Windows
                 mw.LoadTalkDIY();
             BtnCGPTReSet.Content = "打开 {0} 设置".Translate(mw.TalkBoxCurr?.APIName ?? "Steam Workshop");
 
+        }
+
+        private void btn_muti_open_click(object sender, RoutedEventArgs e)
+        {
+            if (LBHave.SelectedIndex == -1)
+                return;
+            var str = LBHave.SelectedItem as string;
+            if (str == "默认存档")
+            {
+                str = string.Empty;
+            }
+            if (str.EndsWith("(当前存档)".Translate()))
+            {
+                MessageBoxX.Show("当前多开已经加载".Translate());
+                return;
+            }
+            new MainWindow(str).Show();
+        }
+
+        private void btn_mutinew_click(object sender, RoutedEventArgs e)
+        {
+            var savename = TBNew.Text;
+            foreach (var c in @"()#:|/\?*<>-")
+                if (savename.Contains(c))
+                {
+                    MessageBoxX.Show("存档名不能包括特殊符号".Translate());
+                    return;
+                }
+            if (App.MutiSaves.FirstOrDefault(x => x.ToLower() == savename.ToLower()) != null)
+            {
+                MessageBoxX.Show("存档名重复".Translate());
+                return;
+            }
+            var lps = new LPS(mw.Set);
+            lps.SetInt("savetimes", 0);
+            File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting-{savename}.lps", lps.ToString());
+            App.MutiSaves.Add(savename);
+            new MainWindow(savename).Show();
         }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)

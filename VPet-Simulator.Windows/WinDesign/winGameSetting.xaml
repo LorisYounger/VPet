@@ -395,9 +395,45 @@
                                 Click="cleancache_click" Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 桌宠多开}" />
+                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 桌宠多开}" /> <LineBreak />
+                            <Run Text="{ll:Str '支持多开多个桌宠, 这些桌宠将会有独立的设置与存档\&#13;如果画师能够足够勤奋,未来可以看到这些多开的桌宠之间的互动'}" />
                         </TextBlock>
+                        <Grid Margin="0,5,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 新建多开}" />
+                            <Button Grid.Row="0" Grid.Column="3" Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
+                                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str 新建}"
+                                    ToolTip="{ll:Str 新建一个多开}" Click="btn_mutinew_click" />
+                            <TextBox x:Name="TBNew" Grid.Column="2" Margin="0,1,0,1" FontSize="16"
+                                    pu:TextBoxHelper.Watermark="{ll:Str '新开的存档名称,一旦新建,则无法修改'}"
+                                    ToolTip="{ll:Str '新开的存档名称,一旦新建,则无法修改'}"
+                                    Style="{DynamicResource StandardTextBoxStyle}"
+                                    TextChanged="TextBoxPetName_TextChanged" />
+                            <TextBlock Grid.Row="1" VerticalAlignment="Top" Text="{ll:Str 打开}" Margin="0,8,0,0" />
+                            <Button Grid.Row="1" Grid.Column="3" Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
+                                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str 打开}"
+                                    ToolTip="{ll:Str 打开当前选择的多开存档}" VerticalAlignment="Top" Height="25"
+                                    Click="btn_muti_open_click" />
+                            <Button x:Name="btn_mutidel" Grid.Row="1" Grid.Column="3" Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
+                                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str 删除}"
+                                    ToolTip="{ll:Str 删除当前选择的多开存档}" VerticalAlignment="Bottom" Height="25" />
+                            <ListBox x:Name="LBHave" Grid.Row="1" Grid.Column="2" Margin="1,2,1,2"
+                                    pu:ListBoxHelper.CornerRadius="4" BorderBrush="{DynamicResource DARKPrimary}"
+                                    BorderThickness="2" MinHeight="66"
+                                    pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
+                                    pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
+                                    pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}" />
 
+                        </Grid>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
