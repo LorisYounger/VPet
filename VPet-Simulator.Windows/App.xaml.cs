@@ -1,6 +1,7 @@
 ﻿using LinePutScript.Localization.WPF;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using VPet_Simulator.Windows.Interface;
 
@@ -60,6 +61,16 @@ namespace VPet_Simulator.Windows
             else if (expt.Contains("0x80070008"))
             {
                 MessageBox.Show("游戏内存不足,请修改设置中渲染分辨率以便降低内存使用".Translate());
+                return;
+            }
+            else if (expt.Contains("VPet.Plugin"))
+            {
+                var exptin = expt.Split('\n').First(x => x.Contains("VPet.Plugin"));
+                exptin = exptin.Substring(exptin.IndexOf("VPet.Plugin"));
+                MessageBox.Show("游戏发生错误,可能是".Translate() + $"MOD({exptin})" +
+                    "导致的\n如有可能请发送 错误信息截图和引发错误之前的操作给相应MOD作者\n感谢您对MOD开发的支持\n".Translate()
+                     + expt, "游戏发生错误,可能是".Translate() + exptin);
+                return;
             }
 
             string errstr = "游戏发生错误,可能是".Translate() + (string.IsNullOrWhiteSpace(CoreMOD.NowLoading) ?
