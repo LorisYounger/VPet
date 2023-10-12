@@ -1174,7 +1174,7 @@ namespace VPet_Simulator.Windows
                 if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
                 {
                     foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves")
-                        .GetFiles("Save*.lps").OrderByDescending(x => x.LastWriteTime))
+                        .GetFiles($"Save{mw.PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime))
                     {
                         CBSaveReLoad.Items.Add(file.Name.Split('.').First());
                     }
@@ -1361,9 +1361,7 @@ namespace VPet_Simulator.Windows
                 mw.Core.Save = mw.GameSavesData.GameSave;
                 if (oldsave.HashCheck) // 对于重开无作弊的玩家保留统计
                     mw.GameSavesData.Statistics = oldsave.Statistics;
-                mw.HashCheck = true;
-                CBSaveReLoad.IsEnabled = false;
-                BtnSaveReload.IsEnabled = false;
+                mw.HashCheck = true;               
                 MessageBoxX.Show("重置成功".Translate());
             }
         }

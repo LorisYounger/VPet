@@ -1,8 +1,7 @@
 {
   "profiles": {
     "VPet-Simulator.Windows": {
-      "commandName": "Project",
-      "commandLineArgs": "prefix#test:|"
+      "commandName": "Project"
     }
   }
 }

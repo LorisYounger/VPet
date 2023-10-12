@@ -969,6 +969,8 @@ namespace VPet_Simulator.Windows
         public MainWindow(string prefixsave)
         {
             PrefixSave = prefixsave;
+            if (!PrefixSave.StartsWith("-"))
+                PrefixSave = '-' + prefixsave;
             //处理ARGS
             Args = new LPS_D();
 
