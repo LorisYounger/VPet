@@ -461,6 +461,7 @@ namespace VPet_Simulator.Windows
         public void TakeItem(Food item)
         {
             //获取吃腻时间
+            Main.LastInteractionTime = DateTime.Now;
             DateTime now = DateTime.Now;
             DateTime eattime = GameSavesData["buytime"].GetDateTime(item.Name, now);
             double eattimes = 0;
