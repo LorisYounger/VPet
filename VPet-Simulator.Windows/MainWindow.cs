@@ -61,7 +61,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 版本号
         /// </summary>
-        public int version { get; } = 108;
+        public int version { get; } = 109;
         /// <summary>
         /// 版本号
         /// </summary>
@@ -144,7 +144,7 @@ namespace VPet_Simulator.Windows
                         if (hashcheckimg == null)
                         {
                             hashcheckimg = new Image();
-                            hashcheckimg.Source = new BitmapImage(new Uri("pack://application:,,,/Res/hash.png"));
+                            hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash.png");
                             hashcheckimg.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
                             hashcheckimg.ToolTip = "是没有修改过存档/使用超模MOD的玩家专属标志".Translate();
                             Grid.SetColumn(hashcheckimg, 4);

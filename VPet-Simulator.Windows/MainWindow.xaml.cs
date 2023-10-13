@@ -27,6 +27,7 @@ using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 using LinePutScript.Dictionary;
+using System.Windows.Media.Imaging;
 
 namespace VPet_Simulator.Windows
 {
@@ -64,7 +65,6 @@ namespace VPet_Simulator.Windows
             LocalizeCore.StoreTranslation = true;
             CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
             CultureInfo.CurrentCulture.NumberFormat = new CultureInfo("en-US").NumberFormat;
-
 
             //判断是不是Steam用户,因为本软件会发布到Steam
             //在 https://store.steampowered.com/app/1920960/VPet
@@ -205,7 +205,7 @@ namespace VPet_Simulator.Windows
             }
         }
 
-     
+
         public new void Close()
         {
             if (Main == null)

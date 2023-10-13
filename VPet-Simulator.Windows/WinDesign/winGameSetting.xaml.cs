@@ -331,7 +331,7 @@ namespace VPet_Simulator.Windows
             runMODAuthor.Text = mod.Author;
             runMODGameVer.Text = CoreMOD.INTtoVER(mod.GameVer);
             runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
-            ImageMOD.Source = new BitmapImage(new Uri(mod.Path.FullName + @"\icon.png"));
+            ImageMOD.Source = ImageResources.NewSafeBitmapImage(mod.Path.FullName + @"\icon.png");
             if (mod.GameVer < mw.version)
             {
                 if (mod.GameVer / 10 == mw.version / 10)
