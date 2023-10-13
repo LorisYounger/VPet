@@ -1062,10 +1062,10 @@ namespace VPet_Simulator.Windows
                 if (!modpath.Exists)
                 {
                     MessageBoxX.Show("缺少模组Core,无法启动桌宠\nMissing module Core, can't start up", "启动错误 boot error", Panuon.WPF.UI.MessageBoxIcon.Error);
-                    Environment.Exit(0);
+                    App.MainWindows.Remove(this);
+                    Close();
                     return;
                 }
-                Closed += ForceClose;
 
                 Task.Run(GameLoad_muti);
             }

@@ -1406,11 +1406,11 @@ namespace VPet_Simulator.Windows
             {
                 str = string.Empty;
             }
-            if (str.EndsWith("(当前存档)".Translate()))
+            if (str.EndsWith("(当前存档)".Translate()) || App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == str) != null)
             {
                 MessageBoxX.Show("当前多开已经加载".Translate());
                 return;
-            }
+            }           
             new MainWindow(str).Show();
         }
 
@@ -1428,6 +1428,7 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("存档名重复".Translate());
                 return;
             }
+            
             var lps = new LPS(mw.Set);
             lps.SetInt("savetimes", 0);
             File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting-{savename}.lps", lps.ToString());

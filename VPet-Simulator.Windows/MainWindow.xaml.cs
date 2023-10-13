@@ -170,7 +170,6 @@ namespace VPet_Simulator.Windows
                     Environment.Exit(0);
                     return;
                 }
-                Closed += ForceClose;
 
                 //更新存档系统
                 if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
@@ -223,15 +222,6 @@ namespace VPet_Simulator.Windows
             this.Closed += Restart_Closed;
             base.Close();
         }
-        private void ForceClose(object sender, EventArgs e)
-        {
-            Task.Run(() =>
-            {
-                Thread.Sleep(10000);
-                while (true)
-                    Environment.Exit(0);
-            });
-        }
 
         private void Restart_Closed(object sender, EventArgs e)
         {
@@ -244,52 +234,63 @@ namespace VPet_Simulator.Windows
             }
             catch { }
             Save();
-            System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            if (App.MainWindows.Count == 1)
+                System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            else
+            {
+                App.MainWindows.Remove(this);
+                new MainWindow(PrefixSave).Show();
+            }
             Exit();
         }
         private void Exit()
         {
-            try
+            if (App.MainWindows.Count == 1)
             {
-                if (IsSteamUser)
-                    SteamClient.Shutdown();//关掉和Steam的连线
-                if (Core != null)
+                try
                 {
-                    foreach (var igs in Core.Graph.GraphsList.Values)
+                    if (IsSteamUser)
+                        SteamClient.Shutdown();//关掉和Steam的连线
+                    if (Core != null)
                     {
-                        foreach (var ig2 in igs.Values)
+                        foreach (var igs in Core.Graph.GraphsList.Values)
                         {
-                            foreach (var ig3 in ig2)
+                            foreach (var ig2 in igs.Values)
                             {
-                                ig3.Stop();
+                                foreach (var ig3 in ig2)
+                                {
+                                    ig3.Stop();
+                                }
                             }
                         }
                     }
+                    if (Main != null)
+                    {
+                        Main.Dispose();
+                    }
+                    if (winSetting != null)
+                    {
+                        winSetting.Close();
+                    }
+                    AutoSaveTimer?.Stop();
+                    MusicTimer?.Stop();
+                    petHelper?.Close();
+                    if (notifyIcon != null)
+                    {
+                        notifyIcon.Visible = false;
+                        notifyIcon.Dispose();
+                    }
+                    notifyIcon?.Dispose();
                 }
-                if (Main != null)
+                finally
                 {
-                    Main.Dispose();
+                    Environment.Exit(0);
                 }
-                if (winSetting != null)
-                {
-                    winSetting.Close();
-                }
-                AutoSaveTimer?.Stop();
-                MusicTimer?.Stop();
-                petHelper?.Close();
-                if (notifyIcon != null)
-                {
-                    notifyIcon.Visible = false;
-                    notifyIcon.Dispose();
-                }
-                notifyIcon?.Dispose();
+                while (true)
+                    Environment.Exit(0);
             }
-            finally
-            {
-                Environment.Exit(0);
-            }
-            while (true)
-                Environment.Exit(0);
+            else
+                App.MainWindows.Remove(this);
         }
 
 
