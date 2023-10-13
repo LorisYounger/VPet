@@ -225,39 +225,58 @@ namespace VPet_Simulator.Windows
             };
             voicetimer.Tick += Voicetimer_Tick;
 
+            //为侧边添加目录           
+            ListMenuItems.Add(listmenuswith("置于顶层", 0, TopMostBox));
+            ListMenuItems.Add(listmenuswith("开机启动", 0, StartUpBox));
+            ListMenuItems.Add(listmenuswith("宠物动画", 0, PetBox));
+            ListMenuItems.Add(listmenuswith("隐藏窗口", 0, SwitchHideFromTaskControl));
+
+            ListMenuItems.Add(listmenuswith("自动保存频率", 1, CBAutoSave));
+            ListMenuItems.Add(listmenuswith("从备份中还原", 1, numBackupSaveMaxNum));
+            ListMenuItems.Add(listmenuswith("聊天设置", 1, RBCGPTUseLB));
+            ListMenuItems.Add(listmenuswith("游戏操作", 1, btn_cleancache));
+            ListMenuItems.Add(listmenuswith("桌宠多开", 1, btn_mutidel));
+
+            ListMenuItems.Add(listmenuswith("互动设置", 2, CalFunctionBox));
+            ListMenuItems.Add(listmenuswith("计算间隔", 2, CalSlider));
+            ListMenuItems.Add(listmenuswith("桌宠移动", 2, MoveEventBox));
+            ListMenuItems.Add(listmenuswith("操作设置", 2, PressLengthSlider));
+            ListMenuItems.Add(listmenuswith("桌宠名字", 2, TextBoxPetName));
+            ListMenuItems.Add(listmenuswith("音乐识别设置", 2, VoiceMaxSilder));
+
+            ListMenuItems.Add(listmenuswith("自定义链接", 3, btn_DIY));
+
+            ListMenuItems.Add(listmenuswith("自动超模MOD优化", 4, swAutoCal));
+            ListMenuItems.Add(listmenuswith("诊断与反馈", 4, RBDiagnosisYES));
+
+            ListMenuItems.Add(listmenuswith("MOD管理", 5, ButtonOpenModFolder));
+
+            ListMenuItems.Add(listmenuswith("关于", 6, ImageWHY));
+
+            foreach (var v in ListMenuItems)
+                ListMenu.Items.Add(v);
+
             AllowChange = true;
 
             UpdateMoveAreaText();
-
-            //为侧边添加目录           
-            ListMenu.Items.Add(listmenuswith("置于顶层", 0, TopMostBox));
-            ListMenu.Items.Add(listmenuswith("开机启动", 0, StartUpBox));
-            ListMenu.Items.Add(listmenuswith("宠物动画", 0, PetBox));
-            ListMenu.Items.Add(listmenuswith("隐藏窗口", 0, SwitchHideFromTaskControl));
-
-            ListMenu.Items.Add(listmenuswith("自动保存频率", 1, CBAutoSave));
-            ListMenu.Items.Add(listmenuswith("从备份中还原", 1, numBackupSaveMaxNum));
-            ListMenu.Items.Add(listmenuswith("聊天设置", 1, RBCGPTUseLB));
-            ListMenu.Items.Add(listmenuswith("游戏操作", 1, btn_cleancache));
-            ListMenu.Items.Add(listmenuswith("桌宠多开", 1, btn_mutidel));
-
-            ListMenu.Items.Add(listmenuswith("互动设置", 2, CalFunctionBox));
-            ListMenu.Items.Add(listmenuswith("计算间隔", 2, CalSlider));
-            ListMenu.Items.Add(listmenuswith("桌宠移动", 2, MoveEventBox));
-            ListMenu.Items.Add(listmenuswith("操作设置", 2, PressLengthSlider));
-            ListMenu.Items.Add(listmenuswith("桌宠名字", 2, TextBoxPetName));
-            ListMenu.Items.Add(listmenuswith("音乐识别设置", 2, VoiceMaxSilder));
-
-            ListMenu.Items.Add(listmenuswith("自定义链接", 3, btn_DIY));
-
-            ListMenu.Items.Add(listmenuswith("自动超模MOD优化", 4, swAutoCal));
-            ListMenu.Items.Add(listmenuswith("诊断与反馈", 4, RBDiagnosisYES));
-
-            ListMenu.Items.Add(listmenuswith("MOD管理", 5, ButtonOpenModFolder));
-
-            ListMenu.Items.Add(listmenuswith("关于", 6, ImageWHY));
-
-
+        }
+        public List<ListBoxItem> ListMenuItems = new List<ListBoxItem>();
+        private void tb_seach_menu_textchange(object sender, TextChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            ListMenu.Items.Clear();
+            if (string.IsNullOrEmpty(tb_seach_menu.Text))
+            {
+                foreach (var v in ListMenuItems)
+                    ListMenu.Items.Add(v);
+                return;
+            }
+            foreach (var v in ListMenuItems)
+            {
+                if (((string)v.Content).Contains(tb_seach_menu.Text))
+                    ListMenu.Items.Add(v);
+            }
         }
 
         private ListBoxItem listmenuswith(string content, int page, FrameworkElement element)
@@ -1361,7 +1380,7 @@ namespace VPet_Simulator.Windows
                 mw.Core.Save = mw.GameSavesData.GameSave;
                 if (oldsave.HashCheck) // 对于重开无作弊的玩家保留统计
                     mw.GameSavesData.Statistics = oldsave.Statistics;
-                mw.HashCheck = true;               
+                mw.HashCheck = true;
                 MessageBoxX.Show("重置成功".Translate());
             }
         }
@@ -1415,6 +1434,8 @@ namespace VPet_Simulator.Windows
             App.MutiSaves.Add(savename);
             new MainWindow(savename).Show();
         }
+
+
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
         {

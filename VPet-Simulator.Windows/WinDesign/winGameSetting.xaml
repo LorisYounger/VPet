@@ -19,8 +19,11 @@
             <ColumnDefinition x:Name="SettingMenuWidth" Width="150" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+        <TextBox x:Name="tb_seach_menu" FontSize="16" pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
+                Style="{DynamicResource StandardTextBoxStyle}" VerticalAlignment="Top" Margin="3,6,6,0" TextChanged="tb_seach_menu_textchange" />
         <ListBox x:Name="ListMenu" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="3,3,6,3" BorderBrush="{DynamicResource Primary}"
+                ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="3,40,6,3"
+                BorderBrush="{DynamicResource Primary}"
                 pu:ListBoxHelper.CornerRadius="5" BorderThickness="2" Background="{DynamicResource SecondaryLighter}"
                 pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
                 pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource SecondaryLight}" />
