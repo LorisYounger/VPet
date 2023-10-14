@@ -132,7 +132,7 @@ namespace VPet_Simulator.Core
                 //如果实在找不到,就走随机数(无生病)
                 list = gl.FindAll(x => x.GraphInfo.ModeType != GameSave.ModeType.Ill);
                 if (list.Count > 0)
-                    return list[Function.Rnd.Next(list.Count)];              
+                    return list[Function.Rnd.Next(list.Count)];
             }
             return null;// FindGraph(GraphType.Default, mode);
         }
@@ -285,17 +285,18 @@ namespace VPet_Simulator.Core
                 if (lps.FindLine("touchraised") != null)
                 {
                     TouchRaisedLocate = new Point[] {
-                    new Point(lps["touchraised"][(gdbe)"happy_px"], lps["touchraised"][(gdbe)"happy_py"]),
-                    new Point(lps["touchraised"][(gdbe)"nomal_px"], lps["touchraised"][(gdbe)"nomal_py"]),
-                    new Point(lps["touchraised"][(gdbe)"poorcondition_px"], lps["raistouchraisedepoint"][(gdbe)"poorcondition_py"]),
-                    new Point(lps["touchraised"][(gdbe)"ill_px"], lps["touchraised"][(gdbe)"ill_py"])
-                };
+                        new Point(lps["touchraised"].GetDouble("happy_px", TouchRaisedLocate[0].X), lps["touchraised"].GetDouble("happy_py", TouchRaisedLocate[0].Y)),
+                        new Point(lps["touchraised"].GetDouble("nomal_px", TouchRaisedLocate[1].X), lps["touchraised"].GetDouble("nomal_py", TouchRaisedLocate[1].Y)),
+                        new Point(lps["touchraised"].GetDouble("poorcondition_px", TouchRaisedLocate[2].X), lps["touchraised"].GetDouble("poorcondition_py", TouchRaisedLocate[2].Y)),
+                        new Point(lps["touchraised"].GetDouble("ill_px", TouchRaisedLocate[3].X), lps["touchraised"].GetDouble("ill_py", TouchRaisedLocate[3].Y))
+                    };
+
                     TouchRaisedSize = new Size[] {
-                    new Size(lps["touchraised"][(gdbe)"happy_sx"], lps["touchraised"][(gdbe)"happy_sy"]),
-                    new Size(lps["touchraised"][(gdbe)"nomal_sx"], lps["touchraised"][(gdbe)"nomal_sy"]),
-                    new Size(lps["touchraised"][(gdbe)"poorcondition_sx"], lps["touchraised"][(gdbe)"poorcondition_sy"]),
-                    new Size(lps["touchraised"][(gdbe)"ill_sx"], lps["touchraised"][(gdbe)"ill_sy"])
-                };
+                        new Size(lps["touchraised"].GetDouble("happy_sw", TouchRaisedSize[0].Width), lps["touchraised"].GetDouble("happy_sh", TouchRaisedSize[0].Height)),
+                        new Size(lps["touchraised"].GetDouble("nomal_sw", TouchRaisedSize[1].Width), lps["touchraised"].GetDouble("nomal_sh", TouchRaisedSize[1].Height)),
+                        new Size(lps["touchraised"].GetDouble("poorcondition_sw", TouchRaisedSize[2].Width), lps["touchraised"].GetDouble("poorcondition_sh", TouchRaisedSize[2].Height)),
+                        new Size(lps["touchraised"].GetDouble("ill_sw", TouchRaisedSize[3].Width), lps["touchraised"].GetDouble("ill_sh", TouchRaisedSize[3].Height))
+                    };
                 }
                 if (lps.FindLine("raisepoint") != null)
                 {
