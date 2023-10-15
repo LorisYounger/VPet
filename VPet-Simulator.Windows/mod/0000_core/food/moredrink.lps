@@ -1,0 +1,15 @@
+food:|name#茶:|type#Drink:|Exp#10:|Strength#10:|StrengthDrink#100:|StrengthFood#-1:|Health#5:|Feeling#25:|price#19.5:|graph#drink:|desc#中国正统传统饮料，消食解腻，饭后必备。:|
+food:|name#纯牛奶:|type#Drink:|Exp#10:|Strength#20:|StrengthDrink#70:|StrengthFood#20:|Health#2:|Feeling#30:|price#17.5:|graph#drink:|desc#每天一杯奶，强壮好桌宠！:|
+food:|name#格瓦斯:|type#Drink:|Exp#60:|Strength#20:|StrengthDrink#75:|StrengthFood#25:|Health#2:|Feeling#10:|price#26.0:|graph#drink:|desc#液体面包，在俄罗斯的传说中，斯拉夫勇士为了重新变得爷们，经常喝这玩意。:|
+food:|name#1L纯净水:|type#Drink:|Exp#20:|Strength#10:|StrengthDrink#200:|StrengthFood#0:|Health#0.5:|Feeling#-15:|price#25.5:|graph#drink:|desc#一般来说是这是多人份，你一个人吨完算你厉害…达成成就-多喝水:|
+food:|name#奶茶:|type#Drink:|Exp#40:|Strength#70:|StrengthDrink#65:|StrengthFood#20:|Health#-1:|Feeling#25:|price#22.0:|graph#drink:|desc#秋天的第一杯奶茶，少冰，七糖，加珍珠打包带走不要纸管谢谢。:|
+food:|name#啤酒:|type#Drink:|Exp#20:|Strength#10:|StrengthDrink#75:|StrengthFood#10:|Health#-2:|Feeling#10:|price#12.5:|graph#drink:|desc#也是液体面包，雪崩的时候,每一片雪花都在勇闯天涯。:|
+food:|name#威士忌:|type#Drink:|Exp#393:|Strength#5:|StrengthDrink#55:|StrengthFood#5:|Health#-4:|Feeling#20:|price#69.5:|graph#drink:|desc#哦，我亲爱的朋友，请容许我给你倒一杯威士忌加冰。哦不用谢我的老伙计，这是我应该的。:|
+food:|name#白酒:|type#Drink:|Exp#622:|Strength#10:|StrengthDrink#55:|StrengthFood#10:|Health#-3:|Feeling#20:|price#110.0:|graph#drink:|desc#哎意呀意呀意呀意呀~你~爱古梁~地窖1578:|
+food:|name#伏特加:|type#Drink:|Exp#522:|Strength#-5:|StrengthDrink#45:|StrengthFood#5:|Health#-5:|Feeling#50:|price#90.0:|graph#drink:|desc#同志！伏特加！吨吨吨！同志！波波沙！哒哒哒！:|
+food:|name#鸡尾酒:|type#Drink:|Exp#123:|Strength#-5:|StrengthDrink#60:|StrengthFood#5:|Health#-1:|Feeling#20:|price#27.5:|graph#drink:|desc#预调的鸡尾酒，看不到调酒师的花活了，酒味好像也淡了点。:|
+food:|name#矿泉水:|type#Drink:|Exp#10:|StrengthDrink#120:|Health#1:|Feeling#5:|price#16.0:|graph#drink:|desc#一饮矿泉水,方知海南人寿长。:|
+food:|name#苏打水:|type#Drink:|Exp#10:|StrengthDrink#110:|Health#1:|Feeling#5:|price#15.0:|graph#drink:|desc#怎么会有人喜欢喝碳酸氢钠的水溶液？:|
+food:|name#热白开:|type#Drink:|Exp#10:|StrengthDrink#125:|Health#0.5:|Feeling#1:|price#16.0:|graph#drink:|desc#白开水，更适合桌宠宝宝体质的饮用水。:|
+food:|name#电解质水:|type#Drink:|Exp#25:|Strength#20:|StrengthDrink#120:|StrengthFood#5:|Health#4:|Feeling#5:|price#23.5:|graph#drink:|desc#含有适当浓度、适当比例的电解质、微量元素等，反正就是很健康！:|
+food:|name#蒸馏水:|type#Drink:|Exp#10:|StrengthDrink#140:|Health#-0.5:|Feeling#1:|price#16.5:|graph#drink:|desc#最正宗的水，其实不合适长期饮用:|

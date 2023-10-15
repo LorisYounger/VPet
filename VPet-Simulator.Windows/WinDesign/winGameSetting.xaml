@@ -6,15 +6,28 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
-        xmlns:system="clr-namespace:System;assembly=mscorlib" Title="{ll:Str 设置}"
-        Width="{ll:Dbe SettingWidth, DefValue=500}" Height="550" Closing="WindowX_Closing" FontSize="16"
-        Style="{DynamicResource BaseWindowXStyle}" Topmost="True" WindowStartupLocation="CenterScreen" mc:Ignorable="d">
+        xmlns:system="clr-namespace:System;assembly=mscorlib" Width="{ll:Dbe SettingWidth, DefValue=650}" Height="550"
+        Closing="WindowX_Closing" FontSize="16" Style="{DynamicResource BaseWindowXStyle}" Topmost="True"
+        WindowStartupLocation="CenterScreen" mc:Ignorable="d">
     <!--<pu:WindowX.Resources>
         <DataTemplate x:Key="DIYDataTemplate">
 
         </DataTemplate>
     </pu:WindowX.Resources>-->
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="SettingMenuWidth" Width="150" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="tb_seach_menu" FontSize="16" pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
+                Style="{DynamicResource StandardTextBoxStyle}" VerticalAlignment="Top" Margin="3,6,6,0" TextChanged="tb_seach_menu_textchange" />
+        <ListBox x:Name="ListMenu" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="3,40,6,3"
+                BorderBrush="{DynamicResource Primary}"
+                pu:ListBoxHelper.CornerRadius="5" BorderThickness="2" Background="{DynamicResource SecondaryLighter}"
+                pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
+                pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource SecondaryLight}" />
+        <GridSplitter Width="3" Background="{DynamicResource PrimaryDarker}" />
         <TabControl x:Name="MainTab" Margin="5" pu:TabControlHelper.CanHeaderPanelScroll="True"
                 pu:TabControlHelper.ItemsCornerRadius="4" pu:TabControlHelper.ItemsHeight="NaN"
                 pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
@@ -22,11 +35,11 @@
                 pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"
                 pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}" Background="Transparent"
                 BorderThickness="0" Foreground="{DynamicResource PrimaryText}"
-                SelectionChanged="MainTab_SelectionChanged">
+                SelectionChanged="MainTab_SelectionChanged" Grid.Column="1">
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <Border Margin="5,10,5,20" Background="{DynamicResource DARKPrimaryText}" CornerRadius="15">
-                        <ContentControl Margin="15,10" Content="{Binding}" />
+                    <Border Margin="0,5,0,10" Background="{DynamicResource DARKPrimaryText}" CornerRadius="15">
+                        <ContentControl Margin="10,5" Content="{Binding}" />
                     </Border>
                 </DataTemplate>
             </TabControl.ContentTemplate>
@@ -380,9 +393,50 @@
                         <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
                                 Background="{DynamicResource SecondaryLight}" Content="{ll:Str 重新开始}"
                                 ToolTip="{ll:Str '重新开始新游戏,重置统计等信息\&#13;对于想要获得脱离超模从而获得成就非常有帮助'}" Click="restart_click" />
-                        <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                Background="{DynamicResource SecondaryLight}" Click="cleancache_click"
-                                Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
+                        <Button x:Name="btn_cleancache" Grid.Row="1" Grid.Column="2" Margin="4" Padding="1"
+                                pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
+                                Click="cleancache_click" Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
+                        <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                Background="{x:Null}" TextWrapping="Wrap">
+                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 桌宠多开}" /> <LineBreak />
+                            <Run Text="{ll:Str '支持多开多个桌宠, 这些桌宠将会有独立的设置与存档\&#13;如果画师能够足够勤奋,未来可以看到这些多开的桌宠之间的互动'}" />
+                        </TextBlock>
+                        <Grid Margin="0,5,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 新建多开}" />
+                            <Button Grid.Row="0" Grid.Column="3" Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
+                                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str 新建}"
+                                    ToolTip="{ll:Str 新建一个多开}" Click="btn_mutinew_click" />
+                            <TextBox x:Name="TBNew" Grid.Column="2" Margin="0,1,0,1" FontSize="16"
+                                    pu:TextBoxHelper.Watermark="{ll:Str '新开的存档名称,一旦新建,则无法修改'}"
+                                    ToolTip="{ll:Str '新开的存档名称,一旦新建,则无法修改'}"
+                                    Style="{DynamicResource StandardTextBoxStyle}"
+                                    TextChanged="TextBoxPetName_TextChanged" />
+                            <TextBlock Grid.Row="1" VerticalAlignment="Top" Text="{ll:Str 打开}" Margin="0,8,0,0" />
+                            <Button Grid.Row="1" Grid.Column="3" Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
+                                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str 打开}"
+                                    ToolTip="{ll:Str 打开当前选择的多开存档}" VerticalAlignment="Top" Height="25"
+                                    Click="btn_muti_open_click" />
+                            <Button x:Name="btn_mutidel" Grid.Row="1" Grid.Column="3" Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
+                                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str 删除}"
+                                    ToolTip="{ll:Str 删除当前选择的多开存档}" VerticalAlignment="Bottom" Height="25" />
+                            <ListBox x:Name="LBHave" Grid.Row="1" Grid.Column="2" Margin="1,2,1,2"
+                                    pu:ListBoxHelper.CornerRadius="4" BorderBrush="{DynamicResource DARKPrimary}"
+                                    BorderThickness="2" MinHeight="66"
+                                    pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
+                                    pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
+                                    pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}" />
+
+                        </Grid>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -698,7 +752,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
+                        <Button x:Name="btn_DIY" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
                                 Background="{DynamicResource SecondaryLight}" Click="DIY_ADD_Click"
                                 Content="{ll:Str 添加新链接}" />
                         <Button Grid.Column="1" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
@@ -956,7 +1010,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label x:Name="GameVerison" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="{x:Null}"
-                Content="版本v1.0 (655366666)" FontSize="10" Foreground="Green" />
+        <Label x:Name="GameVerison" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="{x:Null}"
+                Content="版本v1.0 (655366666)" FontSize="10" Foreground="Green" Grid.ColumnSpan="2" />
     </Grid>
 </pu:WindowX>

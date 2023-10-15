@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "VPet-Simulator.Windows": {
+      "commandName": "Project"
+    }
+  }
+}

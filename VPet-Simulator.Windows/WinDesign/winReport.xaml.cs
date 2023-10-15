@@ -22,6 +22,7 @@ namespace VPet_Simulator.Windows
         {
             InitializeComponent();
             mw = mainw;
+            Title = "反馈中心".Translate() + ' ' + mw.PrefixSave;
             save = mw.Core.Save.ToLine().ToString() + mw.Set.ToString();
             if (errmsg != null)
             {

@@ -119,15 +119,11 @@ Note that to make sure the features/gameplay you contribute fit the game, I may 
 
 Also note that the addition of new features can usually be accomplished with plugins - see [VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo) for more information.
 
-Thanks to the following participating developers (ordered by the degree of their contribution):
+Thanks to the following participating developers and translator
 
-* Wreathlit
-* windofxy
-* bwnotfound
-* aalichao
-* Dobby233Liu
-* eltociear
-* yupix
+<a href="https://github.com/LorisYounger/VPet/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=LorisYounger/VPet" />
+</a>
 
 And the Steam Workshop users who have shared translations and more with the community.
 

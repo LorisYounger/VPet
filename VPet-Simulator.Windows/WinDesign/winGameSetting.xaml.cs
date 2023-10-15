@@ -6,6 +6,7 @@ using Steamworks.Ugc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -39,6 +40,9 @@ namespace VPet_Simulator.Windows
             //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
             ////ImageWHY.Source = bit;
             //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
+
+            Title = "设置".Translate() + ' ' + mw.PrefixSave;
+            SettingMenuWidth.Width = new GridLength(LocalizeCore.GetDouble("SettingMenuWidth", 150));
             TopMostBox.IsChecked = mw.Set.TopMost;
             if (mw.Set.IsBiggerScreen)
             {
@@ -74,6 +78,7 @@ namespace VPet_Simulator.Windows
             if (petboxid == -1)
                 petboxid = 0;
             PetBox.SelectedIndex = petboxid;
+            petboxbef = petboxid;
             PetIntor.Text = mw.Pets[petboxid].Intor.Translate();
 
             TextBoxStartUpX.Text = mw.Set.StartRecordPoint.X.ToString();
@@ -85,6 +90,15 @@ namespace VPet_Simulator.Windows
 
             swAutoCal.IsChecked = !mw.Set["gameconfig"].GetBool("noAutoCal");
 
+            foreach (var str in App.MutiSaves)
+            {
+                var rn = str;
+                if (str == "")
+                    rn = "默认存档".Translate();
+                if (str == mw.PrefixSave.Trim('-'))
+                    rn += ' ' + "(当前存档)".Translate();
+                LBHave.Items.Add(rn);
+            }
 
             LanguageBox.Items.Add("null");
             foreach (string v in LocalizeCore.AvailableCultures)
@@ -212,11 +226,80 @@ namespace VPet_Simulator.Windows
             };
             voicetimer.Tick += Voicetimer_Tick;
 
+            //为侧边添加目录           
+            ListMenuItems.Add(listmenuswith("置于顶层", 0, TopMostBox));
+            ListMenuItems.Add(listmenuswith("开机启动", 0, StartUpBox));
+            ListMenuItems.Add(listmenuswith("宠物动画", 0, PetBox));
+            ListMenuItems.Add(listmenuswith("隐藏窗口", 0, SwitchHideFromTaskControl));
+
+            ListMenuItems.Add(listmenuswith("自动保存频率", 1, CBAutoSave));
+            ListMenuItems.Add(listmenuswith("从备份中还原", 1, numBackupSaveMaxNum));
+            ListMenuItems.Add(listmenuswith("聊天设置", 1, RBCGPTUseLB));
+            ListMenuItems.Add(listmenuswith("游戏操作", 1, btn_cleancache));
+            ListMenuItems.Add(listmenuswith("桌宠多开", 1, btn_mutidel));
+
+            ListMenuItems.Add(listmenuswith("互动设置", 2, CalFunctionBox));
+            ListMenuItems.Add(listmenuswith("计算间隔", 2, CalSlider));
+            ListMenuItems.Add(listmenuswith("桌宠移动", 2, MoveEventBox));
+            ListMenuItems.Add(listmenuswith("操作设置", 2, PressLengthSlider));
+            ListMenuItems.Add(listmenuswith("桌宠名字", 2, TextBoxPetName));
+            ListMenuItems.Add(listmenuswith("音乐识别设置", 2, VoiceMaxSilder));
+
+            ListMenuItems.Add(listmenuswith("自定义链接", 3, btn_DIY));
+
+            ListMenuItems.Add(listmenuswith("自动超模MOD优化", 4, swAutoCal));
+            ListMenuItems.Add(listmenuswith("诊断与反馈", 4, RBDiagnosisYES));
+
+            ListMenuItems.Add(listmenuswith("MOD管理", 5, ButtonOpenModFolder));
+
+            ListMenuItems.Add(listmenuswith("关于", 6, ImageWHY));
+
+            foreach (var v in ListMenuItems)
+                ListMenu.Items.Add(v);
+
             AllowChange = true;
 
             UpdateMoveAreaText();
         }
+        public List<ListBoxItem> ListMenuItems = new List<ListBoxItem>();
+        private void tb_seach_menu_textchange(object sender, TextChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            ListMenu.Items.Clear();
+            if (string.IsNullOrEmpty(tb_seach_menu.Text))
+            {
+                foreach (var v in ListMenuItems)
+                    ListMenu.Items.Add(v);
+                return;
+            }
+            foreach (var v in ListMenuItems)
+            {
+                if (((string)v.Content).Contains(tb_seach_menu.Text))
+                    ListMenu.Items.Add(v);
+            }
+        }
 
+        private ListBoxItem listmenuswith(string content, int page, FrameworkElement element)
+        {
+            var lbi = new ListBoxItem() { Content = content.Translate() };
+            lbi.PreviewMouseLeftButtonDown += (_, _) =>
+            {
+                if (page >= 0 && page <= 6)
+                    MainTab.SelectedIndex = page;
+                if (page == 2)
+                {
+                    voicetimer.Start();
+                }
+                Task.Run(() =>
+                {
+                    Thread.Sleep(100);
+                    Dispatcher.Invoke(element.BringIntoView);
+                });
+
+            };
+            return lbi;
+        }
         private void Voicetimer_Tick(object sender, EventArgs e)
         {
             var v = mw.AudioPlayingVolume();
@@ -268,7 +351,7 @@ namespace VPet_Simulator.Windows
             runMODAuthor.Text = mod.Author;
             runMODGameVer.Text = CoreMOD.INTtoVER(mod.GameVer);
             runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
-            ImageMOD.Source = new BitmapImage(new Uri(mod.Path.FullName + @"\icon.png"));
+            ImageMOD.Source = ImageResources.NewSafeBitmapImage(mod.Path.FullName + @"\icon.png");
             if (mod.GameVer < mw.version)
             {
                 if (mod.GameVer / 10 == mw.version / 10)
@@ -875,23 +958,64 @@ namespace VPet_Simulator.Windows
             mw.Set.StartUPBootSteam = StartUpSteamBox.IsChecked == true;
             GenStartUP();
         }
-
+        private int petboxbef;
+        private void petbox_back()
+        {
+            AllowChange = false;
+            PetBox.SelectedIndex = petboxbef;
+            AllowChange = true;
+        }
         private void PetBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!AllowChange)
                 return;
 
+            if (mw.PrefixSave == "")
+            {
+                switch (MessageBoxX.Show("是否多开一个新的桌宠使用 {0} 皮肤\n各自存档独立保存,互不影响\n支持同时显示多个宠物".Translate(mw.Pets[PetBox.SelectedIndex].Name.Translate()),
+                    "是否多开".Translate(), MessageBoxButton.YesNoCancel))
+                {
+                    case MessageBoxResult.Yes:                        
+                        var savename = mw.Pets[PetBox.SelectedIndex].Name;
+                        petbox_back();
+                        foreach (var c in @"()#:|/\?*<>-")
+                            if (savename.Contains(c))
+                            {
+                                MessageBoxX.Show("存档名不能包括特殊符号".Translate());
+                                return;
+                            }
+                        if (App.MutiSaves.FirstOrDefault(x => x.ToLower() == savename.ToLower()) != null)
+                        {
+                            MessageBoxX.Show("存档名重复".Translate());
+                            return;
+                        }
+
+                        var lps = new LPS(mw.Set.ToString());
+                        lps.SetInt("savetimes", 0);
+                        lps["gameconfig"].SetString("petgraph", savename);
+                        File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting-{savename}.lps", lps.ToString());
+                        App.MutiSaves.Add(savename);
+                        new MainWindow(savename).Show();
+                        return;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        petbox_back();
+                        return;
+                }
+            }
+
             var petloader = mw.Pets.Find(x => x.Name == mw.Set.PetGraph);
             petloader ??= mw.Pets[0];
             bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
-
-            mw.Set.PetGraph = mw.Pets[PetBox.SelectedIndex].Name;
-            PetIntor.Text = mw.Pets[PetBox.SelectedIndex].Intor.Translate();
+            petboxbef = PetBox.SelectedIndex;
+            mw.Set.PetGraph = mw.Pets[petboxbef].Name;
+            PetIntor.Text = mw.Pets[petboxbef].Intor.Translate();
             ButtonRestartGraph.Visibility = Visibility.Visible;
 
             if (ischangename)
             {
-                mw.Core.Save.Name = mw.Pets[PetBox.SelectedIndex].PetName.Translate();
+                mw.Core.Save.Name = mw.Pets[petboxbef].PetName.Translate();
                 TextBoxPetName.Text = mw.Core.Save.Name;
                 if (mw.IsSteamUser)
                     SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
@@ -1111,7 +1235,7 @@ namespace VPet_Simulator.Windows
                 if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
                 {
                     foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves")
-                        .GetFiles("Save*.lps").OrderByDescending(x => x.LastWriteTime))
+                        .GetFiles($"Save{mw.PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime))
                     {
                         CBSaveReLoad.Items.Add(file.Name.Split('.').First());
                     }
@@ -1143,7 +1267,7 @@ namespace VPet_Simulator.Windows
                                     mw.Main.State = Main.WorkingState.Nomal;
                                 }
                                 if (!mw.GameLoad(l))
-                                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());                               
+                                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
                             }
                             catch (Exception ex)
                             {
@@ -1299,8 +1423,6 @@ namespace VPet_Simulator.Windows
                 if (oldsave.HashCheck) // 对于重开无作弊的玩家保留统计
                     mw.GameSavesData.Statistics = oldsave.Statistics;
                 mw.HashCheck = true;
-                CBSaveReLoad.IsEnabled = false;
-                BtnSaveReload.IsEnabled = false;
                 MessageBoxX.Show("重置成功".Translate());
             }
         }
@@ -1317,6 +1439,47 @@ namespace VPet_Simulator.Windows
 
         }
 
+        private void btn_muti_open_click(object sender, RoutedEventArgs e)
+        {
+            if (LBHave.SelectedIndex == -1)
+                return;
+            var str = LBHave.SelectedItem as string;
+            if (str == "默认存档")
+            {
+                str = string.Empty;
+            }
+            if (str.EndsWith("(当前存档)".Translate()) || App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == str) != null)
+            {
+                MessageBoxX.Show("当前多开已经加载".Translate());
+                return;
+            }
+            new MainWindow(str).Show();
+        }
+
+        private void btn_mutinew_click(object sender, RoutedEventArgs e)
+        {
+            var savename = TBNew.Text;
+            foreach (var c in @"()#:|/\?*<>-")
+                if (savename.Contains(c))
+                {
+                    MessageBoxX.Show("存档名不能包括特殊符号".Translate());
+                    return;
+                }
+            if (App.MutiSaves.FirstOrDefault(x => x.ToLower() == savename.ToLower()) != null)
+            {
+                MessageBoxX.Show("存档名重复".Translate());
+                return;
+            }
+
+            var lps = new LPS(mw.Set);
+            lps.SetInt("savetimes", 0);
+            File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting-{savename}.lps", lps.ToString());
+            App.MutiSaves.Add(savename);
+            new MainWindow(savename).Show();
+        }
+
+
+
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
         {
             if (!AllowChange)
@@ -1324,5 +1487,7 @@ namespace VPet_Simulator.Windows
             mw.Set.HideFromTaskControl = SwitchHideFromTaskControl.IsChecked == true;
             ButtonRestartGraph.Visibility = Visibility.Visible;
         }
+
+
     }
 }

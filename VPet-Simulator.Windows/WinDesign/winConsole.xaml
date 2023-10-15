@@ -1,175 +1,96 @@
-﻿<Window
-  x:Class="VPet_Simulator.Windows.winConsole"
-  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-  xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-  xmlns:local="clr-namespace:VPet_Simulator.Windows"
-  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
-  Title="{ll:Str 桌宠管理开发控制台}"
-  Width="450"
-  Height="450"
-  FontSize="16"
-  mc:Ignorable="d">
-  <TabControl pu:TabControlHelper.HeaderPanelBackground="{DynamicResource PrimaryLight}" pu:TabControlHelper.ItemsSelectedBackground="White">
-    <TabItem Header="{ll:Str 动画列表}">
-      <Grid>
-        <Label Background="{x:Null}" Content="{ll:Str '双击查看动画效果'}" />
-        <Label
-          Margin="0,20,0,0"
-          VerticalAlignment="Top"
-          Background="{x:Null}"
-          Content="{ll:Str '选择状态模式:'}" />
+﻿<Window x:Class="VPet_Simulator.Windows.winConsole" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Width="450" Height="450" FontSize="16"
+        mc:Ignorable="d">
+    <TabControl pu:TabControlHelper.HeaderPanelBackground="{DynamicResource PrimaryLight}"
+            pu:TabControlHelper.ItemsSelectedBackground="White">
+        <TabItem Header="{ll:Str 动画列表}">
+            <Grid>
+                <Label Background="{x:Null}" Content="{ll:Str '双击查看动画效果'}" />
+                <Label Margin="0,20,0,0" VerticalAlignment="Top" Background="{x:Null}" Content="{ll:Str '选择状态模式:'}" />
 
-        <ComboBox
-          x:Name="ComboxMode"
-          Margin="110,25,5,0"
-          VerticalAlignment="Top"
-          SelectedIndex="1">
-          <ComboBoxItem Content="Happy" />
-          <ComboBoxItem Content="Nomal" />
-          <ComboBoxItem Content="PoorCondition" />
-          <ComboBoxItem Content="Ill" />
-        </ComboBox>
-        <Label
-          x:Name="LabelNowPlay"
-          HorizontalAlignment="Right"
-          Background="{x:Null}"
-          Content="" />
-        <ListBox
-          x:Name="GraphListBox"
-          Margin="0,49,0,0"
-          MouseDoubleClick="GraphListBox_MouseDoubleClick" />
-      </Grid>
-    </TabItem>
-    <TabItem Header="{ll:Str 动画播放}">
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="1*" />
-          <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="15*" />
-          <RowDefinition Height="110*" />
-          <RowDefinition Height="10*" />
-        </Grid.RowDefinitions>
-        <Label
-          Grid.RowSpan="2"
-          Grid.ColumnSpan="2"
-          Background="{x:Null}"
-          Content="{ll:Str '双击添加/移除播放列表内容'}" />
-        <Label
-          Grid.RowSpan="2"
-          Grid.ColumnSpan="2"
-          Margin="0,20,0,0"
-          VerticalAlignment="Top"
-          Background="{x:Null}"
-          Content="{ll:Str '选择状态模式:'}" />
-        <ComboBox
-          x:Name="ComboxPlayMode"
-          Grid.ColumnSpan="2"
-          Margin="110,25,5,0"
-          VerticalAlignment="Top"
-          SelectedIndex="1">
-          <ComboBoxItem Content="Happy" />
-          <ComboBoxItem Content="Nomal" />
-          <ComboBoxItem Content="PoorCondition" />
-          <ComboBoxItem Content="Ill" />
-        </ComboBox>
-        <ListBox
-          x:Name="GraphListPlayerBox"
-          Grid.Row="1"
-          Margin="5"
-          MouseDoubleClick="GraphListPlayerBox_MouseDoubleClick" />
-        <ListBox
-          x:Name="GraphListWillPlayBox"
-          Grid.Row="1"
-          Grid.Column="1"
-          Margin="5"
-          MouseDoubleClick="GraphListWillPlayBox_MouseDoubleClick" />
-        <Button
-          Grid.Row="2"
-          Grid.ColumnSpan="2"
-          Margin="5"
-          Click="Play_Click"
-          Content="开始播放" />
-        <Button
-          Grid.Column="1"
-          Margin="5"
-          HorizontalAlignment="Right"
-          VerticalAlignment="Top"
-          Click="PlayADD_Click"
-          Content="ADD" />
-      </Grid>
-    </TabItem>
-    <TabItem Header="{ll:Str 显示逻辑}">
-      <Grid>
-        <Label Background="{x:Null}" Content="{ll:Str 双击运行显示效果}" />
-        <Label
-          x:Name="LabelSuccess"
-          HorizontalAlignment="Right"
-          Background="{x:Null}"
-          Content="" />
-        <ListBox
-          x:Name="DisplayListBox"
-          Margin="0,30,0,0"
-          MouseDoubleClick="DisplayListBox_MouseDoubleClick">
-          <ListBoxItem Content="DisplayNomal" />
-          <ListBoxItem Content="DisplayTouchHead" />
-          <ListBoxItem Content="DisplayTouchBody" />
-          <ListBoxItem Content="DisplayIdel" />
-          <ListBoxItem Content="DisplayIdel_StateONE" />
-          <ListBoxItem Content="DisplaySleep" />
-          <ListBoxItem Content="DisplayRaised" />
-          <ListBoxItem Content="DisplayMove" />
-          <ListBoxItem Content="DisplayToNomal" />
-        </ListBox>
-      </Grid>
-    </TabItem>
-    <TabItem Header="{ll:Str 说话}">
-      <Grid>
-        <Label Background="{x:Null}" Content="{ll:Str '输入要说的话,按说话键发送'}" />
-        <Label
-          Margin="0,20,0,0"
-          VerticalAlignment="Top"
-          Background="{x:Null}"
-          Content="{ll:Str '选择说话类型:'}" />
-        <ComboBox
-          x:Name="CombSay"
-          Margin="110,26,5,0"
-          VerticalAlignment="Top" />
-        <TextBox
-          x:Name="SayTextBox"
-          Height="200"
-          Margin="5,54,5,0"
-          VerticalAlignment="Top"
-          VerticalContentAlignment="Top"
-          pu:TextBoxHelper.Watermark="{ll:Str 在这里输入要说话的内容}"
-          AcceptsReturn="True"
-          TextWrapping="Wrap" />
-        <Button
-          VerticalAlignment="Bottom"
-          Click="Say_Click"
-          Content="{ll:Str 说话}"
-          FontSize="24" />
-      </Grid>
-    </TabItem>
-    <TabItem Header="{ll:Str 距离查看器}">
-      <Grid>
-        <Grid.RowDefinitions>
-          <RowDefinition />
-          <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid>
-          <CheckBox
-            Margin="10,5,5,5"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Checked="CheckBox_Checked"
-            Content="{ll:Str 启动距离查看器}"
-            Unchecked="CheckBox_Unchecked" />
-          <TextBlock Margin="10,24,0,0" FontSize="24">
+                <ComboBox x:Name="ComboxMode" Margin="110,25,5,0" VerticalAlignment="Top" SelectedIndex="1">
+                    <ComboBoxItem Content="Happy" />
+                    <ComboBoxItem Content="Nomal" />
+                    <ComboBoxItem Content="PoorCondition" />
+                    <ComboBoxItem Content="Ill" />
+                </ComboBox>
+                <Label x:Name="LabelNowPlay" HorizontalAlignment="Right" Background="{x:Null}" Content="" />
+                <ListBox x:Name="GraphListBox" Margin="0,49,0,0" MouseDoubleClick="GraphListBox_MouseDoubleClick" />
+            </Grid>
+        </TabItem>
+        <TabItem Header="{ll:Str 动画播放}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="15*" />
+                    <RowDefinition Height="110*" />
+                    <RowDefinition Height="10*" />
+                </Grid.RowDefinitions>
+                <Label Grid.RowSpan="2" Grid.ColumnSpan="2" Background="{x:Null}" Content="{ll:Str '双击添加/移除播放列表内容'}" />
+                <Label Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,20,0,0" VerticalAlignment="Top"
+                        Background="{x:Null}" Content="{ll:Str '选择状态模式:'}" />
+                <ComboBox x:Name="ComboxPlayMode" Grid.ColumnSpan="2" Margin="110,25,5,0" VerticalAlignment="Top"
+                        SelectedIndex="1">
+                    <ComboBoxItem Content="Happy" />
+                    <ComboBoxItem Content="Nomal" />
+                    <ComboBoxItem Content="PoorCondition" />
+                    <ComboBoxItem Content="Ill" />
+                </ComboBox>
+                <ListBox x:Name="GraphListPlayerBox" Grid.Row="1" Margin="5"
+                        MouseDoubleClick="GraphListPlayerBox_MouseDoubleClick" />
+                <ListBox x:Name="GraphListWillPlayBox" Grid.Row="1" Grid.Column="1" Margin="5"
+                        MouseDoubleClick="GraphListWillPlayBox_MouseDoubleClick" />
+                <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="5" Click="Play_Click" Content="开始播放" />
+                <Button Grid.Column="1" Margin="5" HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Click="PlayADD_Click" Content="ADD" />
+            </Grid>
+        </TabItem>
+        <TabItem Header="{ll:Str 显示逻辑}">
+            <Grid>
+                <Label Background="{x:Null}" Content="{ll:Str 双击运行显示效果}" />
+                <Label x:Name="LabelSuccess" HorizontalAlignment="Right" Background="{x:Null}" Content="" />
+                <ListBox x:Name="DisplayListBox" Margin="0,30,0,0" MouseDoubleClick="DisplayListBox_MouseDoubleClick">
+                    <ListBoxItem Content="DisplayNomal" />
+                    <ListBoxItem Content="DisplayTouchHead" />
+                    <ListBoxItem Content="DisplayTouchBody" />
+                    <ListBoxItem Content="DisplayIdel" />
+                    <ListBoxItem Content="DisplayIdel_StateONE" />
+                    <ListBoxItem Content="DisplaySleep" />
+                    <ListBoxItem Content="DisplayRaised" />
+                    <ListBoxItem Content="DisplayMove" />
+                    <ListBoxItem Content="DisplayToNomal" />
+                </ListBox>
+            </Grid>
+        </TabItem>
+        <TabItem Header="{ll:Str 说话}">
+            <Grid>
+                <Label Background="{x:Null}" Content="{ll:Str '输入要说的话,按说话键发送'}" />
+                <Label Margin="0,20,0,0" VerticalAlignment="Top" Background="{x:Null}" Content="{ll:Str '选择说话类型:'}" />
+                <ComboBox x:Name="CombSay" Margin="110,26,5,0" VerticalAlignment="Top" />
+                <TextBox x:Name="SayTextBox" Height="200" Margin="5,54,5,0" VerticalAlignment="Top"
+                        VerticalContentAlignment="Top" pu:TextBoxHelper.Watermark="{ll:Str 在这里输入要说话的内容}"
+                        AcceptsReturn="True" TextWrapping="Wrap" />
+                <Button VerticalAlignment="Bottom" Click="Say_Click" Content="{ll:Str 说话}" FontSize="24" />
+            </Grid>
+        </TabItem>
+        <TabItem Header="{ll:Str 距离查看器}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid>
+                    <CheckBox Margin="10,5,5,5" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Checked="CheckBox_Checked" Content="{ll:Str 启动距离查看器}" Unchecked="CheckBox_Unchecked" />
+                    <TextBlock Margin="10,24,0,0" FontSize="24">
             <Run Text="{ll:Str '屏幕边缘距离'}" /><LineBreak />
             <Run Text="{ll:Str 左侧}" />
             :<Run x:Name="RLeft" /><LineBreak />
@@ -179,44 +100,28 @@
             :<Run x:Name="RTop" /><LineBreak />
             <Run Text="{ll:Str 下侧}" />
             :<Run x:Name="RDown" /><LineBreak />
-          </TextBlock>
-        </Grid>
-        <Grid Grid.Row="1">
-          <StackPanel>
-            <Button
-              x:Name="Button_MoveToLeft"
-              Click="Button_MoveToLeft_Click"
-              Content="向左移动" />
-            <Button
-              x:Name="Button_MoveToUp"
-              Click="Button_MoveToUp_Click"
-              Content="向上移动" />
-            <Button
-              x:Name="Button_MoveToRight"
-              Click="Button_MoveToRight_Click"
-              Content="向右移动" />
-            <Button
-              x:Name="Button_MoveToButton"
-              Click="Button_MoveToButton_Click"
-              Content="向下移动" />
-          </StackPanel>
-        </Grid>
-      </Grid>
-    </TabItem>
-    <TabItem Header="{ll:Str 未翻译文档}">
-      <Grid>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="1*" />
-          <RowDefinition Height="10*" />
-        </Grid.RowDefinitions>
-        <Button Click="Output_No_Local" Content="{ll:Str 导出未翻译文档}" />
-        <TextBox
-          x:Name="LocalTextBox"
-          Grid.Row="1"
-          AcceptsReturn="True"
-          IsReadOnly="True"
-          MouseDown="Local_SelectAll_Click" />
-      </Grid>
-    </TabItem>
-  </TabControl>
+                    </TextBlock>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <StackPanel>
+                        <Button x:Name="Button_MoveToLeft" Click="Button_MoveToLeft_Click" Content="向左移动" />
+                        <Button x:Name="Button_MoveToUp" Click="Button_MoveToUp_Click" Content="向上移动" />
+                        <Button x:Name="Button_MoveToRight" Click="Button_MoveToRight_Click" Content="向右移动" />
+                        <Button x:Name="Button_MoveToButton" Click="Button_MoveToButton_Click" Content="向下移动" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Header="{ll:Str 未翻译文档}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="10*" />
+                </Grid.RowDefinitions>
+                <Button Click="Output_No_Local" Content="{ll:Str 导出未翻译文档}" />
+                <TextBox x:Name="LocalTextBox" Grid.Row="1" AcceptsReturn="True" IsReadOnly="True"
+                        MouseDown="Local_SelectAll_Click" />
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>

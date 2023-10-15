@@ -26,7 +26,8 @@ using Line = LinePutScript.Line;
 using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
-using System.Web.UI.WebControls;
+using LinePutScript.Dictionary;
+using System.Windows.Media.Imaging;
 
 namespace VPet_Simulator.Windows
 {
@@ -38,8 +39,22 @@ namespace VPet_Simulator.Windows
         private NotifyIcon notifyIcon;
         public PetHelper petHelper;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
+
         public MainWindow()
         {
+            //处理ARGS
+            Args = new LPS_D();
+            foreach (var str in App.Args)
+            {
+                Args.Add(new Line(str));
+            }
+
+            //存档前缀
+            if (Args.ContainsLine("prefix"))
+            {
+                PrefixSave = '-' + Args["prefix"].Info;
+            }
+            App.MainWindows.Add(this);
 #if X64
             PNGAnimation.MaxLoadNumber = 50;
 #else
@@ -50,6 +65,7 @@ namespace VPet_Simulator.Windows
             LocalizeCore.StoreTranslation = true;
             CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
             CultureInfo.CurrentCulture.NumberFormat = new CultureInfo("en-US").NumberFormat;
+
             //判断是不是Steam用户,因为本软件会发布到Steam
             //在 https://store.steampowered.com/app/1920960/VPet
             try
@@ -72,9 +88,9 @@ namespace VPet_Simulator.Windows
             try
             {
                 //加载游戏设置
-                if (new FileInfo(ExtensionValue.BaseDirectory + @"\Setting.lps").Exists)
+                if (new FileInfo(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps").Exists)
                 {
-                    Set = new Setting(File.ReadAllText(ExtensionValue.BaseDirectory + @"\Setting.lps"));
+                    Set = new Setting(File.ReadAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps"));
                 }
                 else
                     Set = new Setting("Setting#VPET:|\n");
@@ -154,7 +170,6 @@ namespace VPet_Simulator.Windows
                     Environment.Exit(0);
                     return;
                 }
-                Closed += ForceClose;
 
                 //更新存档系统
                 if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
@@ -188,6 +203,8 @@ namespace VPet_Simulator.Windows
                 Environment.Exit(0);
             }
         }
+
+
         public new void Close()
         {
             if (Main == null)
@@ -205,15 +222,6 @@ namespace VPet_Simulator.Windows
             this.Closed += Restart_Closed;
             base.Close();
         }
-        private void ForceClose(object sender, EventArgs e)
-        {
-            Task.Run(() =>
-            {
-                Thread.Sleep(10000);
-                while (true)
-                    Environment.Exit(0);
-            });
-        }
 
         private void Restart_Closed(object sender, EventArgs e)
         {
@@ -226,52 +234,67 @@ namespace VPet_Simulator.Windows
             }
             catch { }
             Save();
-            System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            if (App.MainWindows.Count == 1)
+                System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            else
+            {
+                App.MainWindows.Remove(this);
+                new MainWindow(PrefixSave).Show();
+            }
             Exit();
         }
         private void Exit()
         {
-            try
+            if (App.MainWindows.Count == 1)
             {
-                if (IsSteamUser)
-                    SteamClient.Shutdown();//关掉和Steam的连线
-                if (Core != null)
+                try
                 {
-                    foreach (var igs in Core.Graph.GraphsList.Values)
+                    if (IsSteamUser)
+                        SteamClient.Shutdown();//关掉和Steam的连线
+                    if (Core != null)
                     {
-                        foreach (var ig2 in igs.Values)
+                        foreach (var igs in Core.Graph.GraphsList.Values)
                         {
-                            foreach (var ig3 in ig2)
+                            foreach (var ig2 in igs.Values)
                             {
-                                ig3.Stop();
+                                foreach (var ig3 in ig2)
+                                {
+                                    ig3.Stop();
+                                }
                             }
                         }
                     }
+                    if (Main != null)
+                    {
+                        Main.Dispose();
+                    }
+                    if (winSetting != null)
+                    {
+                        winSetting.Close();
+                    }
+                    AutoSaveTimer?.Stop();
+                    MusicTimer?.Stop();
+                    petHelper?.Close();
+                    if (notifyIcon != null)
+                    {
+                        notifyIcon.Visible = false;
+                        notifyIcon.Dispose();
+                    }
+                    notifyIcon?.Dispose();
                 }
-                if (Main != null)
+                finally
                 {
-                    Main.Dispose();
+                    Environment.Exit(0);
                 }
-                if (winSetting != null)
-                {
-                    winSetting.Close();
-                }
-                AutoSaveTimer?.Stop();
-                MusicTimer?.Stop();
-                petHelper?.Close();
-                if (notifyIcon != null)
-                {
-                    notifyIcon.Visible = false;
-                    notifyIcon.Dispose();
-                }
-                notifyIcon?.Dispose();
+                while (true)
+                    Environment.Exit(0);
             }
-            finally
+            else
             {
-                Environment.Exit(0);
+                winSetting?.Close();
+                winBetterBuy?.Close();
+                App.MainWindows.Remove(this);
             }
-            while (true)
-                Environment.Exit(0);
         }
 
 
@@ -281,16 +304,17 @@ namespace VPet_Simulator.Windows
         {
             if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
             {
-                var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\Saves", "*.lps")).FindAll(x => x.Contains('_')).OrderBy(x =>
-                {
-                    if (int.TryParse(x.Split('_')[1].Split('.')[0], out int i))
-                        return i;
-                    return 0;
-                }).ToList();
+                var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\Saves", $@"Save{PrefixSave}_*.lps"))
+                    .OrderBy(x =>
+                 {
+                     if (int.TryParse(x.Split('_').Last().Split('.')[0], out int i))
+                         return i;
+                     return 0;
+                 }).ToList();
 
                 if (ds.Count != 0)
                 {
-                    int.TryParse(ds.Last().Split('_')[1].Split('.')[0], out int lastid);
+                    int.TryParse(ds.Last().Split('_').Last().Split('.')[0], out int lastid);
                     if (Set.SaveTimes < lastid)
                     {
                         Set.SaveTimes = lastid;
@@ -325,8 +349,7 @@ namespace VPet_Simulator.Windows
             Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
             if (IsSteamUser)//如果是steam用户,尝试加载workshop
             {
-                var workshop = Set["workshop"];
-                workshop.Clear();
+                var workshop = new Line_D();
                 await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading Steam Workshop"));
                 int i = 1;
                 while (true)
@@ -348,6 +371,8 @@ namespace VPet_Simulator.Windows
                         break;
                     }
                 }
+                if (workshop.Count != 0)
+                    Set["workshop"] = workshop;
             }
             else
             {
@@ -506,7 +531,7 @@ namespace VPet_Simulator.Windows
             //桌宠生日:第一次启动日期
             if (GameSavesData.Data.FindLine("birthday") == null)
             {
-                var sf = new FileInfo(ExtensionValue.BaseDirectory + @"\Setting.lps");
+                var sf = new FileInfo(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps");
                 if (sf.Exists)
                 {
                     GameSavesData[(gdat)"birthday"] = sf.CreationTime.Date;
