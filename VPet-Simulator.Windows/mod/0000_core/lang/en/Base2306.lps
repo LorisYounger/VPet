@@ -188,10 +188,10 @@ text#Text Set:|
 商品分类#Product Category:|
 全部#All:|
 收藏#Favorites:|
-正餐#Dinner:|
+正餐#Main Dishes:|
 零食#Snacks:|
-饮料#Drink:|
-功能性#Functionality:|
+饮料#Drinks:|
+功能性#Functional:|
 药品#Medicine:|
 排序方式#Sort by:|
 按名字#Name:|
@@ -213,10 +213,10 @@ text#Text Set:|
 心情#Mood:|
 饱腹度#Hunger:|
 口渴度#Thirst:|
-投喂#Feed:|
-面板#Panel:|
+投喂#Shop:|
+面板#Status:|
 睡觉#Sleep:|
-学习#Learn:|
+学习#Learning:|
 工作#Work:|
 文案#Copywriting:|
 直播#Livestreaming:|
@@ -232,8 +232,8 @@ text#Text Set:|
 开发控制台#Console:|
 反馈中心#Feedback:|
 设置面板#Settings:|
-吃饭#Eat:|
-喝水#Drink:|
+吃饭#Food:|
+喝水#Drinks:|
 吃饭中#Eating:|
 喝水中#Drinking:|
 虚拟桌宠模拟器#VPet-Simulator:|
