@@ -290,7 +290,11 @@ namespace VPet_Simulator.Windows
                     Environment.Exit(0);
             }
             else
+            {
+                winSetting?.Close();
+                winBetterBuy?.Close();
                 App.MainWindows.Remove(this);
+            }
         }
 
 

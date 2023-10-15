@@ -78,6 +78,7 @@ namespace VPet_Simulator.Windows
             if (petboxid == -1)
                 petboxid = 0;
             PetBox.SelectedIndex = petboxid;
+            petboxbef = petboxid;
             PetIntor.Text = mw.Pets[petboxid].Intor.Translate();
 
             TextBoxStartUpX.Text = mw.Set.StartRecordPoint.X.ToString();
@@ -957,23 +958,64 @@ namespace VPet_Simulator.Windows
             mw.Set.StartUPBootSteam = StartUpSteamBox.IsChecked == true;
             GenStartUP();
         }
-
+        private int petboxbef;
+        private void petbox_back()
+        {
+            AllowChange = false;
+            PetBox.SelectedIndex = petboxbef;
+            AllowChange = true;
+        }
         private void PetBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!AllowChange)
                 return;
 
+            if (mw.PrefixSave == "")
+            {
+                switch (MessageBoxX.Show("是否多开一个新的桌宠使用 {0} 皮肤\n各自存档独立保存,互不影响\n支持同时显示多个宠物".Translate(mw.Pets[PetBox.SelectedIndex].Name.Translate()),
+                    "是否多开".Translate(), MessageBoxButton.YesNoCancel))
+                {
+                    case MessageBoxResult.Yes:                        
+                        var savename = mw.Pets[PetBox.SelectedIndex].Name;
+                        petbox_back();
+                        foreach (var c in @"()#:|/\?*<>-")
+                            if (savename.Contains(c))
+                            {
+                                MessageBoxX.Show("存档名不能包括特殊符号".Translate());
+                                return;
+                            }
+                        if (App.MutiSaves.FirstOrDefault(x => x.ToLower() == savename.ToLower()) != null)
+                        {
+                            MessageBoxX.Show("存档名重复".Translate());
+                            return;
+                        }
+
+                        var lps = new LPS(mw.Set.ToString());
+                        lps.SetInt("savetimes", 0);
+                        lps["gameconfig"].SetString("petgraph", savename);
+                        File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting-{savename}.lps", lps.ToString());
+                        App.MutiSaves.Add(savename);
+                        new MainWindow(savename).Show();
+                        return;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        petbox_back();
+                        return;
+                }
+            }
+
             var petloader = mw.Pets.Find(x => x.Name == mw.Set.PetGraph);
             petloader ??= mw.Pets[0];
             bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
-
-            mw.Set.PetGraph = mw.Pets[PetBox.SelectedIndex].Name;
-            PetIntor.Text = mw.Pets[PetBox.SelectedIndex].Intor.Translate();
+            petboxbef = PetBox.SelectedIndex;
+            mw.Set.PetGraph = mw.Pets[petboxbef].Name;
+            PetIntor.Text = mw.Pets[petboxbef].Intor.Translate();
             ButtonRestartGraph.Visibility = Visibility.Visible;
 
             if (ischangename)
             {
-                mw.Core.Save.Name = mw.Pets[PetBox.SelectedIndex].PetName.Translate();
+                mw.Core.Save.Name = mw.Pets[petboxbef].PetName.Translate();
                 TextBoxPetName.Text = mw.Core.Save.Name;
                 if (mw.IsSteamUser)
                     SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
@@ -1410,7 +1452,7 @@ namespace VPet_Simulator.Windows
             {
                 MessageBoxX.Show("当前多开已经加载".Translate());
                 return;
-            }           
+            }
             new MainWindow(str).Show();
         }
 
@@ -1428,7 +1470,7 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("存档名重复".Translate());
                 return;
             }
-            
+
             var lps = new LPS(mw.Set);
             lps.SetInt("savetimes", 0);
             File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting-{savename}.lps", lps.ToString());
