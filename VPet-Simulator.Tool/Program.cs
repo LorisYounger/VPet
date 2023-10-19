@@ -46,15 +46,21 @@ namespace VPet_Simulator.Tool
             {
                 Console.WriteLine("请输入图片位置");
                 DirectoryInfo directoryInfo = new DirectoryInfo(Console.ReadLine());
-                if (directoryInfo.GetFiles().Length != 0)
-                    AnimationReName(time, directoryInfo);
-                else
-                    foreach (var fs in directoryInfo.GetDirectories())
-                    {
-                        AnimationReName(time, fs);
-                    }
+                AnimationReNameFolder(time, directoryInfo);
             }
         }
+
+        static void AnimationReNameFolder(int time, DirectoryInfo directoryInfo)
+        {
+            if (directoryInfo.GetFiles("*.png").Length != 0)
+                AnimationReName(time, directoryInfo);
+            else
+                foreach (var fs in directoryInfo.GetDirectories())
+                {
+                    AnimationReNameFolder(time, fs);
+                }
+        }
+
         static void AnimationReName(int time, DirectoryInfo directoryInfo)
         {
             int id = 0;
@@ -86,56 +92,8 @@ namespace VPet_Simulator.Tool
             lastf.MoveTo(Path.Combine(directoryInfo.FullName, $"{GetFileName(lastf)}_{id++:D3}_{rpt * time}.png"));
             Console.WriteLine("图片处理已完成");
         }
-        //static void FontPetNew()
-        //{
-        //    Console.WriteLine("请输入储存位置");
-        //    DirectoryInfo directoryInfo = new DirectoryInfo(Console.ReadLine());
+       
 
-        //    var elist = Properties.Resources.laenum.Replace("            ", "").Replace("/// <summary>", "")
-        //        .Replace("/// </summary>", "").Replace("/// ", "").Replace("\r", "").Replace("\n\n", "\n")
-        //        .Replace("\n\n", "\n").Replace("\n\n", "\n").Split('\n').ToList();
-        //    elist.RemoveAll(x => x.EndsWith(","));
-        //    for (int i = 0; i < elist.Count; i++)
-        //    {
-        //        var paths = GraphTypeValue[i].Split('_');
-        //        DirectoryInfo nowpath = directoryInfo;
-        //        foreach (var path in paths)
-        //        {
-        //            nowpath = nowpath.CreateSubdirectory(path);
-        //        }
-        //        foreach (string v in Enum.GetNames(typeof(GameSave.ModeType)))
-        //        {
-        //            using (Bitmap image = new Bitmap(500, 500))
-        //            {
-        //                using (Graphics g = Graphics.FromImage(image))
-        //                {
-        //                    var strs = elist[i].Split(' ');
-        //                    g.DrawString(strs[0], new Font("胡晓波男神体2.0", 66, FontStyle.Bold), new SolidBrush(Color.DarkSlateBlue), 10, 100);
-        //                    g.DrawString(strs[0], new Font("胡晓波男神体2.0", 64), new SolidBrush(Color.AliceBlue), 15, 100);
-        //                    for (int j = 1; j < strs.Length - 1; j++)
-        //                    {
-        //                        g.DrawString(strs[j], new Font("胡晓波萌萌体", 50, FontStyle.Bold), new SolidBrush(Color.LightGray), 10, 150 + 50 * j);
-        //                        g.DrawString(strs[j], new Font("胡晓波萌萌体", 48, FontStyle.Bold), new SolidBrush(Color.Gray), 15, 150 + 50 * j);
-        //                    }
-        //                    g.DrawString(v, new Font("胡晓波润圆体35", 50, FontStyle.Bold), new SolidBrush(Color.DeepSkyBlue), 10, 350);
-        //                    g.DrawString(v, new Font("胡晓波润圆体35", 48, FontStyle.Bold), new SolidBrush(Color.SkyBlue), 15, 350);
-        //                    int len = 2000;
-        //                    var last = strs.Last();
-        //                    if(last == "S")
-        //                    {
-        //                        len = 250;
-        //                    }
-        //                    else if (last == "M")
-        //                    {
-        //                        len = 1000;
-        //                    }
-        //                    image.Save(nowpath.CreateSubdirectory(v).FullName + $"\\{paths[0]}_{len}.png");
-        //                }
-        //            }
-        //        }
-
-        //    }
-        //}
         public static string GetFileHash(FileInfo fileInfo)
         {
             //创建一个哈希算法对象
