@@ -90,15 +90,7 @@ namespace VPet_Simulator.Windows
 
             swAutoCal.IsChecked = !mw.Set["gameconfig"].GetBool("noAutoCal");
 
-            foreach (var str in App.MutiSaves)
-            {
-                var rn = str;
-                if (str == "")
-                    rn = "默认存档".Translate();
-                if (str == mw.PrefixSave.Trim('-'))
-                    rn += ' ' + "(当前存档)".Translate();
-                LBHave.Items.Add(rn);
-            }
+            LoadMutiUI();
 
             LanguageBox.Items.Add("null");
             foreach (string v in LocalizeCore.AvailableCultures)
@@ -965,6 +957,19 @@ namespace VPet_Simulator.Windows
             PetBox.SelectedIndex = petboxbef;
             AllowChange = true;
         }
+        private void LoadMutiUI()
+        {
+            LBHave.Items.Clear();
+            foreach (var str in App.MutiSaves)
+            {
+                var rn = str;
+                if (str == "")
+                    rn = "默认存档".Translate();
+                if (str == mw.PrefixSave.Trim('-'))
+                    rn += " (" + "当前存档".Translate() + ')';
+                LBHave.Items.Add(rn);
+            }
+        }
         private void PetBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!AllowChange)
@@ -975,7 +980,7 @@ namespace VPet_Simulator.Windows
                 switch (MessageBoxX.Show("是否多开一个新的桌宠使用 {0} 皮肤\n各自存档独立保存,互不影响\n支持同时显示多个宠物".Translate(mw.Pets[PetBox.SelectedIndex].Name.Translate()),
                     "是否多开".Translate(), MessageBoxButton.YesNoCancel))
                 {
-                    case MessageBoxResult.Yes:                        
+                    case MessageBoxResult.Yes:
                         var savename = mw.Pets[PetBox.SelectedIndex].Name;
                         petbox_back();
                         foreach (var c in @"()#:|/\?*<>-")
@@ -1415,7 +1420,7 @@ namespace VPet_Simulator.Windows
 
         private void restart_click(object sender, RoutedEventArgs e)
         {
-            if (MessageBoxX.Show("是否重置游戏数据重新开始?\n该操作无法撤回".Translate(), "重新开始".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBoxX.Show("是否重置游戏数据重新开始?".Translate(), "重新开始".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 var oldsave = mw.GameSavesData;
                 mw.GameSavesData = new GameSave_v2(mw.Core.Save.Name);
@@ -1444,11 +1449,11 @@ namespace VPet_Simulator.Windows
             if (LBHave.SelectedIndex == -1)
                 return;
             var str = LBHave.SelectedItem as string;
-            if (str == "默认存档")
+            if (str == "默认存档".Translate())
             {
                 str = string.Empty;
             }
-            if (str.EndsWith("(当前存档)".Translate()) || App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == str) != null)
+            if (str.EndsWith(")") || App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == str) != null)
             {
                 MessageBoxX.Show("当前多开已经加载".Translate());
                 return;
@@ -1478,7 +1483,33 @@ namespace VPet_Simulator.Windows
             new MainWindow(savename).Show();
         }
 
-
+        private void btn_mutidel_Click(object sender, RoutedEventArgs e)
+        {
+            if (LBHave.SelectedIndex == -1)
+                return;
+            var str = LBHave.SelectedItem as string;
+            if (str == "默认存档".Translate())
+            {
+                MessageBoxX.Show("默认存档无法删除,请使用重新开始功能重新开始游戏".Translate());
+                return;
+            }
+            if (str.EndsWith(")") || App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == str) != null)
+            {
+                MessageBoxX.Show("当前多开已经加载,请先关闭改多开后重试".Translate());
+                return;
+            }
+            if (!App.MutiSaves.Contains(str))
+            {
+                LoadMutiUI();
+                return;
+            }
+            if (MessageBoxX.Show("是否删除当前选择({0})的多开存档?".Translate(str), "删除前确认".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                File.Delete(ExtensionValue.BaseDirectory + @$"\Setting-{str}.lps");
+                App.MutiSaves.Remove(str);
+                LoadMutiUI();
+            }
+        }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
         {
