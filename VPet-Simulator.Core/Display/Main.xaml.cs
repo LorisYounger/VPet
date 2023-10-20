@@ -75,7 +75,7 @@ namespace VPet_Simulator.Core
             if (!core.Controller.EnableFunction)
                 Core.Save.Mode = NoFunctionMOD;
             var ig = Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, core.Save.Mode);
-            ig ??= Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, GameSave.ModeType.PoorCondition);
+            ig ??= Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Default), AnimatType.Single, core.Save.Mode);
             //var ig2 = Core.Graph.FindGraph(GraphType.Default, core.GameSave.Mode);
             PetGrid2.Visibility = Visibility.Collapsed;
             Task.Run(() =>
