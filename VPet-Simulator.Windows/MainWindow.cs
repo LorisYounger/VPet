@@ -1046,17 +1046,7 @@ namespace VPet_Simulator.Windows
                 {
                     Topmost = true;
                 }
-                if (Set.HitThrough)
-                {
-                    if (!Set["v"][(gbol)"HitThrough"])
-                    {
-                        Set["v"][(gbol)"HitThrough"] = true;
-                        Set.HitThrough = false;
-                    }
-                    else
-                        SetTransparentHitThrough();
-                }
-
+                
                 //不存在就关掉
                 var modpath = new DirectoryInfo(ModPath + @"\0000_core\pet\vup");
                 if (!modpath.Exists)
@@ -1515,6 +1505,17 @@ namespace VPet_Simulator.Windows
                 Main.Event_TouchBody += Main_Event_TouchBody;
 
                 HashCheck = HashCheck;
+
+                if (Set.HitThrough)
+                {
+                    if (!Set["v"][(gbol)"HitThrough"])
+                    {
+                        Set["v"][(gbol)"HitThrough"] = true;
+                        Set.HitThrough = false;
+                    }
+                    else
+                        SetTransparentHitThrough();
+                }
 
                 if (File.Exists(ExtensionValue.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 6, 20))
                 {
