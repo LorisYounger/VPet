@@ -428,7 +428,7 @@
                                     Click="btn_muti_open_click" />
                             <Button x:Name="btn_mutidel" Grid.Row="1" Grid.Column="3" Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
                                     Background="{DynamicResource SecondaryLight}" Content="{ll:Str 删除}"
-                                    ToolTip="{ll:Str 删除当前选择的多开存档}" VerticalAlignment="Bottom" Height="25" />
+                                    ToolTip="{ll:Str 删除当前选择的多开存档}" VerticalAlignment="Bottom" Height="25" Click="btn_mutidel_Click" />
                             <ListBox x:Name="LBHave" Grid.Row="1" Grid.Column="2" Margin="1,2,1,2"
                                     pu:ListBoxHelper.CornerRadius="4" BorderBrush="{DynamicResource DARKPrimary}"
                                     BorderThickness="2" MinHeight="66"

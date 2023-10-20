@@ -42,7 +42,12 @@ namespace VPet_Simulator.Core
         /// <param name="info">信息</param>
         public GraphInfo(FileSystemInfo path, ILine info)
         {
-            var pn = Sub.Split(path.FullName.Substring(0, path.FullName.Length - path.Extension.Length).ToLower(), info[(gstr)"startuppath"].ToLower()).Last();
+            string pn;
+            if (path is DirectoryInfo)
+                pn = Sub.Split(path.FullName.ToLower(), info[(gstr)"startuppath"].ToLower()).Last();
+            else
+                pn = Sub.Split(path.FullName.Substring(0, path.FullName.Length - path.Extension.Length).ToLower(), info[(gstr)"startuppath"].ToLower()).Last();
+
             var path_name = pn.Replace('\\', '_').Split('_').ToList();
             path_name.RemoveAll(string.IsNullOrWhiteSpace);
             if (!Enum.TryParse(info[(gstr)"mode"], true, out GameSave.ModeType modetype))
@@ -109,7 +114,8 @@ namespace VPet_Simulator.Core
                 else if (path_name.Remove("c") || path_name.Remove("end"))
                 {
                     animatType = AnimatType.C_End;
-                }else if (path_name.Remove("single"))
+                }
+                else if (path_name.Remove("single"))
                 {
                     animatType = AnimatType.Single;
                 }
