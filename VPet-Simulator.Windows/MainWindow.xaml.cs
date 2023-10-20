@@ -238,7 +238,6 @@ namespace VPet_Simulator.Windows
                 System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
             else
             {
-                App.MainWindows.Remove(this);
                 new MainWindow(PrefixSave).Show();
             }
             Exit();

@@ -158,7 +158,7 @@ namespace VPet_Simulator.Windows.Interface
             string source = FindSource(imagename);
             if (source == null)
             {
-                return NewSafeBitmapImage(source);
+                return NewSafeBitmapImage(FindImageUri(superior));
             }
             return NewSafeBitmapImage(source);
         }

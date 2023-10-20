@@ -119,6 +119,8 @@ namespace VPet_Simulator.Windows
 
             if (mw.Set.Diagnosis)
                 RBDiagnosisYES.IsChecked = true;
+            else
+                RBDiagnosisNO.IsChecked = true;
 
             List<int> cbDiagnosis = new List<int> { 200, 500, 1000, 2000, 5000, 10000, 20000 };
             int ds = cbDiagnosis.IndexOf(mw.Set.DiagnosisInterval);
