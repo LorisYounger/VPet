@@ -985,18 +985,23 @@ namespace VPet_Simulator.Windows
                     case MessageBoxResult.Yes:
                         var savename = mw.Pets[PetBox.SelectedIndex].Name;
                         petbox_back();
+                        //如果有这个皮肤的多开,自动多开
+                        if (App.MutiSaves.Contains(savename))
+                        {
+                            if (App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == savename) != null)
+                            {
+                                MessageBoxX.Show("当前多开已经加载".Translate());
+                            }
+                            else
+                                new MainWindow(savename).Show();
+                            return;
+                        }
                         foreach (var c in @"()#:|/\?*<>-")
                             if (savename.Contains(c))
                             {
                                 MessageBoxX.Show("存档名不能包括特殊符号".Translate());
                                 return;
-                            }
-                        if (App.MutiSaves.FirstOrDefault(x => x.ToLower() == savename.ToLower()) != null)
-                        {
-                            MessageBoxX.Show("存档名重复".Translate());
-                            return;
-                        }
-
+                            }                        
                         var lps = new LPS(mw.Set.ToString());
                         lps.SetInt("savetimes", 0);
                         lps["gameconfig"].SetString("petgraph", savename);
