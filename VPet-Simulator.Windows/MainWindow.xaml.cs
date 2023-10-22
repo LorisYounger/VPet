@@ -282,6 +282,12 @@ namespace VPet_Simulator.Windows
                 winSetting?.Close();
                 winBetterBuy?.Close();
                 App.MainWindows.Remove(this);
+                if (notifyIcon != null)
+                {
+                    notifyIcon.Visible = false;
+                    notifyIcon.Dispose();
+                }
+                notifyIcon?.Dispose();
             }
         }
 
