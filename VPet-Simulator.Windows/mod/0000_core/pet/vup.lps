@@ -1,5 +1,6 @@
 pet#默认虚拟桌宠:|intor#虚拟主播模拟器默认人物形象:|path#vup:|petname#萝莉斯:|
 touchhead:|px#159:|py#16:|sw#189:|sh#178:|
+touchbody:|px#166:|py#206:|sw#163:|sh#136:|
 touchraised:|happy_px#0:|happy_py#50:|happy_sw#500:|happy_sh#200:|nomal_px#0:|nomal_py#50:|nomal_sw#500:|nomal_sh#200:|poorcondition_px#0:|poorcondition_py#50:|poorcondition_sw#500:|poorcondition_sh#200:|ill_px#0:|ill_py#200:|ill_sw#500:|ill_sh#300:|
 raisepoint:|happy_x#290:|happy_y#128:|nomal_x#290:|nomal_y#128:|poorcondition_x#290:|poorcondition_y#128:|ill_x#225:|ill_y#115:|
 work:|Type#Work:|Name#文案:|MoneyBase#8:|MoneyLevel#0.5:|Graph#workone:|StrengthFood#3.5:|StrengthDrink#2.5:|Feeling#1.5:|Time#60:|FinishBonus#0.1:|BorderBrush#000000:|Background#413d39:|ButtonBackground#322e2b:|ButtonForeground#FFFFFF:|Foreground#ccbdad:|Left#113:|Top#315:|Width#280:|

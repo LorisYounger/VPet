@@ -198,6 +198,14 @@ namespace VPet_Simulator.Core
             /// </summary>
             public Size TouchHeadSize;
             /// <summary>
+            /// 摸身体触发位置
+            /// </summary>
+            public Point TouchBodyLocate;
+            /// <summary>
+            /// 摸身体触发大小
+            /// </summary>
+            public Size TouchBodySize;
+            /// <summary>
             /// 提起触发大小
             /// </summary>
             public Size[] TouchRaisedSize;
@@ -242,6 +250,8 @@ namespace VPet_Simulator.Core
             {
                 TouchHeadLocate = new Point(lps["touchhead"][(gdbe)"px"], lps["touchhead"][(gdbe)"py"]);
                 TouchHeadSize = new Size(lps["touchhead"][(gdbe)"sw"], lps["touchhead"][(gdbe)"sh"]);
+                TouchBodyLocate = new Point(lps["touchbody"][(gdbe)"px"], lps["touchbody"][(gdbe)"py"]);
+                TouchBodySize = new Size(lps["touchbody"][(gdbe)"sw"], lps["touchbody"][(gdbe)"sh"]);
                 TouchRaisedLocate = new Point[] {
                     new Point(lps["touchraised"][(gdbe)"happy_px"], lps["touchraised"][(gdbe)"happy_py"]),
                     new Point(lps["touchraised"][(gdbe)"nomal_px"], lps["touchraised"][(gdbe)"nomal_py"]),
@@ -282,6 +292,12 @@ namespace VPet_Simulator.Core
                     TouchHeadLocate = new Point(lps["touchhead"][(gdbe)"px"], lps["touchhead"][(gdbe)"py"]);
                     TouchHeadSize = new Size(lps["touchhead"][(gdbe)"sw"], lps["touchhead"][(gdbe)"wh"]);
                 }
+                if (lps.FindLine("touchbody") != null)
+                {
+                    TouchBodyLocate = new Point(lps["touchbody"][(gdbe)"px"], lps["touchbody"][(gdbe)"py"]);
+                    TouchBodySize = new Size(lps["touchbody"][(gdbe)"sw"], lps["touchbody"][(gdbe)"sh"]);
+                }
+
                 if (lps.FindLine("touchraised") != null)
                 {
                     TouchRaisedLocate = new Point[] {

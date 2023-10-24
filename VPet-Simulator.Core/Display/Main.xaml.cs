@@ -142,6 +142,7 @@ namespace VPet_Simulator.Core
         public void LoadTouchEvent()
         {
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, () => { DisplayTouchHead(); return true; }));
+            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchBodyLocate, Core.Graph.GraphConfig.TouchBodySize, () => { DisplayTouchBody(); return true; }));
             for (int i = 0; i < 4; i++)
             {
                 GameSave.ModeType m = (GameSave.ModeType)i;
