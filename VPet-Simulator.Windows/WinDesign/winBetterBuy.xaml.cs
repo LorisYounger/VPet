@@ -82,7 +82,7 @@ namespace VPet_Simulator.Windows
                 }
                 else
                 {
-                    MessageBoxX.Show("看到您囊中羞涩,{0}拿出了1000块私房钱出来给你".Translate());
+                    MessageBoxX.Show("看到您囊中羞涩,{0}拿出了1000块私房钱出来给你".Translate(mw.Core.Save.Name));
                     mw.GameSavesData[(gbol)"self"] = true;
                     mw.Core.Save.Money += 1000;
                 }
