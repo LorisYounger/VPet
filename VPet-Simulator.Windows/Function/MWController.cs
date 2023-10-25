@@ -103,7 +103,7 @@ namespace VPet_Simulator.Windows
 
         public void ShowPanel()
         {
-            var panelWindow = new winCharacterPanel();
+            var panelWindow = new winCharacterPanel(mw);
             panelWindow.ShowDialog();
         }
 

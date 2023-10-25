@@ -18,7 +18,7 @@
         <Border x:Name="BdrPanel" Margin="0,0,0,55" VerticalAlignment="Bottom" x:FieldModifier="public"
                 Background="{DynamicResource DARKPrimaryText}" BorderBrush="{DynamicResource DARKPrimaryDarker}"
                 BorderThickness="1" CornerRadius="5" MouseLeave="MenuPanel_MouseLeave" TextBlock.FontSize="24"
-                TextElement.FontSize="24" Visibility="Collapsed" >
+                TextElement.FontSize="24" Visibility="Collapsed" Cursor="">
             <Grid Margin="15" x:Name="gdPanel" x:FieldModifier="public">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -41,7 +41,7 @@
                         Foreground="{DynamicResource DARKPrimary}" Text="Lv 14" />
                 <Button Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Right" VerticalAlignment="Center"
                         Background="Transparent" Click="MenuPanel_Click" Content="{ll:Str 详细}" Cursor="Hand"
-                        Foreground="{DynamicResource DARKPrimary}" Visibility="Collapsed">
+                        Foreground="{DynamicResource DARKPrimary}" Grid.Row="2">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" TextDecorations="Underline" />
