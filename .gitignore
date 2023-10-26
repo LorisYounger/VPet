@@ -353,3 +353,5 @@ MigrationBackup/
 *.rar
 *_PDLC_*
 *_DLC_*
+/VPet-Simulator.Windows/0000_core
+/VPet-Simulator.Windows/mod/0000_core
