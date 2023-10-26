@@ -1,6 +1,9 @@
 ﻿using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,6 +16,7 @@ namespace VPet_Simulator.Windows
     public partial class winCharacterPanel : WindowX
     {
         MainWindow mw;
+
         public winCharacterPanel(MainWindow mw)
         {
             this.mw = mw;
@@ -20,60 +24,65 @@ namespace VPet_Simulator.Windows
 
             foreach (var v in mw.GameSavesData.Statistics.Data)
             {
-                Statlists.Add(new Statlist(v.Key, v.Value));
+                StatList.Add(new StatInfo(v.Key, v.Value));
             }
-            DataGridStatic.DataContext = Statlists;
+            DataGridStatic.ItemsSource = StatList;
         }
-        private List<Statlist> Statlists { get; set; } = new List<Statlist>();
-        private class Statlist
+
+        private ObservableCollection<StatInfo> StatList { get; set; } = new();
+
+        private class StatInfo
         {
-            public Statlist(string statid, string statcount)
+            public StatInfo(string statId, string statCount)
             {
-                this.statid = statid;
-                this.statcount = statcount;
-                if (statid.StartsWith("buy_"))
+                StatId = statId;
+                StatCount = statCount;
+                if (statId.StartsWith("buy_"))
                 {
-                    statname = "购买次数".Translate() + statid.Substring(3);
+                    StatName = "购买次数".Translate() + statId.Substring(3);
                 }
                 else
                 {
-                    statname = statid.Translate();
+                    StatName = statId.Translate();
                 }
             }
 
             /// <summary>
             /// 统计ID
             /// </summary>
-            public string statid { get; set; }
+            public string StatId { get; set; }
+
             /// <summary>
             /// 统计显示名称
             /// </summary>
-            public string statname { get; set; }
+            public string StatName { get; set; }
+
             /// <summary>
             /// 统计内容
             /// </summary>
-            public string statcount { get; set; }
+            public string StatCount { get; set; }
         }
 
-        private void PgbExperience_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
+        private void PgbExperience_GeneratingPercentText(
+            object sender,
+            GeneratingPercentTextRoutedEventArgs e
+        )
         {
             e.Text = $"{e.Value * 10} / {100 * 10}";
         }
 
-        private void PgbStrength_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
+        private void PgbStrength_GeneratingPercentText(
+            object sender,
+            GeneratingPercentTextRoutedEventArgs e
+        )
         {
             e.Text = $"{e.Value} / 100";
         }
 
-        private void PgbSpirit_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
-        {
-            var progressBar = (ProgressBar)sender;
-            progressBar.Foreground = GetForeground(e.Value);
-            progressBar.BorderBrush = GetForeground(e.Value);
-            e.Text = $"{e.Value} / 100";
-        }
-
-        private void PgbHunger_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
+        private void PgbSpirit_GeneratingPercentText(
+            object sender,
+            GeneratingPercentTextRoutedEventArgs e
+        )
         {
             var progressBar = (ProgressBar)sender;
             progressBar.Foreground = GetForeground(e.Value);
@@ -81,7 +90,21 @@ namespace VPet_Simulator.Windows
             e.Text = $"{e.Value} / 100";
         }
 
-        private void PgbThirsty_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
+        private void PgbHunger_GeneratingPercentText(
+            object sender,
+            GeneratingPercentTextRoutedEventArgs e
+        )
+        {
+            var progressBar = (ProgressBar)sender;
+            progressBar.Foreground = GetForeground(e.Value);
+            progressBar.BorderBrush = GetForeground(e.Value);
+            e.Text = $"{e.Value} / 100";
+        }
+
+        private void PgbThirsty_GeneratingPercentText(
+            object sender,
+            GeneratingPercentTextRoutedEventArgs e
+        )
         {
             var progressBar = (ProgressBar)sender;
             progressBar.Foreground = GetForeground(e.Value);
@@ -94,7 +117,10 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        private void PgbHearth_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
+        private void PgbHearth_GeneratingPercentText(
+            object sender,
+            GeneratingPercentTextRoutedEventArgs e
+        )
         {
             e.Text = $"{e.Value} / 100";
         }
@@ -115,5 +141,24 @@ namespace VPet_Simulator.Windows
             }
         }
 
+        private void TextBox_Search_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is not TextBox textBox)
+                return;
+            if (string.IsNullOrWhiteSpace(textBox.Text))
+            {
+                DataGridStatic.ItemsSource = StatList;
+            }
+            else
+            {
+                DataGridStatic.ItemsSource = StatList.Where(
+                    i =>
+                        i.StatName.IndexOf(
+                            textBox.Text,
+                            StringComparison.InvariantCultureIgnoreCase
+                        ) >= 0
+                );
+            }
+        }
     }
 }
