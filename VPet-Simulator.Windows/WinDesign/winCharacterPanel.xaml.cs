@@ -24,7 +24,7 @@ namespace VPet_Simulator.Windows
 
             foreach (var v in mw.GameSavesData.Statistics.Data)
             {
-                StatList.Add(new StatInfo(v.Key, v.Value));
+                StatList.Add(new StatInfo(v.Key, v.Value.GetDouble()));
             }
             DataGridStatic.ItemsSource = StatList;
         }
@@ -33,13 +33,17 @@ namespace VPet_Simulator.Windows
 
         private class StatInfo
         {
-            public StatInfo(string statId, string statCount)
+            public StatInfo(string statId, double statCount)
             {
                 StatId = statId;
                 StatCount = statCount;
                 if (statId.StartsWith("buy_"))
                 {
-                    StatName = "购买次数".Translate() + statId.Substring(3);
+                    StatName = "购买次数".Translate() + '_' + statId.Substring(4).Translate();
+                }
+                else if (statId.StartsWith("stat_"))
+                {
+                    StatName = "统计".Translate() + '_' + statId.Substring(5).Translate();
                 }
                 else
                 {
@@ -60,7 +64,7 @@ namespace VPet_Simulator.Windows
             /// <summary>
             /// 统计内容
             /// </summary>
-            public string StatCount { get; set; }
+            public double StatCount { get; set; }
         }
 
         private void PgbExperience_GeneratingPercentText(
@@ -154,6 +158,9 @@ namespace VPet_Simulator.Windows
                 DataGridStatic.ItemsSource = StatList.Where(
                     i =>
                         i.StatName.IndexOf(
+                            textBox.Text,
+                            StringComparison.InvariantCultureIgnoreCase
+                        ) >= 0 || i.StatId.IndexOf(
                             textBox.Text,
                             StringComparison.InvariantCultureIgnoreCase
                         ) >= 0

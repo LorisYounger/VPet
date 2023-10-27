@@ -1,0 +1,47 @@
+统计面板#Statistics Panel:|
+搜索统计#Search Statistics:|
+数量#Quantity:|
+详情面板#Details Panel:|
+购买次数#Purchase:|
+统计#Statistics:|
+0_feel#Mood is 0:|
+0_sd_sf#Hungry and thirsty at the same time is 0:|
+0_strengthdrink#Thirst 0:|
+0_strengthfood#Hunger is 0:|
+100_all#Number of full states:|
+ill_nomoney#Sick with no money:|
+sleep_time#Sleeping time:|
+autobuy#Number of automatic purchases:|
+bb_drink#Drinks total cost:|
+bb_drug_exp#Drugs total experience:|
+bb_drug#Drugs Total Spend:|
+bb_functional#Functionality Total Spend:|
+bb_gift#Gift Total Cost:|
+bb_gift_like#Gift Total Favor:|
+bb_meal#Meal Totals:|
+bb_snack#Snacks Total:|
+betterbuy#Better Buys Total:|
+buytimes#Better Buys Purchase Count:|
+level#Level:|
+level_g_money#Rank is greater than money:|
+likability#Favorability:|
+menu_pop#Number of times the taskbar has been opened:|
+money#Money:|
+move_length#Movement distance (px):|
+music#Number of times music is danced to:|
+open_times#Game startup times:|
+say_exp_p#Talking experience value increase:|
+say_exp_d#Decrease in talk experience:|
+say_like_p#Talking favor increase:|
+say_like_d#Talking favor decreases:|
+say_money_p#Talking money increased:|
+say_money_d#Talking money decreases:|
+say_times#Speaking times:|
+single_profit_exp#Experience gained per job:|
+single_profit_money#Money gained in a single session of work:|
+sleep_time#Sleeping time (sec):|
+study_time#Study time (sec):|
+total_time#Total time (sec):|
+touch_body#Number of times you touch your body:|
+touch_head#Number of times you touch your head:|
+work_time#Working time (sec):|

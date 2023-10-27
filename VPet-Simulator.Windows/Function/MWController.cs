@@ -104,7 +104,7 @@ namespace VPet_Simulator.Windows
         public void ShowPanel()
         {
             var panelWindow = new winCharacterPanel(mw);
-            panelWindow.ShowDialog();
+            panelWindow.Show();
         }
 
         public double ZoomRatio => mw.Set.ZoomLevel;
