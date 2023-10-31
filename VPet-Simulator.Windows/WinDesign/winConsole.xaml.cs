@@ -22,6 +22,7 @@ namespace VPet_Simulator.Windows
         MainWindow mw;
         public winConsole(MainWindow mw)
         {
+            mw.Windows.Add(this);
             InitializeComponent();
             Title = "桌宠管理开发控制台".Translate() + ' ' + mw.PrefixSave;
             this.mw = mw;
@@ -172,6 +173,11 @@ namespace VPet_Simulator.Windows
         private void Button_MoveToRight_Click(object sender, RoutedEventArgs e)
         {
             mw.Core.Graph.GraphConfig.Moves[9].Display(mw.Main);
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            mw.Windows.Remove(this);
         }
         //private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{

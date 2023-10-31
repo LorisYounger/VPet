@@ -279,6 +279,10 @@ namespace VPet_Simulator.Windows
             }
             else
             {
+                while (Windows.Count != 0)
+                {
+                    Windows[0].Close();
+                }
                 winSetting?.Close();
                 winBetterBuy?.Close();
                 App.MainWindows.Remove(this);

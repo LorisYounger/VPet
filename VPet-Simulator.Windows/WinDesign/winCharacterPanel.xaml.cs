@@ -22,7 +22,8 @@ namespace VPet_Simulator.Windows
         {
             this.mw = mw;
             InitializeComponent();
-
+            Title = "面板".Translate() + ' ' + mw.PrefixSave;
+            mw.Windows.Add(this);
             foreach (var v in mw.GameSavesData.Statistics.Data)
             {
                 StatList.Add(new StatInfo(v.Key, v.Value.GetDouble()));
@@ -203,6 +204,7 @@ namespace VPet_Simulator.Windows
         private void WindowX_Closed(object sender, EventArgs e)
         {
             mw.GameSavesData.Statistics.StatisticChanged -= Statistics_StatisticChanged;
+            mw.Windows.Remove(this);
         }
     }
 }

@@ -6,7 +6,8 @@
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
         xmlns:system="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d"
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" Width="500" MinHeight="250"
-        Height="Auto" ResizeMode="NoResize" WindowState="Normal" Icon="../vpeticon.ico" SizeToContent="Height">
+        Height="Auto" ResizeMode="NoResize" WindowState="Normal" Icon="../vpeticon.ico" SizeToContent="Height"
+        Closed="WindowX_Closed">
     <StackPanel x:Name="MainGrid" Margin="10,10,15,10" VerticalAlignment="Top">
         <Label Background="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left" Content="{ll:Str 反馈与错误提交}"
                 FontSize="24" Margin="10,0,0,0" />

@@ -20,6 +20,7 @@ namespace VPet_Simulator.Windows
         public bool StoreSize => false;
         public winReport(MainWindow mainw, string errmsg = null)
         {
+            mainw.Windows.Add(this);
             InitializeComponent();
             mw = mainw;
             Title = "反馈中心".Translate() + ' ' + mw.PrefixSave;
@@ -133,6 +134,11 @@ namespace VPet_Simulator.Windows
                 }
                 tUpload.IsChecked = false;
             }
+        }
+
+        private void WindowX_Closed(object sender, EventArgs e)
+        {
+            mw.Windows.Remove(this);
         }
     }
 }

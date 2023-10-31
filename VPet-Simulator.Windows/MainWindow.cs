@@ -47,6 +47,7 @@ namespace VPet_Simulator.Windows
         public List<PetLoader> Pets { get; set; } = new List<PetLoader>();
         public List<CoreMOD> CoreMODs = new List<CoreMOD>();
         public GameCore Core { get; set; } = new GameCore();
+        public List<Window> Windows { get; set; } = new List<Window>();
         public Main Main { get; set; }
         public UIElement TalkBox;
         public winGameSetting winSetting { get; set; }
