@@ -239,7 +239,7 @@ namespace VPet_Simulator.Windows
         {
             Main.ToolBar.MenuDIY.Items.Clear();
 
-            if (App.MutiSaves.Count > 0)
+            if (App.MutiSaves.Count > 1)
             {
                 var list = App.MutiSaves.ToList();
                 foreach (var win in App.MainWindows)
@@ -273,7 +273,6 @@ namespace VPet_Simulator.Windows
                     }
                     Main.ToolBar.MenuDIY.Items.Add(menuItem);
                 }
-
             }
 
             foreach (Sub sub in Set["diy"])
