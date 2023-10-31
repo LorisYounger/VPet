@@ -47,6 +47,7 @@ namespace VPet_Simulator.Windows
         public List<PetLoader> Pets { get; set; } = new List<PetLoader>();
         public List<CoreMOD> CoreMODs = new List<CoreMOD>();
         public GameCore Core { get; set; } = new GameCore();
+        public List<Window> Windows { get; set; } = new List<Window>();
         public Main Main { get; set; }
         public UIElement TalkBox;
         public winGameSetting winSetting { get; set; }
@@ -237,6 +238,43 @@ namespace VPet_Simulator.Windows
         public void LoadDIY()
         {
             Main.ToolBar.MenuDIY.Items.Clear();
+
+            if (App.MutiSaves.Count > 1)
+            {
+                var list = App.MutiSaves.ToList();
+                foreach (var win in App.MainWindows)
+                {
+                    list.Remove(win.PrefixSave);
+                }
+                list.Remove(PrefixSave);
+                if (list.Count > 0)
+                {
+                    var menuItem = new System.Windows.Controls.MenuItem()
+                    {
+                        Header = "桌宠多开".Translate(),
+                        HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center,
+                    };
+                    foreach (var win in list)
+                    {
+                        var mo = new System.Windows.Controls.MenuItem()
+                        {
+                            Header = win.Translate(),
+                            HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center,
+                        };
+                        mo.Click += (s, e) =>
+                        {
+                            if (App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == win) == null)
+                            {
+                                new MainWindow(win).Show();
+                            }
+                            menuItem.Items.Remove(s);
+                        };
+                        menuItem.Items.Add(mo);
+                    }
+                    Main.ToolBar.MenuDIY.Items.Add(menuItem);
+                }
+            }
+
             foreach (Sub sub in Set["diy"])
                 Main.ToolBar.AddMenuButton(ToolBar.MenuType.DIY, sub.Name, () =>
                 {
@@ -1047,7 +1085,7 @@ namespace VPet_Simulator.Windows
                 {
                     Topmost = true;
                 }
-                
+
                 //不存在就关掉
                 var modpath = new DirectoryInfo(ModPath + @"\0000_core\pet\vup");
                 if (!modpath.Exists)

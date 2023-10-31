@@ -964,7 +964,7 @@ namespace VPet_Simulator.Windows
             LBHave.Items.Clear();
             foreach (var str in App.MutiSaves)
             {
-                var rn = str;
+                var rn = str.Translate();
                 if (str == "")
                     rn = "默认存档".Translate();
                 if (str == mw.PrefixSave.Trim('-'))
@@ -1001,13 +1001,14 @@ namespace VPet_Simulator.Windows
                             {
                                 MessageBoxX.Show("存档名不能包括特殊符号".Translate());
                                 return;
-                            }                        
+                            }
                         var lps = new LPS(mw.Set.ToString());
                         lps.SetInt("savetimes", 0);
                         lps["gameconfig"].SetString("petgraph", savename);
                         File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting-{savename}.lps", lps.ToString());
                         App.MutiSaves.Add(savename);
                         new MainWindow(savename).Show();
+                        LoadMutiUI();
                         return;
                     case MessageBoxResult.No:
                         break;
@@ -1455,7 +1456,7 @@ namespace VPet_Simulator.Windows
         {
             if (LBHave.SelectedIndex == -1)
                 return;
-            var str = LBHave.SelectedItem as string;
+            var str = App.MutiSaves[LBHave.SelectedIndex];
             if (str == "默认存档".Translate())
             {
                 str = string.Empty;
@@ -1494,7 +1495,7 @@ namespace VPet_Simulator.Windows
         {
             if (LBHave.SelectedIndex == -1)
                 return;
-            var str = LBHave.SelectedItem as string;
+            var str = App.MutiSaves[LBHave.SelectedIndex];
             if (str == "默认存档".Translate())
             {
                 MessageBoxX.Show("默认存档无法删除,请使用重新开始功能重新开始游戏".Translate());
