@@ -58,13 +58,15 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Remove="mod\**" />
+		<!--<Compile Remove="mod\**" />
 		<EmbeddedResource Remove="mod\**" />
 		<None Remove="mod\**" />
-		<Page Remove="mod\**" />
+		<Page Remove="mod\**" />-->
+		<None Include="mod\**">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="mklink.bat" />
 		<None Remove="快捷键通用注解.md" />
 	</ItemGroup>
 	<ItemGroup>
