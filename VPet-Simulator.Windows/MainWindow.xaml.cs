@@ -766,35 +766,6 @@ namespace VPet_Simulator.Windows
                     winSetting.Show();
                 });
 
-                //if (PrefixSave == "" && App.MutiSaves.Count > 1)
-                //{
-                //    var menuItem = new System.Windows.Controls.MenuItem()
-                //    {
-                //        Header = "多开",
-                //        HorizontalContentAlignment = HorizontalAlignment.Center
-                //    };
-                //    menuItem.Click += delegate
-                //    {
-                //        clickCallback?.Invoke();
-                //    };
-                //    if (str.EndsWith(")") || App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == str) != null)
-                //    {
-                //        MessageBoxX.Show("当前多开已经加载,请先关闭改多开后重试".Translate());
-                //        return;
-                //    }
-                //    if (!App.MutiSaves.Contains(str))
-                //    {
-                //        LoadMutiUI();
-                //        return;
-                //    }
-                //    if (MessageBoxX.Show("是否删除当前选择({0})的多开存档?".Translate(str), "删除前确认".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                //    {
-                //        File.Delete(ExtensionValue.BaseDirectory + @$"\Setting-{str}.lps");
-                //        App.MutiSaves.Remove(str);
-                //        LoadMutiUI();
-                //    }
-                //}
-
                 //this.Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.PNG")));
 
                 //Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喂食测试", () =>
