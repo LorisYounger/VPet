@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Title="{ll:Str 面板}" Width="500" Height="500"
-        Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" mc:Ignorable="d">
+        Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" mc:Ignorable="d"
+        Closed="WindowX_Closed">
     <Window.Resources>
         <Style x:Key="DataGridTextColumnCenterSytle" TargetType="{x:Type TextBlock}">
             <Setter Property="HorizontalAlignment" Value="Center" />

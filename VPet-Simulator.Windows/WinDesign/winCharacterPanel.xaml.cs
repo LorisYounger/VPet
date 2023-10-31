@@ -3,6 +3,7 @@ using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,11 +28,25 @@ namespace VPet_Simulator.Windows
                 StatList.Add(new StatInfo(v.Key, v.Value.GetDouble()));
             }
             DataGridStatic.ItemsSource = StatList;
+            mw.GameSavesData.Statistics.StatisticChanged += Statistics_StatisticChanged;
+        }
+
+        private void Statistics_StatisticChanged(Interface.Statistics sender, string name, LinePutScript.SetObject value)
+        {
+            var v = StatList.FirstOrDefault(x => x.StatId == name);
+            if (v != null)
+            {
+                v.StatCount = value.GetDouble();
+            }
+            else
+            {
+                StatList.Add(new StatInfo(name, value.GetDouble()));
+            }
         }
 
         private ObservableCollection<StatInfo> StatList { get; set; } = new();
 
-        private class StatInfo
+        private class StatInfo : INotifyPropertyChanged
         {
             public StatInfo(string statId, double statCount)
             {
@@ -61,10 +76,27 @@ namespace VPet_Simulator.Windows
             /// </summary>
             public string StatName { get; set; }
 
+            private double _statCount;
             /// <summary>
             /// 统计内容
             /// </summary>
-            public double StatCount { get; set; }
+            public double StatCount
+            {
+                get { return _statCount; }
+                set
+                {
+                    if (_statCount != value)
+                    {
+                        _statCount = value;
+                        OnPropertyChanged(nameof(StatCount));
+                    }
+                }
+            }
+            protected virtual void OnPropertyChanged(string propertyName)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+            public event PropertyChangedEventHandler PropertyChanged;
         }
 
         private void PgbExperience_GeneratingPercentText(
@@ -166,6 +198,11 @@ namespace VPet_Simulator.Windows
                         ) >= 0
                 );
             }
+        }
+
+        private void WindowX_Closed(object sender, EventArgs e)
+        {
+            mw.GameSavesData.Statistics.StatisticChanged -= Statistics_StatisticChanged;
         }
     }
 }
