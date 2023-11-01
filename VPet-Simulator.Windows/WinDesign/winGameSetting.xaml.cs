@@ -962,7 +962,7 @@ namespace VPet_Simulator.Windows
         private void LoadMutiUI()
         {
             LBHave.Items.Clear();
-            foreach (var str in App.MutiSaves)
+            foreach (var str in App.MultiSaves)
             {
                 var rn = str.Translate();
                 if (str == "")
@@ -986,7 +986,7 @@ namespace VPet_Simulator.Windows
                         var savename = mw.Pets[PetBox.SelectedIndex].Name;
                         petbox_back();
                         //如果有这个皮肤的多开,自动多开
-                        if (App.MutiSaves.Contains(savename))
+                        if (App.MultiSaves.Contains(savename))
                         {
                             if (App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == savename) != null)
                             {
@@ -1006,7 +1006,7 @@ namespace VPet_Simulator.Windows
                         lps.SetInt("savetimes", 0);
                         lps["gameconfig"].SetString("petgraph", savename);
                         File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting-{savename}.lps", lps.ToString());
-                        App.MutiSaves.Add(savename);
+                        App.MultiSaves.Add(savename);
                         new MainWindow(savename).Show();
                         LoadMutiUI();
                         return;
@@ -1456,7 +1456,7 @@ namespace VPet_Simulator.Windows
         {
             if (LBHave.SelectedIndex == -1)
                 return;
-            var str = App.MutiSaves[LBHave.SelectedIndex];
+            var str = App.MultiSaves[LBHave.SelectedIndex];
             if (str == "默认存档".Translate())
             {
                 str = string.Empty;
@@ -1478,7 +1478,7 @@ namespace VPet_Simulator.Windows
                     MessageBoxX.Show("存档名不能包括特殊符号".Translate());
                     return;
                 }
-            if (App.MutiSaves.FirstOrDefault(x => x.ToLower() == savename.ToLower()) != null)
+            if (App.MultiSaves.FirstOrDefault(x => x.ToLower() == savename.ToLower()) != null)
             {
                 MessageBoxX.Show("存档名重复".Translate());
                 return;
@@ -1487,7 +1487,7 @@ namespace VPet_Simulator.Windows
             var lps = new LPS(mw.Set);
             lps.SetInt("savetimes", 0);
             File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting-{savename}.lps", lps.ToString());
-            App.MutiSaves.Add(savename);
+            App.MultiSaves.Add(savename);
             new MainWindow(savename).Show();
         }
 
@@ -1495,7 +1495,7 @@ namespace VPet_Simulator.Windows
         {
             if (LBHave.SelectedIndex == -1)
                 return;
-            var str = App.MutiSaves[LBHave.SelectedIndex];
+            var str = App.MultiSaves[LBHave.SelectedIndex];
             if (str == "默认存档".Translate())
             {
                 MessageBoxX.Show("默认存档无法删除,请使用重新开始功能重新开始游戏".Translate());
@@ -1506,7 +1506,7 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("当前多开已经加载,请先关闭改多开后重试".Translate());
                 return;
             }
-            if (!App.MutiSaves.Contains(str))
+            if (!App.MultiSaves.Contains(str))
             {
                 LoadMutiUI();
                 return;
@@ -1514,7 +1514,7 @@ namespace VPet_Simulator.Windows
             if (MessageBoxX.Show("是否删除当前选择({0})的多开存档?".Translate(str), "删除前确认".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 File.Delete(ExtensionValue.BaseDirectory + @$"\Setting-{str}.lps");
-                App.MutiSaves.Remove(str);
+                App.MultiSaves.Remove(str);
                 LoadMutiUI();
             }
         }

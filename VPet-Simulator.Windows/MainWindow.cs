@@ -239,9 +239,9 @@ namespace VPet_Simulator.Windows
         {
             Main.ToolBar.MenuDIY.Items.Clear();
 
-            if (App.MutiSaves.Count > 1)
+            if (App.MultiSaves.Count > 1)
             {
-                var list = App.MutiSaves.ToList();
+                var list = App.MultiSaves.ToList();
                 foreach (var win in App.MainWindows)
                 {
                     list.Remove(win.PrefixSave);

@@ -23,7 +23,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 多存档系统名称
         /// </summary>
-        public static List<string> MutiSaves { get; set; } = new List<string>();
+        public static List<string> MultiSaves { get; set; } = new List<string>();
 
         public static List<MainWindow> MainWindows { get; set; } = new List<MainWindow>();
 
@@ -34,12 +34,12 @@ namespace VPet_Simulator.Windows
             foreach (var mss in new DirectoryInfo(ExtensionValue.BaseDirectory).GetFiles("Setting*.lps"))
             {
                 var n = mss.Name.Substring(7).Trim('-');
-                MutiSaves.Add(n.Substring(0, n.Length - 4));
+                MultiSaves.Add(n.Substring(0, n.Length - 4));
             }
 
-            if (MutiSaves.Count == 0)
+            if (MultiSaves.Count == 0)
             {
-                MutiSaves.Add("");
+                MultiSaves.Add("");
             }
         }
 
