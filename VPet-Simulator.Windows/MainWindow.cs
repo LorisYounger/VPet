@@ -289,7 +289,7 @@ namespace VPet_Simulator.Windows
             }
             catch (Exception e)
             {
-                new winReport(this, "由于插件引起的自定按钮加载错误".Translate() + '\n' + e.ToString()).Show();
+                MessageBoxX.Show(e.ToString(), "由于插件引起的自定按钮加载错误".Translate());
             }
         }
         /// <summary>

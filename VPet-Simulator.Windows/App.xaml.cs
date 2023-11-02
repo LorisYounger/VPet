@@ -48,7 +48,7 @@ namespace VPet_Simulator.Windows
             e.Handled = true;
 
             var expt = e.Exception.ToString();
-            if (expt.Contains("value") && expt.Contains("Panuon.WPF.UI.Internal.Utils") && expt.Contains("NaN"))
+            if (expt.ToLower().Contains("value") && expt.Contains("NaN"))
             {
                 MessageBox.Show("由于修改游戏数据导致数据溢出,存档可能会出错\n开发者提醒您请不要使用过于超模的MOD".Translate());
                 return;
@@ -61,6 +61,11 @@ namespace VPet_Simulator.Windows
             else if (expt.Contains("0x80070008"))
             {
                 MessageBox.Show("游戏内存不足,请修改设置中渲染分辨率以便降低内存使用".Translate());
+                return;
+            }
+            else if (expt.Contains("UnauthorizedAccessException"))
+            {
+                MessageBox.Show("游戏权限不足,无法写入游戏存档和设置,请检查设置文件是否被其他软件占用".Translate());
                 return;
             }
             else if (expt.Contains("VPet.Plugin"))

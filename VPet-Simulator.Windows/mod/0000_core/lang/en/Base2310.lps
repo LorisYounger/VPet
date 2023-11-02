@@ -26,3 +26,4 @@ selecttext#Options Chat Text:|
 是否删除当前选择({0})的多开存档?#Whether to delete the current selection ({0}) multiple archive?:|
 删除前确认#Confirm before deleting:|
 当前多开已经加载,请先关闭改多开后重试#Multiple currently loaded, please close the multiple before trying again:|
+游戏权限不足,无法写入游戏存档和设置,请检查设置文件是否被其他软件占用#Insufficient game permissions, unable to write game archives and settings, please check if the settings file is occupied by other software:|
