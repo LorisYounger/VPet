@@ -39,7 +39,7 @@ namespace VPet_Simulator.Windows
 {
     public partial class MainWindow : IMainWindow
     {
-        public readonly string ModPath = Environment.CurrentDirectory + @"\mod";
+        public readonly string ModPath = ExtensionValue.BaseDirectory + @"\mod";
         public bool IsSteamUser { get; }
         public LPS_D Args { get; }
         public string PrefixSave { get; } = "";
