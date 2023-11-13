@@ -347,7 +347,7 @@ namespace VPet_Simulator.Windows
             Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
             if (IsSteamUser)//如果是steam用户,尝试加载workshop
             {
-                var workshop = new Line_D();
+                var workshop = new Line_D("workshop");
                 await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading Steam Workshop"));
                 int i = 1;
                 while (true)

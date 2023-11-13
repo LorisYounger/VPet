@@ -1457,10 +1457,6 @@ namespace VPet_Simulator.Windows
             if (LBHave.SelectedIndex == -1)
                 return;
             var str = App.MutiSaves[LBHave.SelectedIndex];
-            if (str == "默认存档".Translate())
-            {
-                str = string.Empty;
-            }
             if (str.EndsWith(")") || App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == str) != null)
             {
                 MessageBoxX.Show("当前多开已经加载".Translate());
