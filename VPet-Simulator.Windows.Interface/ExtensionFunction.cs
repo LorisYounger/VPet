@@ -19,18 +19,12 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public static readonly int[] WorkCalLevel = new int[] { 1, 5, 10, 20, 30, 40, 50, 75, 100, 200 };
         /// <summary>
-        /// 判断这个工作是否超模
+        /// 工作获取效率
         /// </summary>
         /// <param name="work">工作</param>
-        /// <returns>是否超模</returns>
-        public static bool IsOverLoad(this Work work)
-        {//判断这个工作是否超模
-            if (work.FinishBonus < 0)
-                return true;
-            var spend = ((work.StrengthFood >= 0 ? 1 : -1) * Math.Pow(work.StrengthFood * 2 + 1, 2) / 6 +
-                (work.StrengthDrink >= 0 ? 1 : -1) * Math.Pow(work.StrengthDrink * 2 + 1, 2) / 9 +
-               (work.Feeling >= 0 ? 1 : -1) * Math.Pow((work.Type == Work.WorkType.Play ? -1 : 1) * work.Feeling * 2 + 1, 2) / 12) *
-                (Math.Pow(work.LevelLimit / 2 + 1, 0.5) / 4 + 1) - 0.5;
+        /// <returns>工作获取效率</returns>
+        public static double Get(this Work work)
+        {
             double get = 0;
             foreach (var lv in WorkCalLevel)
             {
@@ -41,6 +35,27 @@ namespace VPet_Simulator.Windows.Interface
             {
                 get /= 12;//经验值换算
             }
+            return get;
+        }
+        public static double Spend(this Work work)
+        {
+            var spend = ((work.StrengthFood >= 0 ? 1 : -1) * Math.Pow(work.StrengthFood * 2 + 1, 2) / 6 +
+            (work.StrengthDrink >= 0 ? 1 : -1) * Math.Pow(work.StrengthDrink * 2 + 1, 2) / 9 +
+            (work.Feeling >= 0 ? 1 : -1) * Math.Pow((work.Type == Work.WorkType.Play ? -1 : 1) * work.Feeling * 2 + 1, 2) / 12) *
+            (Math.Pow(work.LevelLimit / 2 + 1, 0.5) / 4 + 1) - 0.5;
+            return spend;
+        }
+        /// <summary>
+        /// 判断这个工作是否超模
+        /// </summary>
+        /// <param name="work">工作</param>
+        /// <returns>是否超模</returns>
+        public static bool IsOverLoad(this Work work)
+        {//判断这个工作是否超模
+            if (work.FinishBonus < 0)
+                return true;
+            var spend = work.Spend();
+            var get = work.Get();
             var rel = get / spend;
             if (rel < 0)
                 return true;

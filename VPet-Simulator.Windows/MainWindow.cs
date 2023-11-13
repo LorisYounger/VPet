@@ -982,16 +982,8 @@ namespace VPet_Simulator.Windows
             //看看是否超模
             if (HashCheck && work.IsOverLoad())
             {
-                var spend = ((work.StrengthFood >= 0 ? 1 : -1) * Math.Pow(work.StrengthFood * 2 + 1, 2) / 6 +
-                (work.StrengthDrink >= 0 ? 1 : -1) * Math.Pow(work.StrengthDrink * 2 + 1, 2) / 9 +
-                (work.Feeling >= 0 ? 1 : -1) * Math.Pow((work.Type == Work.WorkType.Play ? -1 : 1) * work.Feeling * 2 + 1, 2) / 12) *
-                (Math.Pow(work.LevelLimit / 2 + 1, 0.5) / 4 + 1) - 0.5;
-                double get = 0;
-                foreach (var lv in WorkCalLevel)
-                {
-                    get += (work.MoneyBase + Math.Sqrt(lv) * work.MoneyLevel) * (1 + work.FinishBonus / 2);
-                }
-                get /= WorkCalLevel.Length;
+                double spend = work.Spend();
+                double get = work.Get();
                 var rel = get / spend;
                 if (MessageBoxX.Show("当前工作数据属性超模,是否继续工作?\n超模工作可能会导致游戏发生不可预料的错误\n超模工作不影响大部分成就解锁\n当前数据比率 {0:f2} 推荐=0.5<0.75\n盈利速度:{1:f0} 推荐<{2}"
                     .Translate(rel, get, (work.LevelLimit + 4) * 3), "超模工作提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
