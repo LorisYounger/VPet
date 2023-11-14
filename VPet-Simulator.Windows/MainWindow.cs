@@ -651,9 +651,9 @@ namespace VPet_Simulator.Windows
             }
         }
         /// <summary>
-        /// 加载游戏
+        /// 加载游戏存档
         /// </summary>
-        public bool GameLoad(ILPS lps)
+        public bool SavesLoad(ILPS lps)
         {
             if (lps == null)
                 return false;
@@ -995,23 +995,11 @@ namespace VPet_Simulator.Windows
             return true;
         }
         /// <summary>
-        /// 支持多开的启动方式
+        /// 游戏加载
         /// </summary>
-        /// <param name="prefixsave">存档前缀</param>
-        public MainWindow(string prefixsave)
+        public void GameInitialization()
         {
-            PrefixSave = prefixsave;
-            if (prefixsave != string.Empty && !PrefixSave.StartsWith("-"))
-                PrefixSave = '-' + prefixsave;
-            //处理ARGS
-            Args = new LPS_D();
-
             App.MainWindows.Add(this);
-
-            foreach (var str in App.Args)
-            {
-                Args.Add(new Line(str));
-            }
             try
             {
                 //加载游戏设置
@@ -1034,13 +1022,6 @@ namespace VPet_Simulator.Windows
                     VisualTree = visualTree,
                 };
 
-                _dwmEnabled = Win32.Dwmapi.DwmIsCompositionEnabled();
-                _hwnd = new WindowInteropHelper(this).EnsureHandle();
-
-                //if (File.Exists(ExtensionValue.BaseDirectory + @"\ChatGPTSetting.json"))
-                //    CGPTClient = ChatGPTClient.Load(File.ReadAllText(ExtensionValue.BaseDirectory + @"\ChatGPTSetting.json"));
-                //this.Width = 400 * ZoomSlider.Value;
-                //this.Height = 450 * ZoomSlider.Value;
                 InitializeComponent();
 
                 this.Height = 500 * Set.ZoomLevel;
@@ -1082,13 +1063,11 @@ namespace VPet_Simulator.Windows
                 var modpath = new DirectoryInfo(ModPath + @"\0000_core\pet\vup");
                 if (!modpath.Exists)
                 {
-                    MessageBoxX.Show("缺少模组Core,无法启动桌宠\nMissing module Core, can't start up", "启动错误 boot error", Panuon.WPF.UI.MessageBoxIcon.Error);
-                    App.MainWindows.Remove(this);
+                    MessageBoxX.Show("缺少模组Core,无法启动桌宠\nMissing module Core, can't start up", "启动错误 boot error", Panuon.WPF.UI.MessageBoxIcon.Error);                    
                     Close();
                     return;
                 }
 
-                Task.Run(GameLoad_muti);
             }
             catch (Exception e)
             {
@@ -1097,11 +1076,31 @@ namespace VPet_Simulator.Windows
               "导致的\n如有可能请发送 错误信息截图和引发错误之前的操作 给开发者:service@exlb.net\n感谢您对游戏开发的支持\n".Translate()
               + e.ToString();
                 MessageBoxX.Show(errstr, "游戏致命性错误".Translate() + ' ' + "启动错误".Translate(), Panuon.WPF.UI.MessageBoxIcon.Error);
+                Close();
             }
         }
 
-        public async void GameLoad_muti()
+        /// <summary>
+        /// 支持多开的启动方式
+        /// </summary>
+        /// <param name="prefixsave">存档前缀</param>
+        public MainWindow(string prefixsave)
         {
+            PrefixSave = prefixsave;
+            if (prefixsave != string.Empty && !PrefixSave.StartsWith("-"))
+                PrefixSave = '-' + prefixsave;
+
+            //处理ARGS
+            Args = new LPS_D();
+            foreach (var str in App.Args)
+            {
+                Args.Add(new Line(str));
+            }
+            _dwmEnabled = Win32.Dwmapi.DwmIsCompositionEnabled();
+            _hwnd = new WindowInteropHelper(this).EnsureHandle();
+
+            GameInitialization();
+
             //加载所有MOD
             List<DirectoryInfo> Path = new List<DirectoryInfo>();
             Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
@@ -1111,6 +1110,14 @@ namespace VPet_Simulator.Windows
             {
                 Path.Add(new DirectoryInfo(ws.Name));
             }
+            Task.Run(() => GameLoad(Path));
+        }
+        /// <summary>
+        /// 加载游戏
+        /// </summary>
+        /// <param name="Path">MOD地址</param>
+        public async void GameLoad(List<DirectoryInfo> Path)
+        {
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading MOD"));
             //加载mod
@@ -1132,7 +1139,25 @@ namespace VPet_Simulator.Windows
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏存档".Translate()));
             //加载存档
-            LoadLatestSave(petloader.PetName);
+            if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps")) //有老的旧存档,优先旧存档
+                try
+                {
+                    if (!SavesLoad(new LpsDocument(File.ReadAllText(ExtensionValue.BaseDirectory + @"\Save.lps"))))
+                    {
+                        //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
+                        LoadLatestSave(petloader.PetName);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
+                    //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
+                    LoadLatestSave(petloader.PetName);
+                }
+            else
+                //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
+                LoadLatestSave(petloader.PetName);
 
             //加载数据合理化:食物
             if (!Set["gameconfig"].GetBool("noAutoCal"))
@@ -1221,6 +1246,12 @@ namespace VPet_Simulator.Windows
             ClickTexts.Add(new ClickText("想要宠物不乱动? 设置里可以设置智能移动或者关闭移动"));
             ClickTexts.Add(new ClickText("有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧"));
             ClickTexts.Add(new ClickText("长按脑袋拖动桌宠到你喜欢的任意位置"));
+            //"如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的".Translate(),
+            //"你知道吗? 你可以在设置里面修改游戏的缩放比例".Translate(),
+            //"你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing".Translate(),
+            //"你添加了虚拟主播模拟器和虚拟桌宠模拟器到愿望单了吗? 快去加吧".Translate(),
+            //"这游戏开发这么慢,都怪画师太咕了".Translate(),
+            //"欢迎加入 虚拟主播模拟器群 430081239".Translate()
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载Steam内容".Translate()));
             //给正在玩这个游戏的主播/游戏up主做个小功能
@@ -1260,6 +1291,7 @@ namespace VPet_Simulator.Windows
                 AutoReset = false
             };
             MusicTimer.Elapsed += MusicTimer_Elapsed;
+
 
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
