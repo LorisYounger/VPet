@@ -43,6 +43,21 @@ namespace VPet_Simulator.Windows
         public bool IsSteamUser { get; }
         public LPS_D Args { get; }
         public string PrefixSave { get; } = "";
+        private string prefixsavetrans = null;
+        public string PrefixSaveTrans
+        {
+            get
+            {
+                if (prefixsavetrans == null)
+                {
+                    if (PrefixSave == "")
+                        prefixsavetrans = "";
+                    else
+                        prefixsavetrans = '-' + PrefixSave.TrimStart('-').Translate();
+                }
+                return prefixsavetrans;
+            }
+        }
         public Setting Set { get; set; }
         public List<PetLoader> Pets { get; set; } = new List<PetLoader>();
         public List<CoreMOD> CoreMODs = new List<CoreMOD>();
@@ -1063,7 +1078,7 @@ namespace VPet_Simulator.Windows
                 var modpath = new DirectoryInfo(ModPath + @"\0000_core\pet\vup");
                 if (!modpath.Exists)
                 {
-                    MessageBoxX.Show("缺少模组Core,无法启动桌宠\nMissing module Core, can't start up", "启动错误 boot error", Panuon.WPF.UI.MessageBoxIcon.Error);                    
+                    MessageBoxX.Show("缺少模组Core,无法启动桌宠\nMissing module Core, can't start up", "启动错误 boot error", Panuon.WPF.UI.MessageBoxIcon.Error);
                     Close();
                     return;
                 }
@@ -1244,7 +1259,8 @@ namespace VPet_Simulator.Windows
             ClickTexts.Add(new ClickText("你知道吗? 鼠标右键可以打开菜单栏"));
             ClickTexts.Add(new ClickText("你知道吗? 你可以在设置里面修改游戏的缩放比例"));
             ClickTexts.Add(new ClickText("想要宠物不乱动? 设置里可以设置智能移动或者关闭移动"));
-            ClickTexts.Add(new ClickText("有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧"));
+            ClickTexts.Add(new ClickText("这游戏开发这么慢,都怪画师太咕了"));
+            //ClickTexts.Add(new ClickText("有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧"));
             ClickTexts.Add(new ClickText("长按脑袋拖动桌宠到你喜欢的任意位置"));
             //"如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的".Translate(),
             //"你知道吗? 你可以在设置里面修改游戏的缩放比例".Translate(),
@@ -1494,7 +1510,7 @@ namespace VPet_Simulator.Windows
 
                 //加载图标
                 notifyIcon = new NotifyIcon();
-                notifyIcon.Text = "虚拟桌宠模拟器".Translate();
+                notifyIcon.Text = "虚拟桌宠模拟器".Translate() + PrefixSave;
                 ContextMenu m_menu;
 
                 if (Set.PetHelper)

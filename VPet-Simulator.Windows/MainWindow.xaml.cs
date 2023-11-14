@@ -134,11 +134,15 @@ namespace VPet_Simulator.Windows
                         int i = 1;
                         while (true)
                         {
-                            var page = await Steamworks.Ugc.Query.ItemsReadyToUse.GetPageAsync(i++);
+                            var page = await Steamworks.Ugc.Query.ItemsReadyToUse.GetPageAsync(i++);                           
                             if (page.HasValue && page.Value.ResultCount != 0)
                             {
                                 foreach (Steamworks.Ugc.Item entry in page.Value.Entries)
                                 {
+                                    if (!NOCancel)
+                                    {
+                                        return;
+                                    }
                                     if (entry.Directory != null)
                                     {
                                         Path.Add(new DirectoryInfo(entry.Directory));
