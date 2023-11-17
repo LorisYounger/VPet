@@ -702,54 +702,121 @@ namespace VPet_Simulator.Windows
             HashCheck = HashCheck;
             return true;
         }
+
+
+
         private void Handle_Steam(Main obj)
         {
-            if (HashCheck)
+            if (App.MainWindows.Count > 1)
             {
-                SteamFriends.SetRichPresence("lv", $" (lv{GameSavesData.GameSave.Level})");
-            }
-            else
-            {
-                SteamFriends.SetRichPresence("lv", " ");
-            }
-            if (Core.Save.Mode == GameSave.ModeType.Ill)
-            {
-                SteamFriends.SetRichPresence("steam_display", "#Status_Ill");
-            }
-            else
-            {
-                SteamFriends.SetRichPresence("mode", (Core.Save.Mode.ToString() + "ly").Translate());
-                switch (obj.State)
+                if (App.MainWindows.FirstOrDefault() != this)
                 {
-                    case Main.WorkingState.Work:
-                        SteamFriends.SetRichPresence("work", obj.nowWork.Name.Translate());
-                        SteamFriends.SetRichPresence("steam_display", "#Status_Work");
-                        break;
-                    case Main.WorkingState.Sleep:
-                        SteamFriends.SetRichPresence("steam_display", "#Status_Sleep");
-                        break;
-                    default:
-                        if (obj.DisplayType.Name == "music")
-                            SteamFriends.SetRichPresence("steam_display", "#Status_Music");
-                        else
-                        {
-                            switch (obj.DisplayType.Type)
+                    return;
+                }
+                string str = "";
+                int lv = 0;
+                int workcount = 0;
+                int sleepcount = 0;
+                int musiccount = 0;
+                int allcount = App.MainWindows.Count * 2 / 3;
+                foreach (var item in App.MainWindows)
+                {
+                    str += item.GameSavesData.GameSave.Name + ",";
+                    if (item.HashCheck)
+                    {
+                        lv += item.GameSavesData.GameSave.Level;
+                    }
+                    else
+                        lv = int.MinValue;
+                    switch (item.Main.State)
+                    {
+                        case Main.WorkingState.Work:
+                            workcount++;
+                            break;
+                        case Main.WorkingState.Sleep:
+                            sleepcount++;
+                            break;
+                        case Main.WorkingState.Nomal:
+                            if (item.Main.DisplayType.Name == "music")
+                                musiccount++;
+                            break;
+                    }
+                }
+                SteamFriends.SetRichPresence("usernames", str.Trim(','));
+                if (lv > 0)
+                {
+                    SteamFriends.SetRichPresence("lv", $" (lv{lv}/{App.MainWindows.Count})");
+                }
+                else
+                {
+                    SteamFriends.SetRichPresence("lv", " ");
+                }
+                if (workcount > allcount)
+                {
+                    SteamFriends.SetRichPresence("steam_display", "#Status_MUTI_Work");
+                }
+                else if (sleepcount > allcount)
+                {
+                    SteamFriends.SetRichPresence("steam_display", "#Status_MUTI_Sleep");
+                }
+                else if (musiccount > allcount)
+                {
+                    SteamFriends.SetRichPresence("steam_display", "#Status_MUTI_Music");
+                }
+                else
+                {
+                    SteamFriends.SetRichPresence("steam_display", "#Status_MUTI_Play");
+                }
+            }
+            else
+            {
+                if (HashCheck)
+                {
+                    SteamFriends.SetRichPresence("lv", $" (lv{GameSavesData.GameSave.Level})");
+                }
+                else
+                {
+                    SteamFriends.SetRichPresence("lv", " ");
+                }
+                if (Core.Save.Mode == GameSave.ModeType.Ill)
+                {
+                    SteamFriends.SetRichPresence("steam_display", "#Status_Ill");
+                }
+                else
+                {
+                    SteamFriends.SetRichPresence("mode", (Core.Save.Mode.ToString() + "ly").Translate());
+                    switch (obj.State)
+                    {
+                        case Main.WorkingState.Work:
+                            SteamFriends.SetRichPresence("work", obj.nowWork.Name.Translate());
+                            SteamFriends.SetRichPresence("steam_display", "#Status_Work");
+                            break;
+                        case Main.WorkingState.Sleep:
+                            SteamFriends.SetRichPresence("steam_display", "#Status_Sleep");
+                            break;
+                        default:
+                            if (obj.DisplayType.Name == "music")
+                                SteamFriends.SetRichPresence("steam_display", "#Status_Music");
+                            else
                             {
-                                case GraphType.Move:
-                                    SteamFriends.SetRichPresence("idel", "乱爬".Translate());
-                                    break;
-                                case GraphType.Idel:
-                                case GraphType.StateONE:
-                                case GraphType.StateTWO:
-                                    SteamFriends.SetRichPresence("idel", "发呆".Translate());
-                                    break;
-                                default:
-                                    SteamFriends.SetRichPresence("idel", "闲逛".Translate());
-                                    break;
+                                switch (obj.DisplayType.Type)
+                                {
+                                    case GraphType.Move:
+                                        SteamFriends.SetRichPresence("idel", "乱爬".Translate());
+                                        break;
+                                    case GraphType.Idel:
+                                    case GraphType.StateONE:
+                                    case GraphType.StateTWO:
+                                        SteamFriends.SetRichPresence("idel", "发呆".Translate());
+                                        break;
+                                    default:
+                                        SteamFriends.SetRichPresence("idel", "闲逛".Translate());
+                                        break;
+                                }
+                                SteamFriends.SetRichPresence("steam_display", "#Status_IDLE");
                             }
-                            SteamFriends.SetRichPresence("steam_display", "#Status_IDLE");
-                        }
-                        break;
+                            break;
+                    }
                 }
             }
         }
@@ -1125,6 +1192,8 @@ namespace VPet_Simulator.Windows
             {
                 Path.Add(new DirectoryInfo(ws.Name));
             }
+
+
             Task.Run(() => GameLoad(Path));
         }
         /// <summary>

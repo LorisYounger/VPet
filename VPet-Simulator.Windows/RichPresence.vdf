@@ -10,6 +10,10 @@
 			"#Status_Work"		"%username%在%mode%%work%%lv%"
 			"#Status_DIY"		"%DIY%"
 			"#Status_Ill"		"%username% 生病了"
+			"#Status_MUTI_Play"		"%usernames% 在一起玩%lv%"
+			"#Status_MUTI_Work"		"%usernames% 在一起工作%lv%"
+			"#Status_MUTI_Sleep"	"%usernames% 在一起睡觉%lv%"
+			"#Status_MUTI_Music"	"%usernames% 在一起跳舞%lv%"
 		}
 	}
 	"tchinese"
@@ -22,6 +26,10 @@
 			"#Status_Work"		"%username%在%mode%%work%%lv%"
 			"#Status_DIY"		"%DIY%"
 			"#Status_Ill"		"%username% 生病了"
+			"#Status_MUTI_Play"		"%usernames% 在一起玩%lv%"
+			"#Status_MUTI_Work"		"%usernames% 在一起工作%lv%"
+			"#Status_MUTI_Sleep"	"%usernames% 在一起睡覺%lv%"
+			"#Status_MUTI_Music"	"%usernames% 在一起跳舞%lv%"
 		}
 	}
 	"english"
@@ -30,10 +38,14 @@
 		{
 			"#Status_IDLE"		"%username% is %mode% %idel%%lv%"
 			"#Status_Music"		"%username% dancing %mode%%lv%"
-			"#Status_Sleep"		"%username% Sleep %mode%%lv%"
+			"#Status_Sleep"		"%username% sleep %mode%%lv%"
 			"#Status_Work"		"%username% %work% %mode%%lv%"
 			"#Status_DIY"		"%DIY%"
 			"#Status_Ill"		"%username% is sick"
+			"#Status_MUTI_Play"		"%usernames% play together%lv%"
+			"#Status_MUTI_Work"		"%usernames% working together%lv%"
+			"#Status_MUTI_Sleep"	"%usernames% sleeping together%lv%"
+			"#Status_MUTI_Music"	"%usernames% dancing together%lv%"
 		}
 	}
 }

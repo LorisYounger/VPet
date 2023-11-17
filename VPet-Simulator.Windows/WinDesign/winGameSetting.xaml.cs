@@ -345,7 +345,10 @@ namespace VPet_Simulator.Windows
             runMODAuthor.Text = mod.Author;
             runMODGameVer.Text = CoreMOD.INTtoVER(mod.GameVer);
             runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
-            ImageMOD.Source = ImageResources.NewSafeBitmapImage(mod.Path.FullName + @"\icon.png");
+            if (File.Exists(mod.Path.FullName + @"\icon.png"))
+                ImageMOD.Source = ImageResources.NewSafeBitmapImage(mod.Path.FullName + @"\icon.png");
+            else
+                ImageMOD.Source = ImageResources.NewSafeBitmapImage(@"pack://application:,,,/Res/TopLogo2019.PNG");
             if (mod.GameVer < mw.version)
             {
                 if (mod.GameVer / 10 == mw.version / 10)
