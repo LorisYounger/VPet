@@ -1172,6 +1172,8 @@ namespace VPet_Simulator.Windows
             if (prefixsave != string.Empty && !PrefixSave.StartsWith("-"))
                 PrefixSave = '-' + prefixsave;
 
+            IsSteamUser = App.MainWindows[0].IsSteamUser;
+
             //处理ARGS
             Args = new LPS_D();
             foreach (var str in App.Args)
