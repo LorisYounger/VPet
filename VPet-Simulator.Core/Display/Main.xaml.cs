@@ -255,7 +255,7 @@ namespace VPet_Simulator.Core
         /// 默认长按事件
         /// </summary>
         public Action DefaultPressAction;
-        bool isPress = false;
+        public bool isPress = false;
         long presstime;
         private void MainGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

@@ -1656,6 +1656,16 @@ namespace VPet_Simulator.Windows
 
                 HashCheck = HashCheck;
 
+                //添加捏脸动画(若有)
+                if (Core.Graph.GraphConfig.Data.ContainsLine("pinch"))
+                {
+                    var pin = Core.Graph.GraphConfig.Data["pinch"];
+                    Main.Core.TouchEvent.Insert(0, new TouchArea(
+                        new Point(pin[(gdbe)"px"], pin[(gdbe)"py"]), new Size(pin[(gdbe)"sw"], pin[(gdbe)"sh"])
+                        , () => { DisplayPinch(); return true; }, true));
+                }
+
+
                 if (Set.HitThrough)
                 {
                     if (!Set["v"][(gbol)"HitThrough"])
@@ -1732,6 +1742,51 @@ namespace VPet_Simulator.Windows
             //    }));
             //}
 
+        }
+        /// <summary>
+        /// 显示捏脸情况
+        /// </summary>
+        public void DisplayPinch()
+        {
+            Main.CountNomal = 0;
+            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
+            {
+                Core.Save.StrengthChange(-2);
+                Core.Save.FeelingChange(1);
+                Core.Save.Mode = Core.Save.CalMode();
+                Main.LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
+            }
+            if (Main.DisplayType.Name == "pinch")
+            {
+                if (Main.DisplayType.Animat == AnimatType.A_Start)
+                    return;
+                else if (Main.DisplayType.Animat == AnimatType.B_Loop)
+                    if (Dispatcher.Invoke(() => Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Name == "pinch" && ig.GraphInfo.Animat == AnimatType.B_Loop)
+                    {
+                        ig.IsContinue = true;
+                        return;
+                    }
+                    else if (Dispatcher.Invoke(() => Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Name == "pinch" && ig2.GraphInfo.Animat == AnimatType.B_Loop)
+                    {
+                        ig2.IsContinue = true;
+                        return;
+                    }
+            }
+            Main_Event_TouchHead();
+            Main_Event_TouchBody();
+            Main.Display("pinch", AnimatType.A_Start, () =>
+               Main.Display("pinch", AnimatType.B_Loop, DisplayPinch_loop));
+        }
+        private void DisplayPinch_loop()
+        {
+            if (Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
+            {
+                Main.Display("pinch", AnimatType.B_Loop, DisplayPinch_loop);
+            }
+            else
+            {
+                Main.DisplayCEndtoNomal("pinch");
+            }
         }
     }
 }

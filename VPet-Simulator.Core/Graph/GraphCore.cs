@@ -243,6 +243,10 @@ namespace VPet_Simulator.Core
             /// <returns>储存的文本 (已翻译)</returns>
             public string StrGetString(string name) => LocalizeCore.Translate(Str.GetString(name));
             /// <summary>
+            /// 剩余设置数据
+            /// </summary>
+            public LPS_D Data;
+            /// <summary>
             /// 初始化设置
             /// </summary>
             /// <param name="lps"></param>
@@ -281,6 +285,7 @@ namespace VPet_Simulator.Core
                 }
                 Str = new Line_D(lps["str"]);
                 Duration = new Line_D(lps["duration"]);
+                Data = new LPS_D(lps);
             }
             /// <summary>
             /// 加载更多设置,新的替换后来的,允许空内容
@@ -334,6 +339,7 @@ namespace VPet_Simulator.Core
                 {
                     Moves.Add(LPSConvert.DeserializeObject<Move>(line));
                 }
+                Data.AddRange(lps);
             }
         }
 
