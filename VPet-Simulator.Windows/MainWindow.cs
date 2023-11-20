@@ -1333,6 +1333,12 @@ namespace VPet_Simulator.Windows
             ClickTexts.Add(new ClickText("这游戏开发这么慢,都怪画师太咕了"));
             //ClickTexts.Add(new ClickText("有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧"));
             ClickTexts.Add(new ClickText("长按脑袋拖动桌宠到你喜欢的任意位置"));
+
+            //临时聊天内容
+            ClickTexts.Add(new ClickText("主人，sbema秋季促销开始了哦，还有游戏大奖赛，快去给{name}去投一票吧。"));
+            ClickTexts.Add(new ClickText("主人主人，{name}参加了sbeam大奖赛哦，给人家投一票喵"));
+            ClickTexts.Add(new ClickText("那个。。主人。。\n人家参加了sbeam大奖赛哦。能不能。。给{name}投一票呢～"));
+            ClickTexts.Add(new ClickText("电脑里有一款《虚拟桌宠模拟器》的游戏正在参加2023的sbeam大奖赛，快来给桌宠投一票吧"));
             //"如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的".Translate(),
             //"你知道吗? 你可以在设置里面修改游戏的缩放比例".Translate(),
             //"你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing".Translate(),
