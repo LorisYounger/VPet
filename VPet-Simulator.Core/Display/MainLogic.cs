@@ -283,11 +283,11 @@ namespace VPet_Simulator.Core
                 playSwitchAnimat(Core.Save.Mode, newmod);
 
                 Core.Save.Mode = newmod;
-                //看情况播放停止工作动画
-                if (newmod == GameSave.ModeType.Ill && State == WorkingState.Work)
-                {
-                    WorkTimer.Stop();
-                }
+            }
+            //看情况播放停止工作动画
+            if (Core.Save.Mode == GameSave.ModeType.Ill && State == WorkingState.Work)
+            {
+                WorkTimer.Stop();
             }
         }
         private void playSwitchAnimat(GameSave.ModeType before, GameSave.ModeType after)
