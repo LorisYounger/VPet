@@ -267,9 +267,7 @@ namespace VPet_Simulator.Windows
             if (App.MainWindows.Count <= 1)
             {
                 try
-                {
-                    if (IsSteamUser)
-                        SteamClient.Shutdown();//关掉和Steam的连线
+                {                   
                     if (Core != null && Core.Graph != null)
                     {
                         foreach (var igs in Core.Graph.GraphsList.Values)
@@ -283,17 +281,18 @@ namespace VPet_Simulator.Windows
                             }
                         }
                     }
-                    if (Main != null)
+                    while (Windows.Count != 0)
                     {
-                        Main.Dispose();
+                        Windows[0].Close();
                     }
-                    if (winSetting != null)
-                    {
-                        winSetting.Close();
-                    }
+                    Main?.Dispose();
                     AutoSaveTimer?.Stop();
                     MusicTimer?.Stop();
                     petHelper?.Close();
+                    winSetting?.Close();
+                    winBetterBuy?.Close();
+                    if (IsSteamUser)
+                        SteamClient.Shutdown();//关掉和Steam的连线
                     if (notifyIcon != null)
                     {
                         notifyIcon.Visible = false;
@@ -310,10 +309,27 @@ namespace VPet_Simulator.Windows
             }
             else
             {
+                if (Core != null && Core.Graph != null)
+                {
+                    foreach (var igs in Core.Graph.GraphsList.Values)
+                    {
+                        foreach (var ig2 in igs.Values)
+                        {
+                            foreach (var ig3 in ig2)
+                            {
+                                ig3.Stop();
+                            }
+                        }
+                    }
+                }
                 while (Windows.Count != 0)
                 {
                     Windows[0].Close();
                 }
+                Main?.Dispose();
+                AutoSaveTimer?.Stop();
+                MusicTimer?.Stop();
+                petHelper?.Close();
                 winSetting?.Close();
                 winBetterBuy?.Close();
                 App.MainWindows.Remove(this);

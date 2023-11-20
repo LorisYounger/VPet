@@ -356,8 +356,6 @@ namespace VPet_Simulator.Core
 
         public void Dispose()
         {
-            EventTimer.Stop();
-            MoveTimer.Enabled = false;
             EventTimer.Dispose();
             MoveTimer.Dispose();
             MsgBar.Dispose();
