@@ -273,6 +273,7 @@ namespace VPet_Simulator.Core
         {
             if (Function.Rnd.Next(++looptimes) > Core.Graph.GraphConfig.GetDuration(graphname))
             {
+                looptimes = 0;
                 Display(graphname, AnimatType.C_End, GraphType.StateTWO, DisplayIdel_StateONEing);
             }
             else

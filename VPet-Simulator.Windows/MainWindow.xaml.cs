@@ -7,16 +7,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using VPet_Simulator.Core;
 using System.Windows.Forms;
-using MessageBox = System.Windows.MessageBox;
-using ContextMenu = System.Windows.Forms.ContextMenu;
-using MenuItem = System.Windows.Forms.MenuItem;
-using Application = System.Windows.Application;
 using System.Timers;
 using LinePutScript;
-using static VPet_Simulator.Core.GraphCore;
 using Panuon.WPF.UI;
 using VPet_Simulator.Windows.Interface;
-using System.Windows.Controls;
 using System.Linq;
 using LinePutScript.Localization.WPF;
 using System.Runtime.InteropServices;
@@ -25,9 +19,7 @@ using static VPet_Simulator.Windows.PerformanceDesktopTransparentWindow;
 using Line = LinePutScript.Line;
 using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
-using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 using LinePutScript.Dictionary;
-using System.Windows.Media.Imaging;
 
 namespace VPet_Simulator.Windows
 {
@@ -386,12 +378,6 @@ namespace VPet_Simulator.Windows
             }
             GameSavesData = new GameSave_v2(petname.Translate());
             Core.Save = GameSavesData.GameSave;
-        }
-
-
-        private void M_menu_Popup(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         private void WorkTimer_E_FinishWork(WorkTimer.FinishWorkInfo obj)
