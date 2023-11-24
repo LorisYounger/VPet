@@ -113,17 +113,17 @@ namespace VPet_Simulator.Windows
             switch (Core.Save.Mode)
             {
                 case GameSave.ModeType.PoorCondition:
-                    mt = ClickText.ModeType.PoorCondition;
+                    mt = ICheckText.ModeType.PoorCondition;
                     break;
                 default:
                 case GameSave.ModeType.Nomal:
-                    mt = ClickText.ModeType.Nomal;
+                    mt = ICheckText.ModeType.Nomal;
                     break;
                 case GameSave.ModeType.Happy:
-                    mt = ClickText.ModeType.Happy;
+                    mt = ICheckText.ModeType.Happy;
                     break;
                 case GameSave.ModeType.Ill:
-                    mt = ClickText.ModeType.Ill;
+                    mt = ICheckText.ModeType.Ill;
                     break;
             }
             var list = ClickTexts.FindAll(x => x.DaiTime.HasFlag(dt) && x.Mode.HasFlag(mt) && x.CheckState(Main));
@@ -333,7 +333,7 @@ namespace VPet_Simulator.Windows
             {
                 try
                 {
-                    System.Windows.Forms.SendKeys.SendWait(content);
+                    SendKeys.SendWait(content);
                 }
                 catch (Exception e)
                 {
@@ -605,7 +605,7 @@ namespace VPet_Simulator.Windows
         {
             if (name.StartsWith("stat_"))
             {
-                Steamworks.SteamUserStats.SetStat(name, (int)value);
+                SteamUserStats.SetStat(name, (int)value);
             }
         }
         /// <summary>
@@ -623,7 +623,7 @@ namespace VPet_Simulator.Windows
             switch (Main.State)
             {
                 case Main.WorkingState.Work:
-                    if (Main.nowWork.Type == GraphHelper.Work.WorkType.Work)
+                    if (Main.nowWork.Type == Work.WorkType.Work)
                         stat[(gi64)"stat_work_time"] += (int)Set.LogicInterval;
                     else
                         stat[(gi64)"stat_study_time"] += (int)Set.LogicInterval;
@@ -662,7 +662,7 @@ namespace VPet_Simulator.Windows
 
             if (IsSteamUser)
             {
-                Task.Run(Steamworks.SteamUserStats.StoreStats);
+                Task.Run(SteamUserStats.StoreStats);
             }
         }
         /// <summary>
@@ -975,7 +975,7 @@ namespace VPet_Simulator.Windows
             //参数
             StringBuilder sb = new StringBuilder();
             sb.Append("action=data");
-            sb.Append($"&steamid={Steamworks.SteamClient.SteamId.Value}");
+            sb.Append($"&steamid={SteamClient.SteamId.Value}");
             sb.Append($"&ver={version}");
             sb.Append("&save=");
             sb.AppendLine(HttpUtility.UrlEncode(Core.Save.ToLine().ToString() + Set.ToString()));
@@ -1093,9 +1093,9 @@ namespace VPet_Simulator.Windows
                     Set = new Setting("Setting#VPET:|\n");
 
                 var visualTree = new FrameworkElementFactory(typeof(Border));
-                visualTree.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(Window.BackgroundProperty));
+                visualTree.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(BackgroundProperty));
                 var childVisualTree = new FrameworkElementFactory(typeof(ContentPresenter));
-                childVisualTree.SetValue(UIElement.ClipToBoundsProperty, true);
+                childVisualTree.SetValue(ClipToBoundsProperty, true);
                 visualTree.AppendChild(childVisualTree);
 
                 Template = new ControlTemplate
@@ -1216,6 +1216,18 @@ namespace VPet_Simulator.Windows
             }
 
             CoreMOD.NowLoading = null;
+
+            //判断是否需要清空缓存
+            if (App.MainWindows.Count == 1 && Set.LastCacheDate < CoreMODs.Max(x => x.CacheDate))
+            {//需要清理缓存
+                Set.LastCacheDate = DateTime.Now;
+                if (Directory.Exists(GraphCore.CachePath))
+                {
+                    Directory.Delete(GraphCore.CachePath, true);
+                    Directory.CreateDirectory(GraphCore.CachePath);
+                }
+            }
+
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏MOD".Translate()));
 
@@ -1405,7 +1417,7 @@ namespace VPet_Simulator.Windows
                         {
                             work.MoneyLevel = 0.5;
                             work.MoneyBase = 8;
-                            if (work.Type == GraphHelper.Work.WorkType.Work)
+                            if (work.Type == Work.WorkType.Work)
                             {
                                 work.StrengthDrink = 2.5;
                                 work.StrengthFood = 3.5;
@@ -1530,9 +1542,9 @@ namespace VPet_Simulator.Windows
                     await Dispatcher.InvokeAsync(() => LoadingText.Visibility = Visibility.Collapsed);
                 });
 
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
                 {
                     if (LocalizeCore.CurrentCulture == "zh-Hans")
                         ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
@@ -1541,8 +1553,8 @@ namespace VPet_Simulator.Windows
                     else
                         ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
                 });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "反馈中心".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "设置面板".Translate(), () =>
                 {
                     Main.ToolBar.Visibility = Visibility.Collapsed;
                     winSetting.Show();
@@ -1558,23 +1570,23 @@ namespace VPet_Simulator.Windows
                 //        eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/汉堡.png")), Main.DisplayToNomal);
                 //    }
                 //);
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "吃饭".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "吃饭".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Meal);
                 });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喝水".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "喝水".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Drink);
                 });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "收藏".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "收藏".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Star);
                 });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "药品".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "药品".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Drug);
                 });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "礼品".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "礼品".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Gift);
                 });
@@ -1683,7 +1695,7 @@ namespace VPet_Simulator.Windows
                         SetTransparentHitThrough();
                 }
 
-                if (File.Exists(ExtensionValue.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 6, 20))
+                if (File.Exists(ExtensionValue.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 10, 20))
                 {
                     Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
                     if (LocalizeCore.CurrentCulture == "zh-Hans")
@@ -1700,7 +1712,7 @@ namespace VPet_Simulator.Windows
                         Thread.Sleep(2000);
                         Set["SingleTips"].SetBool("helloworld", true);
                         NoticeBox.Show("欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠".Translate(),
-                           "你好".Translate() + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName));
+                           "你好".Translate() + (IsSteamUser ? SteamClient.Name : Environment.UserName));
                         //Thread.Sleep(2000);
                         //Main.SayRnd("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate());
                     });
@@ -1759,7 +1771,7 @@ namespace VPet_Simulator.Windows
                 return false;
             }
             Main.CountNomal = 0;
-            
+
             if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
             {
                 Core.Save.StrengthChange(-2);

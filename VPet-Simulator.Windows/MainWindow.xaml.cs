@@ -174,6 +174,7 @@ namespace VPet_Simulator.Windows
                     }
                 }
 
+
                 Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading Translate")).Wait();
                 //加载语言
                 LocalizeCore.StoreTranslation = true;
