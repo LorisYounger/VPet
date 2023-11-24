@@ -48,7 +48,7 @@ namespace VPet_Simulator.Windows
             e.Handled = true;
 
             var expt = e.Exception.ToString();
-            if (expt.ToLower().Contains("value") && expt.Contains("NaN"))
+            if (expt.ToLower().Contains("value") && expt.ToLower().Contains("nan"))
             {
                 MessageBox.Show("由于修改游戏数据导致数据溢出,存档可能会出错\n开发者提醒您请不要使用过于超模的MOD".Translate());
                 return;
@@ -71,8 +71,8 @@ namespace VPet_Simulator.Windows
             else if (expt.Contains("VPet.Plugin"))
             {
                 var exptin = expt.Split('\n').First(x => x.Contains("VPet.Plugin"));
-                exptin = exptin.Substring(exptin.IndexOf("VPet.Plugin"));
-                MessageBox.Show("游戏发生错误,可能是".Translate() + $"MOD({exptin})" +
+                exptin = exptin.Substring(exptin.IndexOf("VPet.Plugin") + 12).Split('.')[0];
+                MessageBox.Show("游戏发生错误,可能是".Translate() + $"MOD({exptin.Translate()})" +
                     "导致的\n如有可能请发送 错误信息截图和引发错误之前的操作给相应MOD作者\n感谢您对MOD开发的支持\n".Translate()
                      + expt, "游戏发生错误,可能是".Translate() + exptin);
                 return;
