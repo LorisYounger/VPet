@@ -163,8 +163,8 @@ namespace VPet_Simulator.Windows
             //关于ui
             if (mw.IsSteamUser)
             {
-                runUserName.Text = Steamworks.SteamClient.Name;
-                runActivate.Text = "已通过Steam[{0}]激活服务注册".Translate(Steamworks.SteamClient.SteamId.Value.ToString("x").Substring(6));
+                runUserName.Text = SteamClient.Name;
+                runActivate.Text = "已通过Steam[{0}]激活服务注册".Translate(SteamClient.SteamId.Value.ToString("x").Substring(6));
             }
             else
             {
@@ -411,7 +411,7 @@ namespace VPet_Simulator.Windows
                     ButtonPublish.Text = "更新至Steam".Translate();
                     ButtonSteam.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimaryDarker);
                 }
-                if (mod.ItemID != 1 && (mod.AuthorID == Steamworks.SteamClient.SteamId.AccountId || mod.AuthorID == 0))
+                if (mod.ItemID != 1 && (mod.AuthorID == SteamClient.SteamId.AccountId || mod.AuthorID == 0))
                 {
                     ButtonPublish.IsEnabled = true;
                     ButtonPublish.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimaryDarker);
@@ -554,7 +554,7 @@ namespace VPet_Simulator.Windows
             }
             mw.Set.OnModRemove(mod.Name);
             ShowMod(mod.Name);
-            ButtonRestart.Visibility = System.Windows.Visibility.Visible;
+            ButtonRestart.Visibility = Visibility.Visible;
             ShowModList();
         }
         class ProgressClass : IProgress<float>
@@ -610,7 +610,7 @@ namespace VPet_Simulator.Windows
                 foreach (string tag in mods.Tag)
                     result = result.WithTag(tag);
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
-                mods.AuthorID = Steamworks.SteamClient.SteamId.AccountId;
+                mods.AuthorID = SteamClient.SteamId.AccountId;
                 mods.WriteFile();
                 if (r.Success)
                 {
@@ -630,7 +630,7 @@ namespace VPet_Simulator.Windows
                         .Translate(mods.Name, r.Result), "MOD上传失败 {0}".Translate(r.Result));
                 }
             }
-            else if (mods.AuthorID == Steamworks.SteamClient.SteamId.AccountId)
+            else if (mods.AuthorID == SteamClient.SteamId.AccountId)
             {
                 var item = await Item.GetAsync(mod.ItemID);
                 Editor result;
@@ -656,7 +656,7 @@ namespace VPet_Simulator.Windows
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
                 if (r.Success)
                 {
-                    mods.AuthorID = Steamworks.SteamClient.SteamId.AccountId;
+                    mods.AuthorID = SteamClient.SteamId.AccountId;
                     mods.ItemID = r.FileId.Value;
                     mods.WriteFile();
                     if (MessageBoxX.Show("{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑新内容?".Translate(mods.Name)
