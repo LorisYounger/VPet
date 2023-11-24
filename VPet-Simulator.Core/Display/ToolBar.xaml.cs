@@ -153,7 +153,7 @@ namespace VPet_Simulator.Core
         public Func<Work, bool> WorkCheck;
         public void StartWork(Work work)
         {
-            if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
+            if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != IGameSave.ModeType.Ill)
                 if (!m.Core.Controller.EnableFunction || m.Core.Save.Level >= work.LevelLimit)
                     if (m.State == Main.WorkingState.Work && m.StateID == m.Core.Graph.GraphConfig.Works.IndexOf(work))
                         m.WorkTimer.Stop();
@@ -188,7 +188,7 @@ namespace VPet_Simulator.Core
                 tMoney.Text = "$ " + m.Core.Save.Money.ToString("N2");
                 if (m.Core.Controller.EnableFunction)
                 {
-                    till.Visibility = m.Core.Save.Mode == GameSave.ModeType.Ill ? Visibility.Visible : Visibility.Collapsed;
+                    till.Visibility = m.Core.Save.Mode == IGameSave.ModeType.Ill ? Visibility.Visible : Visibility.Collapsed;
                     tfun.Visibility = Visibility.Collapsed;
                 }
                 else
@@ -432,7 +432,7 @@ namespace VPet_Simulator.Core
         private void Sleep_Click(object sender, RoutedEventArgs e)
         {
             this.Visibility = Visibility.Collapsed;
-            if (m.Core.Save.Mode != GameSave.ModeType.Ill)
+            if (m.Core.Save.Mode != IGameSave.ModeType.Ill)
                 if (m.State == Main.WorkingState.Sleep)
                 {
                     m.State = WorkingState.Nomal;

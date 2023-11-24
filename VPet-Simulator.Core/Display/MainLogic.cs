@@ -285,12 +285,12 @@ namespace VPet_Simulator.Core
                 Core.Save.Mode = newmod;
             }
             //看情况播放停止工作动画
-            if (Core.Save.Mode == GameSave.ModeType.Ill && State == WorkingState.Work)
+            if (Core.Save.Mode == IGameSave.ModeType.Ill && State == WorkingState.Work)
             {
                 WorkTimer.Stop();
             }
         }
-        private void playSwitchAnimat(GameSave.ModeType before, GameSave.ModeType after)
+        private void playSwitchAnimat(IGameSave.ModeType before, IGameSave.ModeType after)
         {
             if (!(DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Switch_Down || DisplayType.Type == GraphType.Switch_Up))
             {
@@ -304,12 +304,12 @@ namespace VPet_Simulator.Core
             else if (before < after)
             {
                 Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Down), AnimatType.Single, before),
-                    () => playSwitchAnimat((GameSave.ModeType)(((int)before) + 1), after));
+                    () => playSwitchAnimat((IGameSave.ModeType)(((int)before) + 1), after));
             }
             else
             {
                 Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Up), AnimatType.Single, before),
-                    () => playSwitchAnimat((GameSave.ModeType)(((int)before) - 1), after));
+                    () => playSwitchAnimat((IGameSave.ModeType)(((int)before) - 1), after));
             }
         }
         /// <summary>

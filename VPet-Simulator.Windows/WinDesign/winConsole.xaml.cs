@@ -62,7 +62,7 @@ namespace VPet_Simulator.Windows
             if (GraphListBox.SelectedItem == null)
                 return;
             var kv = Sub.Split((string)GraphListBox.SelectedItem, "++");
-            var graph = mw.Main.Core.Graph.FindGraph(kv[0], (AnimatType)Enum.Parse(typeof(AnimatType), kv[1]), (GameSave.ModeType)ComboxMode.SelectedIndex);
+            var graph = mw.Main.Core.Graph.FindGraph(kv[0], (AnimatType)Enum.Parse(typeof(AnimatType), kv[1]), (IGameSave.ModeType)ComboxMode.SelectedIndex);
             if (graph == null)
             {
                 LabelNowPlay.Content = "未找到对应类型图像资源".Translate();
@@ -100,19 +100,19 @@ namespace VPet_Simulator.Windows
         {
             DestanceTimer.Stop();
         }
-        List<Tuple<string, GameSave.ModeType>> playlist = new List<Tuple<string, GameSave.ModeType>>();
+        List<Tuple<string, IGameSave.ModeType>> playlist = new List<Tuple<string, IGameSave.ModeType>>();
         private void GraphListPlayerBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            playlist.Add(new Tuple<string, GameSave.ModeType>((string)GraphListPlayerBox.SelectedItem,
-                (GameSave.ModeType)Enum.Parse(typeof(GameSave.ModeType), (string)(((ComboBoxItem)ComboxPlayMode.SelectedItem).Content))));
+            playlist.Add(new Tuple<string, IGameSave.ModeType>((string)GraphListPlayerBox.SelectedItem,
+                (IGameSave.ModeType)Enum.Parse(typeof(IGameSave.ModeType), (string)(((ComboBoxItem)ComboxPlayMode.SelectedItem).Content))));
             GraphListWillPlayBox.Items.Add((string)GraphListPlayerBox.SelectedItem + "_" + (string)((ComboBoxItem)ComboxPlayMode.SelectedItem).Content);
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-            DisplayList(new Queue<Tuple<string, GameSave.ModeType>>(playlist));
+            DisplayList(new Queue<Tuple<string, IGameSave.ModeType>>(playlist));
         }
-        public void DisplayList(Queue<Tuple<string, GameSave.ModeType>> list)
+        public void DisplayList(Queue<Tuple<string, IGameSave.ModeType>> list)
         {
             if (list.Count == 0)
             {

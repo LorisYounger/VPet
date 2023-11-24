@@ -1320,8 +1320,8 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Set.CalFunState = (GameSave.ModeType)combCalFunState.SelectedIndex;
-            mw.Main.NoFunctionMOD = (GameSave.ModeType)combCalFunState.SelectedIndex;
+            mw.Set.CalFunState = (IGameSave.ModeType)combCalFunState.SelectedIndex;
+            mw.Main.NoFunctionMOD = (IGameSave.ModeType)combCalFunState.SelectedIndex;
             mw.Main.EventTimer_Elapsed();
         }
 

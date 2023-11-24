@@ -318,7 +318,7 @@ namespace VPet_Simulator.Windows
         /// <param name="save">存档</param>
         /// <param name="food">食物</param>
         /// <param name="buff">默认1倍</param>
-        public static void EatFood(this GameSave save, IFood food, double buff)
+        public static void EatFood(this IGameSave save, IFood food, double buff)
         {
             save.Exp += food.Exp * buff;
             var tmp = food.Strength / 2 * buff;

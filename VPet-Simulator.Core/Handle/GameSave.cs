@@ -1,13 +1,14 @@
 ﻿using LinePutScript;
 using LinePutScript.Converter;
 using System;
+using static VPet_Simulator.Core.IGameSave;
 
 namespace VPet_Simulator.Core
 {
     /// <summary>
     /// 游戏存档
     /// </summary>
-    public class GameSave
+    public class GameSave : IGameSave
     {
         /// <summary>
         /// 宠物名字
@@ -252,27 +253,8 @@ namespace VPet_Simulator.Core
             Likability += food.Likability;
         }
         /// <summary>
-        /// 宠物状态模式
+        /// 宠物当前状态
         /// </summary>
-        public enum ModeType
-        {
-            /// <summary>
-            /// 高兴
-            /// </summary>
-            Happy,
-            /// <summary>
-            /// 普通
-            /// </summary>
-            Nomal,
-            /// <summary>
-            /// 状态不佳
-            /// </summary>
-            PoorCondition,
-            /// <summary>
-            /// 生病(躺床)
-            /// </summary>
-            Ill
-        }
         [Line(name: "mode")]
         public ModeType Mode { get; set; } = ModeType.Nomal;
         /// <summary>

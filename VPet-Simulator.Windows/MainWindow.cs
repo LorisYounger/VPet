@@ -112,17 +112,17 @@ namespace VPet_Simulator.Windows
             ClickText.ModeType mt;
             switch (Core.Save.Mode)
             {
-                case GameSave.ModeType.PoorCondition:
+                case IGameSave.ModeType.PoorCondition:
                     mt = ClickText.ModeType.PoorCondition;
                     break;
                 default:
-                case GameSave.ModeType.Nomal:
+                case IGameSave.ModeType.Nomal:
                     mt = ClickText.ModeType.Nomal;
                     break;
-                case GameSave.ModeType.Happy:
+                case IGameSave.ModeType.Happy:
                     mt = ClickText.ModeType.Happy;
                     break;
-                case GameSave.ModeType.Ill:
+                case IGameSave.ModeType.Ill:
                     mt = ClickText.ModeType.Ill;
                     break;
             }
@@ -404,7 +404,7 @@ namespace VPet_Simulator.Windows
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
             }
-            else if (Core.Save.Mode == GameSave.ModeType.Happy || Core.Save.Mode == GameSave.ModeType.Nomal)
+            else if (Core.Save.Mode == IGameSave.ModeType.Happy || Core.Save.Mode == IGameSave.ModeType.Nomal)
             {
                 if (Core.Save.StrengthFood < 75 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
                 {
@@ -632,7 +632,7 @@ namespace VPet_Simulator.Windows
                     stat[(gi64)"stat_sleep_time"] += (int)Set.LogicInterval;
                     break;
             }
-            if (save.Mode == GameSave.ModeType.Ill)
+            if (save.Mode == IGameSave.ModeType.Ill)
             {
                 if (save.Money < 100)
                     stat["stat_ill_nomoney"] = 1;
@@ -778,7 +778,7 @@ namespace VPet_Simulator.Windows
                 {
                     SteamFriends.SetRichPresence("lv", " ");
                 }
-                if (Core.Save.Mode == GameSave.ModeType.Ill)
+                if (Core.Save.Mode == IGameSave.ModeType.Ill)
                 {
                     SteamFriends.SetRichPresence("steam_display", "#Status_Ill");
                 }

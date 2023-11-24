@@ -117,9 +117,9 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 非计算模式下默认模式
         /// </summary>
-        public GameSave.ModeType CalFunState
+        public IGameSave.ModeType CalFunState
         {
-            get => (GameSave.ModeType)this[(gint)"calfunstate"];
+            get => (IGameSave.ModeType)this[(gint)"calfunstate"];
             set => this[(gint)"calfunstate"] = (int)value;
         }
         /// <summary>

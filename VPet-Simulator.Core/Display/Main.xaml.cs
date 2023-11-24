@@ -45,7 +45,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 如果不开启功能模式,默认状态设置
         /// </summary>
-        public GameSave.ModeType NoFunctionMOD = GameSave.ModeType.Happy;
+        public IGameSave.ModeType NoFunctionMOD = IGameSave.ModeType.Happy;
         /// <summary>
         /// 是否开始运行
         /// </summary>
@@ -145,7 +145,7 @@ namespace VPet_Simulator.Core
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchBodyLocate, Core.Graph.GraphConfig.TouchBodySize, () => { DisplayTouchBody(); return true; }));
             for (int i = 0; i < 4; i++)
             {
-                GameSave.ModeType m = (GameSave.ModeType)i;
+                IGameSave.ModeType m = (IGameSave.ModeType)i;
                 Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate[i], Core.Graph.GraphConfig.TouchRaisedSize[i],
                     () =>
                     {

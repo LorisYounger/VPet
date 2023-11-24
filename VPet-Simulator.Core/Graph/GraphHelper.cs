@@ -270,17 +270,17 @@ namespace VPet_Simulator.Core
                 /// </summary>
                 Ill = 16,
             }
-            public static ModeType GetModeType(GameSave.ModeType type)
+            public static ModeType GetModeType(IGameSave.ModeType type)
             {
                 switch (type)
                 {
-                    case GameSave.ModeType.Happy:
+                    case IGameSave.ModeType.Happy:
                         return ModeType.Happy;
-                    case GameSave.ModeType.Nomal:
+                    case IGameSave.ModeType.Nomal:
                         return ModeType.Nomal;
-                    case GameSave.ModeType.PoorCondition:
+                    case IGameSave.ModeType.PoorCondition:
                         return ModeType.PoorCondition;
-                    case GameSave.ModeType.Ill:
+                    case IGameSave.ModeType.Ill:
                         return ModeType.Ill;
                     default:
                         return ModeType.Nomal;

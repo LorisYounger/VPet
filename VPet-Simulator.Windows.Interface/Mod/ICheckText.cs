@@ -145,7 +145,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 检查部分状态是否满足需求
         /// </summary>之所以不是全部的,是因为挨个取效率太差了
-        public virtual bool CheckState(GameSave save)
+        public virtual bool CheckState(IGameSave save)
         {
             if (save.Likability < LikeMin || save.Likability > LikeMax)
                 return false;
