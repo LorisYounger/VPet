@@ -49,6 +49,12 @@
         /// 显示面板窗体
         /// </summary>
         void ShowPanel();
+
+        /// <summary>
+        /// 在边缘时重新靠边，防止被阻挡
+        /// </summary>
+        void ResetPosition();
+
         /// <summary>
         /// 启用计算等数据功能
         /// </summary>
