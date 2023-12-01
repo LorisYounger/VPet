@@ -107,6 +107,35 @@ namespace VPet_Simulator.Windows
             panelWindow.Show();
         }
 
+        public void ResetPosition()
+        {
+            mw.Dispatcher.Invoke(() =>
+            {
+                if (RePostionActive)
+                {
+                    if (mw.Core.Controller.GetWindowsDistanceUp() < -0.25 * mw.Height && mw.Core.Controller.GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight)
+                    {
+                        mw.Core.Controller.MoveWindows(0, -mw.Core.Controller.GetWindowsDistanceUp() / mw.Core.Controller.ZoomRatio);
+                    }
+                    else if (mw.Core.Controller.GetWindowsDistanceDown() < -0.25 * mw.Height && mw.Core.Controller.GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight)
+                    {
+                        mw.Core.Controller.MoveWindows(0, mw.Core.Controller.GetWindowsDistanceDown() / mw.Core.Controller.ZoomRatio);
+                    }
+                    if (mw.Core.Controller.GetWindowsDistanceLeft() < -0.25 * mw.Width && mw.Core.Controller.GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth)
+                    {
+                        mw.Core.Controller.MoveWindows(-mw.Core.Controller.GetWindowsDistanceLeft() / mw.Core.Controller.ZoomRatio, 0);
+                    }
+                    else if (mw.Core.Controller.GetWindowsDistanceRight() < -0.25 * mw.Width && mw.Core.Controller.GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth)
+                    {
+                        mw.Core.Controller.MoveWindows(mw.Core.Controller.GetWindowsDistanceRight() / mw.Core.Controller.ZoomRatio, 0);
+                    }
+                }
+            });
+        }
+
+
+        public bool RePostionActive = true;
+
         public double ZoomRatio => mw.Set.ZoomLevel;
 
         public int PressLength => mw.Set.PressLength;

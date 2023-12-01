@@ -28,6 +28,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void DisplayToNomal()
         {
+            this.Core.Controller.ResetPosition();
             switch (State)
             {
                 default:
