@@ -111,30 +111,32 @@ namespace VPet_Simulator.Windows
         {
             mw.Dispatcher.Invoke(() =>
             {
-                if (RePostionActive)
+                if (GetWindowsDistanceUp() < -0.25 * mw.Height && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight)
                 {
-                    if (mw.Core.Controller.GetWindowsDistanceUp() < -0.25 * mw.Height && mw.Core.Controller.GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight)
-                    {
-                        mw.Core.Controller.MoveWindows(0, -mw.Core.Controller.GetWindowsDistanceUp() / mw.Core.Controller.ZoomRatio);
-                    }
-                    else if (mw.Core.Controller.GetWindowsDistanceDown() < -0.25 * mw.Height && mw.Core.Controller.GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight)
-                    {
-                        mw.Core.Controller.MoveWindows(0, mw.Core.Controller.GetWindowsDistanceDown() / mw.Core.Controller.ZoomRatio);
-                    }
-                    if (mw.Core.Controller.GetWindowsDistanceLeft() < -0.25 * mw.Width && mw.Core.Controller.GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth)
-                    {
-                        mw.Core.Controller.MoveWindows(-mw.Core.Controller.GetWindowsDistanceLeft() / mw.Core.Controller.ZoomRatio, 0);
-                    }
-                    else if (mw.Core.Controller.GetWindowsDistanceRight() < -0.25 * mw.Width && mw.Core.Controller.GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth)
-                    {
-                        mw.Core.Controller.MoveWindows(mw.Core.Controller.GetWindowsDistanceRight() / mw.Core.Controller.ZoomRatio, 0);
-                    }
+                    MoveWindows(0, -GetWindowsDistanceUp() / ZoomRatio);
+                }
+                else if (GetWindowsDistanceDown() < -0.25 * mw.Height && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight)
+                {
+                    MoveWindows(0, GetWindowsDistanceDown() / ZoomRatio);
+                }
+                if (GetWindowsDistanceLeft() < -0.25 * mw.Width && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth)
+                {
+                    MoveWindows(-GetWindowsDistanceLeft() / ZoomRatio, 0);
+                }
+                else if (GetWindowsDistanceRight() < -0.25 * mw.Width && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth)
+                {
+                    MoveWindows(GetWindowsDistanceRight() / ZoomRatio, 0);
                 }
             });
         }
+        public bool CheckPosition() => mw.Dispatcher.Invoke(() =>
+               GetWindowsDistanceUp() < -0.25 * mw.Height && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight
+            || GetWindowsDistanceDown() < -0.25 * mw.Height && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight
+            || GetWindowsDistanceLeft() < -0.25 * mw.Width && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth
+            || GetWindowsDistanceRight() < -0.25 * mw.Width && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth
+        );
 
-
-        public bool RePostionActive = true;
+        public bool RePostionActive { get; set; } = true;
 
         public double ZoomRatio => mw.Set.ZoomLevel;
 
