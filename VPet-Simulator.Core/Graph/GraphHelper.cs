@@ -485,8 +485,7 @@ namespace VPet_Simulator.Core
                             return;
                         }
                     }
-                    m.MoveTimer.Enabled = false;
-                    m.Display(Graph, AnimatType.C_End, m.DisplayToNomal);
+                    StopMoving(m);
                     return;
                 }
                 //不是:继续右边走or停下
@@ -504,6 +503,14 @@ namespace VPet_Simulator.Core
                         return;
                     }
                 }
+                StopMoving(m);
+            }
+
+            private void StopMoving(Main m)
+            {
+                if (m.Core.Controller.RePostionActive)
+                    m.Core.Controller.ResetPosition();
+                m.Core.Controller.RePostionActive = !m.Core.Controller.CheckPosition();
                 m.MoveTimer.Enabled = false;
                 m.Display(Graph, AnimatType.C_End, m.DisplayToNomal);
             }

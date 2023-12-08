@@ -7,6 +7,15 @@
 
 The core gameplay revolves taking care of your Pet. However, more automatic actions, such as wandering around, spacing out, squatting, etc., can be seen only when the game is idle.
 
+## 11/24 Update Pinch Face
+
+Pinch animation for 2023 steam award Voting Rewards
+
+Long press on the face to pinch the face
+
+![ss33](Tutorial.assets/ss33.gif)
+
+
 ## Basics
 
 ### Right Click to Open/Close the Menu Bar

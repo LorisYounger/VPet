@@ -16,6 +16,11 @@ namespace VPet_Simulator.Windows
 {
     public class CoreMOD
     {
+        /// <summary>
+        /// 自动启用MOD名称
+        /// </summary>
+        public static readonly string[] OnModDefList = new string[] { "Core", "PCat", "ModMaker" };
+
         public static HashSet<string> LoadedDLL { get; } = new HashSet<string>()
         {
             "Panuon.WPF.dll","steam_api.dll","Panuon.WPF.UI.dll","steam_api64.dll",
@@ -264,7 +269,7 @@ namespace VPet_Simulator.Windows
                                 }
                                 catch (Exception e)
                                 {
-                                    ErrorMessage = e.Message;                                    
+                                    ErrorMessage = e.Message;
                                     SuccessLoad = false;
                                 }
                             }
@@ -274,7 +279,7 @@ namespace VPet_Simulator.Windows
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ErrorMessage = e.Message;
                 Tag.Add("该模组已损坏");
@@ -338,7 +343,7 @@ namespace VPet_Simulator.Windows
         }
         public static bool IsOnMod(this Setting t, string ModName)
         {
-            if (ModName == "Core")
+            if (CoreMOD.OnModDefList.Contains(ModName))
                 return true;
             var line = t.FindLine("onmod");
             if (line == null)

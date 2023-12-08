@@ -381,6 +381,9 @@ namespace VPet_Simulator.Core
         private DateTime wavespan;
         private void MainGrid_MouseWave(object sender, MouseEventArgs e)
         {
+            if(e.LeftButton == MouseButtonState.Pressed)            
+                return;
+            isPress = false;
             if (rasetype >= 0 || State != WorkingState.Nomal)
                 return;
 

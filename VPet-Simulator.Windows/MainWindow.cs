@@ -333,7 +333,7 @@ namespace VPet_Simulator.Windows
             {
                 try
                 {
-                    System.Windows.Forms.SendKeys.SendWait(content);
+                    SendKeys.SendWait(content);
                 }
                 catch (Exception e)
                 {
@@ -605,7 +605,7 @@ namespace VPet_Simulator.Windows
         {
             if (name.StartsWith("stat_"))
             {
-                Steamworks.SteamUserStats.SetStat(name, (int)value);
+                SteamUserStats.SetStat(name, (int)value);
             }
         }
         /// <summary>
@@ -623,7 +623,7 @@ namespace VPet_Simulator.Windows
             switch (Main.State)
             {
                 case Main.WorkingState.Work:
-                    if (Main.nowWork.Type == GraphHelper.Work.WorkType.Work)
+                    if (Main.nowWork.Type == Work.WorkType.Work)
                         stat[(gi64)"stat_work_time"] += (int)Set.LogicInterval;
                     else
                         stat[(gi64)"stat_study_time"] += (int)Set.LogicInterval;
@@ -662,7 +662,7 @@ namespace VPet_Simulator.Windows
 
             if (IsSteamUser)
             {
-                Task.Run(Steamworks.SteamUserStats.StoreStats);
+                Task.Run(SteamUserStats.StoreStats);
             }
         }
         /// <summary>
@@ -975,7 +975,7 @@ namespace VPet_Simulator.Windows
             //参数
             StringBuilder sb = new StringBuilder();
             sb.Append("action=data");
-            sb.Append($"&steamid={Steamworks.SteamClient.SteamId.Value}");
+            sb.Append($"&steamid={SteamClient.SteamId.Value}");
             sb.Append($"&ver={version}");
             sb.Append("&save=");
             sb.AppendLine(HttpUtility.UrlEncode(Core.Save.ToLine().ToString() + Set.ToString()));
@@ -1093,9 +1093,9 @@ namespace VPet_Simulator.Windows
                     Set = new Setting("Setting#VPET:|\n");
 
                 var visualTree = new FrameworkElementFactory(typeof(Border));
-                visualTree.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(Window.BackgroundProperty));
+                visualTree.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(BackgroundProperty));
                 var childVisualTree = new FrameworkElementFactory(typeof(ContentPresenter));
-                childVisualTree.SetValue(UIElement.ClipToBoundsProperty, true);
+                childVisualTree.SetValue(ClipToBoundsProperty, true);
                 visualTree.AppendChild(childVisualTree);
 
                 Template = new ControlTemplate
@@ -1217,6 +1217,18 @@ namespace VPet_Simulator.Windows
 
             CoreMOD.NowLoading = null;
 
+            //判断是否需要清空缓存
+            if (App.MainWindows.Count == 1 && Set.LastCacheDate < CoreMODs.Max(x => x.CacheDate))
+            {//需要清理缓存
+                Set.LastCacheDate = DateTime.Now;
+                if (Directory.Exists(GraphCore.CachePath))
+                {
+                    Directory.Delete(GraphCore.CachePath, true);
+                    Directory.CreateDirectory(GraphCore.CachePath);
+                }
+            }
+
+
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏MOD".Translate()));
 
             //当前桌宠动画
@@ -1334,11 +1346,11 @@ namespace VPet_Simulator.Windows
             //ClickTexts.Add(new ClickText("有建议/游玩反馈? 来 菜单-系统-反馈中心 反馈吧"));
             ClickTexts.Add(new ClickText("长按脑袋拖动桌宠到你喜欢的任意位置"));
 
-            //临时聊天内容
-            ClickTexts.Add(new ClickText("主人，sbema秋季促销开始了哦，还有游戏大奖赛，快去给{name}去投一票吧。"));
-            ClickTexts.Add(new ClickText("主人主人，{name}参加了sbeam大奖赛哦，给人家投一票喵"));
-            ClickTexts.Add(new ClickText("那个。。主人。。\n人家参加了sbeam大奖赛哦。能不能。。给{name}投一票呢～"));
-            ClickTexts.Add(new ClickText("电脑里有一款《虚拟桌宠模拟器》的游戏正在参加2023的sbeam大奖赛，快来给桌宠投一票吧"));
+            ////临时聊天内容
+            //ClickTexts.Add(new ClickText("主人，sbema秋季促销开始了哦，还有游戏大奖赛，快去给{name}去投一票吧。"));
+            //ClickTexts.Add(new ClickText("主人主人，{name}参加了sbeam大奖赛哦，给人家投一票喵"));
+            //ClickTexts.Add(new ClickText("那个。。主人。。\n人家参加了sbeam大奖赛哦。能不能。。给{name}投一票呢～"));
+            //ClickTexts.Add(new ClickText("电脑里有一款《虚拟桌宠模拟器》的游戏正在参加2023的sbeam大奖赛，快来给桌宠投一票吧"));
             //"如果你觉得目前功能太少,那就多挂会机. 宠物会自己动的".Translate(),
             //"你知道吗? 你可以在设置里面修改游戏的缩放比例".Translate(),
             //"你现在乱点说话是说话系统的一部分,不过还没做,在做了在做了ing".Translate(),
@@ -1405,7 +1417,7 @@ namespace VPet_Simulator.Windows
                         {
                             work.MoneyLevel = 0.5;
                             work.MoneyBase = 8;
-                            if (work.Type == GraphHelper.Work.WorkType.Work)
+                            if (work.Type == Work.WorkType.Work)
                             {
                                 work.StrengthDrink = 2.5;
                                 work.StrengthFood = 3.5;
@@ -1530,9 +1542,9 @@ namespace VPet_Simulator.Windows
                     await Dispatcher.InvokeAsync(() => LoadingText.Visibility = Visibility.Collapsed);
                 });
 
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
                 {
                     if (LocalizeCore.CurrentCulture == "zh-Hans")
                         ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
@@ -1541,8 +1553,8 @@ namespace VPet_Simulator.Windows
                     else
                         ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
                 });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "反馈中心".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Setting, "设置面板".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "反馈中心".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "设置面板".Translate(), () =>
                 {
                     Main.ToolBar.Visibility = Visibility.Collapsed;
                     winSetting.Show();
@@ -1558,23 +1570,23 @@ namespace VPet_Simulator.Windows
                 //        eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/汉堡.png")), Main.DisplayToNomal);
                 //    }
                 //);
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "吃饭".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "吃饭".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Meal);
                 });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喝水".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "喝水".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Drink);
                 });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "收藏".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "收藏".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Star);
                 });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "药品".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "药品".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Drug);
                 });
-                Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "礼品".Translate(), () =>
+                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "礼品".Translate(), () =>
                 {
                     winBetterBuy.Show(Food.FoodType.Gift);
                 });
@@ -1668,7 +1680,7 @@ namespace VPet_Simulator.Windows
                     var pin = Core.Graph.GraphConfig.Data["pinch"];
                     Main.Core.TouchEvent.Insert(0, new TouchArea(
                         new Point(pin[(gdbe)"px"], pin[(gdbe)"py"]), new Size(pin[(gdbe)"sw"], pin[(gdbe)"sh"])
-                        , () => { DisplayPinch(); return true; }, true));
+                        , DisplayPinch, true));
                 }
 
 
@@ -1683,7 +1695,7 @@ namespace VPet_Simulator.Windows
                         SetTransparentHitThrough();
                 }
 
-                if (File.Exists(ExtensionValue.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 6, 20))
+                if (File.Exists(ExtensionValue.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 10, 20) && App.MainWindows.Count == 1)
                 {
                     Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
                     if (LocalizeCore.CurrentCulture == "zh-Hans")
@@ -1700,7 +1712,7 @@ namespace VPet_Simulator.Windows
                         Thread.Sleep(2000);
                         Set["SingleTips"].SetBool("helloworld", true);
                         NoticeBox.Show("欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠".Translate(),
-                           "你好".Translate() + (IsSteamUser ? Steamworks.SteamClient.Name : Environment.UserName));
+                           "你好".Translate() + (IsSteamUser ? SteamClient.Name : Environment.UserName));
                         //Thread.Sleep(2000);
                         //Main.SayRnd("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate());
                     });
@@ -1752,9 +1764,14 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 显示捏脸情况
         /// </summary>
-        public void DisplayPinch()
+        public bool DisplayPinch()
         {
+            if (Core.Graph.FindGraphs("pinch", AnimatType.A_Start, Core.Save.Mode) == null)
+            {
+                return false;
+            }
             Main.CountNomal = 0;
+
             if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
             {
                 Core.Save.StrengthChange(-2);
@@ -1765,28 +1782,36 @@ namespace VPet_Simulator.Windows
             if (Main.DisplayType.Name == "pinch")
             {
                 if (Main.DisplayType.Animat == AnimatType.A_Start)
-                    return;
+                    return false;
                 else if (Main.DisplayType.Animat == AnimatType.B_Loop)
                     if (Dispatcher.Invoke(() => Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Name == "pinch" && ig.GraphInfo.Animat == AnimatType.B_Loop)
                     {
                         ig.IsContinue = true;
-                        return;
+                        return true;
                     }
                     else if (Dispatcher.Invoke(() => Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Name == "pinch" && ig2.GraphInfo.Animat == AnimatType.B_Loop)
                     {
                         ig2.IsContinue = true;
-                        return;
+                        return true;
                     }
             }
             Main_Event_TouchHead();
             Main_Event_TouchBody();
             Main.Display("pinch", AnimatType.A_Start, () =>
                Main.Display("pinch", AnimatType.B_Loop, DisplayPinch_loop));
+            return true;
         }
         private void DisplayPinch_loop()
         {
             if (Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
             {
+                if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
+                {
+                    Core.Save.StrengthChange(-2);
+                    Core.Save.FeelingChange(1);
+                    Core.Save.Mode = Core.Save.CalMode();
+                    Main.LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
+                }
                 Main.Display("pinch", AnimatType.B_Loop, DisplayPinch_loop);
             }
             else

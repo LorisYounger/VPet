@@ -49,6 +49,16 @@
         /// 显示面板窗体
         /// </summary>
         void ShowPanel();
+
+        /// <summary>
+        /// 在边缘时重新靠边，防止被阻挡
+        /// </summary>
+        void ResetPosition();
+        /// <summary>
+        /// 判断桌宠是否靠边
+        /// </summary>
+        bool CheckPosition();
+
         /// <summary>
         /// 启用计算等数据功能
         /// </summary>
@@ -56,6 +66,11 @@
         /// <summary>
         /// 互动周期
         /// </summary>
-        int InteractionCycle { get; } 
+        int InteractionCycle { get; }
+
+        /// <summary>
+        /// 是否启用边缘重新定位
+        /// </summary>
+        bool RePostionActive { get; set; }
     }
 }
