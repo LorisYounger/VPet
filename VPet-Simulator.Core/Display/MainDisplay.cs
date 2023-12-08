@@ -377,6 +377,7 @@ namespace VPet_Simulator.Core
                     break;
                 case -1:
                     rasetype = int.MinValue;
+                    Core.Controller.RePostionActive = !Core.Controller.CheckPosition();
                     if (string.IsNullOrEmpty(name))
                         Display(GraphType.Raised_Static, AnimatType.C_End, DisplayToNomal);
                     else

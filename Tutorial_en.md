@@ -9,7 +9,7 @@ The core gameplay revolves taking care of your Pet. However, more automatic acti
 
 ## 11/24 Update Pinch Face
 
-Pinch animation for 2023 [steam award](https://store.steampowered.com/news/app/1920960/view/6966567177514898075) Voting Rewards, we participate in the nomination of the relaxation award. The production team is looking forward to the owners who like VPet Simulator to give us [valuable votes](https://store.steampowered.com/news/app/1920960/view/6966567177514898075)
+Pinch animation for 2023 steam award Voting Rewards
 
 Long press on the face to pinch the face
 

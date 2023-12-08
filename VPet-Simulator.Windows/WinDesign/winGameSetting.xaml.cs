@@ -547,11 +547,13 @@ namespace VPet_Simulator.Windows
 
         private void ButtonDisEnable_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (mod.Name.ToLower() == "core")
+            if (mod.Name == "Core")
             {
                 MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法停用".Translate(), "停用失败".Translate());
                 return;
             }
+            else if (CoreMOD.OnModDefList.Contains(mod.Name))
+                return;
             mw.Set.OnModRemove(mod.Name);
             ShowMod(mod.Name);
             ButtonRestart.Visibility = Visibility.Visible;
@@ -577,7 +579,7 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("请先登录Steam后才能上传文件".Translate(), "上传MOD需要Steam登录".Translate(), MessageBoxIcon.Warning);
                 return;
             }
-            if (mods.Name.ToLower() == "core")
+            if (CoreMOD.OnModDefList.Contains(mods.Name))
             {
                 MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法发布\n如需发布自定义内容,请复制并更改名称".Translate(), "MOD上传失败".Translate(), MessageBoxIcon.Error);
                 return;
