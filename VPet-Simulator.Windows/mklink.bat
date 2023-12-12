@@ -1,4 +1,4 @@
-﻿chcp 65001
+chcp 65001
 
 mklink /d "%~dp0\bin\x64\Debug\net462\mod" "%~dp0\mod"
 

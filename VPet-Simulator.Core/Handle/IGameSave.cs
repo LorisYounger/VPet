@@ -38,7 +38,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 最大体力值
         /// </summary>
-        double StrengthMax { get; set; }
+        double StrengthMax { get;}
         /// <summary>
         /// 待补充的体力,随着时间缓慢加给桌宠
         /// </summary>//让游戏更有游戏性
@@ -109,7 +109,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 好感度(隐藏)(最大值)
         /// </summary>
-        double LikabilityMax { get; set; }
+        double LikabilityMax { get;}
 
         /// <summary>
         /// 清除变化
@@ -124,6 +124,10 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="food">食物类</param>
         void EatFood(IFood food);
+        /// <summary>
+        /// 宠物当前状态
+        /// </summary>
+        ModeType Mode { get; set; }
         /// <summary>
         /// 宠物状态模式
         /// </summary>

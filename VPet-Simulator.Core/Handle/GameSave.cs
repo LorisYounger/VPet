@@ -14,30 +14,33 @@ namespace VPet_Simulator.Core
         /// 宠物名字
         /// </summary>
         [Line(name: "name")]
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// 金钱
         /// </summary>
         [Line(Type = LPSConvert.ConvertType.ToFloat, Name = "money")]
-        public virtual double Money { get; set; }
+        public double Money { get; set; }
         /// <summary>
         /// 经验值
         /// </summary>
-        [Line(type: LPSConvert.ConvertType.ToFloat, name: "exp")] public virtual double Exp { get; set; }
+        [Line(type: LPSConvert.ConvertType.ToFloat, name: "exp")] public double Exp { get; set; }
         /// <summary>
         /// 等级
         /// </summary>
-        public virtual int Level => Exp < 0 ? 1 : (int)(Math.Sqrt(Exp) / 10) + 1;
+        public int Level => Exp < 0 ? 1 : (int)(Math.Sqrt(Exp) / 10) + 1;
         /// <summary>
         /// 升级所需经验值
         /// </summary>
         /// <returns></returns>
-        public virtual int LevelUpNeed() => (int)(Math.Pow((Level) * 10, 2));
+        public int LevelUpNeed() => (int)(Math.Pow((Level) * 10, 2));
         /// <summary>
         /// 体力 0-100
         /// </summary>
-        public virtual double Strength { get => strength; set => strength = Math.Min(100, Math.Max(0, value)); }
+        public double Strength { get => strength; set => strength = Math.Min(StrengthMax, Math.Max(0, value)); }
+
+        public double StrengthMax { get;} = 100;
+
         [Line(Type = LPSConvert.ConvertType.ToFloat, IgnoreCase = true)]
         protected double strength { get; set; }
         /// <summary>
@@ -48,8 +51,8 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 变化 体力
         /// </summary>
-        public double ChangeStrength = 0;
-        public virtual void StrengthChange(double value)
+        public double ChangeStrength { get; set; } = 0;
+        public void StrengthChange(double value)
         {
             ChangeStrength += value;
             Strength += value;
@@ -57,7 +60,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 饱腹度
         /// </summary>
-        public virtual double StrengthFood
+        public double StrengthFood
         {
             get => strengthFood; set
             {
@@ -77,8 +80,8 @@ namespace VPet_Simulator.Core
         /// 待补充的饱腹度,随着时间缓慢加给桌宠
         /// </summary>//让游戏更有游戏性
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
-        public virtual double StoreStrengthFood { get; set; }
-        public virtual void StrengthChangeFood(double value)
+        public double StoreStrengthFood { get; set; }
+        public void StrengthChangeFood(double value)
         {
             ChangeStrengthFood += value;
             StrengthFood += value;
@@ -86,11 +89,11 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 变化 食物
         /// </summary>
-        public double ChangeStrengthFood = 0;
+        public double ChangeStrengthFood { get; set; } = 0;
         /// <summary>
         /// 口渴度
         /// </summary>
-        public virtual double StrengthDrink
+        public double StrengthDrink
         {
             get => strengthDrink; set
             {
@@ -111,11 +114,11 @@ namespace VPet_Simulator.Core
         /// 待补充的口渴度,随着时间缓慢加给桌宠
         /// </summary>//让游戏更有游戏性
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
-        public virtual double StoreStrengthDrink { get; set; }
+        public double StoreStrengthDrink { get; set; }
         /// <summary>
         /// 变化 口渴度
         /// </summary>
-        public double ChangeStrengthDrink = 0;
+        public double ChangeStrengthDrink { get; set; } = 0;
         public void StrengthChangeDrink(double value)
         {
             ChangeStrengthDrink += value;
@@ -124,7 +127,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 心情
         /// </summary>
-        public virtual double Feeling
+        public double Feeling
         {
             get => feeling; set
             {
@@ -152,7 +155,7 @@ namespace VPet_Simulator.Core
         /// 变化 心情
         /// </summary>
         public double ChangeFeeling = 0;
-        public virtual void FeelingChange(double value)
+        public void FeelingChange(double value)
         {
             ChangeFeeling += value;
             Feeling += value;
