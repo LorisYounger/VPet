@@ -1,4 +1,4 @@
-简体中文 | [English](./CONTRIBUTING_en.md)
+简体中文 | [繁體中文](./CONTRIBUTING_zht.md) | [English](./CONTRIBUTING_en.md)
 
 ## 参与开发
 
