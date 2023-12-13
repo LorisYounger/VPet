@@ -47,43 +47,43 @@
 
 ## 軟體架構
 
-* **VPet-Simulator.Windows: 适用于桌面端的虚拟桌宠模拟器**
-  * *Function 功能性代码存放位置*
-    * CoreMOD Mod管理类
-    * MWController 窗体控制器
+* **VPet-Simulator.Windows: 適用於桌面端的虛擬桌寵模擬器**
+  * *Function 功能性程式碼儲存位置*
+    * CoreMOD 模組管理
+    * MWController 視窗控制器
 
-  * *WinDesign 窗口和UI设计
-    * winBetterBuy 更好买窗口
-    * winCGPTSetting ChatGPT 设置
-    * winSetting 软件设置/MOD 窗口
-    * winConsole 开发控制台
-    * winGameSetting 游戏设置
-    * winReport 反馈中心
+  * *WinDesign 視窗及UI設計
+    * winBetterBuy 更好買視窗
+    * winCGPTSetting ChatGPT設定
+    * winSetting 軟體設定、模組視窗
+    * winConsole 開發控制台
+    * winGameSetting 遊戲設定
+    * winReport 意見回饋中心
 
-  * MainWindows 主窗体,存放和展示Core
-  * PetHelper 快速切换小标
-* **VPet-Simulator.Tool: 方便制作MOD的工具(eg:图片帧生成)**
-* **VPet-Simulator.Core: 软件核心 方便内置到任何WPF应用程序(例如:VUP-Simulator)**
-  * Handle 接口与控件
-    * IController 窗体控制器 (调用相关功能和设置,例如移动到侧边等)
+  * MainWindows 主視窗、儲存及展示Core
+  * PetHelper 快速切換圖示
+* **VPet-Simulator.Tool: 方便製作模組的工具（例如：產生動態圖片）**
+* **VPet-Simulator.Core: 軟體核心，方便內建至任何的WPF應用程式（例如：VUP-Simulator）**
+  * Handle 介面及控制項
+    * IController 視窗控制（呼叫相關功能及設定，例如：移動到側邊等）
     * Function 通用功能
-    * GameCore 游戏核心,包含各种数据等内容
-    * GameSave 游戏存档
-    * IFood 食物/物品接口
-    * PetLoader 宠物图形加载器
-  * Graph 图形渲染
-    * IGraph 动画基本接口
-    * GraphCore 动画显示核心
-    * GraphHelper 动画帮助类
-    * GraphInfo 动画信息
-    * FoodAnimation 食物动画 支持显示前中后3层夹心动画 不一定只用于食物,只是叫这个名字
-    * PNGAnimation 桌宠动态动画组件
-    * Picture 桌宠静态动画组件
-  * Display 显示
-    * basestyle/Theme 基本风格主题
-    * Main.xaml 核心显示部件
-      * MainDisplay 核心显示方法
-      * MainLogic 核心显示逻辑
-    * ToolBar 点击人物时候的工具栏
-    * MessageBar 人物说话时候的说话栏
-    * WorkTimer 工作时钟
+    * GameCore 遊戲核心，包含各種資料數據等內容
+    * GameSave 遊戲存檔
+    * IFood 食物及物品介面
+    * PetLoader 寵物圖片載入器
+  * Graph 圖形渲染
+    * IGraph 動畫基本介面
+    * GraphCore 動畫顯示核心
+    * GraphHelper 動畫幫助
+    * GraphInfo 動畫資訊
+    * FoodAnimation 食物動畫，支援顯示前中後三層夾心動畫，不一定只用於食物，只是叫這個名字
+    * PNGAnimation 桌寵動態動畫元件
+    * Picture 桌寵靜態動畫元件
+  * Display 顯示
+    * basestyle/Theme 基礎風格主題
+    * Main.xaml 核心顯示元件
+      * MainDisplay 核心顯示方法
+      * MainLogic 核心顯示邏輯
+    * ToolBar 點擊人物時的工具欄
+    * MessageBar 人物說話時的對話框
+    * WorkTimer 運作計時器
