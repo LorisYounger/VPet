@@ -14,6 +14,8 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -39,7 +41,8 @@
       <HintPath>..\packages\LinePutScript.1.9.2\lib\net462\LinePutScript.dll</HintPath>
     </Reference>
     <Reference Include="LinePutScript.Localization.WPF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LinePutScript.Localization.WPF.1.0.6\lib\net462\LinePutScript.Localization.WPF.dll</HintPath>
+      <HintPath>
+        ..\packages\LinePutScript.Localization.WPF.1.0.6\lib\net462\LinePutScript.Localization.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Panuon.WPF, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Panuon.WPF.1.0.2\lib\net462\Panuon.WPF.dll</HintPath>
@@ -49,6 +52,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -67,7 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -75,9 +79,50 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="ViewModels\MainWindowVM.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\BrushToMediaColorConverter.cs" />
+    <Compile Include="Converters\CalculatorConverter.cs" />
+    <Compile Include="Converters\EqualsConverter.cs" />
+    <Compile Include="Converters\FalseToCollapsedConverter.cs" />
+    <Compile Include="Converters\FalseToHiddenConverter.cs" />
+    <Compile Include="Converters\MediaColorToBrushConverter.cs" />
+    <Compile Include="Converters\NotEqualsConverter.cs" />
+    <Compile Include="Converters\NullToFalseConverter.cs" />
+    <Compile Include="Converters\StringFormatConverter.cs" />
+    <Compile Include="Converters\RatioMarginConverter.cs" />
+    <Compile Include="Converters\MaxConverter.cs" />
+    <Compile Include="Converters\MarginConverter.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\INotifyPropertyChangedX.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\INotifyPropertyChangingX.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\ObservableClass.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\PropertyChangedXEventArgs.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\PropertyChangedXEventHandler.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\PropertyChangingXEventArgs.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\PropertyChangingXEventHandler.cs" />
+    <Compile Include="SimpleObservable\ObservableCommand\ExecuteAsyncEventHandler.cs" />
+    <Compile Include="SimpleObservable\ObservableCommand\ExecuteEventHandler.cs" />
+    <Compile Include="SimpleObservable\ObservableCommand\NotifyReceivedEventHandler.cs" />
+    <Compile Include="SimpleObservable\ObservableCommand\ObservableCommand.cs" />
+    <Compile Include="SimpleObservable\ObservableCommand\ObservableCommandT.cs" />
+    <Compile Include="Utils\ObservableEnumFlags.cs" />
+    <Compile Include="Utils\Expansions.cs" />
+    <Compile Include="Utils\HashCode.cs" />
+    <Compile Include="Utils\ObservableRange.cs" />
+    <Compile Include="Utils\ObservablePoint.cs" />
+    <Compile Include="Utils\ObservableRect.cs" />
+    <Compile Include="Utils\Utils.cs" />
+    <Compile Include="Resources\NativeResources.cs" />
+    <Compile Include="Usings.cs" />
+    <Page Include="NativeStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
+    <Compile Include="NativeStyles.xaml.cs">
+      <DependentUpon>NativeStyles.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +161,9 @@
       <Project>{dcad838a-1a02-4bdf-962c-fd47c6006d28}</Project>
       <Name>VPet-Simulator.Windows.Interface</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
