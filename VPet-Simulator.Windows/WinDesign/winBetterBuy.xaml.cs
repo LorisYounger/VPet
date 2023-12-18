@@ -354,6 +354,7 @@ namespace VPet_Simulator.Windows
         private void pagination_CurrentPageChanged(object sender, SelectedValueChangedRoutedEventArgs<int> e)
         {
             Search();
+            TbPage.Text = e.NewValue.ToString();
         }
 
         private void rMoney_Loaded(object sender, RoutedEventArgs e)
@@ -407,6 +408,15 @@ namespace VPet_Simulator.Windows
         {
             ((Button)sender).Content = "更好买".Translate() + mw.PrefixSave;
             ;
+        }
+
+        private void TbPage_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key ==  Key.Enter 
+                && int.TryParse(TbPage.Text?.Trim(), out int page))
+            {
+                pagination.CurrentPage = Math.Min(0, Math.Max(pagination.MaxPage, page));
+            }
         }
     }
 }

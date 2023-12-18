@@ -185,6 +185,8 @@
 
     <Style x:Key="StandardPaginationStyle" TargetType="{x:Type pu:Pagination}">
         <Setter Property="Height" Value="25" />
+        <Setter Property="ItemsWidth" Value="NaN" />
+        <Setter Property="ItemsPadding" Value="7,0" />
         <Setter Property="ItemsBackground" Value="{DynamicResource DARKPrimaryTrans4}" />
         <Setter Property="ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
         <Setter Property="ItemsSelectedBackground" Value="{DynamicResource DARKPrimary}" />
