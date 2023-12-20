@@ -71,6 +71,38 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\CustomizedSettingsPageVM.cs" />
+    <Compile Include="ViewModels\DiagnosticSettingsPageVM.cs" />
+    <Compile Include="ViewModels\ModSettingsPageVM.cs" />
+    <Compile Include="ViewModels\SystemSettingsPageVM.cs" />
+    <Compile Include="Views\CustomizedSettingsPage.xaml.cs">
+      <DependentUpon>CustomizedSettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DiagnosticSettingsPage.xaml.cs">
+      <DependentUpon>DiagnosticSettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ModSettingsPage.xaml.cs">
+      <DependentUpon>ModSettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SystemSettingsPage.xaml.cs">
+      <DependentUpon>SystemSettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\CustomizedSettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DiagnosticSettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GraphicsSettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InteractiveSettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -79,7 +111,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModels\GraphicsSettingsPageVM.cs" />
+    <Compile Include="ViewModels\InteractiveSettingsPageVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
+    <Compile Include="Views\GraphicsSettingsPage.xaml.cs">
+      <DependentUpon>GraphicsSettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InteractiveSettingsPage.xaml.cs">
+      <DependentUpon>InteractiveSettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -124,6 +164,14 @@
     <Compile Include="NativeStyles.xaml.cs">
       <DependentUpon>NativeStyles.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\ModSettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SystemSettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
