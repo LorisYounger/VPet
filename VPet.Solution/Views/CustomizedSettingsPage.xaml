@@ -1,0 +1,57 @@
+﻿<Page
+  x:Class="VPet.Solution.Views.CustomizedSettingsPage"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+  xmlns:local="clr-namespace:VPet.Solution.Views"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:pu="https://opensource.panuon.com/wpf-ui"
+  xmlns:vm="clr-namespace:VPet.Solution.ViewModels"
+  Title="CustomizedSettingsPage"
+  d:DataContext="{d:DesignInstance Type=vm:CustomizedSettingsPageVM}"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d">
+
+  <Grid>
+    <StackPanel>
+      <TextBlock Background="{x:Null}" TextWrapping="Wrap">
+        <Run
+          FontSize="18"
+          FontWeight="Bold"
+          Text="{ll:Str 自定义链接}" /><LineBreak />
+        <Run Text="{ll:Str '在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能'}" /><LineBreak />
+        <Run Text="{ll:Str '键盘快捷键编写方法请参考'}" /> <Hyperlink d:Click="sendkey_click">
+          <Run Text="{ll:Str '键盘快捷键 通用注解'}" />
+        </Hyperlink><LineBreak />
+        <Run Text="{ll:Str '右键进行排序/删除等操作'}" />
+      </TextBlock>
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Button
+          x:Name="btn_DIY"
+          Margin="4"
+          Padding="1"
+          d:Click="DIY_ADD_Click"
+          pu:ButtonHelper.CornerRadius="4"
+          Background="{DynamicResource SecondaryLight}"
+          Content="{ll:Str 添加新链接}" />
+        <Button
+          Grid.Column="1"
+          Margin="4"
+          Padding="1"
+          d:Click="DIY_Save_Click"
+          pu:ButtonHelper.CornerRadius="4"
+          Background="{DynamicResource SecondaryLight}"
+          Content="{ll:Str 保存设置}" />
+      </Grid>
+      <ScrollViewer>
+        <StackPanel x:Name="StackDIY" />
+      </ScrollViewer>
+    </StackPanel>
+  </Grid>
+</Page>

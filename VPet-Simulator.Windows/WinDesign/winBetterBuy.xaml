@@ -319,8 +319,19 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <pu:Pagination x:Name="pagination" Grid.Row="1" Style="{DynamicResource StandardPaginationStyle}"
-                    CurrentPageChanged="pagination_CurrentPageChanged" />
+            <Grid Grid.Row="1" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <pu:Pagination x:Name="pagination" Style="{DynamicResource StandardPaginationStyle}"
+                               CurrentPageChanged="pagination_CurrentPageChanged" />
+                <StackPanel Grid.Column="1" Margin="5,0,0,0" Orientation="Horizontal">
+                    <TextBox x:Name="TbPage" MinWidth="50" Style="{DynamicResource StandardTextBoxStyle}" 
+                         PreviewKeyDown="TbPage_PreviewKeyDown" />
+                    <TextBlock Margin="3,0,0,0" Text="页" VerticalAlignment="Center"/> 
+                </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </pu:WindowX>

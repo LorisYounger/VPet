@@ -1,0 +1,15 @@
+﻿<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:c="clr-namespace:VPet.House.Converters">
+  <c:MarginConverter x:Key="MarginConverter" />
+  <c:RatioMarginConverter x:Key="RatioMarginConverter" />
+  <c:CalculatorConverter x:Key="CalculatorConverter" />
+  <c:StringFormatConverter x:Key="StringFormatConverter" />
+  <c:BrushToMediaColorConverter x:Key="BrushToMediaColorConverter" />
+  <c:MaxConverter x:Key="MaxConverter" />
+  <c:FalseToHiddenConverter x:Key="FalseToHiddenConverter" />
+  <c:EqualsConverter x:Key="EqualsConverter" />
+  <c:NotEqualsConverter x:Key="NotEqualsConverter" />
+  <c:NullToFalseConverter x:Key="NullToFalseConverter" />
+</ResourceDictionary>
