@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Xml.Linq;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 
@@ -102,6 +103,13 @@ namespace VPet_Simulator.Windows
                         ls.Add(new Line(sub.Name, sub.info));
                     }
                     LocalizeCore.AddCulture(line.info, ls);
+                }
+
+                if(mw.CoreMODs.FirstOrDefault(x=>x.Name == Name) != null)
+                {
+                    Name += $"({"MOD名称重复".Translate()})";
+                    ErrorMessage = "MOD名称重复".Translate();
+                    return;
                 }
 
                 if (!IsOnMOD(mw))
