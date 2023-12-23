@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -263,18 +264,39 @@ public static class Extensions
             yield return new(index++, item);
     }
 
-    public static void SetDataContext<T>(this Window window)
+    /// <summary>
+    /// 设置视图模型
+    /// </summary>
+    /// <typeparam name="T">视图模型类型</typeparam>
+    /// <param name="window">窗口</param>
+    public static Lazy<T> SetViewModel<T>(this Window window, EventHandler? closedEvent = null)
         where T : new()
     {
-        window.DataContext = new T();
-        window.Closed += (s, e) =>
+        if (window.DataContext is null)
         {
-            try
+            window.DataContext = new T();
+            window.Closed += (s, e) =>
             {
-                window.DataContext = null;
-            }
-            catch { }
-        };
+                try
+                {
+                    window.DataContext = null;
+                }
+                catch { }
+            };
+            window.Closed += closedEvent;
+        }
+        return new(() => (T)window.DataContext);
+    }
+
+    /// <summary>
+    /// 设置视图模型
+    /// </summary>
+    /// <typeparam name="T">视图模型类型</typeparam>
+    /// <param name="page">页面</param>
+    public static Lazy<T> SetViewModel<T>(this Page page)
+        where T : new()
+    {
+        return new(() => (T)(page.DataContext ??= new T()));
     }
 }
 

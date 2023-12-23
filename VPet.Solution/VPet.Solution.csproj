@@ -71,6 +71,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Utils\ClearFocus.cs" />
+    <Compile Include="Utils\ElementHelper.cs" />
+    <Compile Include="Utils\FindTopParent.cs" />
     <Compile Include="ViewModels\CustomizedSettingsPageVM.cs" />
     <Compile Include="ViewModels\DiagnosticSettingsPageVM.cs" />
     <Compile Include="ViewModels\ModSettingsPageVM.cs" />
@@ -87,6 +90,18 @@
     <Compile Include="Views\SystemSettingsPage.xaml.cs">
       <DependentUpon>SystemSettingsPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="Converters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Templates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\CustomizedSettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

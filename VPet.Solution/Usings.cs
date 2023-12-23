@@ -1,3 +1,4 @@
+global using global::HKW.HKWUtils;
 global using global::HKW.HKWUtils.Observable;
 global using global::System;
 global using global::System.Collections.Generic;

@@ -133,4 +133,49 @@
     <Setter Property="pu:MenuItemHelper.ClickBackground" Value="{DynamicResource ClickColor}" />
     <Setter Property="pu:MenuItemHelper.CheckedBackground" Value="{DynamicResource CheckedColor}" />-->
   </Style>
+  <Style x:Key="Switch_BaseStyle" TargetType="pu:Switch">
+    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="Background" Value="{x:Null}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryDark}" />
+    <Setter Property="BoxHeight" Value="20" />
+    <Setter Property="CheckedBackground" Value="{DynamicResource Primary}" />
+    <Setter Property="CheckedBorderBrush" Value="{DynamicResource Primary}" />
+    <Setter Property="CheckedToggleBrush" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="ToggleBrush" Value="{DynamicResource PrimaryDark}" />
+    <Setter Property="ToggleShadowColor" Value="{x:Null}" />
+    <Setter Property="ToggleSize" Value="14" />
+  </Style>
+  <Style x:Key="Label_BaseStyle" TargetType="Label">
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Margin" Value="10,0,10,0" />
+    <Setter Property="Height" Value="30" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="{x:Null}" />
+  </Style>
+  <Style x:Key="NumberInput_BaseStyle" TargetType="pu:NumberInput">
+    <Setter Property="Height" Value="30" />
+    <Setter Property="Margin" Value="10,0,10,0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Background" Value="{x:Null}" />
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDarker}" />
+  </Style>
+  <Style x:Key="Button_BaseStyle" TargetType="Button">
+    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="Padding" Value="10,5,10,5" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="pu:ButtonHelper.CornerRadius" Value="4" />
+    <Setter Property="Background" Value="{DynamicResource SecondaryLight}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource SecondaryDark}" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+  <Style
+    x:Key="ComboBox_BaseStyle"
+    BasedOn="{StaticResource StandardComboBoxStyle}"
+    TargetType="ComboBox">
+    <Setter Property="Margin" Value="10,5,10,5" />
+  </Style>
 </ResourceDictionary>

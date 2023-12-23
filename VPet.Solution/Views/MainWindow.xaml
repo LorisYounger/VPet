@@ -1,5 +1,5 @@
 ﻿<pu:WindowX
-  x:Class="VPet.Solution.MainWindow"
+  x:Class="VPet.Solution.Views.MainWindow"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -23,34 +23,30 @@
       <ListBox x:Name="ListBox_Saves" />
     </Grid>
     <Grid Grid.Column="1">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition MinWidth="200" />
-        <ColumnDefinition MinWidth="100" />
-      </Grid.ColumnDefinitions>
-      <Grid Grid.Column="1">
-        <TextBox
-          x:Name="tb_seach_menu"
-          Margin="3,6,6,0"
-          VerticalAlignment="Top"
-          d:TextChanged="tb_seach_menu_textchange"
-          pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
-          FontSize="16"
-          Style="{DynamicResource StandardTextBoxStyle}" />
-        <ListBox
-          x:Name="ListMenu"
-          Margin="3,40,6,3"
-          pu:ListBoxHelper.CornerRadius="5"
-          pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
-          pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource SecondaryLight}"
-          Background="{DynamicResource SecondaryLighter}"
-          BorderBrush="{DynamicResource Primary}"
-          BorderThickness="2"
-          ScrollViewer.HorizontalScrollBarVisibility="Auto"
-          ScrollViewer.VerticalScrollBarVisibility="Auto" />
-      </Grid>
-      <GridSplitter Width="3" Background="{DynamicResource PrimaryDarker}" />
-      <Grid>
-        <TabControl
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <ListBox x:Name="ListBox_Main" Style="{DynamicResource SideMenuListBoxStyle}">
+        <ListBox.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal" />
+          </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+        <ListBoxItem x:Name="ListBoxItem_GraphicsSettings" Content="{ll:Str 图形}" />
+        <ListBoxItem x:Name="ListBoxItem_SystemSettings" Content="{ll:Str 系统}" />
+        <ListBoxItem x:Name="ListBoxItem_InteractiveSettings" Content="{ll:Str 互动}" />
+        <ListBoxItem x:Name="ListBoxItem_CustomizedSettings" Content="{ll:Str 自定}" />
+        <ListBoxItem x:Name="ListBoxItem_DiagnosticSettings" Content="{ll:Str 诊断}" />
+        <ListBoxItem x:Name="ListBoxItem_ModSettings" Content="{ll:Str Mod管理}" />
+      </ListBox>
+      <Frame
+        x:Name="Frame_Main"
+        Grid.Row="1"
+        Content="{Binding SelectedItem.Tag, ElementName=ListBox_Main}"
+        ContentRendered="Frame_Main_ContentRendered"
+        NavigationUIVisibility="Hidden" />
+      <!--<TabControl
           x:Name="MainTab"
           Grid.Column="1"
           Margin="5"
@@ -78,7 +74,7 @@
           <TabItem
             BorderBrush="{DynamicResource PrimaryDarker}"
             Foreground="{DynamicResource PrimaryText}"
-            Header="{ll:Str 图形}" />
+            Header="" />
           <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 系统}" />
           <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 互动}" />
           <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 自定}" />
@@ -93,8 +89,28 @@
           Background="{x:Null}"
           Content="版本v1.0 (655366666)"
           FontSize="10"
-          Foreground="Green" />
-      </Grid>
+          Foreground="Green" />-->
     </Grid>
+    <!--<Grid Grid.Column="1">
+        <TextBox
+          x:Name="tb_seach_menu"
+          Margin="3,6,6,0"
+          VerticalAlignment="Top"
+          d:TextChanged="tb_seach_menu_textchange"
+          pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
+          FontSize="16"
+          Style="{DynamicResource StandardTextBoxStyle}" />
+        <ListBox
+          x:Name="ListMenu"
+          Margin="3,40,6,3"
+          pu:ListBoxHelper.CornerRadius="5"
+          pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
+          pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource SecondaryLight}"
+          Background="{DynamicResource SecondaryLighter}"
+          BorderBrush="{DynamicResource Primary}"
+          BorderThickness="2"
+          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+          ScrollViewer.VerticalScrollBarVisibility="Auto" />
+      </Grid>-->
   </Grid>
 </pu:WindowX>
