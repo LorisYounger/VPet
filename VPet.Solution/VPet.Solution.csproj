@@ -71,6 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BoolInverter.cs" />
     <Compile Include="Utils\ClearFocus.cs" />
     <Compile Include="Utils\ElementHelper.cs" />
     <Compile Include="Utils\FindTopParent.cs" />

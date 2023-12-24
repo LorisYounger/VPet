@@ -12,4 +12,5 @@
   <c:EqualsConverter x:Key="EqualsConverter" />
   <c:NotEqualsConverter x:Key="NotEqualsConverter" />
   <c:NullToFalseConverter x:Key="NullToFalseConverter" />
+  <c:BoolInverter x:Key="BoolInverter" />
 </ResourceDictionary>

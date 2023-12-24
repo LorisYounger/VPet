@@ -160,10 +160,10 @@
   </Style>
   <Style x:Key="NumberInput_BaseStyle" TargetType="pu:NumberInput">
     <Setter Property="Height" Value="30" />
-    <Setter Property="Margin" Value="10,0,10,0" />
+    <Setter Property="Margin" Value="10,5,10,5" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Background" Value="{x:Null}" />
-    <Setter Property="FontSize" Value="16" />
+    <Setter Property="FontSize" Value="14" />
     <Setter Property="FontWeight" Value="Bold" />
     <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDarker}" />
   </Style>
@@ -185,5 +185,24 @@
     BasedOn="{StaticResource StandardComboBoxStyle}"
     TargetType="ComboBox">
     <Setter Property="Margin" Value="10,5,10,5" />
+  </Style>
+  <Style
+    x:Key="Expander_BaseStyle"
+    BasedOn="{StaticResource {x:Static pu:StyleKeys.ExpanderStyle}}"
+    TargetType="Expander">
+    <Setter Property="Margin" Value="10" />
+    <Setter Property="BorderBrush" Value="{DynamicResource SecondaryDark}" />
+    <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="BorderThickness" Value="2" />
+    <Setter Property="pu:ExpanderHelper.CornerRadius" Value="4" />
+    <Setter Property="pu:ExpanderHelper.ToggleArrowPlacement" Value="Right" />
+  </Style>
+  <Style
+    x:Key="Slider_BaseStyle"
+    BasedOn="{StaticResource StandardSliderStyle}"
+    TargetType="Slider">
+    <Setter Property="IsSnapToTickEnabled" Value="True" />
+    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
 </ResourceDictionary>
