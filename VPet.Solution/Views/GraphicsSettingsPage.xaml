@@ -14,15 +14,14 @@
   d:DesignHeight="450"
   d:DesignWidth="800"
   mc:Ignorable="d">
-
   <Grid>
     <Grid>
       <Grid.ColumnDefinitions>
         <ColumnDefinition MinWidth="300" />
-        <ColumnDefinition Width="Auto" />
-        <ColumnDefinition Width="Auto" MinWidth="100" />
+        <!--<ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" MinWidth="100" />-->
       </Grid.ColumnDefinitions>
-      <ScrollViewer>
+      <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
           <Grid MinHeight="40">
             <Grid.ColumnDefinitions>
@@ -32,6 +31,7 @@
               <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Label
+              HorizontalContentAlignment="Left"
               h:ElementHelper.UniformMinWidthGroup="A"
               Content="{ll:Str '置于顶层'}"
               Style="{DynamicResource Label_BaseStyle}" />
@@ -66,6 +66,7 @@
               <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Label
+              HorizontalContentAlignment="Left"
               h:ElementHelper.UniformMinWidthGroup="A"
               Content="Language"
               Style="{DynamicResource Label_BaseStyle}" />
@@ -115,13 +116,16 @@
               LargeChange=".1"
               Maximum="3"
               Minimum="0.5"
-              SmallChange=".05"
+              SmallChange="0.05"
               Style="{DynamicResource StandardSliderStyle}"
               TickFrequency="0.05"
               Value="1" />
             <pu:NumberInput
               Grid.Column="2"
               Foreground="{DynamicResource DARKPrimaryDarker}"
+              Interval="0.1"
+              Maximum="3"
+              Minimum="0.5"
               Style="{DynamicResource NumberInput_BaseStyle}"
               Value="{Binding Value, ElementName=Slider_Zoom}" />
           </Grid>
@@ -153,6 +157,9 @@
               Value="1000" />
             <pu:NumberInput
               Grid.Column="2"
+              Interval="10"
+              Maximum="1920"
+              Minimum="200"
               Style="{DynamicResource NumberInput_BaseStyle}"
               ToolTip="{ll:Str '桌宠图形渲染的分辨率,越高图形越清晰\&#13;但是高分辨率会占用更多内存\&#13;重启后生效'}"
               Value="{Binding Value, ElementName=Slider_Resolution}" />
@@ -210,7 +217,7 @@
               Grid.Column="1"
               d:Checked="StartPlace_Checked"
               d:Unchecked="StartPlace_Checked"
-              Content="{ll:Str 退出位置}"
+              Content="{ll:Str 保存为退出位置}"
               IsChecked="True"
               Style="{DynamicResource Switch_BaseStyle}"
               ToolTip="{ll:Str 游戏退出位置为下次桌宠启动出现的位置}" />
@@ -342,5 +349,26 @@
         </StackPanel>
       </ScrollViewer>
     </Grid>
+    <!--<Grid Grid.Column="1">
+        <TextBox
+          x:Name="tb_seach_menu"
+          Margin="3,6,6,0"
+          VerticalAlignment="Top"
+          d:TextChanged="tb_seach_menu_textchange"
+          pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
+          FontSize="16"
+          Style="{DynamicResource StandardTextBoxStyle}" />
+        <ListBox
+          x:Name="ListMenu"
+          Margin="3,40,6,3"
+          pu:ListBoxHelper.CornerRadius="5"
+          pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
+          pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource SecondaryLight}"
+          Background="{DynamicResource SecondaryLighter}"
+          BorderBrush="{DynamicResource Primary}"
+          BorderThickness="2"
+          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+          ScrollViewer.VerticalScrollBarVisibility="Auto" />
+      </Grid>-->
   </Grid>
 </Page>

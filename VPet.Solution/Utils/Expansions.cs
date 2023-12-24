@@ -27,6 +27,29 @@ public static class Extensions
         return source.IndexOf(value, comparisonType) >= 0;
     }
 
+    public static TSource MaxBy<TSource, TKey>(
+        this IEnumerable<TSource> source,
+        Func<TSource, TKey> keySelector
+    )
+    {
+        using IEnumerator<TSource> e = source.GetEnumerator();
+        if (e.MoveNext() is false)
+            return default;
+        TSource value = e.Current;
+        TKey key = keySelector(value);
+        while (e.MoveNext())
+        {
+            TSource nextValue = e.Current;
+            TKey nextKey = keySelector(nextValue);
+            if (Comparer<TKey>.Default.Compare(nextKey, key) > 0)
+            {
+                key = nextKey;
+                value = nextValue;
+            }
+        }
+        return value;
+    }
+
     //public static string GetSourceFile(this BitmapImage image)
     //{
     //    return ((FileStream)image.StreamSource).Name;

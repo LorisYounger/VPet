@@ -12,6 +12,8 @@
   Title="{ll:Str 'VPET 问题解决工具'}"
   Width="800"
   Height="450"
+  MinWidth="400"
+  MinHeight="200"
   d:DataContext="{d:DesignInstance Type=vm:MainWindowVM}"
   mc:Ignorable="d">
   <Grid>

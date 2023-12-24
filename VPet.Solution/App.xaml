@@ -6,8 +6,8 @@
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/Panuon.WPF.UI;component/Control.xaml" />
         <ResourceDictionary Source="/VPet-Simulator.Windows.Interface;component/ResourceStyle.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Panuon.WPF.UI;component/Control.xaml" />
         <ResourceDictionary Source="Converters.xaml" />
         <ResourceDictionary Source="Templates.xaml" />
         <ResourceDictionary Source="Styles.xaml" />

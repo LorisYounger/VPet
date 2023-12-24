@@ -192,9 +192,7 @@ public static class ElementHelper
             var topParent = element.FindTopParentOnVisualTree();
             var groups = _uniformMinWidthGroups[topParent];
             var group = groups[groupName];
-            var maxWidthElement = group.Elements.First(
-                i => i.ActualWidth == group.Elements.Max(e => e.ActualWidth)
-            );
+            var maxWidthElement = group.Elements.MaxBy(i => i.ActualWidth);
             if (maxWidthElement is null)
                 return;
 
