@@ -353,6 +353,8 @@ namespace VPet_Simulator.Windows
 
         private void pagination_CurrentPageChanged(object sender, SelectedValueChangedRoutedEventArgs<int> e)
         {
+            if (!AllowChange)
+                return;
             Search();
             TbPage.Text = e.NewValue.ToString();
         }
