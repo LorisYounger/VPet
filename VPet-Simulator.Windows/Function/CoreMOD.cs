@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Xml.Linq;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 
@@ -104,6 +105,13 @@ namespace VPet_Simulator.Windows
                     LocalizeCore.AddCulture(line.info, ls);
                 }
 
+                if (mw.CoreMODs.FirstOrDefault(x => x.Name == Name) != null)
+                {
+                    Name += $"({"MOD名称重复".Translate()})";
+                    ErrorMessage = "MOD名称重复".Translate();
+                    return;
+                }
+
                 if (!IsOnMOD(mw))
                 {
                     Tag.Add("该模组已停用");
@@ -155,6 +163,8 @@ namespace VPet_Simulator.Windows
                                 var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
                                 foreach (ILine li in tmp)
                                 {
+                                    if (li.Name != "food")
+                                        continue;
                                     string tmps = li.Find("name").info;
                                     mw.Foods.RemoveAll(x => x.Name == tmps);
                                     mw.Foods.Add(LPSConvert.DeserializeObject<Food>(li));

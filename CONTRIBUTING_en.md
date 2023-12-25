@@ -1,6 +1,6 @@
 # Contributing
 
-[简体中文](./CONTRIBUTING.md) | English
+[简体中文](./CONTRIBUTING.md) | [繁體中文](./CONTRIBUTING_zht.md) | English
 
 Welcome to participate in development! To ensure code maintainability and playability, if you wish to develop new features or gameplay, please first contact me (by sending a [mail](mailto:zoujin.dev@exlb.org) or opening an [Issue](https://github.com/LorisYounger/VPet/issues/new)) with your idea. This is to make sure your contribution fits the game, and will not get outright rejected for being unfitting (causing your effort to be wasted). You don't need to contact me regarding fixing errors or bugs - simply send a PR in that case.
 

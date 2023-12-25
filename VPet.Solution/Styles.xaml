@@ -1,0 +1,208 @@
+﻿<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:pu="https://opensource.panuon.com/wpf-ui">
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary Source="pack://application:,,,/Panuon.WPF.UI;component/Control.xaml" />
+  </ResourceDictionary.MergedDictionaries>
+  <Style
+    x:Key="Button_Add"
+    BasedOn="{StaticResource {x:Type Button}}"
+    TargetType="Button">
+    <Setter Property="Background" Value="{StaticResource DARKPrimary}" />
+    <Setter Property="pu:ButtonHelper.ShadowColor" Value="{StaticResource ShadowColor}" />
+    <Setter Property="FontSize" Value="24" />
+    <Setter Property="Padding" Value="10" />
+    <Setter Property="Margin" Value="10" />
+    <Setter Property="pu:ButtonHelper.CornerRadius" Value="24" />
+  </Style>
+  <Style
+    x:Key="Button_Cancel"
+    BasedOn="{StaticResource ThemedButtonStyle}"
+    TargetType="Button">
+    <Setter Property="Background" Value="{StaticResource PrimaryLight}" />
+    <Setter Property="Foreground" Value="{StaticResource SecondaryText}" />
+  </Style>
+  <Style
+    x:Key="Button_HiddenOnTagNull"
+    BasedOn="{StaticResource ThemedButtonStyle}"
+    TargetType="Button">
+    <Setter Property="Visibility" Value="Hidden" />
+    <Style.Triggers>
+      <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}" Value="{x:Null}">
+        <Setter Property="Visibility" Value="Visible" />
+      </DataTrigger>
+    </Style.Triggers>
+  </Style>
+  <Style
+    x:Key="Button_CollapsedOnTagNull"
+    BasedOn="{StaticResource ThemedButtonStyle}"
+    TargetType="Button">
+    <Setter Property="Visibility" Value="Collapsed" />
+    <Style.Triggers>
+      <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}" Value="{x:Null}">
+        <Setter Property="Visibility" Value="Visible" />
+      </DataTrigger>
+    </Style.Triggers>
+  </Style>
+  <Style
+    x:Key="TextBlock_Wrap"
+    BasedOn="{StaticResource {x:Type TextBlock}}"
+    TargetType="TextBlock">
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Mode=Self}}" />
+  </Style>
+  <Style
+    x:Key="TextBlock_BaseStyle"
+    BasedOn="{StaticResource {x:Type TextBlock}}"
+    TargetType="TextBlock">
+    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Mode=Self}}" />
+  </Style>
+  <Style
+    x:Key="TextBlock_LeftCenter"
+    BasedOn="{StaticResource {x:Type TextBlock}}"
+    TargetType="TextBlock">
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Mode=Self}}" />
+  </Style>
+  <Style
+    x:Key="TextBox_Wrap"
+    BasedOn="{StaticResource {x:Type TextBox}}"
+    TargetType="TextBox">
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Top" />
+    <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Mode=Self}}" />
+  </Style>
+  <Style
+    x:Key="TextBox_Center"
+    BasedOn="{StaticResource {x:Type TextBox}}"
+    TargetType="TextBox">
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Mode=Self}}" />
+  </Style>
+  <Style
+    x:Key="TextBox_LeftCenter"
+    BasedOn="{StaticResource {x:Type TextBox}}"
+    TargetType="TextBox">
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Mode=Self}}" />
+  </Style>
+  <Style x:Key="WindowXStyle" TargetType="pu:WindowX">
+    <Setter Property="pu:WindowXCaption.Background" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:WindowXCaption.Foreground" Value="{DynamicResource DARKPrimaryText}" />
+  </Style>
+  <Style
+    x:Key="Menu_Style"
+    BasedOn="{StaticResource {x:Static pu:StyleKeys.MenuStyle}}"
+    TargetType="Menu">
+    <Setter Property="Height" Value="NaN" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:MenuHelper.CornerRadius" Value="4" />
+
+    <Setter Property="pu:DropDownHelper.CornerRadius" Value="4" />
+    <!--    -->
+    <Setter Property="pu:MenuHelper.TopLevelItemsBorderThickness" Value="0" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsPadding" Value="5,0,5,0" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsMargin" Value="0" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsHorizontalContentAlignment" Value="Center" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsBackground" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsForeground" Value="{DynamicResource DARKPrimaryText}" />
+    <!--    -->
+    <Setter Property="pu:MenuHelper.SubmenuItemsBorderThickness" Value="0" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsBorderBrush" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsWidth" Value="NaN" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsHeight" Value="NaN" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsPadding" Value="5" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsMargin" Value="0" />
+    <!--<Setter Property="pu:MenuHelper.SubmenuItemsCornerRadius" Value="4" />-->
+    <Setter Property="pu:MenuHelper.SubmenuItemsBackground" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsForeground" Value="{DynamicResource DARKPrimaryText}" />
+    <!--<Setter Property="Width" Value="NaN" />
+    <Setter Property="Height" Value="NaN" />
+    <Setter Property="Padding" Value="5" />
+    <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}" />
+    <Setter Property="FontSize" Value="{DynamicResource BodyFontSize}" />
+    <Setter Property="pu:MenuItemHelper.HoverBackground" Value="{DynamicResource HoverColor}" />
+    <Setter Property="pu:MenuItemHelper.ClickBackground" Value="{DynamicResource ClickColor}" />
+    <Setter Property="pu:MenuItemHelper.CheckedBackground" Value="{DynamicResource CheckedColor}" />-->
+  </Style>
+  <Style x:Key="Switch_BaseStyle" TargetType="pu:Switch">
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="Background" Value="{x:Null}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryDark}" />
+    <Setter Property="BoxHeight" Value="20" />
+    <Setter Property="CheckedBackground" Value="{DynamicResource Primary}" />
+    <Setter Property="CheckedBorderBrush" Value="{DynamicResource Primary}" />
+    <Setter Property="CheckedToggleBrush" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="ToggleBrush" Value="{DynamicResource PrimaryDark}" />
+    <Setter Property="ToggleShadowColor" Value="{x:Null}" />
+    <Setter Property="ToggleSize" Value="14" />
+  </Style>
+  <Style x:Key="Label_BaseStyle" TargetType="Label">
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Margin" Value="10,0,10,0" />
+    <Setter Property="Height" Value="30" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="{x:Null}" />
+  </Style>
+  <Style x:Key="NumberInput_BaseStyle" TargetType="pu:NumberInput">
+    <Setter Property="Height" Value="30" />
+    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Background" Value="{x:Null}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDarker}" />
+  </Style>
+  <Style
+    x:Key="Button_BaseStyle"
+    BasedOn="{StaticResource {x:Type Button}}"
+    TargetType="Button">
+    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="Padding" Value="10,5,10,5" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="pu:ButtonHelper.CornerRadius" Value="4" />
+    <Setter Property="Background" Value="{DynamicResource SecondaryLight}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource SecondaryDark}" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+  <Style
+    x:Key="ComboBox_BaseStyle"
+    BasedOn="{StaticResource StandardComboBoxStyle}"
+    TargetType="ComboBox">
+    <Setter Property="Margin" Value="10,5,10,5" />
+  </Style>
+  <Style
+    x:Key="Expander_BaseStyle"
+    BasedOn="{StaticResource {x:Static pu:StyleKeys.ExpanderStyle}}"
+    TargetType="Expander">
+    <Setter Property="Margin" Value="10" />
+    <Setter Property="BorderBrush" Value="{DynamicResource SecondaryDark}" />
+    <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="BorderThickness" Value="2" />
+    <Setter Property="pu:ExpanderHelper.CornerRadius" Value="4" />
+    <Setter Property="pu:ExpanderHelper.ToggleArrowPlacement" Value="Right" />
+  </Style>
+  <Style
+    x:Key="Slider_BaseStyle"
+    BasedOn="{StaticResource StandardSliderStyle}"
+    TargetType="Slider">
+    <Setter Property="IsSnapToTickEnabled" Value="True" />
+    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+</ResourceDictionary>

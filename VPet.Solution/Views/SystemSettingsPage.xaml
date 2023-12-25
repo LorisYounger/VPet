@@ -1,0 +1,326 @@
+﻿<Page
+  x:Class="VPet.Solution.Views.SystemSettingsPage"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:h="clr-namespace:HKW.WPF.Helpers"
+  xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+  xmlns:local="clr-namespace:VPet.Solution.Views"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:pu="https://opensource.panuon.com/wpf-ui"
+  xmlns:sys="clr-namespace:System;assembly=mscorlib"
+  xmlns:vm="clr-namespace:VPet.Solution.ViewModels"
+  Title="SystemSettingsPage"
+  d:DataContext="{d:DesignInstance Type=vm:SystemSettingsPageVM}"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d">
+  <Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <StackPanel>
+        <Grid MinHeight="40">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <Label
+            HorizontalContentAlignment="Left"
+            h:ElementHelper.UniformMinWidthGroup="A"
+            Content="{ll:Str 自动保存频率}"
+            Style="{DynamicResource Label_BaseStyle}"
+            ToolTip="{ll:Str 在指定时间后自动保存游戏数据}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_BaseStyle}"
+            Text="{ll:Str 每次间隔}" />
+          <ComboBox
+            x:Name="CBAutoSave"
+            Grid.Column="2"
+            d:SelectionChanged="CBAutoSave_SelectionChanged"
+            SelectedIndex="3"
+            Style="{DynamicResource ComboBox_BaseStyle}">
+            <!--<ComboBoxItem Content="{ll:Str 关闭自动保存}">
+            <ComboBoxItem.Tag>
+              <sys:Int32>-1</sys:Int32>
+            </ComboBoxItem.Tag>
+          </ComboBoxItem>
+          <ComboBoxItem Content="{ll:Str 每2分钟一次}">
+            <ComboBoxItem.Tag>
+              <sys:Int32>2</sys:Int32>
+            </ComboBoxItem.Tag>
+          </ComboBoxItem>
+          <ComboBoxItem Content="{ll:Str 每5分钟一次}">
+            <ComboBoxItem.Tag>
+              <sys:Int32>5</sys:Int32>
+            </ComboBoxItem.Tag>
+          </ComboBoxItem>
+          <ComboBoxItem Content="{ll:Str 每10分钟一次}">
+            <ComboBoxItem.Tag>
+              <sys:Int32>10</sys:Int32>
+            </ComboBoxItem.Tag>
+          </ComboBoxItem>
+          <ComboBoxItem Content="{ll:Str 每20分钟一次}">
+            <ComboBoxItem.Tag>
+              <sys:Int32>20</sys:Int32>
+            </ComboBoxItem.Tag>
+          </ComboBoxItem>
+          <ComboBoxItem Content="{ll:Str 每半小时一次}">
+            <ComboBoxItem.Tag>
+              <sys:Int32>30</sys:Int32>
+            </ComboBoxItem.Tag>
+          </ComboBoxItem>
+          <ComboBoxItem Content="{ll:Str 每小时一次}">
+            <ComboBoxItem.Tag>
+              <sys:Int32>60</sys:Int32>
+            </ComboBoxItem.Tag>
+          </ComboBoxItem>-->
+          </ComboBox>
+          <TextBlock
+            Grid.Column="3"
+            Style="{DynamicResource TextBlock_BaseStyle}"
+            Text="{ll:Str 分钟}" />
+        </Grid>
+        <Grid MinHeight="40">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+          <Label
+            HorizontalContentAlignment="Left"
+            h:ElementHelper.UniformMinWidthGroup="A"
+            Content="{ll:Str 备份设置}"
+            Style="{DynamicResource Label_BaseStyle}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_BaseStyle}"
+            Text="{ll:Str 备份数量}" />
+          <pu:NumberInput
+            x:Name="numBackupSaveMaxNum"
+            Grid.Column="2"
+            d:ValueChanged="numBackupSaveMaxNum_ValueChanged"
+            Minimum="1"
+            Style="{DynamicResource NumberInput_BaseStyle}"
+            Value="20" />
+        </Grid>
+        <!--<Grid Margin="0,5,0,0">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+          </Grid.RowDefinitions>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="15" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="1*" />
+          </Grid.ColumnDefinitions>
+          <TextBlock
+            Margin="0,6,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Background="{x:Null}"
+            TextWrapping="Wrap">
+            <Run
+              FontSize="18"
+              FontWeight="Bold"
+              Text="{ll:Str 从备份中还原}" /><LineBreak />
+            <Run Text="{ll:Str '虚拟桌宠模拟器在每次保存的时候都会备份上次储存的存档, 当原始存档丢失,受损或误操作时, 就可以还原他们'}" />
+          </TextBlock>
+          <TextBlock
+            Grid.Row="1"
+            VerticalAlignment="Center"
+            Text="{ll:Str 加载存档}" />
+          <Button
+            x:Name="BtnSaveReload"
+            Grid.Row="1"
+            Grid.Column="3"
+            Margin="5"
+            Padding="1"
+            d:Click="BtnSaveReload_Click"
+            pu:ButtonHelper.CornerRadius="4"
+            Background="{DynamicResource SecondaryLight}"
+            Content="{ll:Str 加载}"
+            ToolTip="{ll:Str 加载上次保存的存档}" />
+          <ComboBox
+            x:Name="CBSaveReLoad"
+            Grid.Row="1"
+            Grid.Column="2"
+            d:MouseEnter="CBSaveReLoad_MouseEnter"
+            FontSize="16"
+            SelectedIndex="3"
+            Style="{DynamicResource StandardComboBoxStyle}" />
+        </Grid>-->
+        <Grid MinHeight="40">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+          <Label
+            HorizontalContentAlignment="Left"
+            h:ElementHelper.UniformMinWidthGroup="A"
+            Content="{ll:Str 聊天设置}"
+            Style="{DynamicResource Label_BaseStyle}" />
+          <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <RadioButton
+              x:Name="RBCGPTUseLB"
+              d:Checked="CGPType_Checked"
+              Content="{ll:Str '使用桌宠选项式\&#13;聊天功能'}"
+              GroupName="cgpttype"
+              IsChecked="True"
+              Style="{DynamicResource StandardRadioButtonStyle}"
+              ToolTip="{ll:Str 支持MOD与创意工坊添加聊天内容}" />
+            <RadioButton
+              x:Name="RBCGPTClose"
+              Grid.Column="1"
+              d:Checked="CGPType_Checked"
+              Content="{ll:Str '关闭聊天框'}"
+              GroupName="cgpttype"
+              Style="{DynamicResource StandardRadioButtonStyle}" />
+            <Grid Grid.Row="1" Grid.ColumnSpan="2">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <RadioButton
+                x:Name="RBCGPTDIY"
+                d:Checked="CGPType_Checked"
+                Content="{ll:Str '自定义聊天接口'}"
+                GroupName="cgpttype"
+                Style="{DynamicResource StandardRadioButtonStyle}" />
+              <ComboBox
+                x:Name="cbChatAPISelect"
+                Grid.Column="1"
+                d:SelectionChanged="cbChatAPISelect_SelectionChanged"
+                Style="{DynamicResource ComboBox_BaseStyle}" />
+              <Button
+                x:Name="BtnCGPTReSet"
+                Grid.Column="2"
+                d:Click="ChatGPT_Reset_Click"
+                Background="{DynamicResource SecondaryLight}"
+                Content="{ll:Str 初始化桌宠聊天程序}"
+                Style="{DynamicResource Button_BaseStyle}" />
+            </Grid>
+          </Grid>
+        </Grid>
+        <!--<Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="15" />
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="35" />
+          </Grid.RowDefinitions>
+          <TextBlock
+            x:Name="tbMode"
+            Grid.Row="0"
+            VerticalAlignment="Center"
+            Text="{ll:Str 使用模式}" />
+          <TextBlock
+            Grid.Row="1"
+            VerticalAlignment="Center"
+            Text="{ll:Str 相关功能}" />
+          <Grid Grid.Column="2">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+        -->
+        <!--<RadioButton x:Name="RBCGPTUseAPI" Grid.Column="1" Checked="CGPType_Checked"
+                        Content="{ll:Str '使用从ChatGPT\&#13;申请的的API'}" GroupName="cgpttype"
+                        Style="{DynamicResource StandardRadioButtonStyle}"
+                        ToolTip="{ll:Str 需要去OpenAI官网申请}" />-->
+        <!--
+          </Grid>
+        </Grid>-->
+        <!--<Grid MinHeight="40">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+          <Label HorizontalContentAlignment="Left"  h:ElementHelper.UniformMinWidthGroup="A" Content="{ll:Str 游戏操作}" Style="{DynamicResource Label_BaseStyle}" />
+          <Button
+            Grid.Column="1"
+            d:Click="save_click"
+            Content="{ll:Str 保存游戏}"
+            Style="{DynamicResource Button_BaseStyle}"
+            ToolTip="{ll:Str '手动保存桌宠存档,就算不手动保存,桌宠也会在退出的时候自动保存'}" />
+          <Button
+            Grid.Column="2"
+            d:Click="restart_click"
+            pu:ButtonHelper.CornerRadius="4"
+            Content="{ll:Str 重新开始}"
+            Style="{DynamicResource Button_BaseStyle}"
+            ToolTip="{ll:Str '重新开始新游戏,重置统计等信息\&#13;对于想要获得脱离超模从而获得成就非常有帮助'}" />
+          <Button
+            x:Name="btn_cleancache"
+            Grid.Column="3"
+            d:Click="cleancache_click"
+            pu:ButtonHelper.CornerRadius="4"
+            Content="{ll:Str 清理缓存}"
+            Style="{DynamicResource Button_BaseStyle}"
+            ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
+        </Grid>-->
+        <!--<Grid MinHeight="40">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <Label HorizontalContentAlignment="Left"
+            h:ElementHelper.UniformMinWidthGroup="A"
+            Content="{ll:Str 桌宠多开}"
+            Style="{DynamicResource Label_BaseStyle}"
+            ToolTip="{ll:Str '支持多开多个桌宠, 这些桌宠将会有独立的设置与存档\&#13;如果画师能够足够勤奋,未来可以看到这些多开的桌宠之间的互动'}" />
+        -->
+        <!--  新建要弹个窗写入存档名称  -->
+        <!--
+          <Button
+            Grid.Column="1"
+            d:Click="btn_mutinew_click"
+            Content="{ll:Str 新建存档}"
+            Style="{DynamicResource Button_BaseStyle}"
+            ToolTip="{ll:Str 新建多开存档}" />
+          <Button
+            Grid.Column="2"
+            d:Click="btn_muti_open_click"
+            Content="{ll:Str 打开存档}"
+            Style="{DynamicResource Button_BaseStyle}"
+            ToolTip="{ll:Str 打开当前选择的多开存档}" />
+        -->
+        <!--  存档列表, 或许应该用个大一点的  -->
+        <!--
+          <ComboBox Grid.Column="3" Style="{DynamicResource ComboBox_BaseStyle}" />
+          <Button
+            x:Name="btn_mutidel"
+            Grid.Column="4"
+            d:Click="btn_mutidel_Click"
+            Content="{ll:Str 删除存档}"
+            Style="{DynamicResource Button_BaseStyle}"
+            ToolTip="{ll:Str 删除当前选择的多开存档}" />
+        </Grid>-->
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Page>
