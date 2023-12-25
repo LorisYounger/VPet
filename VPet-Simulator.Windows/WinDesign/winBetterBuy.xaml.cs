@@ -415,7 +415,7 @@ namespace VPet_Simulator.Windows
             if(e.Key ==  Key.Enter 
                 && int.TryParse(TbPage.Text?.Trim(), out int page))
             {
-                pagination.CurrentPage = Math.Min(0, Math.Max(pagination.MaxPage, page));
+                pagination.CurrentPage = Math.Max(0, Math.Min(pagination.MaxPage, page));
             }
         }
     }
