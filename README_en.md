@@ -47,6 +47,8 @@ Feature requests and pull requests are welcome! You can take our code and modify
 
 Steam Workshop mods are supported. With mods, you can add your own pets (animations/interactions), and share them with others through the Workshop.
 
+MOD Maker:  https://github.com/LorisYounger/VPet.ModMaker
+
 The following contents can be added or modified by Workshop mods:
 
 * Pet animations

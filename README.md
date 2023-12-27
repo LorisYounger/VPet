@@ -49,6 +49,8 @@
 
 该游戏支持创意工坊,您可以制作别的人物桌宠动画或者互动,并上传至创意工坊分享给更多人使用.
 
+MOD制作器:  https://github.com/LorisYounger/VPet.ModMaker
+
 创意工坊支持添加/修改以下内容
 
 * 桌宠动画
