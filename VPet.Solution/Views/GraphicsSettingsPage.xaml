@@ -38,17 +38,15 @@
             <pu:Switch
               x:Name="TopMostBox"
               Grid.Column="1"
-              d:Checked="TopMostBox_Checked"
-              d:Unchecked="TopMostBox_Unchecked"
               Content="{ll:Str '将桌宠置于顶层'}"
+              IsChecked="{Binding GraphicsSettings.TopMost}"
               Style="{DynamicResource Switch_BaseStyle}"
               ToolTip="{ll:Str '将桌宠置于顶层'}" />
             <pu:Switch
               x:Name="HitThroughBox"
               Grid.Column="2"
-              d:Checked="HitThroughBox_Checked"
-              d:Unchecked="HitThroughBox_Checked"
               Content="{ll:Str '鼠标穿透'}"
+              IsChecked="{Binding GraphicsSettings.HitThrough}"
               Style="{DynamicResource Switch_BaseStyle}"
               ToolTip="{ll:Str '鼠标将会穿过桌宠到下方内容,不打扰操作\&#13;该选项'}" />
             <pu:Switch
@@ -73,7 +71,7 @@
             <ComboBox
               x:Name="LanguageBox"
               Grid.Column="1"
-              d:SelectionChanged="LanguageBox_SelectionChanged"
+              SelectedItem="{Binding GraphicsSettings.Language}"
               Style="{DynamicResource ComboBox_BaseStyle}" />
           </Grid>
           <Grid MinHeight="40">
@@ -89,9 +87,8 @@
             <pu:Switch
               x:Name="FullScreenBox"
               Grid.Column="1"
-              d:Checked="FullScreenBox_Check"
-              d:Unchecked="FullScreenBox_Check"
               Content="{ll:Str 支持更大缩放倍率}"
+              IsChecked="{Binding GraphicsSettings.IsBiggerScreen}"
               Style="{DynamicResource Switch_BaseStyle}"
               ToolTip="{ll:Str 解锁缩放限制}" />
           </Grid>
@@ -109,17 +106,13 @@
             <Slider
               x:Name="Slider_Zoom"
               Grid.Column="1"
-              Margin="10,0,10,0"
-              VerticalAlignment="Center"
-              d:PreviewMouseUp="Slider_Zoom_MouseUp"
-              IsSnapToTickEnabled="True"
-              LargeChange=".1"
+              LargeChange="0.1"
               Maximum="3"
               Minimum="0.5"
               SmallChange="0.05"
-              Style="{DynamicResource StandardSliderStyle}"
+              Style="{DynamicResource Slider_BaseStyle}"
               TickFrequency="0.05"
-              Value="1" />
+              Value="{Binding GraphicsSettings.ZoomLevel}" />
             <pu:NumberInput
               Grid.Column="2"
               Foreground="{DynamicResource DARKPrimaryDarker}"
@@ -143,18 +136,14 @@
             <Slider
               x:Name="Slider_Resolution"
               Grid.Column="1"
-              Margin="10,0,10,0"
-              VerticalAlignment="Center"
-              d:PreviewMouseUp="Slider_Resolution_MouseUp"
-              IsSnapToTickEnabled="True"
               LargeChange="50"
               Maximum="1920"
               Minimum="200"
-              SmallChange="20"
-              Style="{DynamicResource StandardSliderStyle}"
+              SmallChange="10"
+              Style="{DynamicResource Slider_BaseStyle}"
               TickFrequency="10"
               ToolTip="{ll:Str '桌宠图形渲染的分辨率,越高图形越清晰\&#13;但是高分辨率会占用更多内存\&#13;重启后生效'}"
-              Value="1000" />
+              Value="{Binding GraphicsSettings.Resolution}" />
             <pu:NumberInput
               Grid.Column="2"
               Interval="10"
@@ -177,8 +166,8 @@
             <ComboBox
               x:Name="ThemeBox"
               Grid.Column="1"
-              d:SelectionChanged="ThemeBox_SelectionChanged"
               IsEnabled="False"
+              SelectedItem="{Binding GraphicsSettings.Theme}"
               Style="{DynamicResource ComboBox_BaseStyle}" />
           </Grid>
           <Grid MinHeight="40">
@@ -194,8 +183,8 @@
             <ComboBox
               x:Name="FontBox"
               Grid.Column="1"
-              d:SelectionChanged="FontBox_SelectionChanged"
               IsEnabled="False"
+              SelectedItem="{Binding GraphicsSettings.Font}"
               Style="{DynamicResource ComboBox_BaseStyle}" />
           </Grid>
           <Grid MinHeight="40">
@@ -215,35 +204,24 @@
             <pu:Switch
               x:Name="StartPlace"
               Grid.Column="1"
-              d:Checked="StartPlace_Checked"
-              d:Unchecked="StartPlace_Checked"
               Content="{ll:Str 保存为退出位置}"
-              IsChecked="True"
+              IsChecked="{Binding GraphicsSettings.StartRecordLast}"
               Style="{DynamicResource Switch_BaseStyle}"
               ToolTip="{ll:Str 游戏退出位置为下次桌宠启动出现的位置}" />
-            <TextBox
-              x:Name="TextBoxStartUpX"
-              Grid.Column="2"
-              Margin="0,0,5,0"
-              d:TextChanged="TextBoxStartUp_TextChanged"
-              pu:IconHelper.Margin="5,0,0,0"
-              pu:TextBoxHelper.Icon="X"
-              pu:TextBoxHelper.InputLimit="Digit"
-              pu:TextBoxHelper.Watermark="{ll:Str X轴}"
-              Style="{DynamicResource StandardTextBoxStyle}"
-              ToolTip="{ll:Str X轴}" />
-            <TextBox
-              x:Name="TextBoxStartUpY"
-              Grid.Column="3"
-              Margin="0,0,5,0"
-              d:TextChanged="TextBoxStartUp_TextChanged"
-              pu:IconHelper.Margin="5,0,0,0"
-              pu:TextBoxHelper.Icon="Y"
-              pu:TextBoxHelper.InputLimit="Digit"
-              pu:TextBoxHelper.Watermark="{ll:Str Y轴}"
-              FontSize="16"
-              Style="{DynamicResource StandardTextBoxStyle}"
-              ToolTip="{ll:Str Y轴}" />
+            <DockPanel Grid.Column="2">
+              <Label Content="{ll:Str X轴}" Style="{DynamicResource Label_BaseStyle}" />
+              <pu:NumberInput
+                x:Name="TextBoxStartUpX"
+                Style="{DynamicResource NumberInput_BaseStyle}"
+                Value="{Binding GraphicsSettings.StartRecordPoint.X}" />
+            </DockPanel>
+            <DockPanel Grid.Column="3">
+              <Label Content="{ll:Str Y轴}" Style="{DynamicResource Label_BaseStyle}" />
+              <pu:NumberInput
+                x:Name="TextBoxStartUpY"
+                Style="{DynamicResource NumberInput_BaseStyle}"
+                Value="{Binding GraphicsSettings.StartRecordPoint.Y}" />
+            </DockPanel>
             <Button
               x:Name="BtnStartUpGet"
               Grid.Column="4"
@@ -284,17 +262,15 @@
             <pu:Switch
               x:Name="StartUpBox"
               Grid.Column="1"
-              d:Checked="StartUpBox_Checked"
-              d:Unchecked="StartUpBox_Checked"
               Content="{ll:Str 开机启动}"
+              IsChecked="{Binding GraphicsSettings.StartUPBoot}"
               Style="{DynamicResource Switch_BaseStyle}"
               ToolTip="{ll:Str '该游戏随着开机启动该程序\&#13;如需卸载游戏\&#13;请关闭该选项'}" />
             <pu:Switch
               x:Name="StartUpSteamBox"
               Grid.Column="2"
-              d:Checked="StartUpSteamBox_Checked"
-              d:Unchecked="StartUpSteamBox_Checked"
               Content="{ll:Str 从Steam启动}"
+              IsChecked="{Binding GraphicsSettings.StartUPBootSteam}"
               Style="{DynamicResource Switch_BaseStyle}"
               ToolTip="{ll:Str '从Steam启动该游戏, 统计时长不能停'}" />
           </Grid>
@@ -340,9 +316,8 @@
             <pu:Switch
               x:Name="SwitchHideFromTaskControl"
               Grid.Column="1"
-              d:Checked="SwitchHideFromTaskControl_OnChecked"
-              d:Unchecked="SwitchHideFromTaskControl_OnChecked"
               Content="{ll:Str '在任务切换器中隐藏窗口'}"
+              IsChecked="{Binding GraphicsSettings.HideFromTaskControl}"
               Style="{DynamicResource Switch_BaseStyle}"
               ToolTip="{ll:Str '在Alt+Tab中隐藏'}" />
           </Grid>
