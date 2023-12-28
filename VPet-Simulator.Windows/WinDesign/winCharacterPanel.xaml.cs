@@ -34,15 +34,18 @@ namespace VPet_Simulator.Windows
 
         private void Statistics_StatisticChanged(Interface.Statistics sender, string name, LinePutScript.SetObject value)
         {
-            var v = StatList.FirstOrDefault(x => x.StatId == name);
-            if (v != null)
+            Dispatcher.Invoke(() =>
             {
-                v.StatCount = value.GetDouble();
-            }
-            else
-            {
-                StatList.Add(new StatInfo(name, value.GetDouble()));
-            }
+                var v = StatList.FirstOrDefault(x => x.StatId == name);
+                if (v != null)
+                {
+                    v.StatCount = value.GetDouble();
+                }
+                else
+                {
+                    StatList.Add(new StatInfo(name, value.GetDouble()));
+                }
+            });
         }
 
         private ObservableCollection<StatInfo> StatList { get; set; } = new();
