@@ -45,16 +45,16 @@
                     <DataGrid.RowStyle>
                         <Style BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="DataGridRow">
                             <Setter Property="ToolTip" Value="{Binding StatId}" />
-                        </Style>                        
+                        </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding StatName}"
                                 ElementStyle="{StaticResource DataGridTextColumnLeftSytle}" Header="{ll:Str 名称}"
-                                IsReadOnly="True" Width="300">                            
+                                IsReadOnly="True" Width="300">
                         </DataGridTextColumn>
                         <DataGridTextColumn Binding="{Binding StatCount}"
                                 ElementStyle="{StaticResource DataGridTextColumnCenterSytle}" Header="{ll:Str 数量}"
-                                IsReadOnly="True" Width="160"/>
+                                IsReadOnly="True" Width="160" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
@@ -198,6 +198,233 @@
                     </StackPanel>
                 </Grid>
             </ScrollViewer>
+        </TabItem>
+        <TabItem Header="{ll:Str 统计总结}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Button x:Name="btn_r_genRank" Grid.Column="1" pu:ButtonHelper.CornerRadius="4"
+                        Background="{DynamicResource SecondaryLight}" BorderBrush="{DynamicResource SecondaryDark}"
+                        BorderThickness="2" Content="{ll:Str 生成统计}" Margin="5,2" Click="btn_r_genRank_Click" />
+                <Button x:Name="btn_r_save" Grid.Column="1" pu:ButtonHelper.CornerRadius="4"
+                        Background="{DynamicResource SecondaryLight}" BorderBrush="{DynamicResource SecondaryDark}"
+                        BorderThickness="2" Content="{ll:Str 保存图片}" Margin="5,2" Grid.Row="1" Click="btn_r_save_Click"
+                        IsEnabled="False" />
+                <CheckBox x:Name="cb_NoCheat" Content="{ll:Str '未使用过作弊模组和修改游戏数据'}" Margin="5,2"
+                        BorderBrush="{DynamicResource DARKPrimary}" pu:CheckBoxHelper.CornerRadius="4" IsEnabled="False"
+                        Unchecked="cb_NoCheat_Unchecked" />
+                <CheckBox x:Name="cb_AgreeUpload" Content="{ll:Str '同意上传统计数据至Steam排行榜'}" Margin="5,2"
+                        BorderBrush="{DynamicResource DARKPrimary}" pu:CheckBoxHelper.CornerRadius="4" Grid.Row="1"
+                        IsEnabled="False" Checked="cb_AgreeUpload_Checked" />
+                <ScrollViewer Grid.Row="2" Grid.ColumnSpan="2" x:Name="r_viewbox" Visibility="Collapsed">
+                    <Viewbox x:Name="r_output">
+                        <Grid Background="White">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="200" />
+                                <RowDefinition Height="100" />
+                                <RowDefinition Height="100" />
+                                <RowDefinition Height="200" />
+                                <RowDefinition Height="100" />
+                                <RowDefinition Height="200" />
+                                <RowDefinition Height="100" />
+                                <RowDefinition Height="200" />
+                                <RowDefinition Height="100" />
+                                <RowDefinition Height="200" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Res/img/rank1.png" Margin="20,0,0,0" />
+                            <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="10,0,10,0" FontSize="16">
+                                <Run x:Name="r_r_startday" Text="XXXX年XX月XX日" FontSize="24" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /><LineBreak />
+                                <Run Text="{ll:Str 你第一次遇到了这只可爱的小东西}" /><LineBreak />
+                                <Run Text="{ll:Str '初次见面，主人~'}" />
+                            </TextBlock>
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="10,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" FontSize="16" MaxWidth="500"
+                                    TextWrapping="Wrap">
+                                <Run Text="{ll:Str 你和}" /><Run x:Name="r_r_petname_2" Text="萝莉斯" /><Run
+                                        Text="{ll:Str 一共生活了}" /> <Run x:Name="r_r_startlength" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str r天}" /><LineBreak />
+                                <Run Text="{ll:Str 你陪伴她的时长是}" /> <Run x:Name="r_r_length_h" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str r小时}" /><LineBreak />
+                                <Run Text="{ll:Str 超过了全球}" /> <Run x:Name="r_r_length_p" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str r的主人}" /><LineBreak />
+                                <Run x:Name="r_r_lenghranktext" Text="主人~感谢陪伴~" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" />
+                            </TextBlock>
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="10,0,10,0" Grid.Row="2" Grid.ColumnSpan="2" FontSize="16" MaxWidth="500"
+                                    TextWrapping="Wrap">
+                                 <Run Text="{ll:Str 平均一天有}" /> <Run x:Name="r_r_lengthph" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str 小时在一起}" /><LineBreak />
+                                 <Run Text="{ll:Str 相当于平均和}" /> <Run x:Name="r_r_lengthphtext" Text="同学"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str 在一起的时间}" /><LineBreak />
+                                 <Run x:Name="r_r_lenghtext" Text="学长~前辈"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" />
+                            </TextBlock>
+                            <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="10,0,10,0" Grid.Row="3" FontSize="16" MaxWidth="350" TextWrapping="Wrap">
+                                <Run Text="{ll:Str 你的等级是}" /> <Run x:Name="r_r_level" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str r级}" /><LineBreak />
+                                <Run Text="{ll:Str 累计获得经验}" /> <Run x:Name="r_r_exp" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /><LineBreak />
+                                <Run Text="{ll:Str 累计学习时间是}" /> <Run x:Name="r_r_studytime" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str r分钟}" /><LineBreak />
+                               <Run x:Name="r_r_studytext" Text="相当于桌宠的小学学历哦&#13;“肃清! 萝莉斯的安魂曲☆”"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" />
+                            </TextBlock>
+                            <Image Source="/Res/img/rank2.png" Margin="40,20,0,20" Grid.Row="3" />
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="10,0,10,0" Grid.Row="4" Grid.ColumnSpan="2" FontSize="16" MaxWidth="500"
+                                    TextWrapping="Wrap">
+                             <Run Text="{ll:Str 单次学习最大获得}" /> <Run x:Name="r_r_studyexpmax" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str 经验}" /><LineBreak />
+                             <Run Text="{ll:Str 超过了全球}" /> <Run x:Name="r_r_studyexpmaxrank" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str r的主人}" /><LineBreak />
+                             <Run x:Name="r_r_studyexptext" Text="看我量子速读法!"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" />
+                            </TextBlock>
+                            <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="10,0,10,0" Grid.Row="5" FontSize="16" MaxWidth="350" TextWrapping="Wrap">
+                                <Run Text="{ll:Str 累计工作时间是}" /> <Run x:Name="r_r_worktime" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str r分钟}" /><LineBreak />
+                                <Run Text="{ll:Str 工作占总时间}" /> <Run x:Name="r_r_worktimeps" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /><LineBreak />
+                                <Run Text="{ll:Str 超过了全球}" /> <Run x:Name="r_r_worktimepsrank" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str r的主人}" /><LineBreak />
+                               <Run x:Name="r_r_worktext" Text="“我草，卷狗”"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" />
+                            </TextBlock>
+                            <Image Source="/Res/img/rank3.png" Margin="40,20,0,20" Grid.Row="5" />
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="10,0,10,0" Grid.Row="6" Grid.ColumnSpan="2" FontSize="16" MaxWidth="500"
+                                    TextWrapping="Wrap">
+                                 <Run Text="{ll:Str 单次工作最大获得}" /> <Run x:Name="r_r_workmoneymax" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str 金钱}" /><LineBreak />
+                                 <Run Text="{ll:Str 超过了全球}" /> <Run x:Name="r_r_workmoneyrank" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str r的主人}" /><LineBreak />
+                                 <Run x:Name="r_r_workmoneytext" Text="可是，我真的很需要那些钱钱!"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" />
+                            </TextBlock>
+                            <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="10,0,10,0" Grid.Row="7" FontSize="16" MaxWidth="350" TextWrapping="Wrap">
+                                 <Run Text="{ll:Str 累计购买}" /> <Run x:Name="r_r_betterbuytimes" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str 次更好买商品}" /><LineBreak />
+                                 <Run Text="{ll:Str 累计花费}" /> <Run x:Name="r_r_betterbuycount" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str 金钱}" /><LineBreak />
+                                 <Run Text="{ll:Str 其中最多购买的是}" /> <Run x:Name="r_r_betterbuymostitem" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str 在分类}" /> <Run x:Name="r_r_betterbuymosttype" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /><LineBreak />
+                                <Run x:Name="r_r_betterbuymosttext" Text="“多吃零食有益心理健康”"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" />
+                            </TextBlock>
+                            <Image Source="/Res/img/rank4.png" Margin="40,20,0,20" Grid.Row="7" />
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="10,0,10,0" Grid.Row="8" Grid.ColumnSpan="2" FontSize="16" MaxWidth="500"
+                                    TextWrapping="Wrap">
+                                 <Run Text="{ll:Str 自动购买}" /> <Run x:Name="r_r_autobuy" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str 次}" /><LineBreak />
+                                 <Run Text="{ll:Str 占全部购买}" /> <Run x:Name="r_r_autobuypres" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /><LineBreak />
+                                 <Run Text="{ll:Str 超过了全球}" /> <Run x:Name="r_r_autobuyrank" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str r的主人}" /><LineBreak />
+                                 <Run x:Name="r_r_autobuytext" Text="“不要小看我的情报网！你自动购买礼物没关，对不对？”"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" />
+                            </TextBlock>
+                            <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="10,0,10,0" Grid.Row="9" FontSize="16" MaxWidth="350" TextWrapping="Wrap">
+                                   <Run Text="{ll:Str 你订阅了}" /> <Run x:Name="r_r_modcount" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str 个mod}" /><LineBreak />
+                                   <Run Text="{ll:Str 启用的其中的}" /> <Run x:Name="r_r_modenablecount" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str 个mod}" /><LineBreak />
+                                   <Run Text="{ll:Str 你订阅mod数超过了全球}" /> <Run x:Name="r_r_modcountrank" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str r的主人}" /><LineBreak />
+                                  <Run x:Name="r_r_modcounttext" Text="“主人已经是mod大师了喵，要不要试试mod制作器，给我做mod喵”"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" />
+                            </TextBlock>
+                            <Image Source="/Res/img/rank5.png" Margin="40" Grid.Row="9" />
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="10,0,10,0" Grid.Row="10" Grid.ColumnSpan="2" FontSize="20" MaxWidth="500"
+                                    TextWrapping="Wrap">
+                                 <Run Text="{ll:Str 睡了}" /> <Run x:Name="r_r_sleeplength" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str 小时的觉}" /><LineBreak />
+                                 <Run Text="{ll:Str 移动了}" /> <Run x:Name="r_r_movelength" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /><Run 
+                                        Text="px" FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str '的距离'}" /><LineBreak />
+                                 <Run Text="{ll:Str 说了}" /> <Run x:Name="r_r_saycount" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str '句话'}" /><LineBreak />
+                                 <Run Text="{ll:Str 跳了}" /> <Run x:Name="r_r_musiccount" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str '次舞蹈'}" /><LineBreak />
+                                 <Run Text="{ll:Str 摸了}" /> <Run x:Name="r_r_touchtotal" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str '次头'}" /><LineBreak />                                 
+                                 <Run Text="&quot;" Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" /><Run
+                                        Text="{ll:Str '吃喝玩乐睡, 惨了养成猪了'}" Foreground="{DynamicResource DARKPrimaryDarker}"
+                                        FontWeight="Bold" /><Run Text="&quot;"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" />
+                            </TextBlock>
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Margin="40" Grid.Row="11" Grid.ColumnSpan="2" FontSize="20" MaxWidth="500"
+                                    TextWrapping="Wrap">
+                                 <Run Text="{ll:Str 打开游戏次数是}" /> <Run x:Name="r_r_opencount" Text="XX" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /> <Run Text="{ll:Str 次}" /><LineBreak />
+                                 <Run Text="{ll:Str 你照顾的}" /><Run x:Name="r_r_petname_3" Text="萝莉斯" /><Run
+                                        Text="{ll:Str 满状态次数是}" /> <Run x:Name="r_r_bettercount" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str '次'}" /><LineBreak /><LineBreak />
+                                 <Run x:Name="r_r_petname_4" Text="萝莉斯" /><Run Text="{ll:Str 对你的好感度是}" /><LineBreak /> <Run
+                                        x:Name="r_r_likecount" Text="&#xEE0E;&#xEE0E;&#xEE0E;&#xEE0F;" FontWeight="Bold"
+                                        FontFamily="/VPet-Simulator.Windows;component/Res/#remixicon"
+                                        Foreground="{DynamicResource DARKPrimaryDark}" /><LineBreak /><LineBreak />
+                                 <Run Text="{ll:Str 超过了全球}" /> <Run x:Name="r_r_likecountrank" Text="XX"
+                                        FontWeight="Bold" Foreground="{DynamicResource DARKPrimaryDark}" /> <Run
+                                        Text="{ll:Str 'r的主人'}" /><LineBreak />                                 
+                                 <LineBreak />
+                                <Run Text="&quot;" Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" /><Run
+                                        Text="{ll:Str '最喜欢你了主人~ 新的一年请多多关照喵~'}"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" /><Run
+                                        Text="&quot;" Foreground="{DynamicResource DARKPrimaryDarker}" FontWeight="Bold" />
+                            </TextBlock>
+                            <Image Source="/Res/img/rank6.png" Grid.Row="12" Grid.ColumnSpan="2" Stretch="UniformToFill" />
+                            <TextBlock Grid.Row="12" Grid.ColumnSpan="2" VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Left" Foreground="{DynamicResource DARKPrimaryText}"
+                                    Margin="10" FontWeight="Bold">
+                                <Run Text="To" FontSize="16" /> <Run x:Name="r_r_petname" Text="萝莉斯" FontSize="16" /> <LineBreak />
+                                <Run Text="By" FontSize="16" /> <Run x:Name="r_r_username" Text="洛里斯杨远" FontSize="16" /> <LineBreak />
+                                @<Run Text="{ll:Str 虚拟桌宠模拟器}" /> (<Run x:Name="r_r_now" Text="2023/12/29" />) TEST VERSION
+                            </TextBlock>
+                        </Grid>
+                    </Viewbox>
+                </ScrollViewer>
+                <ProgressBar x:Name="pb_r_genRank" Height="20" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Top"
+                        pu:ProgressBarHelper.CornerRadius="4" pu:ProgressBarHelper.IsPercentVisible="True"
+                        Background="{DynamicResource SecondaryLighter}" BorderBrush="{DynamicResource SecondaryDark}"
+                        BorderThickness="1.5" FontSize="10" Foreground="{DynamicResource Secondary}" Value="0"
+                        Margin="0,5,0,0" Visibility="Collapsed" />
+            </Grid>
         </TabItem>
     </TabControl>
 
