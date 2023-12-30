@@ -1,35 +1,19 @@
-﻿using FastMember;
-using HKW.HKWUtils.Observable;
-using System.ComponentModel;
-using System.Windows;
-using VPet.Solution.Properties;
+﻿using HKW.HKWUtils.Observable;
 using VPet_Simulator.Core;
-using VPet_Simulator.Windows.Interface;
 
 namespace VPet.Solution.Models;
 
-public class SettingsModel : ObservableClass<SettingsModel>
+public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
 {
-    private GraphicsSettingsModel _graphicsSettings;
-    public GraphicsSettingsModel GraphicsSettings
-    {
-        get => _graphicsSettings;
-        set => SetProperty(ref _graphicsSettings, value);
-    }
+    private string _petName;
 
-    public SettingsModel(Setting setting)
+    /// <summary>
+    /// 宠物名称
+    /// </summary>
+    public string PetName
     {
-        GraphicsSettings = LoadGraphicsSettings(setting);
-    }
-
-    private GraphicsSettingsModel LoadGraphicsSettings(Setting setting)
-    {
-        var graphicsSettings = new GraphicsSettingsModel();
-        var sourceAccessor = ObjectAccessor.Create(setting);
-        var targetAccessor = ObjectAccessor.Create(graphicsSettings);
-        foreach (var property in typeof(GraphicsSettingsModel).GetProperties())
-            targetAccessor[property.Name] = sourceAccessor[property.Name];
-        return graphicsSettings;
+        get => _petName;
+        set => SetProperty(ref _petName, value);
     }
 
     private double _voiceVolume;
@@ -43,22 +27,6 @@ public class SettingsModel : ObservableClass<SettingsModel>
         set => SetProperty(ref _voiceVolume, value);
     }
 
-    /// <summary>
-    /// 数据收集是否被禁止(当日)
-    /// </summary>
-    public bool DiagnosisDayEnable { get; } = true;
-
-    private bool _diagnosis;
-
-    /// <summary>
-    /// 是否启用数据收集
-    /// </summary>
-    public bool Diagnosis
-    {
-        get => _diagnosis;
-        set => SetProperty(ref _diagnosis, value);
-    }
-
     private GameSave.ModeType _calFunState;
 
     /// <summary>
@@ -68,39 +36,6 @@ public class SettingsModel : ObservableClass<SettingsModel>
     {
         get => _calFunState;
         set => SetProperty(ref _calFunState, value);
-    }
-
-    private int _diagnosisInterval;
-
-    /// <summary>
-    /// 数据收集频率
-    /// </summary>
-    public int DiagnosisInterval
-    {
-        get => _diagnosisInterval;
-        set => SetProperty(ref _diagnosisInterval, value);
-    }
-
-    private int _autoSaveInterval;
-
-    /// <summary>
-    /// 自动保存频率 (min)
-    /// </summary>
-    public int AutoSaveInterval
-    {
-        get => _autoSaveInterval;
-        set => SetProperty(ref _autoSaveInterval, value);
-    }
-
-    private int _backupSaveMaxNum;
-
-    /// <summary>
-    /// 备份保存最大数量
-    /// </summary>
-    public int BackupSaveMaxNum
-    {
-        get => _backupSaveMaxNum;
-        set => SetProperty(ref _backupSaveMaxNum, value);
     }
 
     private bool _petHelper;

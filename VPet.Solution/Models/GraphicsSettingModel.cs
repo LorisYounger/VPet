@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace VPet.Solution.Models;
 
-public class GraphicsSettingsModel : ObservableClass<SettingsModel>
+public class GraphicsSettingModel : ObservableClass<SettingModel>
 {
     private double _zoomLevel = 1;
 
@@ -138,12 +138,12 @@ public class GraphicsSettingsModel : ObservableClass<SettingsModel>
     //    set => SetProperty(ref _startRecordLastPoint, value);
     //}
 
-    private ObservablePoint<double> _startRecordPoint;
+    private ObservablePoint _startRecordPoint;
 
     /// <summary>
     /// 设置中桌宠启动的位置
     /// </summary>
-    public ObservablePoint<double> StartRecordPoint
+    public ObservablePoint StartRecordPoint
     {
         get => _startRecordPoint;
         set => SetProperty(ref _startRecordPoint, value);

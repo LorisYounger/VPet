@@ -6,4 +6,4 @@ using System.Threading.Tasks;
 
 namespace VPet.Solution.ViewModels;
 
-public class SystemSettingsPageVM { }
+public class CustomizedSettingPageVM { }

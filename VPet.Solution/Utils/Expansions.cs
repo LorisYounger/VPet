@@ -292,7 +292,7 @@ public static class Extensions
     /// </summary>
     /// <typeparam name="T">视图模型类型</typeparam>
     /// <param name="window">窗口</param>
-    public static Lazy<T> SetViewModel<T>(this Window window, EventHandler? closedEvent = null)
+    public static T SetViewModel<T>(this Window window, EventHandler? closedEvent = null)
         where T : new()
     {
         if (window.DataContext is null)
@@ -308,7 +308,7 @@ public static class Extensions
             };
             window.Closed += closedEvent;
         }
-        return new(() => (T)window.DataContext);
+        return (T)window.DataContext;
     }
 
     /// <summary>
@@ -316,10 +316,10 @@ public static class Extensions
     /// </summary>
     /// <typeparam name="T">视图模型类型</typeparam>
     /// <param name="page">页面</param>
-    public static Lazy<T> SetViewModel<T>(this Page page)
+    public static T SetViewModel<T>(this Page page)
         where T : new()
     {
-        return new(() => (T)(page.DataContext ??= new T()));
+        return (T)(page.DataContext ??= new T());
     }
 }
 

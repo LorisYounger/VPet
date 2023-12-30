@@ -14,12 +14,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace VPet.Solution.Views;
+
 /// <summary>
-/// DiagnosticSettingsPage.xaml 的交互逻辑
+/// CustomizedSettingsPage.xaml 的交互逻辑
 /// </summary>
-public partial class DiagnosticSettingsPage : Page
+public partial class CustomizedSettingPage : Page
 {
-    public DiagnosticSettingsPage()
+    public CustomizedSettingPage()
     {
         InitializeComponent();
     }

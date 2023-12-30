@@ -18,11 +18,29 @@
   mc:Ignorable="d">
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" />
-      <ColumnDefinition />
+      <ColumnDefinition Width="Auto" MinWidth="100" />
+      <ColumnDefinition MinWidth="300" />
     </Grid.ColumnDefinitions>
     <Grid>
-      <ListBox x:Name="ListBox_Saves" />
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <TextBox Style="{DynamicResource StandardTextBoxStyle}" Text="{Binding SearchSetting, UpdateSourceTrigger=PropertyChanged}" />
+      <ListBox
+        x:Name="ListBox_Saves"
+        Grid.Row="1"
+        d:ItemsSource="{d:SampleData ItemCount=5}"
+        ItemsSource="{Binding ShowSettings}"
+        SelectedItem="{Binding CurrentSetting}"
+        Style="{DynamicResource SideMenuListBoxStyle}">
+        <ListBox.ItemContainerStyle>
+          <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
+            <Setter Property="Content" Value="{Binding Name}" />
+            <Setter Property="ToolTip" Value="{Binding Path}" />
+          </Style>
+        </ListBox.ItemContainerStyle>
+      </ListBox>
     </Grid>
     <Grid Grid.Column="1">
       <Grid.RowDefinitions>

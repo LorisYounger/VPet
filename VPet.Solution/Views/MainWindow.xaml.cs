@@ -1,5 +1,7 @@
 ﻿using HKW.HKWUtils;
 using Panuon.WPF.UI;
+using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using VPet.Solution.ViewModels;
 
@@ -10,7 +12,7 @@ namespace VPet.Solution.Views;
 /// </summary>
 public partial class MainWindow : WindowX
 {
-    public MainWindowVM ViewModel => this.SetViewModel<MainWindowVM>().Value;
+    public MainWindowVM ViewModel => (MainWindowVM)DataContext;
 
     public MainWindow()
     {
@@ -20,12 +22,14 @@ public partial class MainWindow : WindowX
             return;
         }
         InitializeComponent();
-        ListBoxItem_GraphicsSettings.Tag = new GraphicsSettingsPage();
-        ListBoxItem_SystemSettings.Tag = new SystemSettingsPage();
-        ListBoxItem_InteractiveSettings.Tag = new InteractiveSettingsPage();
-        ListBoxItem_CustomizedSettings.Tag = new CustomizedSettingsPage();
-        ListBoxItem_DiagnosticSettings.Tag = new DiagnosticSettingsPage();
-        ListBoxItem_ModSettings.Tag = new ModSettingsPage();
+        this.SetViewModel<MainWindowVM>();
+
+        ListBoxItem_GraphicsSettings.Tag = new GraphicsSettingPage();
+        ListBoxItem_SystemSettings.Tag = new SystemSettingPage();
+        ListBoxItem_InteractiveSettings.Tag = new InteractiveSettingPage();
+        ListBoxItem_CustomizedSettings.Tag = new CustomizedSettingPage();
+        ListBoxItem_DiagnosticSettings.Tag = new DiagnosticSettingPage();
+        ListBoxItem_ModSettings.Tag = new ModSettingPage();
     }
 
     private void Frame_Main_ContentRendered(object sender, EventArgs e)

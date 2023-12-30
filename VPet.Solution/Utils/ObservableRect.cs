@@ -1,30 +1,30 @@
 ﻿namespace HKW.HKWUtils;
 
-public class ObservableRect<T> : ObservableClass<ObservableRect<T>>, IEquatable<ObservableRect<T>>
+public class ObservableRect : ObservableClass<ObservableRect>, IEquatable<ObservableRect>
 {
-    private T _x;
-    public T X
+    private double _x;
+    public double X
     {
         get => _x;
         set => SetProperty(ref _x, value);
     }
 
-    private T _y;
-    public T Y
+    private double _y;
+    public double Y
     {
         get => _y;
         set => SetProperty(ref _y, value);
     }
 
-    private T _width;
-    public T Width
+    private double _width;
+    public double Width
     {
         get => _width;
         set => SetProperty(ref _width, value);
     }
 
-    private T _heigth;
-    public T Height
+    private double _heigth;
+    public double Height
     {
         get => _heigth;
         set => SetProperty(ref _heigth, value);
@@ -32,7 +32,7 @@ public class ObservableRect<T> : ObservableClass<ObservableRect<T>>, IEquatable<
 
     public ObservableRect() { }
 
-    public ObservableRect(T x, T y, T width, T hetght)
+    public ObservableRect(double x, double y, double width, double hetght)
     {
         X = x;
         Y = y;
@@ -44,7 +44,7 @@ public class ObservableRect<T> : ObservableClass<ObservableRect<T>>, IEquatable<
     /// 复制一个新的对象
     /// </summary>
     /// <returns>新对象</returns>
-    public ObservableRect<T> Copy()
+    public ObservableRect Copy()
     {
         return new(X, Y, Width, Height);
     }
@@ -60,27 +60,27 @@ public class ObservableRect<T> : ObservableClass<ObservableRect<T>>, IEquatable<
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
-        return obj is ObservableRect<T> temp
-            && EqualityComparer<T>.Default.Equals(X, temp.X)
-            && EqualityComparer<T>.Default.Equals(Y, temp.Y)
-            && EqualityComparer<T>.Default.Equals(Width, temp.Width)
-            && EqualityComparer<T>.Default.Equals(Height, temp.Height);
+        return obj is ObservableRect temp
+            && EqualityComparer<double>.Default.Equals(X, temp.X)
+            && EqualityComparer<double>.Default.Equals(Y, temp.Y)
+            && EqualityComparer<double>.Default.Equals(Width, temp.Width)
+            && EqualityComparer<double>.Default.Equals(Height, temp.Height);
     }
 
     /// <inheritdoc/>
-    public bool Equals(ObservableRect<T>? other)
+    public bool Equals(ObservableRect? other)
     {
         return Equals(obj: other);
     }
 
     /// <inheritdoc/>
-    public static bool operator ==(ObservableRect<T> a, ObservableRect<T> b)
+    public static bool operator ==(ObservableRect a, ObservableRect b)
     {
         return Equals(a, b);
     }
 
     /// <inheritdoc/>
-    public static bool operator !=(ObservableRect<T> a, ObservableRect<T> b)
+    public static bool operator !=(ObservableRect a, ObservableRect b)
     {
         return Equals(a, b) is not true;
     }

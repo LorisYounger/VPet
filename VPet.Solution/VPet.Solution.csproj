@@ -75,26 +75,28 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BoolInverter.cs" />
-    <Compile Include="Models\GraphicsSettingsModel.cs" />
+    <Compile Include="Models\GraphicsSettingModel.cs" />
+    <Compile Include="Models\InteractiveSettingModel.cs" />
+    <Compile Include="Models\SystemSettingModel.cs" />
     <Compile Include="Utils\ClearFocus.cs" />
     <Compile Include="Utils\ElementHelper.cs" />
     <Compile Include="Utils\FindTopParent.cs" />
-    <Compile Include="ViewModels\CustomizedSettingsPageVM.cs" />
-    <Compile Include="ViewModels\DiagnosticSettingsPageVM.cs" />
-    <Compile Include="ViewModels\ModSettingsPageVM.cs" />
-    <Compile Include="Models\SettingsModel.cs" />
-    <Compile Include="ViewModels\SystemSettingsPageVM.cs" />
-    <Compile Include="Views\CustomizedSettingsPage.xaml.cs">
-      <DependentUpon>CustomizedSettingsPage.xaml</DependentUpon>
+    <Compile Include="ViewModels\CustomizedSettingPageVM.cs" />
+    <Compile Include="ViewModels\DiagnosticSettingPageVM.cs" />
+    <Compile Include="ViewModels\ModSettingPageVM.cs" />
+    <Compile Include="Models\SettingModel.cs" />
+    <Compile Include="ViewModels\SystemSettingPageVM.cs" />
+    <Compile Include="Views\CustomizedSettingPage.xaml.cs">
+      <DependentUpon>CustomizedSettingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DiagnosticSettingsPage.xaml.cs">
-      <DependentUpon>DiagnosticSettingsPage.xaml</DependentUpon>
+    <Compile Include="Views\DiagnosticSettingPage.xaml.cs">
+      <DependentUpon>DiagnosticSettingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ModSettingsPage.xaml.cs">
-      <DependentUpon>ModSettingsPage.xaml</DependentUpon>
+    <Compile Include="Views\ModSettingPage.xaml.cs">
+      <DependentUpon>ModSettingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SystemSettingsPage.xaml.cs">
-      <DependentUpon>SystemSettingsPage.xaml</DependentUpon>
+    <Compile Include="Views\SystemSettingPage.xaml.cs">
+      <DependentUpon>SystemSettingPage.xaml</DependentUpon>
     </Compile>
     <Page Include="Converters.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -108,19 +110,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\CustomizedSettingsPage.xaml">
+    <Page Include="Views\CustomizedSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DiagnosticSettingsPage.xaml">
+    <Page Include="Views\DiagnosticSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GraphicsSettingsPage.xaml">
+    <Page Include="Views\GraphicsSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\InteractiveSettingsPage.xaml">
+    <Page Include="Views\InteractiveSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -132,14 +134,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModels\GraphicsSettingsPageVM.cs" />
-    <Compile Include="ViewModels\InteractiveSettingsPageVM.cs" />
+    <Compile Include="ViewModels\GraphicsSettingPageVM.cs" />
+    <Compile Include="ViewModels\InteractiveSettingPageVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
-    <Compile Include="Views\GraphicsSettingsPage.xaml.cs">
-      <DependentUpon>GraphicsSettingsPage.xaml</DependentUpon>
+    <Compile Include="Views\GraphicsSettingPage.xaml.cs">
+      <DependentUpon>GraphicsSettingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\InteractiveSettingsPage.xaml.cs">
-      <DependentUpon>InteractiveSettingsPage.xaml</DependentUpon>
+    <Compile Include="Views\InteractiveSettingPage.xaml.cs">
+      <DependentUpon>InteractiveSettingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -185,11 +187,11 @@
     <Compile Include="NativeStyles.xaml.cs">
       <DependentUpon>NativeStyles.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\ModSettingsPage.xaml">
+    <Page Include="Views\ModSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SystemSettingsPage.xaml">
+    <Page Include="Views\SystemSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
