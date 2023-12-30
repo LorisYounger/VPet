@@ -1,12 +1,34 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Data;
 
 namespace HKW.WPF.Converters;
 
-public class BoolInverter : ValueConverterBase
+/// <summary>
+/// 是布尔值转换器
+/// </summary>
+public class IsBoolConverter : ValueConverterBase
 {
+    /// <summary>
+    ///
+    /// </summary>
+    public static readonly DependencyProperty BoolValueProperty = DependencyProperty.Register(
+        nameof(BoolValue),
+        typeof(bool),
+        typeof(AllIsBoolToVisibilityConverter),
+        new PropertyMetadata(true)
+    );
+
+    /// <summary>
+    /// 目标布尔值
+    /// </summary>
+    [DefaultValue(true)]
+    public bool BoolValue
+    {
+        get => (bool)GetValue(BoolValueProperty);
+        set => SetValue(BoolValueProperty, value);
+    }
+
     /// <summary>
     ///
     /// </summary>
@@ -27,6 +49,7 @@ public class BoolInverter : ValueConverterBase
         set => SetValue(NullValueProperty, value);
     }
 
+    /// <inheritdoc/>
     public override object Convert(
         object value,
         Type targetType,
@@ -34,8 +57,6 @@ public class BoolInverter : ValueConverterBase
         CultureInfo culture
     )
     {
-        if (value is not bool b)
-            return NullValue;
-        return !b;
+        return Utils.GetBool(value, BoolValue, NullValue);
     }
 }

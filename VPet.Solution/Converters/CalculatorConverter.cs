@@ -1,8 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows;
-using System.Windows.Data;
 
-namespace VPet.House.Converters;
+namespace HKW.WPF.Converters;
 
 /// <summary>
 /// 计算器转换器
@@ -30,9 +29,15 @@ namespace VPet.House.Converters;
 /// ]]></code></para>
 /// </summary>
 /// <exception cref="Exception">绑定的数量不正确</exception>
-public class CalculatorConverter : IMultiValueConverter
+public class CalculatorConverter : MultiValueConverterBase
 {
-    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    /// <inheritdoc/>
+    public override object Convert(
+        object[] values,
+        Type targetType,
+        object parameter,
+        CultureInfo culture
+    )
     {
         if (values.Any(i => i == DependencyProperty.UnsetValue))
             return 0.0;
@@ -72,6 +77,14 @@ public class CalculatorConverter : IMultiValueConverter
         return result;
     }
 
+    /// <summary>
+    /// 计算
+    /// </summary>
+    /// <param name="value1">值1</param>
+    /// <param name="operatorChar">符号</param>
+    /// <param name="value2">值2</param>
+    /// <returns>结果</returns>
+    /// <exception cref="NotImplementedException"></exception>
     public static double Operation(double value1, char operatorChar, double value2)
     {
         return operatorChar switch
@@ -83,15 +96,5 @@ public class CalculatorConverter : IMultiValueConverter
             '%' => value1 % value2,
             _ => throw new NotImplementedException(),
         };
-    }
-
-    public object[] ConvertBack(
-        object value,
-        Type[] targetTypes,
-        object parameter,
-        CultureInfo culture
-    )
-    {
-        throw new NotImplementedException();
     }
 }

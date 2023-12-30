@@ -1,307 +1,364 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:pu="https://opensource.panuon.com/wpf-ui"
-        xmlns:pucore="clr-namespace:Panuon.WPF;assembly=Panuon.WPF">
-    <ResourceDictionary.MergedDictionaries>
-        <pucore:SharedResourceDictionary Source="/Panuon.WPF.UI;component/Control.xaml" />
-    </ResourceDictionary.MergedDictionaries>
+﻿<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:pu="https://opensource.panuon.com/wpf-ui"
+  xmlns:pucore="clr-namespace:Panuon.WPF;assembly=Panuon.WPF">
+  <ResourceDictionary.MergedDictionaries>
+    <pucore:SharedResourceDictionary Source="/Panuon.WPF.UI;component/Control.xaml" />
+  </ResourceDictionary.MergedDictionaries>
 
-    <DrawingBrush x:Key="ProgressBarForeground" Viewport="0,0,8,22" ViewportUnits="Absolute" Stretch="None"
-            TileMode="Tile">
-        <DrawingBrush.RelativeTransform>
-            <RotateTransform Angle="2" />
-        </DrawingBrush.RelativeTransform>
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <GeometryDrawing Brush="{DynamicResource DARKPrimaryTransA}">
-                    <GeometryDrawing.Geometry>
-                        <GeometryGroup>
-                            <RectangleGeometry Rect="5.5,0,2.5,22" />
-                        </GeometryGroup>
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-                <GeometryDrawing Brush="{DynamicResource DARKPrimary}">
-                    <GeometryDrawing.Geometry>
-                        <GeometryGroup>
-                            <RectangleGeometry Rect="0,0,5.5,22" />
-                        </GeometryGroup>
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
-    <DrawingBrush x:Key="SuccessProgressBarForeground" Viewport="0,0,8,22" ViewportUnits="Absolute" Stretch="None"
-            TileMode="Tile">
-        <DrawingBrush.RelativeTransform>
-            <RotateTransform Angle="2" />
-        </DrawingBrush.RelativeTransform>
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <GeometryDrawing Brush="#AAAACC6C">
-                    <GeometryDrawing.Geometry>
-                        <GeometryGroup>
-                            <RectangleGeometry Rect="5.5,0,2.5,22" />
-                        </GeometryGroup>
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-                <GeometryDrawing Brush="#AACC6C">
-                    <GeometryDrawing.Geometry>
-                        <GeometryGroup>
-                            <RectangleGeometry Rect="0,0,5.5,22" />
-                        </GeometryGroup>
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
-    <DrawingBrush x:Key="WarningProgressBarForeground" Viewport="0,0,8,22" ViewportUnits="Absolute" Stretch="None"
-            TileMode="Tile">
-        <DrawingBrush.RelativeTransform>
-            <RotateTransform Angle="2" />
-        </DrawingBrush.RelativeTransform>
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <GeometryDrawing Brush="#AAFFCC4C">
-                    <GeometryDrawing.Geometry>
-                        <GeometryGroup>
-                            <RectangleGeometry Rect="5.5,0,2.5,22" />
-                        </GeometryGroup>
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-                <GeometryDrawing Brush="#FFCC4C">
-                    <GeometryDrawing.Geometry>
-                        <GeometryGroup>
-                            <RectangleGeometry Rect="0,0,5.5,22" />
-                        </GeometryGroup>
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
-    <DrawingBrush x:Key="DangerProgressBarForeground" Viewport="0,0,8,22" ViewportUnits="Absolute" Stretch="None"
-            TileMode="Tile">
-        <DrawingBrush.RelativeTransform>
-            <RotateTransform Angle="2" />
-        </DrawingBrush.RelativeTransform>
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <GeometryDrawing Brush="#AAFF4C4C">
-                    <GeometryDrawing.Geometry>
-                        <GeometryGroup>
-                            <RectangleGeometry Rect="5.5,0,2.5,22" />
-                        </GeometryGroup>
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-                <GeometryDrawing Brush="#FF4C4C">
-                    <GeometryDrawing.Geometry>
-                        <GeometryGroup>
-                            <RectangleGeometry Rect="0,0,5.5,22" />
-                        </GeometryGroup>
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
+  <DrawingBrush
+    x:Key="ProgressBarForeground"
+    Stretch="None"
+    TileMode="Tile"
+    Viewport="0,0,8,22"
+    ViewportUnits="Absolute">
+    <DrawingBrush.RelativeTransform>
+      <RotateTransform Angle="2" />
+    </DrawingBrush.RelativeTransform>
+    <DrawingBrush.Drawing>
+      <DrawingGroup>
+        <GeometryDrawing Brush="{DynamicResource DARKPrimaryTransA}">
+          <GeometryDrawing.Geometry>
+            <GeometryGroup>
+              <RectangleGeometry Rect="5.5,0,2.5,22" />
+            </GeometryGroup>
+          </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <GeometryDrawing Brush="{DynamicResource DARKPrimary}">
+          <GeometryDrawing.Geometry>
+            <GeometryGroup>
+              <RectangleGeometry Rect="0,0,5.5,22" />
+            </GeometryGroup>
+          </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+      </DrawingGroup>
+    </DrawingBrush.Drawing>
+  </DrawingBrush>
+  <DrawingBrush
+    x:Key="SuccessProgressBarForeground"
+    Stretch="None"
+    TileMode="Tile"
+    Viewport="0,0,8,22"
+    ViewportUnits="Absolute">
+    <DrawingBrush.RelativeTransform>
+      <RotateTransform Angle="2" />
+    </DrawingBrush.RelativeTransform>
+    <DrawingBrush.Drawing>
+      <DrawingGroup>
+        <GeometryDrawing Brush="#AAAACC6C">
+          <GeometryDrawing.Geometry>
+            <GeometryGroup>
+              <RectangleGeometry Rect="5.5,0,2.5,22" />
+            </GeometryGroup>
+          </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <GeometryDrawing Brush="#AACC6C">
+          <GeometryDrawing.Geometry>
+            <GeometryGroup>
+              <RectangleGeometry Rect="0,0,5.5,22" />
+            </GeometryGroup>
+          </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+      </DrawingGroup>
+    </DrawingBrush.Drawing>
+  </DrawingBrush>
+  <DrawingBrush
+    x:Key="WarningProgressBarForeground"
+    Stretch="None"
+    TileMode="Tile"
+    Viewport="0,0,8,22"
+    ViewportUnits="Absolute">
+    <DrawingBrush.RelativeTransform>
+      <RotateTransform Angle="2" />
+    </DrawingBrush.RelativeTransform>
+    <DrawingBrush.Drawing>
+      <DrawingGroup>
+        <GeometryDrawing Brush="#AAFFCC4C">
+          <GeometryDrawing.Geometry>
+            <GeometryGroup>
+              <RectangleGeometry Rect="5.5,0,2.5,22" />
+            </GeometryGroup>
+          </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <GeometryDrawing Brush="#FFCC4C">
+          <GeometryDrawing.Geometry>
+            <GeometryGroup>
+              <RectangleGeometry Rect="0,0,5.5,22" />
+            </GeometryGroup>
+          </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+      </DrawingGroup>
+    </DrawingBrush.Drawing>
+  </DrawingBrush>
+  <DrawingBrush
+    x:Key="DangerProgressBarForeground"
+    Stretch="None"
+    TileMode="Tile"
+    Viewport="0,0,8,22"
+    ViewportUnits="Absolute">
+    <DrawingBrush.RelativeTransform>
+      <RotateTransform Angle="2" />
+    </DrawingBrush.RelativeTransform>
+    <DrawingBrush.Drawing>
+      <DrawingGroup>
+        <GeometryDrawing Brush="#AAFF4C4C">
+          <GeometryDrawing.Geometry>
+            <GeometryGroup>
+              <RectangleGeometry Rect="5.5,0,2.5,22" />
+            </GeometryGroup>
+          </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <GeometryDrawing Brush="#FF4C4C">
+          <GeometryDrawing.Geometry>
+            <GeometryGroup>
+              <RectangleGeometry Rect="0,0,5.5,22" />
+            </GeometryGroup>
+          </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+      </DrawingGroup>
+    </DrawingBrush.Drawing>
+  </DrawingBrush>
 
-    <Style x:Key="BaseWindowXStyle" TargetType="pu:WindowX">
-        <Setter Property="pu:WindowXCaption.Background" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:WindowXCaption.Foreground" Value="{DynamicResource DARKPrimaryText}" />
-        <Setter Property="pu:WindowXCaption.Buttons" Value="Close" />
-        <Setter Property="pu:WindowXCaption.CloseButtonStyle">
-            <Setter.Value>
-                <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
-                    <Setter Property="pu:ButtonHelper.HoverBackground" Value="{x:Null}" />
-                </Style>
-            </Setter.Value>
-        </Setter>
-    </Style>
+  <Style x:Key="BaseWindowXStyle" TargetType="pu:WindowX">
+    <Setter Property="pu:WindowXCaption.Background" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:WindowXCaption.Foreground" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="pu:WindowXCaption.Buttons" Value="Close" />
+    <Setter Property="pu:WindowXCaption.CloseButtonStyle">
+      <Setter.Value>
+        <Style BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}" TargetType="Button">
+          <Setter Property="pu:ButtonHelper.HoverBackground" Value="{x:Null}" />
+        </Style>
+      </Setter.Value>
+    </Setter>
+  </Style>
 
-        <Style x:Key="ThemedButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
-        <Setter Property="Padding" Value="10,5" />
-        <Setter Property="pu:ButtonHelper.CornerRadius" Value="5" />
-    </Style>
+  <Style
+    x:Key="ThemedButtonStyle"
+    BasedOn="{StaticResource {x:Type Button}}"
+    TargetType="{x:Type Button}">
+    <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="Padding" Value="10,5" />
+    <Setter Property="pu:ButtonHelper.CornerRadius" Value="5" />
+  </Style>
 
-    <Style x:Key="TextButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryDarker}" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="FontSize" Value="12" />
-    </Style>
+  <Style
+    x:Key="TextButtonStyle"
+    BasedOn="{StaticResource {x:Type Button}}"
+    TargetType="{x:Type Button}">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource PrimaryDarker}" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="FontSize" Value="12" />
+  </Style>
 
-    <Style x:Key="DARKPrimaryTextButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource TextButtonStyle}">
-        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
-    </Style>
-    
-    <Style x:Key="IconInvertedForegroundRepeatButtonStyle" TargetType="{x:Type RepeatButton}" BasedOn="{StaticResource {x:Type RepeatButton}}">
-        <Setter Property="Width" Value="25" />
-        <Setter Property="Height" Value="25" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="FontSize" Value="15" />
-        <Setter Property="FontFamily" Value="pack://application:,,,/Res/#remixicon" />
-    </Style>
+  <Style
+    x:Key="DARKPrimaryTextButtonStyle"
+    BasedOn="{StaticResource TextButtonStyle}"
+    TargetType="{x:Type Button}">
+    <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+  </Style>
 
-    <Style x:Key="LinkButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource TextButtonStyle}">
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}"
-                               TextDecorations="Underline" />
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+  <Style
+    x:Key="IconInvertedForegroundRepeatButtonStyle"
+    BasedOn="{StaticResource {x:Type RepeatButton}}"
+    TargetType="{x:Type RepeatButton}">
+    <Setter Property="Width" Value="25" />
+    <Setter Property="Height" Value="25" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="FontFamily" Value="pack://application:,,,/Res/#remixicon" />
+  </Style>
 
-    <Style x:Key="StndardToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
-        <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:ToggleButtonHelper.CheckedBackground" Value="{DynamicResource DARKPrimaryDarker}"/>
-        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
-        <Setter Property="Padding" Value="10,5" />
-        <Setter Property="pu:ButtonHelper.CornerRadius" Value="5" />
-    </Style>
+  <Style
+    x:Key="LinkButtonStyle"
+    BasedOn="{StaticResource TextButtonStyle}"
+    TargetType="{x:Type Button}">
+    <Setter Property="ContentTemplate">
+      <Setter.Value>
+        <DataTemplate>
+          <TextBlock Text="{Binding}" TextDecorations="Underline" />
+        </DataTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 
-    <Style x:Key="TextToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryDarker}" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="FontSize" Value="14" />
-    </Style>
+  <Style
+    x:Key="StndardToggleButtonStyle"
+    BasedOn="{StaticResource {x:Type ToggleButton}}"
+    TargetType="{x:Type ToggleButton}">
+    <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:ToggleButtonHelper.CheckedBackground" Value="{DynamicResource DARKPrimaryDarker}" />
+    <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="Padding" Value="10,5" />
+    <Setter Property="pu:ButtonHelper.CornerRadius" Value="5" />
+  </Style>
 
-    <Style x:Key="LinkToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource TextToggleButtonStyle}">
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}" TextDecorations="Underline" />
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+  <Style
+    x:Key="TextToggleButtonStyle"
+    BasedOn="{StaticResource {x:Type ToggleButton}}"
+    TargetType="{x:Type ToggleButton}">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource PrimaryDarker}" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="FontSize" Value="14" />
+  </Style>
 
-    <Style x:Key="StandardPaginationStyle" TargetType="{x:Type pu:Pagination}">
-        <Setter Property="Height" Value="25" />
-        <Setter Property="ItemsWidth" Value="NaN" />
-        <Setter Property="ItemsPadding" Value="7,0" />
-        <Setter Property="ItemsBackground" Value="{DynamicResource DARKPrimaryTrans4}" />
-        <Setter Property="ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
-        <Setter Property="ItemsSelectedBackground" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="ItemsCornerRadius" Value="2" />
-    </Style>
+  <Style
+    x:Key="LinkToggleButtonStyle"
+    BasedOn="{StaticResource TextToggleButtonStyle}"
+    TargetType="{x:Type ToggleButton}">
+    <Setter Property="ContentTemplate">
+      <Setter.Value>
+        <DataTemplate>
+          <TextBlock Text="{Binding}" TextDecorations="Underline" />
+        </DataTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 
-    <Style x:Key="StandardComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="Height" Value="30" />
-        <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
-        <Setter Property="BorderThickness" Value="1.5" />
-        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="Padding" Value="7,0,15,0" />
-        <Setter Property="pu:ComboBoxHelper.CornerRadius" Value="5" />
-        <Setter Property="pu:ComboBoxHelper.WatermarkForeground" Value="#DCDCDC" />
-        <Setter Property="pu:ComboBoxHelper.ItemsSelectedBackground" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:ComboBoxHelper.ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
-        <Setter Property="pu:ComboBoxHelper.ItemsHoverBackground" Value="{DynamicResource DARKPrimaryTrans4}" />
-        <Setter Property="pu:ComboBoxHelper.ItemsPadding" Value="22,0" />
-        <Setter Property="pu:DropDownHelper.BorderThickness" Value="1" />
-        <Setter Property="pu:DropDownHelper.Background" Value="{DynamicResource DARKPrimaryText}" />
-        <Setter Property="pu:DropDownHelper.ShadowColor" Value="{DynamicResource ShadowColor}" />
-        <Setter Property="pu:DropDownHelper.CornerRadius" Value="5" />
-        <Setter Property="pu:DropDownHelper.MinHeight" Value="100" />
-        <Setter Property="pu:DropDownHelper.ClipDockSideShadow" Value="False" />
-        <Setter Property="pu:DropDownHelper.BorderBrush" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:ShadowHelper.BlurRadius" Value="15" />
-        <Setter Property="pu:ShadowHelper.Opacity" Value="0.5" />
-        <Setter Property="pu:ComboBoxHelper.ToggleArrowTransformControlStyle">
-            <Setter.Value>
-                <Style TargetType="pu:TransformControl"
-                        BasedOn="{StaticResource {x:Static pu:ComboBoxHelper.ToggleArrowTransformControlStyleKey}}">
-                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
-                    <Setter Property="FontSize" Value="10" />
-                    <Setter Property="Content" Value="&#xe91f;" />
-                </Style>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style x:Key="StandardTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="Height" Value="30" />
-        <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
-        <Setter Property="BorderThickness" Value="1.5" />
-        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="Padding" Value="7,0,15,0" />
-        <Setter Property="pu:TextBoxHelper.CornerRadius" Value="5" />
-        <Setter Property="pu:TextBoxHelper.WatermarkForeground" Value="#DCDCDC" />
-        <Setter Property="pu:ShadowHelper.BlurRadius" Value="15" />
-        <Setter Property="pu:ShadowHelper.Opacity" Value="0.5" />        
-    </Style>
-    <Style x:Key="StandardSliderStyle" TargetType="Slider" BasedOn="{StaticResource {x:Type Slider}}">
-        <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
-        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDark}" />
-        <Setter Property="pu:SliderHelper.ThumbShadowColor" Value="{DynamicResource ShadowColor}" />
-        <Setter Property="pu:SliderHelper.TrackThickness" Value="2.5" />
-        <Setter Property="pu:SliderHelper.ThumbBorderBrush" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:SliderHelper.ThumbBorderThickness" Value="2.5" />
-        <Setter Property="pu:SliderHelper.CoveredBackground" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:ShadowHelper.ShadowDepth" Value="3" />
-        <Setter Property="pu:ShadowHelper.Direction" Value="270" />
-        <Setter Property="pu:ShadowHelper.Opacity" Value="0.5" />
-    </Style>
+  <Style x:Key="StandardPaginationStyle" TargetType="{x:Type pu:Pagination}">
+    <Setter Property="Height" Value="25" />
+    <Setter Property="ItemsWidth" Value="NaN" />
+    <Setter Property="ItemsPadding" Value="7,0" />
+    <Setter Property="ItemsBackground" Value="{DynamicResource DARKPrimaryTrans4}" />
+    <Setter Property="ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="ItemsSelectedBackground" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="ItemsCornerRadius" Value="2" />
+  </Style>
 
-    <Style x:Key="StandardRadioButtonStyle" TargetType="RadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
-        <Setter Property="pu:RadioButtonHelper.CheckedToggleBrush" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:RadioButtonHelper.CheckedBorderBrush" Value="{DynamicResource DARKPrimary}" />
-    </Style>
+  <Style
+    x:Key="StandardComboBoxStyle"
+    BasedOn="{StaticResource {x:Type ComboBox}}"
+    TargetType="{x:Type ComboBox}">
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Height" Value="30" />
+    <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="BorderThickness" Value="1.5" />
+    <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="Padding" Value="7,0,15,0" />
+    <Setter Property="pu:ComboBoxHelper.CornerRadius" Value="5" />
+    <Setter Property="pu:ComboBoxHelper.WatermarkForeground" Value="#DCDCDC" />
+    <Setter Property="pu:ComboBoxHelper.ItemsSelectedBackground" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:ComboBoxHelper.ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="pu:ComboBoxHelper.ItemsHoverBackground" Value="{DynamicResource DARKPrimaryTrans4}" />
+    <Setter Property="pu:ComboBoxHelper.ItemsPadding" Value="22,0" />
+    <Setter Property="pu:DropDownHelper.BorderThickness" Value="1" />
+    <Setter Property="pu:DropDownHelper.Background" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="pu:DropDownHelper.ShadowColor" Value="{DynamicResource ShadowColor}" />
+    <Setter Property="pu:DropDownHelper.CornerRadius" Value="5" />
+    <Setter Property="pu:DropDownHelper.MinHeight" Value="100" />
+    <Setter Property="pu:DropDownHelper.ClipDockSideShadow" Value="False" />
+    <Setter Property="pu:DropDownHelper.BorderBrush" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:ShadowHelper.BlurRadius" Value="15" />
+    <Setter Property="pu:ShadowHelper.Opacity" Value="0.5" />
+    <Setter Property="pu:ComboBoxHelper.ToggleArrowTransformControlStyle">
+      <Setter.Value>
+        <Style BasedOn="{StaticResource {x:Static pu:ComboBoxHelper.ToggleArrowTransformControlStyleKey}}" TargetType="pu:TransformControl">
+          <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+          <Setter Property="FontSize" Value="10" />
+          <Setter Property="Content" Value="&#xe91f;" />
+        </Style>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style
+    x:Key="StandardTextBoxStyle"
+    BasedOn="{StaticResource {x:Type TextBox}}"
+    TargetType="TextBox">
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Height" Value="30" />
+    <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="BorderThickness" Value="1.5" />
+    <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="Padding" Value="7,0,15,0" />
+    <Setter Property="pu:TextBoxHelper.CornerRadius" Value="5" />
+    <Setter Property="pu:TextBoxHelper.WatermarkForeground" Value="#DCDCDC" />
+    <Setter Property="pu:ShadowHelper.BlurRadius" Value="15" />
+    <Setter Property="pu:ShadowHelper.Opacity" Value="0.5" />
+  </Style>
+  <Style
+    x:Key="StandardSliderStyle"
+    BasedOn="{StaticResource {x:Type Slider}}"
+    TargetType="Slider">
+    <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
+    <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDark}" />
+    <Setter Property="pu:SliderHelper.ThumbShadowColor" Value="{DynamicResource ShadowColor}" />
+    <Setter Property="pu:SliderHelper.TrackThickness" Value="2.5" />
+    <Setter Property="pu:SliderHelper.ThumbBorderBrush" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:SliderHelper.ThumbBorderThickness" Value="2.5" />
+    <Setter Property="pu:SliderHelper.CoveredBackground" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:ShadowHelper.ShadowDepth" Value="3" />
+    <Setter Property="pu:ShadowHelper.Direction" Value="270" />
+    <Setter Property="pu:ShadowHelper.Opacity" Value="0.5" />
+  </Style>
 
-    <Style x:Key="SideMenuListBoxStyle" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="pu:ListBoxHelper.ItemsHeight" Value="30" />
-        <Setter Property="pu:ListBoxHelper.ItemsPadding" Value="15,0" />
-        <Setter Property="pu:ListBoxHelper.ItemsCornerRadius" Value="5" />
-        <Setter Property="pu:ListBoxHelper.ItemsHoverBackground" Value="{x:Null}" />
-        <Setter Property="pu:ListBoxHelper.ItemsSelectedBackground" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:ListBoxHelper.ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
-    </Style>
+  <Style
+    x:Key="StandardRadioButtonStyle"
+    BasedOn="{StaticResource {x:Type RadioButton}}"
+    TargetType="RadioButton">
+    <Setter Property="pu:RadioButtonHelper.CheckedToggleBrush" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:RadioButtonHelper.CheckedBorderBrush" Value="{DynamicResource DARKPrimary}" />
+  </Style>
 
-    <Style x:Key="ToolBarMenuStyle" TargetType="Menu" BasedOn="{StaticResource {x:Type Menu}}">
-        <Setter Property="Height" Value="55" />
-        <Setter Property="FontSize" Value="24" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="pu:MenuHelper.TopLevelDropDownVerticalOffset" Value="-25" />
-        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimaryDarker}" />
-        <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
-        <Setter Property="pu:MenuHelper.CornerRadius" Value="5" />
-        <Setter Property="pu:MenuHelper.TopLevelDropDownPlacement" Value="TopRight" />
-        <Setter Property="pu:MenuHelper.TopLevelItemsPadding" Value="15,0" />
-        <Setter Property="pu:MenuHelper.TopLevelItemsHeight" Value="55" />
-        <Setter Property="pu:MenuHelper.TopLevelItemsBackground" Value="Transparent" />
-        <Setter Property="pu:MenuHelper.TopLevelItemsHoverBackground" Value="{DynamicResource SecondaryLighter}" />
-        <Setter Property="pu:MenuHelper.TopLevelItemsHoverForeground" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:MenuHelper.TopLevelItemsOpenedBackground" Value="{DynamicResource SecondaryLighter}" />
-        <Setter Property="pu:MenuHelper.TopLevelItemsOpenedForeground" Value="{DynamicResource DARKPrimary}" />
-        <Setter Property="pu:MenuHelper.SubmenuItemsPadding" Value="15,0" />
-        <Setter Property="pu:MenuHelper.SubmenuItemsHeight" Value="55" />
-        <Setter Property="pu:MenuHelper.SubmenuItemsIconWidth" Value="NaN" />
-        <Setter Property="pu:MenuHelper.SubmenuItemsWidth" Value="200" />
-        <Setter Property="pu:DropDownHelper.CornerRadius" Value="5" />
-        <Setter Property="pu:MenuHelper.SubmenuItemsBackground" Value="Transparent" />
-        <Setter Property="pu:MenuHelper.SubmenuItemsHoverBackground" Value="{DynamicResource SecondaryLighter}" />
-        <!--<Setter Property="pu:MenuHelper.SubmenuItemsHoverForeground"
+  <Style
+    x:Key="SideMenuListBoxStyle"
+    BasedOn="{StaticResource {x:Type ListBox}}"
+    TargetType="ListBox">
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="pu:ListBoxHelper.ItemsHeight" Value="30" />
+    <Setter Property="pu:ListBoxHelper.ItemsPadding" Value="15,0" />
+    <Setter Property="pu:ListBoxHelper.ItemsCornerRadius" Value="5" />
+    <Setter Property="pu:ListBoxHelper.ItemsHoverBackground" Value="{x:Null}" />
+    <Setter Property="pu:ListBoxHelper.ItemsSelectedBackground" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:ListBoxHelper.ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
+  </Style>
+
+  <Style
+    x:Key="ToolBarMenuStyle"
+    BasedOn="{StaticResource {x:Type Menu}}"
+    TargetType="Menu">
+    <Setter Property="Height" Value="55" />
+    <Setter Property="FontSize" Value="24" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="pu:MenuHelper.TopLevelDropDownVerticalOffset" Value="-25" />
+    <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimaryDarker}" />
+    <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="pu:MenuHelper.CornerRadius" Value="5" />
+    <Setter Property="pu:MenuHelper.TopLevelDropDownPlacement" Value="TopRight" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsPadding" Value="15,0" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsHeight" Value="55" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsBackground" Value="Transparent" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsHoverBackground" Value="{DynamicResource SecondaryLighter}" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsHoverForeground" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsOpenedBackground" Value="{DynamicResource SecondaryLighter}" />
+    <Setter Property="pu:MenuHelper.TopLevelItemsOpenedForeground" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsPadding" Value="15,0" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsHeight" Value="55" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsIconWidth" Value="NaN" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsWidth" Value="200" />
+    <Setter Property="pu:DropDownHelper.CornerRadius" Value="5" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsBackground" Value="Transparent" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsHoverBackground" Value="{DynamicResource SecondaryLighter}" />
+    <!--<Setter Property="pu:MenuHelper.SubmenuItemsHoverForeground"
                 Value="{DynamicResource DARKPrimary}" />-->
-        <Setter Property="pu:MenuHelper.SubmenuItemsOpenedBackground" Value="{DynamicResource SecondaryLighter}" />
-        <!--<Setter Property="pu:MenuHelper.SubmenuItemsOpenedForeground"
+    <Setter Property="pu:MenuHelper.SubmenuItemsOpenedBackground" Value="{DynamicResource SecondaryLighter}" />
+    <!--<Setter Property="pu:MenuHelper.SubmenuItemsOpenedForeground"
                 Value="{DynamicResource DARKPrimary}" />-->
-        <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorVisibility" Value="Visible" />
-        <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorBrush" Value="#CCCECF" />
-        <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorMargin" Value="10,0" />
-        <!--<Setter Property="pu:MenuHelper.ShadowColor"
+    <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorVisibility" Value="Visible" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorBrush" Value="#CCCECF" />
+    <Setter Property="pu:MenuHelper.SubmenuItemsSeparatorMargin" Value="10,0" />
+    <!--<Setter Property="pu:MenuHelper.ShadowColor"
                 Value="{DynamicResource ShadowColor}" />-->
-        <Setter Property="pu:DropDownHelper.ShadowColor" Value="{DynamicResource ShadowColor}" />
-        <Setter Property="pu:ShadowHelper.Opacity" Value="0.7" />
-        <Setter Property="pu:ShadowHelper.BlurRadius" Value="25" />
-    </Style>
+    <Setter Property="pu:DropDownHelper.ShadowColor" Value="{DynamicResource ShadowColor}" />
+    <Setter Property="pu:ShadowHelper.Opacity" Value="0.7" />
+    <Setter Property="pu:ShadowHelper.BlurRadius" Value="25" />
+  </Style>
 </ResourceDictionary>

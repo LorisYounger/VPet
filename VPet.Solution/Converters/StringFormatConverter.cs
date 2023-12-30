@@ -1,9 +1,9 @@
-﻿using System.Windows.Data;
+﻿using System.Globalization;
 
-namespace VPet.House.Converters;
+namespace HKW.WPF.Converters;
 
 /// <summary>
-/// 边距转换器
+/// 字符串格式化器
 /// <para>示例:
 /// <code><![CDATA[
 /// <MultiBinding Converter="{StaticResource MarginConverter}">
@@ -18,13 +18,21 @@ namespace VPet.House.Converters;
 /// </MultiBinding>
 /// ]]></code></para>
 /// </summary>
-public class StringFormatConverter : IMultiValueConverter
+public class StringFormatConverter : MultiValueConverterBase
 {
-    public object Convert(
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="values"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
+    public override object Convert(
         object[] values,
         Type targetType,
         object parameter,
-        System.Globalization.CultureInfo culture
+        CultureInfo culture
     )
     {
         var formatStr = (string)parameter;
@@ -37,15 +45,5 @@ public class StringFormatConverter : IMultiValueConverter
         {
             return string.Format(formatStr, values);
         }
-    }
-
-    public object[] ConvertBack(
-        object value,
-        Type[] targetTypes,
-        object parameter,
-        System.Globalization.CultureInfo culture
-    )
-    {
-        throw new NotImplementedException();
     }
 }

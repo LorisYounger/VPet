@@ -74,6 +74,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\AllIsBoolConverter.cs" />
+    <Compile Include="Converters\AllIsBoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\ConverterBase\BoolToValueConverterBase.cs" />
+    <Compile Include="Converters\BrushToMediaColorConverter.cs" />
+    <Compile Include="Converters\CalculatorConverter.cs" />
+    <Compile Include="Converters\ConverterBase\CanInverterMultiValueConverter.cs" />
+    <Compile Include="Converters\ConverterBase\CanInverterValueConverter.cs" />
+    <Compile Include="Converters\ConverterBase\ConverterBase.cs" />
+    <Compile Include="Converters\ConverterBase\HaveRatioConverter.cs" />
+    <Compile Include="Converters\ConverterBase\MultiValueConverterBase.cs" />
+    <Compile Include="Converters\ConverterBase\MultiValueToBoolConverter.cs" />
+    <Compile Include="Converters\ConverterBase\ValueConverterBase.cs" />
+    <Compile Include="Converters\EqualsConverter.cs" />
+    <Compile Include="Converters\IsBoolConverter.cs" />
+    <Compile Include="Converters\MarginConverter.cs" />
+    <Compile Include="Converters\MediaColorToBrushConverter.cs" />
+    <Compile Include="Converters\StringFormatConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\MaxConverter.cs" />
+    <Compile Include="Converters\ValueToBoolConverter.cs" />
     <Compile Include="Converters\BoolInverter.cs" />
     <Compile Include="Models\GraphicsSettingModel.cs" />
     <Compile Include="Models\InteractiveSettingModel.cs" />
@@ -146,18 +166,6 @@
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\BrushToMediaColorConverter.cs" />
-    <Compile Include="Converters\CalculatorConverter.cs" />
-    <Compile Include="Converters\EqualsConverter.cs" />
-    <Compile Include="Converters\FalseToCollapsedConverter.cs" />
-    <Compile Include="Converters\FalseToHiddenConverter.cs" />
-    <Compile Include="Converters\MediaColorToBrushConverter.cs" />
-    <Compile Include="Converters\NotEqualsConverter.cs" />
-    <Compile Include="Converters\NullToFalseConverter.cs" />
-    <Compile Include="Converters\StringFormatConverter.cs" />
-    <Compile Include="Converters\RatioMarginConverter.cs" />
-    <Compile Include="Converters\MaxConverter.cs" />
-    <Compile Include="Converters\MarginConverter.cs" />
     <Compile Include="SimpleObservable\ObservableClass\INotifyPropertyChangedX.cs" />
     <Compile Include="SimpleObservable\ObservableClass\INotifyPropertyChangingX.cs" />
     <Compile Include="SimpleObservable\ObservableClass\ObservableClass.cs" />

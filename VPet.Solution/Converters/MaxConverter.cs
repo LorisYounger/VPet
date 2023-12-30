@@ -1,10 +1,12 @@
 ﻿using System.Windows.Data;
 
-namespace VPet.House.Converters;
+using System.Windows;
 
-public class MaxConverter : IMultiValueConverter
+namespace HKW.WPF.Converters;
+
+public class MaxConverter : MultiValueConverterBase
 {
-    public object Convert(
+    public override object Convert(
         object[] values,
         Type targetType,
         object parameter,
@@ -12,15 +14,5 @@ public class MaxConverter : IMultiValueConverter
     )
     {
         return values.Max(i => (double)i);
-    }
-
-    public object[] ConvertBack(
-        object value,
-        Type[] targetTypes,
-        object parameter,
-        System.Globalization.CultureInfo culture
-    )
-    {
-        throw new NotImplementedException();
     }
 }
