@@ -71,6 +71,47 @@
 		<None Remove="Res\img\rank4.png" />
 		<None Remove="Res\img\rank5.png" />
 		<None Remove="Res\img\rank6.png" />
+		<None Remove="Res\img\rbgb.png" />
+		<None Remove="Res\img\rbgt.png" />
+		<None Remove="Res\img\r_autobuy_1.png" />
+		<None Remove="Res\img\r_autobuy_2.png" />
+		<None Remove="Res\img\r_autobuy_3.png" />
+		<None Remove="Res\img\r_autobuy_4.png" />
+		<None Remove="Res\img\r_level_1.png" />
+		<None Remove="Res\img\r_level_2.png" />
+		<None Remove="Res\img\r_level_3.png" />
+		<None Remove="Res\img\r_level_4.png" />
+		<None Remove="Res\img\r_level_5.png" />
+		<None Remove="Res\img\r_mod_1.png" />
+		<None Remove="Res\img\r_mod_2.png" />
+		<None Remove="Res\img\r_mod_3.png" />
+		<None Remove="Res\img\r_mostfood_Drink.png" />
+		<None Remove="Res\img\r_mostfood_Drug.png" />
+		<None Remove="Res\img\r_mostfood_Food.png" />
+		<None Remove="Res\img\r_mostfood_Functional.png" />
+		<None Remove="Res\img\r_mostfood_Gift.png" />
+		<None Remove="Res\img\r_mostfood_Meal.png" />
+		<None Remove="Res\img\r_mostfood_Snack.png" />
+		<None Remove="Res\img\r_singleexp_1.png" />
+		<None Remove="Res\img\r_singleexp_2.png" />
+		<None Remove="Res\img\r_singleexp_3.png" />
+		<None Remove="Res\img\r_singleexp_4.png" />
+		<None Remove="Res\img\r_singleexp_5.png" />
+		<None Remove="Res\img\r_singlemoney_1.png" />
+		<None Remove="Res\img\r_singlemoney_2.png" />
+		<None Remove="Res\img\r_singlemoney_3.png" />
+		<None Remove="Res\img\r_singlemoney_4.png" />
+		<None Remove="Res\img\r_timelength_1.png" />
+		<None Remove="Res\img\r_timelength_2.png" />
+		<None Remove="Res\img\r_timelength_3.png" />
+		<None Remove="Res\img\r_timelength_4.png" />
+		<None Remove="Res\img\r_timelength_5.png" />
+		<None Remove="Res\img\r_worktime_1.png" />
+		<None Remove="Res\img\r_worktime_2.png" />
+		<None Remove="Res\img\r_worktime_3.png" />
+		<None Remove="Res\img\r_worktime_4.png" />
+		<None Remove="Res\img\r_worktime_5.png" />
+		<None Remove="Res\img\r_worktime_6.png" />
 		<None Remove="快捷键通用注解.md" />
 	</ItemGroup>
 	<ItemGroup>
@@ -79,9 +120,8 @@
 		<Resource Include="Res\img\rank2.png" />
 		<Resource Include="Res\img\rank1.png" />
 		<Resource Include="Res\img\rank3.png" />
-		<Resource Include="Res\img\rank4.png" />
-		<Resource Include="Res\img\rank5.png" />
-		<Resource Include="Res\img\rank6.png" />
+		<Resource Include="Res\img\rbgb.png" />
+		<Resource Include="Res\img\r_mostfood_Food.png" />
 		<Resource Include="Res\remixicon.ttf" />
 		<Resource Include="vpeticon.ico" />
 	</ItemGroup>
@@ -143,6 +183,47 @@
 			<ProductName>.NET Framework 3.5 SP1</ProductName>
 			<Install>false</Install>
 		</BootstrapperPackage>
+	</ItemGroup>
+	<ItemGroup>
+	  <Resource Include="Res\img\rbgt.png" />
+	  <Resource Include="Res\img\r_autobuy_1.png" />
+	  <Resource Include="Res\img\r_autobuy_2.png" />
+	  <Resource Include="Res\img\r_autobuy_3.png" />
+	  <Resource Include="Res\img\r_autobuy_4.png" />
+	  <Resource Include="Res\img\r_level_1.png" />
+	  <Resource Include="Res\img\r_level_2.png" />
+	  <Resource Include="Res\img\r_level_3.png" />
+	  <Resource Include="Res\img\r_level_4.png" />
+	  <Resource Include="Res\img\r_level_5.png" />
+	  <Resource Include="Res\img\r_mod_1.png" />
+	  <Resource Include="Res\img\r_mod_2.png" />
+	  <Resource Include="Res\img\r_mod_3.png" />
+	  <Resource Include="Res\img\r_mostfood_Drink.png" />
+	  <Resource Include="Res\img\r_mostfood_Drug.png" />
+	  <Resource Include="Res\img\r_mostfood_Functional.png" />
+	  <Resource Include="Res\img\r_mostfood_Gift.png" />
+	  <Resource Include="Res\img\r_mostfood_Meal.png" />
+	  <Resource Include="Res\img\r_mostfood_Snack.png" />
+	  <Resource Include="Res\img\r_singleexp_1.png" />
+	  <Resource Include="Res\img\r_singleexp_2.png" />
+	  <Resource Include="Res\img\r_singleexp_3.png" />
+	  <Resource Include="Res\img\r_singleexp_4.png" />
+	  <Resource Include="Res\img\r_singleexp_5.png" />
+	  <Resource Include="Res\img\r_singlemoney_1.png" />
+	  <Resource Include="Res\img\r_singlemoney_2.png" />
+	  <Resource Include="Res\img\r_singlemoney_3.png" />
+	  <Resource Include="Res\img\r_singlemoney_4.png" />
+	  <Resource Include="Res\img\r_timelength_1.png" />
+	  <Resource Include="Res\img\r_timelength_2.png" />
+	  <Resource Include="Res\img\r_timelength_3.png" />
+	  <Resource Include="Res\img\r_timelength_4.png" />
+	  <Resource Include="Res\img\r_timelength_5.png" />
+	  <Resource Include="Res\img\r_worktime_1.png" />
+	  <Resource Include="Res\img\r_worktime_2.png" />
+	  <Resource Include="Res\img\r_worktime_3.png" />
+	  <Resource Include="Res\img\r_worktime_4.png" />
+	  <Resource Include="Res\img\r_worktime_5.png" />
+	  <Resource Include="Res\img\r_worktime_6.png" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 using VPet_Simulator.Windows.Interface;
@@ -236,8 +237,14 @@ namespace VPet_Simulator.Windows
             };
             if (saveFileDialog.ShowDialog() != true)
                 return;
-            RenderTargetBitmap image = new RenderTargetBitmap((int)r_output.ActualWidth, (int)r_output.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-            image.Render(r_output);
+            r_viewbox.ScrollToTop();
+            FrameworkElement outputbox;
+            if (r_output.ActualWidth > r_output_base.ActualWidth)
+                outputbox = r_output;
+            else
+                outputbox = r_output_base;
+            RenderTargetBitmap image = new RenderTargetBitmap((int)outputbox.ActualWidth, (int)outputbox.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            image.Render(outputbox);
             var path = saveFileDialog.FileName;
             using (MemoryStream ms = new MemoryStream())
             {
@@ -264,16 +271,18 @@ namespace VPet_Simulator.Windows
 
         private void btn_r_genRank_Click(object sender, RoutedEventArgs e)
         {
+            btn_r_genRank.IsEnabled = false;
             pb_r_genRank.Value = 0;
             pb_r_genRank.Visibility = Visibility.Visible;
-            btn_r_genRank.IsEnabled = false;
             Task.Run(GenRank);
         }
         private async void GenRank()
         {
+            mw.Set["v"][(gint)"rank"] = DateTime.Now.Year;
             bool useranking = mw.IsSteamUser && await Dispatcher.InvokeAsync(() => cb_AgreeUpload.IsChecked == true);
 
-            string petname = mw.IsSteamUser ? SteamClient.Name : Environment.UserName;
+            string petname = mw.GameSavesData.GameSave.Name;
+            string username = mw.IsSteamUser ? SteamClient.Name : Environment.UserName;
 
             int timelength = mw.GameSavesData.Statistics[(gint)"stat_total_time"];
             double timelength_h = (timelength / 3600.0);
@@ -295,44 +304,66 @@ namespace VPet_Simulator.Windows
             double timelengthph = timelength_h / startdatelength;
             string timelengthphtext;
             string timelengthtext;
+            int timelength_i;
             if (timelengthph < 2)
             {
                 timelengthphtext = "同学".Translate();
                 timelengthtext = '"' + "学长~前辈~".Translate() + '"';
+                timelength_i = 1;
             }
             else if (timelengthph < 4)
             {
                 timelengthphtext = "朋友".Translate();
                 timelengthtext = '"' + "兄弟!".Translate() + '"';
+                timelength_i = 2;
             }
             else if (timelengthph < 7)
             {
                 timelengthphtext = "挚友".Translate();
                 timelengthtext = '"' + "不求同年同月同日生，但求同年同月同日打开《虚拟桌宠模拟器》".Translate() + '"';
+                timelength_i = 3;
             }
             else if (timelengthph < 10)
             {
                 timelengthphtext = "家人".Translate();
                 timelengthtext = '"' + "We are 伐木累~".Translate() + '"';
+                timelength_i = 4;
             }
             else
             {
                 timelengthphtext = "女鹅".Translate();
                 timelengthtext = '"' + "爸妈~ 这么叫好像不太好".Translate() + '"';
+                timelength_i = 5;
             }
 
             await Dispatcher.InvokeAsync(() => pb_r_genRank.Value = 10);
             string studytext;
+            int study_i;
             if (mw.GameSavesData.GameSave.Level < 20)
+            {
                 studytext = "相当于桌宠的小学学历哦\n\"肃清! {0}的安魂曲☆\"".Translate(petname);
+                study_i = 1;
+            }
             else if (mw.GameSavesData.GameSave.Level < 40)
+            {
                 studytext = "相当于桌宠的中学学历哦\n<高考桌宠100天>".Translate();
+                study_i = 2;
+            }
             else if (mw.GameSavesData.GameSave.Level < 60)
+            {
                 studytext = "相当于桌宠的大学学历哦\n\"大学生上课吃饭睡觉, {0}学习吃饭睡觉, {0}＝大学生\"".Translate(petname);
+                study_i = 3;
+            }
             else if (mw.GameSavesData.GameSave.Level < 80)
+            {
                 studytext = "相当于桌宠的博士学历哦\n\"大学生上课吃饭睡觉, 人家和那个带兜帽的没关系啦\"".Translate();
+                study_i = 4;
+            }
             else
-                studytext = "<虚拟桌宠模拟器砖家>\n\"一定是{0}干的!\"".Translate(petname);
+            {
+                studytext = "<虚拟桌宠模拟器砖家>\n\"一定是{0}干的!\"".Translate(username);
+                study_i = 5;
+            }
 
             int studyexpmax, studymoneymax;
             double studyexpmaxrank = 0, studymoneymaxrank = 0;
@@ -360,23 +391,53 @@ namespace VPet_Simulator.Windows
                 studymoneymaxrank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
             }
             string studyexptext, workmoneytext;
+            int studyexp_i, workmoney_i;
             if (studyexpmaxrank < 0.25)
+            {
                 studyexptext = '"' + "在你这个年纪,你怎么睡得着觉的?".Translate() + '"';
-            else if (studyexpmaxrank < 0.5)
-                studyexptext = '"' + "学而不思则罔，思而不学则die".Translate() + '"';
+                studyexp_i = 5;
+            }
+            else if (studyexpmaxrank < 0.4)
+            {
+                studyexptext = '"' + "孩子学习老不好，多半是废了，快来试试思维驰学习机".Translate() + '"';
+                studyexp_i = 4;
+            }
+            else if (studyexpmaxrank < 0.55)
+            {
+                studyexptext = '"' + "孩子学习老不好，多半是废了，快来试试思维驰学习机".Translate() + '"';
+                studyexp_i = 3;
+            }
             else if (studyexpmaxrank < 0.75)
-                studyexptext = '"' + "学习?".Translate() + '"';
+            {
+                studyexptext = '"' + "学而不思则罔，思而不学则die".Translate() + '"';
+                studyexp_i = 2;
+            }
             else
+            {
                 studyexptext = '"' + "看我量子速读法!".Translate() + '"';
+                studyexp_i = 1;
+            }
 
             if (studymoneymaxrank < 0.25)
+            {
                 workmoneytext = '"' + "钱钱乃身外之物".Translate() + '"';
+                workmoney_i = 4;
+            }
             else if (studymoneymaxrank < 0.5)
+            {
                 workmoneytext = '"' + "风声雨声读书声声声入耳，日结月结次次结钱钱入账".Translate() + '"';
+                workmoney_i = 3;
+            }
             else if (studymoneymaxrank < 0.75)
+            {
                 workmoneytext = '"' + "有钱能使磨推鬼".Translate() + '"';
+                workmoney_i = 2;
+            }
             else
+            {
                 workmoneytext = '"' + "可是，我真的很需要那些钱钱!".Translate() + '"';
+                workmoney_i = 1;
+            }
 
             await Dispatcher.InvokeAsync(() => pb_r_genRank.Value = 40);
 
@@ -391,14 +452,37 @@ namespace VPet_Simulator.Windows
                 worktimephrank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
             }
             string worktimephtext;
+            int worktime_i;
             if (worktimephrank < 0.25)
+            {
                 worktimephtext = '"' + "干一天来歇一天, 能混一天是一天".Translate() + '"';
-            else if (worktimephrank < 0.5)
+                worktime_i = 1;
+            }
+            else if (worktimephrank < 0.35)
+            {
                 worktimephtext = '"' + "早8晚5，快乐回家".Translate() + '"';
+                worktime_i = 2;
+            }
+            else if (worktimephrank < 0.45)
+            {
+                worktimephtext = '"' + "早8晚5，快乐回家".Translate() + '"';
+                worktime_i = 3;
+            }
+            else if (worktimephrank < 0.55)
+            {
+                worktimephtext = '"' + "早8晚5，快乐回家".Translate() + '"';
+                worktime_i = 4;
+            }
             else if (worktimephrank < 0.75)
+            {
                 worktimephtext = '"' + "加班没有加班费不是基本常识吗?".Translate() + '"';
+                worktime_i = 5;
+            }
             else
+            {
                 worktimephtext = '"' + "老板! 路灯已经准备好了!".Translate() + '"';
+                worktime_i = 6;
+            }
 
             int betterbuytimes = mw.GameSavesData.Statistics[(gint)"stat_buytimes"];
             int betterbuycount = (int)mw.GameSavesData.Statistics[(gdbe)"stat_betterbuy"];
@@ -408,9 +492,9 @@ namespace VPet_Simulator.Windows
                 Name = "None",
             };
 
-            foreach (string name in mw.GameSavesData.Statistics.Data.Where(x => x.Key.StartsWith("buy_")).OrderByDescending(x => x.Value).Select(x => x.Key))
+            foreach (var pair in mw.GameSavesData.Statistics.Data.Where(x => x.Key.StartsWith("buy_")).OrderByDescending(x => ((int)x.Value)))
             {
-                var fn = name.Substring(4);
+                var fn = pair.Key.Substring(4);
                 var f = mw.Foods.FirstOrDefault(x => x.Name == fn);
                 if (f != null)
                 {
@@ -418,6 +502,7 @@ namespace VPet_Simulator.Windows
                     break;
                 }
             }
+
             string foodtext = "啥也没吃,{0}都饿坏了".Translate(petname);
             switch (mostfood.Type)
             {
@@ -454,14 +539,27 @@ namespace VPet_Simulator.Windows
                 autobuytimesphrank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
             }
             string autobuytext;
+            int autobuy_i;
             if (autobuytimesph < 0.25)
+            {
                 autobuytext = '"' + "主人, 是担心我乱买东西嘛".Translate() + '"';
+                autobuy_i = 4;
+            }
             else if (autobuytimesph < 0.5)
+            {
                 autobuytext = '"' + "自己赚的钱自己花".Translate() + '"';
+                autobuy_i = 3;
+            }
             else if (autobuytimesph < 0.75)
+            {
                 autobuytext = '"' + "不要小看我的情报网! 你自动购买礼物没关,对不对?".Translate() + '"';
+                autobuy_i = 2;
+            }
             else
+            {
                 autobuytext = '"' + "诚招保姆,工资面议".Translate() + '"';
+                autobuy_i = 1;
+            }
 
             await Dispatcher.InvokeAsync(() => pb_r_genRank.Value = 70);
 
@@ -477,12 +575,21 @@ namespace VPet_Simulator.Windows
                 modworkshoprank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
             }
             string modworkshoptext;
+            int modworkshop_i;
             if (modworkshop == 0)
+            {
                 modworkshoptext = '"' + "桌宠的steam创意工坊里有许多的mod喵, 主人快去试试吧".Translate() + '"';
+                modworkshop_i = 3;
+            }
             else if (modworkshoprank < 0.3)
-                modworkshoptext = '"' + "创意工坊又更新了很多有趣的mod喵, 主人要不要去看看?".Translate() + '"';
+            {
+                modworkshoptext = '"' + "主人还可以再去创意工坊体验更多MOD喵".Translate() + '"';
+                modworkshop_i = 3;
+            }
+            else if (modworkshoprank < 0.7)
+            { modworkshoptext = '"' + "创意工坊又更新了很多有趣的mod喵, 主人要不要去看看?".Translate() + '"'; modworkshop_i = 2; }
             else
-                modworkshoptext = '"' + "主人已经是mod大师了喵,要不要试试mod制作器,给我做mod喵!".Translate() + '"';
+            { modworkshoptext = '"' + "主人已经是mod大师了喵,要不要试试mod制作器,给我做mod喵!".Translate() + '"'; modworkshop_i = 1; }
 
             await Dispatcher.InvokeAsync(() => pb_r_genRank.Value = 80);
 
@@ -498,7 +605,7 @@ namespace VPet_Simulator.Windows
                 like -= 50;
                 liketext += '\uEE0F';
             }
-            if(liketext.Length == 0)
+            if (liketext.Length == 0)
             {
                 liketext = "\uEECA";
             }
@@ -523,27 +630,32 @@ namespace VPet_Simulator.Windows
                 r_r_lengthph.Text = timelengthph.ToString("f1");
                 r_r_lengthphtext.Text = timelengthphtext;
                 r_r_lenghtext.Text = timelengthtext;
+                r_i_timelength.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_timelength_{timelength_i}.png"));
 
                 r_r_level.Text = mw.GameSavesData.GameSave.Level.ToString();
                 r_r_exp.Text = mw.GameSavesData.GameSave.Exp.ToString("f0");
                 r_r_studytime.Text = (mw.GameSavesData.Statistics[(gint)"stat_study_time"] / 60).ToString();
                 r_r_studytext.Text = studytext;
+                r_i_exp.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_level_{study_i}.png"));
 
                 r_r_studyexpmax.Text = studyexpmax.ToString();
                 r_r_studyexpmaxrank.Text = studyexpmaxrank.ToString("p1");
                 r_r_studyexptext.Text = studyexptext;
+                r_i_singleexp.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_singleexp_{studyexp_i}.png"));
 
                 r_r_worktime.Text = (worktime / 60).ToString();
                 r_r_worktimeps.Text = worktimeph.ToString("p1");
                 r_r_worktimepsrank.Text = worktimephrank.ToString("p1");
                 r_r_worktext.Text = worktimephtext;
+                r_i_money.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_worktime_{worktime_i}.png"));
 
                 r_r_workmoneymax.Text = studymoneymax.ToString();
                 r_r_workmoneyrank.Text = studymoneymaxrank.ToString("p1");
                 r_r_workmoneytext.Text = workmoneytext;
+                r_i_singlemoney.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_singlemoney_{workmoney_i}.png"));
 
-                r_r_username.Text = petname;
-                r_r_petname.Text = r_r_petname_2.Text = r_r_petname_3.Text = r_r_petname_4.Text = mw.GameSavesData.GameSave.Name;
+                r_r_username.Text = username;
+                r_r_petname.Text = r_r_petname_2.Text = r_r_petname_3.Text = r_r_petname_4.Text = petname;
                 r_r_now.Text = DateTime.Now.ToShortDateString();
 
                 r_r_betterbuytimes.Text = betterbuytimes.ToString();
@@ -551,22 +663,31 @@ namespace VPet_Simulator.Windows
                 r_r_betterbuymosttype.Text = mostfood.Type.ToString().Translate();
                 r_r_betterbuymostitem.Text = mostfood.TranslateName;
                 r_r_betterbuymosttext.Text = foodtext;
+                r_i_mostfood.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_mostfood_{mostfood.Type}.png"));
 
                 r_r_autobuy.Text = autobuytimes.ToString();
                 r_r_autobuypres.Text = autobuytimesph.ToString("p1");
                 r_r_autobuyrank.Text = autobuytimesphrank.ToString("p1");
                 r_r_autobuytext.Text = autobuytext;
+                r_i_autobuy.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_autobuy_{autobuy_i}.png"));
 
                 r_r_modcount.Text = modworkshop.ToString();
                 r_r_modenablecount.Text = modon.ToString();
                 r_r_modcountrank.Text = modworkshoprank.ToString("p1");
                 r_r_modcounttext.Text = modworkshoptext;
+                r_i_mod.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_mod_{modworkshop_i}.png"));
 
                 r_r_sleeplength.Text = (mw.GameSavesData.Statistics[(gint)"stat_sleep_time"] / 3600.0).ToString("f1");
-                r_r_movelength.Text = mw.GameSavesData.Statistics[(gint)"stat_move_length"].ToString();
+                r_r_movelength.Text = px_tocm(mw.GameSavesData.Statistics[(gi64)"stat_move_length"], out string cm);
+                r_r_movelengthcm.Text = cm;
                 r_r_saycount.Text = mw.GameSavesData.Statistics[(gint)"stat_say_times"].ToString();
                 r_r_musiccount.Text = mw.GameSavesData.Statistics[(gint)"stat_music"].ToString();
                 r_r_touchtotal.Text = (mw.GameSavesData.Statistics[(gint)"stat_touch_body"] + mw.GameSavesData.Statistics[(gint)"stat_touch_head"]).ToString();
+
+                if (mw.GameSavesData.GameSave.Likability > 100)
+                    r_i_like.Visibility = Visibility.Visible;
+                else
+                    r_i_like.Visibility = Visibility.Collapsed;
 
                 r_r_opencount.Text = mw.GameSavesData.Statistics[(gint)"stat_open_times"].ToString();
                 r_r_bettercount.Text = mw.GameSavesData.Statistics[(gint)"stat_100_all"].ToString();
@@ -577,7 +698,31 @@ namespace VPet_Simulator.Windows
                 btn_r_genRank.IsEnabled = true;
                 btn_r_save.IsEnabled = true;
                 pb_r_genRank.Visibility = Visibility.Collapsed;
+                Width = 800;
             });
+        }
+        private string px_tocm(long px, out string cm)
+        {
+            if (px < 37795)
+            {
+                cm = "px";
+                return px.ToString();
+            }
+            else if (px < 3779527)
+            {
+                cm = "cm";
+                return (px * 2.54 / 96).ToString("f1");
+            }
+            else if (px < 377952755)
+            {
+                cm = "m";
+                return (px * 2.54 / 9600).ToString("f1");
+            }
+            else
+            {
+                cm = "km";
+                return (px * 2.54 / 9600000).ToString("f1");
+            }
         }
     }
 }
