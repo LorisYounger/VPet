@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 
-namespace VPet.Solution.Models;
+namespace VPet.Solution.Models.SettingEditor;
 
-public class GraphicsSettingModel : ObservableClass<SettingModel>
+public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
 {
     private double _zoomLevel = 1;
 

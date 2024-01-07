@@ -6,7 +6,7 @@ using System.Windows;
 using VPet.Solution.Properties;
 using VPet_Simulator.Windows.Interface;
 
-namespace VPet.Solution.Models;
+namespace VPet.Solution.Models.SettingEditor;
 
 public class SettingModel : ObservableClass<SettingModel>
 {

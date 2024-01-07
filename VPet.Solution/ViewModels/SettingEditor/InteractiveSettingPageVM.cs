@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VPet.Solution.Models;
+using VPet.Solution.Models.SettingEditor;
 
-namespace VPet.Solution.ViewModels;
+namespace VPet.Solution.ViewModels.SettingEditor;
 
 public class InteractiveSettingPageVM : ObservableClass<InteractiveSettingPageVM>
 {
@@ -18,12 +19,12 @@ public class InteractiveSettingPageVM : ObservableClass<InteractiveSettingPageVM
 
     public InteractiveSettingPageVM()
     {
-        MainWindowVM.Current.PropertyChangedX += Current_PropertyChangedX;
+        SettingWindowVM.Current.PropertyChangedX += Current_PropertyChangedX;
     }
 
-    private void Current_PropertyChangedX(MainWindowVM sender, PropertyChangedXEventArgs e)
+    private void Current_PropertyChangedX(SettingWindowVM sender, PropertyChangedXEventArgs e)
     {
-        if (e.PropertyName == nameof(MainWindowVM.CurrentSetting))
+        if (e.PropertyName == nameof(SettingWindowVM.CurrentSetting))
         {
             InteractiveSetting = sender.CurrentSetting.InteractiveSetting;
         }

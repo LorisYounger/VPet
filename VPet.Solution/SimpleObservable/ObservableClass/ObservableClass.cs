@@ -23,6 +23,14 @@ public abstract class ObservableClass<TObject>
         INotifyPropertyChangedX<TObject>
     where TObject : ObservableClass<TObject>
 {
+    public ObservableClass()
+    {
+        if (GetType() != typeof(TObject))
+            throw new InvalidCastException(
+                $"Inconsistency between target type [{GetType().FullName}] and generic type [{typeof(TObject).FullName}]"
+            );
+    }
+
     #region OnPropertyChange
     /// <summary>
     /// 设置属性值

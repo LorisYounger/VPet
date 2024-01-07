@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace VPet.Solution.Views;
+namespace VPet.Solution.Views.SettingEditor;
 
 /// <summary>
-/// SystemSettingsPage.xaml 的交互逻辑
+/// ModSettingsPage.xaml 的交互逻辑
 /// </summary>
-public partial class SystemSettingPage : Page
+public partial class ModSettingPage : Page
 {
-    public SystemSettingPage()
+    public ModSettingPage()
     {
         InitializeComponent();
     }

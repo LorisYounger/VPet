@@ -15,122 +15,24 @@
   MinWidth="400"
   MinHeight="200"
   d:DataContext="{d:DesignInstance Type=vm:MainWindowVM}"
+  WindowStartupLocation="CenterScreen"
   mc:Ignorable="d">
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" MinWidth="100" />
-      <ColumnDefinition MinWidth="300" />
+      <ColumnDefinition />
+      <ColumnDefinition />
     </Grid.ColumnDefinitions>
-    <Grid>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition />
-      </Grid.RowDefinitions>
-      <TextBox Style="{DynamicResource StandardTextBoxStyle}" Text="{Binding SearchSetting, UpdateSourceTrigger=PropertyChanged}" />
-      <ListBox
-        x:Name="ListBox_Saves"
-        Grid.Row="1"
-        d:ItemsSource="{d:SampleData ItemCount=5}"
-        ItemsSource="{Binding ShowSettings}"
-        SelectedItem="{Binding CurrentSetting}"
-        Style="{DynamicResource SideMenuListBoxStyle}">
-        <ListBox.ItemContainerStyle>
-          <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
-            <Setter Property="Content" Value="{Binding Name}" />
-            <Setter Property="ToolTip" Value="{Binding Path}" />
-          </Style>
-        </ListBox.ItemContainerStyle>
-      </ListBox>
-    </Grid>
-    <Grid Grid.Column="1">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition />
-      </Grid.RowDefinitions>
-      <ListBox x:Name="ListBox_Main" Style="{DynamicResource SideMenuListBoxStyle}">
-        <ListBox.ItemsPanel>
-          <ItemsPanelTemplate>
-            <StackPanel Orientation="Horizontal" />
-          </ItemsPanelTemplate>
-        </ListBox.ItemsPanel>
-        <ListBoxItem x:Name="ListBoxItem_GraphicsSettings" Content="{ll:Str 图形}" />
-        <ListBoxItem x:Name="ListBoxItem_SystemSettings" Content="{ll:Str 系统}" />
-        <ListBoxItem x:Name="ListBoxItem_InteractiveSettings" Content="{ll:Str 互动}" />
-        <ListBoxItem x:Name="ListBoxItem_CustomizedSettings" Content="{ll:Str 自定}" />
-        <ListBoxItem x:Name="ListBoxItem_DiagnosticSettings" Content="{ll:Str 诊断}" />
-        <ListBoxItem x:Name="ListBoxItem_ModSettings" Content="{ll:Str Mod管理}" />
-      </ListBox>
-      <Frame
-        x:Name="Frame_Main"
-        Grid.Row="1"
-        Content="{Binding SelectedItem.Tag, ElementName=ListBox_Main}"
-        ContentRendered="Frame_Main_ContentRendered"
-        NavigationUIVisibility="Hidden" />
-      <!--<TabControl
-          x:Name="MainTab"
-          Grid.Column="1"
-          Margin="5"
-          d:SelectionChanged="MainTab_SelectionChanged"
-          pu:TabControlHelper.CanHeaderPanelScroll="True"
-          pu:TabControlHelper.ItemsCornerRadius="4"
-          pu:TabControlHelper.ItemsHeight="NaN"
-          pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
-          pu:TabControlHelper.ItemsPadding="10,7"
-          pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"
-          pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
-          Background="Transparent"
-          BorderThickness="0"
-          Foreground="{DynamicResource PrimaryText}">
-          <TabControl.ContentTemplate>
-            <DataTemplate>
-              <Border
-                Margin="0,5,0,10"
-                Background="{DynamicResource DARKPrimaryText}"
-                CornerRadius="15">
-                <ContentControl Margin="10,5" Content="{Binding}" />
-              </Border>
-            </DataTemplate>
-          </TabControl.ContentTemplate>
-          <TabItem
-            BorderBrush="{DynamicResource PrimaryDarker}"
-            Foreground="{DynamicResource PrimaryText}"
-            Header="" />
-          <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 系统}" />
-          <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 互动}" />
-          <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 自定}" />
-          <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 诊断}" />
-          <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str MOD管理}" />
-        </TabControl>
-        <Label
-          x:Name="GameVerison"
-          Grid.ColumnSpan="2"
-          HorizontalAlignment="Right"
-          VerticalAlignment="Bottom"
-          Background="{x:Null}"
-          Content="版本v1.0 (655366666)"
-          FontSize="10"
-          Foreground="Green" />-->
-    </Grid>
-    <!--<Grid Grid.Column="1">
-        <TextBox
-          x:Name="tb_seach_menu"
-          Margin="3,6,6,0"
-          VerticalAlignment="Top"
-          d:TextChanged="tb_seach_menu_textchange"
-          pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
-          FontSize="16"
-          Style="{DynamicResource StandardTextBoxStyle}" />
-        <ListBox
-          x:Name="ListMenu"
-          Margin="3,40,6,3"
-          pu:ListBoxHelper.CornerRadius="5"
-          pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
-          pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource SecondaryLight}"
-          Background="{DynamicResource SecondaryLighter}"
-          BorderBrush="{DynamicResource Primary}"
-          BorderThickness="2"
-          ScrollViewer.HorizontalScrollBarVisibility="Auto"
-          ScrollViewer.VerticalScrollBarVisibility="Auto" />
-      </Grid>-->
+    <Button
+      x:Name="Button_OpenSettingEditor"
+      Click="Button_OpenSettingEditor_Click"
+      Content="{ll:Str 打开设置编辑器}"
+      FontSize="16"
+      Style="{DynamicResource Button_BaseStyle}" />
+    <Button
+      x:Name="Button_OpenSaveEditor"
+      Grid.Column="1"
+      Content="{ll:Str 打开存档编辑器}"
+      FontSize="16"
+      Style="{DynamicResource Button_BaseStyle}" />
   </Grid>
 </pu:WindowX>

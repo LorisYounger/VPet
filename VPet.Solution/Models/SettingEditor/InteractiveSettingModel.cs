@@ -1,7 +1,7 @@
 ﻿using HKW.HKWUtils.Observable;
 using VPet_Simulator.Core;
 
-namespace VPet.Solution.Models;
+namespace VPet.Solution.Models.SettingEditor;
 
 public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
 {

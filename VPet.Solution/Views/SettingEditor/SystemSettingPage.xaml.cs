@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace VPet.Solution.Views;
+namespace VPet.Solution.Views.SettingEditor;
 
 /// <summary>
-/// InteractiveSettingsPage.xaml 的交互逻辑
+/// SystemSettingsPage.xaml 的交互逻辑
 /// </summary>
-public partial class InteractiveSettingPage : Page
+public partial class SystemSettingPage : Page
 {
-    public InteractiveSettingPage()
+    public SystemSettingPage()
     {
         InitializeComponent();
     }

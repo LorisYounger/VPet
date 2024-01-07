@@ -4,6 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VPet.Solution.ViewModels;
+namespace VPet.Solution.ViewModels.SettingEditor;
 
-public class CustomizedSettingPageVM { }
+public class ModSettingPageVM { }

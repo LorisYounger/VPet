@@ -95,27 +95,31 @@
     <Compile Include="Converters\MaxConverter.cs" />
     <Compile Include="Converters\ValueToBoolConverter.cs" />
     <Compile Include="Converters\BoolInverter.cs" />
-    <Compile Include="Models\GraphicsSettingModel.cs" />
-    <Compile Include="Models\InteractiveSettingModel.cs" />
-    <Compile Include="Models\SystemSettingModel.cs" />
+    <Compile Include="Models\SettingEditor\GraphicsSettingModel.cs" />
+    <Compile Include="Models\SettingEditor\InteractiveSettingModel.cs" />
+    <Compile Include="Models\SettingEditor\SystemSettingModel.cs" />
     <Compile Include="Utils\ClearFocus.cs" />
     <Compile Include="Utils\ElementHelper.cs" />
     <Compile Include="Utils\FindTopParent.cs" />
-    <Compile Include="ViewModels\CustomizedSettingPageVM.cs" />
-    <Compile Include="ViewModels\DiagnosticSettingPageVM.cs" />
-    <Compile Include="ViewModels\ModSettingPageVM.cs" />
-    <Compile Include="Models\SettingModel.cs" />
-    <Compile Include="ViewModels\SystemSettingPageVM.cs" />
-    <Compile Include="Views\CustomizedSettingPage.xaml.cs">
+    <Compile Include="ViewModels\MainWindowVM.cs" />
+    <Compile Include="ViewModels\SettingEditor\CustomizedSettingPageVM.cs" />
+    <Compile Include="ViewModels\SettingEditor\DiagnosticSettingPageVM.cs" />
+    <Compile Include="ViewModels\SettingEditor\ModSettingPageVM.cs" />
+    <Compile Include="Models\SettingEditor\SettingModel.cs" />
+    <Compile Include="ViewModels\SettingEditor\SystemSettingPageVM.cs" />
+    <Compile Include="Views\SettingEditor\SettingWindow.xaml.cs">
+      <DependentUpon>SettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingEditor\CustomizedSettingPage.xaml.cs">
       <DependentUpon>CustomizedSettingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DiagnosticSettingPage.xaml.cs">
+    <Compile Include="Views\SettingEditor\DiagnosticSettingPage.xaml.cs">
       <DependentUpon>DiagnosticSettingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ModSettingPage.xaml.cs">
+    <Compile Include="Views\SettingEditor\ModSettingPage.xaml.cs">
       <DependentUpon>ModSettingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SystemSettingPage.xaml.cs">
+    <Compile Include="Views\SettingEditor\SystemSettingPage.xaml.cs">
       <DependentUpon>SystemSettingPage.xaml</DependentUpon>
     </Compile>
     <Page Include="Converters.xaml">
@@ -130,19 +134,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\CustomizedSettingPage.xaml">
+    <Page Include="Views\SettingEditor\SettingWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SettingEditor\CustomizedSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DiagnosticSettingPage.xaml">
+    <Page Include="Views\SettingEditor\DiagnosticSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GraphicsSettingPage.xaml">
+    <Page Include="Views\SettingEditor\GraphicsSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\InteractiveSettingPage.xaml">
+    <Page Include="Views\SettingEditor\InteractiveSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -154,13 +162,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModels\GraphicsSettingPageVM.cs" />
-    <Compile Include="ViewModels\InteractiveSettingPageVM.cs" />
-    <Compile Include="ViewModels\MainWindowVM.cs" />
-    <Compile Include="Views\GraphicsSettingPage.xaml.cs">
+    <Compile Include="ViewModels\SettingEditor\GraphicsSettingPageVM.cs" />
+    <Compile Include="ViewModels\SettingEditor\InteractiveSettingPageVM.cs" />
+    <Compile Include="ViewModels\SettingEditor\SettingWindowVM.cs" />
+    <Compile Include="Views\SettingEditor\GraphicsSettingPage.xaml.cs">
       <DependentUpon>GraphicsSettingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\InteractiveSettingPage.xaml.cs">
+    <Compile Include="Views\SettingEditor\InteractiveSettingPage.xaml.cs">
       <DependentUpon>InteractiveSettingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
@@ -195,11 +203,11 @@
     <Compile Include="NativeStyles.xaml.cs">
       <DependentUpon>NativeStyles.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\ModSettingPage.xaml">
+    <Page Include="Views\SettingEditor\ModSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SystemSettingPage.xaml">
+    <Page Include="Views\SettingEditor\SystemSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -241,6 +249,10 @@
       <Name>VPet-Simulator.Windows.Interface</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\SaveEditor\" />
+    <Folder Include="ViewModels\SaveEditor\" />
+    <Folder Include="Views\SaveEditor\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

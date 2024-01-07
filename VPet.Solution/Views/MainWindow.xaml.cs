@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using VPet.Solution.ViewModels;
+using VPet.Solution.Views.SettingEditor;
 
 namespace VPet.Solution.Views;
 
@@ -13,6 +14,8 @@ namespace VPet.Solution.Views;
 public partial class MainWindow : WindowX
 {
     public MainWindowVM ViewModel => (MainWindowVM)DataContext;
+
+    public SettingWindow SettingWindow { get; set; } = new();
 
     public MainWindow()
     {
@@ -24,21 +27,18 @@ public partial class MainWindow : WindowX
         InitializeComponent();
         this.SetViewModel<MainWindowVM>();
 
-        ListBoxItem_GraphicsSettings.Tag = new GraphicsSettingPage();
-        ListBoxItem_SystemSettings.Tag = new SystemSettingPage();
-        ListBoxItem_InteractiveSettings.Tag = new InteractiveSettingPage();
-        ListBoxItem_CustomizedSettings.Tag = new CustomizedSettingPage();
-        ListBoxItem_DiagnosticSettings.Tag = new DiagnosticSettingPage();
-        ListBoxItem_ModSettings.Tag = new ModSettingPage();
+        Closed += MainWindow_Closed;
     }
 
-    private void Frame_Main_ContentRendered(object sender, EventArgs e)
+    private void MainWindow_Closed(object sender, EventArgs e)
     {
-        if (sender is not Frame frame)
-            return;
-        // 清理过时页面
-        while (frame.CanGoBack)
-            frame.RemoveBackEntry();
-        GC.Collect();
+        SettingWindow.CloseX();
+    }
+
+    private void Button_OpenSettingEditor_Click(object sender, RoutedEventArgs e)
+    {
+        if (SettingWindow.IsVisible is false)
+            SettingWindow.Show();
+        SettingWindow.Activate();
     }
 }

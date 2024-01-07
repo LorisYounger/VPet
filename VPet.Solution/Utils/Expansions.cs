@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -321,6 +322,43 @@ public static class Extensions
     {
         return (T)(page.DataContext ??= new T());
     }
+
+    private static Dictionary<Window, WindowCloseState> _windowCloseStates = new();
+
+    public static void SetCloseState(this Window window, WindowCloseState state)
+    {
+        window.Closing -= WindowCloseState_Closing;
+        window.Closing += WindowCloseState_Closing;
+        _windowCloseStates[window] = state;
+    }
+
+    public static void CloseX(this Window window)
+    {
+        _windowCloseStates.Remove(window);
+        window.Closing -= WindowCloseState_Closing;
+        window.Close();
+    }
+
+    private static void WindowCloseState_Closing(object sender, CancelEventArgs e)
+    {
+        if (sender is not Window window)
+            return;
+        if (_windowCloseStates.TryGetValue(window, out var state) is false)
+            return;
+        if (state is WindowCloseState.Close)
+            return;
+        e.Cancel = true;
+        window.Visibility =
+            state is WindowCloseState.Hidden ? Visibility.Hidden : Visibility.Collapsed;
+        return;
+    }
+}
+
+public enum WindowCloseState
+{
+    Close,
+    Hidden,
+    Collapsed
 }
 
 /// <summary>

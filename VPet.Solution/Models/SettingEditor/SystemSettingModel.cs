@@ -1,6 +1,6 @@
-﻿namespace VPet.Solution.Models;
+﻿namespace VPet.Solution.Models.SettingEditor;
 
-public class SystemSettingModel : ObservableClass<SettingModel>
+public class SystemSettingModel : ObservableClass<SystemSettingModel>
 {
     /// <summary>
     /// 数据收集是否被禁止(当日)

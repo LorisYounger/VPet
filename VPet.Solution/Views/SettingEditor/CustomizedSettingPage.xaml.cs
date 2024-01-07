@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace VPet.Solution.Views;
+namespace VPet.Solution.Views.SettingEditor;
 
 /// <summary>
 /// CustomizedSettingsPage.xaml 的交互逻辑

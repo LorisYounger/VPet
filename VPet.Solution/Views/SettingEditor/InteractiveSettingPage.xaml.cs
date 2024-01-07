@@ -1,5 +1,4 @@
-﻿using HKW.HKWUtils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,20 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using VPet.Solution.ViewModels;
 
-namespace VPet.Solution.Views;
+namespace VPet.Solution.Views.SettingEditor;
 
 /// <summary>
-/// GraphicsSettingsPage.xaml 的交互逻辑
+/// InteractiveSettingsPage.xaml 的交互逻辑
 /// </summary>
-public partial class GraphicsSettingPage : Page
+public partial class InteractiveSettingPage : Page
 {
-    public GraphicsSettingPageVM ViewModel => (GraphicsSettingPageVM)DataContext;
-
-    public GraphicsSettingPage()
+    public InteractiveSettingPage()
     {
         InitializeComponent();
-        this.SetViewModel<GraphicsSettingPageVM>();
     }
 }
