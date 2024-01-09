@@ -325,6 +325,11 @@ public static class Extensions
 
     private static Dictionary<Window, WindowCloseState> _windowCloseStates = new();
 
+    /// <summary>
+    /// 设置关闭状态
+    /// </summary>
+    /// <param name="window"></param>
+    /// <param name="state">关闭状态</param>
     public static void SetCloseState(this Window window, WindowCloseState state)
     {
         window.Closing -= WindowCloseState_Closing;
@@ -332,11 +337,30 @@ public static class Extensions
         _windowCloseStates[window] = state;
     }
 
-    public static void CloseX(this Window window)
+    /// <summary>
+    /// 强制关闭
+    /// </summary>
+    /// <param name="window"></param>
+    public static void CloseX(this Window? window)
     {
+        if (window is null)
+            return;
         _windowCloseStates.Remove(window);
         window.Closing -= WindowCloseState_Closing;
         window.Close();
+    }
+
+    /// <summary>
+    /// 显示或者聚焦
+    /// </summary>
+    /// <param name="window"></param>
+    public static void ShowOrActivate(this Window? window)
+    {
+        if (window is null)
+            return;
+        if (window.IsVisible is false)
+            window.Show();
+        window.Activate();
     }
 
     private static void WindowCloseState_Closing(object sender, CancelEventArgs e)

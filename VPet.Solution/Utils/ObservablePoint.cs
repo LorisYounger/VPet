@@ -46,6 +46,11 @@ public class ObservablePoint : ObservableClass<ObservablePoint>, IEquatable<Obse
         return new(X, Y);
     }
 
+    public Point ToPoint()
+    {
+        return new Point(X, Y);
+    }
+
     #region Other
 
     /// <inheritdoc/>

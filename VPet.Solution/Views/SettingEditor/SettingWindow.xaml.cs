@@ -12,6 +12,7 @@ namespace VPet.Solution.Views.SettingEditor;
 /// </summary>
 public partial class SettingWindow : WindowX
 {
+    public static SettingWindow Instance { get; private set; }
     public SettingWindowVM ViewModel => (SettingWindowVM)DataContext;
 
     public SettingWindow()
@@ -26,6 +27,8 @@ public partial class SettingWindow : WindowX
         ListBoxItem_CustomizedSettings.Tag = new CustomizedSettingPage();
         ListBoxItem_DiagnosticSettings.Tag = new DiagnosticSettingPage();
         ListBoxItem_ModSettings.Tag = new ModSettingPage();
+        ListBox_Pages.SelectedIndex = 0;
+        Instance = this;
     }
 
     private void Frame_Main_ContentRendered(object sender, EventArgs e)

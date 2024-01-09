@@ -274,7 +274,8 @@
               Style="{DynamicResource Switch_BaseStyle}"
               ToolTip="{ll:Str '从Steam启动该游戏, 统计时长不能停'}" />
           </Grid>
-          <Grid MinHeight="40">
+          <!--  无需设置  -->
+          <!--<Grid MinHeight="40">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" />
               <ColumnDefinition />
@@ -302,7 +303,7 @@
                 Text="{ll:Str '动画描述...'}"
                 TextWrapping="WrapWithOverflow" />
             </Grid>
-          </Grid>
+          </Grid>-->
           <Grid MinHeight="40">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" />

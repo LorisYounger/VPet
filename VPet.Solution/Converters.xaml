@@ -10,6 +10,6 @@
   <c:BoolToVisibilityConverter x:Key="FalseToHiddenConverter" />
   <c:EqualsConverter x:Key="EqualsConverter" />
   <c:EqualsConverter x:Key="NotEqualsConverter" Inverter="True" />
-  <c:ValueToBoolConverter x:Key="NullToFalse" />
+  <c:ValueToBoolConverter x:Key="NullToFalse" Invert="True" />
   <c:BoolInverter x:Key="BoolInverter" />
 </ResourceDictionary>

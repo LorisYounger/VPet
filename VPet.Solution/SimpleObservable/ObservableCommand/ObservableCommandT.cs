@@ -8,7 +8,7 @@ namespace HKW.HKWUtils.Observable;
 /// 具有参数的可观察命令
 /// </summary>
 [DebuggerDisplay("\\{ObservableCommand, CanExecute = {IsCanExecute.Value}\\}")]
-public class ObservableCommand<T> : ObservableClass<ObservableCommand>, ICommand
+public class ObservableCommand<T> : ObservableClass<ObservableCommand<T>>, ICommand
 {
     bool _isCanExecute = true;
 

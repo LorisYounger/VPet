@@ -1,5 +1,6 @@
 ﻿using FastMember;
 using HKW.HKWUtils.Observable;
+using LinePutScript;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -24,7 +25,7 @@ public class SettingModel : ObservableClass<SettingModel>
     private string _filePath;
 
     /// <summary>
-    /// 路径
+    /// 文件路径
     /// </summary>
     public string FilePath
     {
@@ -54,15 +55,21 @@ public class SettingModel : ObservableClass<SettingModel>
         set => SetProperty(ref _interactiveSetting, value);
     }
 
+    private static HashSet<string> _settingProperties =
+        new(typeof(Setting).GetProperties().Select(p => p.Name));
+
+    private Setting _setting;
+
     public SettingModel(Setting setting)
     {
-        GraphicsSetting = LoadGraphicsSettings(setting);
+        _setting = setting;
+        GraphicsSetting = LoadGraphicsSettings();
     }
 
-    private GraphicsSettingModel LoadGraphicsSettings(Setting setting)
+    private GraphicsSettingModel LoadGraphicsSettings()
     {
         var graphicsSettings = new GraphicsSettingModel();
-        var sourceAccessor = ObjectAccessor.Create(setting);
+        var sourceAccessor = ObjectAccessor.Create(_setting);
         var targetAccessor = ObjectAccessor.Create(graphicsSettings);
         foreach (var property in typeof(GraphicsSettingModel).GetProperties())
         {
@@ -76,5 +83,34 @@ public class SettingModel : ObservableClass<SettingModel>
             }
         }
         return graphicsSettings;
+    }
+
+    public void Save()
+    {
+        SaveGraphicsSettings();
+        File.WriteAllText(FilePath, _setting.ToString());
+    }
+
+    private void SaveGraphicsSettings()
+    {
+        var sourceAccessor = ObjectAccessor.Create(GraphicsSetting);
+        var targetAccessor = ObjectAccessor.Create(_setting);
+        foreach (var property in typeof(GraphicsSettingModel).GetProperties())
+        {
+            //if (_settingProperties.Contains(property.Name) is false)
+            //    continue;
+            var sourceValue = sourceAccessor[property.Name];
+            var targetValue = targetAccessor[property.Name];
+            if (sourceValue.Equals(targetValue))
+                continue;
+            if (sourceValue is ObservablePoint point)
+            {
+                targetAccessor[property.Name] = point.ToPoint();
+            }
+            else
+            {
+                targetAccessor[property.Name] = sourceValue;
+            }
+        }
     }
 }

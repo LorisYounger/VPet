@@ -26,6 +26,8 @@
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
       <TextBox Style="{DynamicResource StandardTextBoxStyle}" Text="{Binding SearchSetting, UpdateSourceTrigger=PropertyChanged}" />
       <ListBox
@@ -37,18 +39,44 @@
         Style="{DynamicResource SideMenuListBoxStyle}">
         <ListBox.ItemContainerStyle>
           <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
+            <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}" />
             <Setter Property="Content" Value="{Binding Name}" />
-            <Setter Property="ToolTip" Value="{Binding Path}" />
+            <Setter Property="ToolTip" Value="{Binding FilePath}" />
+            <Setter Property="ContextMenu">
+              <Setter.Value>
+                <ContextMenu>
+                  <MenuItem
+                    Command="{Binding PlacementTarget.Tag.SaveSettingCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                    CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                    Header="{ll:Str 保存}" />
+                </ContextMenu>
+              </Setter.Value>
+            </Setter>
           </Style>
         </ListBox.ItemContainerStyle>
       </ListBox>
+      <Button
+        Grid.Row="2"
+        Margin="0"
+        HorizontalAlignment="Stretch"
+        Command="{Binding ResetSettingCommand}"
+        Content="{ll:Str 重置选中的设置}"
+        IsEnabled="{Binding SelectedItem, ElementName=ListBox_Saves, Converter={StaticResource NullToFalse}}"
+        Style="{DynamicResource Button_BaseStyle}" />
+      <Button
+        Grid.Row="3"
+        Margin="0"
+        HorizontalAlignment="Stretch"
+        Command="{Binding SaveAllSettingCommand}"
+        Content="{ll:Str 全部保存}"
+        Style="{DynamicResource Button_BaseStyle}" />
     </Grid>
     <Grid Grid.Column="1">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition />
       </Grid.RowDefinitions>
-      <ListBox x:Name="ListBox_Main" Style="{DynamicResource SideMenuListBoxStyle}">
+      <ListBox x:Name="ListBox_Pages" Style="{DynamicResource SideMenuListBoxStyle}">
         <ListBox.ItemsPanel>
           <ItemsPanelTemplate>
             <StackPanel Orientation="Horizontal" />
@@ -64,7 +92,7 @@
       <Frame
         x:Name="Frame_Main"
         Grid.Row="1"
-        Content="{Binding SelectedItem.Tag, ElementName=ListBox_Main}"
+        Content="{Binding SelectedItem.Tag, ElementName=ListBox_Pages}"
         ContentRendered="Frame_Main_ContentRendered"
         NavigationUIVisibility="Hidden" />
       <!--<TabControl

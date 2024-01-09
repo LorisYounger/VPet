@@ -37,8 +37,6 @@ public partial class MainWindow : WindowX
 
     private void Button_OpenSettingEditor_Click(object sender, RoutedEventArgs e)
     {
-        if (SettingWindow.IsVisible is false)
-            SettingWindow.Show();
-        SettingWindow.Activate();
+        SettingWindow.ShowOrActivate();
     }
 }

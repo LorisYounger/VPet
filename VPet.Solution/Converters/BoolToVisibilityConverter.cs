@@ -14,7 +14,7 @@ public class BoolToVisibilityConverter : BoolToValueConverterBase<BoolToVisibili
         DependencyProperty.Register(
             nameof(TrueVisibilityValue),
             typeof(Visibility),
-            typeof(AllIsBoolToVisibilityConverter),
+            typeof(BoolToVisibilityConverter),
             new PropertyMetadata(Visibility.Visible)
         );
 
@@ -35,7 +35,7 @@ public class BoolToVisibilityConverter : BoolToValueConverterBase<BoolToVisibili
         DependencyProperty.Register(
             nameof(FalseVisibilityValue),
             typeof(Visibility),
-            typeof(AllIsBoolToVisibilityConverter),
+            typeof(BoolToVisibilityConverter),
             new PropertyMetadata(Visibility.Hidden)
         );
 
