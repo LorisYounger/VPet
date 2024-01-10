@@ -49,20 +49,16 @@
                     Command="{Binding PlacementTarget.Tag.SaveSettingCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                     CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                     Header="{ll:Str 保存}" />
+                  <MenuItem
+                    Command="{Binding PlacementTarget.Tag.ResetSettingCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                    CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                    Header="{ll:Str 重置}" />
                 </ContextMenu>
               </Setter.Value>
             </Setter>
           </Style>
         </ListBox.ItemContainerStyle>
       </ListBox>
-      <Button
-        Grid.Row="2"
-        Margin="0"
-        HorizontalAlignment="Stretch"
-        Command="{Binding ResetSettingCommand}"
-        Content="{ll:Str 重置选中的设置}"
-        IsEnabled="{Binding SelectedItem, ElementName=ListBox_Saves, Converter={StaticResource NullToFalse}}"
-        Style="{DynamicResource Button_BaseStyle}" />
       <Button
         Grid.Row="3"
         Margin="0"
@@ -71,7 +67,7 @@
         Content="{ll:Str 全部保存}"
         Style="{DynamicResource Button_BaseStyle}" />
     </Grid>
-    <Grid Grid.Column="1">
+    <Grid Grid.Column="1" IsEnabled="{Binding SelectedItem, ElementName=ListBox_Saves, Converter={StaticResource NullToFalse}}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition />

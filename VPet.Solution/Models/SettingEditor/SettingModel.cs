@@ -2,6 +2,7 @@
 using HKW.HKWUtils.Observable;
 using LinePutScript;
 using System.ComponentModel;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using VPet.Solution.Properties;
@@ -60,6 +61,8 @@ public class SettingModel : ObservableClass<SettingModel>
 
     private Setting _setting;
 
+    private ReflectionOptions _saveReflectionOptions = new() { CheckValueEquals = true };
+
     public SettingModel(Setting setting)
     {
         _setting = setting;
@@ -68,21 +71,9 @@ public class SettingModel : ObservableClass<SettingModel>
 
     private GraphicsSettingModel LoadGraphicsSettings()
     {
-        var graphicsSettings = new GraphicsSettingModel();
-        var sourceAccessor = ObjectAccessor.Create(_setting);
-        var targetAccessor = ObjectAccessor.Create(graphicsSettings);
-        foreach (var property in typeof(GraphicsSettingModel).GetProperties())
-        {
-            if (sourceAccessor[property.Name] is Point point)
-            {
-                targetAccessor[property.Name] = new ObservablePoint(point);
-            }
-            else
-            {
-                targetAccessor[property.Name] = sourceAccessor[property.Name];
-            }
-        }
-        return graphicsSettings;
+        var graphicsSetting = new GraphicsSettingModel();
+        ReflectionUtils.SetValue(_setting, graphicsSetting);
+        return graphicsSetting;
     }
 
     public void Save()
@@ -93,24 +84,6 @@ public class SettingModel : ObservableClass<SettingModel>
 
     private void SaveGraphicsSettings()
     {
-        var sourceAccessor = ObjectAccessor.Create(GraphicsSetting);
-        var targetAccessor = ObjectAccessor.Create(_setting);
-        foreach (var property in typeof(GraphicsSettingModel).GetProperties())
-        {
-            //if (_settingProperties.Contains(property.Name) is false)
-            //    continue;
-            var sourceValue = sourceAccessor[property.Name];
-            var targetValue = targetAccessor[property.Name];
-            if (sourceValue.Equals(targetValue))
-                continue;
-            if (sourceValue is ObservablePoint point)
-            {
-                targetAccessor[property.Name] = point.ToPoint();
-            }
-            else
-            {
-                targetAccessor[property.Name] = sourceValue;
-            }
-        }
+        ReflectionUtils.SetValue(GraphicsSetting, _setting, _saveReflectionOptions);
     }
 }

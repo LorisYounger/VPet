@@ -31,12 +31,6 @@ public class ObservablePoint : ObservableClass<ObservablePoint>, IEquatable<Obse
         Y = y;
     }
 
-    public ObservablePoint(Point point)
-    {
-        X = point.X;
-        Y = point.Y;
-    }
-
     /// <summary>
     /// 复制一个新的对象
     /// </summary>
@@ -86,6 +80,19 @@ public class ObservablePoint : ObservableClass<ObservablePoint>, IEquatable<Obse
     }
 
     #endregion
+}
+
+public class ObservablePointToPointConverter : ReflectionConverterBase<ObservablePoint, Point>
+{
+    public override Point Convert(ObservablePoint sourceValue)
+    {
+        return new(sourceValue.X, sourceValue.Y);
+    }
+
+    public override ObservablePoint ConvertBack(Point targetValue)
+    {
+        return new(targetValue.X, targetValue.Y);
+    }
 }
 
 ///// <summary>

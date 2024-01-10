@@ -107,8 +107,8 @@
               x:Name="Slider_Zoom"
               Grid.Column="1"
               LargeChange="0.1"
-              Maximum="3"
-              Minimum="0.5"
+              Maximum="{Binding GraphicsSetting.ZoomLevelMaximum}"
+              Minimum="{Binding GraphicsSetting.ZoomLevelMinimum}"
               SmallChange="0.05"
               Style="{DynamicResource Slider_BaseStyle}"
               TickFrequency="0.05"
@@ -117,8 +117,8 @@
               Grid.Column="2"
               Foreground="{DynamicResource DARKPrimaryDarker}"
               Interval="0.1"
-              Maximum="3"
-              Minimum="0.5"
+              Maximum="{Binding GraphicsSetting.ZoomLevelMaximum}"
+              Minimum="{Binding GraphicsSetting.ZoomLevelMinimum}"
               Style="{DynamicResource NumberInput_BaseStyle}"
               Value="{Binding Value, ElementName=Slider_Zoom}" />
           </Grid>

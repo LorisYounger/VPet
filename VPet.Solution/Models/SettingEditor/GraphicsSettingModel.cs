@@ -1,10 +1,12 @@
-﻿using System.ComponentModel;
+﻿using HKW.HKWUtils.Observable;
+using System.ComponentModel;
 using System.Windows;
 
 namespace VPet.Solution.Models.SettingEditor;
 
 public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
 {
+    #region
     private double _zoomLevel = 1;
 
     /// <summary>
@@ -17,6 +19,24 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
         set => SetProperty(ref _zoomLevel, value);
     }
 
+    private double _zoomLevelMinimum = 0.5;
+
+    [DefaultValue(0.5)]
+    public double ZoomLevelMinimum
+    {
+        get => _zoomLevelMinimum;
+        set => SetProperty(ref _zoomLevelMinimum, value);
+    }
+
+    private double _zoomLevelMaximum = 3;
+
+    [DefaultValue(3)]
+    public double ZoomLevelMaximum
+    {
+        get => _zoomLevelMaximum;
+        set => SetProperty(ref _zoomLevelMaximum, value);
+    }
+    #endregion
     private int _resolution = 1000;
 
     /// <summary>
@@ -37,7 +57,14 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     public bool IsBiggerScreen
     {
         get => _isBiggerScreen;
-        set => SetProperty(ref _isBiggerScreen, value);
+        set
+        {
+            SetProperty(ref _isBiggerScreen, value);
+            if (value is true)
+                ZoomLevelMaximum = 8;
+            else
+                ZoomLevelMaximum = 3;
+        }
     }
 
     private bool _topMost;
@@ -143,6 +170,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 设置中桌宠启动的位置
     /// </summary>
+    [ReflectionPropertyInfo(typeof(ObservablePointToPointConverter))]
     public ObservablePoint StartRecordPoint
     {
         get => _startRecordPoint;

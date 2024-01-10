@@ -101,6 +101,7 @@
     <Compile Include="Utils\ClearFocus.cs" />
     <Compile Include="Utils\ElementHelper.cs" />
     <Compile Include="Utils\FindTopParent.cs" />
+    <Compile Include="Utils\ReflectionUtils.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\SettingEditor\CustomizedSettingPageVM.cs" />
     <Compile Include="ViewModels\SettingEditor\DiagnosticSettingPageVM.cs" />

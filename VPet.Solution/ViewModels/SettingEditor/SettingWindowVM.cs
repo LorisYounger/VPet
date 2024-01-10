@@ -1,5 +1,6 @@
 ﻿using HKW.HKWUtils.Observable;
 using LinePutScript;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
     #endregion
 
     #region Command
-    public ObservableCommand ResetSettingCommand { get; } = new();
+    public ObservableCommand<SettingModel> ResetSettingCommand { get; } = new();
     public ObservableCommand<SettingModel> SaveSettingCommand { get; } = new();
     public ObservableCommand SaveAllSettingCommand { get; } = new();
     #endregion
@@ -62,6 +63,13 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
         PropertyChanged += MainWindowVM_PropertyChanged;
         ResetSettingCommand.ExecuteCommand += ResetSettingCommand_ExecuteCommand;
         SaveSettingCommand.ExecuteCommand += SaveSettingCommand_ExecuteCommand;
+        SaveAllSettingCommand.ExecuteCommand += SaveAllSettingCommand_ExecuteCommand;
+    }
+
+    private void SaveAllSettingCommand_ExecuteCommand()
+    {
+        foreach (var setting in _settings)
+            setting.Save();
     }
 
     private void SaveSettingCommand_ExecuteCommand(SettingModel parameter)
@@ -69,22 +77,26 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
         parameter.Save();
     }
 
-    private void ResetSettingCommand_ExecuteCommand()
+    private void ResetSettingCommand_ExecuteCommand(SettingModel parameter)
     {
         if (
-            MessageBoxX.Show(
+            MessageBox.Show(
                 SettingWindow.Instance,
-                "确定重置吗",
+                "确定重置设置吗\n名称: {0}\n路径: {1}".Translate(parameter.Name, parameter.FilePath),
                 "",
                 MessageBoxButton.YesNo,
-                MessageBoxIcon.Warning
+                MessageBoxImage.Warning
             )
             is not MessageBoxResult.Yes
         )
             return;
         CurrentSetting = _settings[_settings.IndexOf(CurrentSetting)] = new SettingModel(
             new Setting("")
-        );
+        )
+        {
+            Name = CurrentSetting.Name,
+            FilePath = CurrentSetting.FilePath
+        };
         RefreshShowSettings(SearchSetting);
     }
 
