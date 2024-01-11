@@ -48,8 +48,29 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
     #endregion
 
     #region Command
+    /// <summary>
+    /// 打开文件
+    /// </summary>
+    public ObservableCommand<SettingModel> OpenFileCommand { get; } = new();
+
+    /// <summary>
+    /// 从资源管理器打开
+    /// </summary>
+    public ObservableCommand<SettingModel> OpenFileInExplorerCommand { get; } = new();
+
+    /// <summary>
+    /// 重置
+    /// </summary>
     public ObservableCommand<SettingModel> ResetSettingCommand { get; } = new();
+
+    /// <summary>
+    /// 保存
+    /// </summary>
     public ObservableCommand<SettingModel> SaveSettingCommand { get; } = new();
+
+    /// <summary>
+    /// 保存全部
+    /// </summary>
     public ObservableCommand SaveAllSettingCommand { get; } = new();
     #endregion
     public SettingWindowVM()
@@ -59,15 +80,37 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
 
         foreach (var s in LoadSettings())
             _settings.Add(s);
-
         PropertyChanged += MainWindowVM_PropertyChanged;
+        OpenFileCommand.ExecuteCommand += OpenFileCommand_ExecuteCommand;
+        OpenFileInExplorerCommand.ExecuteCommand += OpenFileInExplorerCommand_ExecuteCommand;
         ResetSettingCommand.ExecuteCommand += ResetSettingCommand_ExecuteCommand;
         SaveSettingCommand.ExecuteCommand += SaveSettingCommand_ExecuteCommand;
         SaveAllSettingCommand.ExecuteCommand += SaveAllSettingCommand_ExecuteCommand;
     }
 
+    private void OpenFileInExplorerCommand_ExecuteCommand(SettingModel parameter)
+    {
+        Utils.OpenFileInExplorer(parameter.FilePath);
+    }
+
+    private void OpenFileCommand_ExecuteCommand(SettingModel parameter)
+    {
+        Utils.OpenFile(parameter.FilePath);
+    }
+
     private void SaveAllSettingCommand_ExecuteCommand()
     {
+        if (
+            MessageBox.Show(
+                SettingWindow.Instance,
+                "确定全部保存吗".Translate(),
+                "",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning
+            )
+            is not MessageBoxResult.Yes
+        )
+            return;
         foreach (var setting in _settings)
             setting.Save();
     }
@@ -90,9 +133,7 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
             is not MessageBoxResult.Yes
         )
             return;
-        CurrentSetting = _settings[_settings.IndexOf(CurrentSetting)] = new SettingModel(
-            new Setting("")
-        )
+        CurrentSetting = _settings[_settings.IndexOf(CurrentSetting)] = new SettingModel()
         {
             Name = CurrentSetting.Name,
             FilePath = CurrentSetting.FilePath

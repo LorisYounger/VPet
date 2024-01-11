@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VPet.Solution.ViewModels.SettingEditor;
 
 namespace VPet.Solution.Views.SettingEditor;
 
@@ -20,8 +21,11 @@ namespace VPet.Solution.Views.SettingEditor;
 /// </summary>
 public partial class InteractiveSettingPage : Page
 {
+    public InteractiveSettingPageVM ViewModel => (InteractiveSettingPageVM)DataContext;
+
     public InteractiveSettingPage()
     {
         InitializeComponent();
+        this.SetViewModel<InteractiveSettingPageVM>();
     }
 }

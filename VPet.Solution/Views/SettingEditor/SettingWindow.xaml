@@ -44,14 +44,22 @@
             <Setter Property="ToolTip" Value="{Binding FilePath}" />
             <Setter Property="ContextMenu">
               <Setter.Value>
-                <ContextMenu>
+                <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Mode=Self}}">
+                  <MenuItem
+                    Command="{Binding PlacementTarget.Tag.OpenFileDommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                    CommandParameter="{Binding}"
+                    Header="{ll:Str 打开文件}" />
+                  <MenuItem
+                    Command="{Binding PlacementTarget.Tag.OpenFileInExplorerCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                    CommandParameter="{Binding}"
+                    Header="{ll:Str 从资源管理器打开文件}" />
                   <MenuItem
                     Command="{Binding PlacementTarget.Tag.SaveSettingCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                    CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                    CommandParameter="{Binding}"
                     Header="{ll:Str 保存}" />
                   <MenuItem
                     Command="{Binding PlacementTarget.Tag.ResetSettingCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                    CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                    CommandParameter="{Binding}"
                     Header="{ll:Str 重置}" />
                 </ContextMenu>
               </Setter.Value>

@@ -24,7 +24,8 @@
           FontSize="16"
           FontWeight="Bold"
           Style="{DynamicResource Label_BaseStyle}" />
-        <Grid MinHeight="40">
+        <!--  存档才有这个设置  -->
+        <!--<Grid MinHeight="40">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
@@ -35,7 +36,7 @@
             Grid.Column="1"
             Style="{DynamicResource StandardTextBoxStyle}"
             Text="{Binding InteractiveSetting.PetName}" />
-        </Grid>
+        </Grid>-->
         <Grid MinHeight="40">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -55,15 +56,10 @@
             Grid.Column="2"
             pu:ComboBoxHelper.Watermark="{ll:Str '当关闭数据计算时\&#13;桌宠显示的状态'}"
             IsEnabled="{Binding IsChecked, ElementName=Switch_EnablePetState, Converter={StaticResource BoolInverter}}"
-            SelectedIndex="0"
+            ItemsSource="{Binding InteractiveSetting.ModeTypes}"
             SelectedItem="{Binding InteractiveSetting.CalFunState}"
             Style="{DynamicResource ComboBox_BaseStyle}"
-            ToolTip="{ll:Str '当关闭数据计算时\&#13;桌宠显示的状态'}">
-            <ComboBoxItem Content="Happy" />
-            <ComboBoxItem Content="Nomal" />
-            <ComboBoxItem Content="PoorCondition" />
-            <ComboBoxItem Content="Ill" />
-          </ComboBox>
+            ToolTip="{ll:Str '当关闭数据计算时\&#13;桌宠显示的状态'}" />
         </Grid>
         <Grid MinHeight="40">
           <Grid.ColumnDefinitions>
@@ -376,7 +372,7 @@
             Maximum="100"
             Minimum="{Binding ElementName=VoiceCatchSilder, Path=Value}"
             SmallChange="1"
-            Style="{DynamicResource StandardSliderStyle}"
+            Style="{DynamicResource Slider_BaseStyle}"
             TickFrequency="1"
             ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}"
             Value="75" />
