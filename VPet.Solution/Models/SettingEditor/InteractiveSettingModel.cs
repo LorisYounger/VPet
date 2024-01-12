@@ -1,5 +1,6 @@
 ﻿using HKW.HKWUtils.Observable;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using VPet_Simulator.Core;
 
 namespace VPet.Solution.Models.SettingEditor;
@@ -165,11 +166,12 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     #endregion
 
     #region SmartMoveInterval
-    private int _smartMoveInterval;
+    private int _smartMoveInterval = 0;
 
     /// <summary>
     /// 智能移动周期 (秒)
     /// </summary>
+    [DefaultValue(1)]
     [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.SmartMoveInterval))]
     [ReflectionPropertyConverter(typeof(SecondToMinuteConverter))]
     public int SmartMoveInterval
@@ -178,7 +180,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
         set => SetProperty(ref _smartMoveInterval, value);
     }
 
-    public static ObservableCollection<int> SmartMoveIntervals =
+    public static ObservableCollection<int> SmartMoveIntervals { get; } =
         new() { 1, 2, 5, 10, 20, 30, 40, 50, 60 };
     #endregion
 
@@ -197,13 +199,14 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     #endregion
 
     #region MusicCatch
-    private double _musicCatch;
+    private int _musicCatch;
 
     /// <summary>
     /// 当实时播放音量达到该值时运行音乐动作
     /// </summary>
     [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.MusicCatch))]
-    public double MusicCatch
+    [ReflectionPropertyConverter(typeof(DoubleToInt32Converter))]
+    public int MusicCatch
     {
         get => _musicCatch;
         set => SetProperty(ref _musicCatch, value);
@@ -211,13 +214,14 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     #endregion
 
     #region MusicMax
-    private double _musicMax;
+    private int _musicMax;
 
     /// <summary>
     /// 当实时播放音量达到该值时运行特殊音乐动作
     /// </summary>
     [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.MusicMax))]
-    public double MusicMax
+    [ReflectionPropertyConverter(typeof(DoubleToInt32Converter))]
+    public int MusicMax
     {
         get => _musicMax;
         set => SetProperty(ref _musicMax, value);
@@ -281,14 +285,27 @@ public class SecondToMinuteConverter : ReflectionConverterBase<int, int>
 {
     public override int Convert(int sourceValue)
     {
-        if (sourceValue == 30)
-            return 1;
-        else
-            return sourceValue / 60;
+        return sourceValue * 60;
     }
 
     public override int ConvertBack(int targetValue)
     {
-        return targetValue * 60;
+        if (targetValue == 30)
+            return 1;
+        else
+            return targetValue / 60;
+    }
+}
+
+public class DoubleToInt32Converter : ReflectionConverterBase<int, double>
+{
+    public override double Convert(int sourceValue)
+    {
+        return sourceValue;
+    }
+
+    public override int ConvertBack(double targetValue)
+    {
+        return System.Convert.ToInt32(targetValue);
     }
 }

@@ -14,6 +14,8 @@ public static class ReflectionUtils
     private static readonly BindingFlags _propertyBindingFlags =
         BindingFlags.Instance | BindingFlags.Public;
 
+    private static readonly Dictionary<Type, IReflectionConverter> _reflectionConverters = new();
+
     /// <summary>
     /// 类型信息
     /// <para>
@@ -102,7 +104,19 @@ public static class ReflectionUtils
                 is ReflectionPropertyConverterAttribute propertyConverterAttribute
             )
             {
-                propertyInfo.Converter = propertyConverterAttribute.Converter;
+                if (
+                    _reflectionConverters.TryGetValue(
+                        propertyConverterAttribute.ConverterType,
+                        out var converter
+                    )
+                    is false
+                )
+                    converter = _reflectionConverters[propertyConverterAttribute.ConverterType] =
+                        (IReflectionConverter)
+                            TypeAccessor
+                                .Create(propertyConverterAttribute.ConverterType)
+                                .CreateNew();
+                propertyInfo.Converter = converter;
             }
             objectInfo.PropertyInfos[property.Name] = propertyInfo;
         }
@@ -189,11 +203,11 @@ public class ReflectionPropertyConverterAttribute : Attribute
     /// <summary>
     /// 反射转换器
     /// </summary>
-    public IReflectionConverter Converter { get; }
+    public Type ConverterType { get; }
 
     public ReflectionPropertyConverterAttribute(Type converterType)
     {
-        Converter = (IReflectionConverter)TypeAccessor.Create(converterType).CreateNew();
+        ConverterType = converterType;
     }
 }
 

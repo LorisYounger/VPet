@@ -77,9 +77,8 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
     {
         Current = this;
         ShowSettings = _settings;
+        LoadSettings();
 
-        foreach (var s in LoadSettings())
-            _settings.Add(s);
         PropertyChanged += MainWindowVM_PropertyChanged;
         OpenFileCommand.ExecuteCommand += OpenFileCommand_ExecuteCommand;
         OpenFileInExplorerCommand.ExecuteCommand += OpenFileInExplorerCommand_ExecuteCommand;
@@ -159,27 +158,47 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
         }
     }
 
-    public static IEnumerable<SettingModel> LoadSettings()
+    private void LoadSettings()
     {
-        foreach (
-            var file in Directory
-                .EnumerateFiles(Environment.CurrentDirectory)
-                .Where(
-                    (s) =>
-                    {
-                        if (s.EndsWith(".lps") is false)
-                            return false;
-                        return Path.GetFileName(s).StartsWith("Setting");
-                    }
-                )
-        )
+        foreach (var file in GetSettingFiles())
         {
-            var setting = new Setting(File.ReadAllText(file));
-            yield return new SettingModel(setting)
+            var fileName = Path.GetFileNameWithoutExtension(file);
+            try
             {
-                Name = Path.GetFileNameWithoutExtension(file),
-                FilePath = file
-            };
+                var setting = new Setting(File.ReadAllText(file));
+                var settingModel = new SettingModel(setting) { Name = fileName, FilePath = file };
+                _settings.Add(settingModel);
+            }
+            catch (Exception ex)
+            {
+                if (
+                    MessageBox.Show(
+                        "设置载入失败, 是否强制载入并重置\n[是]: 载入并重置\t[否]: 取消载入\n名称: {0}\n路径: {1}\n{2}".Translate(
+                            fileName,
+                            file,
+                            ex.ToString()
+                        ),
+                        "载入设置出错".Translate(),
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning
+                    ) is MessageBoxResult.Yes
+                )
+                    _settings.Add(new SettingModel() { Name = fileName, FilePath = file });
+            }
         }
+    }
+
+    private static IEnumerable<string> GetSettingFiles()
+    {
+        return Directory
+            .EnumerateFiles(Environment.CurrentDirectory)
+            .Where(
+                (s) =>
+                {
+                    if (s.EndsWith(".lps") is false)
+                        return false;
+                    return Path.GetFileName(s).StartsWith("Setting");
+                }
+            );
     }
 }

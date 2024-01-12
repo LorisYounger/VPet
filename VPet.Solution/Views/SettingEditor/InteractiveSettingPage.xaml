@@ -54,6 +54,7 @@
           <!--  TODO: ComboBox使用内部数据  -->
           <ComboBox
             Grid.Column="2"
+            Margin="0,5,10,5"
             pu:ComboBoxHelper.Watermark="{ll:Str '当关闭数据计算时\&#13;桌宠显示的状态'}"
             IsEnabled="{Binding IsChecked, ElementName=Switch_EnablePetState, Converter={StaticResource BoolInverter}}"
             ItemsSource="{Binding InteractiveSetting.ModeTypes}"
@@ -75,23 +76,24 @@
             VerticalAlignment="Center"
             LargeChange="0.1"
             Maximum="5"
-            Minimum="0.05"
-            SmallChange=".05"
+            Minimum="0.5"
+            SmallChange="0.5"
             Style="{DynamicResource Slider_BaseStyle}"
-            TickFrequency="0.01"
+            TickFrequency="0.5"
             Value="{Binding InteractiveSetting.PressLength}" />
           <pu:NumberInput
             Grid.Column="2"
+            MinWidth="80"
             Interval="0.1"
             Maximum="5"
             Minimum="0.05"
             Style="{DynamicResource NumberInput_BaseStyle}"
             Value="{Binding Value, ElementName=PressLengthSlider}" />
-          <TextBlock
+          <Label
             Grid.Column="3"
             Margin="0,5,10,5"
-            Style="{DynamicResource TextBlock_BaseStyle}"
-            Text="{ll:Str 秒}" />
+            Content="{ll:Str 秒}"
+            Style="{DynamicResource Label_BaseStyle}" />
         </Grid>
         <Grid MinHeight="40">
           <Grid.ColumnDefinitions>
@@ -108,22 +110,23 @@
             LargeChange="1"
             Maximum="60"
             Minimum="5"
-            SmallChange=".5"
+            SmallChange="0.5"
             Style="{DynamicResource Slider_BaseStyle}"
             TickFrequency="0.1"
             Value="{Binding InteractiveSetting.LogicInterval}" />
           <pu:NumberInput
             Grid.Column="2"
+            MinWidth="80"
             Interval="0.5"
             Maximum="60"
             Minimum="5"
             Style="{DynamicResource NumberInput_BaseStyle}"
             Value="{Binding Value, ElementName=Slider_Cal}" />
-          <TextBlock
+          <Label
             Grid.Column="3"
             Margin="0,5,10,5"
-            Style="{DynamicResource TextBlock_BaseStyle}"
-            Text="{ll:Str 秒}" />
+            Content="{ll:Str 秒}"
+            Style="{DynamicResource Label_BaseStyle}" />
         </Grid>
         <Grid MinHeight="40" ToolTip="{ll:Str 互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动}">
           <Grid.ColumnDefinitions>
@@ -143,6 +146,7 @@
             </Grid.RowDefinitions>
             <Slider
               x:Name="Slider_Interaction"
+              d:Value="1000"
               LargeChange="5"
               Maximum="1000"
               Minimum="30"
@@ -153,16 +157,17 @@
               Value="{Binding InteractiveSetting.InteractionCycle}" />
             <pu:NumberInput
               Grid.Column="1"
+              MinWidth="80"
               Interval="1"
               Maximum="1000"
               Minimum="30"
               Style="{DynamicResource NumberInput_BaseStyle}"
               Value="{Binding ElementName=Slider_Interaction, Path=Value}" />
-            <TextBlock
+            <Label
               Grid.Column="2"
               Margin="0,5,10,5"
-              Style="{DynamicResource TextBlock_BaseStyle}"
-              Text="{ll:Str 秒}" />
+              Content="{ll:Str 秒}"
+              Style="{DynamicResource Label_BaseStyle}" />
             <TextBlock
               Grid.Row="1"
               Grid.ColumnSpan="3"
@@ -204,10 +209,10 @@
             SelectedItem="{Binding InteractiveSetting.SmartMoveInterval}"
             Style="{DynamicResource StandardComboBoxStyle}"
             ToolTip="{ll:Str 智能移动判断时间间隔}" />
-          <TextBlock
+          <Label
             Grid.Column="4"
-            Style="{DynamicResource TextBlock_BaseStyle}"
-            Text="{ll:Str 分钟}" />
+            Content="{ll:Str 分钟}"
+            Style="{DynamicResource Label_BaseStyle}" />
         </Grid>
         <!--  TODO: 移动范围设置  -->
         <!--<Grid MinHeight="40">
@@ -286,16 +291,18 @@
             Value="{Binding InteractiveSetting.MusicCatch}" />
           <pu:NumberInput
             Grid.Column="2"
+            MinWidth="80"
             Interval="1"
             Maximum="100"
             Minimum="0"
             Style="{DynamicResource NumberInput_BaseStyle}"
             ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}"
             Value="{Binding Value, ElementName=VoiceCatchSilder}" />
-          <TextBlock
+          <Label
             Grid.Column="3"
             Margin="0,5,10,5"
-            Text="%" />
+            Content="%"
+            Style="{DynamicResource Label_BaseStyle}" />
         </Grid>
         <Grid MinHeight="40">
           <Grid.ColumnDefinitions>
@@ -321,6 +328,7 @@
             Value="{Binding InteractiveSetting.MusicMax}" />
           <pu:NumberInput
             Grid.Column="2"
+            MinWidth="80"
             Foreground="{DynamicResource DARKPrimaryDarker}"
             Interval="1"
             Maximum="100"
@@ -328,10 +336,11 @@
             Style="{DynamicResource NumberInput_BaseStyle}"
             ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}"
             Value="{Binding Value, ElementName=VoiceMaxSilder}" />
-          <TextBlock
+          <Label
             Grid.Column="3"
             Margin="0,5,10,5"
-            Text="%" />
+            Content="%"
+            Style="{DynamicResource Label_BaseStyle}" />
         </Grid>
       </StackPanel>
     </ScrollViewer>
