@@ -233,4 +233,64 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
         set => SetProperty(ref _hideFromTaskControl, value);
     }
     #endregion
+
+    #region MessageBarOutside
+    private bool _messageBarOutside;
+
+    /// <summary>
+    /// 消息框外置
+    /// </summary>
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.MessageBarOutside))]
+    public bool MessageBarOutside
+    {
+        get => _messageBarOutside;
+        set => SetProperty(ref _messageBarOutside, value);
+    }
+    #endregion
+
+    #region PetHelper
+    private bool _petHelper;
+
+    /// <summary>
+    /// 是否显示宠物帮助窗口
+    /// </summary>
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PetHelper))]
+    public bool PetHelper
+    {
+        get => _petHelper;
+        set => SetProperty(ref _petHelper, value);
+    }
+    #endregion
+
+    #region PetHelpLeft
+    private double _petHelpLeft;
+
+    // TODO 加入 PetHelpLeft
+
+    /// <summary>
+    /// 快捷穿透按钮X坐标
+    /// </summary>
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PetHelpLeft))]
+    public double PetHelpLeft
+    {
+        get => _petHelpLeft;
+        set => SetProperty(ref _petHelpLeft, value);
+    }
+    #endregion
+
+    #region PetHelpTop
+    private double _petHelpTop;
+
+    // TODO 加入 PetHelpTop
+
+    /// <summary>
+    /// 快捷穿透按钮Y坐标
+    /// </summary>
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PetHelpTop))]
+    public double PetHelpTop
+    {
+        get => _petHelpTop;
+        set => SetProperty(ref _petHelpTop, value);
+    }
+    #endregion
 }

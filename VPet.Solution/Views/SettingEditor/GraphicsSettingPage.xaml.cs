@@ -29,4 +29,12 @@ public partial class GraphicsSettingPage : Page
         InitializeComponent();
         this.SetViewModel<GraphicsSettingPageVM>();
     }
+
+    private void Button_StartPoint_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.GraphicsSetting.StartRecordPoint = new(
+            SettingWindow.Instance.Left,
+            SettingWindow.Instance.Top
+        );
+    }
 }

@@ -52,20 +52,6 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
         new(Enum.GetValues(typeof(GameSave.ModeType)).Cast<GameSave.ModeType>());
     #endregion
 
-    #region PetHelper
-    private bool _petHelper;
-
-    /// <summary>
-    /// 是否显示宠物帮助窗口
-    /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PetHelper))]
-    public bool PetHelper
-    {
-        get => _petHelper;
-        set => SetProperty(ref _petHelper, value);
-    }
-    #endregion
-
     #region LastCacheDate
     private DateTime _lastCacheDate;
 
@@ -136,34 +122,6 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     }
     #endregion
 
-    #region PetHelpLeft
-    private double _petHelpLeft;
-
-    /// <summary>
-    /// 计算间隔
-    /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PetHelpLeft))]
-    public double PetHelpLeft
-    {
-        get => _petHelpLeft;
-        set => SetProperty(ref _petHelpLeft, value);
-    }
-    #endregion
-
-    #region PetHelpTop
-    private double _petHelpTop;
-
-    /// <summary>
-    /// 计算间隔
-    /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PetHelpTop))]
-    public double PetHelpTop
-    {
-        get => _petHelpTop;
-        set => SetProperty(ref _petHelpTop, value);
-    }
-    #endregion
-
     #region AllowMove
     private bool _allowMove;
 
@@ -213,25 +171,15 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// 智能移动周期 (秒)
     /// </summary>
     [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.SmartMoveInterval))]
+    [ReflectionPropertyConverter(typeof(SecondToMinuteConverter))]
     public int SmartMoveInterval
     {
         get => _smartMoveInterval;
         set => SetProperty(ref _smartMoveInterval, value);
     }
-    #endregion
 
-    #region MessageBarOutside
-    private bool _messageBarOutside;
-
-    /// <summary>
-    /// 消息框外置
-    /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.MessageBarOutside))]
-    public bool MessageBarOutside
-    {
-        get => _messageBarOutside;
-        set => SetProperty(ref _messageBarOutside, value);
-    }
+    public static ObservableCollection<int> SmartMoveIntervals =
+        new() { 1, 2, 5, 10, 20, 30, 40, 50, 60 };
     #endregion
 
     #region PetGraph
@@ -279,6 +227,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     #region AutoBuy
     private bool _autoBuy;
 
+    // TODO 加入 AutoBuy
     /// <summary>
     /// 允许桌宠自动购买食品
     /// </summary>
@@ -293,6 +242,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     #region AutoGift
     private bool _autoGift;
 
+    // TODO 加入 AutoGift
     /// <summary>
     /// 允许桌宠自动购买礼物
     /// </summary>
@@ -325,4 +275,20 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
         set => SetProperty(ref _moveArea, value);
     }
     #endregion
+}
+
+public class SecondToMinuteConverter : ReflectionConverterBase<int, int>
+{
+    public override int Convert(int sourceValue)
+    {
+        if (sourceValue == 30)
+            return 1;
+        else
+            return sourceValue / 60;
+    }
+
+    public override int ConvertBack(int targetValue)
+    {
+        return targetValue * 60;
+    }
 }

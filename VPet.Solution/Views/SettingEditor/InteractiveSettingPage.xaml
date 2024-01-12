@@ -73,14 +73,13 @@
             x:Name="PressLengthSlider"
             Grid.Column="1"
             VerticalAlignment="Center"
-            d:ValueChanged="PressLengthSlider_ValueChanged"
             LargeChange="0.1"
             Maximum="5"
             Minimum="0.05"
             SmallChange=".05"
             Style="{DynamicResource Slider_BaseStyle}"
             TickFrequency="0.01"
-            Value="0.5" />
+            Value="{Binding InteractiveSetting.PressLength}" />
           <pu:NumberInput
             Grid.Column="2"
             Interval="0.1"
@@ -106,14 +105,13 @@
             x:Name="Slider_Cal"
             Grid.Column="1"
             VerticalAlignment="Center"
-            d:ValueChanged="CalSlider_ValueChanged"
             LargeChange="1"
             Maximum="60"
             Minimum="5"
             SmallChange=".5"
             Style="{DynamicResource Slider_BaseStyle}"
             TickFrequency="0.1"
-            Value="15" />
+            Value="{Binding InteractiveSetting.LogicInterval}" />
           <pu:NumberInput
             Grid.Column="2"
             Interval="0.5"
@@ -145,7 +143,6 @@
             </Grid.RowDefinitions>
             <Slider
               x:Name="Slider_Interaction"
-              d:ValueChanged="Slider_Interaction_ValueChanged"
               LargeChange="5"
               Maximum="1000"
               Minimum="30"
@@ -153,7 +150,7 @@
               Style="{DynamicResource Slider_BaseStyle}"
               TickFrequency="1"
               ToolTip="{ll:Str '数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.\&#13;间隔越大越不容易打扰到当前工作'}"
-              Value="200" />
+              Value="{Binding InteractiveSetting.InteractionCycle}" />
             <pu:NumberInput
               Grid.Column="1"
               Interval="1"
@@ -188,84 +185,32 @@
           <pu:Switch
             x:Name="Switch_PetMove"
             Grid.Column="1"
-            d:Checked="Switch_PetMove_Checked"
-            d:Unchecked="Switch_PetMove_Checked"
             Content="{ll:Str 启用桌宠移动}"
+            IsChecked="{Binding InteractiveSetting.AllowMove}"
             Style="{DynamicResource Switch_BaseStyle}"
             ToolTip="{ll:Str '启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.\&#13;如果嫌麻烦可以关掉'}" />
           <pu:Switch
             x:Name="Switch_SmartPetMove"
             Grid.Column="2"
-            d:Checked="SmartSwitch_PetMove_Checked"
-            d:Unchecked="SmartSwitch_PetMove_Checked"
             Content="{ll:Str '智能移动'}"
+            IsChecked="{Binding InteractiveSetting.SmartMove}"
             IsEnabled="{Binding ElementName=Switch_PetMove, Path=IsChecked}"
             Style="{DynamicResource Switch_BaseStyle}" />
           <ComboBox
             x:Name="CBSmartMove"
             Grid.Column="3"
-            d:SelectionChanged="CBSmartMove_SelectionChanged"
             IsEnabled="{Binding IsChecked, ElementName=Switch_SmartPetMove}"
-            SelectedIndex="5"
+            ItemsSource="{Binding InteractiveSetting.SmartMoveIntervals}"
+            SelectedItem="{Binding InteractiveSetting.SmartMoveInterval}"
             Style="{DynamicResource StandardComboBoxStyle}"
-            ToolTip="{ll:Str 智能移动判断时间间隔}">
-            <!--<ComboBoxItem Content="{ll:Str '30 秒'}">
-              <ComboBoxItem.Tag>
-                <sys:Int32>30</sys:Int32>
-              </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem Content="{ll:Str '1 分钟'}">
-              <ComboBoxItem.Tag>
-                <sys:Int32>60</sys:Int32>
-              </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem Content="{ll:Str '2 分钟'}">
-              <ComboBoxItem.Tag>
-                <sys:Int32>120</sys:Int32>
-              </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem Content="{ll:Str '5 分钟'}">
-              <ComboBoxItem.Tag>
-                <sys:Int32>300</sys:Int32>
-              </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem Content="{ll:Str '10 分钟'}">
-              <ComboBoxItem.Tag>
-                <sys:Int32>600</sys:Int32>
-              </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem Content="{ll:Str '20 分钟'}">
-              <ComboBoxItem.Tag>
-                <sys:Int32>1200</sys:Int32>
-              </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem Content="{ll:Str '30 分钟'}">
-              <ComboBoxItem.Tag>
-                <sys:Int32>1800</sys:Int32>
-              </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem Content="{ll:Str '40 分钟'}">
-              <ComboBoxItem.Tag>
-                <sys:Int32>2400</sys:Int32>
-              </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem Content="{ll:Str '50 分钟'}">
-              <ComboBoxItem.Tag>
-                <sys:Int32>3000</sys:Int32>
-              </ComboBoxItem.Tag>
-            </ComboBoxItem>
-            <ComboBoxItem Content="{ll:Str '60 分钟'}">
-              <ComboBoxItem.Tag>
-                <sys:Int32>3600</sys:Int32>
-              </ComboBoxItem.Tag>
-            </ComboBoxItem>-->
-          </ComboBox>
+            ToolTip="{ll:Str 智能移动判断时间间隔}" />
           <TextBlock
             Grid.Column="4"
             Style="{DynamicResource TextBlock_BaseStyle}"
             Text="{ll:Str 分钟}" />
         </Grid>
-        <Grid MinHeight="40">
+        <!--  TODO: 移动范围设置  -->
+        <!--<Grid MinHeight="40">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
@@ -309,7 +254,7 @@
               Style="{DynamicResource Button_BaseStyle}"
               ToolTip="{ll:Str '手动设置桌宠可移动范围'}" />
           </Grid>
-        </Grid>
+        </Grid>-->
         <Label
           Margin="5"
           HorizontalAlignment="Left"
@@ -331,7 +276,6 @@
           <Slider
             x:Name="VoiceCatchSilder"
             Grid.Column="1"
-            d:ValueChanged="VoiceCatchSilder_ValueChanged"
             LargeChange="5"
             Maximum="100"
             Minimum="0"
@@ -339,7 +283,7 @@
             Style="{DynamicResource Slider_BaseStyle}"
             TickFrequency="1"
             ToolTip="{ll:Str 当实时播放音量达到该值时运行音乐动作}"
-            Value="30" />
+            Value="{Binding InteractiveSetting.MusicCatch}" />
           <pu:NumberInput
             Grid.Column="2"
             Interval="1"
@@ -367,7 +311,6 @@
           <Slider
             x:Name="VoiceMaxSilder"
             Grid.Column="1"
-            d:ValueChanged="VoiceCatchSilder_ValueChanged"
             LargeChange="1"
             Maximum="100"
             Minimum="{Binding ElementName=VoiceCatchSilder, Path=Value}"
@@ -375,7 +318,7 @@
             Style="{DynamicResource Slider_BaseStyle}"
             TickFrequency="1"
             ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}"
-            Value="75" />
+            Value="{Binding InteractiveSetting.MusicMax}" />
           <pu:NumberInput
             Grid.Column="2"
             Foreground="{DynamicResource DARKPrimaryDarker}"

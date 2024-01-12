@@ -121,7 +121,9 @@ public class ReflectionObjectInfo
 
     public ReflectionObjectInfo(Type type)
     {
-        PropertyNames = new(type.GetProperties().Select(p => p.Name));
+        PropertyNames = new(
+            type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Select(p => p.Name)
+        );
     }
 }
 
