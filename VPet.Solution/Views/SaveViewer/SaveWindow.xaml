@@ -49,7 +49,7 @@
               <Setter.Value>
                 <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Mode=Self}}">
                   <MenuItem
-                    Command="{Binding PlacementTarget.Tag.OpenFileDommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                    Command="{Binding PlacementTarget.Tag.OpenFileCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                     CommandParameter="{Binding}"
                     Header="{ll:Str 打开文件}" />
                   <MenuItem

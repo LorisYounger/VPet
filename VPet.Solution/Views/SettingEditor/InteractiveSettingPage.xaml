@@ -48,7 +48,7 @@
             x:Name="Switch_EnablePetState"
             Grid.Column="1"
             Content="{ll:Str '启用桌宠状态'}"
-            IsChecked="{Binding InteractiveSetting.CalFunState}"
+            IsChecked="{Binding InteractiveSetting.EnableFunction}"
             Style="{DynamicResource Switch_BaseStyle}"
             ToolTip="{ll:Str '启用数据计算,桌宠会有状态变化,需要按时投喂等.\&#13;如果嫌麻烦可以关掉'}" />
           <!--  TODO: ComboBox使用内部数据  -->

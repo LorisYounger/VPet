@@ -36,6 +36,20 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     }
     #endregion
 
+    #region EnableFunction
+    private bool _enableFunction;
+
+    /// <summary>
+    /// 启用计算等数据功能
+    /// </summary>
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.EnableFunction))]
+    public bool EnableFunction
+    {
+        get => _enableFunction;
+        set => SetProperty(ref _enableFunction, value);
+    }
+    #endregion
+
     #region CalFunState
     private GameSave.ModeType _calFunState;
 
@@ -148,20 +162,6 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     {
         get => _smartMove;
         set => SetProperty(ref _smartMove, value);
-    }
-    #endregion
-
-    #region EnableFunction
-    private bool _enableFunction;
-
-    /// <summary>
-    /// 启用计算等数据功能
-    /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.EnableFunction))]
-    public bool EnableFunction
-    {
-        get => _enableFunction;
-        set => SetProperty(ref _enableFunction, value);
     }
     #endregion
 
