@@ -46,6 +46,9 @@ public static class ReflectionUtils
         {
             // 尝试获取目标属性信息
             targetInfo.PropertyInfos.TryGetValue(property.Name, out var targetReflectionInfo);
+            // 检测忽视
+            if (targetReflectionInfo?.IsIgnore is true)
+                continue;
             // 获取源属性名
             var sourcePropertyName = targetReflectionInfo is null
                 ? property.Name
@@ -82,8 +85,14 @@ public static class ReflectionUtils
         var objectInfo = new ReflectionObjectInfo(type);
         foreach (var property in type.GetProperties(_propertyBindingFlags))
         {
+            // 获取是否被忽视
+            if (property.IsDefined(typeof(ReflectionPropertyIgnoreAttribute)))
+            {
+                objectInfo.PropertyInfos[property.Name] = new(property.Name) { IsIgnore = true };
+                continue;
+            }
             if (
-                property.IsDefined(typeof(ReflectionPropertyAttribute)) is false
+                property.IsDefined(typeof(ReflectionPropertyIgnoreAttribute))
                 && property.IsDefined(typeof(ReflectionPropertyConverterAttribute)) is false
             )
                 continue;
@@ -94,8 +103,8 @@ public static class ReflectionUtils
                 is ReflectionPropertyAttribute propertyInfoAttribute
             )
             {
-                if (string.IsNullOrWhiteSpace(propertyInfoAttribute.TargetName) is false)
-                    propertyInfo.TargetName = propertyInfoAttribute.TargetName;
+                if (string.IsNullOrWhiteSpace(propertyInfoAttribute.TargetPropertyName) is false)
+                    propertyInfo.TargetName = propertyInfoAttribute.TargetPropertyName;
                 propertyInfo.IsRequired = propertyInfoAttribute.IsRequired;
             }
             // 获取属性转换器
@@ -151,8 +160,13 @@ public class ReflectionPropertyInfo
     /// <summary>
     /// 是必要的
     /// </summary>
-    [DefaultValue(true)]
-    public bool IsRequired { get; set; } = true;
+    [DefaultValue(false)]
+    public bool IsRequired { get; set; } = false;
+
+    /// <summary>
+    /// 是忽视的
+    /// </summary>
+    public bool IsIgnore { get; set; } = false;
 
     /// <summary>
     /// 反射值转换器
@@ -174,7 +188,7 @@ public class ReflectionPropertyAttribute : Attribute
     /// <summary>
     /// 属性名称
     /// </summary>
-    public string TargetName { get; }
+    public string TargetPropertyName { get; }
 
     /// <summary>
     /// 是必要的
@@ -187,9 +201,9 @@ public class ReflectionPropertyAttribute : Attribute
         IsRequired = isRequired;
     }
 
-    public ReflectionPropertyAttribute(string name, bool isRequired = true)
+    public ReflectionPropertyAttribute(string targetPropertyName, bool isRequired = true)
     {
-        TargetName = name;
+        TargetPropertyName = targetPropertyName;
         IsRequired = isRequired;
     }
 }
@@ -209,6 +223,15 @@ public class ReflectionPropertyConverterAttribute : Attribute
     {
         ConverterType = converterType;
     }
+}
+
+/// <summary>
+/// 反射属性忽视
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class ReflectionPropertyIgnoreAttribute : Attribute
+{
+    public ReflectionPropertyIgnoreAttribute() { }
 }
 
 /// <summary>

@@ -31,7 +31,8 @@
     <Button
       x:Name="Button_OpenSaveEditor"
       Grid.Column="1"
-      Content="{ll:Str 打开存档编辑器}"
+      Click="Button_OpenSaveEditor_Click"
+      Content="{ll:Str 打开存档查看器}"
       FontSize="16"
       Style="{DynamicResource Button_BaseStyle}" />
   </Grid>
