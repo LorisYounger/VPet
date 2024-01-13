@@ -173,7 +173,7 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
             {
                 if (
                     MessageBox.Show(
-                        "设置载入失败, 是否强制载入并重置\n[是]: 载入并重置\t[否]: 取消载入\n名称: {0}\n路径: {1}\n{2}".Translate(
+                        "设置载入失败, 是否强制载入并重置\n[是]: 载入并重置\t[否]: 取消载入\n名称: {0}\n路径: {1}\n异常: {2}".Translate(
                             fileName,
                             file,
                             ex.ToString()

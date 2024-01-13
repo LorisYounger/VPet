@@ -92,7 +92,7 @@ public static class ReflectionUtils
                 continue;
             }
             if (
-                property.IsDefined(typeof(ReflectionPropertyIgnoreAttribute))
+                property.IsDefined(typeof(ReflectionPropertyAttribute))
                 && property.IsDefined(typeof(ReflectionPropertyConverterAttribute)) is false
             )
                 continue;
@@ -229,10 +229,7 @@ public class ReflectionPropertyConverterAttribute : Attribute
 /// 反射属性忽视
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class ReflectionPropertyIgnoreAttribute : Attribute
-{
-    public ReflectionPropertyIgnoreAttribute() { }
-}
+public class ReflectionPropertyIgnoreAttribute : Attribute { }
 
 /// <summary>
 /// 反射设置
