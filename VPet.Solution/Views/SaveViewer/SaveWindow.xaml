@@ -33,17 +33,17 @@
         pu:TextBoxHelper.Watermark="{ll:Str 搜索存档}"
         Style="{DynamicResource StandardTextBoxStyle}"
         Text="{Binding SearchSave, UpdateSourceTrigger=PropertyChanged}" />
-      <ListBox
-        x:Name="ListBox_Saves"
+      <DataGrid
+        x:Name="DataGrid_Saves"
         Grid.Row="1"
         d:ItemsSource="{d:SampleData ItemCount=5}"
+        AutoGenerateColumns="False"
+        CanUserAddRows="False"
         ItemsSource="{Binding ShowSaves}"
-        SelectedItem="{Binding CurrentSave}"
-        Style="{DynamicResource SideMenuListBoxStyle}">
-        <ListBox.ItemContainerStyle>
-          <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
+        SelectedItem="{Binding CurrentSave}">
+        <DataGrid.RowStyle>
+          <Style BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="DataGridRow">
             <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}" />
-            <Setter Property="Content" Value="{Binding Name}" />
             <Setter Property="ToolTip" Value="{Binding FilePath}" />
             <Setter Property="ContextMenu">
               <Setter.Value>
@@ -60,10 +60,27 @@
               </Setter.Value>
             </Setter>
           </Style>
-        </ListBox.ItemContainerStyle>
-      </ListBox>
+        </DataGrid.RowStyle>
+        <DataGrid.Columns>
+          <DataGridTextColumn
+            Binding="{Binding Name}"
+            ElementStyle="{DynamicResource TextBlock_LeftCenter}"
+            Header="{ll:Str 名称}"
+            IsReadOnly="True" />
+          <DataGridTextColumn
+            Binding="{Binding DateSaved}"
+            ElementStyle="{DynamicResource TextBlock_LeftCenter}"
+            Header="{ll:Str 保存时间}"
+            IsReadOnly="True" />
+          <DataGridTextColumn
+            Binding="{Binding TotalTime}"
+            ElementStyle="{DynamicResource TextBlock_LeftCenter}"
+            Header="{ll:Str 游玩时长}"
+            IsReadOnly="True" />
+        </DataGrid.Columns>
+      </DataGrid>
     </Grid>
-    <Grid Grid.Column="1" IsEnabled="{Binding SelectedItem, ElementName=ListBox_Saves, Converter={StaticResource NullToFalse}}">
+    <Grid Grid.Column="1" IsEnabled="{Binding SelectedItem, ElementName=DataGrid_Saves, Converter={StaticResource NullToFalse}}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition />

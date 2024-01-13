@@ -87,6 +87,13 @@
           Style="{DynamicResource Label_BaseStyle}" />
         <TextBlock Style="{DynamicResource TextBlock_LeftCenter}" Text="{Binding Save.StrengthDrink}" />
       </DockPanel>
+      <DockPanel>
+        <Label
+          h:ElementHelper.UniformMinWidthGroup="A"
+          Content="{ll:Str 哈希值}"
+          Style="{DynamicResource Label_BaseStyle}" />
+        <TextBlock Style="{DynamicResource TextBlock_LeftCenter}" Text="{Binding Save.HashCode}" />
+      </DockPanel>
     </StackPanel>
   </ScrollViewer>
 </Page>

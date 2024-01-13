@@ -31,6 +31,11 @@ public class SaveModel : ObservableClass<SaveModel>
     /// </summary>
     public ObservableCollection<StatisticDataModel> Statistics { get; set; } = new();
 
+    /// <summary>
+    /// 是损坏的
+    /// </summary>
+    public bool IsDamaged { get; set; }
+
     #region DateSaved
     private DateTime _dateSaved;
     public DateTime DateSaved
@@ -162,12 +167,41 @@ public class SaveModel : ObservableClass<SaveModel>
     }
     #endregion
 
+
+    #region HashCode
+    private long _hashCode;
+
+    public long HashCode
+    {
+        get => _hashCode;
+        set => SetProperty(ref _hashCode, value);
+    }
+    #endregion
+
+
+
+    #region TotalTime
+    private long _totalTime;
+
+    /// <summary>
+    /// 游玩总时长
+    /// </summary>
+    public long TotalTime
+    {
+        get => _totalTime;
+        set => SetProperty(ref _totalTime, value);
+    }
+    #endregion
+
+
     public SaveModel(string filePath, GameSave_v2 save)
     {
         Name = Path.GetFileNameWithoutExtension(filePath);
         FilePath = filePath;
         DateSaved = File.GetLastWriteTime(filePath);
         LoadSave(save.GameSave);
+        if (save.Statistics.Data.TryGetValue("stat_total_time", out var time))
+            TotalTime = time.GetInteger64();
         foreach (var data in save.Statistics.Data)
         {
             Statistics.Add(

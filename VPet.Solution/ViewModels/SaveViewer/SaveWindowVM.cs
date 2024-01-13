@@ -101,10 +101,14 @@ public class SaveWindowVM : ObservableClass<SaveWindowVM>
     private void LoadSaves()
     {
         var saveDirectory = Path.Combine(Environment.CurrentDirectory, "Saves");
-        foreach (var file in Directory.EnumerateFiles(saveDirectory))
+        if (Directory.Exists(saveDirectory) is false)
+            return;
+        foreach (var file in Directory.EnumerateFiles(saveDirectory).Where(s => s.EndsWith(".lps")))
         {
-            var save = new GameSave_v2(new LPS(File.ReadAllText(file)));
-            var saveModel = new SaveModel(file, save);
+            var lps = new LPS(File.ReadAllText(file));
+            var hashCode = lps.FindLine("hash")?.InfoToInt64 is long hash ? hash : 0;
+            var save = new GameSave_v2(lps);
+            var saveModel = new SaveModel(file, save) { HashCode = hashCode };
             _saves.Add(saveModel);
         }
     }
