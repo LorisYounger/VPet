@@ -92,7 +92,7 @@ public static class ReflectionUtils
                 continue;
             }
             if (
-                property.IsDefined(typeof(ReflectionPropertyAttribute))
+                property.IsDefined(typeof(ReflectionPropertyAttribute)) is false
                 && property.IsDefined(typeof(ReflectionPropertyConverterAttribute)) is false
             )
                 continue;
