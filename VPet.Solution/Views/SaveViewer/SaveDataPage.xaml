@@ -90,9 +90,9 @@
       <DockPanel>
         <Label
           h:ElementHelper.UniformMinWidthGroup="A"
-          Content="{ll:Str 哈希值}"
+          Content="{ll:Str 哈希检查}"
           Style="{DynamicResource Label_BaseStyle}" />
-        <TextBlock Style="{DynamicResource TextBlock_LeftCenter}" Text="{Binding Save.HashCode}" />
+        <TextBlock Style="{DynamicResource TextBlock_LeftCenter}" Text="{Binding Save.HashChecked}" />
       </DockPanel>
     </StackPanel>
   </ScrollViewer>

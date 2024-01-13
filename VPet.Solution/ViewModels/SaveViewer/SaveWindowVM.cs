@@ -106,9 +106,8 @@ public class SaveWindowVM : ObservableClass<SaveWindowVM>
         foreach (var file in Directory.EnumerateFiles(saveDirectory).Where(s => s.EndsWith(".lps")))
         {
             var lps = new LPS(File.ReadAllText(file));
-            var hashCode = lps.FindLine("hash")?.InfoToInt64 is long hash ? hash : 0;
             var save = new GameSave_v2(lps);
-            var saveModel = new SaveModel(file, save) { HashCode = hashCode };
+            var saveModel = new SaveModel(file, save);
             _saves.Add(saveModel);
         }
     }

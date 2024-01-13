@@ -168,13 +168,16 @@ public class SaveModel : ObservableClass<SaveModel>
     #endregion
 
 
-    #region HashCode
-    private long _hashCode;
+    #region HashChecked
+    private bool _hashChecked;
 
-    public long HashCode
+    /// <summary>
+    /// Hash已检查
+    /// </summary>
+    public bool HashChecked
     {
-        get => _hashCode;
-        set => SetProperty(ref _hashCode, value);
+        get => _hashChecked;
+        set => SetProperty(ref _hashChecked, value);
     }
     #endregion
 
@@ -202,6 +205,7 @@ public class SaveModel : ObservableClass<SaveModel>
         LoadSave(save.GameSave);
         if (save.Statistics.Data.TryGetValue("stat_total_time", out var time))
             TotalTime = time.GetInteger64();
+        HashChecked = save.HashCheck;
         foreach (var data in save.Statistics.Data)
         {
             Statistics.Add(
