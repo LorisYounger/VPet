@@ -35,6 +35,8 @@ using Line = LinePutScript.Line;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 using Image = System.Windows.Controls.Image;
 
+using VPet.Solution;
+
 namespace VPet_Simulator.Windows
 {
     public partial class MainWindow : IMainWindow

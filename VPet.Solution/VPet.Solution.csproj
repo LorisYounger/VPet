@@ -95,6 +95,8 @@
     <Compile Include="Converters\MaxConverter.cs" />
     <Compile Include="Converters\ValueToBoolConverter.cs" />
     <Compile Include="Converters\BoolInverter.cs" />
+    <Compile Include="Models\SaveViewer\SaveModel.cs" />
+    <Compile Include="Models\SaveViewer\StatisticDataModel.cs" />
     <Compile Include="Models\SettingEditor\GraphicsSettingModel.cs" />
     <Compile Include="Models\SettingEditor\InteractiveSettingModel.cs" />
     <Compile Include="Models\SettingEditor\SystemSettingModel.cs" />
@@ -103,11 +105,23 @@
     <Compile Include="Utils\FindTopParent.cs" />
     <Compile Include="Utils\ReflectionUtils.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
+    <Compile Include="ViewModels\SaveViewer\SaveDataPageVM.cs" />
+    <Compile Include="ViewModels\SaveViewer\SaveStatisticPageVM.cs" />
+    <Compile Include="ViewModels\SaveViewer\SaveWindowVM.cs" />
     <Compile Include="ViewModels\SettingEditor\CustomizedSettingPageVM.cs" />
     <Compile Include="ViewModels\SettingEditor\DiagnosticSettingPageVM.cs" />
     <Compile Include="ViewModels\SettingEditor\ModSettingPageVM.cs" />
     <Compile Include="Models\SettingEditor\SettingModel.cs" />
     <Compile Include="ViewModels\SettingEditor\SystemSettingPageVM.cs" />
+    <Compile Include="Views\SaveViewer\SaveDataPage.xaml.cs">
+      <DependentUpon>SaveDataPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SaveViewer\SaveStatisticPage.xaml.cs">
+      <DependentUpon>SaveStatisticPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SaveViewer\SaveWindow.xaml.cs">
+      <DependentUpon>SaveWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingEditor\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
@@ -132,6 +146,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Templates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SaveViewer\SaveDataPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SaveViewer\SaveStatisticPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SaveViewer\SaveWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -250,10 +276,6 @@
       <Name>VPet-Simulator.Windows.Interface</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\SaveEditor\" />
-    <Folder Include="ViewModels\SaveEditor\" />
-    <Folder Include="Views\SaveEditor\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

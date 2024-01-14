@@ -77,6 +77,13 @@ public static class Utils
         return bitmapImage;
     }
 
+    /// <summary>
+    /// 获取布尔值
+    /// </summary>
+    /// <param name="value">值</param>
+    /// <param name="boolValue">目标布尔值</param>
+    /// <param name="nullValue">为空时布尔值</param>
+    /// <returns></returns>
     public static bool GetBool(object value, bool boolValue, bool nullValue)
     {
         if (value is null)
@@ -87,5 +94,27 @@ public static class Utils
             return b == boolValue;
         else
             return false;
+    }
+
+    /// <summary>
+    /// 打开文件
+    /// </summary>
+    /// <param name="filePath">文件路径</param>
+    public static void OpenFile(string filePath)
+    {
+        System.Diagnostics.Process
+            .Start(new System.Diagnostics.ProcessStartInfo(filePath) { UseShellExecute = true })
+            ?.Close();
+    }
+
+    /// <summary>
+    /// 从资源管理器打开文件
+    /// </summary>
+    /// <param name="filePath">文件路径</param>
+    public static void OpenFileInExplorer(string filePath)
+    {
+        System.Diagnostics.Process
+            .Start("Explorer", $"/select,{Path.GetFullPath(filePath)}")
+            ?.Close();
     }
 }

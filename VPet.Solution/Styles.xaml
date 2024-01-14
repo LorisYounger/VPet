@@ -56,7 +56,7 @@
     x:Key="TextBlock_BaseStyle"
     BasedOn="{StaticResource {x:Type TextBlock}}"
     TargetType="TextBlock">
-    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="Margin" Value="5" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="HorizontalAlignment" Value="Center" />
     <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Mode=Self}}" />
@@ -139,7 +139,7 @@
   </Style>
   <Style x:Key="Switch_BaseStyle" TargetType="pu:Switch">
     <Setter Property="HorizontalAlignment" Value="Left" />
-    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="Margin" Value="5" />
     <Setter Property="Background" Value="{x:Null}" />
     <Setter Property="BorderBrush" Value="{DynamicResource PrimaryDark}" />
     <Setter Property="BoxHeight" Value="20" />
@@ -152,7 +152,7 @@
   </Style>
   <Style x:Key="Label_BaseStyle" TargetType="Label">
     <Setter Property="FontSize" Value="14" />
-    <Setter Property="Margin" Value="10,0,10,0" />
+    <Setter Property="Margin" Value="10,5,10,5" />
     <Setter Property="Height" Value="30" />
     <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -160,7 +160,7 @@
   </Style>
   <Style x:Key="NumberInput_BaseStyle" TargetType="pu:NumberInput">
     <Setter Property="Height" Value="30" />
-    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="Margin" Value="5" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Background" Value="{x:Null}" />
     <Setter Property="FontSize" Value="14" />
@@ -171,8 +171,8 @@
     x:Key="Button_BaseStyle"
     BasedOn="{StaticResource {x:Type Button}}"
     TargetType="Button">
-    <Setter Property="Margin" Value="10,5,10,5" />
-    <Setter Property="Padding" Value="10,5,10,5" />
+    <Setter Property="Margin" Value="5" />
+    <Setter Property="Padding" Value="5" />
     <Setter Property="HorizontalAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="pu:ButtonHelper.CornerRadius" Value="4" />
@@ -184,7 +184,7 @@
     x:Key="ComboBox_BaseStyle"
     BasedOn="{StaticResource StandardComboBoxStyle}"
     TargetType="ComboBox">
-    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="Margin" Value="5" />
   </Style>
   <Style
     x:Key="Expander_BaseStyle"
@@ -202,7 +202,7 @@
     BasedOn="{StaticResource StandardSliderStyle}"
     TargetType="Slider">
     <Setter Property="IsSnapToTickEnabled" Value="True" />
-    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="Margin" Value="5" />
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
 </ResourceDictionary>

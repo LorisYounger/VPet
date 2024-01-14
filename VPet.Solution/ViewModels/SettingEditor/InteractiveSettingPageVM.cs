@@ -24,7 +24,10 @@ public class InteractiveSettingPageVM : ObservableClass<InteractiveSettingPageVM
 
     private void Current_PropertyChangedX(SettingWindowVM sender, PropertyChangedXEventArgs e)
     {
-        if (e.PropertyName == nameof(SettingWindowVM.CurrentSetting))
+        if (
+            e.PropertyName == nameof(SettingWindowVM.CurrentSetting)
+            && sender.CurrentSetting is not null
+        )
         {
             InteractiveSetting = sender.CurrentSetting.InteractiveSetting;
         }

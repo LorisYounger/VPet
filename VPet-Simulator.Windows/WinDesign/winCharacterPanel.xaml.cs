@@ -699,6 +699,7 @@ namespace VPet_Simulator.Windows
                 btn_r_save.IsEnabled = true;
                 pb_r_genRank.Visibility = Visibility.Collapsed;
                 Width = 800;
+                Height = 800;
             });
         }
         private string px_tocm(long px, out string cm)

@@ -12,20 +12,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using VPet.Solution.ViewModels.SettingEditor;
+using VPet.Solution.ViewModels.SaveViewer;
 
-namespace VPet.Solution.Views.SettingEditor;
+namespace VPet.Solution.Views.SaveViewer;
 
 /// <summary>
-/// InteractiveSettingsPage.xaml 的交互逻辑
+/// SaveStatisticPage.xaml 的交互逻辑
 /// </summary>
-public partial class InteractiveSettingPage : Page
+public partial class SaveStatisticPage : Page
 {
-    public InteractiveSettingPageVM ViewModel => (InteractiveSettingPageVM)DataContext;
+    public SaveStatisticPageVM ViewModel => (SaveStatisticPageVM)DataContext;
 
-    public InteractiveSettingPage()
+    public SaveStatisticPage()
     {
         InitializeComponent();
-        this.SetViewModel<InteractiveSettingPageVM>();
+        this.SetViewModel<SaveStatisticPageVM>();
     }
 }

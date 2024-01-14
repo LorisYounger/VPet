@@ -52,9 +52,8 @@
             <pu:Switch
               x:Name="PetHelperBox"
               Grid.Column="3"
-              d:Checked="PetHelperBox_Checked"
-              d:Unchecked="PetHelperBox_Checked"
               Content="{ll:Str '快速切换'}"
+              IsChecked="{Binding GraphicsSetting.PetHelper}"
               Style="{DynamicResource Switch_BaseStyle}"
               ToolTip="{ll:Str '添加快速切换小标,切换顶层或穿透'}" />
           </Grid>
@@ -153,7 +152,8 @@
               ToolTip="{ll:Str '桌宠图形渲染的分辨率,越高图形越清晰\&#13;但是高分辨率会占用更多内存\&#13;重启后生效'}"
               Value="{Binding Value, ElementName=Slider_Resolution}" />
           </Grid>
-          <Grid MinHeight="40">
+          <!--  实际上主题并没有实装  -->
+          <!--<Grid MinHeight="40">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" />
               <ColumnDefinition />
@@ -169,7 +169,7 @@
               IsEnabled="False"
               SelectedItem="{Binding GraphicsSetting.Theme}"
               Style="{DynamicResource ComboBox_BaseStyle}" />
-          </Grid>
+          </Grid>-->
           <Grid MinHeight="40">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" />
@@ -223,11 +223,12 @@
                 Value="{Binding GraphicsSetting.StartRecordPoint.Y}" />
             </DockPanel>
             <Button
-              x:Name="BtnStartUpGet"
+              x:Name="Button_StartPoint"
               Grid.Column="4"
-              d:Click="BtnStartUpGet_Click"
+              Click="Button_StartPoint_Click"
               Content="{ll:Str 设为当前位置}"
-              Style="{DynamicResource Button_BaseStyle}" />
+              Style="{DynamicResource Button_BaseStyle}"
+              ToolTip="{ll:Str 设为当前窗口左上角顶点坐标的位置}" />
           </Grid>
           <Grid MinHeight="40">
             <Grid.ColumnDefinitions>
@@ -242,9 +243,8 @@
             <pu:Switch
               x:Name="SwitchMsgOut"
               Grid.Column="1"
-              d:Checked="SwitchMsgOut_Checked"
-              d:Unchecked="SwitchMsgOut_Checked"
               Content="{ll:Str 将消息框置于外部}"
+              IsChecked="{Binding GraphicsSetting.MessageBarOutside}"
               Style="{DynamicResource Switch_BaseStyle}"
               ToolTip="{ll:Str 将消息框置于外部}" />
           </Grid>

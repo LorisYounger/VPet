@@ -39,44 +39,9 @@
             x:Name="CBAutoSave"
             Grid.Column="2"
             d:SelectionChanged="CBAutoSave_SelectionChanged"
-            SelectedIndex="3"
-            Style="{DynamicResource ComboBox_BaseStyle}">
-            <!--<ComboBoxItem Content="{ll:Str 关闭自动保存}">
-            <ComboBoxItem.Tag>
-              <sys:Int32>-1</sys:Int32>
-            </ComboBoxItem.Tag>
-          </ComboBoxItem>
-          <ComboBoxItem Content="{ll:Str 每2分钟一次}">
-            <ComboBoxItem.Tag>
-              <sys:Int32>2</sys:Int32>
-            </ComboBoxItem.Tag>
-          </ComboBoxItem>
-          <ComboBoxItem Content="{ll:Str 每5分钟一次}">
-            <ComboBoxItem.Tag>
-              <sys:Int32>5</sys:Int32>
-            </ComboBoxItem.Tag>
-          </ComboBoxItem>
-          <ComboBoxItem Content="{ll:Str 每10分钟一次}">
-            <ComboBoxItem.Tag>
-              <sys:Int32>10</sys:Int32>
-            </ComboBoxItem.Tag>
-          </ComboBoxItem>
-          <ComboBoxItem Content="{ll:Str 每20分钟一次}">
-            <ComboBoxItem.Tag>
-              <sys:Int32>20</sys:Int32>
-            </ComboBoxItem.Tag>
-          </ComboBoxItem>
-          <ComboBoxItem Content="{ll:Str 每半小时一次}">
-            <ComboBoxItem.Tag>
-              <sys:Int32>30</sys:Int32>
-            </ComboBoxItem.Tag>
-          </ComboBoxItem>
-          <ComboBoxItem Content="{ll:Str 每小时一次}">
-            <ComboBoxItem.Tag>
-              <sys:Int32>60</sys:Int32>
-            </ComboBoxItem.Tag>
-          </ComboBoxItem>-->
-          </ComboBox>
+            ItemsSource="{Binding SystemSetting.SaveIntervals}"
+            SelectedItem="{Binding SystemSetting.AutoSaveInterval}"
+            Style="{DynamicResource ComboBox_BaseStyle}" />
           <TextBlock
             Grid.Column="3"
             Style="{DynamicResource TextBlock_BaseStyle}"

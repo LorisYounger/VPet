@@ -1,5 +1,5 @@
 ﻿<pu:WindowX
-  x:Class="VPet.Solution.Views.SettingEditor.SettingWindow"
+  x:Class="VPet.Solution.Views.SaveViewer.SaveWindow"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,13 +8,13 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:pu="https://opensource.panuon.com/wpf-ui"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
-  xmlns:vm="clr-namespace:VPet.Solution.ViewModels.SettingEditor"
-  Title="{ll:Str 'VPET 设置编辑器'}"
+  xmlns:vm="clr-namespace:VPet.Solution.ViewModels.SaveViewer"
+  Title="{ll:Str 'VPET 存档查看器'}"
   Width="800"
   Height="450"
   MinWidth="400"
   MinHeight="200"
-  d:DataContext="{d:DesignInstance Type=vm:SettingWindowVM}"
+  d:DataContext="{d:DesignInstance Type=vm:SaveWindowVM}"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d">
   <Grid>
@@ -30,20 +30,20 @@
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
       <TextBox
-        pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
+        pu:TextBoxHelper.Watermark="{ll:Str 搜索存档}"
         Style="{DynamicResource StandardTextBoxStyle}"
-        Text="{Binding SearchSetting, UpdateSourceTrigger=PropertyChanged}" />
-      <ListBox
-        x:Name="ListBox_Saves"
+        Text="{Binding SearchSave, UpdateSourceTrigger=PropertyChanged}" />
+      <DataGrid
+        x:Name="DataGrid_Saves"
         Grid.Row="1"
         d:ItemsSource="{d:SampleData ItemCount=5}"
-        ItemsSource="{Binding ShowSettings}"
-        SelectedItem="{Binding CurrentSetting}"
-        Style="{DynamicResource SideMenuListBoxStyle}">
-        <ListBox.ItemContainerStyle>
-          <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
+        AutoGenerateColumns="False"
+        CanUserAddRows="False"
+        ItemsSource="{Binding ShowSaves}"
+        SelectedItem="{Binding CurrentSave}">
+        <DataGrid.RowStyle>
+          <Style BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="DataGridRow">
             <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}" />
-            <Setter Property="Content" Value="{Binding Name}" />
             <Setter Property="ToolTip" Value="{Binding FilePath}" />
             <Setter Property="ContextMenu">
               <Setter.Value>
@@ -56,29 +56,31 @@
                     Command="{Binding PlacementTarget.Tag.OpenFileInExplorerCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                     CommandParameter="{Binding}"
                     Header="{ll:Str 从资源管理器打开文件}" />
-                  <MenuItem
-                    Command="{Binding PlacementTarget.Tag.SaveSettingCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                    CommandParameter="{Binding}"
-                    Header="{ll:Str 保存}" />
-                  <MenuItem
-                    Command="{Binding PlacementTarget.Tag.ResetSettingCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                    CommandParameter="{Binding}"
-                    Header="{ll:Str 重置}" />
                 </ContextMenu>
               </Setter.Value>
             </Setter>
           </Style>
-        </ListBox.ItemContainerStyle>
-      </ListBox>
-      <Button
-        Grid.Row="3"
-        Margin="0"
-        HorizontalAlignment="Stretch"
-        Command="{Binding SaveAllSettingCommand}"
-        Content="{ll:Str 全部保存}"
-        Style="{DynamicResource Button_BaseStyle}" />
+        </DataGrid.RowStyle>
+        <DataGrid.Columns>
+          <DataGridTextColumn
+            Binding="{Binding Name}"
+            ElementStyle="{DynamicResource TextBlock_LeftCenter}"
+            Header="{ll:Str 名称}"
+            IsReadOnly="True" />
+          <DataGridTextColumn
+            Binding="{Binding DateSaved, StringFormat='yyyy/MM/dd HH:mm:ss'}"
+            ElementStyle="{DynamicResource TextBlock_LeftCenter}"
+            Header="{ll:Str 保存时间}"
+            IsReadOnly="True" />
+          <DataGridTextColumn
+            Binding="{Binding TotalTime}"
+            ElementStyle="{DynamicResource TextBlock_LeftCenter}"
+            Header="{ll:Str 游玩时长}"
+            IsReadOnly="True" />
+        </DataGrid.Columns>
+      </DataGrid>
     </Grid>
-    <Grid Grid.Column="1" IsEnabled="{Binding SelectedItem, ElementName=ListBox_Saves, Converter={StaticResource NullToFalse}}">
+    <Grid Grid.Column="1" IsEnabled="{Binding SelectedItem, ElementName=DataGrid_Saves, Converter={StaticResource NullToFalse}}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition />
@@ -89,12 +91,8 @@
             <StackPanel Orientation="Horizontal" />
           </ItemsPanelTemplate>
         </ListBox.ItemsPanel>
-        <ListBoxItem x:Name="ListBoxItem_GraphicsSettings" Content="{ll:Str 图形}" />
-        <ListBoxItem x:Name="ListBoxItem_SystemSettings" Content="{ll:Str 系统}" />
-        <ListBoxItem x:Name="ListBoxItem_InteractiveSettings" Content="{ll:Str 互动}" />
-        <ListBoxItem x:Name="ListBoxItem_CustomizedSettings" Content="{ll:Str 自定}" />
-        <ListBoxItem x:Name="ListBoxItem_DiagnosticSettings" Content="{ll:Str 诊断}" />
-        <ListBoxItem x:Name="ListBoxItem_ModSettings" Content="{ll:Str Mod管理}" />
+        <ListBoxItem x:Name="ListBoxItem_SaveData" Content="{ll:Str 数据}" />
+        <ListBoxItem x:Name="ListBoxItem_SaveStatistic" Content="{ll:Str 统计}" />
       </ListBox>
       <Frame
         x:Name="Frame_Main"
