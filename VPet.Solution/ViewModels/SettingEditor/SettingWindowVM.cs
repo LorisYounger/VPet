@@ -94,7 +94,7 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
 
     private void OpenFileCommand_ExecuteCommand(SettingModel parameter)
     {
-        Utils.OpenFile(parameter.FilePath);
+        Utils.OpenLink(parameter.FilePath);
     }
 
     private void SaveAllSettingCommand_ExecuteCommand()

@@ -77,7 +77,7 @@ public class SaveWindowVM : ObservableClass<SaveWindowVM>
 
     private void OpenFileCommand_ExecuteCommand(SaveModel parameter)
     {
-        Utils.OpenFile(parameter.FilePath);
+        Utils.OpenLink(parameter.FilePath);
     }
 
     public void RefreshShowSaves(string name)

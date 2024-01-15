@@ -8,6 +8,16 @@
   <c:StringFormatConverter x:Key="StringFormatConverter" />
   <c:BrushToMediaColorConverter x:Key="BrushToMediaColorConverter" />
   <c:BoolToVisibilityConverter x:Key="FalseToHiddenConverter" />
+  <c:BoolToVisibilityConverter
+    x:Key="FalseToVisibleConverter"
+    FalseVisibilityValue="Visible"
+    NullValue="True"
+    TrueVisibilityValue="Hidden" />
+  <c:NullToVisibilityConverter x:Key="NotNullToVisibleConverter" />
+  <c:NullToVisibilityConverter
+    x:Key="NullToVisibleConverter"
+    NotNullVisibilityValue="Hidden"
+    NullVisibilityValue="Visible" />
   <c:EqualsConverter x:Key="EqualsConverter" />
   <c:EqualsConverter x:Key="NotEqualsConverter" Inverter="True" />
   <c:ValueToBoolConverter x:Key="NullToFalse" Invert="True" />

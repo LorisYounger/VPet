@@ -50,12 +50,37 @@ public class SettingModel : ObservableClass<SettingModel>
     }
     #endregion
 
-    private static HashSet<string> _settingProperties =
-        new(typeof(Setting).GetProperties().Select(p => p.Name));
+    #region CustomizedSetting
+    private CustomizedSettingModel _CustomizedSetting;
+    public CustomizedSettingModel CustomizedSetting
+    {
+        get => _CustomizedSetting;
+        set => SetProperty(ref _CustomizedSetting, value);
+    }
+    #endregion
 
-    private Setting _setting;
+    #region DiagnosticSetting
+    private DiagnosticSettingModel _diagnosticSetting;
+    public DiagnosticSettingModel DiagnosticSetting
+    {
+        get => _diagnosticSetting;
+        set => SetProperty(ref _diagnosticSetting, value);
+    }
+    #endregion
 
-    private ReflectionOptions _saveReflectionOptions = new() { CheckValueEquals = true };
+    #region ModSetting
+    private ModSettingModel _modSetting;
+    public ModSettingModel ModSetting
+    {
+        get => _modSetting;
+        set => SetProperty(ref _modSetting, value);
+    }
+    #endregion
+
+
+    private readonly Setting _setting;
+
+    private readonly ReflectionOptions _saveReflectionOptions = new() { CheckValueEquals = true };
 
     public SettingModel()
         : this(new("")) { }
@@ -66,14 +91,39 @@ public class SettingModel : ObservableClass<SettingModel>
         GraphicsSetting = LoadSetting<GraphicsSettingModel>();
         InteractiveSetting = LoadSetting<InteractiveSettingModel>();
         SystemSetting = LoadSetting<SystemSettingModel>();
+        CustomizedSetting = LoadCustomizedSetting(setting);
+        DiagnosticSetting = LoadSetting<DiagnosticSettingModel>();
+        DiagnosticSetting.SetAutoCalToSetting(setting);
+        ModSetting = LoadModSetting(setting);
+    }
+
+    private ModSettingModel LoadModSetting(Setting setting)
+    {
+        var settingModel = new ModSettingModel(setting);
+        return settingModel;
+    }
+
+    private CustomizedSettingModel LoadCustomizedSetting(Setting setting)
+    {
+        var model = new CustomizedSettingModel();
+        if (setting[CustomizedSettingModel.TargetName] is ILine line && line.Count > 0)
+        {
+            foreach (var sub in line)
+                model.Links.Add(new(sub.Name, sub.Info));
+        }
+        else
+        {
+            setting.Remove(CustomizedSettingModel.TargetName);
+        }
+        return model;
     }
 
     private T LoadSetting<T>()
         where T : new()
     {
-        var setting = new T();
-        ReflectionUtils.SetValue(_setting, setting);
-        return setting;
+        var settingModel = new T();
+        ReflectionUtils.SetValue(_setting, settingModel);
+        return settingModel;
     }
 
     public void Save()
@@ -81,11 +131,16 @@ public class SettingModel : ObservableClass<SettingModel>
         SaveSetting(GraphicsSetting);
         SaveSetting(InteractiveSetting);
         SaveSetting(SystemSetting);
+        SaveSetting(DiagnosticSetting);
+        DiagnosticSetting.SetAutoCalToSetting(_setting);
+        foreach (var link in CustomizedSetting.Links)
+            _setting[CustomizedSettingModel.TargetName].Add(new Sub(link.Name, link.Link));
+        ModSetting.Save(_setting);
         File.WriteAllText(FilePath, _setting.ToString());
     }
 
-    private void SaveSetting(object setting)
+    private void SaveSetting(object settingModel)
     {
-        ReflectionUtils.SetValue(setting, _setting, _saveReflectionOptions);
+        ReflectionUtils.SetValue(settingModel, _setting, _saveReflectionOptions);
     }
 }

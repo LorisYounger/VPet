@@ -13,7 +13,7 @@ public class BoolInverter : ValueConverterBase
     public static readonly DependencyProperty NullValueProperty = DependencyProperty.Register(
         nameof(NullValue),
         typeof(bool),
-        typeof(AllIsBoolToVisibilityConverter),
+        typeof(BoolInverter),
         new PropertyMetadata(false)
     );
 
