@@ -83,14 +83,15 @@ public class ModLoader
 
     public ModLoader(string path)
     {
+        ModPath = path;
         var infoFile = Path.Combine(path, "info.lps");
         if (File.Exists(infoFile) is false)
         {
+            Name = Path.GetFileName(path);
             IsSuccesses = false;
             return;
         }
         var modlps = new LpsDocument(File.ReadAllText(infoFile));
-        ModPath = path;
         Name = modlps.FindLine("vupmod").Info;
         Intro = modlps.FindLine("intro").Info;
         GameVer = modlps.FindSub("gamever").InfoToInt;

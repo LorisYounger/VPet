@@ -1,5 +1,6 @@
 ﻿using HKW.HKWUtils.Observable;
 using LinePutScript;
+using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -49,13 +50,24 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
                 Mods.Add(modModel);
             }
             else
-                Mods.Add(new());
+            {
+                Mods.Add(
+                    new()
+                    {
+                        Name = modName,
+                        ModPath = "未知, 可能是{0}".Translate(Path.Combine(ModDirectory, modName))
+                    }
+                );
+            }
         }
         foreach (var modPath in setting[WorkShopLineName])
         {
             var loader = new ModLoader(modPath.Name);
             if (loader.IsSuccesses is false)
+            {
+                Mods.Add(new() { Name = loader.Name, ModPath = loader.ModPath });
                 return;
+            }
             var modModel = new ModModel(loader);
             modModel.IsPass = setting[PassModLineName].Contains(modModel.Name);
             modModel.IsMsg = setting[MsgModLineName].Contains(modModel.Name);
@@ -264,8 +276,8 @@ public class ModModel : ObservableClass<ModModel>
 
     public ModModel()
     {
-        PropertyChanged += ModModel_PropertyChanged;
         IsEnabled = null;
+        RefreshState();
     }
 
     private void ModModel_PropertyChanged(
@@ -289,10 +301,10 @@ public class ModModel : ObservableClass<ModModel>
     public void RefreshState()
     {
         if (IsEnabled is true)
-            State = "已启用";
+            State = "已启用".Translate();
         else if (IsEnabled is false)
-            State = "已关闭";
+            State = "已关闭".Translate();
         else
-            State = "已损坏";
+            State = "已损坏".Translate();
     }
 }

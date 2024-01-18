@@ -137,7 +137,14 @@ public class ModSettingPageVM : ObservableClass<ModSettingPageVM>
 
     private void OpenModPathCommand_ExecuteCommand(ModModel parameter)
     {
-        Utils.OpenLink(parameter.ModPath);
+        try
+        {
+            Utils.OpenLink(parameter.ModPath);
+        }
+        catch
+        {
+            MessageBox.Show("未在路径\n{0}\n中找到模组".Translate(parameter.ModPath));
+        }
     }
 
     private void Current_PropertyChangedX(SettingWindowVM sender, PropertyChangedXEventArgs e)
