@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using System.Windows.Media.Imaging;
+using LinePutScript.Localization.WPF;
 
 namespace VPet.Solution.Models;
 
@@ -75,10 +76,21 @@ public class ModLoader
 
     public BitmapImage? Image { get; } = null;
 
+    /// <summary>
+    /// 读取成功
+    /// </summary>
+    public bool IsSuccesses { get; } = true;
+
     public ModLoader(string path)
     {
+        var infoFile = Path.Combine(path, "info.lps");
+        if (File.Exists(infoFile) is false)
+        {
+            IsSuccesses = false;
+            return;
+        }
+        var modlps = new LpsDocument(File.ReadAllText(infoFile));
         ModPath = path;
-        var modlps = new LpsDocument(File.ReadAllText(Path.Combine(path + @"\info.lps")));
         Name = modlps.FindLine("vupmod").Info;
         Intro = modlps.FindLine("intro").Info;
         GameVer = modlps.FindSub("gamever").InfoToInt;
@@ -104,7 +116,8 @@ public class ModLoader
         }
         foreach (var dir in Directory.EnumerateDirectories(path))
         {
-            switch (dir.ToLower())
+            var dirName = Path.GetFileName(dir);
+            switch (dirName.ToLower())
             {
                 case "pet":
                     //宠物模型
@@ -121,6 +134,23 @@ public class ModLoader
                     break;
                 case "lang":
                     Tags.Add("lang");
+                    foreach (var langFile in Directory.EnumerateFiles(dir, "*.lps"))
+                    {
+                        LocalizeCore.AddCulture(
+                            Path.GetFileNameWithoutExtension(dir),
+                            new LPS_D(File.ReadAllText(langFile))
+                        );
+                    }
+                    foreach (var langDir in Directory.EnumerateDirectories(dir))
+                    {
+                        foreach (var langFile in Directory.EnumerateFiles(langDir, "*.lps"))
+                        {
+                            LocalizeCore.AddCulture(
+                                Path.GetFileNameWithoutExtension(langDir),
+                                new LPS_D(File.ReadAllText(langFile))
+                            );
+                        }
+                    }
                     break;
             }
         }

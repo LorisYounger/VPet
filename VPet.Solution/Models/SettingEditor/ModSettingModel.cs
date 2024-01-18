@@ -17,6 +17,7 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
     public const string ModLineName = "onmod";
     public const string PassModLineName = "passmod";
     public const string MsgModLineName = "msgmod";
+    public const string WorkShopLineName = "workshop";
     public static string ModDirectory = Path.Combine(Environment.CurrentDirectory, "mod");
     public static Dictionary<string, ModLoader> LocalMods = Directory.Exists(ModDirectory) is false
         ? new(StringComparer.OrdinalIgnoreCase)
@@ -40,7 +41,7 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
         foreach (var item in setting[ModLineName])
         {
             var modName = item.Name;
-            if (LocalMods.TryGetValue(modName, out var loader))
+            if (LocalMods.TryGetValue(modName, out var loader) && loader.IsSuccesses)
             {
                 var modModel = new ModModel(loader);
                 modModel.IsPass = setting[PassModLineName].Contains(modName);
@@ -49,6 +50,16 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
             }
             else
                 Mods.Add(new());
+        }
+        foreach (var modPath in setting[WorkShopLineName])
+        {
+            var loader = new ModLoader(modPath.Name);
+            if (loader.IsSuccesses is false)
+                return;
+            var modModel = new ModModel(loader);
+            modModel.IsPass = setting[PassModLineName].Contains(modModel.Name);
+            modModel.IsMsg = setting[MsgModLineName].Contains(modModel.Name);
+            Mods.Add(modModel);
         }
     }
 
