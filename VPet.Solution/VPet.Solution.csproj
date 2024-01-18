@@ -47,11 +47,11 @@
       <HintPath>
         ..\packages\LinePutScript.Localization.WPF.1.0.6\lib\net462\LinePutScript.Localization.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Panuon.WPF, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Panuon.WPF.1.0.2\lib\net462\Panuon.WPF.dll</HintPath>
+    <Reference Include="Panuon.WPF, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Panuon.WPF.1.0.3\lib\net462\Panuon.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Panuon.WPF.UI, Version=1.1.15.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Panuon.WPF.UI.1.1.15.8\lib\net462\Panuon.WPF.UI.dll</HintPath>
+    <Reference Include="Panuon.WPF.UI, Version=1.1.16.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Panuon.WPF.UI.1.1.16.5\lib\net462\Panuon.WPF.UI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

@@ -40,12 +40,12 @@ public class DiagnosticSettingModel : ObservableClass<DiagnosticSettingModel>
     #endregion
 
     #region DiagnosisInterval
-    private int _diagnosisInterval = 200;
+    private int _diagnosisInterval = 500;
 
     /// <summary>
     /// 数据收集频率
     /// </summary>
-    [DefaultValue(200)]
+    [DefaultValue(500)]
     [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.DiagnosisInterval))]
     public int DiagnosisInterval
     {

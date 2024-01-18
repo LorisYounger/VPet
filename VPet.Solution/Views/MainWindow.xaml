@@ -29,11 +29,25 @@
       FontSize="16"
       Style="{DynamicResource Button_BaseStyle}" />
     <Button
-      x:Name="Button_OpenSaveEditor"
+      x:Name="Button_OpenSaveViewer"
       Grid.Column="1"
-      Click="Button_OpenSaveEditor_Click"
+      Click="Button_OpenSaveViewer_Click"
       Content="{ll:Str 打开存档查看器}"
       FontSize="16"
       Style="{DynamicResource Button_BaseStyle}" />
+    <Button
+      x:Name="Button_OpenLocalText"
+      Grid.Column="1"
+      HorizontalAlignment="Right"
+      VerticalAlignment="Bottom"
+      Click="Button_OpenLocalText_Click"
+      Content="{ll:Str 打开翻译文本}" />
+    <ComboBox
+      x:Name="ComboBox_Langs"
+      Grid.Column="1"
+      HorizontalAlignment="Right"
+      VerticalAlignment="Top"
+      SelectionChanged="ComboBox_Langs_SelectionChanged"
+      Style="{DynamicResource ComboBox_BaseStyle}" />
   </Grid>
 </pu:WindowX>
