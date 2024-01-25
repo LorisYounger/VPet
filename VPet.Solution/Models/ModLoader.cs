@@ -107,6 +107,14 @@ public class ModLoader
             ItemID = 0;
         CacheDate = modlps.GetDateTime("cachedate", DateTime.MinValue);
         var imagePath = Path.Combine(path, "icon.png");
+        //加载翻译
+        foreach (var line in modlps.FindAllLine("lang"))
+        {
+            var lps = new LPS();
+            foreach (var sub in line)
+                lps.Add(new Line(sub.Name, sub.Info));
+            LocalizeCore.AddCulture(line.Info, lps);
+        }
         if (File.Exists(imagePath))
         {
             try

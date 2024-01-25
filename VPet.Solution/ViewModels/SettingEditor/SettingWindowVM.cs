@@ -72,6 +72,11 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
     /// 保存全部
     /// </summary>
     public ObservableCommand SaveAllSettingCommand { get; } = new();
+
+    /// <summary>
+    /// 重置全部
+    /// </summary>
+    public ObservableCommand ResetAllSettingCommand { get; } = new();
     #endregion
     public SettingWindowVM()
     {
@@ -85,6 +90,24 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
         ResetSettingCommand.ExecuteCommand += ResetSettingCommand_ExecuteCommand;
         SaveSettingCommand.ExecuteCommand += SaveSettingCommand_ExecuteCommand;
         SaveAllSettingCommand.ExecuteCommand += SaveAllSettingCommand_ExecuteCommand;
+        ResetAllSettingCommand.ExecuteCommand += ResetAllSettingCommand_ExecuteCommand;
+    }
+
+    private void ResetAllSettingCommand_ExecuteCommand()
+    {
+        if (
+            MessageBox.Show(
+                SettingWindow.Instance,
+                "确定全部重置吗".Translate(),
+                "",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning
+            )
+            is not MessageBoxResult.Yes
+        )
+            return;
+        for (var i = 0; i < _settings.Count; i++)
+            _settings[i] = new SettingModel();
     }
 
     private void OpenFileInExplorerCommand_ExecuteCommand(SettingModel parameter)

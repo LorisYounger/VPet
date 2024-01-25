@@ -77,6 +77,11 @@
             ElementStyle="{DynamicResource TextBlock_LeftCenter}"
             Header="{ll:Str 游玩时长}"
             IsReadOnly="True" />
+          <DataGridTextColumn
+            Binding="{Binding HashChecked}"
+            ElementStyle="{DynamicResource TextBlock_LeftCenter}"
+            Header="{ll:Str 哈希}"
+            IsReadOnly="True" />
         </DataGrid.Columns>
       </DataGrid>
     </Grid>

@@ -30,10 +30,6 @@ public partial class MainWindow : WindowX
         }
         InitializeComponent();
         this.SetViewModel<MainWindowVM>();
-        LocalizeCore.StoreTranslation = true;
-        LocalizeCore.LoadDefaultCulture();
-        ComboBox_Langs.ItemsSource = LocalizeCore.AvailableCultures;
-        ComboBox_Langs.SelectedItem = LocalizeCore.CurrentCulture;
         Closed += MainWindow_Closed;
     }
 
@@ -51,18 +47,5 @@ public partial class MainWindow : WindowX
     private void Button_OpenSaveViewer_Click(object sender, RoutedEventArgs e)
     {
         SaveWindow.ShowOrActivate();
-    }
-
-    private void Button_OpenLocalText_Click(object sender, RoutedEventArgs e)
-    {
-        var sb = new StringBuilder();
-        foreach (var a in LocalizeCore.StoreTranslationList)
-            sb.AppendLine(a.Replace("\r\n", "\\r\\n"));
-        MessageBoxX.Show(sb.ToString());
-    }
-
-    private void ComboBox_Langs_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        LocalizeCore.LoadCulture((string)ComboBox_Langs.SelectedItem);
     }
 }

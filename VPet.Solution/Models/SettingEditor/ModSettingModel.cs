@@ -4,6 +4,7 @@ using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -296,6 +297,15 @@ public class ModModel : ObservableClass<ModModel>
         PropertyChanged += ModModel_PropertyChanged;
         ReflectionUtils.SetValue(loader, this);
         RefreshState();
+        Name = Name.Translate();
+        Description = Description.Translate();
+        LocalizeCore.BindingNotify.PropertyChanged += BindingNotify_PropertyChanged;
+    }
+
+    private void BindingNotify_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        Name = Name.Translate();
+        Description = Description.Translate();
     }
 
     public void RefreshState()
