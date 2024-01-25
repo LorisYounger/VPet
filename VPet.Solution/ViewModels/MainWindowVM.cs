@@ -30,9 +30,10 @@ public class MainWindowVM : ObservableClass<MainWindowVM>
 
     private void FirstStartFailedCommand_ExecuteCommand()
     {
-        Utils.OpenLink(
-            "https://steamcommunity.com/games/1920960/announcements/detail/3681184905256253203"
-        );
+        if (LocalizeCore.CurrentCulture == "zh-Hans")
+            Utils.OpenLink("https://www.bilibili.com/read/cv26510496/");
+        else
+            Utils.OpenLink("https://steamcommunity.com/games/1920960/announcements/detail/3681184905256253203");
     }
 
     #region Property
