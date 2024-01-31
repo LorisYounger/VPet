@@ -1,6 +1,8 @@
 ﻿using HKW.HKWUtils;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System.ComponentModel;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using VPet.Solution.ViewModels;
@@ -28,7 +30,6 @@ public partial class MainWindow : WindowX
         }
         InitializeComponent();
         this.SetViewModel<MainWindowVM>();
-
         Closed += MainWindow_Closed;
     }
 
@@ -43,7 +44,7 @@ public partial class MainWindow : WindowX
         SettingWindow.ShowOrActivate();
     }
 
-    private void Button_OpenSaveEditor_Click(object sender, RoutedEventArgs e)
+    private void Button_OpenSaveViewer_Click(object sender, RoutedEventArgs e)
     {
         SaveWindow.ShowOrActivate();
     }

@@ -318,17 +318,37 @@ namespace VPet_Simulator.Windows
             petHelper.Show();
         }
 
-        public static void RunDIY(string content)
+        public void RunDIY(string content)
         {
-            if (content.Contains("://") || content.Contains(@":\"))
+            if (content.Contains(@":\"))
             {
                 try
                 {
-                    Process.Start(content);
+                    if (!Set["v"][(gbol)"rundiy"])
+                    {
+                        MessageBoxX.Show("由于操作系统的设计，通过我们软件启动的程序可能会在任务管理器中归类为我们软件的子进程，这可能导致CPU/内存占用显示较高".Translate(),
+                            "关于CPU/内存占用显示较高的一次性提示".Translate());
+                        Set["v"][(gbol)"rundiy"] = true;
+                    }
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.FileName = content;
+                    startInfo.UseShellExecute = false;
+                    Process.Start(startInfo);
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                    MessageBoxX.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                }
+            }
+            else if (content.Contains("://"))
+            {
+                try
+                {
+                    ExtensionSetting.StartURL(content);
+                }
+                catch (Exception e)
+                {
+                    MessageBoxX.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
                 }
             }
             else
@@ -339,7 +359,7 @@ namespace VPet_Simulator.Windows
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                    MessageBoxX.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
                 }
             }
         }

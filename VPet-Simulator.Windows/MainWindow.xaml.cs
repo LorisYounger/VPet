@@ -20,6 +20,7 @@ using Line = LinePutScript.Line;
 using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using LinePutScript.Dictionary;
+using Steamworks.Data;
 
 namespace VPet_Simulator.Windows
 {
@@ -111,6 +112,8 @@ namespace VPet_Simulator.Windows
                 {
                     if (IsSteamUser)//如果是steam用户,尝试加载workshop
                     {
+                        //Leaderboard? leaderboard = await SteamUserStats.FindLeaderboardAsync("chatgpt_auth");
+                        //leaderboard?.ReplaceScore(Function.Rnd.Next());
                         var workshop = new Line_D("workshop");
                         await Dispatcher.InvokeAsync(new Action(() =>
                         {
@@ -126,7 +129,7 @@ namespace VPet_Simulator.Windows
                         int i = 1;
                         while (true)
                         {
-                            var page = await Steamworks.Ugc.Query.ItemsReadyToUse.GetPageAsync(i++);                           
+                            var page = await Steamworks.Ugc.Query.ItemsReadyToUse.GetPageAsync(i++);
                             if (page.HasValue && page.Value.ResultCount != 0)
                             {
                                 foreach (Steamworks.Ugc.Item entry in page.Value.Entries)
@@ -260,7 +263,7 @@ namespace VPet_Simulator.Windows
             if (App.MainWindows.Count <= 1)
             {
                 try
-                {                   
+                {
                     if (Core != null && Core.Graph != null)
                     {
                         foreach (var igs in Core.Graph.GraphsList.Values)

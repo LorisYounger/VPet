@@ -9,34 +9,6 @@ public class SystemSettingModel : ObservableClass<SystemSettingModel>
     /// </summary>
     public bool DiagnosisDayEnable { get; } = true;
 
-    #region Diagnosis
-    private bool _diagnosis;
-
-    /// <summary>
-    /// 是否启用数据收集
-    /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.Diagnosis))]
-    public bool Diagnosis
-    {
-        get => _diagnosis;
-        set => SetProperty(ref _diagnosis, value);
-    }
-    #endregion
-
-    #region DiagnosisInterval
-    private int _diagnosisInterval;
-
-    /// <summary>
-    /// 数据收集频率
-    /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.DiagnosisInterval))]
-    public int DiagnosisInterval
-    {
-        get => _diagnosisInterval;
-        set => SetProperty(ref _diagnosisInterval, value);
-    }
-    #endregion
-
     #region AutoSaveInterval
     private int _autoSaveInterval;
 

@@ -27,7 +27,6 @@
         <RowDefinition Height="Auto" />
         <RowDefinition />
         <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
       <TextBox
         pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
@@ -45,63 +44,87 @@
             <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}" />
             <Setter Property="Content" Value="{Binding Name}" />
             <Setter Property="ToolTip" Value="{Binding FilePath}" />
-            <Setter Property="ContextMenu">
-              <Setter.Value>
-                <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Mode=Self}}">
-                  <MenuItem
-                    Command="{Binding PlacementTarget.Tag.OpenFileCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                    CommandParameter="{Binding}"
-                    Header="{ll:Str 打开文件}" />
-                  <MenuItem
-                    Command="{Binding PlacementTarget.Tag.OpenFileInExplorerCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                    CommandParameter="{Binding}"
-                    Header="{ll:Str 从资源管理器打开文件}" />
-                  <MenuItem
-                    Command="{Binding PlacementTarget.Tag.SaveSettingCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                    CommandParameter="{Binding}"
-                    Header="{ll:Str 保存}" />
-                  <MenuItem
-                    Command="{Binding PlacementTarget.Tag.ResetSettingCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                    CommandParameter="{Binding}"
-                    Header="{ll:Str 重置}" />
-                </ContextMenu>
-              </Setter.Value>
-            </Setter>
           </Style>
         </ListBox.ItemContainerStyle>
       </ListBox>
-      <Button
-        Grid.Row="3"
-        Margin="0"
-        HorizontalAlignment="Stretch"
-        Command="{Binding SaveAllSettingCommand}"
-        Content="{ll:Str 全部保存}"
-        Style="{DynamicResource Button_BaseStyle}" />
+      <StackPanel Grid.Row="2">
+        <Button
+          Margin="0"
+          HorizontalAlignment="Stretch"
+          Command="{Binding ResetAllSettingCommand}"
+          Content="{ll:Str 全部重置}"
+          Style="{DynamicResource Button_BaseStyle}" />
+        <Button
+          Margin="0"
+          HorizontalAlignment="Stretch"
+          Command="{Binding SaveAllSettingCommand}"
+          Content="{ll:Str 全部保存}"
+          Style="{DynamicResource Button_BaseStyle}" />
+      </StackPanel>
     </Grid>
     <Grid Grid.Column="1" IsEnabled="{Binding SelectedItem, ElementName=ListBox_Saves, Converter={StaticResource NullToFalse}}">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition />
-      </Grid.RowDefinitions>
-      <ListBox x:Name="ListBox_Pages" Style="{DynamicResource SideMenuListBoxStyle}">
-        <ListBox.ItemsPanel>
-          <ItemsPanelTemplate>
-            <StackPanel Orientation="Horizontal" />
-          </ItemsPanelTemplate>
-        </ListBox.ItemsPanel>
-        <ListBoxItem x:Name="ListBoxItem_GraphicsSettings" Content="{ll:Str 图形}" />
-        <ListBoxItem x:Name="ListBoxItem_SystemSettings" Content="{ll:Str 系统}" />
-        <ListBoxItem x:Name="ListBoxItem_InteractiveSettings" Content="{ll:Str 互动}" />
-        <ListBoxItem x:Name="ListBoxItem_CustomizedSettings" Content="{ll:Str 自定}" />
-        <ListBoxItem x:Name="ListBoxItem_DiagnosticSettings" Content="{ll:Str 诊断}" />
-        <ListBoxItem x:Name="ListBoxItem_ModSettings" Content="{ll:Str Mod管理}" />
-      </ListBox>
-      <Frame
-        x:Name="Frame_Main"
-        Grid.Row="1"
-        Content="{Binding SelectedItem.Tag, ElementName=ListBox_Pages}"
-        ContentRendered="Frame_Main_ContentRendered"
-        NavigationUIVisibility="Hidden" />
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <ListBox x:Name="ListBox_Pages" Style="{DynamicResource SideMenuListBoxStyle}">
+          <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ListBox.ItemsPanel>
+          <ListBoxItem x:Name="ListBoxItem_GraphicsSettings" Content="{ll:Str 图形}" />
+          <ListBoxItem x:Name="ListBoxItem_SystemSettings" Content="{ll:Str 系统}" />
+          <ListBoxItem x:Name="ListBoxItem_InteractiveSettings" Content="{ll:Str 互动}" />
+          <ListBoxItem x:Name="ListBoxItem_CustomizedSettings" Content="{ll:Str 自定}" />
+          <ListBoxItem x:Name="ListBoxItem_DiagnosticSettings" Content="{ll:Str 诊断}" />
+          <ListBoxItem x:Name="ListBoxItem_ModSettings" Content="{ll:Str Mod管理}" />
+        </ListBox>
+        <Frame
+          x:Name="Frame_Main"
+          Grid.Row="1"
+          Content="{Binding SelectedItem.Tag, ElementName=ListBox_Pages}"
+          ContentRendered="Frame_Main_ContentRendered"
+          NavigationUIVisibility="Hidden" />
+      </Grid>
+      <StackPanel Grid.Column="1" MinWidth="100">
+        <Button
+          Margin="0"
+          HorizontalAlignment="Stretch"
+          Command="{Binding OpenFileCommand}"
+          CommandParameter="{Binding SelectedItem, ElementName=ListBox_Saves}"
+          Content="{ll:Str 打开文件}"
+          Style="{StaticResource Button_BaseStyle}" />
+        <Button
+          Grid.Column="1"
+          Margin="0"
+          HorizontalAlignment="Stretch"
+          Command="{Binding OpenFileInExplorerCommand}"
+          CommandParameter="{Binding SelectedItem, ElementName=ListBox_Saves}"
+          Content="{ll:Str 从资源管理器打开文件}"
+          Style="{StaticResource Button_BaseStyle}" />
+        <Button
+          Grid.Column="2"
+          Margin="0"
+          HorizontalAlignment="Stretch"
+          Command="{Binding SaveSettingCommand}"
+          CommandParameter="{Binding SelectedItem, ElementName=ListBox_Saves}"
+          Content="{ll:Str 保存}"
+          Style="{StaticResource Button_BaseStyle}" />
+        <Button
+          Grid.Column="3"
+          Margin="0"
+          HorizontalAlignment="Stretch"
+          Command="{Binding ResetSettingCommand}"
+          CommandParameter="{Binding SelectedItem, ElementName=ListBox_Saves}"
+          Content="{ll:Str 重置}"
+          Style="{StaticResource Button_BaseStyle}" />
+      </StackPanel>
       <!--<TabControl
           x:Name="MainTab"
           Grid.Column="1"

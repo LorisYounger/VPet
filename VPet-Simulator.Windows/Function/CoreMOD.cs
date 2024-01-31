@@ -323,7 +323,11 @@ namespace VPet_Simulator.Windows
             }
             catch
             {
-                Process.Start("explorer.exe", url);
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = "explorer.exe";
+                startInfo.UseShellExecute = false;
+                startInfo.Arguments = url;
+                Process.Start(startInfo);
             }
         }
 

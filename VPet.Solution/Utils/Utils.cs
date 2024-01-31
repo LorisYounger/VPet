@@ -18,21 +18,27 @@ public static class Utils
     public const int DecodePixelHeight = 250;
     public static char[] Separator { get; } = new char[] { '_' };
 
-    //public static BitmapImage LoadImageToStream(string imagePath)
-    //{
-    //    BitmapImage bitmapImage = new();
-    //    bitmapImage.BeginInit();
-    //    bitmapImage.DecodePixelWidth = DecodePixelWidth;
-    //    try
-    //    {
-    //        bitmapImage.StreamSource = new StreamReader(imagePath).BaseStream;
-    //    }
-    //    finally
-    //    {
-    //        bitmapImage.EndInit();
-    //    }
-    //    return bitmapImage;
-    //}
+    /// <summary>
+    /// 载入图片到流
+    /// </summary>
+    /// <param name="imagePath">图片路径</param>
+    /// <returns>图片</returns>
+    public static BitmapImage LoadImageToStream(string imagePath)
+    {
+        if (string.IsNullOrWhiteSpace(imagePath) || File.Exists(imagePath) is false)
+            return null;
+        BitmapImage bitmapImage = new();
+        bitmapImage.BeginInit();
+        try
+        {
+            bitmapImage.StreamSource = new StreamReader(imagePath).BaseStream;
+        }
+        finally
+        {
+            bitmapImage.EndInit();
+        }
+        return bitmapImage;
+    }
 
     /// <summary>
     /// 载入图片至内存流
@@ -100,7 +106,7 @@ public static class Utils
     /// 打开文件
     /// </summary>
     /// <param name="filePath">文件路径</param>
-    public static void OpenFile(string filePath)
+    public static void OpenLink(string filePath)
     {
         System.Diagnostics.Process
             .Start(new System.Diagnostics.ProcessStartInfo(filePath) { UseShellExecute = true })
