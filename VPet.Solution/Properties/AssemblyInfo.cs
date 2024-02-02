@@ -8,9 +8,9 @@ using System.Windows;
 [assembly: AssemblyTitle("VPet.Solution")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("LBGame")]
 [assembly: AssemblyProduct("VPet.Solution")]
-[assembly: AssemblyCopyright("Copyright ©  2023")]
+[assembly: AssemblyCopyright("Copyright © LBGame 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

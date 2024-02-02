@@ -11,7 +11,6 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using VPet_Simulator.Core;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace VPet_Simulator.Windows.Interface
 {
