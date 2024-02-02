@@ -50,7 +50,7 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        private void Statistics_StatisticChanged(Interface.Statistics sender, string name, LinePutScript.SetObject value)
+        private void Statistics_StatisticChanged(Interface.Statistics sender, string name, SetObject value)
         {
             Dispatcher.Invoke(() =>
             {

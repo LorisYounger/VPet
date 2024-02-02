@@ -87,7 +87,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public double VoiceVolume
         {
-            get => GetFloat("voicevolume", 0.5);
+            get => (double)GetFloat("voicevolume", 0.5);
             set => SetFloat("voicevolume", value);
         }
         /// <summary>
@@ -275,7 +275,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public double PetHelpLeft
         {
-            get => this["pethelp"].GetFloat("left", 0);
+            get => (double)this["pethelp"].GetFloat("left", 0);
             set => this["pethelp"].SetFloat("left", value);
         }
         /// <summary>
@@ -283,7 +283,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public double PetHelpTop
         {
-            get => this["pethelp"].GetFloat("top", 0);
+            get => (double)this["pethelp"].GetFloat("top", 0);
             set => this["pethelp"].SetFloat("top", value);
         }
 

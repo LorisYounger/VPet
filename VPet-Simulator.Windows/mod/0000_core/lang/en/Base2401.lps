@@ -1,2 +1,3 @@
 由于操作系统的设计，通过我们软件启动的程序可能会在任务管理器中归类为我们软件的子进程，这可能导致CPU/内存占用显示较高#Due to the design of the operating system, programs launched by our software may be categorized as sub-processes of our software in the task manager, which may result in higher displayed CPU/memory usage.:|
 关于CPU/内存占用显示较高的一次性提示#One-time Notice Regarding Higher Displayed CPU/Memory Usage:|
+尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待#Attempting to load animations and generate cache\nThis step may take a while\nPlease be patient:|

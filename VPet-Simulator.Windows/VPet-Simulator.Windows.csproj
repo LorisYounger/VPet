@@ -186,6 +186,9 @@
 		</BootstrapperPackage>
 	</ItemGroup>
 	<ItemGroup>
+	  <None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
+	<ItemGroup>
 	  <Resource Include="Res\img\rbgt.png" />
 	  <Resource Include="Res\img\r_autobuy_1.png" />
 	  <Resource Include="Res\img\r_autobuy_2.png" />
@@ -234,10 +237,10 @@
 		<PackageReference Include="CSCore" Version="1.2.1.2" />
 		<PackageReference Include="Facepunch.Steamworks" Condition="'$(Platform)' == 'x64'" Version="2.3.3" />
 		<PackageReference Include="Facepunch.Steamworks.win32" Condition="'$(Platform)' == 'x86'" Version="2.3.3" />
-		<PackageReference Include="LinePutScript" Version="1.9.2" />
+		<PackageReference Include="LinePutScript" Version="1.10.2" />
 		<PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.6" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="Panuon.WPF" Version="1.0.2" />
-		<PackageReference Include="Panuon.WPF.UI" Version="1.1.15.8" />
+		<PackageReference Include="Panuon.WPF" Version="1.0.3" />
+		<PackageReference Include="Panuon.WPF.UI" Version="1.1.16.8" />
 	</ItemGroup>
 </Project>
