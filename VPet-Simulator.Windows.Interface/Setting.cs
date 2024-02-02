@@ -33,19 +33,20 @@ namespace VPet_Simulator.Windows.Interface
             allowmove = !this["gameconfig"].GetBool("allowmove");
             smartmove = this["gameconfig"].GetBool("smartmove");
             enablefunction = !this["gameconfig"].GetBool("nofunction");
-            Statistics_OLD = new Statistics(this["statistics"].ToList());
+            //Statistics_OLD = new Statistics(this["statistics"].ToList());
             autobuy = this["gameconfig"].GetBool("autobuy");
             autogift = this["gameconfig"].GetBool("autogift");
         }
-        public override string ToString()
-        {//留作备份,未来版本删了
-            this["statistics"] = new Line("statistics", "", "", Statistics_OLD.ToSubs().ToArray());
-            return base.ToString();
-        }
-        /// <summary>
-        /// 统计数据信息(旧)
-        /// </summary>
-        public Statistics Statistics_OLD;
+        //public override string ToString()
+        //{//留作备份,未来版本删了
+        //    this["statistics"] = new Line("statistics", "", "", Statistics_OLD.ToSubs().ToArray());
+        //    return base.ToString();
+        //}
+
+        ///// <summary>
+        ///// 统计数据信息(旧)
+        ///// </summary>
+        //public Statistics Statistics_OLD;
 
         //public Size WindowsSize
         //{

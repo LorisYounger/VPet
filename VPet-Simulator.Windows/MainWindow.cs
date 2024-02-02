@@ -712,7 +712,7 @@ namespace VPet_Simulator.Windows
                     else
                         data.Add(new Line(item.Name, item.Info));
                 }
-                tmp = new GameSave_v2(lps, Set.Statistics_OLD, olddata: data);
+                tmp = new GameSave_v2(lps, null, olddata: data);
             }
             if (tmp.GameSave == null)
                 return false;
