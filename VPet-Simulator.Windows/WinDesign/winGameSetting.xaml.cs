@@ -1439,7 +1439,14 @@ namespace VPet_Simulator.Windows
                 mw.GameSavesData = new GameSave_v2(mw.Core.Save.Name);
                 mw.Core.Save = mw.GameSavesData.GameSave;
                 if (oldsave.HashCheck) // 对于重开无作弊的玩家保留统计
+                {
                     mw.GameSavesData.Statistics = oldsave.Statistics;
+                    if(oldsave.GameSave.Money > 10000000 || oldsave.GameSave.Money < -1000000000 || oldsave.GameSave.Exp > 100000000 || oldsave.GameSave.Exp < -10000000000)
+                    {
+                        mw.Core.Save.Money = 10000;
+                        mw.Core.Save.Exp = 10000;
+                    }
+                }
                 mw.HashCheck = true;
                 MessageBoxX.Show("重置成功".Translate());
             }
