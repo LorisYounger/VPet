@@ -14,6 +14,7 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,21 +35,28 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FastMember, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.1.5.0\lib\net461\FastMember.dll</HintPath>
+    </Reference>
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LinePutScript.1.9.2\lib\net462\LinePutScript.dll</HintPath>
+      <HintPath>..\packages\LinePutScript.1.10.2\lib\net462\LinePutScript.dll</HintPath>
     </Reference>
     <Reference Include="LinePutScript.Localization.WPF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LinePutScript.Localization.WPF.1.0.6\lib\net462\LinePutScript.Localization.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Panuon.WPF, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Panuon.WPF.1.0.2\lib\net462\Panuon.WPF.dll</HintPath>
+    <Reference Include="Panuon.WPF, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Panuon.WPF.1.0.3\lib\net462\Panuon.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Panuon.WPF.UI, Version=1.1.15.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Panuon.WPF.UI.1.1.15.8\lib\net462\Panuon.WPF.UI.dll</HintPath>
+    <Reference Include="Panuon.WPF.UI, Version=1.1.16.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Panuon.WPF.UI.1.1.16.5\lib\net462\Panuon.WPF.UI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -67,7 +75,120 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="Converters\AllIsBoolConverter.cs" />
+    <Compile Include="Converters\AllIsBoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\ConverterBase\BoolToValueConverterBase.cs" />
+    <Compile Include="Converters\BrushToMediaColorConverter.cs" />
+    <Compile Include="Converters\CalculatorConverter.cs" />
+    <Compile Include="Converters\ConverterBase\CanInverterMultiValueConverter.cs" />
+    <Compile Include="Converters\ConverterBase\CanInverterValueConverter.cs" />
+    <Compile Include="Converters\ConverterBase\ConverterBase.cs" />
+    <Compile Include="Converters\ConverterBase\HaveRatioConverter.cs" />
+    <Compile Include="Converters\ConverterBase\MultiValueConverterBase.cs" />
+    <Compile Include="Converters\ConverterBase\MultiValueToBoolConverter.cs" />
+    <Compile Include="Converters\ConverterBase\ValueConverterBase.cs" />
+    <Compile Include="Converters\EqualsConverter.cs" />
+    <Compile Include="Converters\IsBoolConverter.cs" />
+    <Compile Include="Converters\MarginConverter.cs" />
+    <Compile Include="Converters\MediaColorToBrushConverter.cs" />
+    <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="Converters\StringFormatConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\MaxConverter.cs" />
+    <Compile Include="Converters\ValueToBoolConverter.cs" />
+    <Compile Include="Converters\BoolInverter.cs" />
+    <Compile Include="Models\ModLoader.cs" />
+    <Compile Include="Models\SaveViewer\SaveModel.cs" />
+    <Compile Include="Models\SaveViewer\StatisticDataModel.cs" />
+    <Compile Include="Models\SettingEditor\CustomizedSettingModel.cs" />
+    <Compile Include="Models\SettingEditor\DiagnosticSettingModel.cs" />
+    <Compile Include="Models\SettingEditor\GraphicsSettingModel.cs" />
+    <Compile Include="Models\SettingEditor\InteractiveSettingModel.cs" />
+    <Compile Include="Models\SettingEditor\ModSettingModel.cs" />
+    <Compile Include="Models\SettingEditor\SystemSettingModel.cs" />
+    <Compile Include="Utils\ClearFocus.cs" />
+    <Compile Include="Utils\ElementHelper.cs" />
+    <Compile Include="Utils\FindTopParent.cs" />
+    <Compile Include="Utils\ReflectionUtils.cs" />
+    <Compile Include="ViewModels\MainWindowVM.cs" />
+    <Compile Include="ViewModels\SaveViewer\SaveDataPageVM.cs" />
+    <Compile Include="ViewModels\SaveViewer\SaveStatisticPageVM.cs" />
+    <Compile Include="ViewModels\SaveViewer\SaveWindowVM.cs" />
+    <Compile Include="ViewModels\SettingEditor\CustomizedSettingPageVM.cs" />
+    <Compile Include="ViewModels\SettingEditor\DiagnosticSettingPageVM.cs" />
+    <Compile Include="ViewModels\SettingEditor\ModSettingModelModel.cs" />
+    <Compile Include="ViewModels\SettingEditor\ModSettingPageVM.cs" />
+    <Compile Include="Models\SettingEditor\SettingModel.cs" />
+    <Compile Include="ViewModels\SettingEditor\SystemSettingPageVM.cs" />
+    <Compile Include="Views\SaveViewer\SaveDataPage.xaml.cs">
+      <DependentUpon>SaveDataPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SaveViewer\SaveStatisticPage.xaml.cs">
+      <DependentUpon>SaveStatisticPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SaveViewer\SaveWindow.xaml.cs">
+      <DependentUpon>SaveWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingEditor\SettingWindow.xaml.cs">
+      <DependentUpon>SettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingEditor\CustomizedSettingPage.xaml.cs">
+      <DependentUpon>CustomizedSettingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingEditor\DiagnosticSettingPage.xaml.cs">
+      <DependentUpon>DiagnosticSettingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingEditor\ModSettingPage.xaml.cs">
+      <DependentUpon>ModSettingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingEditor\SystemSettingPage.xaml.cs">
+      <DependentUpon>SystemSettingPage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Converters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Templates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SaveViewer\SaveDataPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SaveViewer\SaveStatisticPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SaveViewer\SaveWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SettingEditor\SettingWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SettingEditor\CustomizedSettingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingEditor\DiagnosticSettingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingEditor\GraphicsSettingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingEditor\InteractiveSettingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -75,10 +196,55 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
+    <Compile Include="ViewModels\SettingEditor\GraphicsSettingPageVM.cs" />
+    <Compile Include="ViewModels\SettingEditor\InteractiveSettingPageVM.cs" />
+    <Compile Include="ViewModels\SettingEditor\SettingWindowVM.cs" />
+    <Compile Include="Views\SettingEditor\GraphicsSettingPage.xaml.cs">
+      <DependentUpon>GraphicsSettingPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SettingEditor\InteractiveSettingPage.xaml.cs">
+      <DependentUpon>InteractiveSettingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SimpleObservable\ObservableClass\INotifyPropertyChangedX.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\INotifyPropertyChangingX.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\ObservableClass.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\PropertyChangedXEventArgs.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\PropertyChangedXEventHandler.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\PropertyChangingXEventArgs.cs" />
+    <Compile Include="SimpleObservable\ObservableClass\PropertyChangingXEventHandler.cs" />
+    <Compile Include="SimpleObservable\ObservableCommand\ExecuteAsyncEventHandler.cs" />
+    <Compile Include="SimpleObservable\ObservableCommand\ExecuteEventHandler.cs" />
+    <Compile Include="SimpleObservable\ObservableCommand\NotifyReceivedEventHandler.cs" />
+    <Compile Include="SimpleObservable\ObservableCommand\ObservableCommand.cs" />
+    <Compile Include="SimpleObservable\ObservableCommand\ObservableCommandT.cs" />
+    <Compile Include="Utils\ObservableEnumFlags.cs" />
+    <Compile Include="Utils\Expansions.cs" />
+    <Compile Include="Utils\HashCode.cs" />
+    <Compile Include="Utils\ObservableRange.cs" />
+    <Compile Include="Utils\ObservablePoint.cs" />
+    <Compile Include="Utils\ObservableRect.cs" />
+    <Compile Include="Utils\Utils.cs" />
+    <Compile Include="Resources\NativeResources.cs" />
+    <Compile Include="Usings.cs" />
+    <Page Include="NativeStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
+    <Compile Include="NativeStyles.xaml.cs">
+      <DependentUpon>NativeStyles.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\SettingEditor\ModSettingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingEditor\SystemSettingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -116,6 +282,9 @@
       <Project>{dcad838a-1a02-4bdf-962c-fd47c6006d28}</Project>
       <Name>VPet-Simulator.Windows.Interface</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

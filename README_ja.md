@@ -1,6 +1,6 @@
 # VPet
 
-[简体中文](./README.md) | [English](./README_en.md) | 日本語
+[简体中文](./README.md) | [繁體中文](./README_zht.md) | [English](./README_en.md) | 日本語
 
 ![Header](README.assets/%E4%B8%BB%E5%9B%BE.png)
 
@@ -46,6 +46,8 @@ VPet を [Steam で](https://store.steampowered.com/app/1920960/VPet)無料で�
 ### Steam Workshop 対応！
 
 Steam Workshop の MOD に対応しています。MOD を使用すると、独自のペット（アニメーション/インタラクション）を追加したり、Workshop を通じて他の人と共有したりすることができます。
+
+MOD プロデューサ:  https://github.com/LorisYounger/VPet.ModMaker
 
 以下のコンテンツは、Workshop の MOD によって追加または変更することができます:
 

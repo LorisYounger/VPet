@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace VPet_Simulator.Core
 {
-    public static class Function
+    public static partial class Function
     {
         public static Random Rnd = new Random();
         /// <summary>

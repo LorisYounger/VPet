@@ -99,7 +99,7 @@ namespace VPet_Simulator.Windows.Interface
         }
 
     }
-    public static class ExtensionValue
+    public static partial class ExtensionValue
     {
         /// <summary>
         /// 当前运行目录

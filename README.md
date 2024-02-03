@@ -1,6 +1,6 @@
 # VPet-Simulator
 
-简体中文 | [English](./README_en.md) | [日本語](./README_ja.md)
+简体中文 | [繁體中文](./README_zht.md) | [English](./README_en.md) | [日本語](./README_ja.md)
 
 虚拟桌宠模拟器 一个开源的桌宠软件, 可以内置到任何WPF应用程序
 
@@ -48,6 +48,8 @@
 ### 支持创意工坊
 
 该游戏支持创意工坊,您可以制作别的人物桌宠动画或者互动,并上传至创意工坊分享给更多人使用.
+
+MOD制作器:  https://github.com/LorisYounger/VPet.ModMaker
 
 创意工坊支持添加/修改以下内容
 

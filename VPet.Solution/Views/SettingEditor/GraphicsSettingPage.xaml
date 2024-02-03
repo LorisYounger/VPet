@@ -1,0 +1,350 @@
+﻿<Page
+  x:Class="VPet.Solution.Views.SettingEditor.GraphicsSettingPage"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:h="clr-namespace:HKW.WPF.Helpers"
+  xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+  xmlns:local="clr-namespace:VPet.Solution.Views.SettingEditor"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:pu="https://opensource.panuon.com/wpf-ui"
+  xmlns:vm="clr-namespace:VPet.Solution.ViewModels.SettingEditor"
+  Title="GraphicsSettingsPage"
+  d:DataContext="{d:DesignInstance Type=vm:GraphicsSettingPageVM}"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d">
+  <Grid>
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition MinWidth="300" />
+        <!--<ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" MinWidth="100" />-->
+      </Grid.ColumnDefinitions>
+      <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+          <Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="{ll:Str '置于顶层'}"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <pu:Switch
+              x:Name="TopMostBox"
+              Grid.Column="1"
+              Content="{ll:Str '将桌宠置于顶层'}"
+              IsChecked="{Binding GraphicsSetting.TopMost}"
+              Style="{DynamicResource Switch_BaseStyle}"
+              ToolTip="{ll:Str '将桌宠置于顶层'}" />
+            <pu:Switch
+              x:Name="HitThroughBox"
+              Grid.Column="2"
+              Content="{ll:Str '鼠标穿透'}"
+              IsChecked="{Binding GraphicsSetting.HitThrough}"
+              Style="{DynamicResource Switch_BaseStyle}"
+              ToolTip="{ll:Str '鼠标将会穿过桌宠到下方内容,不打扰操作\&#13;该选项'}" />
+            <pu:Switch
+              x:Name="PetHelperBox"
+              Grid.Column="3"
+              Content="{ll:Str '快速切换'}"
+              IsChecked="{Binding GraphicsSetting.PetHelper}"
+              Style="{DynamicResource Switch_BaseStyle}"
+              ToolTip="{ll:Str '添加快速切换小标,切换顶层或穿透'}" />
+          </Grid>
+          <Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="Language"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <ComboBox
+              x:Name="LanguageBox"
+              Grid.Column="1"
+              SelectedItem="{Binding GraphicsSetting.Language}"
+              Style="{DynamicResource ComboBox_BaseStyle}" />
+          </Grid>
+          <Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="{ll:Str 更高缩放}"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <pu:Switch
+              x:Name="FullScreenBox"
+              Grid.Column="1"
+              Content="{ll:Str 支持更大缩放倍率}"
+              IsChecked="{Binding GraphicsSetting.IsBiggerScreen}"
+              Style="{DynamicResource Switch_BaseStyle}"
+              ToolTip="{ll:Str 解锁缩放限制}" />
+          </Grid>
+          <Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+              <ColumnDefinition Width="Auto" MinWidth="100" />
+            </Grid.ColumnDefinitions>
+            <Label
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="{ll:Str 缩放等级}"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <Slider
+              x:Name="Slider_Zoom"
+              Grid.Column="1"
+              LargeChange="0.1"
+              Maximum="{Binding GraphicsSetting.ZoomLevelMaximum}"
+              Minimum="{Binding GraphicsSetting.ZoomLevelMinimum}"
+              SmallChange="0.05"
+              Style="{DynamicResource Slider_BaseStyle}"
+              TickFrequency="0.05"
+              Value="{Binding GraphicsSetting.ZoomLevel}" />
+            <pu:NumberInput
+              Grid.Column="2"
+              Foreground="{DynamicResource DARKPrimaryDarker}"
+              Interval="0.1"
+              Maximum="{Binding GraphicsSetting.ZoomLevelMaximum}"
+              Minimum="{Binding GraphicsSetting.ZoomLevelMinimum}"
+              Style="{DynamicResource NumberInput_BaseStyle}"
+              Value="{Binding Value, ElementName=Slider_Zoom}" />
+          </Grid>
+          <Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+              <ColumnDefinition Width="Auto" MinWidth="100" />
+            </Grid.ColumnDefinitions>
+            <Label
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="{ll:Str 渲染分辨率}"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <Slider
+              x:Name="Slider_Resolution"
+              Grid.Column="1"
+              LargeChange="50"
+              Maximum="1920"
+              Minimum="200"
+              SmallChange="10"
+              Style="{DynamicResource Slider_BaseStyle}"
+              TickFrequency="10"
+              ToolTip="{ll:Str '桌宠图形渲染的分辨率,越高图形越清晰\&#13;但是高分辨率会占用更多内存\&#13;重启后生效'}"
+              Value="{Binding GraphicsSetting.Resolution}" />
+            <pu:NumberInput
+              Grid.Column="2"
+              Interval="10"
+              Maximum="1920"
+              Minimum="200"
+              Style="{DynamicResource NumberInput_BaseStyle}"
+              ToolTip="{ll:Str '桌宠图形渲染的分辨率,越高图形越清晰\&#13;但是高分辨率会占用更多内存\&#13;重启后生效'}"
+              Value="{Binding Value, ElementName=Slider_Resolution}" />
+          </Grid>
+          <!--  实际上主题并没有实装  -->
+          <!--<Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="{ll:Str 主题}"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <ComboBox
+              x:Name="ThemeBox"
+              Grid.Column="1"
+              IsEnabled="False"
+              SelectedItem="{Binding GraphicsSetting.Theme}"
+              Style="{DynamicResource ComboBox_BaseStyle}" />
+          </Grid>-->
+          <Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="{ll:Str 字体}"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <ComboBox
+              x:Name="FontBox"
+              Grid.Column="1"
+              IsEnabled="False"
+              SelectedItem="{Binding GraphicsSetting.Font}"
+              Style="{DynamicResource ComboBox_BaseStyle}" />
+          </Grid>
+          <Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+              <ColumnDefinition />
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label
+              Grid.Row="8"
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="{ll:Str 启动位置}"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <pu:Switch
+              x:Name="StartPlace"
+              Grid.Column="1"
+              Content="{ll:Str 保存为退出位置}"
+              IsChecked="{Binding GraphicsSetting.StartRecordLast}"
+              Style="{DynamicResource Switch_BaseStyle}"
+              ToolTip="{ll:Str 游戏退出位置为下次桌宠启动出现的位置}" />
+            <DockPanel Grid.Column="2">
+              <Label Content="{ll:Str X轴}" Style="{DynamicResource Label_BaseStyle}" />
+              <pu:NumberInput
+                x:Name="TextBoxStartUpX"
+                Style="{DynamicResource NumberInput_BaseStyle}"
+                Value="{Binding GraphicsSetting.StartRecordPoint.X}" />
+            </DockPanel>
+            <DockPanel Grid.Column="3">
+              <Label Content="{ll:Str Y轴}" Style="{DynamicResource Label_BaseStyle}" />
+              <pu:NumberInput
+                x:Name="TextBoxStartUpY"
+                Style="{DynamicResource NumberInput_BaseStyle}"
+                Value="{Binding GraphicsSetting.StartRecordPoint.Y}" />
+            </DockPanel>
+            <Button
+              x:Name="Button_StartPoint"
+              Grid.Column="4"
+              Click="Button_StartPoint_Click"
+              Content="{ll:Str 设为当前位置}"
+              Style="{DynamicResource Button_BaseStyle}"
+              ToolTip="{ll:Str 设为当前窗口左上角顶点坐标的位置}" />
+          </Grid>
+          <Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="{ll:Str 消息框}"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <pu:Switch
+              x:Name="SwitchMsgOut"
+              Grid.Column="1"
+              Content="{ll:Str 将消息框置于外部}"
+              IsChecked="{Binding GraphicsSetting.MessageBarOutside}"
+              Style="{DynamicResource Switch_BaseStyle}"
+              ToolTip="{ll:Str 将消息框置于外部}" />
+          </Grid>
+          <Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="{ll:Str 开机启动}"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <pu:Switch
+              x:Name="StartUpBox"
+              Grid.Column="1"
+              Content="{ll:Str 开机启动}"
+              IsChecked="{Binding GraphicsSetting.StartUPBoot}"
+              Style="{DynamicResource Switch_BaseStyle}"
+              ToolTip="{ll:Str '该游戏随着开机启动该程序\&#13;如需卸载游戏\&#13;请关闭该选项'}" />
+            <pu:Switch
+              x:Name="StartUpSteamBox"
+              Grid.Column="2"
+              Content="{ll:Str 从Steam启动}"
+              IsChecked="{Binding GraphicsSetting.StartUPBootSteam}"
+              Style="{DynamicResource Switch_BaseStyle}"
+              ToolTip="{ll:Str '从Steam启动该游戏, 统计时长不能停'}" />
+          </Grid>
+          <!--  无需设置  -->
+          <!--<Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="{ll:Str 宠物动画}"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <Grid Grid.Column="1">
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" MinHeight="30" />
+              </Grid.RowDefinitions>
+              <ComboBox
+                x:Name="PetBox"
+                d:SelectionChanged="PetBox_SelectionChanged"
+                Style="{DynamicResource ComboBox_BaseStyle}"
+                ToolTip="{ll:Str '加载的宠物动画,重启后生效'}" />
+              <TextBlock
+                x:Name="PetIntor"
+                Grid.Row="1"
+                Margin="10,5,10,5"
+                VerticalAlignment="Center"
+                Text="{ll:Str '动画描述...'}"
+                TextWrapping="WrapWithOverflow" />
+            </Grid>
+          </Grid>-->
+          <Grid MinHeight="40">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label
+              HorizontalContentAlignment="Left"
+              h:ElementHelper.UniformMinWidthGroup="A"
+              Content="{ll:Str 隐藏窗口}"
+              Style="{DynamicResource Label_BaseStyle}" />
+            <pu:Switch
+              x:Name="SwitchHideFromTaskControl"
+              Grid.Column="1"
+              Content="{ll:Str '在任务切换器中隐藏窗口'}"
+              IsChecked="{Binding GraphicsSetting.HideFromTaskControl}"
+              Style="{DynamicResource Switch_BaseStyle}"
+              ToolTip="{ll:Str '在Alt+Tab中隐藏'}" />
+          </Grid>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+    <!--<Grid Grid.Column="1">
+        <TextBox
+          x:Name="tb_seach_menu"
+          Margin="3,6,6,0"
+          VerticalAlignment="Top"
+          d:TextChanged="tb_seach_menu_textchange"
+          pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
+          FontSize="16"
+          Style="{DynamicResource StandardTextBoxStyle}" />
+        <ListBox
+          x:Name="ListMenu"
+          Margin="3,40,6,3"
+          pu:ListBoxHelper.CornerRadius="5"
+          pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
+          pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource SecondaryLight}"
+          Background="{DynamicResource SecondaryLighter}"
+          BorderBrush="{DynamicResource Primary}"
+          BorderThickness="2"
+          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+          ScrollViewer.VerticalScrollBarVisibility="Auto" />
+      </Grid>-->
+  </Grid>
+</Page>

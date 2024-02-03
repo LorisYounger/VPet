@@ -1,0 +1,58 @@
+﻿<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+  xmlns:pu="https://opensource.panuon.com/wpf-ui">
+  <ContextMenu x:Key="ContextMenu_DataGridRow" x:Shared="false">
+    <MenuItem
+      Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=Page, Mode=FindAncestor}}"
+      CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=DataGridRow, Mode=FindAncestor}}"
+      Header="{ll:Str 修改}" />
+    <MenuItem
+      Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=Page, Mode=FindAncestor}}"
+      CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType=DataGridRow, Mode=FindAncestor}}"
+      Header="{ll:Str 删除}" />
+  </ContextMenu>
+  <ControlTemplate x:Key="ListBoxItem_RangeData" TargetType="ListBoxItem">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <Label HorizontalContentAlignment="Center" Content="{Binding Tag, RelativeSource={RelativeSource AncestorType=ListBoxItem, Mode=FindAncestor}}" />
+      <Grid Grid.Row="1">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Label Content="{ll:Str 最小值}" />
+        <pu:NumberInput
+          Grid.Column="1"
+          ToolTip="{Binding Value, RelativeSource={RelativeSource Mode=Self}}"
+          Value="{Binding DataContext.Min.Value, RelativeSource={RelativeSource AncestorType=ListBoxItem, Mode=FindAncestor}}" />
+        <Label Grid.Row="1" Content="{ll:Str 最大值}" />
+        <pu:NumberInput
+          Grid.Row="1"
+          Grid.Column="1"
+          ToolTip="{Binding Value, RelativeSource={RelativeSource Mode=Self}}"
+          Value="{Binding DataContext.Max.Value, RelativeSource={RelativeSource AncestorType=ListBoxItem, Mode=FindAncestor}}" />
+      </Grid>
+    </Grid>
+  </ControlTemplate>
+  <ControlTemplate x:Key="ListBox_ShowLangs" TargetType="ListBox">
+    <ListBox
+      ItemsSource="{Binding I18nData.CultureNames}"
+      ScrollViewer.VerticalScrollBarVisibility="Auto"
+      SelectedItem="{Binding I18nData.CultureName.Value}">
+      <ListBox.ItemContainerStyle>
+        <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
+          <Setter Property="Content" Value="{Binding}" />
+        </Style>
+      </ListBox.ItemContainerStyle>
+    </ListBox>
+  </ControlTemplate>
+</ResourceDictionary>

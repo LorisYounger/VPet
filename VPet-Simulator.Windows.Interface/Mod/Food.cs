@@ -50,13 +50,9 @@ namespace VPet_Simulator.Windows.Interface
             /// </summary>
             Drug,
             /// <summary>
-            /// 礼品 (没做)
+            /// 礼品
             /// </summary>
             Gift,
-            ///// <summary>
-            ///// 限定食物优先显示
-            ///// </summary>
-            //Limit,
         }
         /// <summary>
         /// 食物类型
@@ -107,7 +103,6 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Line(ignoreCase: true)]
         public string Desc { get; set; }
-        private string desc = null;
         private string descs = null;
         /// <summary>
         /// 描述(ToBetterBuy)

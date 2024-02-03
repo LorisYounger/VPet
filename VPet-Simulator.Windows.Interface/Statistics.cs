@@ -45,7 +45,7 @@ namespace VPet_Simulator.Windows.Interface
             get => GetDateTime((string)subName);
             set => SetDateTime((string)subName, value);
         }
-        public double this[gflt subName]
+        public FInt64 this[gflt subName]
         {
             get => GetFloat((string)subName);
             set => SetFloat((string)subName, value);
@@ -113,9 +113,9 @@ namespace VPet_Simulator.Windows.Interface
 
         public void SetInt64(string subName, long value) => Set(subName, value);
 
-        public double GetFloat(string subName, double defaultvalue = 0) => Find(subName)?.GetFloat() ?? defaultvalue;
+        public FInt64 GetFloat(string subName, FInt64 defaultvalue = default) => Find(subName)?.GetFloat() ?? defaultvalue;
 
-        public void SetFloat(string subName, double value) => Set(subName, value);
+        public void SetFloat(string subName, FInt64 value) => Set(subName, new SetObject(value));
 
         public DateTime GetDateTime(string subName, DateTime defaultvalue = default) => Find(subName)?.GetDateTime() ?? defaultvalue;
 

@@ -33,19 +33,20 @@ namespace VPet_Simulator.Windows.Interface
             allowmove = !this["gameconfig"].GetBool("allowmove");
             smartmove = this["gameconfig"].GetBool("smartmove");
             enablefunction = !this["gameconfig"].GetBool("nofunction");
-            Statistics_OLD = new Statistics(this["statistics"].ToList());
+            //Statistics_OLD = new Statistics(this["statistics"].ToList());
             autobuy = this["gameconfig"].GetBool("autobuy");
             autogift = this["gameconfig"].GetBool("autogift");
         }
-        public override string ToString()
-        {//留作备份,未来版本删了
-            this["statistics"] = new Line("statistics", "", "", Statistics_OLD.ToSubs().ToArray());
-            return base.ToString();
-        }
-        /// <summary>
-        /// 统计数据信息(旧)
-        /// </summary>
-        public Statistics Statistics_OLD;
+        //public override string ToString()
+        //{//留作备份,未来版本删了
+        //    this["statistics"] = new Line("statistics", "", "", Statistics_OLD.ToSubs().ToArray());
+        //    return base.ToString();
+        //}
+
+        ///// <summary>
+        ///// 统计数据信息(旧)
+        ///// </summary>
+        //public Statistics Statistics_OLD;
 
         //public Size WindowsSize
         //{
@@ -87,7 +88,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public double VoiceVolume
         {
-            get => GetFloat("voicevolume", 0.5);
+            get => (double)GetFloat("voicevolume", 0.5);
             set => SetFloat("voicevolume", value);
         }
         /// <summary>
@@ -275,7 +276,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public double PetHelpLeft
         {
-            get => this["pethelp"].GetFloat("left", 0);
+            get => (double)this["pethelp"].GetFloat("left", 0);
             set => this["pethelp"].SetFloat("left", value);
         }
         /// <summary>
@@ -283,7 +284,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public double PetHelpTop
         {
-            get => this["pethelp"].GetFloat("top", 0);
+            get => (double)this["pethelp"].GetFloat("top", 0);
             set => this["pethelp"].SetFloat("top", value);
         }
 

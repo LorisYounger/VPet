@@ -1,6 +1,6 @@
 # VPet
 
-[简体中文](./README.md) | English | [日本語](./README_ja.md)
+[简体中文](./README.md) | [繁體中文](./README_zht.md) | English | [日本語](./README_ja.md)
 
 ![Header](README.assets/%E4%B8%BB%E5%9B%BE.png)
 
@@ -46,6 +46,8 @@ Feature requests and pull requests are welcome! You can take our code and modify
 ### With Steam Workshop support!
 
 Steam Workshop mods are supported. With mods, you can add your own pets (animations/interactions), and share them with others through the Workshop.
+
+MOD Maker:  https://github.com/LorisYounger/VPet.ModMaker
 
 The following contents can be added or modified by Workshop mods:
 

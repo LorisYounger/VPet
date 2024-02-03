@@ -1,0 +1,25 @@
+﻿<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:c="clr-namespace:HKW.WPF.Converters">
+  <c:MarginConverter x:Key="MarginConverter" />
+  <c:MarginConverter x:Key="RatioMarginConverter" HaveRatio="True" />
+  <c:CalculatorConverter x:Key="CalculatorConverter" />
+  <c:StringFormatConverter x:Key="StringFormatConverter" />
+  <c:BrushToMediaColorConverter x:Key="BrushToMediaColorConverter" />
+  <c:BoolToVisibilityConverter x:Key="FalseToHiddenConverter" />
+  <c:BoolToVisibilityConverter
+    x:Key="FalseToVisibleConverter"
+    FalseVisibilityValue="Visible"
+    NullValue="True"
+    TrueVisibilityValue="Hidden" />
+  <c:NullToVisibilityConverter x:Key="NotNullToVisibleConverter" />
+  <c:NullToVisibilityConverter
+    x:Key="NullToVisibleConverter"
+    NotNullVisibilityValue="Hidden"
+    NullVisibilityValue="Visible" />
+  <c:EqualsConverter x:Key="EqualsConverter" />
+  <c:EqualsConverter x:Key="NotEqualsConverter" Inverter="True" />
+  <c:ValueToBoolConverter x:Key="NullToFalse" Invert="True" />
+  <c:BoolInverter x:Key="BoolInverter" />
+</ResourceDictionary>

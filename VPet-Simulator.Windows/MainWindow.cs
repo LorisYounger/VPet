@@ -35,6 +35,8 @@ using Line = LinePutScript.Line;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 using Image = System.Windows.Controls.Image;
 
+using VPet.Solution;
+
 namespace VPet_Simulator.Windows
 {
     public partial class MainWindow : IMainWindow
@@ -316,17 +318,37 @@ namespace VPet_Simulator.Windows
             petHelper.Show();
         }
 
-        public static void RunDIY(string content)
+        public void RunDIY(string content)
         {
-            if (content.Contains("://") || content.Contains(@":\"))
+            if (content.Contains(@":\"))
             {
                 try
                 {
-                    Process.Start(content);
+                    if (!Set["v"][(gbol)"rundiy"])
+                    {
+                        MessageBoxX.Show("由于操作系统的设计，通过我们软件启动的程序可能会在任务管理器中归类为我们软件的子进程，这可能导致CPU/内存占用显示较高".Translate(),
+                            "关于CPU/内存占用显示较高的一次性提示".Translate());
+                        Set["v"][(gbol)"rundiy"] = true;
+                    }
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.FileName = content;
+                    startInfo.UseShellExecute = false;
+                    Process.Start(startInfo);
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                    MessageBoxX.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                }
+            }
+            else if (content.Contains("://"))
+            {
+                try
+                {
+                    ExtensionSetting.StartURL(content);
+                }
+                catch (Exception e)
+                {
+                    MessageBoxX.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
                 }
             }
             else
@@ -337,7 +359,7 @@ namespace VPet_Simulator.Windows
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                    MessageBoxX.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
                 }
             }
         }
@@ -615,7 +637,7 @@ namespace VPet_Simulator.Windows
         {
             var stat = GameSavesData.Statistics;
             var save = Core.Save;
-            stat["stat_money"] = save.Money;
+            stat["stat_money"] = (SetObject)save.Money;
             stat["stat_level"] = save.Level;
             stat["stat_likability"] = save.Likability;
 
@@ -690,7 +712,7 @@ namespace VPet_Simulator.Windows
                     else
                         data.Add(new Line(item.Name, item.Info));
                 }
-                tmp = new GameSave_v2(lps, Set.Statistics_OLD, olddata: data);
+                tmp = new GameSave_v2(lps, null, olddata: data);
             }
             if (tmp.GameSave == null)
                 return false;
@@ -1205,6 +1227,7 @@ namespace VPet_Simulator.Windows
         public async void GameLoad(List<DirectoryInfo> Path)
         {
 
+            Path = Path.Distinct().ToList();
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading MOD"));
             //加载mod
             foreach (DirectoryInfo di in Path)
@@ -1402,11 +1425,15 @@ namespace VPet_Simulator.Windows
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
             await Dispatcher.InvokeAsync(new Action(() =>
             {
-                LoadingText.Content = "尝试加载动画和生成缓存".Translate();
+                LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate();
 
                 Core.Graph = petloader.Graph(Set.Resolution);
                 Main = new Main(Core);
                 Main.NoFunctionMOD = Set.CalFunState;
+
+
+                LoadingText.Content = "正在加载游戏".Translate();
+
 
                 //加载数据合理化:工作
                 if (!Set["gameconfig"].GetBool("noAutoCal"))
@@ -1436,7 +1463,6 @@ namespace VPet_Simulator.Windows
                 }
 
 
-                LoadingText.Content = "正在加载游戏".Translate();
                 var m = new System.Windows.Controls.MenuItem()
                 {
                     Header = "MOD管理".Translate(),
@@ -1712,9 +1738,36 @@ namespace VPet_Simulator.Windows
                         Thread.Sleep(2000);
                         Set["SingleTips"].SetBool("helloworld", true);
                         NoticeBox.Show("欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠".Translate(),
-                           "你好".Translate() + (IsSteamUser ? SteamClient.Name : Environment.UserName));
+                           "你好".Translate() + (IsSteamUser ? SteamClient.Name : Environment.UserName), Panuon.WPF.UI.MessageBoxIcon.Info, true, 5000);
                         //Thread.Sleep(2000);
                         //Main.SayRnd("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate());
+                    });
+                }
+                if (Set["v"][(gint)"rank"] != DateTime.Now.Year && GameSavesData.Statistics[(gint)"stat_total_time"] > 3600)
+                {//年度报告提醒
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(120000);
+                        Set["v"][(gint)"rank"] = DateTime.Now.Year;
+                        Dispatcher.Invoke(() =>
+                        {
+                            var button = new System.Windows.Controls.Button()
+                            {
+                                Content = "点击前往查看".Translate(),
+                                FontSize = 20,
+                                HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+                                Background = Function.ResourcesBrush(Function.BrushType.Primary),
+                                Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
+                            };
+                            button.Click += (x, y) =>
+                            {
+                                var panelWindow = new winCharacterPanel(this);
+                                panelWindow.MainTab.SelectedIndex = 2;
+                                panelWindow.Show();
+                            };
+                            Main.MsgBar.MessageBoxContent.Children.Add(button);
+                        });
+                        Main.Say("哼哼~主人，我的考试成绩出炉了哦，快来和我一起看我的成绩单喵".Translate(), "shining");
                     });
                 }
 #if DEMO
