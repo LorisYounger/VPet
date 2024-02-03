@@ -1,9 +1,12 @@
 ﻿using LinePutScript;
 using LinePutScript.Dictionary;
+using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,9 +58,28 @@ namespace VPet_Simulator.Windows.Interface
             if (nohashcheck)
             {
                 hash = lps.GetInt64("hash");
+                int ver = lps["hash"].GetInt("ver");
                 if (lps.Remove("hash"))
                 {
-                    HashCheck = Sub.GetHashCode(lps.ToString()) == hash;
+                    if (ver == 2)
+                        HashCheck = Sub.GetHashCode(lps.ToString()) == hash;
+                    else
+                    {
+                        try
+                        {
+                            using (MD5 md5 = MD5.Create())
+                            {
+                                HashCheck = BitConverter.ToInt64(md5.ComputeHash(Encoding.UTF8.GetBytes(lps.ToString())), 0) == hash;
+                            }
+                            if (!HashCheck)
+                                HashCheck = Sub.GetHashCode(lps.ToString()) == hash;
+                        }
+                        catch (Exception e)
+                        {
+                            HashCheck = false;
+                            MessageBoxX.Show(e.ToString(), "当前存档Hash验证信息".Translate() + ":" + "失败".Translate());
+                        }
+                    }
                 }
             }
 
@@ -109,15 +131,22 @@ namespace VPet_Simulator.Windows.Interface
             if (HashCheck)
             {
                 lps[(gi64)"hash"] = Sub.GetHashCode(lps.ToString());
+                lps["hash"][(gint)"ver"] = 2;
             }
             else
+            {
                 lps[(gint)"hash"] = -1;
+                lps["hash"][(gint)"ver"] = 2;
+            }
             return lps;
         }
+
         /// <summary>
         /// Hash检查
         /// </summary>
         public bool HashCheck { get; private set; } = true;
+
+        FInt64 IGetOBJ<ILine>.this[gflt subName] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
 
 
@@ -132,7 +161,7 @@ namespace VPet_Simulator.Windows.Interface
 
         #region GETOBJ
         public DateTime this[gdat subName] { get => Data[subName]; set => Data[subName] = value; }
-        public double this[gflt subName] { get => Data[subName]; set => Data[subName] = value; }
+        public FInt64 this[gflt subName] { get => Data[subName]; set => Data[subName] = value; }
         public double this[gdbe subName] { get => Data[subName]; set => Data[subName] = value; }
         public long this[gi64 subName] { get => Data[subName]; set => Data[subName] = value; }
         public int this[gint subName] { get => Data[subName]; set => Data[subName] = value; }
@@ -170,12 +199,12 @@ namespace VPet_Simulator.Windows.Interface
             Data.SetInt64(subName, value);
         }
 
-        public double GetFloat(string subName, double defaultvalue = 0)
+        public FInt64 GetFloat(string subName, FInt64 defaultvalue = default)
         {
             return Data.GetFloat(subName, defaultvalue);
         }
 
-        public void SetFloat(string subName, double value)
+        public void SetFloat(string subName, FInt64 value)
         {
             Data.SetFloat(subName, value);
         }

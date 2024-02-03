@@ -35,16 +35,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="FastMember, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FastMember.1.5.0\lib\net461\FastMember.dll</HintPath>
     </Reference>
     <Reference Include="LinePutScript, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LinePutScript.1.9.2\lib\net462\LinePutScript.dll</HintPath>
+      <HintPath>..\packages\LinePutScript.1.10.2\lib\net462\LinePutScript.dll</HintPath>
     </Reference>
     <Reference Include="LinePutScript.Localization.WPF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>
-        ..\packages\LinePutScript.Localization.WPF.1.0.6\lib\net462\LinePutScript.Localization.WPF.dll</HintPath>
+      <HintPath>..\packages\LinePutScript.Localization.WPF.1.0.6\lib\net462\LinePutScript.Localization.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Panuon.WPF, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Panuon.WPF.1.0.3\lib\net462\Panuon.WPF.dll</HintPath>
@@ -282,6 +284,8 @@
       <Name>VPet-Simulator.Windows.Interface</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

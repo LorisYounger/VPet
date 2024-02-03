@@ -637,7 +637,7 @@ namespace VPet_Simulator.Windows
         {
             var stat = GameSavesData.Statistics;
             var save = Core.Save;
-            stat["stat_money"] = save.Money;
+            stat["stat_money"] = (SetObject)save.Money;
             stat["stat_level"] = save.Level;
             stat["stat_likability"] = save.Likability;
 
@@ -712,7 +712,7 @@ namespace VPet_Simulator.Windows
                     else
                         data.Add(new Line(item.Name, item.Info));
                 }
-                tmp = new GameSave_v2(lps, Set.Statistics_OLD, olddata: data);
+                tmp = new GameSave_v2(lps, null, olddata: data);
             }
             if (tmp.GameSave == null)
                 return false;
@@ -1425,11 +1425,15 @@ namespace VPet_Simulator.Windows
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
             await Dispatcher.InvokeAsync(new Action(() =>
             {
-                LoadingText.Content = "尝试加载动画和生成缓存".Translate();
+                LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate();
 
                 Core.Graph = petloader.Graph(Set.Resolution);
                 Main = new Main(Core);
                 Main.NoFunctionMOD = Set.CalFunState;
+
+
+                LoadingText.Content = "正在加载游戏".Translate();
+
 
                 //加载数据合理化:工作
                 if (!Set["gameconfig"].GetBool("noAutoCal"))
@@ -1459,7 +1463,6 @@ namespace VPet_Simulator.Windows
                 }
 
 
-                LoadingText.Content = "正在加载游戏".Translate();
                 var m = new System.Windows.Controls.MenuItem()
                 {
                     Header = "MOD管理".Translate(),

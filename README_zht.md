@@ -59,7 +59,7 @@
 * 自訂桌寵工作內容
 * 對話內容
 * 主題
-* 代碼插件：編撰程式碼來加入新內容
+* 程式碼外掛：編撰程式碼來加入新內容
   * 加入新的動畫邏輯或顯示效果（例如：l2d/spine等）
   * 加入新功能（鬧鐘、記事本等）
   * 幾乎無所不能，範例請見[VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo)
