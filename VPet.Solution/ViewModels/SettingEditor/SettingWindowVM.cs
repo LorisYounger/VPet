@@ -20,13 +20,12 @@ namespace VPet.Solution.ViewModels.SettingEditor;
 public class SettingWindowVM : ObservableClass<SettingWindowVM>
 {
     public static SettingWindowVM Current { get; private set; }
-
     #region Properties
-    private SettingModel _currentSettings;
+    private SettingModel _currentSetting;
     public SettingModel CurrentSetting
     {
-        get => _currentSettings;
-        set => SetProperty(ref _currentSettings, value);
+        get => _currentSetting;
+        set { SetProperty(ref _currentSetting, value); }
     }
 
     private readonly ObservableCollection<SettingModel> _settings = new();
@@ -81,8 +80,8 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
     public SettingWindowVM()
     {
         Current = this;
-        ShowSettings = _settings;
         LoadSettings();
+        ShowSettings = _settings = new(_settings.OrderBy(m => m.Name));
 
         PropertyChanged += MainWindowVM_PropertyChanged;
         OpenFileCommand.ExecuteCommand += OpenFileCommand_ExecuteCommand;
@@ -204,9 +203,13 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
                         "载入设置出错".Translate(),
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Warning
-                    ) is MessageBoxResult.Yes
+                    )
+                    is not MessageBoxResult.Yes
                 )
-                    _settings.Add(new SettingModel() { Name = fileName, FilePath = file });
+                    return;
+                var setting = new SettingModel() { Name = fileName, FilePath = file };
+                _settings.Add(setting);
+                setting.Save();
             }
         }
     }
@@ -220,7 +223,7 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
                 {
                     if (s.EndsWith(".lps") is false)
                         return false;
-                    return Path.GetFileName(s).StartsWith("Setting");
+                    return Path.GetFileName(s).StartsWith(nameof(Setting));
                 }
             );
     }

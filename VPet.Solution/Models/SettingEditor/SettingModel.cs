@@ -1,6 +1,7 @@
 ﻿using FastMember;
 using HKW.HKWUtils.Observable;
 using LinePutScript;
+using LinePutScript.Localization.WPF;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -21,6 +22,19 @@ public class SettingModel : ObservableClass<SettingModel>
     /// 文件路径
     /// </summary>
     public string FilePath { get; set; }
+
+    //#region IsChanged
+    //private bool _isChanged;
+
+    ///// <summary>
+    ///// 已更改
+    ///// </summary>
+    //public bool IsChanged
+    //{
+    //    get => _isChanged;
+    //    set => SetProperty(ref _isChanged, value);
+    //}
+    //#endregion
 
     #region GraphicsSetting
     private GraphicsSettingModel _graphicsSetting;
@@ -89,13 +103,32 @@ public class SettingModel : ObservableClass<SettingModel>
     {
         _setting = setting;
         GraphicsSetting = LoadSetting<GraphicsSettingModel>();
+        if (string.IsNullOrWhiteSpace(GraphicsSetting.Language))
+            GraphicsSetting.Language = LocalizeCore.CurrentCulture;
         InteractiveSetting = LoadSetting<InteractiveSettingModel>();
         SystemSetting = LoadSetting<SystemSettingModel>();
         CustomizedSetting = LoadCustomizedSetting(setting);
         DiagnosticSetting = LoadSetting<DiagnosticSettingModel>();
         DiagnosticSetting.SetAutoCalToSetting(setting);
         ModSetting = LoadModSetting(setting);
+        //MergeNotify();
     }
+
+    //private void MergeNotify()
+    //{
+    //    var accessor = ObjectAccessor.Create(this);
+    //    foreach (var property in typeof(SettingModel).GetProperties())
+    //    {
+    //        var value = accessor[property.Name];
+    //        if (value is INotifyPropertyChanged model)
+    //            model.PropertyChanged += Notify_PropertyChanged;
+    //    }
+    //}
+
+    //private void Notify_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    //{
+    //    IsChanged = true;
+    //}
 
     private ModSettingModel LoadModSetting(Setting setting)
     {
