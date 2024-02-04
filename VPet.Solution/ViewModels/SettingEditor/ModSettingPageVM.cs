@@ -130,7 +130,7 @@ public class ModSettingPageVM : ObservableClass<ModSettingPageVM>
 
     private void OpenSteamCommunityCommand_ExecuteCommand(ModModel parameter)
     {
-        Utils.OpenLink(
+        HKWUtils.OpenLink(
             "https://steamcommunity.com/sharedfiles/filedetails/?id=" + parameter.ItemId
         );
     }
@@ -139,7 +139,7 @@ public class ModSettingPageVM : ObservableClass<ModSettingPageVM>
     {
         try
         {
-            Utils.OpenLink(parameter.ModPath);
+            HKWUtils.OpenLink(parameter.ModPath);
         }
         catch
         {

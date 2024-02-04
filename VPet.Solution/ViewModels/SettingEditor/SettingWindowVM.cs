@@ -111,12 +111,12 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
 
     private void OpenFileInExplorerCommand_ExecuteCommand(SettingModel parameter)
     {
-        Utils.OpenFileInExplorer(parameter.FilePath);
+        HKWUtils.OpenFileInExplorer(parameter.FilePath);
     }
 
     private void OpenFileCommand_ExecuteCommand(SettingModel parameter)
     {
-        Utils.OpenLink(parameter.FilePath);
+        HKWUtils.OpenLink(parameter.FilePath);
     }
 
     private void SaveAllSettingCommand_ExecuteCommand()

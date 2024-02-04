@@ -227,7 +227,7 @@
     <Compile Include="Utils\ObservableRange.cs" />
     <Compile Include="Utils\ObservablePoint.cs" />
     <Compile Include="Utils\ObservableRect.cs" />
-    <Compile Include="Utils\Utils.cs" />
+    <Compile Include="Utils\HKWUtils.cs" />
     <Compile Include="Resources\NativeResources.cs" />
     <Compile Include="Usings.cs" />
     <Page Include="NativeStyles.xaml">

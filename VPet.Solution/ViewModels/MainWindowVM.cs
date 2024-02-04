@@ -23,7 +23,7 @@ public class MainWindowVM : ObservableClass<MainWindowVM>
         _mainSetting = SettingWindowVM.Current.ShowSettings.FirstOrDefault(
             m => m.Name == nameof(Setting)
         );
-        if (string.IsNullOrWhiteSpace(_mainSetting.GraphicsSetting.Language))
+        if (string.IsNullOrWhiteSpace(_mainSetting?.GraphicsSetting?.Language))
             CurrentCulture = LocalizeCore.CurrentCulture;
         else
             CurrentCulture = _mainSetting.GraphicsSetting.Language;
@@ -43,9 +43,11 @@ public class MainWindowVM : ObservableClass<MainWindowVM>
     private void FirstStartFailedCommand_ExecuteCommand()
     {
         if (LocalizeCore.CurrentCulture == "zh-Hans")
-            Utils.OpenLink("https://www.bilibili.com/read/cv26510496/");
+            HKWUtils.OpenLink("https://www.bilibili.com/read/cv26510496/");
         else
-            Utils.OpenLink("https://steamcommunity.com/games/1920960/announcements/detail/3681184905256253203");
+            HKWUtils.OpenLink(
+                "https://steamcommunity.com/games/1920960/announcements/detail/3681184905256253203"
+            );
     }
 
     #region Property

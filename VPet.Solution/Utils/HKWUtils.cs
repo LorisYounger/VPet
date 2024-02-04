@@ -1,11 +1,12 @@
-﻿using System.Windows.Media.Imaging;
+﻿using System.Text;
+using System.Windows.Media.Imaging;
 
 namespace HKW.HKWUtils;
 
 /// <summary>
 /// 工具
 /// </summary>
-public static class Utils
+public static class HKWUtils
 {
     /// <summary>
     /// 解码像素宽度
@@ -122,5 +123,18 @@ public static class Utils
         System.Diagnostics.Process
             .Start("Explorer", $"/select,{Path.GetFullPath(filePath)}")
             ?.Close();
+    }
+
+    /// <summary>
+    /// 从文件获取只读流 (用于目标文件被其它进程访问的情况)
+    /// </summary>
+    /// <param name="path">文件</param>
+    /// <param name="encoding">编码</param>
+    /// <returns>流读取器</returns>
+    public static StreamReader StreamReaderOnReadOnly(string path, Encoding? encoding = null)
+    {
+        encoding ??= Encoding.UTF8;
+        var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        return new StreamReader(fs, encoding);
     }
 }

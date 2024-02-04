@@ -47,6 +47,6 @@ public class AllIsBoolConverter : MultiValueToBoolConverter<AllIsBoolConverter>
     {
         var boolValue = TargetBoolValue;
         var nullValue = BoolOnNull;
-        return values.All(o => Utils.GetBool(o, boolValue, nullValue));
+        return values.All(o => HKWUtils.HKWUtils.GetBool(o, boolValue, nullValue));
     }
 }

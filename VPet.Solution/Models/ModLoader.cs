@@ -91,7 +91,7 @@ public class ModLoader
             IsSuccesses = false;
             return;
         }
-        var modlps = new LpsDocument(File.ReadAllText(infoFile));
+        var modlps = new LPS(File.ReadAllText(infoFile));
         Name = modlps.FindLine("vupmod").Info;
         Intro = modlps.FindLine("intro").Info;
         GameVer = modlps.FindSub("gamever").InfoToInt;
@@ -119,7 +119,7 @@ public class ModLoader
         {
             try
             {
-                Image = Utils.LoadImageToStream(imagePath);
+                Image = HKWUtils.LoadImageToStream(imagePath);
             }
             catch { }
         }

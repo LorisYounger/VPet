@@ -8,8 +8,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using VPet.Solution.Views.SettingEditor;
 using VPet_Simulator.Windows.Interface;
 
 namespace VPet.Solution.Models.SettingEditor;
@@ -21,16 +23,8 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
     public const string MsgModLineName = "msgmod";
     public const string WorkShopLineName = "workshop";
     public static string ModDirectory = Path.Combine(Environment.CurrentDirectory, "mod");
-    public static Dictionary<string, ModLoader> LocalMods = Directory.Exists(ModDirectory) is false
-        ? new(StringComparer.OrdinalIgnoreCase)
-        : new(
-            Directory
-                .EnumerateDirectories(ModDirectory)
-                .Select(d => new ModLoader(d))
-                .Distinct(CompareUtils<ModLoader>.Create(m => m.Name))
-                .ToDictionary(m => m.Name, m => m),
-            StringComparer.OrdinalIgnoreCase
-        );
+    public static Dictionary<string, ModLoader> LocalMods { get; private set; } = null;
+
     #region Mods
     private ObservableCollection<ModModel> _mods = new();
     public ObservableCollection<ModModel> Mods
@@ -41,6 +35,7 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
 
     public ModSettingModel(Setting setting)
     {
+        LocalMods ??= GetLocalMods();
         foreach (var item in setting[ModLineName])
         {
             var modName = item.Name;
@@ -75,6 +70,24 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
             modModel.IsMsg = setting[MsgModLineName].Contains(modModel.Name);
             Mods.Add(modModel);
         }
+    }
+
+    private static Dictionary<string, ModLoader> GetLocalMods()
+    {
+        var dic = new Dictionary<string, ModLoader>(StringComparer.OrdinalIgnoreCase);
+        foreach (var dir in Directory.EnumerateDirectories(ModDirectory))
+        {
+            try
+            {
+                var loader = new ModLoader(dir);
+                dic.TryAdd(loader.Name, loader);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("模组载入错误\n路径:{0}\n异常:{1}".Translate(dir, ex));
+            }
+        }
+        return dic;
     }
 
     public void Close()
