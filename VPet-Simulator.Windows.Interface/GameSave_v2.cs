@@ -43,6 +43,14 @@ namespace VPet_Simulator.Windows.Interface
             if (vpet != null)
             {
                 GameSave = GameSave.Load(vpet);
+                if (GameSave.Exp < -1000000000)
+                {
+                    GameSave.Exp = 100000;
+                }
+                if (GameSave.Money < -1000000000)
+                {
+                    GameSave.Money = 100000;
+                }
                 hash = vpet.GetInt64("hash");
                 if (vpet.Remove("hash"))
                 {
