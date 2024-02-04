@@ -27,6 +27,7 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
             Directory
                 .EnumerateDirectories(ModDirectory)
                 .Select(d => new ModLoader(d))
+                .Distinct(CompareUtils<ModLoader>.Create(m => m.Name))
                 .ToDictionary(m => m.Name, m => m),
             StringComparer.OrdinalIgnoreCase
         );

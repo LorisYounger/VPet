@@ -107,6 +107,7 @@
     <Compile Include="Models\SettingEditor\ModSettingModel.cs" />
     <Compile Include="Models\SettingEditor\SystemSettingModel.cs" />
     <Compile Include="Utils\ClearFocus.cs" />
+    <Compile Include="Utils\CompareUtils.cs" />
     <Compile Include="Utils\ElementHelper.cs" />
     <Compile Include="Utils\FindTopParent.cs" />
     <Compile Include="Utils\ReflectionUtils.cs" />

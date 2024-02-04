@@ -106,7 +106,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     #endregion
 
     #region Language
-    private string _language = Languages.First();
+    private string _language;
 
     /// <summary>
     /// 语言
@@ -118,9 +118,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
         set => SetProperty(ref _language, value);
     }
 
-    public static ObservableCollection<string> Languages { get; } =
-        new() { "zh-Hans", "zh-Hant", "en" };
-    // NOTE: 实际上这里面并没有文化 new(LocalizeCore.AvailableCultures);
+    public static IEnumerable<string> Languages => LocalizeCore.AvailableCultures;
 
     #endregion
 

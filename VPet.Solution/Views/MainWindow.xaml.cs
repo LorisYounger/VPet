@@ -5,9 +5,11 @@ using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.ViewModels;
 using VPet.Solution.Views.SaveViewer;
 using VPet.Solution.Views.SettingEditor;
+using VPet_Simulator.Windows.Interface;
 
 namespace VPet.Solution.Views;
 
