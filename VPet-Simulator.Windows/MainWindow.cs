@@ -899,8 +899,8 @@ namespace VPet_Simulator.Windows
                 CurrMusicType = null;
                 MusicTimer.Start();
                 Task.Run(() =>
-                {//等2秒看看识别结果
-                    Thread.Sleep(2500);
+                {//等3秒看看识别结果
+                    Thread.Sleep(3000);
 
                     if (CurrMusicType != null && Main.IsIdel)
                     {//识别通过,开始跑跳舞动画
