@@ -719,6 +719,18 @@ namespace VPet_Simulator.Windows
             if (tmp.GameSave.Money == 0 && tmp.GameSave.Likability == 0 && tmp.GameSave.Exp == 0
                 && tmp.GameSave.StrengthDrink == 0 && tmp.GameSave.StrengthFood == 0)//数据全是0,可能是bug
                 return false;
+            if (tmp.GameSave.Exp < -1000000000)
+            {
+                tmp.GameSave.Exp = 1000000;
+                tmp.Data[(gbol)"round"] = true;
+                Dispatcher.Invoke(() => MessageBoxX.Show("检测到经验值超过 9,223,372,036 导致算数溢出\n已经自动回正".Translate(), "数据溢出警告".Translate()));
+
+            }
+            if (tmp.GameSave.Money < -1000000000)
+            {
+                tmp.GameSave.Money = 100000;
+                Dispatcher.Invoke(() => MessageBoxX.Show("检测到金钱超过 9,223,372,036 导致算数溢出\n已经自动回正".Translate(), "数据溢出警告".Translate()));
+            }
             GameSavesData = tmp;
             Core.Save = tmp.GameSave;
             HashCheck = HashCheck;

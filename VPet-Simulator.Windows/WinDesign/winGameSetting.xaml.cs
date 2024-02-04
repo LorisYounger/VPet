@@ -1441,7 +1441,7 @@ namespace VPet_Simulator.Windows
                 if (oldsave.HashCheck) // 对于重开无作弊的玩家保留统计
                 {
                     mw.GameSavesData.Statistics = oldsave.Statistics;
-                    if(oldsave.GameSave.Money > 10000000 || oldsave.GameSave.Money < -1000000000 || oldsave.GameSave.Exp > 100000000 || oldsave.GameSave.Exp < -10000000000)
+                    if (oldsave.GameSave.Money > 10000000 || oldsave.GameSave.Money < -1000000000 || oldsave.GameSave.Exp > 100000000 || oldsave.GameSave.Exp < -10000000000)
                     {
                         mw.Core.Save.Money = 10000;
                         mw.Core.Save.Exp = 10000;
