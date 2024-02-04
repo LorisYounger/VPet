@@ -941,7 +941,7 @@ namespace VPet_Simulator.Windows
                 return;
             catch_MusicVolSum += AudioPlayingVolume();
             catch_MusicVolCount++;
-            if (catch_MusicVolCount >= 20)
+            if (catch_MusicVolCount >= 10)
             {
                 double ans = catch_MusicVolSum / catch_MusicVolCount;
                 catch_MusicVolSum /= 4;
@@ -1414,7 +1414,7 @@ namespace VPet_Simulator.Windows
             }
 
             //音乐识别timer加载
-            MusicTimer = new System.Timers.Timer(100)
+            MusicTimer = new System.Timers.Timer(200)
             {
                 AutoReset = false
             };
