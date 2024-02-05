@@ -1272,8 +1272,7 @@ namespace VPet_Simulator.Windows
                 {
                     try
                     {
-                        var l = new LPS(File.ReadAllText(path));
-                        GameSave_v2 gs = new GameSave_v2(l);
+                        GameSave_v2 gs = new GameSave_v2(new LPS(File.ReadAllText(path)));
                         if (MessageBoxX.Show("存档名称:{0}\n存档等级:{1}\n存档金钱:{2}\nHashCheck:{3}\n是否加载该备份存档? 当前游戏数据会丢失"
                             .Translate(gs.GameSave.Name, gs.GameSave.Level, gs.GameSave.Money, gs.HashCheck), "是否加载该备份存档? 当前游戏数据会丢失".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Info) == MessageBoxResult.Yes)
                         {
@@ -1284,7 +1283,7 @@ namespace VPet_Simulator.Windows
                                     mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
                                     mw.Main.State = Main.WorkingState.Nomal;
                                 }
-                                if (!mw.SavesLoad(l))
+                                if (!mw.SavesLoad(new LPS(File.ReadAllText(path))))
                                     MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
                             }
                             catch (Exception ex)
