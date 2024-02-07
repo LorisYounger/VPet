@@ -10,7 +10,9 @@ using System.Security.Cryptography;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using VPet_Simulator.Core;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -31,7 +33,7 @@ namespace VPet_Simulator.Windows.Interface
         {
             if (lps.FindLine("statistics") == null)
             {//尝试从老存档加载
-                Statistics = oldStatistics;
+                Statistics = oldStatistics ?? new Statistics();
             }
             else
             {
@@ -42,12 +44,30 @@ namespace VPet_Simulator.Windows.Interface
             long hash;
             if (vpet != null)
             {
-                GameSave = GameSave.Load(vpet);                
+                GameSave = GameSave.Load(vpet);
                 hash = vpet.GetInt64("hash");
                 if (vpet.Remove("hash"))
                 {
-                    HashCheck = vpet.GetLongHashCode() == hash;
                     nohashcheck = false;
+                    try
+                    {
+                        using (MD5 md5 = MD5.Create())
+                        {
+                            long hs = BitConverter.ToInt64(md5.ComputeHash(Encoding.UTF8.GetBytes(vpet.Name)), 0)
+                                * 2 + BitConverter.ToInt64(md5.ComputeHash(Encoding.UTF8.GetBytes(vpet.info)), 0)
+                                * 3 + BitConverter.ToInt64(md5.ComputeHash(Encoding.UTF8.GetBytes(vpet.text)), 0) * 4;
+                            foreach (ISub su in vpet.ToList())
+                            {
+                                hs += BitConverter.ToInt64(md5.ComputeHash(Encoding.UTF8.GetBytes(su.Name)), 0) * 2
+                                    + BitConverter.ToInt64(md5.ComputeHash(Encoding.UTF8.GetBytes(su.Info)), 0) * 3;
+                            }
+                            HashCheck = hs == hash;
+                        }
+                    }
+                    catch
+                    {
+                        nohashcheck = true;
+                    }
                 }
             }
             else if (oldGameSave != null)

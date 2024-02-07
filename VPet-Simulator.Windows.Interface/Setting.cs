@@ -145,7 +145,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public int BackupSaveMaxNum
         {
-            get => Math.Max(GetInt("bakupsave", 30), 1);
+            get => Math.Max(GetInt("bakupsave", 50), 1);
             set => SetInt("bakupsave", value);
         }
         /// <summary>

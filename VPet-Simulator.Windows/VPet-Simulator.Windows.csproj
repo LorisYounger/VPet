@@ -126,10 +126,6 @@
 		<Resource Include="vpeticon.ico" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\VPet-Simulator.Core\VPet-Simulator.Core.csproj" />
-		<ProjectReference Include="..\VPet-Simulator.Windows.Interface\VPet-Simulator.Windows.Interface.csproj" />
-	</ItemGroup>
-	<ItemGroup>
 		<Compile Update="Properties\Settings.Designer.cs">
 			<DesignTimeSharedInput>True</DesignTimeSharedInput>
 			<AutoGen>True</AutoGen>
@@ -241,5 +237,9 @@
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="Panuon.WPF" Version="1.0.3" />
 		<PackageReference Include="Panuon.WPF.UI" Version="1.1.16.8" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\VPet-Simulator.Core\VPet-Simulator.Core.csproj" />
+	  <ProjectReference Include="..\VPet-Simulator.Windows.Interface\VPet-Simulator.Windows.Interface.csproj" />
 	</ItemGroup>
 </Project>
