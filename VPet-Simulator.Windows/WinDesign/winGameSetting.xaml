@@ -714,7 +714,7 @@
                             <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 触发音量}"
                                     ToolTip="{ll:Str 当实时播放音量达到该值时运行音乐动作}" />
                             <Slider x:Name="VoiceCatchSilder" Grid.Column="2" VerticalAlignment="Center"
-                                    IsSnapToTickEnabled="True" LargeChange=".5" Maximum="1" Minimum="0"
+                                    IsSnapToTickEnabled="True" LargeChange=".5" Maximum="1" Minimum="0.02"
                                     SmallChange=".02" Style="{DynamicResource StandardSliderStyle}" TickFrequency="0.01"
                                     ToolTip="{ll:Str 当实时播放音量达到该值时运行音乐动作}" ValueChanged="VoiceCatchSilder_ValueChanged"
                                     Value="0.3" />

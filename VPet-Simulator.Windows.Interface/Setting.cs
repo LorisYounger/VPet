@@ -222,7 +222,7 @@ namespace VPet_Simulator.Windows.Interface
         {
             get
             {
-                int list = GetInt("savetimes", 100000) + 1 ;
+                int list = GetInt("savetimes", 100000) + 1;
                 SetInt("savetimes", list);
                 return list;
             }
@@ -419,7 +419,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public double MusicCatch
         {
-            get => this["gameconfig"].GetDouble("musiccatch", 0.3);
+            get => Math.Max(this["gameconfig"].GetDouble("musiccatch", 0.3), 0.02);
             set => this["gameconfig"].SetDouble("musiccatch", value);
         }
         /// <summary>
@@ -427,7 +427,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public double MusicMax
         {
-            get => this["gameconfig"].GetDouble("musicmax", 0.70);
+            get => Math.Max(this["gameconfig"].GetDouble("musicmax", 0.70), 0.02);
             set => this["gameconfig"].SetDouble("musicmax", value);
         }
         /// <summary>
