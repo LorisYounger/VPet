@@ -102,14 +102,20 @@ public class SettingModel : ObservableClass<SettingModel>
     public SettingModel(Setting setting)
     {
         _setting = setting;
+
         GraphicsSetting = LoadSetting<GraphicsSettingModel>();
         if (string.IsNullOrWhiteSpace(GraphicsSetting.Language))
             GraphicsSetting.Language = LocalizeCore.CurrentCulture;
+
         InteractiveSetting = LoadSetting<InteractiveSettingModel>();
+
         SystemSetting = LoadSetting<SystemSettingModel>();
+
         CustomizedSetting = LoadCustomizedSetting(setting);
+
         DiagnosticSetting = LoadSetting<DiagnosticSettingModel>();
-        DiagnosticSetting.SetAutoCalToSetting(setting);
+        DiagnosticSetting.GetAutoCalFromSetting(setting);
+
         ModSetting = LoadModSetting(setting);
         //MergeNotify();
     }
