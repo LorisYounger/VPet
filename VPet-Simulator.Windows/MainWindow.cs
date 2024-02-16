@@ -1444,7 +1444,7 @@ namespace VPet_Simulator.Windows
                 //临时更新:新年进入动画, 
                 if (DateTime.Now < new DateTime(2024, 2, 19))
                 {
-                    Main = new Main(Core, startUPGraph: Core.Graph.FindGraph("newyear", AnimatType.Single, GameSave.ModeType.Nomal));
+                    Main = new Main(Core, startUPGraph: Core.Graph.FindGraph("newyear", AnimatType.Single, Core.Save.Mode));
                 }
                 else
                     Main = new Main(Core);
