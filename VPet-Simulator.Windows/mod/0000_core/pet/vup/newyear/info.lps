@@ -1,4 +1,7 @@
-PNGAnimation#newyear:|path#Happy:|mode#Happy:|graph#Common:|
-PNGAnimation#newyear:|path#Nomal:|mode#Nomal:|graph#Common:|
-PNGAnimation#newyear:|path#Nomal:|mode#PoorCondition:|graph#Common:|
+PNGAnimation#newyear:|path#Happy:|mode#Happy:|graph#StartUP:|
+PNGAnimation#newyear:|path#Nomal:|mode#Nomal:|graph#StartUP:|
+PNGAnimation#newyear:|path#Nomal:|mode#PoorCondition:|graph#StartUP:|
 PNGAnimation#newyear:|path#Nomal:|mode#ill:|graph#Common:|
+PNGAnimation#newyearidel:|path#IDEL:|mode#Happy:|graph#Idel:|animat#single:|
+PNGAnimation#newyearidel:|path#IDEL:|mode#Nomal:|graph#Idel:|animat#single:|
+PNGAnimation#newyearidel:|path#IDEL:|mode#PoorCondition:|graph#Idel:|animat#single:|
