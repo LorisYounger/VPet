@@ -243,5 +243,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\VPet-Simulator.Core\VPet-Simulator.Core.csproj" />
 	  <ProjectReference Include="..\VPet-Simulator.Windows.Interface\VPet-Simulator.Windows.Interface.csproj" />
+	  <ProjectReference Include="..\VPet.Solution\VPet.Solution.csproj" />
 	</ItemGroup>
 </Project>
