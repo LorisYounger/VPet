@@ -1447,8 +1447,8 @@ namespace VPet_Simulator.Windows
                     Main = new Main(Core, startUPGraph: Core.Graph.FindGraph("newyear", AnimatType.Single, Core.Save.Mode));
                 }
                 else
-                    Main = new Main(Core);
 #endif
+                Main = new Main(Core);
                 Main.NoFunctionMOD = Set.CalFunState;
 
 
@@ -1792,9 +1792,9 @@ namespace VPet_Simulator.Windows
                 }
 #if NewYear
                 //仅新年功能
-                Main.TimeHandle += NewYearHandle;
                 if (DateTime.Now < new DateTime(2024, 2, 18))
                 {
+                    Main.TimeHandle += NewYearHandle;
                     Task.Run(() =>
                     {
                         Thread.Sleep(5000);
