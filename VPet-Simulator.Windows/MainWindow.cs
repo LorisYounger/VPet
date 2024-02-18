@@ -1452,7 +1452,7 @@ namespace VPet_Simulator.Windows
                 Main.NoFunctionMOD = Set.CalFunState;
 
 
-                LoadingText.Content = "正在加载游戏".Translate();
+                LoadingText.Content = "正在加载游戏\n该步骤可能会耗时比较长\n请耐心等待".Translate();
 
 
                 //加载数据合理化:工作
