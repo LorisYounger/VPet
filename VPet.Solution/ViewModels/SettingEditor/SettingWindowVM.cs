@@ -1,7 +1,7 @@
 ﻿using HKW.HKWUtils.Observable;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
-using Panuon.WPF.UI;
+using Panuon.WPF;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
