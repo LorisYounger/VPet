@@ -5,6 +5,7 @@ mklink /d "%~dp0\bin\x64\Debug\net462\mod" "%~dp0\mod"
 
 echo The following is the automatic link generation for other related MODs. If an error is prompted, it is a normal phenomenon and can be ignored
 
+mklink /d "%~dp0\bin\x86\Debug\net462\mod" "%~dp0\mod"
 mklink /d "%~dp0\bin\x64\Release\net462\mod" "%~dp0\mod"
 mklink /d "%~dp0\..\VPet.Solution\bin\Debug\mod" "%~dp0\mod"
 
