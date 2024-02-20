@@ -369,6 +369,11 @@ public static class Extensions
             return;
         if (_windowCloseStates.TryGetValue(window, out var state) is false)
             return;
+        if (state.HasFlag(WindowCloseState.SkipNext))
+        {
+            _windowCloseStates[window] = state &= WindowCloseState.SkipNext;
+            return;
+        }
         if (state is WindowCloseState.Close)
             return;
         e.Cancel = true;
@@ -378,11 +383,13 @@ public static class Extensions
     }
 }
 
+[Flags]
 public enum WindowCloseState
 {
-    Close,
-    Hidden,
-    Collapsed
+    SkipNext = 0,
+    Close = 1 << 0,
+    Hidden = 1 << 1,
+    Collapsed = 1 << 2
 }
 
 /// <summary>

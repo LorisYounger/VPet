@@ -23,18 +23,18 @@ public class SettingModel : ObservableClass<SettingModel>
     /// </summary>
     public string FilePath { get; set; }
 
-    //#region IsChanged
-    //private bool _isChanged;
+    #region IsChanged
+    private bool _isChanged;
 
-    ///// <summary>
-    ///// 已更改
-    ///// </summary>
-    //public bool IsChanged
-    //{
-    //    get => _isChanged;
-    //    set => SetProperty(ref _isChanged, value);
-    //}
-    //#endregion
+    /// <summary>
+    /// 已更改
+    /// </summary>
+    public bool IsChanged
+    {
+        get => _isChanged;
+        set => SetProperty(ref _isChanged, value);
+    }
+    #endregion
 
     #region GraphicsSetting
     private GraphicsSettingModel _graphicsSetting;
@@ -117,24 +117,24 @@ public class SettingModel : ObservableClass<SettingModel>
         DiagnosticSetting.GetAutoCalFromSetting(setting);
 
         ModSetting = LoadModSetting(setting);
-        //MergeNotify();
+        MergePropertyChangedNotify();
     }
 
-    //private void MergeNotify()
-    //{
-    //    var accessor = ObjectAccessor.Create(this);
-    //    foreach (var property in typeof(SettingModel).GetProperties())
-    //    {
-    //        var value = accessor[property.Name];
-    //        if (value is INotifyPropertyChanged model)
-    //            model.PropertyChanged += Notify_PropertyChanged;
-    //    }
-    //}
+    private void MergePropertyChangedNotify()
+    {
+        var accessor = ObjectAccessor.Create(this);
+        foreach (var property in typeof(SettingModel).GetProperties())
+        {
+            var value = accessor[property.Name];
+            if (value is INotifyPropertyChanged model)
+                model.PropertyChanged += Notify_PropertyChanged;
+        }
+    }
 
-    //private void Notify_PropertyChanged(object sender, PropertyChangedEventArgs e)
-    //{
-    //    IsChanged = true;
-    //}
+    private void Notify_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        IsChanged = true;
+    }
 
     private ModSettingModel LoadModSetting(Setting setting)
     {
@@ -176,6 +176,7 @@ public class SettingModel : ObservableClass<SettingModel>
             _setting[CustomizedSettingModel.TargetName].Add(new Sub(link.Name, link.Link));
         ModSetting.Save(_setting);
         File.WriteAllText(FilePath, _setting.ToString());
+        IsChanged = false;
     }
 
     private void SaveSetting(object settingModel)

@@ -38,12 +38,12 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
         LocalMods ??= GetLocalMods();
         foreach (var item in setting[ModLineName])
         {
-            var modName = item.Name;
-            if (LocalMods.TryGetValue(modName, out var loader) && loader.IsSuccesses)
+            var modID = item.Name;
+            if (LocalMods.TryGetValue(modID, out var loader) && loader.IsSuccesses)
             {
                 var modModel = new ModModel(loader);
-                modModel.IsPass = setting[PassModLineName].Contains(modName);
-                modModel.IsMsg = setting[MsgModLineName].Contains(modModel.Name);
+                modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
+                modModel.IsPass = setting[PassModLineName].Contains(modID);
                 Mods.Add(modModel);
             }
             else
@@ -51,8 +51,8 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
                 Mods.Add(
                     new()
                     {
-                        Name = modName,
-                        ModPath = "未知, 可能是{0}".Translate(Path.Combine(ModDirectory, modName))
+                        Name = modID,
+                        ModPath = "未知, 可能是{0}".Translate(Path.Combine(ModDirectory, modID))
                     }
                 );
             }
@@ -60,15 +60,17 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
         foreach (var modPath in setting[WorkShopLineName])
         {
             var loader = new ModLoader(modPath.Name);
-            if (loader.IsSuccesses is false)
+            if (loader.IsSuccesses)
+            {
+                var modModel = new ModModel(loader);
+                modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
+                modModel.IsPass = setting[PassModLineName].Contains(modModel.ID.ToLower());
+                Mods.Add(modModel);
+            }
+            else
             {
                 Mods.Add(new() { Name = loader.Name, ModPath = loader.ModPath });
-                return;
             }
-            var modModel = new ModModel(loader);
-            modModel.IsPass = setting[PassModLineName].Contains(modModel.Name);
-            modModel.IsMsg = setting[MsgModLineName].Contains(modModel.Name);
-            Mods.Add(modModel);
         }
     }
 
@@ -107,10 +109,10 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
             return;
         foreach (var mod in Mods)
         {
-            setting[ModLineName].Add(new Sub(mod.Name.ToLower()));
-            setting[MsgModLineName].Add(new Sub(mod.Name, "True"));
+            setting[ModLineName].Add(new Sub(mod.ID.ToLower()));
+            setting[MsgModLineName].Add(new Sub(mod.ID, "True"));
             if (mod.IsPass)
-                setting[PassModLineName].Add(new Sub(mod.Name.ToLower()));
+                setting[PassModLineName].Add(new Sub(mod.ID.ToLower()));
         }
     }
     #endregion
@@ -118,6 +120,15 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
 
 public class ModModel : ObservableClass<ModModel>
 {
+    #region ID
+    private string _id;
+    public string ID
+    {
+        get => _id;
+        set => SetProperty(ref _id, value);
+    }
+    #endregion
+
     #region Name
     private string _name;
 
@@ -311,6 +322,7 @@ public class ModModel : ObservableClass<ModModel>
         PropertyChanged += ModModel_PropertyChanged;
         ReflectionUtils.SetValue(loader, this);
         RefreshState();
+        ID = Name;
         Name = Name.Translate();
         Description = Description.Translate();
         LocalizeCore.BindingNotify.PropertyChanged += BindingNotify_PropertyChanged;

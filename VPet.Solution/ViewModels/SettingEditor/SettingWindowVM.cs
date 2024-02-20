@@ -25,7 +25,30 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
     public SettingModel CurrentSetting
     {
         get => _currentSetting;
-        set { SetProperty(ref _currentSetting, value); }
+        set
+        {
+            if (_currentSetting?.IsChanged is true)
+            {
+                var result = MessageBox.Show(
+                    "当前设置未保存 确定要保存吗".Translate(),
+                    "",
+                    MessageBoxButton.YesNoCancel
+                );
+                if (result is MessageBoxResult.Yes)
+                {
+                    _currentSetting.Save();
+                }
+                else if (result is MessageBoxResult.No)
+                {
+                    _currentSetting.IsChanged = false;
+                }
+                else if (result is MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+            SetProperty(ref _currentSetting, value);
+        }
     }
 
     private readonly ObservableCollection<SettingModel> _settings = new();
