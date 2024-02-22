@@ -72,12 +72,12 @@ public class SaveWindowVM : ObservableClass<SaveWindowVM>
 
     private void OpenFileInExplorerCommand_ExecuteCommand(SaveModel parameter)
     {
-        Utils.OpenFileInExplorer(parameter.FilePath);
+        HKWUtils.OpenFileInExplorer(parameter.FilePath);
     }
 
     private void OpenFileCommand_ExecuteCommand(SaveModel parameter)
     {
-        Utils.OpenLink(parameter.FilePath);
+        HKWUtils.OpenLink(parameter.FilePath);
     }
 
     public void RefreshShowSaves(string name)

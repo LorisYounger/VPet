@@ -52,7 +52,7 @@ namespace VPet_Simulator.Core
         public bool IsWorking { get; private set; } = false;
         public SoundPlayer soundPlayer = new SoundPlayer();
         public bool windowMediaPlayerAvailable = true;
-        public Main(GameCore core, bool loadtouchevent = true)
+        public Main(GameCore core, bool loadtouchevent = true, IGraph startUPGraph = null)
         {
             //Console.WriteLine(DateTime.Now.ToString("T:fff"));
             InitializeComponent();
@@ -74,7 +74,7 @@ namespace VPet_Simulator.Core
             }
             if (!core.Controller.EnableFunction)
                 Core.Save.Mode = NoFunctionMOD;
-            var ig = Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, core.Save.Mode);
+            IGraph ig = startUPGraph ?? Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, core.Save.Mode);
             ig ??= Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Default), AnimatType.Single, core.Save.Mode);
             //var ig2 = Core.Graph.FindGraph(GraphType.Default, core.GameSave.Mode);
             PetGrid2.Visibility = Visibility.Collapsed;
@@ -84,17 +84,17 @@ namespace VPet_Simulator.Core
                 //{
                 //    Thread.Sleep(100);
                 //}//新功能:等待所有图像加载完成再跑
-                foreach(var igs in Core.Graph.GraphsList.Values)
+                foreach (var igs in Core.Graph.GraphsList.Values)
                 {
-                    foreach(var ig2 in igs.Values)
+                    foreach (var ig2 in igs.Values)
                     {
-                        foreach(var ig3 in ig2)
+                        foreach (var ig3 in ig2)
                         {
                             while (!ig3.IsReady)
                             {
                                 Thread.Sleep(100);
                             }
-                        }    
+                        }
                     }
                 }
 
@@ -381,7 +381,7 @@ namespace VPet_Simulator.Core
         private DateTime wavespan;
         private void MainGrid_MouseWave(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed)            
+            if (e.LeftButton == MouseButtonState.Pressed)
                 return;
             isPress = false;
             if (rasetype >= 0 || State != WorkingState.Nomal)

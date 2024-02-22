@@ -34,9 +34,9 @@ using Application = System.Windows.Application;
 using Line = LinePutScript.Line;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 using Image = System.Windows.Controls.Image;
-
+#if SteamOutput
 using VPet.Solution;
-
+#endif
 namespace VPet_Simulator.Windows
 {
     public partial class MainWindow : IMainWindow
@@ -335,9 +335,16 @@ namespace VPet_Simulator.Windows
                     startInfo.UseShellExecute = false;
                     Process.Start(startInfo);
                 }
-                catch (Exception e)
+                catch
                 {
-                    MessageBoxX.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                    try
+                    {
+                        Process.Start(content);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBoxX.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                    }
                 }
             }
             else if (content.Contains("://"))
@@ -380,7 +387,7 @@ namespace VPet_Simulator.Windows
         {
             if (Set.AutoBuy && Core.Save.Money >= 100)
             {
-                var havemoney = Core.Save.Money * 1.2 - 120;
+                var havemoney = Core.Save.Money * 0.8;
                 List<Food> food = Foods.FindAll(x => x.Price >= 2 && x.Health >= 0 && x.Exp >= 0 && x.Likability >= 0 && x.Price < havemoney //桌宠不吃负面的食物
                  && !x.IsOverLoad() // 不吃超模食物
                 );
@@ -719,6 +726,18 @@ namespace VPet_Simulator.Windows
             if (tmp.GameSave.Money == 0 && tmp.GameSave.Likability == 0 && tmp.GameSave.Exp == 0
                 && tmp.GameSave.StrengthDrink == 0 && tmp.GameSave.StrengthFood == 0)//数据全是0,可能是bug
                 return false;
+            if (tmp.GameSave.Exp < -1000000000)
+            {
+                tmp.GameSave.Exp = 1000000;
+                tmp.Data[(gbol)"round"] = true;
+                Dispatcher.Invoke(() => MessageBoxX.Show("检测到经验值超过 9,223,372,036 导致算数溢出\n已经自动回正".Translate(), "数据溢出警告".Translate()));
+
+            }
+            if (tmp.GameSave.Money < -1000000000)
+            {
+                tmp.GameSave.Money = 100000;
+                Dispatcher.Invoke(() => MessageBoxX.Show("检测到金钱超过 9,223,372,036 导致算数溢出\n已经自动回正".Translate(), "数据溢出警告".Translate()));
+            }
             GameSavesData = tmp;
             Core.Save = tmp.GameSave;
             HashCheck = HashCheck;
@@ -899,8 +918,8 @@ namespace VPet_Simulator.Windows
                 CurrMusicType = null;
                 MusicTimer.Start();
                 Task.Run(() =>
-                {//等2秒看看识别结果
-                    Thread.Sleep(2500);
+                {//等3秒看看识别结果
+                    Thread.Sleep(3000);
 
                     if (CurrMusicType != null && Main.IsIdel)
                     {//识别通过,开始跑跳舞动画
@@ -941,7 +960,7 @@ namespace VPet_Simulator.Windows
                 return;
             catch_MusicVolSum += AudioPlayingVolume();
             catch_MusicVolCount++;
-            if (catch_MusicVolCount >= 20)
+            if (catch_MusicVolCount >= 10)
             {
                 double ans = catch_MusicVolSum / catch_MusicVolCount;
                 catch_MusicVolSum /= 4;
@@ -1414,7 +1433,7 @@ namespace VPet_Simulator.Windows
             }
 
             //音乐识别timer加载
-            MusicTimer = new System.Timers.Timer(100)
+            MusicTimer = new System.Timers.Timer(200)
             {
                 AutoReset = false
             };
@@ -1428,11 +1447,19 @@ namespace VPet_Simulator.Windows
                 LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate();
 
                 Core.Graph = petloader.Graph(Set.Resolution);
+#if NewYear
+                //临时更新:新年进入动画, 
+                if (DateTime.Now < new DateTime(2024, 2, 19))
+                {
+                    Main = new Main(Core, startUPGraph: Core.Graph.FindGraph("newyear", AnimatType.Single, Core.Save.Mode));
+                }
+                else
+#endif
                 Main = new Main(Core);
                 Main.NoFunctionMOD = Set.CalFunState;
 
 
-                LoadingText.Content = "正在加载游戏".Translate();
+                LoadingText.Content = "正在加载游戏\n该步骤可能会耗时比较长\n请耐心等待".Translate();
 
 
                 //加载数据合理化:工作
@@ -1770,24 +1797,17 @@ namespace VPet_Simulator.Windows
                         Main.Say("哼哼~主人，我的考试成绩出炉了哦，快来和我一起看我的成绩单喵".Translate(), "shining");
                     });
                 }
-#if DEMO
-                else
+#if NewYear
+                //仅新年功能
+                if (DateTime.Now < new DateTime(2024, 2, 18))
                 {
-                    notifyIcon.ShowBalloonTip(10, "正式版更新通知".Translate(), //本次更新内容
-                        "虚拟桌宠模拟器 现已发布正式版, 赶快前往下载吧!", ToolTipIcon.Info);
-                    Process.Start("https://store.steampowered.com/app/1920960/VPet/");
+                    Main.TimeHandle += NewYearHandle;
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(5000);
+                        NewYearSay();
+                    });
                 }
-#else
-                //else if (Set["SingleTips"].GetDateTime("update") <= new DateTime(2023, 8, 11) && LocalizeCore.CurrentCulture.StartsWith("cn"))
-                //{
-                //    if (Set["SingleTips"].GetDateTime("update") > new DateTime(2023, 8, 1)) // 上次更新日期时间
-                //        notifyIcon.ShowBalloonTip(10, "更新通知 08/11", //本次更新内容
-                //        "新增跳舞功能,桌宠会在播放音乐的时候跳舞\n新增不开心大部分系列动画\n更好买支持翻页", ToolTipIcon.Info);
-                //    else// 累计更新内容
-                //        notifyIcon.ShowBalloonTip(10, "更新通知 08/01",
-                //    "更新了新的动画系统\n新增桌宠会在播放音乐的时候跳舞\n新增不开心大部分系列动画\n更好买支持翻页", ToolTipIcon.Info);
-                //    Set["SingleTips"].SetDateTime("update", DateTime.Now);
-                //}
 #endif
                 //MOD报错
                 foreach (CoreMOD cm in CoreMODs)
@@ -1814,6 +1834,56 @@ namespace VPet_Simulator.Windows
             //}
 
         }
+#if NewYear
+        int newyearsay = 0;
+        private void NewYearHandle(Main main)
+        {
+            if (DateTime.Now.Hour == 0 && newyearsay != DateTime.Now.Day)
+            {//跨时间
+                NewYearSay();
+            }
+        }
+        /// <summary>
+        /// 新年说
+        /// </summary>
+        private void NewYearSay()
+        {
+            newyearsay = DateTime.Now.Day;
+            string sayny;
+            switch (newyearsay)
+            {
+                default:
+                case 9:
+                    sayny = "除夕除夕，燃炮祭祖，贴春联，换窗花，主人来一起吃年夜饭！一起包饺砸！{0}祝主人新年快乐！饺子饺子饺饺子！".Translate(GameSavesData.GameSave.Name);
+                    break;
+                case 10:
+                    sayny = "初一初一，开门炮仗，主人～恭喜发财，红包拿来～".Translate();
+                    break;
+                case 11:
+                    sayny = "初二初二，回娘家去，左手一只鸡，右手一只鸭，一起回家吧主人～".Translate();
+                    break;
+                case 12:
+                    sayny = "初三初三，晚起早睡，不待客，过年辛苦了主人，好好休息吧～".Translate();
+                    break;
+                case 13:
+                    sayny = "初四初四，接五路，迎灶神，吃折箩，恭迎灶神爷！绝对不是肚子饿了！".Translate();
+                    break;
+                case 14:
+                    sayny = "初五初五，赶五穷！拿扫帚把垃圾清扫出去！把脏东西都赶出去！今日宜，清屏工作。".Translate();
+                    break;
+                case 15:
+                    sayny = "初六初六，送穷鬼，辞旧迎新，送走旧日贫穷困苦，迎接新一年！诶诶，别赶我啊。".Translate();
+                    break;
+                case 16:
+                    sayny = "初七初七，登高出游，戴人胜，人胜是一种头饰,又叫彩胜,华胜,从晋朝开始有剪彩为花、剪彩戴在头发上哦。主人我好看吗～".Translate();
+                    break;
+                case 17:
+                    sayny = "初八初八，放生祈福，拜谷神，今天是假期最后一天了，和主人过年很开心哦，最后～主人～您还有许多事需要处理，现在还不能休息哦～".Translate();
+                    break;
+            }
+            Main.SayRnd(sayny);
+        }
+#endif
         /// <summary>
         /// 显示捏脸情况
         /// </summary>

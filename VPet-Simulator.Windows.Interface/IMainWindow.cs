@@ -1,6 +1,7 @@
 ﻿using LinePutScript;
 using LinePutScript.Dictionary;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Media;
 using VPet_Simulator.Core;
 
@@ -146,7 +147,13 @@ namespace VPet_Simulator.Windows.Interface
         /// 如果你的mod属于作弊mod/有作弊内容,请在作弊前调用这个方法
         /// </summary>
         void HashCheckOff();
-
+        /// <summary>
+        /// 游戏打开过的窗口, 会在退出时统一调用退出
+        /// </summary>
+        List<Window> Windows { get; set; }
+        /// <summary>
+        /// 游戏存档数据
+        /// </summary>
         GameSave_v2 GameSavesData { get; }
     }
 

@@ -1,4 +1,5 @@
 ﻿using HKW.HKWUtils;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System.ComponentModel;
 using System.Windows;
@@ -29,6 +30,35 @@ public partial class SettingWindow : WindowX
         ListBoxItem_ModSettings.Tag = new ModSettingPage();
         ListBox_Pages.SelectedIndex = 0;
         Instance = this;
+    }
+
+    private void SettingWindow_Closing(object sender, CancelEventArgs e)
+    {
+        if (ViewModel?.CurrentSetting?.IsChanged is true)
+        {
+            if (ViewModel?.CurrentSetting?.IsChanged is true)
+            {
+                this.SetCloseState(WindowCloseState.Hidden | WindowCloseState.SkipNext);
+                var result = MessageBox.Show(
+                    "当前设置未保存 确定要保存吗".Translate(),
+                    "",
+                    MessageBoxButton.YesNoCancel
+                );
+                if (result is MessageBoxResult.Yes)
+                {
+                    ViewModel.CurrentSetting.Save();
+                    Close();
+                }
+                else if (result is MessageBoxResult.No)
+                {
+                    ViewModel.CurrentSetting.IsChanged = false;
+                }
+                else if (result is MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
     }
 
     private void Frame_Main_ContentRendered(object sender, EventArgs e)

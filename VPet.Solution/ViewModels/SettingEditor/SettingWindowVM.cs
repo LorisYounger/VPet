@@ -1,7 +1,7 @@
 ﻿using HKW.HKWUtils.Observable;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
-using Panuon.WPF.UI;
+using Panuon.WPF;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,13 +20,35 @@ namespace VPet.Solution.ViewModels.SettingEditor;
 public class SettingWindowVM : ObservableClass<SettingWindowVM>
 {
     public static SettingWindowVM Current { get; private set; }
-
     #region Properties
-    private SettingModel _currentSettings;
+    private SettingModel _currentSetting;
     public SettingModel CurrentSetting
     {
-        get => _currentSettings;
-        set => SetProperty(ref _currentSettings, value);
+        get => _currentSetting;
+        set
+        {
+            if (_currentSetting?.IsChanged is true)
+            {
+                var result = MessageBox.Show(
+                    "当前设置未保存 确定要保存吗".Translate(),
+                    "",
+                    MessageBoxButton.YesNoCancel
+                );
+                if (result is MessageBoxResult.Yes)
+                {
+                    _currentSetting.Save();
+                }
+                else if (result is MessageBoxResult.No)
+                {
+                    _currentSetting.IsChanged = false;
+                }
+                else if (result is MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+            SetProperty(ref _currentSetting, value);
+        }
     }
 
     private readonly ObservableCollection<SettingModel> _settings = new();
@@ -81,8 +103,8 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
     public SettingWindowVM()
     {
         Current = this;
-        ShowSettings = _settings;
         LoadSettings();
+        ShowSettings = _settings = new(_settings.OrderBy(m => m.Name));
 
         PropertyChanged += MainWindowVM_PropertyChanged;
         OpenFileCommand.ExecuteCommand += OpenFileCommand_ExecuteCommand;
@@ -112,12 +134,12 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
 
     private void OpenFileInExplorerCommand_ExecuteCommand(SettingModel parameter)
     {
-        Utils.OpenFileInExplorer(parameter.FilePath);
+        HKWUtils.OpenFileInExplorer(parameter.FilePath);
     }
 
     private void OpenFileCommand_ExecuteCommand(SettingModel parameter)
     {
-        Utils.OpenLink(parameter.FilePath);
+        HKWUtils.OpenLink(parameter.FilePath);
     }
 
     private void SaveAllSettingCommand_ExecuteCommand()
@@ -204,9 +226,13 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
                         "载入设置出错".Translate(),
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Warning
-                    ) is MessageBoxResult.Yes
+                    )
+                    is not MessageBoxResult.Yes
                 )
-                    _settings.Add(new SettingModel() { Name = fileName, FilePath = file });
+                    return;
+                var setting = new SettingModel() { Name = fileName, FilePath = file };
+                _settings.Add(setting);
+                setting.Save();
             }
         }
     }
@@ -220,7 +246,7 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
                 {
                     if (s.EndsWith(".lps") is false)
                         return false;
-                    return Path.GetFileName(s).StartsWith("Setting");
+                    return Path.GetFileName(s).StartsWith(nameof(Setting));
                 }
             );
     }

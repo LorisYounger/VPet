@@ -120,17 +120,17 @@ public class ModSettingPageVM : ObservableClass<ModSettingPageVM>
             is not MessageBoxResult.Yes
         )
             return;
-        foreach (var mod in ModSetting.Mods.AsEnumerable())
+        for (var i = 0; i < ModSetting.Mods.Count; i++)
         {
-            if (mod.IsEnabled is null)
-                ModSetting.Mods.Remove(mod);
+            if (ModSetting.Mods[i].IsEnabled is null)
+                ModSetting.Mods.RemoveAt(i);
         }
         SearchMod = string.Empty;
     }
 
     private void OpenSteamCommunityCommand_ExecuteCommand(ModModel parameter)
     {
-        Utils.OpenLink(
+        HKWUtils.OpenLink(
             "https://steamcommunity.com/sharedfiles/filedetails/?id=" + parameter.ItemId
         );
     }
@@ -139,7 +139,7 @@ public class ModSettingPageVM : ObservableClass<ModSettingPageVM>
     {
         try
         {
-            Utils.OpenLink(parameter.ModPath);
+            HKWUtils.OpenLink(parameter.ModPath);
         }
         catch
         {

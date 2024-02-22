@@ -56,7 +56,7 @@ public class BoolToVisibilityConverter : BoolToValueConverterBase<BoolToVisibili
         CultureInfo culture
     )
     {
-        return Utils.GetBool(value, BoolValue, NullValue)
+        return HKWUtils.HKWUtils.GetBool(value, BoolValue, NullValue)
             ? TrueVisibilityValue
             : FalseVisibilityValue;
     }

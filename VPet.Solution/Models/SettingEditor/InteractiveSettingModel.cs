@@ -205,7 +205,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// 当实时播放音量达到该值时运行音乐动作
     /// </summary>
     [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.MusicCatch))]
-    [ReflectionPropertyConverter(typeof(DoubleToInt32Converter))]
+    [ReflectionPropertyConverter(typeof(PercentageConverter))]
     public int MusicCatch
     {
         get => _musicCatch;
@@ -220,7 +220,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// 当实时播放音量达到该值时运行特殊音乐动作
     /// </summary>
     [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.MusicMax))]
-    [ReflectionPropertyConverter(typeof(DoubleToInt32Converter))]
+    [ReflectionPropertyConverter(typeof(PercentageConverter))]
     public int MusicMax
     {
         get => _musicMax;
@@ -297,15 +297,15 @@ public class SecondToMinuteConverter : ReflectionConverterBase<int, int>
     }
 }
 
-public class DoubleToInt32Converter : ReflectionConverterBase<int, double>
+public class PercentageConverter : ReflectionConverterBase<int, double>
 {
     public override double Convert(int sourceValue)
     {
-        return sourceValue;
+        return sourceValue / 100.0;
     }
 
     public override int ConvertBack(double targetValue)
     {
-        return System.Convert.ToInt32(targetValue);
+        return System.Convert.ToInt32(targetValue * 100);
     }
 }

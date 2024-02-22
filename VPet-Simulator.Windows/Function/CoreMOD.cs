@@ -231,6 +231,17 @@ namespace VPet_Simulator.Windows
                             string authtype = "";
                             foreach (FileInfo tmpfi in di.EnumerateFiles("*.dll"))
                             {
+#if X64
+                                if (tmpfi.Name.Contains("x86"))
+                                {
+                                    continue;
+                                }
+#else
+                                if (tmpfi.Name.Contains("x64"))
+                                {
+                                    continue;
+                                }
+#endif
                                 try
                                 {
                                     var path = tmpfi.Name;

@@ -295,15 +295,24 @@ namespace VPet_Simulator.Core
                 {
                     var idelname = list[i];
                     var ig = Core.Graph.FindGraphs(idelname, AnimatType.A_Start, Core.Save.Mode);
-                    if (ig != null)
+                    if (ig != null && ig.Count != 0)
                     {
                         looptimes = 0;
                         CountNomal = 0;
-                        DisplayBLoopingToNomal(idelname, Core.Graph.GraphConfig.GetDuration(idelname));
+                        Display(ig[Function.Rnd.Next(ig.Count)], () =>
+                        DisplayBLoopingToNomal(idelname, Core.Graph.GraphConfig.GetDuration(idelname)));
                         return true;
                     }
                     else
                     {
+                        ig = Core.Graph.FindGraphs(idelname, AnimatType.Single, Core.Save.Mode);
+                        if (ig != null && ig.Count != 0)
+                        {
+                            looptimes = 0;
+                            CountNomal = 0;
+                            Display(ig[Function.Rnd.Next(ig.Count)], DisplayToNomal);
+                            return true;
+                        }
                         list.RemoveAt(i);
                     }
                 }
