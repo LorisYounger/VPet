@@ -1,4 +1,5 @@
 ﻿using LinePutScript.Localization.WPF;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,7 +16,8 @@ namespace VPet_Simulator.Windows
         public App() : base()
         {
 #if !DEBUG
-            base.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            base.DispatcherUnhandledException += (s, e) => { e.Handled = true; UnhandledException(e.Exception, false); };
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => { UnhandledException((e.ExceptionObject as Exception), true); };
 #endif
             //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
@@ -43,11 +45,9 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void UnhandledException(Exception e, bool isFatality)
         {
-            e.Handled = true;
-
-            var expt = e.Exception.ToString();
+            var expt = e.ToString();
             if (expt.ToLower().Contains("value") && expt.ToLower().Contains("nan"))
             {
                 MessageBox.Show("由于修改游戏数据导致数据溢出,存档可能会出错\n开发者提醒您请不要使用过于超模的MOD".Translate());
@@ -82,7 +82,7 @@ namespace VPet_Simulator.Windows
                 "游戏或者MOD".Translate() : $"MOD({CoreMOD.NowLoading})") +
                 "导致的\n如有可能请发送 错误信息截图和引发错误之前的操作 给开发者:service@exlb.net\n感谢您对游戏开发的支持\n".Translate()
                 + expt;
-            if (MainWindow == null)
+            if (isFatality || MainWindow == null)
             {
                 MessageBox.Show(errstr, "游戏致命性错误".Translate());
                 return;
