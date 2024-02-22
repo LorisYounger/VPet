@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net462;net6.0-windows</TargetFrameworks>
+		<TargetFramework>net8.0-windows</TargetFramework>	
 		<RootNamespace>VPet_Simulator.Core</RootNamespace>
 		<LangVersion>latest</LangVersion>
 		<UseWindowsForms>true</UseWindowsForms>

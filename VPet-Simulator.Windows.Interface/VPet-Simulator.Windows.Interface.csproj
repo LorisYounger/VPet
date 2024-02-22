@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+		<TargetFramework>net8.0-windows</TargetFramework>	
     <OutputType>Library</OutputType>
     <RootNamespace>VPet_Simulator.Windows.Interface</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

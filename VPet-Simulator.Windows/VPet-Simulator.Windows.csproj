@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net462</TargetFramework>
+		<TargetFramework>net8.0-windows</TargetFramework>	
 		<OutputType>WinExe</OutputType>
 		<RootNamespace>VPet_Simulator.Windows</RootNamespace>
 		<LangVersion>latest</LangVersion>
@@ -33,6 +33,7 @@
 		<FileVersion>1.0.0.0</FileVersion>
 		<Product>VPet-Simulator.Windows</Product>
 		<Copyright>Copyright © exLB.org 2022</Copyright>
+		<StartupObject>VPet_Simulator.Windows.App</StartupObject>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
 		<PlatformTarget>x64</PlatformTarget>
@@ -158,29 +159,6 @@
 		</EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
-		<COMReference Include="IWshRuntimeLibrary">
-			<Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
-			<VersionMajor>1</VersionMajor>
-			<VersionMinor>0</VersionMinor>
-			<Lcid>0</Lcid>
-			<WrapperTool>tlbimp</WrapperTool>
-			<Isolated>False</Isolated>
-			<EmbedInteropTypes>True</EmbedInteropTypes>
-		</COMReference>
-	</ItemGroup>
-	<ItemGroup>
-		<BootstrapperPackage Include=".NETFramework,Version=v4.6.2">
-			<Visible>False</Visible>
-			<ProductName>Microsoft .NET Framework 4.6.2 %28x86 和 x64%29</ProductName>
-			<Install>true</Install>
-		</BootstrapperPackage>
-		<BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-			<Visible>False</Visible>
-			<ProductName>.NET Framework 3.5 SP1</ProductName>
-			<Install>false</Install>
-		</BootstrapperPackage>
-	</ItemGroup>
-	<ItemGroup>
 	  <None Include="..\.editorconfig" Link=".editorconfig" />
 	</ItemGroup>
 	<ItemGroup>
@@ -224,18 +202,14 @@
 	  <Resource Include="Res\img\r_worktime_5.png" />
 	  <Resource Include="Res\img\r_worktime_6.png" />
 	</ItemGroup>
-
 	<ItemGroup>
-		<Reference Include="System.Web" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="CSCore" Version="1.2.1.2" />
 		<PackageReference Include="Facepunch.Steamworks" Condition="'$(Platform)' == 'x64'" Version="2.3.3" />
 		<PackageReference Include="Facepunch.Steamworks.win32" Condition="'$(Platform)' == 'x86'" Version="2.3.3" />
 		<PackageReference Include="LinePutScript" Version="1.10.2" />
 		<PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.6" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="Panuon.WPF" Version="1.0.3" />
+		<PackageReference Include="NAudio" Version="2.2.1" />
+		<PackageReference Include="Panuon.WPF" Version="1.0.4" />
 		<PackageReference Include="Panuon.WPF.UI" Version="1.1.17.3" />
 	</ItemGroup>
 	<ItemGroup>

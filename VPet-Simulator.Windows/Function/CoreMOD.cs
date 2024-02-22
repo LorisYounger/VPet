@@ -249,7 +249,7 @@ namespace VPet_Simulator.Windows
                                         continue;
                                     LoadedDLL.Add(path);
                                     Assembly dll = Assembly.LoadFrom(tmpfi.FullName);
-                                    var certificate = dll.GetModules()?.First()?.GetSignerCertificate();
+                                    var certificate = Win32.GetCertificateFromSignedFile(path);
                                     if (certificate != null)
                                     {
                                         if (certificate.Subject == "CN=\"Shenzhen Lingban Computer Technology Co., Ltd.\", O=\"Shenzhen Lingban Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN"

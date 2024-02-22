@@ -26,7 +26,4 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\VPet-Simulator.Core\VPet-Simulator.Core.csproj" />
-  </ItemGroup>
 </Project>

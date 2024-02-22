@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +11,111 @@ namespace VPet_Simulator.Windows
 {
     static partial class Win32
     {
+        [DllImport("Crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool CryptQueryObject(
+        int dwObjectType,
+        string pvObject,
+        int dwExpectedContentTypeFlags,
+        int dwExpectedFormatTypeFlags,
+        int dwFlags,
+        IntPtr pdwMsgAndCertEncodingType,
+        IntPtr pdwContentType,
+        IntPtr pdwFormatType,
+        IntPtr phStore,
+        IntPtr phMsg,
+        ref IntPtr ppvContext
+    );
+
+        private const int CERT_QUERY_OBJECT_FILE = 0x00000001;
+        private const int CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED = 0x00004000;
+        private const int CERT_QUERY_FORMAT_FLAG_BINARY = 0x00000002;
+
+        public static X509Certificate2? GetCertificateFromSignedFile(string filePath)
+        {
+            IntPtr certificateContext = IntPtr.Zero;
+
+            if (!CryptQueryObject(
+                CERT_QUERY_OBJECT_FILE,
+                filePath,
+                CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED,
+                CERT_QUERY_FORMAT_FLAG_BINARY,
+                0,
+                IntPtr.Zero,
+                IntPtr.Zero,
+                IntPtr.Zero,
+                IntPtr.Zero,
+                IntPtr.Zero,
+                ref certificateContext))
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+
+            try
+            {
+                return new X509Certificate2(certificateContext);
+            }
+            catch
+            {
+                return null;
+            }
+            //finally
+            //{
+            //    if (certificateContext != IntPtr.Zero)
+            //    {
+            //        X509Certificate2Collection certificates = new X509Certificate2Collection();
+            //        certificates.ImportFromPemFile(filePath);
+            //        foreach (var certificate in certificates)
+            //        {
+            //            Console.WriteLine($"Subject: {certificate.Subject}");
+            //            Console.WriteLine($"Issuer: {certificate.Issuer}");
+            //        }
+            //    }
+            //}
+        }
+
+        [ComImport]
+        [Guid("00021401-0000-0000-C000-000000000046")]
+        internal class ShellLink
+        {
+        }
+
+        [ComImport]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [Guid("000214F9-0000-0000-C000-000000000046")]
+        internal interface IShellLink
+        {
+            void GetPath([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile, int cchMaxPath, out IntPtr pfd, int fFlags);
+            void GetIDList(out IntPtr ppidl);
+            void SetIDList(IntPtr pidl);
+            void GetDescription([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName, int cchMaxName);
+            void SetDescription([MarshalAs(UnmanagedType.LPWStr)] string pszName);
+            void GetWorkingDirectory([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir, int cchMaxPath);
+            void SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string pszDir);
+            void GetArguments([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs, int cchMaxPath);
+            void SetArguments([MarshalAs(UnmanagedType.LPWStr)] string pszArgs);
+            void GetHotkey(out short pwHotkey);
+            void SetHotkey(short wHotkey);
+            void GetShowCmd(out int piShowCmd);
+            void SetShowCmd(int iShowCmd);
+            void GetIconLocation([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath, int cchIconPath, out int piIcon);
+            void SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string pszIconPath, int iIcon);
+            void SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string pszPathRel, int dwReserved);
+            void Resolve(IntPtr hwnd, int fFlags);
+            void SetPath([MarshalAs(UnmanagedType.LPWStr)] string pszFile);
+        }
+
+        [ComImport]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [Guid("0000010b-0000-0000-C000-000000000046")]
+        internal interface IPersistFile
+        {
+            void GetClassID(out Guid pClassID);
+            void IsDirty();
+            void Load([MarshalAs(UnmanagedType.LPWStr)] string pszFileName, uint dwMode);
+            void Save([MarshalAs(UnmanagedType.LPWStr)] string pszFileName, bool fRemember);
+            void SaveCompleted([MarshalAs(UnmanagedType.LPWStr)] string pszFileName);
+            void GetCurFile([MarshalAs(UnmanagedType.LPWStr)] out string ppszFileName);
+        }
         /// <summary>
         /// 扩展的窗口风格
         /// 这是 long 类型的，如果想要使用 int 类型请使用 <see cref="WindowExStyles"/> 类

@@ -497,7 +497,7 @@ namespace VPet_Simulator.Windows
                 //uint extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
                 //SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
                 HitThrough = !HitThrough;
-                notifyIcon.ContextMenu.MenuItems.Find("NotifyIcon_HitThrough", false).First().Checked = HitThrough;
+                (notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_HitThrough", false).First() as ToolStripMenuItem).Checked = HitThrough;
                 if (HitThrough)
                 {
                     Win32.User32.SetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE,

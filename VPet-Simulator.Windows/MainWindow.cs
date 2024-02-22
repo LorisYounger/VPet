@@ -1,4 +1,4 @@
-﻿using CSCore.CoreAudioAPI;
+﻿using NAudio.CoreAudioApi;
 using LinePutScript;
 using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
@@ -28,12 +28,13 @@ using Timer = System.Timers.Timer;
 using ToolBar = VPet_Simulator.Core.ToolBar;
 
 using MessageBox = System.Windows.MessageBox;
-using ContextMenu = System.Windows.Forms.ContextMenu;
-using MenuItem = System.Windows.Forms.MenuItem;
+using ContextMenu = System.Windows.Forms.ContextMenuStrip;
+using MenuItem = System.Windows.Forms.ToolStripMenuItem;
 using Application = System.Windows.Application;
 using Line = LinePutScript.Line;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 using Image = System.Windows.Controls.Image;
+using System.Data;
 #if SteamOutput
 using VPet.Solution;
 #endif
@@ -79,11 +80,11 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 版本号
         /// </summary>
-        public int version { get; } = 109;
+        public int version { get; } = 11000;
         /// <summary>
         /// 版本号
         /// </summary>
-        public string Version => $"{version / 100}.{version % 100}";
+        public string Version => $"{version / 10000}.{version % 10000 / 100}.{version % 100:00}";
 
         public List<LowText> LowFoodText { get; set; } = new List<LowText>();
 
@@ -867,42 +868,10 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public float AudioPlayingVolume()
         {
-            if (AudioPlayingVolumeOK == null)
-            {//第一调用检查是否支持
-                try
-                {
-                    float vol = 0;
-                    using (var enumerator = new MMDeviceEnumerator())
-                    {
-                        using (var meter = AudioMeterInformation.FromDevice(enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia)))
-                        {
-                            vol = meter.GetPeakValue();
-                            AudioPlayingVolumeOK = true;
-                        }
-                    }
-                }
-                catch
-                {
-                    AudioPlayingVolumeOK = false;
-                }
-            }
-            else if (AudioPlayingVolumeOK == false)
+            using (var enumerator = new MMDeviceEnumerator())
             {
-                return -1;
-            }
-            try
-            {//后续容错可能是偶发性
-                using (var enumerator = new MMDeviceEnumerator())
-                {
-                    using (var meter = AudioMeterInformation.FromDevice(enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia)))
-                    {
-                        return meter.GetPeakValue();
-                    }
-                }
-            }
-            catch
-            {
-                return -1;
+                var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+                return device.AudioMeterInformation.MasterPeakValue;
             }
         }
         /// <summary>
@@ -1661,14 +1630,14 @@ namespace VPet_Simulator.Windows
 
 
                 m_menu = new ContextMenu();
-                m_menu.Popup += (x, y) => { GameSavesData.Statistics[(gint)"stat_menu_pop"]++; };
-                var hitThrough = new MenuItem("鼠标穿透".Translate(), (x, y) => { SetTransparentHitThrough(); })
+                m_menu.Opening += (x, y) => { GameSavesData.Statistics[(gint)"stat_menu_pop"]++; };
+                var hitThrough = new MenuItem("鼠标穿透".Translate(), null, (x, y) => { SetTransparentHitThrough(); })
                 {
                     Name = "NotifyIcon_HitThrough",
                     Checked = HitThrough
                 };
-                m_menu.MenuItems.Add(hitThrough);
-                m_menu.MenuItems.Add(new MenuItem("操作教程".Translate(), (x, y) =>
+                m_menu.Items.Add(hitThrough);
+                m_menu.Items.Add(new MenuItem("操作教程".Translate(), null, (x, y) =>
                 {
                     if (LocalizeCore.CurrentCulture == "zh-Hans")
                         ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
@@ -1677,25 +1646,25 @@ namespace VPet_Simulator.Windows
                     else
                         ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
                 }));
-                m_menu.MenuItems.Add(new MenuItem("重置位置与状态".Translate(), (x, y) =>
+                m_menu.Items.Add(new MenuItem("重置位置与状态".Translate(), null, (x, y) =>
                 {
                     Main.CleanState();
                     Main.DisplayToNomal();
                     Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
                     Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
                 }));
-                m_menu.MenuItems.Add(new MenuItem("反馈中心".Translate(), (x, y) => { new winReport(this).Show(); }));
-                m_menu.MenuItems.Add(new MenuItem("开发控制台".Translate(), (x, y) => { new winConsole(this).Show(); }));
+                m_menu.Items.Add(new MenuItem("反馈中心".Translate(), null, (x, y) => { new winReport(this).Show(); }));
+                m_menu.Items.Add(new MenuItem("开发控制台".Translate(), null, (x, y) => { new winConsole(this).Show(); }));
 
-                m_menu.MenuItems.Add(new MenuItem("设置面板".Translate(), (x, y) =>
+                m_menu.Items.Add(new MenuItem("设置面板".Translate(), null, (x, y) =>
                 {
                     winSetting.Show();
                 }));
-                m_menu.MenuItems.Add(new MenuItem("退出桌宠".Translate(), (x, y) => Close()));
+                m_menu.Items.Add(new MenuItem("退出桌宠".Translate(), null, (x, y) => Close()));
 
                 LoadDIY();
 
-                notifyIcon.ContextMenu = m_menu;
+                notifyIcon.ContextMenuStrip = m_menu;
 
                 notifyIcon.Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/vpeticon.ico")).Stream);
 
