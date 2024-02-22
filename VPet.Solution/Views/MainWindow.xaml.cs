@@ -9,6 +9,7 @@ using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.ViewModels;
 using VPet.Solution.Views.SaveViewer;
 using VPet.Solution.Views.SettingEditor;
+using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 
 namespace VPet.Solution.Views;
@@ -49,5 +50,14 @@ public partial class MainWindow : WindowX
     private void Button_OpenSaveViewer_Click(object sender, RoutedEventArgs e)
     {
         SaveWindow.ShowOrActivate();
+    }
+
+    private void Button_CleanCache_Click(object sender, RoutedEventArgs e)
+    {
+        if(Directory.Exists(GraphCore.CachePath))
+        {
+            Directory.Delete(GraphCore.CachePath, true);
+        }
+        MessageBox.Show("缓存清理完成".Translate());
     }
 }

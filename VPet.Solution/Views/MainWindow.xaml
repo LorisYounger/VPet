@@ -32,6 +32,8 @@
                         Content="{ll:Str 打开设置编辑器}" FontSize="16" Style="{DynamicResource Button_BaseStyle}" />
                 <Button MinWidth="150" x:Name="Button_OpenSaveViewer" Click="Button_OpenSaveViewer_Click"
                         Content="{ll:Str 打开存档查看器}" FontSize="16" Style="{DynamicResource Button_BaseStyle}" />
+                <Button MinWidth="150" x:Name="Button_CleanCache" Click="Button_CleanCache_Click"
+                        Content="{ll:Str 清理缓存}" FontSize="16" Style="{DynamicResource Button_BaseStyle}" />
             </StackPanel>
             <Button Grid.Row="1" Command="{Binding FirstStartFailedCommand}" Content="{ll:Str '第一次启动桌宠打不开?'}"
                     FontSize="16" Style="{DynamicResource LinkButtonStyle}" />
