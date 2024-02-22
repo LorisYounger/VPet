@@ -335,9 +335,16 @@ namespace VPet_Simulator.Windows
                     startInfo.UseShellExecute = false;
                     Process.Start(startInfo);
                 }
-                catch (Exception e)
+                catch
                 {
-                    MessageBoxX.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                    try
+                    {
+                        Process.Start(content);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBoxX.Show("快捷键运行失败:无法运行指定内容".Translate() + '\n' + e.Message);
+                    }
                 }
             }
             else if (content.Contains("://"))
