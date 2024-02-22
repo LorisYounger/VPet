@@ -26,7 +26,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public GameSave_v2(string petname)
         {
-            GameSave = new IGameSave(petname);
+            GameSave = new GameSave(petname);
             Statistics = new Statistics();
         }
         protected void load(ILPS lps, Statistics oldStatistics = null, IGameSave oldGameSave = null, ILPS olddata = null)
@@ -44,7 +44,7 @@ namespace VPet_Simulator.Windows.Interface
             long hash;
             if (vpet != null)
             {
-                GameSave = IGameSave.Load(vpet);
+                GameSave = Core.GameSave.Load(vpet);
                 hash = vpet.GetInt64("hash");
                 if (vpet.Remove("hash"))
                 {

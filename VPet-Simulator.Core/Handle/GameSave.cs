@@ -154,7 +154,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 变化 心情
         /// </summary>
-        public double ChangeFeeling = 0;
+        public double ChangeFeeling { get; set; } = 0;
         public void FeelingChange(double value)
         {
             ChangeFeeling += value;
@@ -174,7 +174,7 @@ namespace VPet_Simulator.Core
         {
             get => likability; set
             {
-                int max = 90 + Level * 10;
+                var max = LikabilityMax;
                 value = Math.Max(0, value);
                 if (value > max)
                 {
@@ -260,6 +260,9 @@ namespace VPet_Simulator.Core
         /// </summary>
         [Line(name: "mode")]
         public ModeType Mode { get; set; } = ModeType.Nomal;
+
+        public double LikabilityMax => 90 + Level * 10;
+
         /// <summary>
         /// 计算宠物当前状态
         /// </summary>

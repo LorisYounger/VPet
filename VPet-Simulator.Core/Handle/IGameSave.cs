@@ -86,7 +86,10 @@ namespace VPet_Simulator.Core
         /// 修改心情
         /// </summary>
         void FeelingChange(double value);
-
+        /// <summary>
+        /// 变化 心情
+        /// </summary>
+        double ChangeFeeling { get; set; }
         /// <summary>
         /// 心情
         /// </summary>
