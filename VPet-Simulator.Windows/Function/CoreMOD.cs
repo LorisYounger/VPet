@@ -2,6 +2,7 @@
 using LinePutScript.Converter;
 using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
+using NAudio.SoundFont;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -48,7 +49,7 @@ namespace VPet_Simulator.Windows
         public bool SuccessLoad = true;
         public DateTime CacheDate;
         public string ErrorMessage;
-        public static string INTtoVER(int ver) => $"{ver / 100}.{ver % 100:00}";
+        public static string INTtoVER(int ver) => ver < 10000 ? $"{ver / 100}.{ver % 100:00}" : $"{ver / 10000}.{ver % 10000 / 100}.{ver % 100:00}";
         public static void LoadImage(MainWindow mw, DirectoryInfo di)
         {
             //加载其他放在文件夹的图片

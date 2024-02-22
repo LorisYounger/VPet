@@ -1,5 +1,4 @@
-﻿using IWshRuntimeLibrary;
-using LinePutScript;
+﻿using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF;
 using Panuon.WPF.UI;

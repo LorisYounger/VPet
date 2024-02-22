@@ -20,6 +20,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
+using static VPet_Simulator.Windows.Win32;
+using System.Runtime.InteropServices;
 
 namespace VPet_Simulator.Windows
 {
@@ -351,7 +353,7 @@ namespace VPet_Simulator.Windows
                 ImageMOD.Source = ImageResources.NewSafeBitmapImage(@"pack://application:,,,/Res/TopLogo2019.PNG");
             if (mod.GameVer < mw.version)
             {
-                if (mod.GameVer / 10 == mw.version / 10)
+                if (mod.GameVer / 1000 == mw.version / 1000)
                 {
                     runMODGameVer.Text += " (兼容)".Translate();
                 }
@@ -363,7 +365,7 @@ namespace VPet_Simulator.Windows
             }
             else if (mod.GameVer > mw.version)
             {
-                if (mod.GameVer / 10 == mw.version / 10)
+                if (mod.GameVer / 1000 == mw.version / 1000)
                 {
                     runMODGameVer.Text += " (兼容)".Translate();
                     runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
@@ -895,6 +897,7 @@ namespace VPet_Simulator.Windows
                 return;
             mw.Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
         }
+
         public void GenStartUP()
         {
             mw.Set["v"][(gbol)"newverstartup"] = true;
@@ -903,22 +906,22 @@ namespace VPet_Simulator.Windows
             {
                 if (File.Exists(path))
                     File.Delete(path);
-                IWshRuntimeLibrary.WshShell shell = new IWshRuntimeLibrary.WshShell();
-                IWshRuntimeLibrary.IWshShortcut shortcut = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(path);
+                var link = (IShellLink)new ShellLink();
                 if (mw.Set.StartUPBootSteam)
                 {
-                    shortcut.TargetPath = ExtensionValue.BaseDirectory + @"\VPet.Solution.exe";
-                    shortcut.Arguments = "launchsteam";
+                    link.SetPath(ExtensionValue.BaseDirectory + @"\VPet.Solution.exe");
+                    link.SetArguments("launchsteam");
                 }
                 else
-                    shortcut.TargetPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                    link.SetPath(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
-                shortcut.Description = "VPet Simulator";
-                shortcut.WorkingDirectory = ExtensionValue.BaseDirectory;
-                shortcut.IconLocation = ExtensionValue.BaseDirectory + @"vpeticon.ico";
+                link.SetDescription("VPet Simulator");
+                link.SetPath(ExtensionValue.BaseDirectory);
+                link.SetIconLocation(ExtensionValue.BaseDirectory + @"vpeticon.ico", 0);
                 try
                 {
-                    shortcut.Save();
+                    var file = (IPersistFile)link;
+                    file.Save(path, false);
                 }
                 catch
                 {
