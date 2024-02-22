@@ -61,7 +61,9 @@ public class MainWindowVM : ObservableClass<MainWindowVM>
         {
             SetProperty(ref _currentCulture, value);
             LocalizeCore.LoadCulture(_currentCulture);
-            if (_mainSetting is not null)
+            if (
+                _mainSetting is not null && _mainSetting.GraphicsSetting.Language != _currentCulture
+            )
             {
                 _mainSetting.GraphicsSetting.Language = _currentCulture;
                 _mainSetting.Save();

@@ -15,8 +15,33 @@
   MinWidth="400"
   MinHeight="200"
   d:DataContext="{d:DesignInstance Type=vm:SettingWindowVM}"
+  Closing="SettingWindow_Closing"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d">
+  <Window.Resources>
+    <Style
+      x:Key="RemindStyle"
+      BasedOn="{StaticResource Button_BaseStyle}"
+      TargetType="Button">
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}" Value="True">
+          <DataTrigger.EnterActions>
+            <BeginStoryboard x:Name="RemindSaveStoryboard">
+              <Storyboard RepeatBehavior="Forever">
+                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="Background.Color">
+                  <DiscreteColorKeyFrame KeyTime="0:0:1" Value="Aqua" />
+                  <DiscreteColorKeyFrame KeyTime="0:0:1.5" Value="#00FFFFFF" />
+                </ColorAnimationUsingKeyFrames>
+              </Storyboard>
+            </BeginStoryboard>
+          </DataTrigger.EnterActions>
+          <DataTrigger.ExitActions>
+            <RemoveStoryboard BeginStoryboardName="RemindSaveStoryboard" />
+          </DataTrigger.ExitActions>
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+  </Window.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" MinWidth="100" />
@@ -115,7 +140,8 @@
           Command="{Binding SaveSettingCommand}"
           CommandParameter="{Binding SelectedItem, ElementName=ListBox_Saves}"
           Content="{ll:Str 保存}"
-          Style="{StaticResource Button_BaseStyle}" />
+          Style="{StaticResource RemindStyle}"
+          Tag="{Binding CurrentSetting.IsChanged}" />
         <Button
           Grid.Column="3"
           Margin="0"
