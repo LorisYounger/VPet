@@ -124,10 +124,10 @@ public class SaveModel : ObservableClass<SaveModel>
     #endregion
 
     #region Mode
-    private VPet_Simulator.Core.GameSave.ModeType _mode;
+    private VPet_Simulator.Core.IGameSave.ModeType _mode;
 
-    [ReflectionProperty(nameof(VPet_Simulator.Core.GameSave.Mode))]
-    public VPet_Simulator.Core.GameSave.ModeType Mode
+    [ReflectionProperty(nameof(VPet_Simulator.Core.IGameSave.Mode))]
+    public VPet_Simulator.Core.IGameSave.ModeType Mode
     {
         get => _mode;
         set => SetProperty(ref _mode, value);
@@ -219,7 +219,7 @@ public class SaveModel : ObservableClass<SaveModel>
         }
     }
 
-    private void LoadSave(VPet_Simulator.Core.GameSave save)
+    private void LoadSave(VPet_Simulator.Core.IGameSave save)
     {
         ReflectionUtils.SetValue(save, this);
     }

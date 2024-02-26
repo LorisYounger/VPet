@@ -51,20 +51,20 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     #endregion
 
     #region CalFunState
-    private GameSave.ModeType _calFunState;
+    private IGameSave.ModeType _calFunState;
 
     /// <summary>
     /// 非计算模式下默认模式
     /// </summary>
     [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.CalFunState))]
-    public GameSave.ModeType CalFunState
+    public IGameSave.ModeType CalFunState
     {
         get => _calFunState;
         set => SetProperty(ref _calFunState, value);
     }
 
-    public ObservableCollection<GameSave.ModeType> ModeTypes { get; } =
-        new(Enum.GetValues(typeof(GameSave.ModeType)).Cast<GameSave.ModeType>());
+    public ObservableCollection<IGameSave.ModeType> ModeTypes { get; } =
+        new(Enum.GetValues(typeof(IGameSave.ModeType)).Cast<IGameSave.ModeType>());
     #endregion
 
     #region LastCacheDate
