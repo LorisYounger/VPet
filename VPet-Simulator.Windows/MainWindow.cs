@@ -35,6 +35,7 @@ using Line = LinePutScript.Line;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 using Image = System.Windows.Controls.Image;
 using System.Data;
+using System.Windows.Media;
 #if SteamOutput
 using VPet.Solution;
 #endif
@@ -76,6 +77,84 @@ namespace VPet_Simulator.Windows
         /// 所有三方插件
         /// </summary>
         public List<MainPlugin> Plugins { get; } = new List<MainPlugin>();
+        /// <summary>
+        /// 所有字体(位置)
+        /// </summary>
+        public List<IFont> Fonts { get; } = new List<IFont>();
+        /// <summary>
+        /// 所有主题
+        /// </summary>
+        public List<Theme> Themes = new List<Theme>();
+        /// <summary>
+        /// 当前启用主题
+        /// </summary>
+        public Theme Theme = null;
+        /// <summary>
+        /// 加载主题
+        /// </summary>
+        /// <param name="themename">主题名称</param>
+        public void LoadTheme(string themename)
+        {
+            Theme ctheme = Themes.Find(x => x.Name == themename || x.xName == themename);
+            if (ctheme == null)
+            {
+                return;
+            }
+            Theme = ctheme;
+
+            //加载图片包
+            ImageSources.AddSources(ctheme.Images);
+
+            //阴影颜色
+            Application.Current.Resources["ShadowColor"] = Function.HEXToColor('#' + ctheme.ThemeColor[(gstr)"ShadowColor"]);
+
+            foreach (ILine lin in ctheme.ThemeColor.Assemblage.FindAll(x => !x.Name.Contains("Color")))
+                Application.Current.Resources[lin.Name] = new SolidColorBrush(Function.HEXToColor('#' + lin.info));
+
+            //系统生成部分颜色
+            Color c = Function.HEXToColor('#' + ctheme.ThemeColor["Primary"].info);
+            c.A = 204;
+            Application.Current.Resources["PrimaryTrans"] = new SolidColorBrush(c);
+            c.A = 44;
+            Application.Current.Resources["PrimaryTrans4"] = new SolidColorBrush(c);
+            c.A = 170;
+            Application.Current.Resources["PrimaryTransA"] = new SolidColorBrush(c);
+            c.A = 238;
+            Application.Current.Resources["PrimaryTransE"] = new SolidColorBrush(c);
+
+            c = Function.HEXToColor('#' + ctheme.ThemeColor["Secondary"].info);
+            c.A = 204;
+            Application.Current.Resources["SecondaryTrans"] = new SolidColorBrush(c);
+            c.A = 44;
+            Application.Current.Resources["SecondaryTrans4"] = new SolidColorBrush(c);
+            c.A = 170;
+            Application.Current.Resources["SecondaryTransA"] = new SolidColorBrush(c);
+            c.A = 238;
+            Application.Current.Resources["SecondaryTransE"] = new SolidColorBrush(c);
+
+
+            c = Function.HEXToColor('#' + ctheme.ThemeColor["DARKPrimary"].info);
+            c.A = 204;
+            Application.Current.Resources["DARKPrimaryTrans"] = new SolidColorBrush(c);
+            c.A = 44;
+            Application.Current.Resources["DARKPrimaryTrans4"] = new SolidColorBrush(c);
+            c.A = 170;
+            Application.Current.Resources["DARKPrimaryTransA"] = new SolidColorBrush(c);
+            c.A = 238;
+            Application.Current.Resources["DARKPrimaryTransE"] = new SolidColorBrush(c);
+        }
+
+        public void LoadFont(string fontname)
+        {
+            IFont cfont = Fonts.Find(x => x.Name == fontname);
+            if (cfont == null)
+            {
+                return;
+            }
+            Application.Current.Resources["MainFont"] = cfont.Font;
+            Panuon.WPF.UI.GlobalSettings.Setting.FontFamily = cfont.Font;
+        }
+
         public List<Food> Foods { get; } = new List<Food>();
         /// <summary>
         /// 版本号
@@ -1427,6 +1506,10 @@ namespace VPet_Simulator.Windows
                 Main = new Main(Core);
                 Main.NoFunctionMOD = Set.CalFunState;
 
+                //加载主题:
+                LoadTheme(Set.Theme);
+                //加载字体
+                LoadFont(Set.Font);
 
                 LoadingText.Content = "正在加载游戏\n该步骤可能会耗时比较长\n请耐心等待".Translate();
 

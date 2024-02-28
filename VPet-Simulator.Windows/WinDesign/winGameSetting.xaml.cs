@@ -147,6 +147,19 @@ namespace VPet_Simulator.Windows
                 }
             }
 
+            foreach (var v in mw.Fonts)
+            {
+                FontBox.Items.Add(v.Name);
+            }
+            FontBox.SelectedItem = mw.Set.Font;
+
+            foreach (var v in mw.Themes)
+            {
+                ThemeBox.Items.Add(v.Name);
+            }
+            if (mw.Theme != null)
+                ThemeBox.SelectedItem = mw.Theme.Name;
+
             VoiceCatchSilder.Value = mw.Set.MusicCatch;
             VoiceMaxSilder.Value = mw.Set.MusicMax;
 
@@ -476,12 +489,20 @@ namespace VPet_Simulator.Windows
 
         private void ThemeBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (!AllowChange)
+                return;
+            string str = (string)(ThemeBox.SelectedItem);
+            mw.LoadTheme(str);
+            mw.Set.Theme = mw.Theme.xName;
         }
 
         private void FontBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (!AllowChange)
+                return;
+            string str = (string)(FontBox.SelectedItem);
+            mw.LoadFont(str);
+            mw.Set.Font = str;
         }
 
         private void CBAutoSave_SelectionChanged(object sender, SelectionChangedEventArgs e)

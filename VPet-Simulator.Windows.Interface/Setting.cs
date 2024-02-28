@@ -37,6 +37,7 @@ namespace VPet_Simulator.Windows.Interface
             autobuy = this["gameconfig"].GetBool("autobuy");
             autogift = this["gameconfig"].GetBool("autogift");
         }
+
         //public override string ToString()
         //{//留作备份,未来版本删了
         //    this["statistics"] = new Line("statistics", "", "", Statistics_OLD.ToSubs().ToArray());

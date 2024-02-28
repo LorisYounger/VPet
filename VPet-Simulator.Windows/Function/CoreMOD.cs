@@ -9,7 +9,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Windows;
+using System.Windows.Media;
 using System.Xml.Linq;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
@@ -125,6 +127,39 @@ namespace VPet_Simulator.Windows
                 {
                     switch (di.Name.ToLower())
                     {
+                        case "theme":
+                            Tag.Add("theme");
+                            if (Directory.Exists(di.FullName + @"\fonts"))
+                                foreach (var str in Directory.EnumerateFiles(di.FullName + @"\fonts", "*.ttf"))
+                                {
+                                    mw.Fonts.Add(new IFont(new FileInfo(str)));
+                                }
+
+                            foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
+                            {
+                                var tmp = new Theme(new LpsDocument(File.ReadAllText(fi.FullName)));
+                                var oldtheme = mw.Themes.Find(x => x.xName == tmp.xName);
+                                if (oldtheme != null)
+                                    mw.Themes.Remove(oldtheme);
+                                mw.Themes.Add(tmp);
+                                //加载图片包
+                                DirectoryInfo tmpdi = new DirectoryInfo(di.FullName + '\\' + tmp.Image);
+                                if (tmpdi.Exists)
+                                {
+                                    foreach (FileInfo tmpfi in tmpdi.EnumerateFiles("*.png"))
+                                    {
+                                        tmp.Images.AddSource(tmpfi.Name.ToLower().Substring(0, tmpfi.Name.Length - 4), tmpfi.FullName);
+                                    }
+                                    foreach (DirectoryInfo fordi in tmpdi.EnumerateDirectories())
+                                    {
+                                        foreach (FileInfo tmpfi in fordi.EnumerateFiles("*.png"))
+                                        {
+                                            tmp.Images.AddSource(fordi.Name + '_' + tmpfi.Name.ToLower().Substring(0, tmpfi.Name.Length - 4), tmpfi.FullName);
+                                        }
+                                    }
+                                }
+                            }
+                            break;
                         case "pet":
                             //宠物模型                           
                             foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
