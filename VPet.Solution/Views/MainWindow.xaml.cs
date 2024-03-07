@@ -1,10 +1,10 @@
-﻿using HKW.HKWUtils;
-using LinePutScript.Localization.WPF;
-using Panuon.WPF.UI;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using HKW.HKWUtils;
+using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
 using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.ViewModels;
 using VPet.Solution.Views.SaveViewer;
@@ -35,18 +35,20 @@ public partial class MainWindow : WindowX
         Closed += MainWindow_Closed;
     }
 
-    private void MainWindow_Closed(object sender, EventArgs e)
+    private void MainWindow_Closed(object? sender, EventArgs e)
     {
+        foreach (var mod in ModSettingModel.LocalMods)
+            mod.Value.Image?.CloseStream();
         SettingWindow.CloseX();
         SaveWindow.CloseX();
     }
 
-    private void Button_OpenSettingEditor_Click(object sender, RoutedEventArgs e)
+    private void Button_OpenSettingEditor_Click(object? sender, RoutedEventArgs e)
     {
         SettingWindow.ShowOrActivate();
     }
 
-    private void Button_OpenSaveViewer_Click(object sender, RoutedEventArgs e)
+    private void Button_OpenSaveViewer_Click(object? sender, RoutedEventArgs e)
     {
         SaveWindow.ShowOrActivate();
     }

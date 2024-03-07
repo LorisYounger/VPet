@@ -1,7 +1,7 @@
-﻿using HKW.WPF.Extensions;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using HKW.WPF.Extensions;
 
 namespace HKW.WPF.Helpers;
 
@@ -95,7 +95,7 @@ public static class ElementHelper
         element.KeyDown -= Element_KeyDown;
         element.KeyDown += Element_KeyDown;
 
-        static void Element_KeyDown(object sender, KeyEventArgs e)
+        static void Element_KeyDown(object? sender, KeyEventArgs e)
         {
             if (sender is not FrameworkElement element)
                 return;
@@ -184,7 +184,7 @@ public static class ElementHelper
         #endregion
 
         #region Element
-        static void Element_SizeChanged(object sender, SizeChangedEventArgs e)
+        static void Element_SizeChanged(object? sender, SizeChangedEventArgs e)
         {
             if (sender is not FrameworkElement element)
                 return;

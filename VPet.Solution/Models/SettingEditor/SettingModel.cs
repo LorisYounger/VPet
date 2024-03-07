@@ -1,11 +1,11 @@
-﻿using FastMember;
-using HKW.HKWUtils.Observable;
-using LinePutScript;
-using LinePutScript.Localization.WPF;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using FastMember;
+using HKW.HKWUtils.Observable;
+using LinePutScript;
+using LinePutScript.Localization.WPF;
 using VPet.Solution.Properties;
 using VPet_Simulator.Windows.Interface;
 
@@ -131,7 +131,7 @@ public class SettingModel : ObservableClass<SettingModel>
         }
     }
 
-    private void Notify_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void Notify_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         IsChanged = true;
     }

@@ -16,9 +16,9 @@
     <ProjectReference Include="..\VPet-Simulator.Core\VPet-Simulator.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LinePutScript" Version="1.10.2" />
+    <PackageReference Include="LinePutScript" Version="1.11.1" />
     <PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.6" />
-    <PackageReference Include="Panuon.WPF" Version="1.0.3" />
-    <PackageReference Include="Panuon.WPF.UI" Version="1.1.17.3" />
+    <PackageReference Include="Panuon.WPF" Version="1.0.4" />
+    <PackageReference Include="Panuon.WPF.UI" Version="1.1.17.5" />
   </ItemGroup>
 </Project>

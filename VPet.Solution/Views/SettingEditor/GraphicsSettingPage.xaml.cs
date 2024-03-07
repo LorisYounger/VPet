@@ -1,5 +1,4 @@
-﻿using HKW.HKWUtils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using HKW.HKWUtils;
 using VPet.Solution.ViewModels.SettingEditor;
 
 namespace VPet.Solution.Views.SettingEditor;
@@ -30,7 +30,7 @@ public partial class GraphicsSettingPage : Page
         this.SetViewModel<GraphicsSettingPageVM>();
     }
 
-    private void Button_StartPoint_Click(object sender, RoutedEventArgs e)
+    private void Button_StartPoint_Click(object? sender, RoutedEventArgs e)
     {
         ViewModel.GraphicsSetting.StartRecordPoint = new(
             SettingWindow.Instance.Left,

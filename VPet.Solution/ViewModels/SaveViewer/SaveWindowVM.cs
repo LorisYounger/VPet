@@ -1,8 +1,4 @@
-﻿using HKW.HKWUtils.Observable;
-using LinePutScript;
-using LinePutScript.Localization.WPF;
-using Panuon.WPF.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,6 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using HKW.HKWUtils.Observable;
+using LinePutScript;
+using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
 using VPet.Solution.Models;
 using VPet.Solution.Models.SaveViewer;
 using VPet.Solution.Models.SettingEditor;
@@ -20,10 +20,10 @@ namespace VPet.Solution.ViewModels.SaveViewer;
 
 public class SaveWindowVM : ObservableClass<SaveWindowVM>
 {
-    public static SaveWindowVM Current { get; private set; }
+    public static SaveWindowVM Current { get; private set; } = null!;
 
     #region Properties
-    private SaveModel _currentSave;
+    private SaveModel _currentSave = null!;
     public SaveModel CurrentSave
     {
         get => _currentSave;
@@ -32,14 +32,14 @@ public class SaveWindowVM : ObservableClass<SaveWindowVM>
 
     private readonly ObservableCollection<SaveModel> _saves = new();
 
-    private IEnumerable<SaveModel> _showSaves;
+    private IEnumerable<SaveModel> _showSaves = null!;
     public IEnumerable<SaveModel> ShowSaves
     {
         get => _showSaves;
         set => SetProperty(ref _showSaves, value);
     }
 
-    private string _searchSave;
+    private string _searchSave = string.Empty;
     public string SearchSave
     {
         get => _searchSave;
@@ -85,12 +85,12 @@ public class SaveWindowVM : ObservableClass<SaveWindowVM>
         if (string.IsNullOrWhiteSpace(name))
             ShowSaves = _saves;
         else
-            ShowSaves = _saves.Where(
-                s => s.Name.Contains(SearchSave, StringComparison.OrdinalIgnoreCase)
+            ShowSaves = _saves.Where(s =>
+                s.Name.Contains(SearchSave, StringComparison.OrdinalIgnoreCase)
             );
     }
 
-    private void SaveWindowVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void SaveWindowVM_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(SearchSave))
         {

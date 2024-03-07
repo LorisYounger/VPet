@@ -1,9 +1,9 @@
-﻿using HKW.HKWUtils;
-using LinePutScript.Localization.WPF;
-using Panuon.WPF.UI;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using HKW.HKWUtils;
+using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
 using VPet.Solution.ViewModels.SettingEditor;
 
 namespace VPet.Solution.Views.SettingEditor;
@@ -32,7 +32,7 @@ public partial class SettingWindow : WindowX
         Instance = this;
     }
 
-    private void SettingWindow_Closing(object sender, CancelEventArgs e)
+    private void SettingWindow_Closing(object? sender, CancelEventArgs e)
     {
         if (ViewModel?.CurrentSetting?.IsChanged is true)
         {
@@ -61,7 +61,7 @@ public partial class SettingWindow : WindowX
         }
     }
 
-    private void Frame_Main_ContentRendered(object sender, EventArgs e)
+    private void Frame_Main_ContentRendered(object? sender, EventArgs e)
     {
         if (sender is not Frame frame)
             return;

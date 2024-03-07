@@ -340,7 +340,7 @@ public static class Extensions
         window.Activate();
     }
 
-    private static void WindowCloseState_Closing(object sender, CancelEventArgs e)
+    private static void WindowCloseState_Closing(object? sender, CancelEventArgs e)
     {
         if (sender is not Window window)
             return;
