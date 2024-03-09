@@ -24,12 +24,7 @@ public partial class MainWindow : WindowX
     public SaveWindow SaveWindow { get; } = new();
 
     public MainWindow()
-    {
-        if (App.IsDone)
-        {
-            Close();
-            return;
-        }
+    {        
         InitializeComponent();
         this.SetViewModel<MainWindowVM>();
         Closed += MainWindow_Closed;
