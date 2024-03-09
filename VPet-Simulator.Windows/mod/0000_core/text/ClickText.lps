@@ -62,7 +62,7 @@ clicktext:|LikeMin#0:|State#Work:|Working#文案:|Text#123456789。。。:|
 clicktext:|LikeMin#0:|State#Work:|Working#文案:|Text#如写。写了吗？如写:|
 clicktext:|LikeMin#0:|State#Work:|Working#文案:|Text#（奋笔疾书中）:|Exp#1:|
 clicktext:|LikeMin#0:|State#Work:|Working#文案:|Text#阿巴巴巴阿巴巴巴:|Exp#-1:|
-clicktext:|LikeMin#0:|State#Work:|Working#文案:|Text#我设定本扔那里去了:|Exp#-1:|
+clicktext:|LikeMin#0:|State#Work:|Working#文案:|Text#我设定本扔哪里去了:|Exp#-1:|
 clicktext:|LikeMin#0:|State#Work:|Working#学习:|Mode#1:|Text#我他妈写写写写写！:|Exp#1:|
 clicktext:|LikeMin#0:|State#Work:|Working#学习:|Mode#1:|Text#开编！呸！开写！:|Exp#-1:|
 clicktext:|LikeMin#0:|State#Work:|Working#学习:|Mode#4:|Text#《我的奋斗》:|Exp#1:|
