@@ -421,7 +421,19 @@ namespace VPet_Simulator.Windows
                 {
                     try
                     {
-                        Process.Start(content);
+                        try
+                        {
+                            Process.Start(content);
+                        }
+                        catch
+                        {
+                            var psi = new ProcessStartInfo
+                            {
+                                FileName = content,
+                                UseShellExecute = true
+                            };
+                            Process.Start(psi);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -1179,7 +1191,7 @@ namespace VPet_Simulator.Windows
                 //加载游戏设置
                 if (new FileInfo(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps").Exists)
                 {
-                    Set = new Setting(this,File.ReadAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps"));
+                    Set = new Setting(this, File.ReadAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps"));
                 }
                 else
                     Set = new Setting(this, "Setting#VPET:|\n");

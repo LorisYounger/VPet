@@ -5,7 +5,7 @@
         xmlns:local="clr-namespace:VPet_Simulator.Core" mc:Ignorable="d" Height="500" Width="500"
         MouseDoubleClick="UserControl_MouseDoubleClick">
     <UserControl.Resources>
-        <ResourceDictionary Source="Theme.xaml" />
+        <ResourceDictionary Source="Theme.xaml" d:IsDataSource="True"/>
     </UserControl.Resources>
     <Border x:Name="BorderMain" Background="{DynamicResource Primary}" BorderBrush="{DynamicResource DARKPrimaryDark}" BorderThickness="5"
             VerticalAlignment="Bottom" Padding="10" Margin="5" CornerRadius="5" MouseEnter="Border_MouseEnter"
