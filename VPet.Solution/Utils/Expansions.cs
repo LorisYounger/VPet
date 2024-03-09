@@ -363,10 +363,10 @@ public static class Extensions
 [Flags]
 public enum WindowCloseState
 {
-    SkipNext = 0,
     Close = 1 << 0,
-    Hidden = 1 << 1,
-    Collapsed = 1 << 2
+    SkipNext = 1 << 1,
+    Hidden = 1 << 2,
+    Collapsed = 1 << 3
 }
 
 /// <summary>
