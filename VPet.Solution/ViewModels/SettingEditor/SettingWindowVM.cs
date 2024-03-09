@@ -13,7 +13,7 @@ using Panuon.WPF;
 using VPet.Solution.Models;
 using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.Views.SettingEditor;
-using VPet_Simulator.Windows.Interface;
+using VPet_Simulator.Windows;
 
 namespace VPet.Solution.ViewModels.SettingEditor;
 
@@ -215,7 +215,7 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
             var fileName = Path.GetFileNameWithoutExtension(file);
             try
             {
-                var setting = new Setting(File.ReadAllText(file));
+                var setting = new Setting(null, File.ReadAllText(file));
                 var settingModel = new SettingModel(setting) { Name = fileName, FilePath = file };
                 Settings.Add(settingModel);
             }

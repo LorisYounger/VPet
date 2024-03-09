@@ -1,21 +1,29 @@
 ﻿using LinePutScript;
 using LinePutScript.Dictionary;
+using LinePutScript.Localization.WPF;
+using NAudio.Gui;
+using Steamworks;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using VPet_Simulator.Core;
+using VPet_Simulator.Windows.Interface;
+using static VPet_Simulator.Windows.Win32;
 
-namespace VPet_Simulator.Windows.Interface
+namespace VPet_Simulator.Windows
 {
     /// <summary>
     /// 游戏设置
     /// </summary>
-    public class Setting : LPS_D
+    public class Setting : LPS_D, ISetting
     {
+        MainWindow mw;
         /// <summary>
         /// 游戏设置
         /// </summary>
-        public Setting(string lps) : base(lps)
+        public Setting(MainWindow mw, string lps) : base(lps)
         {
             var line = FindLine("zoomlevel");
             if (line == null)
@@ -33,41 +41,12 @@ namespace VPet_Simulator.Windows.Interface
             allowmove = !this["gameconfig"].GetBool("allowmove");
             smartmove = this["gameconfig"].GetBool("smartmove");
             enablefunction = !this["gameconfig"].GetBool("nofunction");
-            //Statistics_OLD = new Statistics(this["statistics"].ToList());
             autobuy = this["gameconfig"].GetBool("autobuy");
             autogift = this["gameconfig"].GetBool("autogift");
+            this.mw = mw;
         }
 
-        //public override string ToString()
-        //{//留作备份,未来版本删了
-        //    this["statistics"] = new Line("statistics", "", "", Statistics_OLD.ToSubs().ToArray());
-        //    return base.ToString();
-        //}
 
-        ///// <summary>
-        ///// 统计数据信息(旧)
-        ///// </summary>
-        //public Statistics Statistics_OLD;
-
-        //public Size WindowsSize
-        //{
-        //    get
-        //    {
-        //        var line = FindLine("windowssize");
-        //        if (line == null)
-        //            return new Size(1366, 799);
-        //        var strs = line.GetInfos();
-        //        if (int.TryParse(strs[0], out int x))
-        //            x = 1366;
-        //        if (int.TryParse(strs[0], out int y))
-        //            y = 799;
-        //        return new Size(x, y);
-        //    }
-        //    set
-        //    {
-        //        FindorAddLine("windowssize").info = $"{value.Width},{value.Height}";
-        //    }
-        //}
         private double zoomlevel = 0;
         /// <summary>
         /// 缩放倍率
@@ -512,6 +491,86 @@ namespace VPet_Simulator.Windows.Interface
                 line.SetInt("w", value.Width);
                 line.SetInt("h", value.Height);
             }
+        }
+
+        public ILine BetterBuyData => FindorAddLine("betterbuy");
+
+        public ILine GameData => FindorAddLine("gamedata");
+
+        public void SetZoomLevel(double level) => mw.SetZoomLevel(level);
+
+        public void SetVoiceVolume(double volume) { VoiceVolume = volume; mw.Main.PlayVoiceVolume = volume; }
+
+        public void SetAutoSaveInterval(int interval)
+        {
+            AutoSaveInterval = interval;
+            if (AutoSaveInterval > 0)
+            {
+                mw.AutoSaveTimer.Interval = AutoSaveInterval * 60000;
+                mw.AutoSaveTimer.Start();
+            }
+            else
+            {
+                mw.AutoSaveTimer.Stop();
+            }
+        }
+
+        public void SetTopMost(bool topMost)
+        {
+            TopMost = true;
+            mw.Topmost = topMost;
+        }
+
+        public void SetLanguage(string language)
+        {
+            var petloader = mw.Pets.Find(x => x.Name == PetGraph);
+            petloader ??= mw.Pets[0];
+            bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
+            LocalizeCore.LoadCulture(language);
+            Language = LocalizeCore.CurrentCulture;
+            if (ischangename)
+            {
+                mw.Core.Save.Name = petloader.PetName.Translate();
+                if (mw.IsSteamUser)
+                    SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
+            }
+        }
+
+        public void SetLogicInterval(double interval)
+        {
+            LogicInterval = interval;
+            mw.Main.SetLogicInterval((int)(interval * 1000));
+        }
+
+        public void SetAllowMove(bool allowMove)
+        {
+            AllowMove = allowMove;
+            mw.Main.SetMoveMode(AllowMove, SmartMove, SmartMoveInterval * 1000);
+        }
+
+        public void SetSmartMove(bool smartMove)
+        {
+            SmartMove = smartMove;
+            mw.Main.SetMoveMode(AllowMove, SmartMove, SmartMoveInterval * 1000);
+        }
+
+        public void SetEnableFunction(bool enableFunction)
+        {
+            EnableFunction = enableFunction;
+            if (!enableFunction)
+            {
+                if (mw.Main.State != Main.WorkingState.Nomal)
+                {
+                    mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
+                    mw.Main.State = Main.WorkingState.Nomal;
+                }
+            }
+        }
+
+        public void SetSmartMoveInterval(int interval)
+        {
+            SmartMoveInterval = interval;
+            mw.Main.SetMoveMode(AllowMove, SmartMove, SmartMoveInterval * 1000);
         }
     }
 }

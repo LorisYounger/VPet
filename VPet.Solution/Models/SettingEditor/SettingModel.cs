@@ -7,7 +7,7 @@ using HKW.HKWUtils.Observable;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
 using VPet.Solution.Properties;
-using VPet_Simulator.Windows.Interface;
+using VPet_Simulator.Windows;
 
 namespace VPet.Solution.Models.SettingEditor;
 
@@ -97,7 +97,7 @@ public class SettingModel : ObservableClass<SettingModel>
     private readonly ReflectionOptions _saveReflectionOptions = new() { CheckValueEquals = true };
 
     public SettingModel()
-        : this(new("")) { }
+        : this(new(null, "")) { }
 
     public SettingModel(Setting setting)
     {

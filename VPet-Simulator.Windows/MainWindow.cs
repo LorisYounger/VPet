@@ -63,6 +63,8 @@ namespace VPet_Simulator.Windows
             }
         }
         public Setting Set { get; set; }
+        ISetting IMainWindow.Set => Set;
+
         public List<PetLoader> Pets { get; set; } = new List<PetLoader>();
         public List<CoreMOD> CoreMODs = new List<CoreMOD>();
         public GameCore Core { get; set; } = new GameCore();
@@ -1121,6 +1123,7 @@ namespace VPet_Simulator.Windows
                 return TalkAPI[TalkAPIIndex];
             }
         }
+
         /// <summary>
         /// 移除所有聊天对话框
         /// </summary>
@@ -1176,10 +1179,10 @@ namespace VPet_Simulator.Windows
                 //加载游戏设置
                 if (new FileInfo(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps").Exists)
                 {
-                    Set = new Setting(File.ReadAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps"));
+                    Set = new Setting(this,File.ReadAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps"));
                 }
                 else
-                    Set = new Setting("Setting#VPET:|\n");
+                    Set = new Setting(this, "Setting#VPET:|\n");
 
                 var visualTree = new FrameworkElementFactory(typeof(Border));
                 visualTree.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(BackgroundProperty));
@@ -1505,6 +1508,11 @@ namespace VPet_Simulator.Windows
 #endif
                 Main = new Main(Core);
                 Main.NoFunctionMOD = Set.CalFunState;
+
+                //清空资源
+                Main.Resources = Application.Current.Resources;
+                Main.MsgBar.Resources = Application.Current.Resources;
+                Main.ToolBar.Resources = Application.Current.Resources;
 
                 //加载主题:
                 LoadTheme(Set.Theme);

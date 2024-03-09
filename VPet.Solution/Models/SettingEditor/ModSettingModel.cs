@@ -10,7 +10,7 @@ using HKW.HKWUtils.Observable;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
 using VPet.Solution.Views.SettingEditor;
-using VPet_Simulator.Windows.Interface;
+using VPet_Simulator.Windows;
 
 namespace VPet.Solution.Models.SettingEditor;
 

@@ -27,7 +27,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 游戏设置
         /// </summary>
-        Setting Set { get; }
+        ISetting Set { get; }
         /// <summary>
         /// 宠物加载器列表
         /// </summary>

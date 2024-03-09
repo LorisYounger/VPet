@@ -509,16 +509,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Set.AutoSaveInterval = (int)((ComboBoxItem)CBAutoSave.SelectedItem).Tag;
-            if (mw.Set.AutoSaveInterval > 0)
-            {
-                mw.AutoSaveTimer.Interval = mw.Set.AutoSaveInterval * 60000;
-                mw.AutoSaveTimer.Start();
-            }
-            else
-            {
-                mw.AutoSaveTimer.Stop();
-            }
+            mw.Set.SetAutoSaveInterval((int)((ComboBoxItem)CBAutoSave.SelectedItem).Tag);
         }
 
 
@@ -808,8 +799,6 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.SetZoomLevel(ZoomSlider.Value / 2);
-            //this.Width = 400 * Math.Sqrt(ZoomSlider.Value);
-            //this.Height = 450 * Math.Sqrt(ZoomSlider.Value);
         }
 
         private void PressLengthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -884,8 +873,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Set.LogicInterval = CalSlider.Value;
-            mw.Main.SetLogicInterval((int)(CalSlider.Value * 1000));
+            mw.Set.SetLogicInterval(CalSlider.Value);
             CalTimeInteraction();
         }
 
@@ -893,31 +881,23 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Set.AllowMove = MoveEventBox.IsChecked == true;
-            SetSmartMove();
+            mw.Set.SetAllowMove(MoveEventBox.IsChecked == true);
         }
 
         private void SmartMoveEventBox_Checked(object sender, RoutedEventArgs e)
         {
             if (!AllowChange)
                 return;
-            mw.Set.SmartMove = SmartMoveEventBox.IsChecked == true;
-            SetSmartMove();
+            mw.Set.SetSmartMove(SmartMoveEventBox.IsChecked == true);
         }
 
         private void CBSmartMove_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!AllowChange)
                 return;
-            mw.Set.SmartMoveInterval = (int)((ComboBoxItem)CBSmartMove.SelectedItem).Tag;
-            SetSmartMove();
+            mw.Set.SetSmartMoveInterval((int)((ComboBoxItem)CBSmartMove.SelectedItem).Tag);
         }
-        public void SetSmartMove()
-        {
-            if (!AllowChange)
-                return;
-            mw.Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
-        }
+
 
         public void GenStartUP()
         {
@@ -1383,18 +1363,8 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            var petloader = mw.Pets.Find(x => x.Name == mw.Set.PetGraph);
-            petloader ??= mw.Pets[0];
-            bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
-            LocalizeCore.LoadCulture((string)LanguageBox.SelectedItem);
-            mw.Set.Language = LocalizeCore.CurrentCulture;
-            if (ischangename)
-            {
-                mw.Core.Save.Name = petloader.PetName.Translate();
-                TextBoxPetName.Text = mw.Core.Save.Name;
-                if (mw.IsSteamUser)
-                    SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
-            }
+            mw.Set.SetLanguage((string)LanguageBox.SelectedItem);
+            TextBoxPetName.Text = mw.Core.Save.Name;
         }
 
         private void MainTab_SelectionChanged(object sender, SelectionChangedEventArgs e)

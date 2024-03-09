@@ -8,7 +8,7 @@ using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.ViewModels.SettingEditor;
-using VPet_Simulator.Windows.Interface;
+using VPet_Simulator.Windows;
 
 namespace VPet.Solution.ViewModels;
 

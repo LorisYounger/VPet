@@ -24,7 +24,7 @@ public partial class MainWindow : WindowX
     public SaveWindow SaveWindow { get; } = new();
 
     public MainWindow()
-    {        
+    {
         InitializeComponent();
         this.SetViewModel<MainWindowVM>();
         Closed += MainWindow_Closed;
@@ -32,8 +32,9 @@ public partial class MainWindow : WindowX
 
     private void MainWindow_Closed(object? sender, EventArgs e)
     {
-        foreach (var mod in ModSettingModel.LocalMods)
-            mod.Value.Image?.CloseStream();
+        if (ModSettingModel.LocalMods != null)
+            foreach (var mod in ModSettingModel.LocalMods)
+                mod.Value.Image?.CloseStream();
         SettingWindow.CloseX();
         SaveWindow.CloseX();
     }
