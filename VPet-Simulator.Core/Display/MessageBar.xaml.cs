@@ -91,6 +91,7 @@ namespace VPet_Simulator.Core
         public Action EndAction;
         private void EndTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+           
             if (--timeleft <= 0)
             {
                 EndTimer.Stop();
@@ -169,5 +170,19 @@ namespace VPet_Simulator.Core
             BorderMain.VerticalAlignment = VerticalAlignment.Top;
             Margin = new Thickness(0, 500, 0, 0);
         }
+
+        private void MenuItemCopy_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(TText.Text);
+        }
+
+        private void MenuItemClose_Click(object sender, RoutedEventArgs e)
+        {
+            ForceClose();
+        }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e) => Border_MouseEnter(null, null);
+
+        private void ContextMenu_Closed(object sender, RoutedEventArgs e) => Border_MouseLeave(null, null);
     }
 }
