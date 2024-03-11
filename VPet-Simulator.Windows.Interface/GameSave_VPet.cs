@@ -66,7 +66,7 @@ public class GameSave_VPet : IGameSave
     /// <summary>
     /// 升级所需经验值
     /// </summary>
-    public int LevelUpNeed() => (int)(Math.Pow((Level) * 10, 2) - Math.Pow((Level - 1) * 10, 2));
+    public int LevelUpNeed() => 200 * Level - 100;
     /// <summary>
     /// 体力 0-100
     /// </summary>
