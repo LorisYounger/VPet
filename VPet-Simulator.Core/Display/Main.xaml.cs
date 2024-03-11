@@ -29,7 +29,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 消息栏
         /// </summary>
-        public MessageBar MsgBar;
+        public IMassageBar MsgBar;
         /// <summary>
         /// 工作显示栏
         /// </summary>
@@ -65,7 +65,7 @@ namespace VPet_Simulator.Core
             UIGrid.Children.Add(ToolBar);
             MsgBar = new MessageBar(this);
             MsgBar.Visibility = Visibility.Collapsed;
-            UIGrid.Children.Add(MsgBar);
+            UIGrid.Children.Add(MsgBar.This);
             labeldisplaytimer.Elapsed += Labledisplaytimer_Elapsed;
 
             if (loadtouchevent)

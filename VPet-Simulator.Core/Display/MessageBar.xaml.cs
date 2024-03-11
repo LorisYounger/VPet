@@ -11,11 +11,43 @@ using Timer = System.Timers.Timer;
 
 namespace VPet_Simulator.Core
 {
+    public interface IMassageBar : IDisposable
+    {
+        /// <summary>
+        /// 显示消息
+        /// </summary>
+        /// <param name="name">名字</param>
+        /// <param name="text">内容</param>
+        /// <param name="graphname">图像名</param>
+        /// <param name="msgcontent">消息框内容</param>
+        void Show(string name, string text, string graphname = null, UIElement msgcontent = null);
+        /// <summary>
+        /// 强制关闭
+        /// </summary>
+        void ForceClose();
+        /// <summary>
+        /// 设置位置在桌宠内
+        /// </summary>
+        void SetPlaceIN();
+        /// <summary>
+        /// 设置位置在桌宠外
+        /// </summary>
+        void SetPlaceOUT();
+        /// <summary>
+        /// 显示状态
+        /// </summary>
+        Visibility Visibility { get; set; }
+        /// <summary>
+        /// 该消息框的UIElement
+        /// </summary>
+        UIElement This { get; }
+    }
     /// <summary>
     /// MessageBar.xaml 的交互逻辑
     /// </summary>
-    public partial class MessageBar : UserControl, IDisposable
+    public partial class MessageBar : UserControl, IDisposable, IMassageBar
     {
+        public UIElement This => this;
         Main m;
         public MessageBar(Main m)
         {
@@ -91,7 +123,7 @@ namespace VPet_Simulator.Core
         public Action EndAction;
         private void EndTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-           
+
             if (--timeleft <= 0)
             {
                 EndTimer.Stop();
@@ -109,12 +141,13 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="name">名字</param>
         /// <param name="text">内容</param>
-        public void Show(string name, string text, string graphname = null)
+        public void Show(string name, string text, string graphname = null, UIElement msgcontent = null)
         {
             if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
             {
                 Panel.SetZIndex(this, m.UIGrid.Children.Count - 1);
             }
+            MessageBoxContent.Children.Clear();
             TText.Text = "";
             outputtext = text.ToList();
             LName.Content = name;
@@ -123,6 +156,10 @@ namespace VPet_Simulator.Core
             this.Visibility = Visibility.Visible;
             Opacity = .8;
             graphName = graphname;
+            if (msgcontent != null)
+            {
+                MessageBoxContent.Children.Add(msgcontent);
+            }
         }
 
         public void Border_MouseEnter(object sender, MouseEventArgs e)

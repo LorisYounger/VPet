@@ -41,6 +41,9 @@ namespace VPet_Simulator.Core
         /// 说话
         /// </summary>
         /// <param name="text">说话内容</param>
+        /// <param name="graphname">图像名</param>
+        /// <param name="desc">描述</param>
+        /// <param name="force">强制显示图像</param>
         public void Say(string text, string graphname = null, bool force = false, string desc = null)
         {
             Task.Run(() =>
@@ -51,9 +54,8 @@ namespace VPet_Simulator.Core
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            if (!string.IsNullOrWhiteSpace(desc))
-                                MsgBar.MessageBoxContent.Children.Add(new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = System.Windows.HorizontalAlignment.Right });
-                            MsgBar.Show(Core.Save.Name, text, graphname);
+                            MsgBar.Show(Core.Save.Name, text, graphname, (string.IsNullOrWhiteSpace(desc) ? null :
+                                new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = HorizontalAlignment.Right }));
                         });
                         DisplayBLoopingForce(graphname);
                     });
@@ -61,9 +63,38 @@ namespace VPet_Simulator.Core
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        if (!string.IsNullOrWhiteSpace(desc))
-                            MsgBar.MessageBoxContent.Children.Add(new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = System.Windows.HorizontalAlignment.Right });
-                        MsgBar.Show(Core.Save.Name, text);
+                        MsgBar.Show(Core.Save.Name, text, msgcontent: (string.IsNullOrWhiteSpace(desc) ? null :
+                            new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = HorizontalAlignment.Right }));
+                    });
+                }
+            });
+        }
+        /// <summary>
+        /// 说话
+        /// </summary>
+        /// <param name="text">说话内容</param>
+        /// <param name="graphname">图像名</param>
+        /// <param name="msgcontent">消息内容</param>
+        /// <param name="force">强制显示图像</param>
+        public void Say(string text, UIElement msgcontent, string graphname = null, bool force = false)
+        {
+            Task.Run(() =>
+            {
+                OnSay?.Invoke(text);
+                if (force || !string.IsNullOrWhiteSpace(graphname) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
+                    Display(graphname, AnimatType.A_Start, () =>
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            MsgBar.Show(Core.Save.Name, text, graphname, msgcontent);
+                        });
+                        DisplayBLoopingForce(graphname);
+                    });
+                else
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        MsgBar.Show(Core.Save.Name, text, msgcontent: msgcontent);
                     });
                 }
             });

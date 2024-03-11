@@ -36,9 +36,7 @@ using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 using Image = System.Windows.Controls.Image;
 using System.Data;
 using System.Windows.Media;
-#if SteamOutput
-using VPet.Solution;
-#endif
+
 namespace VPet_Simulator.Windows
 {
     public partial class MainWindow : IMainWindow
@@ -1523,7 +1521,7 @@ namespace VPet_Simulator.Windows
 
                 //清空资源
                 Main.Resources = Application.Current.Resources;
-                Main.MsgBar.Resources = Application.Current.Resources;
+                //Main.MsgBar.Resources = Application.Current.Resources;
                 Main.ToolBar.Resources = Application.Current.Resources;
 
                 //加载主题:
@@ -1848,25 +1846,25 @@ namespace VPet_Simulator.Windows
                     {
                         Thread.Sleep(120000);
                         Set["v"][(gint)"rank"] = DateTime.Now.Year;
-                        Dispatcher.Invoke(() =>
-                        {
-                            var button = new System.Windows.Controls.Button()
-                            {
-                                Content = "点击前往查看".Translate(),
-                                FontSize = 20,
-                                HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
-                                Background = Function.ResourcesBrush(Function.BrushType.Primary),
-                                Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
-                            };
-                            button.Click += (x, y) =>
-                            {
-                                var panelWindow = new winCharacterPanel(this);
-                                panelWindow.MainTab.SelectedIndex = 2;
-                                panelWindow.Show();
-                            };
-                            Main.MsgBar.MessageBoxContent.Children.Add(button);
-                        });
-                        Main.Say("哼哼~主人，我的考试成绩出炉了哦，快来和我一起看我的成绩单喵".Translate(), "shining");
+                        var btn = Dispatcher.Invoke(() =>
+                         {
+                             var button = new System.Windows.Controls.Button()
+                             {
+                                 Content = "点击前往查看".Translate(),
+                                 FontSize = 20,
+                                 HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+                                 Background = Function.ResourcesBrush(Function.BrushType.Primary),
+                                 Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
+                             };
+                             button.Click += (x, y) =>
+                             {
+                                 var panelWindow = new winCharacterPanel(this);
+                                 panelWindow.MainTab.SelectedIndex = 2;
+                                 panelWindow.Show();
+                             };
+                             return button;
+                         });
+                        Main.Say("哼哼~主人，我的考试成绩出炉了哦，快来和我一起看我的成绩单喵".Translate(), btn, "shining");
                     });
                 }
 #if NewYear
