@@ -52,7 +52,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <returns>是否超模</returns>
         public static bool IsOverLoad(this Work work)
         {//判断这个工作是否超模
-            if (work.LevelLimit > 1000)
+            if (work.LevelLimit > 100)
                 return true;
             if (work.FinishBonus < 0)
                 return true;

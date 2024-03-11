@@ -685,7 +685,6 @@ namespace VPet_Simulator.Windows
             }
         }
 
-
         public void RunAction(string action)
         {
             switch (action)
@@ -1521,7 +1520,7 @@ namespace VPet_Simulator.Windows
 
                 //清空资源
                 Main.Resources = Application.Current.Resources;
-                //Main.MsgBar.Resources = Application.Current.Resources;
+                Main.MsgBar.This.Resources = Application.Current.Resources;
                 Main.ToolBar.Resources = Application.Current.Resources;
 
                 //加载主题:
@@ -1589,6 +1588,24 @@ namespace VPet_Simulator.Windows
                 if (IsSteamUser)
                     Main.TimeHandle += Handle_Steam;
                 Main.TimeHandle += (x) => DiagnosisUPLoad();
+
+
+                var tlv = Main.ToolBar.Tlv;
+                Main.ToolBar.gdPanel.Children.Remove(tlv);
+                var sp = new StackPanel();
+                Grid.SetColumnSpan(sp, 3);
+                sp.Orientation = System.Windows.Controls.Orientation.Horizontal;
+                sp.Children.Add(tlv);
+                tlvplus = new TextBlock();
+                tlvplus.Margin = new Thickness(1);
+                tlvplus.VerticalAlignment = VerticalAlignment.Bottom;
+                tlvplus.FontSize = 18;
+                tlvplus.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
+                sp.Children.Add(tlvplus);
+                Main.ToolBar.gdPanel.Children.Add(sp);
+                Main.TimeUIHandle += MWUIHandle;
+                Main.ToolBar.EventMenuPanelShow += () => MWUIHandle(Main);
+
 
                 switch (Set["CGPT"][(gstr)"type"])
                 {
@@ -1903,6 +1920,15 @@ namespace VPet_Simulator.Windows
             //    }));
             //}
 
+        }
+        TextBlock tlvplus;
+        private void MWUIHandle(Main main)
+        {
+            if (Main.ToolBar.BdrPanel.Visibility == Visibility.Visible)
+            {
+                tlvplus.Text = $" / {1000 + GameSavesData.GameSave.LevelMax * 100}" +
+                    (GameSavesData.GameSave.LevelMax == 0 ? "" : $" x{GameSavesData.GameSave.LevelMax}");
+            }
         }
 #if NewYear
         int newyearsay = 0;

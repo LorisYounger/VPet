@@ -39,7 +39,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public double Strength { get => strength; set => strength = Math.Min(StrengthMax, Math.Max(0, value)); }
 
-        public double StrengthMax { get;} = 100;
+        public double StrengthMax { get; } = 100;
 
         [Line(Type = LPSConvert.ConvertType.ToFloat, IgnoreCase = true)]
         protected double strength { get; set; }
@@ -263,6 +263,10 @@ namespace VPet_Simulator.Core
 
         public double LikabilityMax => 90 + Level * 10;
 
+        public double FeelingMax => 100;
+
+        public double ExpBonus => 1;
+
         /// <summary>
         /// 计算宠物当前状态
         /// </summary>
@@ -283,12 +287,13 @@ namespace VPet_Simulator.Core
                 }
             }
             //然后判断是高兴还是普通
-            realhel = 90 - (Likability >= 80 ? 20 : (Likability >= 40 ? 10 : 0));
-            if (Feeling >= realhel)
+            double realfel = .90 - (Likability >= 80 ? .20 : (Likability >= 40 ? .10 : 0));
+            double felps = Feeling / FeelingMax;
+            if (felps >= realfel)
             {
                 return ModeType.Happy;
             }
-            else if (Feeling <= realhel / 2)
+            else if (felps <= realfel / 2)
             {
                 return ModeType.PoorCondition;
             }

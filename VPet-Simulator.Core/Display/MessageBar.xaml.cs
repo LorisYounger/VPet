@@ -38,16 +38,16 @@ namespace VPet_Simulator.Core
         /// </summary>
         Visibility Visibility { get; set; }
         /// <summary>
-        /// 该消息框的UIElement
+        /// 该消息框的Control
         /// </summary>
-        UIElement This { get; }
+        Control This { get; }
     }
     /// <summary>
     /// MessageBar.xaml 的交互逻辑
     /// </summary>
     public partial class MessageBar : UserControl, IDisposable, IMassageBar
     {
-        public UIElement This => this;
+        public Control This => this;
         Main m;
         public MessageBar(Main m)
         {

@@ -366,16 +366,20 @@ namespace VPet_Simulator.Windows
                     var latestsave = ds[i];
                     if (latestsave != null)
                     {
+#if !DEBUG
                         try
                         {
+#endif
                             if (SavesLoad(new LPS(File.ReadAllText(latestsave))))
                                 return;
                             //MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
+#if !DEBUG
                         }
-                        catch // (Exception ex)
+                        catch (Exception ex)
                         {
-                            //MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
+                            MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
                         }
+#endif
                     }
                 }
 

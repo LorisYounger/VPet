@@ -23,6 +23,10 @@ namespace VPet_Simulator.Core
         /// </summary>
         double Exp { get; set; }
         /// <summary>
+        /// 经验值加成
+        /// </summary>
+        double ExpBonus { get; }
+        /// <summary>
         /// 等级
         /// </summary>
         int Level { get; }
@@ -38,7 +42,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 最大体力值
         /// </summary>
-        double StrengthMax { get;}
+        double StrengthMax { get; }
         /// <summary>
         /// 待补充的体力,随着时间缓慢加给桌宠
         /// </summary>//让游戏更有游戏性
@@ -94,7 +98,10 @@ namespace VPet_Simulator.Core
         /// 心情
         /// </summary>
         double Feeling { get; set; }
-
+        /// <summary>
+        /// 心情最大值
+        /// </summary>
+        double FeelingMax { get; }
         /// <summary>
         /// 待补充的心情,随着时间缓慢加给桌宠
         /// </summary>//让游戏更有游戏性
@@ -112,7 +119,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 好感度(隐藏)(最大值)
         /// </summary>
-        double LikabilityMax { get;}
+        double LikabilityMax { get; }
 
         /// <summary>
         /// 清除变化

@@ -97,7 +97,7 @@ public class SettingModel : ObservableClass<SettingModel>
     private readonly ReflectionOptions _saveReflectionOptions = new() { CheckValueEquals = true };
 
     public SettingModel()
-        : this(new(null, "")) { }
+        : this(new(null, "Setting#VPET:|\n")) { }
 
     public SettingModel(Setting setting)
     {

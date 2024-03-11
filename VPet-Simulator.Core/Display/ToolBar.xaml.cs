@@ -15,6 +15,7 @@ using static VPet_Simulator.Core.GraphHelper;
 using System.ComponentModel;
 using System.Reflection;
 using static VPet_Simulator.Core.Main;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VPet_Simulator.Core
 {
@@ -150,6 +151,9 @@ namespace VPet_Simulator.Core
         Work wwork;
         Work wstudy;
         Work wplay;
+        /// <summary>
+        /// 工作检测
+        /// </summary>
         public Func<Work, bool> WorkCheck;
         public void StartWork(Work work)
         {
@@ -185,6 +189,7 @@ namespace VPet_Simulator.Core
             if (BdrPanel.Visibility == Visibility.Visible)
             {
                 Tlv.Text = "Lv " + m.Core.Save.Level.ToString();
+                tExp.Text = "x" + m.Core.Save.ExpBonus.ToString("f2");
                 tMoney.Text = "$ " + m.Core.Save.Money.ToString("N2");
                 if (m.Core.Controller.EnableFunction)
                 {
@@ -197,35 +202,38 @@ namespace VPet_Simulator.Core
                     tfun.Visibility = Visibility.Visible;
                 }
                 var max = m.Core.Save.LevelUpNeed();
-                if (max > pExp.Minimum)
-                {
-                    pExp.Maximum = max;
-                }
+                pExp.Value = 0;
+                pExp.Maximum = max;
                 if (m.Core.Save.Exp < 0)
                 {
                     pExp.Minimum = m.Core.Save.Exp;
                 }
                 else
                 {
-                    var bl = m.Core.Save.Level - 2;
-                    if (bl <= 0)
-                        pExp.Minimum = 0;
-                    else
-                        pExp.Minimum = (int)(Math.Pow((bl) * 10, 2));
+                    pExp.Minimum = 0;
                 }
-                if (max < pExp.Minimum)
-                {
-                    pExp.Maximum = max;
-                }
-
                 pExp.Value = m.Core.Save.Exp;
+
+
+                pStrengthFood.Value = 0;
+                pStrengthDrink.Value = 0;
+                pStrength.Value = 0;
+                pFeeling.Value = 0;
+
+                pStrengthFood.Maximum = m.Core.Save.StrengthMax;
+                pStrengthDrink.Maximum = m.Core.Save.StrengthMax;
+                pStrength.Maximum = m.Core.Save.StrengthMax;
+                pFeeling.Maximum = m.Core.Save.FeelingMax;
+
+
 
                 pStrength.Value = m.Core.Save.Strength;
                 pFeeling.Value = m.Core.Save.Feeling;
+
                 pStrengthFood.Value = m.Core.Save.StrengthFood;
                 pStrengthDrink.Value = m.Core.Save.StrengthDrink;
-                pStrengthFoodMax.Value = Math.Min(100, m.Core.Save.StrengthFood + m.Core.Save.StoreStrengthFood);
-                pStrengthDrinkMax.Value = Math.Min(100, m.Core.Save.StrengthDrink + m.Core.Save.StoreStrengthDrink);
+                pStrengthFoodMax.Value = Math.Min(100, (m.Core.Save.StrengthFood + m.Core.Save.StoreStrengthFood) / m.Core.Save.StrengthMax * 100);
+                pStrengthDrinkMax.Value = Math.Min(100, (m.Core.Save.StrengthDrink + m.Core.Save.StoreStrengthDrink) / m.Core.Save.StrengthMax * 100);
 
                 if (Math.Abs(m.Core.Save.ChangeStrength) > 1)
                     tStrength.Text = $"{m.Core.Save.ChangeStrength:f1}/t";
@@ -368,28 +376,28 @@ namespace VPet_Simulator.Core
 
         private void PgbStrength_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
         {
-            e.Text = $"{e.Value:f2} / 100";
+            e.Text = $"{e.Value:f2} / {pStrength.Maximum:f0}";
         }
 
         private void PgbSpirit_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
         {
             var progressBar = (ProgressBar)sender;
-            progressBar.Foreground = GetForeground(e.Value);
-            e.Text = $"{e.Value:f2} / 100";
+            progressBar.Foreground = GetForeground(e.Value / pFeeling.Maximum);
+            e.Text = $"{e.Value:f2} / {pFeeling.Maximum:f0}";
         }
 
         private void PgbHunger_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
         {
             var progressBar = (ProgressBar)sender;
-            progressBar.Foreground = GetForeground(e.Value);
-            e.Text = $"{e.Value:f2} / 100";
+            progressBar.Foreground = GetForeground(e.Value / pStrength.Maximum);
+            e.Text = $"{e.Value:f2} / {pStrength.Maximum:f0}";
         }
 
         private void PgbThirsty_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
         {
             var progressBar = (ProgressBar)sender;
-            progressBar.Foreground = GetForeground(e.Value);
-            e.Text = $"{e.Value:f2} / 100";
+            progressBar.Foreground = GetForeground(e.Value / pStrength.Maximum);
+            e.Text = $"{e.Value:f2} / {pStrength.Maximum:f0}";
             //if (e.Value <= 20)
             //{
             //    tHearth.Visibility = Visibility.Visible;
@@ -398,11 +406,11 @@ namespace VPet_Simulator.Core
 
         private Brush GetForeground(double value)
         {
-            if (value >= 80)
+            if (value >= .8)
             {
                 return FindResource("SuccessProgressBarForeground") as Brush;
             }
-            else if (value >= 50)
+            else if (value >= .3)
             {
                 return FindResource("WarningProgressBarForeground") as Brush;
             }
@@ -411,10 +419,16 @@ namespace VPet_Simulator.Core
                 return FindResource("DangerProgressBarForeground") as Brush;
             }
         }
+        /// <summary>
+        /// MenuPanel显示事件
+        /// </summary>
+        public event Action EventMenuPanelShow;
+
         private void MenuPanel_MouseEnter(object sender, MouseEventArgs e)
         {
             BdrPanel.Visibility = Visibility.Visible;
             M_TimeUIHandle(m);
+            EventMenuPanelShow?.Invoke();
         }
 
         private void MenuPanel_MouseLeave(object sender, MouseEventArgs e)
