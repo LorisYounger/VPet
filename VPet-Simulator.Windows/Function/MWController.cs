@@ -72,8 +72,8 @@ namespace VPet_Simulator.Windows
         {
             return mw.Dispatcher.Invoke(() =>
             {
-                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenWidth - mw.Left - mw.Width;
-                return ScreenBorder.Width + ScreenBorder.X - mw.Left - mw.Width;
+                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenWidth - mw.Left - mw.ActualWidth;
+                return ScreenBorder.Width + ScreenBorder.X - mw.Left - mw.ActualWidth;
             });
         }
 
@@ -81,8 +81,8 @@ namespace VPet_Simulator.Windows
         {
             return mw.Dispatcher.Invoke(() =>
             {
-                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenHeight - mw.Top - mw.Height;
-                return ScreenBorder.Height + ScreenBorder.Y - mw.Top - mw.Height;
+                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenHeight - mw.Top - mw.ActualHeight;
+                return ScreenBorder.Height + ScreenBorder.Y - mw.Top - mw.ActualHeight;
             });
         }
 
@@ -111,29 +111,29 @@ namespace VPet_Simulator.Windows
         {
             mw.Dispatcher.Invoke(() =>
             {
-                if (GetWindowsDistanceUp() < -0.25 * mw.Height && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight)
+                if (GetWindowsDistanceUp() < -0.25 * mw.ActualHeight && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight)
                 {
                     MoveWindows(0, -GetWindowsDistanceUp() / ZoomRatio);
                 }
-                else if (GetWindowsDistanceDown() < -0.25 * mw.Height && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight)
+                else if (GetWindowsDistanceDown() < -0.25 * mw.ActualHeight && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight)
                 {
                     MoveWindows(0, GetWindowsDistanceDown() / ZoomRatio);
                 }
-                if (GetWindowsDistanceLeft() < -0.25 * mw.Width && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth)
+                if (GetWindowsDistanceLeft() < -0.25 * mw.ActualWidth && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth)
                 {
                     MoveWindows(-GetWindowsDistanceLeft() / ZoomRatio, 0);
                 }
-                else if (GetWindowsDistanceRight() < -0.25 * mw.Width && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth)
+                else if (GetWindowsDistanceRight() < -0.25 * mw.ActualWidth && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth)
                 {
                     MoveWindows(GetWindowsDistanceRight() / ZoomRatio, 0);
                 }
             });
         }
         public bool CheckPosition() => mw.Dispatcher.Invoke(() =>
-               GetWindowsDistanceUp() < -0.25 * mw.Height && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight
-            || GetWindowsDistanceDown() < -0.25 * mw.Height && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight
-            || GetWindowsDistanceLeft() < -0.25 * mw.Width && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth
-            || GetWindowsDistanceRight() < -0.25 * mw.Width && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth
+               GetWindowsDistanceUp() < -0.25 * mw.ActualHeight && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight
+            || GetWindowsDistanceDown() < -0.25 * mw.ActualHeight && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight
+            || GetWindowsDistanceLeft() < -0.25 * mw.ActualWidth && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth
+            || GetWindowsDistanceRight() < -0.25 * mw.ActualWidth && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth
         );
 
         public bool RePostionActive { get; set; } = true;

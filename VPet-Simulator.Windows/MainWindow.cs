@@ -36,6 +36,7 @@ using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 using Image = System.Windows.Controls.Image;
 using System.Data;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace VPet_Simulator.Windows
 {
@@ -266,7 +267,7 @@ namespace VPet_Simulator.Windows
         {
             Set.ZoomLevel = zl;
             //this.Height = 500 * zl;
-            this.Width = 500 * zl;
+            MGrid.Width = 500 * zl;
             if (petHelper != null)
             {
                 petHelper.Width = 50 * zl;
@@ -1207,8 +1208,8 @@ namespace VPet_Simulator.Windows
 
                 InitializeComponent();
 
-                this.Height = 500 * Set.ZoomLevel;
-                this.Width = 500 * Set.ZoomLevel;
+                //MGrid.Height = 500 * Set.ZoomLevel;
+                MGrid.Width = 500 * Set.ZoomLevel;
 
                 double L = 0, T = 0;
                 if (Set.StartRecordLast)
@@ -1231,12 +1232,30 @@ namespace VPet_Simulator.Windows
 
                 // control position inside bounds
                 Core.Controller = new MWController(this);
-                double dist;
-                if ((dist = Core.Controller.GetWindowsDistanceLeft()) < 0) Left -= dist;
-                if ((dist = Core.Controller.GetWindowsDistanceRight()) < 0) Left += dist;
-                if ((dist = Core.Controller.GetWindowsDistanceUp()) < 0) Top -= dist;
-                if ((dist = Core.Controller.GetWindowsDistanceDown()) < 0) Top += dist;
-
+                Task.Run(() =>
+                {
+                    double dist;
+                    if ((dist = Core.Controller.GetWindowsDistanceLeft()) < 0)
+                    {
+                        Thread.Sleep(100);
+                        Dispatcher.Invoke(() => Left -= dist);
+                    }
+                    if ((dist = Core.Controller.GetWindowsDistanceRight()) < 0)
+                    {
+                        Thread.Sleep(100);
+                        Dispatcher.Invoke(() => Left += dist);
+                    }
+                    if ((dist = Core.Controller.GetWindowsDistanceUp()) < 0)
+                    {
+                        Thread.Sleep(100);
+                        Dispatcher.Invoke(() => Top -= dist);
+                    }
+                    if ((dist = Core.Controller.GetWindowsDistanceDown()) < 0)
+                    {
+                        Thread.Sleep(100);
+                        Dispatcher.Invoke(() => Top += dist);
+                    }
+                });
                 if (Set.TopMost)
                 {
                     Topmost = true;
@@ -1735,7 +1754,7 @@ namespace VPet_Simulator.Windows
                 if (Set.MessageBarOutside)
                     Main.MsgBar.SetPlaceOUT();
 
-                Main.ToolBar.WorkCheck = WorkCheck;
+                Main.WorkCheck = WorkCheck;
 
                 //加载图标
                 notifyIcon = new NotifyIcon();
@@ -1926,8 +1945,8 @@ namespace VPet_Simulator.Windows
         {
             if (Main.ToolBar.BdrPanel.Visibility == Visibility.Visible)
             {
-                tlvplus.Text = $" / {1000 + GameSavesData.GameSave.LevelMax * 100}" +
-                    (GameSavesData.GameSave.LevelMax == 0 ? "" : $" x{GameSavesData.GameSave.LevelMax}");
+                if (GameSavesData.GameSave.LevelMax != 0)
+                    tlvplus.Text = $" / {1000 + GameSavesData.GameSave.LevelMax * 100} x{GameSavesData.GameSave.LevelMax}";
             }
         }
 #if NewYear
