@@ -113,6 +113,7 @@
 		<None Remove="Res\img\r_worktime_4.png" />
 		<None Remove="Res\img\r_worktime_5.png" />
 		<None Remove="Res\img\r_worktime_6.png" />
+		<None Remove="RichPresence.vdf" />
 		<None Remove="快捷键通用注解.md" />
 	</ItemGroup>
 	<ItemGroup>
@@ -124,7 +125,9 @@
 		<Resource Include="Res\img\rbgb.png" />
 		<Resource Include="Res\img\r_mostfood_Food.png" />
 		<Resource Include="Res\remixicon.ttf" />
-		<Resource Include="vpeticon.ico" />
+		<Resource Include="vpeticon.ico">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Resource>
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Properties\Settings.Designer.cs">

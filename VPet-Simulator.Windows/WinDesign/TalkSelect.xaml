@@ -7,7 +7,7 @@
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Height="500" Width="500" VerticalAlignment="Top">
     <Grid>
         <Border Background="{DynamicResource SecondaryLighter}" BorderBrush="{DynamicResource Secondary}"
-                BorderThickness="5" VerticalAlignment="Top" Margin="5,50,5,5" CornerRadius="5" Padding="5">
+                BorderThickness="5" VerticalAlignment="Top" Margin="5,5,5,5" CornerRadius="5" Padding="5">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*" />

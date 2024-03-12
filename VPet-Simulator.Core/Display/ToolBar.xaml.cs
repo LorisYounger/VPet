@@ -46,6 +46,7 @@ namespace VPet_Simulator.Core
             LoadWork();
         }
 
+
         public void LoadWork()
         {
             MenuWork.Click -= MenuWork_Click;
@@ -58,24 +59,9 @@ namespace VPet_Simulator.Core
             MenuWork.Items.Clear();
             MenuStudy.Items.Clear();
             MenuPlay.Items.Clear();
-            List<Work> ws = new List<Work>();
-            List<Work> ss = new List<Work>();
-            List<Work> ps = new List<Work>();
-            foreach (var w in m.Core.Graph.GraphConfig.Works)
-            {
-                switch (w.Type)
-                {
-                    case Work.WorkType.Study:
-                        ss.Add(w);
-                        break;
-                    case Work.WorkType.Work:
-                        ws.Add(w);
-                        break;
-                    case Work.WorkType.Play:
-                        ps.Add(w);
-                        break;
-                }
-            }
+
+            m.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
+
             if (ws.Count == 0)
             {
                 MenuWork.Visibility = Visibility.Collapsed;
@@ -94,7 +80,7 @@ namespace VPet_Simulator.Core
                     {
                         Header = w.NameTrans
                     };
-                    mi.Click += (s, e) => StartWork(w);
+                    mi.Click += (s, e) => m.StartWork(w);
                     MenuWork.Items.Add(mi);
                 }
             }
@@ -116,7 +102,7 @@ namespace VPet_Simulator.Core
                     {
                         Header = w.NameTrans
                     };
-                    mi.Click += (s, e) => StartWork(w);
+                    mi.Click += (s, e) => m.StartWork(w);
                     MenuStudy.Items.Add(mi);
                 }
             }
@@ -138,7 +124,7 @@ namespace VPet_Simulator.Core
                     {
                         Header = w.NameTrans
                     };
-                    mi.Click += (s, e) => StartWork(w);
+                    mi.Click += (s, e) => m.StartWork(w);
                     MenuPlay.Items.Add(mi);
                 }
             }
@@ -146,42 +132,20 @@ namespace VPet_Simulator.Core
 
         private void MenuStudy_Click(object sender, RoutedEventArgs e)
         {
-            StartWork(wstudy);
+            m.StartWork(wstudy);
         }
         Work wwork;
         Work wstudy;
         Work wplay;
-        /// <summary>
-        /// 工作检测
-        /// </summary>
-        public Func<Work, bool> WorkCheck;
-        public void StartWork(Work work)
-        {
-            if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != IGameSave.ModeType.Ill)
-                if (!m.Core.Controller.EnableFunction || m.Core.Save.Level >= work.LevelLimit)
-                    if (m.State == Main.WorkingState.Work && m.StateID == m.Core.Graph.GraphConfig.Works.IndexOf(work))
-                        m.WorkTimer.Stop();
-                    else
-                    {
-                        if (WorkCheck != null && !WorkCheck.Invoke(work))
-                            return;
-                        m.WorkTimer.Start(work);
-                    }
-                else
-                    MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/{2}\n无法进行{1}", m.Core.Save.Level.ToString()
-                        , work.NameTrans, work.LevelLimit), LocalizeCore.Translate("{0}取消", work.NameTrans));
-            else
-                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行{1}", m.Core.Save.Name,
-                  work.NameTrans), LocalizeCore.Translate("{0}取消", work.NameTrans));
-            Visibility = Visibility.Collapsed;
-        }
+     
+       
         private void MenuWork_Click(object sender, RoutedEventArgs e)
         {
-            StartWork(wwork);
+            m.StartWork(wwork);
         }
         private void MenuPlay_Click(object sender, RoutedEventArgs e)
         {
-            StartWork(wplay);
+            m.StartWork(wplay);
         }
 
         private void M_TimeUIHandle(Main m)

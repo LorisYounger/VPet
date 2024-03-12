@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +8,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Core
@@ -507,6 +510,61 @@ namespace VPet_Simulator.Core
             /// 其他状态,给开发者留个空位计算
             /// </summary>
             Empty,
+        }
+        /// <summary>
+        /// 获得工作列表分类
+        /// </summary>
+        /// <param name="ws">所有工作</param>
+        /// <param name="ss">所有学习</param>
+        /// <param name="ps">所有娱乐</param>
+        public void WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps)
+        {
+            ws = new List<Work>();
+            ss = new List<Work>();
+            ps = new List<Work>();
+            foreach (var w in Core.Graph.GraphConfig.Works)
+            {
+                switch (w.Type)
+                {
+                    case Work.WorkType.Study:
+                        ss.Add(w);
+                        break;
+                    case Work.WorkType.Work:
+                        ws.Add(w);
+                        break;
+                    case Work.WorkType.Play:
+                        ps.Add(w);
+                        break;
+                }
+            }
+        }
+        /// <summary>
+        /// 工作检测
+        /// </summary>
+        public Func<Work, bool> WorkCheck;
+        /// <summary>
+        /// 开始工作
+        /// </summary>
+        /// <param name="work">工作内容</param>
+        public void StartWork(Work work)
+        {
+            if (!Core.Controller.EnableFunction || Core.Save.Mode != IGameSave.ModeType.Ill)
+                if (!Core.Controller.EnableFunction || Core.Save.Level >= work.LevelLimit)
+                    if (State == Main.WorkingState.Work && StateID == Core.Graph.GraphConfig.Works.IndexOf(work))
+                        WorkTimer.Stop();
+                    else
+                    {
+                        if (WorkCheck != null && !WorkCheck.Invoke(work))
+                            return;
+                        WorkTimer.Start(work);
+                    }
+                else
+                    MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/{2}\n无法进行{1}", Core.Save.Level.ToString()
+                        , work.NameTrans, work.LevelLimit), LocalizeCore.Translate("{0}取消", work.NameTrans));
+            else
+                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行{1}", Core.Save.Name,
+                  work.NameTrans), LocalizeCore.Translate("{0}取消", work.NameTrans));
+            Visibility = Visibility.Collapsed;
         }
     }
 }

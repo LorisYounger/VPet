@@ -2,6 +2,7 @@
 using LinePutScript.Dictionary;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using VPet_Simulator.Core;
 
@@ -155,6 +156,14 @@ namespace VPet_Simulator.Windows.Interface
         /// 游戏存档数据
         /// </summary>
         GameSave_v2 GameSavesData { get; }
+        /// <summary>
+        /// 主窗体 Grid
+        /// </summary>
+        Grid MGHost { get; }
+        /// <summary>
+        /// 主窗体 Pet Grid
+        /// </summary>
+        Grid PetGrid { get; }
     }
 
 }

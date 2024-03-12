@@ -10,8 +10,8 @@
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" />
     </WindowChrome.WindowChrome>
-    <Grid>
-        <Grid x:Name="MGrid" Width="250" Height="Auto" >
+    <Grid x:Name="MGHost" x:FieldModifier="public">
+        <Grid x:Name="MGrid" Width="250" Height="Auto" x:FieldModifier="public">
             <Label x:Name="LoadingText" HorizontalAlignment="Center" VerticalAlignment="Center"
                     Background="{DynamicResource DARKPrimaryLight}" Foreground="{DynamicResource DARKPrimaryText}"
                     Content="Loading" />

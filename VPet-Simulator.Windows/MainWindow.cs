@@ -275,6 +275,9 @@ namespace VPet_Simulator.Windows
                 petHelper.ReloadLocation();
             }
         }
+
+        
+
         //private DateTime timecount = DateTime.Now;
         /// <summary>
         /// 保存设置
@@ -1133,6 +1136,10 @@ namespace VPet_Simulator.Windows
                 return TalkAPI[TalkAPIIndex];
             }
         }
+
+        Grid IMainWindow.MGHost => MGHost;
+
+        Grid IMainWindow.PetGrid => MGrid;
 
         /// <summary>
         /// 移除所有聊天对话框
