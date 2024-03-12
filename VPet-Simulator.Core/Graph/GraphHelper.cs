@@ -107,11 +107,6 @@ namespace VPet_Simulator.Core
             [Line(ignoreCase: true)]
             public string Graph { get; set; }
             /// <summary>
-            /// 工作盈利/学习等级倍率
-            /// </summary>
-            [Line(ignoreCase: true)]
-            public double MoneyLevel { get; set; }
-            /// <summary>
             /// 工作盈利/学习基本倍率
             /// </summary>
             [Line(ignoreCase: true)]

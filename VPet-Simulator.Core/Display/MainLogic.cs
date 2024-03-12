@@ -232,7 +232,7 @@ namespace VPet_Simulator.Core
                     }
                     if (addhealth > 0)
                         Core.Save.Health += addhealth * TimePass;
-                    var addmoney = Math.Max(0, TimePass * (nowwork.MoneyBase * (efficiency) + Math.Pow(Core.Save.Level, 0.75) * nowwork.MoneyLevel * (efficiency - 0.5) * 2));
+                    var addmoney = Math.Max(0, nowwork.MoneyBase * (1.500000000 * efficiency - 0.5));
                     if (nowwork.Type == GraphHelper.Work.WorkType.Work)
                         Core.Save.Money += addmoney;
                     else
@@ -564,7 +564,7 @@ namespace VPet_Simulator.Core
             else
                 MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行{1}", Core.Save.Name,
                   work.NameTrans), LocalizeCore.Translate("{0}取消", work.NameTrans));
-            Visibility = Visibility.Collapsed;
+            ToolBar.Visibility = Visibility.Collapsed;
         }
     }
 }

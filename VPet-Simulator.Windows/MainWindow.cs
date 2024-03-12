@@ -1564,7 +1564,6 @@ namespace VPet_Simulator.Windows
                     {
                         if (work.IsOverLoad())
                         {
-                            work.MoneyLevel = 0.5;
                             work.MoneyBase = 8;
                             if (work.Type == Work.WorkType.Work)
                             {

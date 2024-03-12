@@ -28,7 +28,7 @@ namespace VPet_Simulator.Windows.Interface
             double get = 0;
             foreach (var lv in WorkCalLevel)
             {
-                get += (work.MoneyBase + Math.Sqrt(lv) * work.MoneyLevel) * (1 + work.FinishBonus / 2);
+                get += (work.MoneyBase + Math.Sqrt(lv)) * (1 + work.FinishBonus / 2);
             }
             get /= WorkCalLevel.Length;
             if (work.Type != Work.WorkType.Work)
