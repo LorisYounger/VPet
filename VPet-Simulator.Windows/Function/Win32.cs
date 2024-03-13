@@ -11,68 +11,6 @@ namespace VPet_Simulator.Windows
 {
     static partial class Win32
     {
-        [DllImport("Crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern bool CryptQueryObject(
-        int dwObjectType,
-        string pvObject,
-        int dwExpectedContentTypeFlags,
-        int dwExpectedFormatTypeFlags,
-        int dwFlags,
-        IntPtr pdwMsgAndCertEncodingType,
-        IntPtr pdwContentType,
-        IntPtr pdwFormatType,
-        IntPtr phStore,
-        IntPtr phMsg,
-        ref IntPtr ppvContext
-    );
-
-        private const int CERT_QUERY_OBJECT_FILE = 0x00000001;
-        private const int CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED = 0x00004000;
-        private const int CERT_QUERY_FORMAT_FLAG_BINARY = 0x00000002;
-
-        public static X509Certificate2? GetCertificateFromSignedFile(string filePath)
-        {
-            IntPtr certificateContext = IntPtr.Zero;
-
-            if (!CryptQueryObject(
-                CERT_QUERY_OBJECT_FILE,
-                filePath,
-                CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED,
-                CERT_QUERY_FORMAT_FLAG_BINARY,
-                0,
-                IntPtr.Zero,
-                IntPtr.Zero,
-                IntPtr.Zero,
-                IntPtr.Zero,
-                IntPtr.Zero,
-                ref certificateContext))
-            {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-            }
-
-            try
-            {
-                return new X509Certificate2(certificateContext);
-            }
-            catch
-            {
-                return null;
-            }
-            //finally
-            //{
-            //    if (certificateContext != IntPtr.Zero)
-            //    {
-            //        X509Certificate2Collection certificates = new X509Certificate2Collection();
-            //        certificates.ImportFromPemFile(filePath);
-            //        foreach (var certificate in certificates)
-            //        {
-            //            Console.WriteLine($"Subject: {certificate.Subject}");
-            //            Console.WriteLine($"Issuer: {certificate.Issuer}");
-            //        }
-            //    }
-            //}
-        }
-
         [ComImport]
         [Guid("00021401-0000-0000-C000-000000000046")]
         internal class ShellLink
