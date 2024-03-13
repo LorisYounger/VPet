@@ -221,5 +221,10 @@ namespace VPet_Simulator.Core
         private void ContextMenu_Opened(object sender, RoutedEventArgs e) => Border_MouseEnter(null, null);
 
         private void ContextMenu_Closed(object sender, RoutedEventArgs e) => Border_MouseLeave(null, null);
+
+        private void TText_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            sv.ScrollToEnd();
+        }
     }
 }

@@ -249,12 +249,12 @@ namespace VPet_Simulator.Core
         public event Action EventShow;
         public void Show()
         {
+            EventShow?.Invoke();
             if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
             {
                 Panel.SetZIndex(this, m.UIGrid.Children.Count);
             }
             Visibility = Visibility.Visible;
-            EventShow?.Invoke();
             if (CloseTimer.Enabled)
                 onFocus = true;
             else

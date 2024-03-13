@@ -21,10 +21,10 @@
             <Label x:Name="LName" Content="虚拟桌宠名字:" Foreground="{DynamicResource PrimaryText}"
                     HorizontalAlignment="Left" Padding="0" FontWeight="Bold" Margin="0,0,0,6" FontSize="32"
                     Background="{x:Null}" />
-            <ScrollViewer MaxHeight="400">
+            <ScrollViewer x:Name="sv" MaxHeight="400">
                 <TextBox x:Name="TText" Text="我说话长这样,这是我说的话巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉" IsReadOnly="True"
                         TextWrapping="WrapWithOverflow" FontSize="24" x:FieldModifier="public" Background="{x:Null}"
-                        BorderBrush="{x:Null}" BorderThickness="0" />
+                        BorderBrush="{x:Null}" BorderThickness="0" SizeChanged="TText_SizeChanged" />
             </ScrollViewer>
             <Grid x:Name="MessageBoxContent" x:FieldModifier="public">
 
