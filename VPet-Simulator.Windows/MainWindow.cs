@@ -276,7 +276,7 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        
+
 
         //private DateTime timecount = DateTime.Now;
         /// <summary>
@@ -1564,21 +1564,7 @@ namespace VPet_Simulator.Windows
                     {
                         if (work.IsOverLoad())
                         {
-                            work.MoneyBase = 8;
-                            if (work.Type == Work.WorkType.Work)
-                            {
-                                work.StrengthDrink = 2.5;
-                                work.StrengthFood = 3.5;
-                                work.Feeling = 1.5;
-                                work.FinishBonus = 0;
-                            }
-                            else
-                            {
-                                work.Feeling = 1;
-                                work.FinishBonus = 0;
-                                work.StrengthDrink = 1;
-                                work.StrengthFood = 1;
-                            }
+                            work.FixOverLoad();
                         }
                     }
                 }
