@@ -97,7 +97,7 @@ public class GameSave_VPet : IGameSave
     {
         get => strengthFood; set
         {
-            value = Math.Min(100, value);
+            value = Math.Min(StrengthMax, value);
             if (value <= 0)
             {
                 Health += value;
@@ -130,7 +130,7 @@ public class GameSave_VPet : IGameSave
     {
         get => strengthDrink; set
         {
-            value = Math.Min(100, value);
+            value = Math.Min(StrengthMax, value);
             if (value <= 0)
             {
                 Health += value;
