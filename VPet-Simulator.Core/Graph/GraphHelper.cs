@@ -81,7 +81,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 工作/学习
         /// </summary>
-        public class Work
+        public class Work : ICloneable
         {
             /// <summary>
             /// 类型
@@ -180,6 +180,33 @@ namespace VPet_Simulator.Core
             public void Display(Main m)
             {
                 m.Display(Graph, AnimatType.A_Start, () => m.DisplayBLoopingForce(Graph));
+            }
+            /// <summary>
+            /// 克隆相同的工作/学习
+            /// </summary>
+            public object Clone()
+            {
+                return new Work
+                {
+                    Type = this.Type,
+                    Name = this.Name,
+                    Graph = this.Graph,
+                    MoneyBase = this.MoneyBase,
+                    StrengthFood = this.StrengthFood,
+                    StrengthDrink = this.StrengthDrink,
+                    Feeling = this.Feeling,
+                    LevelLimit = this.LevelLimit,
+                    Time = this.Time,
+                    FinishBonus = this.FinishBonus,
+                    BorderBrush = this.BorderBrush,
+                    Background = this.Background,
+                    ButtonBackground = this.ButtonBackground,
+                    ButtonForeground = this.ButtonForeground,
+                    Foreground = this.Foreground,
+                    Left = this.Left,
+                    Top = this.Top,
+                    Width = this.Width
+                };
             }
         }
 

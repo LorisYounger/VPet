@@ -3,8 +3,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 工作面板}" Height="400"
-        Width="600" ResizeMode="CanMinimize" FontSize="16">
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 工作面板}" Height="550"
+        Width="680" ResizeMode="CanMinimize" FontSize="16" Closed="Window_Closed">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
@@ -14,23 +14,40 @@
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <TabControl Grid.RowSpan="2">
-            <TabItem Header="{ll:Str '学习'}">
-                <ListBox x:Name="lbStudy" />
+        <TabControl x:Name="tbc" Grid.RowSpan="2" SelectionChanged="tbc_SelectionChanged">
+            <TabItem x:Name="tiw" Header="{ll:Str '工作'}">
+                <ListBox x:Name="lbWork" SelectionChanged="lbWork_SelectionChanged" />
             </TabItem>
-            <TabItem Header="{ll:Str '玩耍'}">
-                <ListBox x:Name="lbPlay" />
+            <TabItem x:Name="tis" Header="{ll:Str '学习'}">
+                <ListBox x:Name="lbStudy" SelectionChanged="lbStudy_SelectionChanged" />
             </TabItem>
-            <TabItem Header="{ll:Str '工作'}">
-                <ListBox x:Name="lbWork" />
+            <TabItem x:Name="tip" Header="{ll:Str '玩耍'}">
+                <ListBox x:Name="lbPlay" SelectionChanged="lbPlay_SelectionChanged" />
             </TabItem>
         </TabControl>
         <Image x:Name="WorkViewImage" Grid.Column="1" Margin="10,10,10,33" Source="/Res/img/r_singlemoney_1.png" />
-        <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Margin="5" Height="30" Content="开始工作"
-                Background="{DynamicResource DARKPrimary}" BorderThickness="1" pu:ButtonHelper.CornerRadius="5"
-                BorderBrush="{DynamicResource DARKPrimaryDarker}" Foreground="{DynamicResource DARKPrimaryText}"
-                FontWeight="Bold" FontSize="20" IsEnabled="False" />
-        <Label Background="{x:Null}" Grid.Column="1" VerticalAlignment="Bottom"  Content="请从侧边栏选择工作" FontSize="24"
+        <Button x:Name="btnStart" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Margin="5" Height="30"
+                Content="{ll:Str 开始工作}" Background="{DynamicResource DARKPrimary}" BorderThickness="1"
+                pu:ButtonHelper.CornerRadius="5" BorderBrush="{DynamicResource DARKPrimaryDarker}"
+                Foreground="{DynamicResource DARKPrimaryText}" FontWeight="Bold" FontSize="20" IsEnabled="False" />
+        <Label x:Name="lName" Background="{x:Null}" Grid.Column="1" VerticalAlignment="Bottom" Content="{ll:Str 请从侧边栏选择}" FontSize="24"
                 Foreground="{DynamicResource DARKPrimaryDark}" FontWeight="Bold" />
+        <TextBlock Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="10,5,0,0" HorizontalAlignment="Left">
+            <Run Text="{ll:Str '获得内容'}" /> : <LineBreak />
+            <Run Text="{ll:Str '获取效率'}" /> : <LineBreak />
+            <Run Text="{ll:Str '饱腹消耗'}" /> : <LineBreak />
+            <Run Text="{ll:Str '口渴消耗'}" /> : <LineBreak />
+            <Run Text="{ll:Str '心情消耗'}" /> : <LineBreak />
+            <Run Text="{ll:Str '等级限制'}" /> : <LineBreak />
+            <Run Text="{ll:Str '花费时间'}" /> : <LineBreak />
+            <Run Text="{ll:Str '奖励倍率'}" /> : <LineBreak />
+            <Run Text="{ll:Str '倍率调整'}" /> :
+        </TextBlock>
+        <TextBlock x:Name="tbDisplay" Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="150,5,0,0"
+                HorizontalAlignment="Left" />
+        <Slider x:Name="wDouble" Grid.Column="1" Margin="20,190,20,0" Grid.Row="1" VerticalAlignment="Top"
+                SmallChange="1" Value="1" Minimum="1" IsEnabled="False" TickFrequency="1" IsSnapToTickEnabled="True"
+                ValueChanged="wDouble_ValueChanged" LargeChange="1" Style="{DynamicResource StandardSliderStyle}"
+                TickPlacement="Both" />
     </Grid>
 </Window>

@@ -66,6 +66,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="mklink.bat" />
+		<None Remove="Res\img\error.png" />
 		<None Remove="Res\img\rank1.png" />
 		<None Remove="Res\img\rank2.png" />
 		<None Remove="Res\img\rank3.png" />
@@ -119,6 +120,7 @@
 	<ItemGroup>
 		<Resource Include="Res\Font\OPPOSans B.ttf" />
 		<Resource Include="Res\Font\OPPOSans R.ttf" />
+		<Resource Include="Res\img\error.png" />
 		<Resource Include="Res\img\rank2.png" />
 		<Resource Include="Res\img\rank1.png" />
 		<Resource Include="Res\img\rank3.png" />

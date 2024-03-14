@@ -42,7 +42,7 @@ namespace VPet_Simulator.Windows.Interface
         public static double Spend(this Work work)
         {
             return (MathPow(work.StrengthFood, 1.5) / 3 + MathPow(work.StrengthDrink, 1.5) / 4 + MathPow(work.Feeling, 1.5) / 4 +
-                work.LevelLimit / 10 + MathPow(work.StrengthFood + work.StrengthDrink + work.Feeling, 1.5) / 10) * 3;
+                work.LevelLimit / 10.0 + MathPow(work.StrengthFood + work.StrengthDrink + work.Feeling, 1.5) / 10) * 3;
         }
         /// <summary>
         /// 判断这个工作是否超模
@@ -59,15 +59,20 @@ namespace VPet_Simulator.Windows.Interface
                 work.FinishBonus = 0;
             if (work.Type == Work.WorkType.Play && work.Feeling > 0)
                 work.Feeling *= -1;
+            if (work.Time < 10)
+                work.Time = 10;
 
             var spend = work.Spend();
             var get = work.Get();
             var rel = get / spend;
             if (rel < 0)
                 return true;
-            if (Math.Abs(get) > 1.1 * work.LevelLimit + 10) //等级获取速率限制
+            var lvlimit = 1.1 * work.LevelLimit + 10;
+            if (work.Type != Work.WorkType.Work)
+                lvlimit *= 10;
+            if (Math.Abs(work.MoneyBase) > lvlimit) //等级获取速率限制
                 return true;
-            return rel < 1.3; // 推荐rel为1左右 超过1.3就是超模
+            return rel > 1.3; // 推荐rel为1左右 超过1.3就是超模
         }
         /// <summary>
         /// 数值梯度下降法 修复超模工作
@@ -154,6 +159,19 @@ namespace VPet_Simulator.Windows.Interface
                         break;
                 }
             }
+        }
+        /// <summary>
+        /// 将工作的属性值翻倍
+        /// </summary>
+        public static Work Double(this Work work, int value)
+        {
+            Work w = (Work)work.Clone();
+            w.MoneyBase *= value;
+            w.StrengthFood *= 0.48 + 0.6 * value;
+            w.StrengthDrink *= 0.48 + 0.6 * value;
+            w.Feeling *= 0.48 + 0.6 * value;
+            w.LevelLimit = (work.LevelLimit + 10) * value;
+            return w;
         }
 
         public static string FoodToDescription(this IFood food)

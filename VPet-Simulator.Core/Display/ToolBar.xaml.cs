@@ -45,9 +45,7 @@ namespace VPet_Simulator.Core
             m.TimeUIHandle += M_TimeUIHandle;
             LoadWork();
         }
-
-
-        public void LoadWork()
+        public void LoadClean()
         {
             MenuWork.Click -= MenuWork_Click;
             MenuWork.Visibility = Visibility.Visible;
@@ -59,6 +57,11 @@ namespace VPet_Simulator.Core
             MenuWork.Items.Clear();
             MenuStudy.Items.Clear();
             MenuPlay.Items.Clear();
+        }
+
+        public void LoadWork()
+        {
+            LoadClean();
 
             m.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
 

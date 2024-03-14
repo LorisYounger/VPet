@@ -72,6 +72,8 @@ namespace VPet_Simulator.Windows
         public UIElement TalkBox;
         public winGameSetting winSetting { get; set; }
         public winBetterBuy winBetterBuy { get; set; }
+
+        public winWorkMenu winWorkMenu { get; set; }
         //public ChatGPTClient CGPTClient;
         public ImageResources ImageSources { get; set; } = new ImageResources();
         /// <summary>
@@ -472,6 +474,20 @@ namespace VPet_Simulator.Windows
             if (page >= 0 && page <= 6)
                 winSetting.MainTab.SelectedIndex = page;
             winSetting.Show();
+        }
+        public void ShowWorkMenu(Work.WorkType type)
+        {
+            if (winWorkMenu == null)
+            {
+                winWorkMenu = new winWorkMenu(this, type);
+                winWorkMenu.Show();
+            }
+            else
+            {
+                winWorkMenu.tbc.SelectedIndex = (int)type;
+                winWorkMenu.Focus();
+                winWorkMenu.Topmost = true;
+            }
         }
         public void ShowBetterBuy(Food.FoodType type)
         {
@@ -1548,6 +1564,45 @@ namespace VPet_Simulator.Windows
                 Main.Resources = Application.Current.Resources;
                 Main.MsgBar.This.Resources = Application.Current.Resources;
                 Main.ToolBar.Resources = Application.Current.Resources;
+                Main.ToolBar.LoadClean();
+                Main.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
+                if (ws.Count == 0)
+                {
+                    Main.ToolBar.MenuWork.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    Main.ToolBar.MenuWork.Click += (x, y) =>
+                    {
+                        Main.ToolBar.Visibility = Visibility.Collapsed;
+                        ShowWorkMenu(Work.WorkType.Work);
+                    };
+                }
+                if (ss.Count == 0)
+                {
+                    Main.ToolBar.MenuStudy.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    Main.ToolBar.MenuStudy.Click += (x, y) =>
+                    {
+                        Main.ToolBar.Visibility = Visibility.Collapsed;
+                        ShowWorkMenu(Work.WorkType.Study);
+                    };
+                }
+                if (ps.Count == 0)
+                {
+                    Main.ToolBar.MenuPlay.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    Main.ToolBar.MenuPlay.Click += (x, y) =>
+                    {
+                        Main.ToolBar.Visibility = Visibility.Collapsed;
+                        ShowWorkMenu(Work.WorkType.Play);
+                    };
+                }
+
 
                 //加载主题:
                 LoadTheme(Set.Theme);
@@ -1932,6 +1987,7 @@ namespace VPet_Simulator.Windows
             //}
 
         }
+
         TextBlock tlvplus;
         private void MWUIHandle(Main main)
         {

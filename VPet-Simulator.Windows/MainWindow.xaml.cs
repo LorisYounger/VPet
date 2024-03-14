@@ -287,6 +287,7 @@ namespace VPet_Simulator.Windows
                     petHelper?.Close();
                     winSetting?.Close();
                     winBetterBuy?.Close();
+                    winWorkMenu?.Close();
                     if (IsSteamUser)
                         SteamClient.Shutdown();//关掉和Steam的连线
                     if (notifyIcon != null)
@@ -328,6 +329,7 @@ namespace VPet_Simulator.Windows
                 petHelper?.Close();
                 winSetting?.Close();
                 winBetterBuy?.Close();
+                winWorkMenu?.Close();
                 App.MainWindows.Remove(this);
                 if (notifyIcon != null)
                 {
