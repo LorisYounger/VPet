@@ -199,6 +199,10 @@ namespace VPet_Simulator.Core
             DisplayUI();
         }
         private Work nowWork;
+        /// <summary>
+        /// 停止工作
+        /// </summary>
+        /// <param name="then"></param>
         public void Stop(Action @then = null)
         {
             if (m.State == Main.WorkingState.Work && nowWork != null)

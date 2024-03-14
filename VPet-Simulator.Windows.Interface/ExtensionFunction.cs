@@ -22,7 +22,10 @@ namespace VPet_Simulator.Windows.Interface
         /// <returns>工作获取效率</returns>
         public static double Get(this Work work)
         {
-            return MathPow(Math.Abs(work.MoneyBase) * (1 + work.FinishBonus / 2) + 1, 1.25);
+            if (work.Type == Work.WorkType.Work)
+                return MathPow(Math.Abs(work.MoneyBase) * (1 + work.FinishBonus / 2) + 1, 1.25);
+            else
+                return MathPow((Math.Abs(work.MoneyBase) * (1 + work.FinishBonus / 2) + 1) / 10, 1.25);
         }
         /// <summary>
         /// 求幂(带符号)
@@ -53,7 +56,10 @@ namespace VPet_Simulator.Windows.Interface
             if (work.LevelLimit < 0)
                 work.LevelLimit = 0;
             if (work.FinishBonus < 0)
-                return true;
+                work.FinishBonus = 0;
+            if (work.Type == Work.WorkType.Play && work.Feeling > 0)
+                work.Feeling *= -1;
+
             var spend = work.Spend();
             var get = work.Get();
             var rel = get / spend;
@@ -71,7 +77,7 @@ namespace VPet_Simulator.Windows.Interface
         {
             // 设置梯度下降的步长和最大迭代次数
             double stepSize = 0.01;
-            int maxIterations = 1000;
+            int maxIterations = 100;
 
             for (int i = 0; i < maxIterations; i++)
             {
@@ -122,12 +128,31 @@ namespace VPet_Simulator.Windows.Interface
 
             // 如果仍然不合理，设定一个默认值
             if (work.IsOverLoad())
-            {//TODO
-                work.MoneyBase = 10;
-                work.StrengthFood = 5;
-                work.StrengthDrink = 5;
-                work.Feeling = 5;
-                work.LevelLimit = 10;
+            {
+                switch (work.Type)
+                {
+                    case Work.WorkType.Play:
+                        work.MoneyBase = 18;
+                        work.StrengthFood = 1;
+                        work.StrengthDrink = 1.5;
+                        work.Feeling = -1;
+                        work.LevelLimit = 0;
+                        break;
+                    case Work.WorkType.Work:
+                        work.MoneyBase = 8;
+                        work.StrengthFood = 3.5;
+                        work.StrengthDrink = 2.5;
+                        work.Feeling = 1;
+                        work.LevelLimit = 0;
+                        break;
+                    case Work.WorkType.Study:
+                        work.MoneyBase = 80;
+                        work.StrengthFood = 2;
+                        work.StrengthDrink = 2;
+                        work.Feeling = 3;
+                        work.LevelLimit = 0;
+                        break;
+                }
             }
         }
 

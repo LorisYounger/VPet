@@ -168,7 +168,7 @@ namespace VPet_Simulator.Core
             if (freedrop < 1)
                 freedrop = 0.25 * TimePass;
             else
-                freedrop = Math.Sqrt(freedrop) * TimePass / 2;
+                freedrop = Math.Min(Math.Sqrt(freedrop) * TimePass / 2, Core.Save.FeelingMax / 400);
             switch (State)
             {
                 case WorkingState.Sleep:
@@ -233,18 +233,20 @@ namespace VPet_Simulator.Core
                     if (addhealth > 0)
                         Core.Save.Health += addhealth * TimePass;
                     var addmoney = Math.Max(0, nowwork.MoneyBase * (1.500000000 * efficiency - 0.5));
-                    if (nowwork.Type == GraphHelper.Work.WorkType.Work)
+                    if (nowwork.Type == Work.WorkType.Work)
                         Core.Save.Money += addmoney;
                     else
                         Core.Save.Exp += addmoney;
                     WorkTimer.GetCount += addmoney;
-                    if (nowwork.Type == GraphHelper.Work.WorkType.Play)
+                    if (nowwork.Type == Work.WorkType.Play)
                     {
                         LastInteractionTime = DateTime.Now;
-                        Core.Save.FeelingChange(nowwork.Feeling * TimePass);
+                        Core.Save.FeelingChange(-nowwork.Feeling * TimePass);
                     }
                     else
                         Core.Save.FeelingChange(-freedrop * nowwork.Feeling);
+                    if (Core.Save.Mode == IGameSave.ModeType.Ill)//生病时候停止工作
+                        WorkTimer.Stop();
                     break;
                 default://默认
                     //饮食等乱七八糟的消耗
