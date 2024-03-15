@@ -396,10 +396,7 @@
                                 ToolTip="{ll:Str '重新开始新游戏,重置统计等信息\&#13;对于想要获得脱离超模从而获得成就非常有帮助'}" Click="restart_click" />
                         <Button x:Name="btn_cleancache" Grid.Row="1" Grid.Column="2" Margin="4" Padding="1"
                                 pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
-                                Click="cleancache_click" Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
-                        <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                Background="{DynamicResource SecondaryLight}" Click="cleancache_click"
-                                Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
+                                Click="cleancache_click" Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />                        
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
                             <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 桌宠多开}" /> <LineBreak />

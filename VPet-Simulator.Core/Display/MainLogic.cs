@@ -156,6 +156,7 @@ namespace VPet_Simulator.Core
                 labeldisplaytimer.Start();
             });
         }
+        public Work NowWork;
         /// <summary>
         /// 根据消耗计算相关数据
         /// </summary>
@@ -171,6 +172,8 @@ namespace VPet_Simulator.Core
                 freedrop = Math.Min(Math.Sqrt(freedrop) * TimePass / 2, Core.Save.FeelingMax / 400);
             switch (State)
             {
+                case WorkingState.Empty:
+                    break;
                 case WorkingState.Sleep:
                     //睡觉不消耗
                     Core.Save.StrengthChange(TimePass * 2);
@@ -189,9 +192,10 @@ namespace VPet_Simulator.Core
                     LastInteractionTime = DateTime.Now;
                     break;
                 case WorkingState.Work:
-                    var nowwork = nowWork;
-                    var needfood = TimePass * nowwork.StrengthFood;
-                    var needdrink = TimePass * nowwork.StrengthDrink;
+                    if (NowWork == null)
+                        break;
+                    var needfood = TimePass * NowWork.StrengthFood;
+                    var needdrink = TimePass * NowWork.StrengthDrink;
                     double efficiency = 0;
                     int addhealth = -2;
                     if (Core.Save.StrengthFood <= 25)
@@ -232,19 +236,19 @@ namespace VPet_Simulator.Core
                     }
                     if (addhealth > 0)
                         Core.Save.Health += addhealth * TimePass;
-                    var addmoney = Math.Max(0, nowwork.MoneyBase * (1.500000000 * efficiency - 0.5));
-                    if (nowwork.Type == Work.WorkType.Work)
+                    var addmoney = Math.Max(0, NowWork.MoneyBase * (1.500000000 * efficiency - 0.5));
+                    if (NowWork.Type == Work.WorkType.Work)
                         Core.Save.Money += addmoney;
                     else
                         Core.Save.Exp += addmoney;
                     WorkTimer.GetCount += addmoney;
-                    if (nowwork.Type == Work.WorkType.Play)
+                    if (NowWork.Type == Work.WorkType.Play)
                     {
                         LastInteractionTime = DateTime.Now;
-                        Core.Save.FeelingChange(-nowwork.Feeling * TimePass);
+                        Core.Save.FeelingChange(-NowWork.Feeling * TimePass);
                     }
                     else
-                        Core.Save.FeelingChange(-freedrop * nowwork.Feeling);
+                        Core.Save.FeelingChange(-freedrop * NowWork.Feeling);
                     if (Core.Save.Mode == IGameSave.ModeType.Ill)//生病时候停止工作
                         WorkTimer.Stop();
                     break;
@@ -479,14 +483,7 @@ namespace VPet_Simulator.Core
         /// 当前状态
         /// </summary>
         public WorkingState State = WorkingState.Nomal;
-        /// <summary>
-        /// 当前状态辅助ID
-        /// </summary>
-        public int StateID = 0;
-        /// <summary>
-        /// 当前工作
-        /// </summary>
-        public GraphHelper.Work nowWork => Core.Graph.GraphConfig.Works[StateID];
+
         /// <summary>
         /// 当前正在的状态
         /// </summary>
@@ -552,7 +549,7 @@ namespace VPet_Simulator.Core
         {
             if (!Core.Controller.EnableFunction || Core.Save.Mode != IGameSave.ModeType.Ill)
                 if (!Core.Controller.EnableFunction || Core.Save.Level >= work.LevelLimit)
-                    if (State == Main.WorkingState.Work && StateID == Core.Graph.GraphConfig.Works.IndexOf(work))
+                    if (State == Main.WorkingState.Work && NowWork.Name == work.Name)
                         WorkTimer.Stop();
                     else
                     {

@@ -763,7 +763,7 @@ namespace VPet_Simulator.Windows
             switch (Main.State)
             {
                 case Main.WorkingState.Work:
-                    if (Main.nowWork.Type == Work.WorkType.Work)
+                    if (Main.NowWork.Type == Work.WorkType.Work)
                         stat[(gi64)"stat_work_time"] += (int)Set.LogicInterval;
                     else
                         stat[(gi64)"stat_study_time"] += (int)Set.LogicInterval;
@@ -940,7 +940,7 @@ namespace VPet_Simulator.Windows
                     switch (obj.State)
                     {
                         case Main.WorkingState.Work:
-                            SteamFriends.SetRichPresence("work", obj.nowWork.Name.Translate());
+                            SteamFriends.SetRichPresence("work", obj.NowWork.Name.Translate());
                             SteamFriends.SetRichPresence("steam_display", "#Status_Work");
                             break;
                         case Main.WorkingState.Sleep:
@@ -1345,9 +1345,8 @@ namespace VPet_Simulator.Windows
         /// 加载游戏
         /// </summary>
         /// <param name="Path">MOD地址</param>
-        public async void GameLoad(List<DirectoryInfo> Path)
+        public async Task GameLoad(List<DirectoryInfo> Path)
         {
-
             Path = Path.Distinct().ToList();
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading MOD"));
             //加载mod
@@ -1997,6 +1996,10 @@ namespace VPet_Simulator.Windows
                     tlvplus.Text = $" / {1000 + GameSavesData.GameSave.LevelMax * 100} x{GameSavesData.GameSave.LevelMax}";
             }
         }
+
+
+       
+
 #if NewYear
         int newyearsay = 0;
         private void NewYearHandle(Main main)

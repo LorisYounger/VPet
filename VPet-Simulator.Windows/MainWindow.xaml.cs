@@ -21,6 +21,7 @@ using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using LinePutScript.Dictionary;
 using Steamworks.Data;
+using VPet_Simulator.Windows.WinDesign;
 
 namespace VPet_Simulator.Windows
 {
@@ -100,7 +101,7 @@ namespace VPet_Simulator.Windows
 
             GameInitialization();
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 //加载所有MOD
                 List<DirectoryInfo> Path = new List<DirectoryInfo>();
@@ -216,10 +217,27 @@ namespace VPet_Simulator.Windows
                 else//新玩家,默认设置为
                     Set["CGPT"][(gstr)"type"] = "LB";
 
-                GameLoad(Path);
+                await GameLoad(Path);
+                if (IsSteamUser)
+                    Dispatcher.Invoke(() =>
+                    {
+                        Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "访客表".Translate(), () =>
+                        {
+                            if (winMutiPlayer == null)
+                            {
+                                winMutiPlayer = new winMutiPlayer(this);
+                                winMutiPlayer.Show();
+                            }
+                            else
+                            {
+                                winMutiPlayer.Focus();
+                            }
+                        });
+                    });
+
             });
         }
-
+        internal winMutiPlayer winMutiPlayer;
 
         public new void Close()
         {
@@ -372,9 +390,9 @@ namespace VPet_Simulator.Windows
                         try
                         {
 #endif
-                            if (SavesLoad(new LPS(File.ReadAllText(latestsave))))
-                                return;
-                            //MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
+                        if (SavesLoad(new LPS(File.ReadAllText(latestsave))))
+                            return;
+                        //MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
 #if !DEBUG
                         }
                         catch (Exception ex)
