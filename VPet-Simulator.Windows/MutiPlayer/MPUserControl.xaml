@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="VPet_Simulator.Windows.MPUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VPet_Simulator.Windows"
+             mc:Ignorable="d" Margin="5" Width="360" Height="200" >
+    <Grid>
+            
+    </Grid>
+</UserControl>

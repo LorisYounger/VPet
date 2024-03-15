@@ -21,7 +21,6 @@ using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using LinePutScript.Dictionary;
 using Steamworks.Data;
-using VPet_Simulator.Windows.WinDesign;
 
 namespace VPet_Simulator.Windows
 {
@@ -221,7 +220,7 @@ namespace VPet_Simulator.Windows
                 if (IsSteamUser)
                     Dispatcher.Invoke(() =>
                     {
-                        Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "访客表".Translate(), () =>
+                        Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "访客表".Translate(), () =>
                         {
                             if (winMutiPlayer == null)
                             {
@@ -233,6 +232,15 @@ namespace VPet_Simulator.Windows
                                 winMutiPlayer.Focus();
                             }
                         });
+                        int clid = Array.IndexOf(App.Args, "connect_lobby");
+                        if (clid != -1)
+                        {
+                            if (ulong.TryParse(App.Args[clid + 1], out ulong lid))
+                            {
+                                winMutiPlayer = new winMutiPlayer(this, lid);
+                                winMutiPlayer.Show();
+                            }
+                        }
                     });
 
             });

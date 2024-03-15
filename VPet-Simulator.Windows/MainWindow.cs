@@ -1156,7 +1156,7 @@ namespace VPet_Simulator.Windows
         Grid IMainWindow.MGHost => MGHost;
 
         Grid IMainWindow.PetGrid => MGrid;
-
+        internal MWController MWController { get; set; }
         /// <summary>
         /// 移除所有聊天对话框
         /// </summary>
@@ -1254,7 +1254,8 @@ namespace VPet_Simulator.Windows
                 Top = T;
 
                 // control position inside bounds
-                Core.Controller = new MWController(this);
+                MWController = new MWController(this);
+                Core.Controller = MWController;
                 Task.Run(() =>
                 {
                     double dist;
@@ -1998,7 +1999,7 @@ namespace VPet_Simulator.Windows
         }
 
 
-       
+
 
 #if NewYear
         int newyearsay = 0;
