@@ -38,7 +38,7 @@ namespace VPet_Simulator.Core
                     DisplaySleep(true);
                     return;
                 case WorkingState.Work:
-                    nowWork.Display(this);
+                    NowWork.Display(this);
                     return;
                 case WorkingState.Travel:
                     //TODO
