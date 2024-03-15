@@ -53,17 +53,17 @@ namespace VPet_Simulator.Windows
         public DateTime CacheDate;
         public string ErrorMessage;
         public static string INTtoVER(int ver) => ver < 10000 ? $"{ver / 100}.{ver % 100:00}" : $"{ver / 10000}.{ver % 10000 / 100}.{ver % 100:00}";
-        public static void LoadImage(MainWindow mw, DirectoryInfo di)
+        public static void LoadImage(MainWindow mw, DirectoryInfo di, string pre = "")
         {
             //加载其他放在文件夹的图片
             foreach (FileInfo fi in di.EnumerateFiles("*.png"))
             {
-                mw.ImageSources.AddSource(fi.Name.ToLower().Substring(0, fi.Name.Length - 4), fi.FullName);
+                mw.ImageSources.AddSource(pre + fi.Name.ToLower().Substring(0, fi.Name.Length - 4), fi.FullName);
             }
             //加载其他放在文件夹中文件夹的图片
             foreach (DirectoryInfo fordi in di.EnumerateDirectories())
             {
-                LoadImage(mw, fordi);
+                LoadImage(mw, fordi, pre + fordi.Name + "_");
             }
             //加载标志好的图片和图片设置
             foreach (FileInfo fi in di.EnumerateFiles("*.lps"))

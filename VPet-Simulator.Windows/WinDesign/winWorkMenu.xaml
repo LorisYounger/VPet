@@ -29,7 +29,8 @@
         <Button x:Name="btnStart" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Margin="5" Height="30"
                 Content="{ll:Str 开始工作}" Background="{DynamicResource DARKPrimary}" BorderThickness="1"
                 pu:ButtonHelper.CornerRadius="5" BorderBrush="{DynamicResource DARKPrimaryDarker}"
-                Foreground="{DynamicResource DARKPrimaryText}" FontWeight="Bold" FontSize="20" IsEnabled="False" />
+                Foreground="{DynamicResource DARKPrimaryText}" FontWeight="Bold" FontSize="20" IsEnabled="False"
+                Click="btnStart_Click" />
         <Label x:Name="lName" Background="{x:Null}" Grid.Column="1" VerticalAlignment="Bottom" Content="{ll:Str 请从侧边栏选择}" FontSize="24"
                 Foreground="{DynamicResource DARKPrimaryDark}" FontWeight="Bold" />
         <TextBlock Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="10,5,0,0" HorizontalAlignment="Left">

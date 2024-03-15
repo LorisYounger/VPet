@@ -26,6 +26,7 @@ public partial class winWorkMenu : Window
     List<Work> ws;
     List<Work> ss;
     List<Work> ps;
+    public void ShowImageDefault(Work.WorkType type) => WorkViewImage.Source = mw.ImageSources.FindImage(mw.Set.PetGraph + "_" + type.ToString(), "work");
     public winWorkMenu(MainWindow mw, Work.WorkType type)
     {
         InitializeComponent();
@@ -55,9 +56,11 @@ public partial class winWorkMenu : Window
             }
 
         tbc.SelectedIndex = (int)type;
+        ShowImageDefault(type);
     }
     private bool AllowChange = false;
     Work nowwork;
+    Work nowworkdisplay;
     public void ShowWork()
     {
         AllowChange = false;
@@ -91,17 +94,14 @@ public partial class winWorkMenu : Window
     }
     public void ShowWork(Work work)
     {
+        nowworkdisplay = work;
         lName.Content = work.NameTrans;
         //显示图像
-        string source = mw.ImageSources.FindSource(work.Graph);
-        if (source == null)
-        {
-            source = mw.ImageSources.FindSource(work.Name);
-        }
+        string source = mw.ImageSources.FindSource("work_" + work.Graph) ?? mw.ImageSources.FindSource("work_" + work.Name);
         if (source == null)
         {
             //尝试显示默认图像
-            WorkViewImage.Source = Interface.ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
+            ShowImageDefault(work.Type);
         }
         else
         {
@@ -124,10 +124,12 @@ public partial class winWorkMenu : Window
         sb.AppendLine('x' + (1 + work.FinishBonus).ToString("f2"));
         sb.AppendLine('x' + wDouble.Value.ToString("f0"));
         tbDisplay.Text = sb.ToString();
+
     }
 
     private void tbc_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        ShowImageDefault((Work.WorkType)tbc.SelectedIndex);
         switch (tbc.SelectedIndex)
         {
             case 0:
@@ -169,5 +171,11 @@ public partial class winWorkMenu : Window
     private void Window_Closed(object sender, EventArgs e)
     {
         mw.winWorkMenu = null;
+    }
+
+    private void btnStart_Click(object sender, RoutedEventArgs e)
+    {
+        if (nowworkdisplay != null)
+            mw.Main.StartWork(nowworkdisplay);
     }
 }
