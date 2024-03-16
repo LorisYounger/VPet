@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using VPet_Simulator.Core;
-using System.Windows.Forms;
 using System.Timers;
 using LinePutScript;
 using Panuon.WPF.UI;
@@ -21,6 +20,8 @@ using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using LinePutScript.Dictionary;
 using Steamworks.Data;
+using System.Windows.Controls;
+using ToolBar = VPet_Simulator.Core.ToolBar;
 
 namespace VPet_Simulator.Windows
 {
@@ -29,7 +30,7 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public partial class MainWindow : WindowX
     {
-        private NotifyIcon notifyIcon;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
         public PetHelper petHelper;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
 
@@ -218,6 +219,7 @@ namespace VPet_Simulator.Windows
 
                 await GameLoad(Path);
                 if (IsSteamUser)
+                {
                     Dispatcher.Invoke(() =>
                     {
                         Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "访客表".Translate(), () =>
@@ -242,9 +244,27 @@ namespace VPet_Simulator.Windows
                             }
                         }
                     });
-
+                    SteamMatchmaking.OnLobbyInvite += SteamMatchmaking_OnLobbyInvite;
+                }
             });
         }
+
+        private void SteamMatchmaking_OnLobbyInvite(Friend friend, Lobby lobby)
+        {
+            if (winMutiPlayer != null)
+                return;
+            Button btn = new Button();
+            btn.Content = "加入访客表";
+            btn.Style = FindResource("ThemedButtonStyle") as Style;
+            btn.Click += (_, _) =>
+            {
+                winMutiPlayer = new winMutiPlayer(this, lobby.Id);
+                winMutiPlayer.Show();
+            };
+            Main.Say("收到来自{0}的访客邀请,是否加入?".Translate(friend.Name), msgcontent: btn);
+        }
+
+
         internal winMutiPlayer winMutiPlayer;
 
         public new void Close()
@@ -529,7 +549,7 @@ namespace VPet_Simulator.Windows
                 //uint extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
                 //SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
                 HitThrough = !HitThrough;
-                (notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_HitThrough", false).First() as ToolStripMenuItem).Checked = HitThrough;
+                (notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_HitThrough", false).First() as System.Windows.Forms.ToolStripMenuItem).Checked = HitThrough;
                 if (HitThrough)
                 {
                     Win32.User32.SetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE,
