@@ -42,10 +42,11 @@ public partial class winMutiPlayer : Window
         if (lobbyid == null)
             CreateLobby();
         else
-            JoinLobby(lobbyid);
+            JoinLobby(lobbyid.Value);
     }
-    public async void JoinLobby(ulong? lobbyid)
+    public async void JoinLobby(ulong lobbyid)
     {
+        MessageBoxX.Show(lobbyid.ToString("x"));
         var lbt = (await SteamMatchmaking.JoinLobbyAsync((SteamId)lobbyid));
         if (!lbt.HasValue || lbt.Value.Owner.Id.Value == 0)
         {
@@ -151,7 +152,6 @@ public partial class winMutiPlayer : Window
                 });
         }
     }
-
     private void Main_GraphDisplayHandler(GraphInfo info)
     {
         lb.SendChatString(MPMessage.ConverTo(new MPMessage() { Type = MPMessage.MSGType.DispayGraph, Content = LPSConvert.SerializeObject(info).ToString() }));
@@ -177,7 +177,12 @@ public partial class winMutiPlayer : Window
     {
         if (lobby.Id == lb.Id)
         {
-
+            if (lb.GetData("leave") == "true")
+            {
+                MessageBoxX.Show("访客表已被房主{0}关闭".Translate(lb.Owner.Name));
+                lb = default(Lobby);
+                Close();
+            }
         }
     }
 
@@ -186,6 +191,8 @@ public partial class winMutiPlayer : Window
         SteamMatchmaking.OnLobbyDataChanged -= SteamMatchmaking_OnLobbyDataChanged;
         SteamMatchmaking.OnLobbyMemberDataChanged -= SteamMatchmaking_OnLobbyMemberDataChanged;
         mw.Main.GraphDisplayHandler -= Main_GraphDisplayHandler;
+        if (lb.Owner.Id == SteamClient.SteamId)
+            lb.SetData("leave", "true");
         lb.Leave();
         for (int i = 0; i < MPFriends.Count; i++)
         {

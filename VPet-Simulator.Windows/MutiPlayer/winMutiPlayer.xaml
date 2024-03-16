@@ -4,9 +4,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d"
         xmlns:pu="https://opensource.panuon.com/wpf-ui"
-        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF" Title="{ll:Str 访客表}"
-        MinHeight="400" Width="400" Closed="Window_Closed" FontSize="16" SizeToContent="Height" MaxHeight="800"
-        ResizeMode="CanMinimize" Closing="Window_Closing">
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        Title="{ll:Str 访客表}" MinHeight="400" Width="400" Closed="Window_Closed" FontSize="16" SizeToContent="Height"
+        MaxHeight="800" ResizeMode="CanMinimize" Closing="Window_Closing">
     <Grid>
         <Image x:Name="HostHead" Margin="20" Width="80" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top"
                 Source="/Res/TopLogo2019.PNG" />
@@ -26,7 +26,8 @@
             </TabItem>
             <TabItem Header="{ll:Str 消息日志}">
                 <TextBox x:Name="tbLog" Margin="0" BorderThickness="0" Background="{DynamicResource DARKPrimaryTrans4}"
-                        Foreground="{DynamicResource DARKPrimaryDarker}" IsReadOnly="True" VerticalScrollBarVisibility="Visible" />
+                        Foreground="{DynamicResource DARKPrimaryDarker}" IsReadOnly="True"
+                        VerticalScrollBarVisibility="Visible" />
             </TabItem>
 
         </TabControl>

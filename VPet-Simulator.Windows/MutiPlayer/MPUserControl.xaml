@@ -4,16 +4,16 @@
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Windows"
-        mc:Ignorable="d" Margin="5" Width="360" Height="100" Background="{DynamicResource SecondaryLight}"
+        mc:Ignorable="d" Margin="5" Width="340" Height="100" Background="{DynamicResource SecondaryLight}"
         BorderBrush="{DynamicResource Secondary}">
     <Grid>
         <Image x:Name="uimg" HorizontalAlignment="Left" Source="/Res/TopLogo2019.PNG" Margin="4" />
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="110,0,0,0"
                 Foreground="{DynamicResource DARKPrimaryDarker}" FontSize="16">
-                <Run Text="{ll:Str 访客}" />: <Run x:Name="rPetName" Text="萝莉斯" FontSize="20" FontWeight="Bold" /> 
+                <Run Text="{ll:Str 访客}" />: <Run x:Name="rPetName" Text="{ll:Str 萝莉斯}" FontSize="20" FontWeight="Bold" /> 
                 <LineBreak />
                 <Run Text="{ll:Str 来自}" />: <Run x:Name="hostName" Text="XXX" FontWeight="Bold" /><LineBreak />
-            <Run x:Name="info" Text="Lv 15" />
+            <Run x:Name="info" Text="Lv ??" />
         </TextBlock>
         <Button Style="{DynamicResource ThemedButtonStyle}" HorizontalAlignment="Right" Content="{ll:Str 重置位置}"
                 VerticalAlignment="Top" Margin="10"/>

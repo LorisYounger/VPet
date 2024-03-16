@@ -22,6 +22,7 @@ using LinePutScript.Dictionary;
 using Steamworks.Data;
 using System.Windows.Controls;
 using ToolBar = VPet_Simulator.Core.ToolBar;
+using System.Security.Cryptography;
 
 namespace VPet_Simulator.Windows
 {
@@ -286,6 +287,24 @@ namespace VPet_Simulator.Windows
                         }
                     });
                     SteamMatchmaking.OnLobbyInvite += SteamMatchmaking_OnLobbyInvite;
+                    SteamFriends.OnGameLobbyJoinRequested += SteamFriends_OnGameLobbyJoinRequested;
+                }
+            });
+        }
+
+        private void SteamFriends_OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (winMutiPlayer == null)
+                {
+                    winMutiPlayer = new winMutiPlayer(this, lobby.Id.Value);
+                    winMutiPlayer.Show();
+                }
+                else
+                {
+                    MessageBoxX.Show("已经有加入了一个访客表,无法再创建更多".Translate());
+                    winMutiPlayer.Focus();
                 }
             });
         }
@@ -294,15 +313,18 @@ namespace VPet_Simulator.Windows
         {
             if (winMutiPlayer != null)
                 return;
-            Button btn = new Button();
-            btn.Content = "加入访客表";
-            btn.Style = FindResource("ThemedButtonStyle") as Style;
-            btn.Click += (_, _) =>
+            Dispatcher.Invoke(() =>
             {
-                winMutiPlayer = new winMutiPlayer(this, lobby.Id);
-                winMutiPlayer.Show();
-            };
-            Main.Say("收到来自{0}的访客邀请,是否加入?".Translate(friend.Name), msgcontent: btn);
+                Button btn = new Button();
+                btn.Content = "加入访客表";
+                btn.Style = FindResource("ThemedButtonStyle") as Style;
+                btn.Click += (_, _) =>
+                {
+                    winMutiPlayer = new winMutiPlayer(this, lobby.Id);
+                    winMutiPlayer.Show();
+                };
+                Main.Say("收到来自{0}的访客邀请,是否加入?".Translate(friend.Name), msgcontent: btn);
+            });
         }
 
 
