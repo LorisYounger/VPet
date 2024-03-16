@@ -41,12 +41,26 @@ public partial class winMutiPlayer : Window
     }
     public async void JoinLobby(ulong? lobbyid)
     {
-        lb = (await SteamMatchmaking.JoinLobbyAsync((SteamId)lobbyid)).Value;
+        var lbt = (await SteamMatchmaking.JoinLobbyAsync((SteamId)lobbyid));
+        if (!lbt.HasValue)
+        {
+            MessageBoxX.Show("加入/创建访客表失败，请检查网络连接或重启游戏".Translate());
+            Close();
+            return;
+        }
+        lb = lbt.Value;
         ShowLobbyInfo();
     }
     public async void CreateLobby()
     {
-        lb = (await SteamMatchmaking.CreateLobbyAsync()).Value;
+        var lbt = (await SteamMatchmaking.CreateLobbyAsync());
+        if (!lbt.HasValue)
+        {
+            MessageBoxX.Show("加入/创建访客表失败，请检查网络连接或重启游戏".Translate());
+            Close();
+            return;
+        }
+        lb = lbt.Value;
         lb.SetJoinable(true);
         lb.SetPublic();
         swAllowJoin.Visibility = Visibility.Visible;
@@ -84,8 +98,9 @@ public partial class winMutiPlayer : Window
     }
     public async void ShowLobbyInfo()
     {
+
         lb.SetMemberData("save", mw.GameSavesData.GameSave.ToLine().ToString());
-        lb.SetMemberData("onmod", mw.Set.FindLine("onmod").ToString());
+        lb.SetMemberData("onmod", mw.Set.FindLine("onmod")?.ToString() ?? "onmod");
         lb.SetMemberData("petgraph", mw.Set.PetGraph);
 
         SteamMatchmaking.OnLobbyDataChanged += SteamMatchmaking_OnLobbyDataChanged;
@@ -93,7 +108,7 @@ public partial class winMutiPlayer : Window
         SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
         hostName.Text = lb.Owner.Name;
         lbLid.Text = lb.Id.Value.ToString("x");
-        Steamworks.Data.Image? img = (await lb.Owner.GetMediumAvatarAsync());
+        Steamworks.Data.Image? img = await lb.Owner.GetMediumAvatarAsync();
         if (img.HasValue)
         {
             HostHead.Source = ConvertToImageSource(img.Value);
