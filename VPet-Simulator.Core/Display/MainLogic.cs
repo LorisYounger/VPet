@@ -198,7 +198,7 @@ namespace VPet_Simulator.Core
                     var needdrink = TimePass * NowWork.StrengthDrink;
                     double efficiency = 0;
                     int addhealth = -2;
-                    if (Core.Save.StrengthFood <= 25)
+                    if (Core.Save.StrengthFood <= Core.Save.StrengthMax * 0.25)
                     {//低状态低效率
                         Core.Save.StrengthChangeFood(-needfood / 2);
                         efficiency += 0.25;
@@ -216,7 +216,7 @@ namespace VPet_Simulator.Core
                         if (Core.Save.StrengthFood >= 75)
                             addhealth += Function.Rnd.Next(1, 3);
                     }
-                    if (Core.Save.StrengthDrink <= 25)
+                    if (Core.Save.StrengthDrink <= Core.Save.StrengthMax * 0.25)
                     {//低状态低效率
                         Core.Save.StrengthChangeDrink(-needdrink / 2);
                         efficiency += 0.25;
@@ -236,7 +236,7 @@ namespace VPet_Simulator.Core
                     }
                     if (addhealth > 0)
                         Core.Save.Health += addhealth * TimePass;
-                    var addmoney = Math.Max(0, NowWork.MoneyBase * (1.500000000 * efficiency - 0.5));
+                    var addmoney = Math.Max(0, TimePass * NowWork.MoneyBase * (2 * efficiency - 0.5));
                     if (NowWork.Type == Work.WorkType.Work)
                         Core.Save.Money += addmoney;
                     else
