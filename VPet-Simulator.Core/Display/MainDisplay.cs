@@ -505,6 +505,10 @@ namespace VPet_Simulator.Core
         bool petgridcrlf = true;
         int nodisplayLoop = 0;
         /// <summary>
+        /// 显示过的动画
+        /// </summary>
+        public event Action<GraphInfo> GraphDisplayHandler;
+        /// <summary>
         /// 显示动画 (自动多层切换)
         /// </summary>
         /// <param name="graph">动画</param>
@@ -540,6 +544,7 @@ namespace VPet_Simulator.Core
             //    Dispatcher.Invoke(() => Say(graph.GraphType.ToString()));
             //}
             DisplayType = graph.GraphInfo;
+            GraphDisplayHandler?.Invoke(graph.GraphInfo);
             var PetGridTag = Dispatcher.Invoke(() => PetGrid.Tag);
             var PetGrid2Tag = Dispatcher.Invoke(() => PetGrid2.Tag);
             if (PetGridTag == graph)
@@ -652,6 +657,9 @@ namespace VPet_Simulator.Core
             }
 
         }
+
+
+
         /// <summary>
         /// 显示夹层动画
         /// </summary>

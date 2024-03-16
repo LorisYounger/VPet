@@ -5,7 +5,7 @@
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Background="{x:Null}" WindowStyle="None"
         SizeToContent="Height" xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" ShowInTaskbar="False"
-        ResizeMode="NoResize" Title="MWFriends" Width="250" pu:WindowXCaption.Height="0">
+        ResizeMode="NoResize" Title="MWFriends" Width="250" pu:WindowXCaption.Height="0" Closed="WindowX_Closed">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" />
     </WindowChrome.WindowChrome>

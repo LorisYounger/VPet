@@ -12,7 +12,7 @@
                 Source="/Res/TopLogo2019.PNG" />
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,20,0,0"
                 Foreground="{DynamicResource DARKPrimaryDarker}">
-            <Run Text="萝莉斯" FontSize="24" FontWeight="Bold" /> <Run Text="{ll:Str 的访客表}" />
+            <Run x:Name="hostPet" Text="萝莉斯" FontSize="24" FontWeight="Bold" /> <Run Text="{ll:Str 的访客表}" />
             <LineBreak />
             <Run Text="{ll:Str 主持人}" />: <Run x:Name="hostName" Text="XXX" /><LineBreak />
             <Run Text="{ll:Str 访客表ID}" />:
@@ -22,7 +22,7 @@
                 Foreground="{DynamicResource DARKPrimaryDarker}" Padding="0" />
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Margin="15,115,15,15">
             <TabItem Header="{ll:Str 访客列表}">
-                <StackPanel Background="{DynamicResource SecondaryLighter}" />
+                <StackPanel x:Name="MUUCList" Background="{DynamicResource SecondaryLighter}" />
             </TabItem>
             <TabItem Header="{ll:Str 消息日志}">
                 <TextBox x:Name="tbLog" Margin="0" BorderThickness="0" Background="{DynamicResource DARKPrimaryTrans4}"

@@ -30,9 +30,10 @@ public partial class MPFriends : WindowX
     public Lobby lb;
     MainWindow mw;
     public Friend friend;
+    public winMutiPlayer wmp;
     public GameCore Core { get; set; } = new GameCore();
     public List<Food> Foods { get; } = new List<Food>();
-    public ImageResources ImageSources { get; }
+    public ImageResources ImageSources { get; } = new ImageResources();
     public List<PetLoader> Pets { get; set; } = new List<PetLoader>();
     public ILine OnMod { get; set; }
 
@@ -44,8 +45,9 @@ public partial class MPFriends : WindowX
         return OnMod.Find(ModName.ToLower()) != null;
     }
 
-    public MPFriends(MainWindow mw, Lobby lb, Friend friend)
+    public MPFriends(winMutiPlayer wmp, MainWindow mw, Lobby lb, Friend friend)
     {
+        this.wmp = wmp;
         this.mw = mw;
         this.lb = lb;
         this.friend = friend;
@@ -206,23 +208,14 @@ public partial class MPFriends : WindowX
             Main.Resources = Application.Current.Resources;
             Main.MsgBar.This.Resources = Application.Current.Resources;
             Main.ToolBar.Resources = Application.Current.Resources;
-            Main.ToolBar.LoadClean();         
+            Main.ToolBar.LoadClean();
 
             LoadingText.Content = "正在加载游戏\n该步骤可能会耗时比较长\n请耐心等待".Translate();
 
-            Main.PlayVoiceVolume = mw.Set.VoiceVolume;            
+            Main.PlayVoiceVolume = mw.Set.VoiceVolume;
 
             DisplayGrid.Child = Main;
-            Task.Run(async () =>
-            {
-                while (Main.IsWorking)
-                {
-                    Thread.Sleep(100);
-                }
-                await Dispatcher.InvokeAsync(() => LoadingText.Visibility = Visibility.Collapsed);
-            });
 
-         
             Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
             Main.SetLogicInterval(1500);
             if (mw.Set.MessageBarOutside)
@@ -239,8 +232,30 @@ public partial class MPFriends : WindowX
                     new Point(pin[(gdbe)"px"], pin[(gdbe)"py"]), new Size(pin[(gdbe)"sw"], pin[(gdbe)"sh"])
                     , DisplayPinch, true));
             }
+            SteamMatchmaking.OnLobbyMemberDataChanged += SteamMatchmaking_OnLobbyMemberDataChanged;
+            SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
+            Loaded = true;
+
+            LoadingText.Content = "{0}的{1}".Translate(friend.Name, Core.Save.Name);
+            LoadingText.Background = Function.ResourcesBrush(Function.BrushType.DARKPrimaryTransA);
+            LoadingText.VerticalAlignment = VerticalAlignment.Top;
         }));
     }
+    public new bool Loaded = false;
+    private void SteamMatchmaking_OnLobbyMemberLeave(Lobby lobby, Friend friend)
+    {
+        if (lobby.Id == lb.Id && friend.Id == this.friend.Id)
+            Quit();
+    }
+
+    private void SteamMatchmaking_OnLobbyMemberDataChanged(Lobby lobby, Friend friend)
+    {
+        if (lobby.Id == lb.Id && friend.Id == this.friend.Id)
+        {
+            Core.Save = GameSave_VPet.Load(new Line(lb.GetMemberData(friend, "save")));
+        }
+    }
+
     /// <summary>
     /// 显示捏脸情况
     /// </summary>
@@ -296,5 +311,24 @@ public partial class MPFriends : WindowX
         {
             Main.DisplayCEndtoNomal("pinch");
         }
+    }
+
+    private void WindowX_Closed(object sender, EventArgs e)
+    {
+        wmp.MPFriends.Remove(this);
+        Loaded = false;
+    }
+    /// <summary>
+    /// 播放关闭动画并关闭,如果10秒后还未关闭则强制关闭
+    /// </summary>
+    public void Quit()
+    {
+        Main.Display(GraphType.Shutdown, AnimatType.Single, () => Dispatcher.Invoke(Close));
+        Task.Run(() =>
+        {
+            Thread.Sleep(5000);
+            if (Loaded)
+                Dispatcher.Invoke(Close);
+        });
     }
 }

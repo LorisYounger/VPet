@@ -1,13 +1,16 @@
 ﻿using LinePutScript;
+using LinePutScript.Converter;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using Steamworks;
 using Steamworks.Data;
+using Steamworks.ServerList;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +20,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using VPet_Simulator.Core;
+using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -29,7 +34,7 @@ public partial class winMutiPlayer : Window
     /// <summary>
     /// 好友宠物模块
     /// </summary>
-    List<MPFriends> mFriends = new List<MPFriends>();
+    public List<MPFriends> MPFriends = new List<MPFriends>();
     public winMutiPlayer(MainWindow mw, ulong? lobbyid = null)
     {
         InitializeComponent();
@@ -66,8 +71,13 @@ public partial class winMutiPlayer : Window
         swAllowJoin.Visibility = Visibility.Visible;
         ShowLobbyInfo();
     }
-    public static BitmapFrame ConvertToImageSource(Steamworks.Data.Image image)
+    public static ImageSource ConvertToImageSource(Steamworks.Data.Image? img)
     {
+        if (img == null)
+        {
+            return new BitmapImage(new Uri("pack://application:,,,/Res/vpeticon.png"));
+        }
+        var image = img.Value;
         int stride = (int)((image.Width * 32 + 7) / 8); // 32 bits per pixel
                                                         // Convert RGBA to BGRA
         for (int i = 0; i < image.Data.Length; i += 4)
@@ -103,19 +113,48 @@ public partial class winMutiPlayer : Window
         lb.SetMemberData("petgraph", mw.Set.PetGraph);
 
         SteamMatchmaking.OnLobbyDataChanged += SteamMatchmaking_OnLobbyDataChanged;
-        SteamMatchmaking.OnLobbyMemberDataChanged += SteamMatchmaking_OnLobbyMemberDataChanged;
         SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
         hostName.Text = lb.Owner.Name;
         lbLid.Text = lb.Id.Value.ToString("x");
         Steamworks.Data.Image? img = await lb.Owner.GetMediumAvatarAsync();
-        if (img.HasValue)
+        HostHead.Source = ConvertToImageSource(img.Value);
+
+        //给自己动画添加绑定
+        mw.Main.GraphDisplayHandler += Main_GraphDisplayHandler;
+        if (lb.Owner.Id == SteamClient.SteamId)
         {
-            HostHead.Source = ConvertToImageSource(img.Value);
+            hostPet.Text = mw.GameSavesData.GameSave.Name;
+            Title = "{0}的访客表".Translate(mw.GameSavesData.GameSave.Name);
         }
-        else
+        //获取成员列表
+        foreach (var v in lb.Members)
         {
-            HostHead.Source = new BitmapImage(new Uri("pack://application:,,,/Res/vpeticon.png"));
+            if (v.Id == SteamClient.SteamId) continue;
+            var mpf = new MPFriends(this, mw, lb, v);
+            MPFriends.Add(mpf);
+            mpf.Show();
+            var mpuc = new MPUserControl(this, mpf);
+            MUUCList.Children.Add(mpuc);
+            if (v.Id == lb.Owner.Id)
+                _ = Task.Run(() =>
+                {
+                    //加载lobby传过来的数据       
+                    while (!mpf.Loaded)
+                    {
+                        Thread.Sleep(500);
+                    }
+                    Dispatcher.Invoke(() =>
+                    {
+                        Title = "{0}的访客表".Translate(mpf.Core.Save.Name);
+                        hostPet.Text = mpf.Core.Save.Name;
+                    });
+                });
         }
+    }
+
+    private void Main_GraphDisplayHandler(GraphInfo info)
+    {
+        lb.SendChatString(MPMessage.ConverTo(new MPMessage() { Type = MPMessage.MSGType.DispayGraph, Content = LPSConvert.SerializeObject(info).ToString() }));
     }
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
@@ -146,11 +185,11 @@ public partial class winMutiPlayer : Window
     {
         SteamMatchmaking.OnLobbyDataChanged -= SteamMatchmaking_OnLobbyDataChanged;
         SteamMatchmaking.OnLobbyMemberDataChanged -= SteamMatchmaking_OnLobbyMemberDataChanged;
-        lb.SetMemberData("leave", DateTime.Now.ToString());
+        mw.Main.GraphDisplayHandler -= Main_GraphDisplayHandler;
         lb.Leave();
-        foreach (var item in mFriends)
+        for (int i = 0; i < MPFriends.Count; i++)
         {
-            item.Close();
+            MPFriends[i].Quit();
         }
         mw.winMutiPlayer = null;
     }
