@@ -347,6 +347,11 @@ namespace VPet_Simulator.Windows
         }
         private void Exit()
         {
+            Task.Run(() =>
+            {
+                Thread.Sleep(10000);//等待10秒不退出强退
+                Environment.Exit(0);
+            });
             if (App.MainWindows.Count <= 1)
             {
                 try
@@ -367,6 +372,7 @@ namespace VPet_Simulator.Windows
                     while (Windows.Count != 0)
                     {
                         Windows[0].Close();
+                        Windows.RemoveAt(0);
                     }
                     Main?.Dispose();
                     AutoSaveTimer?.Stop();
