@@ -222,7 +222,19 @@ namespace VPet_Simulator.Windows
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "访客表".Translate(), () =>
+                        var menuItem = new MenuItem()
+                        {
+                            Header = "访客表".Translate(),
+                            HorizontalContentAlignment = HorizontalAlignment.Center
+                        };
+                        Main.ToolBar.MenuInteract.Items.Add(menuItem);
+
+                        var menuCreate = new MenuItem()
+                        {
+                            Header = "创建".Translate(),
+                            HorizontalContentAlignment = HorizontalAlignment.Center
+                        };
+                        menuCreate.Click += (_, _) =>
                         {
                             if (winMutiPlayer == null)
                             {
@@ -231,9 +243,38 @@ namespace VPet_Simulator.Windows
                             }
                             else
                             {
+                                MessageBoxX.Show("已经有加入了一个访客表,无法再创建更多".Translate());
                                 winMutiPlayer.Focus();
                             }
-                        });
+                        };
+                        menuItem.Items.Add(menuCreate);
+
+                        var menuJoin = new MenuItem()
+                        {
+                            Header = "加入".Translate(),
+                            HorizontalContentAlignment = HorizontalAlignment.Center
+                        };
+                        menuJoin.Click += (_, _) =>
+                        {
+                            if (winMutiPlayer == null)
+                            {
+                                winInputBox.Show(this, "请输入访客表ID".Translate(), "加入访客表".Translate(), "", (id) =>
+                                {
+                                    if (ulong.TryParse(id, NumberStyles.HexNumber, null, out ulong lid))
+                                    {
+                                        winMutiPlayer = new winMutiPlayer(this, lid);
+                                        winMutiPlayer.Show();
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                MessageBoxX.Show("已经有加入了一个访客表,无法再创建更多".Translate());
+                                winMutiPlayer.Focus();
+                            }
+                        };
+                        menuItem.Items.Add(menuJoin);
+
                         int clid = Array.IndexOf(App.Args, "connect_lobby");
                         if (clid != -1)
                         {

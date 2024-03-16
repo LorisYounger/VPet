@@ -176,6 +176,9 @@ public partial class winWorkMenu : Window
     private void btnStart_Click(object sender, RoutedEventArgs e)
     {
         if (nowworkdisplay != null)
+        {
             mw.Main.StartWork(nowworkdisplay);
+            Close();
+        }
     }
 }

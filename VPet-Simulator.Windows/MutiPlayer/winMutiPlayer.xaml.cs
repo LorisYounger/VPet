@@ -42,7 +42,7 @@ public partial class winMutiPlayer : Window
     public async void JoinLobby(ulong? lobbyid)
     {
         var lbt = (await SteamMatchmaking.JoinLobbyAsync((SteamId)lobbyid));
-        if (!lbt.HasValue)
+        if (!lbt.HasValue || lbt.Value.Owner.Id.Value == 0)
         {
             MessageBoxX.Show("加入/创建访客表失败，请检查网络连接或重启游戏".Translate());
             Close();
@@ -98,7 +98,6 @@ public partial class winMutiPlayer : Window
     }
     public async void ShowLobbyInfo()
     {
-
         lb.SetMemberData("save", mw.GameSavesData.GameSave.ToLine().ToString());
         lb.SetMemberData("onmod", mw.Set.FindLine("onmod")?.ToString() ?? "onmod");
         lb.SetMemberData("petgraph", mw.Set.PetGraph);
@@ -158,10 +157,11 @@ public partial class winMutiPlayer : Window
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (MessageBoxX.Show("确定要关闭访客表吗?".Translate(), "离开游戏", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-        {
-            e.Cancel = true;
-        }
+        if (!lb.Equals(default(Lobby)))
+            if (MessageBoxX.Show("确定要关闭访客表吗?".Translate(), "离开游戏", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
+            }
     }
 
     private void swAllowJoin_Checked(object sender, RoutedEventArgs e)
