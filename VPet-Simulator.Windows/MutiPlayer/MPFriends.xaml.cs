@@ -20,6 +20,9 @@ using System.Drawing;
 using Point = System.Windows.Point;
 using Size = System.Windows.Size;
 using static VPet_Simulator.Core.GraphInfo;
+using System.Xml.Linq;
+using System.Windows.Interop;
+using LinePutScript.Converter;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -60,7 +63,6 @@ public partial class MPFriends : WindowX
 
             //MGrid.Height = 500 * mw.Set.ZoomLevel;
             MGrid.Width = 500 * mw.Set.ZoomLevel;
-
             double L = 0, T = 0;
             if (mw.Set.StartRecordLast)
             {
@@ -203,6 +205,9 @@ public partial class MPFriends : WindowX
 
             Core.Graph = petloader.Graph(mw.Set.Resolution);
             Main = new Main(Core);
+            Main.DisplayNomal = DisplayMPNomal;
+            Main.EventTimer.AutoReset = false;
+            Main.EventTimer.Enabled = false;
 
             //清空资源
             Main.Resources = Application.Current.Resources;
@@ -232,28 +237,25 @@ public partial class MPFriends : WindowX
                     new Point(pin[(gdbe)"px"], pin[(gdbe)"py"]), new Size(pin[(gdbe)"sw"], pin[(gdbe)"sh"])
                     , DisplayPinch, true));
             }
-            SteamMatchmaking.OnLobbyMemberDataChanged += SteamMatchmaking_OnLobbyMemberDataChanged;
-            SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
-            Loaded = true;
-
             LoadingText.Content = "{0}的{1}".Translate(friend.Name, Core.Save.Name);
             LoadingText.Background = Function.ResourcesBrush(Function.BrushType.DARKPrimaryTransA);
             LoadingText.VerticalAlignment = VerticalAlignment.Top;
+
+            Loaded = true;
         }));
     }
     public new bool Loaded = false;
-    private void SteamMatchmaking_OnLobbyMemberLeave(Lobby lobby, Friend friend)
+    /// <summary>
+    /// 显示默认动画
+    /// </summary>
+    private void DisplayMPNomal()
     {
-        if (lobby.Id == lb.Id && friend.Id == this.friend.Id)
-            Quit();
-    }
+        Core.Save = GameSave_VPet.Load(new Line(lb.GetMemberData(friend, "save")));
 
-    private void SteamMatchmaking_OnLobbyMemberDataChanged(Lobby lobby, Friend friend)
-    {
-        if (lobby.Id == lb.Id && friend.Id == this.friend.Id)
-        {
-            Core.Save = GameSave_VPet.Load(new Line(lb.GetMemberData(friend, "save")));
-        }
+        if (DisplayGraph(LPSConvert.DeserializeObject<GraphInfo>(new LPS(lb.GetMemberData(friend, "display"))))) return;
+
+        Main.CountNomal++;
+        Main.Display(GraphType.Default, AnimatType.Single, DisplayMPNomal);
     }
 
     /// <summary>
@@ -313,11 +315,6 @@ public partial class MPFriends : WindowX
         }
     }
 
-    private void WindowX_Closed(object sender, EventArgs e)
-    {
-        wmp.MPFriends.Remove(this);
-        Loaded = false;
-    }
     /// <summary>
     /// 播放关闭动画并关闭,如果10秒后还未关闭则强制关闭
     /// </summary>
@@ -330,5 +327,30 @@ public partial class MPFriends : WindowX
             if (Loaded)
                 Dispatcher.Invoke(Close);
         });
+    }
+
+    public bool DisplayGraph(GraphInfo gi)
+    {
+        if (!Loaded || Main.DisplayType.Type == GraphType.StartUP || Main.DisplayType.Type == GraphType.Raised_Dynamic || Main.DisplayType.Type == GraphType.Raised_Static)
+        {
+            return false;
+        }
+        if (gi.Type == Main.DisplayType.Type && gi.Animat == Main.DisplayType.Animat)
+        {
+            if (gi.Type != GraphType.Common)
+                return false;
+        }
+        var img = Core.Graph.FindGraph(gi.Name, gi.Animat, Core.Save.Mode);
+        if (img != null)
+        {
+            Main.Display(img, DisplayMPNomal);
+            return true;
+        }
+        return false;
+    }
+
+    private void WindowX_Closed(object sender, EventArgs e)
+    {
+        mw.Windows.Remove(this);
     }
 }

@@ -73,7 +73,7 @@ public partial class winWorkMenu : Window
         }
         else
         {
-            int max = mw.GameSavesData.GameSave.Level / (nowwork.LevelLimit + 10);
+            int max = Math.Min(4000, mw.GameSavesData.GameSave.Level) / (nowwork.LevelLimit + 10);
             if (max <= 1)
             {
                 wDouble.IsEnabled = false;
@@ -83,7 +83,7 @@ public partial class winWorkMenu : Window
             {
                 wDouble.IsEnabled = true;
                 wDouble.Maximum = max;
-                wDouble.Value = mw.Set.GameData.GetDouble("workmenu_" + nowwork.Name, 1);
+                wDouble.Value = mw.Set.GameData.GetInt("workmenu_" + nowwork.Name, 1);
             }
         }
         if (wDouble.Value == 1)
@@ -147,6 +147,7 @@ public partial class winWorkMenu : Window
     private void wDouble_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (!AllowChange) return;
+        mw.Set.GameData.SetInt("workmenu_" + nowwork.Name, (int)wDouble.Value);
         ShowWork(nowwork.Double((int)wDouble.Value));
     }
 

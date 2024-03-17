@@ -46,9 +46,13 @@ namespace VPet_Simulator.Core
             }
         }
         /// <summary>
-        /// 显示默认情况
+        /// 显示默认情况, 默认为默认动画
         /// </summary>
-        public void DisplayNomal()
+        public Action DisplayNomal;
+        /// <summary>
+        /// 显示默认动画
+        /// </summary>
+        public void DisplayDefault()
         {
             CountNomal++;
             Display(GraphType.Default, AnimatType.Single, DisplayNomal);
@@ -68,51 +72,6 @@ namespace VPet_Simulator.Core
                 Display(graph, EndAction);
                 return true;
             }
-            //switch (DisplayType)
-            //{
-            //    case GraphType.Idel:
-            //        Display(GraphType.Boring_C_End, EndAction);
-            //        return true;
-            //    case GraphType.Squat_B_Loop:
-            //        Display(GraphType.Squat_C_End, EndAction);
-            //        return true;
-            //    case GraphType.Crawl_Left_B_Loop:
-            //        Display(GraphType.Crawl_Left_C_End, EndAction);
-            //        return true;
-            //    case GraphType.Crawl_Right_B_Loop:
-            //        Display(GraphType.Crawl_Right_C_End, EndAction);
-            //        return true;
-            //    case GraphType.Fall_Left_B_Loop:
-            //        Display(GraphType.Fall_Left_C_End,
-            //            () => Display(GraphType.Climb_Up_Left, EndAction));
-            //        return true;
-            //    case GraphType.Fall_Right_B_Loop:
-            //        Display(GraphType.Fall_Right_C_End,
-            //            () => Display(GraphType.Climb_Up_Right, EndAction));
-            //        return true;
-            //    case GraphType.Walk_Left_B_Loop:
-            //        Display(GraphType.Walk_Left_C_End, EndAction);
-            //        return true;
-            //    case GraphType.Walk_Right_B_Loop:
-            //        Display(GraphType.Walk_Right_C_End, EndAction);
-            //        return true;
-            //    case GraphType.Sleep_B_Loop:
-            //        State = WorkingState.Nomal;
-            //        Display(GraphType.Sleep_C_End, EndAction);
-            //        return true;
-            //    case GraphType.Idel_StateONE_B_Loop:
-            //        Display(GraphType.Idel_StateONE_C_End, EndAction);
-            //        return true;
-            //    case GraphType.Idel_StateTWO_B_Loop:
-            //        Display(GraphType.Idel_StateTWO_C_End, () => Display(GraphType.Idel_StateONE_C_End, EndAction));
-            //        return true;
-            //        //case GraphType.Climb_Left:
-            //        //case GraphType.Climb_Right:
-            //        //case GraphType.Climb_Top_Left:
-            //        //case GraphType.Climb_Top_Right:
-            //        //    DisplayFalled_Left();
-            //        //    return true;
-            //}
             return false;
         }
         /// <summary>

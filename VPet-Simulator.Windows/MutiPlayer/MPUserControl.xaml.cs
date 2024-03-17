@@ -22,9 +22,9 @@ namespace VPet_Simulator.Windows;
 /// </summary>
 public partial class MPUserControl : Border
 {
-    Friend friend => mpf.friend;
+    public Friend friend => mpf.friend;
     winMutiPlayer wmp;
-    MPFriends mpf;
+    public MPFriends mpf;
     Lobby lb => mpf.lb;
     public MPUserControl(winMutiPlayer wmp, MPFriends mpf)
     {

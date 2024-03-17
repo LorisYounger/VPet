@@ -12,7 +12,7 @@ namespace VPet_Simulator.Windows.Interface;
 /// 多人模式传输的消息
 /// </summary>
 public struct MPMessage
-{
+{  
     /// <summary>
     /// 消息类型
     /// </summary>
@@ -48,10 +48,6 @@ public struct MPMessage
     /// 消息内容
     /// </summary>
     public string Content;
-    /// <summary>
-    /// 操作来自者 (也可能是自己)
-    /// </summary>
-    public ulong From;
     /// <summary>
     /// 被操作者 (显示动画用)
     /// </summary>

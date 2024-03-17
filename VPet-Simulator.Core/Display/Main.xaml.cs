@@ -68,6 +68,8 @@ namespace VPet_Simulator.Core
             UIGrid.Children.Add(MsgBar.This);
             labeldisplaytimer.Elapsed += Labledisplaytimer_Elapsed;
 
+            DisplayNomal = DisplayDefault;
+
             if (loadtouchevent)
             {
                 LoadTouchEvent();

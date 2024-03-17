@@ -19,15 +19,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Interop;
-using System.Windows.Media.Imaging;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
 using Timer = System.Timers.Timer;
 using ToolBar = VPet_Simulator.Core.ToolBar;
-
-using MessageBox = System.Windows.MessageBox;
 using ContextMenu = System.Windows.Forms.ContextMenuStrip;
 using MenuItem = System.Windows.Forms.ToolStripMenuItem;
 using Application = System.Windows.Application;
@@ -378,7 +375,7 @@ namespace VPet_Simulator.Windows
                 }
             }
 
-            foreach (Sub sub in Set["diy"])
+            foreach (ISub sub in Set["diy"])
                 Main.ToolBar.AddMenuButton(ToolBar.MenuType.DIY, sub.Name, () =>
                 {
                     Main.ToolBar.Visibility = Visibility.Collapsed;
@@ -1334,7 +1331,7 @@ namespace VPet_Simulator.Windows
             Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
 
             var workshop = Set["workshop"];
-            foreach (Sub ws in workshop)
+            foreach (ISub ws in workshop)
             {
                 Path.Add(new DirectoryInfo(ws.Name));
             }
@@ -1944,6 +1941,7 @@ namespace VPet_Simulator.Windows
                                  var panelWindow = new winCharacterPanel(this);
                                  panelWindow.MainTab.SelectedIndex = 2;
                                  panelWindow.Show();
+                                 Main.MsgBar.ForceClose();
                              };
                              return button;
                          });

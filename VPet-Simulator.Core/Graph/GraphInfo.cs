@@ -22,6 +22,13 @@ namespace VPet_Simulator.Core
     public class GraphInfo
     {
         /// <summary>
+        /// 用于Convert的空动画信息
+        /// </summary>
+        public GraphInfo()
+        {
+
+        }
+        /// <summary>
         /// 创建动画信息
         /// </summary>
         /// <param name="name">动画名字: 用户自定义 同名字动画支持相同随机,不再使用StoreRand</param>

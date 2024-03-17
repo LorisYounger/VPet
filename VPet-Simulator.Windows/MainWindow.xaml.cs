@@ -322,6 +322,7 @@ namespace VPet_Simulator.Windows
                 {
                     winMutiPlayer = new winMutiPlayer(this, lobby.Id);
                     winMutiPlayer.Show();
+                    Main.MsgBar.ForceClose();
                 };
                 Main.Say("收到来自{0}的访客邀请,是否加入?".Translate(friend.Name), msgcontent: btn);
             });
@@ -393,8 +394,9 @@ namespace VPet_Simulator.Windows
                     }
                     while (Windows.Count != 0)
                     {
-                        Windows[0].Close();
-                        Windows.RemoveAt(0);
+                        var w = Windows[0];
+                        w.Close();
+                        Windows.Remove(w);
                     }
                     Main?.Dispose();
                     AutoSaveTimer?.Stop();

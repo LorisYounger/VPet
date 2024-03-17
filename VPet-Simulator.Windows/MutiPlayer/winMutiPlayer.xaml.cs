@@ -22,6 +22,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
+using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -35,6 +36,7 @@ public partial class winMutiPlayer : Window
     /// 好友宠物模块
     /// </summary>
     public List<MPFriends> MPFriends = new List<MPFriends>();
+    public List<MPUserControl> MPUserControls = new List<MPUserControl>();
     public winMutiPlayer(MainWindow mw, ulong? lobbyid = null)
     {
         InitializeComponent();
@@ -46,7 +48,6 @@ public partial class winMutiPlayer : Window
     }
     public async void JoinLobby(ulong lobbyid)
     {
-        MessageBoxX.Show(lobbyid.ToString("x"));
         var lbt = (await SteamMatchmaking.JoinLobbyAsync((SteamId)lobbyid));
         if (!lbt.HasValue || lbt.Value.Owner.Id.Value == 0)
         {
@@ -107,6 +108,7 @@ public partial class winMutiPlayer : Window
         BitmapFrame result = BitmapFrame.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
         return result;
     }
+    ulong owner;
     public async void ShowLobbyInfo()
     {
         lb.SetMemberData("save", mw.GameSavesData.GameSave.ToLine().ToString());
@@ -115,14 +117,16 @@ public partial class winMutiPlayer : Window
 
         SteamMatchmaking.OnLobbyDataChanged += SteamMatchmaking_OnLobbyDataChanged;
         SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
+        SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
         hostName.Text = lb.Owner.Name;
+        owner = lb.Owner.Id.Value;
         lbLid.Text = lb.Id.Value.ToString("x");
         Steamworks.Data.Image? img = await lb.Owner.GetMediumAvatarAsync();
         HostHead.Source = ConvertToImageSource(img.Value);
 
         //给自己动画添加绑定
         mw.Main.GraphDisplayHandler += Main_GraphDisplayHandler;
-        if (lb.Owner.Id == SteamClient.SteamId)
+        if (lb.Owner.IsMe)
         {
             hostPet.Text = mw.GameSavesData.GameSave.Name;
             Title = "{0}的访客表".Translate(mw.GameSavesData.GameSave.Name);
@@ -136,6 +140,8 @@ public partial class winMutiPlayer : Window
             mpf.Show();
             var mpuc = new MPUserControl(this, mpf);
             MUUCList.Children.Add(mpuc);
+            MPUserControls.Add(mpuc);
+            SteamNetworking.AcceptP2PSessionWithUser(v.Id);
             if (v.Id == lb.Owner.Id)
                 _ = Task.Run(() =>
                 {
@@ -152,9 +158,35 @@ public partial class winMutiPlayer : Window
                 });
         }
     }
+
+    private void SteamMatchmaking_OnLobbyMemberLeave(Lobby lobby, Friend friend)
+    {
+        if (friend.Id == owner)
+        {
+            Task.Run(() => MessageBox.Show("访客表已被房主{0}关闭".Translate(friend.Name)));
+            lb = default(Lobby);
+            Close();
+        }
+        else
+        {
+            var mpuc = MPUserControls.Find(x => x.mpf.friend.Id == friend.Id);
+            if (mpuc != null)
+            {
+                MPUserControls.Remove(mpuc);
+                MUUCList.Children.Remove(mpuc);
+                MPFriends.Remove(mpuc.mpf);
+            }
+        }
+    }
+
     private void Main_GraphDisplayHandler(GraphInfo info)
     {
-        lb.SendChatString(MPMessage.ConverTo(new MPMessage() { Type = MPMessage.MSGType.DispayGraph, Content = LPSConvert.SerializeObject(info).ToString() }));
+        if (info.Type == GraphType.Shutdown || info.Type == GraphType.Common || info.Type == GraphType.Move
+            || info.Type == GraphType.Raised_Dynamic || info.Type == GraphType.Raised_Static || info.Type == GraphType.Default)
+        {
+            return;
+        }
+        lb.SetMemberData("display", LPSConvert.SerializeObject(info).ToString());
     }
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
@@ -165,31 +197,18 @@ public partial class winMutiPlayer : Window
         }
     }
 
-    private void SteamMatchmaking_OnLobbyMemberDataChanged(Lobby lobby, Friend friend)
-    {
-        if (lobby.Id == lb.Id)
-        {
-
-        }
-    }
 
     private void SteamMatchmaking_OnLobbyDataChanged(Lobby lobby)
     {
         if (lobby.Id == lb.Id)
         {
-            if (lb.GetData("leave") == "true")
-            {
-                MessageBoxX.Show("访客表已被房主{0}关闭".Translate(lb.Owner.Name));
-                lb = default(Lobby);
-                Close();
-            }
+
         }
     }
 
     private void Window_Closed(object sender, EventArgs e)
     {
         SteamMatchmaking.OnLobbyDataChanged -= SteamMatchmaking_OnLobbyDataChanged;
-        SteamMatchmaking.OnLobbyMemberDataChanged -= SteamMatchmaking_OnLobbyMemberDataChanged;
         mw.Main.GraphDisplayHandler -= Main_GraphDisplayHandler;
         if (lb.Owner.Id == SteamClient.SteamId)
             lb.SetData("leave", "true");
