@@ -58,7 +58,6 @@ public partial class MPFriends : WindowX
         mw.Windows.Add(this);
         try
         {
-
             InitializeComponent();
 
             //MGrid.Height = 500 * mw.Set.ZoomLevel;
@@ -119,23 +118,20 @@ public partial class MPFriends : WindowX
             Close();
             return;
         }
-
-
-        ImageSources.AddRange(mw.ImageSources);
-
-
-        //加载所有MOD
-        List<DirectoryInfo> Path = new List<DirectoryInfo>();
-        Path.AddRange(new DirectoryInfo(mw.ModPath).EnumerateDirectories());
-
-        var workshop = mw.Set["workshop"];
-        foreach (Sub ws in workshop)
-        {
-            Path.Add(new DirectoryInfo(ws.Name));
-        }
-
         Task.Run(async () =>
         {
+            ImageSources.AddRange(mw.ImageSources);
+
+            //加载所有MOD
+            List<DirectoryInfo> Path = new List<DirectoryInfo>();
+            Path.AddRange(new DirectoryInfo(mw.ModPath).EnumerateDirectories());
+
+            var workshop = mw.Set["workshop"];
+            foreach (Sub ws in workshop)
+            {
+                Path.Add(new DirectoryInfo(ws.Name));
+            }
+
             //加载lobby传过来的数据
             string tmp = lb.GetMemberData(friend, "save");
             while (string.IsNullOrEmpty(tmp))
@@ -205,7 +201,6 @@ public partial class MPFriends : WindowX
 
             Core.Graph = petloader.Graph(mw.Set.Resolution);
             Main = new Main(Core);
-            Main.DisplayNomal = DisplayMPNomal;
             Main.EventTimer.AutoReset = false;
             Main.EventTimer.Enabled = false;
 
@@ -244,19 +239,7 @@ public partial class MPFriends : WindowX
             Loaded = true;
         }));
     }
-    public new bool Loaded = false;
-    /// <summary>
-    /// 显示默认动画
-    /// </summary>
-    private void DisplayMPNomal()
-    {
-        Core.Save = GameSave_VPet.Load(new Line(lb.GetMemberData(friend, "save")));
-
-        if (DisplayGraph(LPSConvert.DeserializeObject<GraphInfo>(new LPS(lb.GetMemberData(friend, "display"))))) return;
-
-        Main.CountNomal++;
-        Main.Display(GraphType.Default, AnimatType.Single, DisplayMPNomal);
-    }
+    public new bool Loaded = false;   
 
     /// <summary>
     /// 显示捏脸情况
@@ -343,7 +326,7 @@ public partial class MPFriends : WindowX
         var img = Core.Graph.FindGraph(gi.Name, gi.Animat, Core.Save.Mode);
         if (img != null)
         {
-            Main.Display(img, DisplayMPNomal);
+            Main.Display(img);
             return true;
         }
         return false;

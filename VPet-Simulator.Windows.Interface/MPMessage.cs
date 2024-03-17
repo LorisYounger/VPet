@@ -11,8 +11,9 @@ namespace VPet_Simulator.Windows.Interface;
 /// <summary>
 /// 多人模式传输的消息
 /// </summary>
+[Serializable]
 public struct MPMessage
-{  
+{
     /// <summary>
     /// 消息类型
     /// </summary>
@@ -53,6 +54,6 @@ public struct MPMessage
     /// </summary>
     public ulong To;
 
-    public static string ConverTo(MPMessage data) => LPSConvert.SerializeObject(data).ToString();
-    public static MPMessage ConverTo(string data) => LPSConvert.DeserializeObject<MPMessage>(new LPS(data));
+    public static byte[] ConverTo(MPMessage data) => Encoding.UTF8.GetBytes(LPSConvert.SerializeObject(data).ToString());
+    public static MPMessage ConverTo(byte[] data) => LPSConvert.DeserializeObject<MPMessage>(new LPS(Encoding.UTF8.GetString(data)));
 }

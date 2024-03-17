@@ -123,6 +123,11 @@ public partial class winMutiPlayer : Window
         lbLid.Text = lb.Id.Value.ToString("x");
         Steamworks.Data.Image? img = await lb.Owner.GetMediumAvatarAsync();
         HostHead.Source = ConvertToImageSource(img.Value);
+        SteamNetworking.AllowP2PPacketRelay(true);
+        SteamNetworking.OnP2PSessionRequest = (steamid) =>
+        {
+            SteamNetworking.AcceptP2PSessionWithUser(steamid);
+        };
 
         //给自己动画添加绑定
         mw.Main.GraphDisplayHandler += Main_GraphDisplayHandler;
@@ -141,7 +146,6 @@ public partial class winMutiPlayer : Window
             var mpuc = new MPUserControl(this, mpf);
             MUUCList.Children.Add(mpuc);
             MPUserControls.Add(mpuc);
-            SteamNetworking.AcceptP2PSessionWithUser(v.Id);
             if (v.Id == lb.Owner.Id)
                 _ = Task.Run(() =>
                 {
@@ -157,6 +161,7 @@ public partial class winMutiPlayer : Window
                     });
                 });
         }
+        _ = Task.Run(LoopP2PPacket);
     }
 
     private void SteamMatchmaking_OnLobbyMemberLeave(Lobby lobby, Friend friend)
@@ -175,6 +180,7 @@ public partial class winMutiPlayer : Window
                 MPUserControls.Remove(mpuc);
                 MUUCList.Children.Remove(mpuc);
                 MPFriends.Remove(mpuc.mpf);
+                mpuc.mpf.Quit();
             }
         }
     }
@@ -186,14 +192,28 @@ public partial class winMutiPlayer : Window
         {
             return;
         }
-        lb.SetMemberData("display", LPSConvert.SerializeObject(info).ToString());
+        MPMessage msg = new MPMessage();
+        msg.Type = MPMessage.MSGType.DispayGraph;
+        msg.Content = LPSConvert.SerializeObject(info).ToString();
+        msg.To = SteamClient.SteamId.Value;
+        byte[] data = MPMessage.ConverTo(msg);
+        for (int i = 0; i < MPFriends.Count; i++)
+        {
+            MPFriends v = MPFriends[i];
+            SteamNetworking.SendP2PPacket(v.friend.Id, data);
+        }
     }
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
         if (lobby.Id == lb.Id)
         {
-
+            var mpf = new MPFriends(this, mw, lb, friend);
+            MPFriends.Add(mpf);
+            mpf.Show();
+            var mpuc = new MPUserControl(this, mpf);
+            MUUCList.Children.Add(mpuc);
+            MPUserControls.Add(mpuc);
         }
     }
 
@@ -205,13 +225,32 @@ public partial class winMutiPlayer : Window
 
         }
     }
-
+    private void LoopP2PPacket()
+    {
+        while (SteamNetworking.IsP2PPacketAvailable() && isOPEN)
+        {
+            var packet = SteamNetworking.ReadP2PPacket();
+            if (packet.HasValue)
+            {
+                var From = packet.Value.SteamId;
+                var MSG = MPMessage.ConverTo(packet.Value.Data);
+                var TO = MPFriends.Find(x => x.friend.Id == MSG.To);
+                switch (MSG.Type)
+                {
+                    case MPMessage.MSGType.DispayGraph:
+                        var info = LPSConvert.DeserializeObject<GraphInfo>(new LPS(MSG.Content));
+                        TO.DisplayGraph(info);
+                        break;
+                }
+            }
+        }
+        Thread.Sleep(100);
+        LoopP2PPacket();
+    }
     private void Window_Closed(object sender, EventArgs e)
     {
         SteamMatchmaking.OnLobbyDataChanged -= SteamMatchmaking_OnLobbyDataChanged;
         mw.Main.GraphDisplayHandler -= Main_GraphDisplayHandler;
-        if (lb.Owner.Id == SteamClient.SteamId)
-            lb.SetData("leave", "true");
         lb.Leave();
         for (int i = 0; i < MPFriends.Count; i++)
         {
@@ -219,14 +258,16 @@ public partial class winMutiPlayer : Window
         }
         mw.winMutiPlayer = null;
     }
-
+    bool isOPEN = true;
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         if (!lb.Equals(default(Lobby)))
             if (MessageBoxX.Show("确定要关闭访客表吗?".Translate(), "离开游戏", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
             {
                 e.Cancel = true;
+                return;
             }
+        isOPEN = false;
     }
 
     private void swAllowJoin_Checked(object sender, RoutedEventArgs e)
