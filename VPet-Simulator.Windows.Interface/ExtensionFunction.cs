@@ -165,6 +165,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public static Work Double(this Work work, int value)
         {
+            if (value == 1) return work;
             Work w = (Work)work.Clone();
             w.MoneyBase *= value;
             w.StrengthFood *= 0.48 + 0.6 * value;
