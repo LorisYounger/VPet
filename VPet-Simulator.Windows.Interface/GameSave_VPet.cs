@@ -293,7 +293,7 @@ public class GameSave_VPet : IGameSave
     /// </summary>
     [Line(name: "mode")]
     public ModeType Mode { get; set; } = ModeType.Nomal;
-
+    [Line]
     public double LikabilityMax { get; set; } = 100;
 
     public double FeelingMax => 100 + (int)Math.Sqrt(Level) * 2;
