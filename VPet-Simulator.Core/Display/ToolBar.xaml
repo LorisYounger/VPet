@@ -109,7 +109,7 @@
         <Menu Width="500" VerticalAlignment="Bottom" pu:MenuHelper.SubmenuItemsHorizontalContentAlignment="Center"
                 pu:MenuHelper.TopLevelItemsHorizontalContentAlignment="Center"
                 Style="{DynamicResource ToolBarMenuStyle}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled" pu:DropDownHelper.Width="NaN"
                 pu:DropDownHelper.MaxHeight="500" Height="60">
             <Menu.ItemsPanel>
                 <ItemsPanelTemplate>

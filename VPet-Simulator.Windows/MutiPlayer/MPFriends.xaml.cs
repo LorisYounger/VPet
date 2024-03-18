@@ -23,6 +23,8 @@ using static VPet_Simulator.Core.GraphInfo;
 using System.Xml.Linq;
 using System.Windows.Interop;
 using LinePutScript.Converter;
+using static VPet_Simulator.Windows.Interface.MPMessage;
+using System.Windows.Input;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -207,10 +209,18 @@ public partial class MPFriends : WindowX
             Main.EventTimer.Enabled = false;
 
             //清空资源
-            //Main.Resources = Application.Current.Resources;
-            //Main.MsgBar.This.Resources = Application.Current.Resources;
-            //Main.ToolBar.Resources = Application.Current.Resources;
+            Main.Resources = Application.Current.Resources;
+            Main.MsgBar.This.Resources = Application.Current.Resources;
+            Main.ToolBar.Resources = Application.Current.Resources;
             Main.ToolBar.LoadClean();
+
+            HideForDesign.Children.Remove(MPTalkBox);
+            Main.ToolBar.MainGrid.Children.Add(MPTalkBox);
+
+            cbTalk.Items.Add("私聊".Translate());
+            cbTalk.Items.Add("公聊".Translate());
+            cbTalk.Items.Add("大家".Translate());
+            cbTalk.SelectedIndex = 1;
 
             LoadingText.Content = "正在加载游戏\n该步骤可能会耗时比较长\n请耐心等待".Translate();
 
@@ -240,7 +250,7 @@ public partial class MPFriends : WindowX
             Loaded = true;
         }));
     }
-    public new bool Loaded = false;   
+    public new bool Loaded = false;
 
     /// <summary>
     /// 显示捏脸情况
@@ -313,6 +323,29 @@ public partial class MPFriends : WindowX
         });
     }
 
+    /// <summary>
+    /// 智能化显示后续过度动画
+    /// </summary>
+    public void DisplayAuto(GraphInfo gi)
+    {
+        switch (gi.Animat)
+        {
+            case AnimatType.A_Start:
+                gi.Animat = AnimatType.B_Loop;
+                Main.Display(gi.Name, AnimatType.B_Loop, () => DisplayAuto(gi));
+                break;
+            case AnimatType.B_Loop:
+                Main.Display(gi.Name, AnimatType.B_Loop, () => DisplayAuto(gi));
+                break;
+            case AnimatType.C_End:
+            case AnimatType.Single:
+                Main.DisplayToNomal();
+                break;
+        }
+    }
+    /// <summary>
+    /// 根据好友数据显示动画
+    /// </summary>
     public bool DisplayGraph(GraphInfo gi)
     {
         if (!Loaded || Main.DisplayType.Type == GraphType.StartUP || Main.DisplayType.Type == GraphType.Raised_Dynamic || Main.DisplayType.Type == GraphType.Raised_Static)
@@ -327,14 +360,94 @@ public partial class MPFriends : WindowX
         var img = Core.Graph.FindGraph(gi.Name, gi.Animat, Core.Save.Mode);
         if (img != null)
         {
-            Main.Display(img);
+            Main.Display(img, () => DisplayAuto(gi));
             return true;
         }
         return false;
     }
 
+    public void DisplayMessage(Chat msg)
+    {
+        switch (msg.ChatType)
+        {
+            case Chat.Type.Private:
+                Main.Say("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
+                break;
+            case Chat.Type.Internal:
+                Main.Say("{0} 对你说: {1}".Translate(msg.SendName, msg.Content));
+                break;
+            case Chat.Type.Public:
+                Main.Say("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
+                break;
+        }
+    }
     private void WindowX_Closed(object sender, EventArgs e)
     {
         mw.Windows.Remove(this);
+    }
+    private void tbTalk_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter && e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control))
+        {
+            Send_Click(sender, e);
+            e.Handled = true;
+            Main.ToolBar.Visibility = Visibility.Collapsed;
+            return;
+        }
+        if (tbTalk.Text.Length > 0)
+        {
+            Main.ToolBar.CloseTimer.Stop();
+        }
+        else
+        {
+            Main.ToolBar.CloseTimer.Start();
+        }
+    }
+    private void Send_Click(object sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrEmpty(tbTalk.Text))
+        {
+            return;
+        }
+        var cont = tbTalk.Text;
+        tbTalk.Text = "";
+        Main.ToolBar.Visibility = Visibility.Collapsed;
+        int talktype = cbTalk.SelectedIndex;
+
+        Task.Run(() =>
+        {
+            MPMessage msg = new MPMessage();
+            msg.Type = MSGType.Chat;
+            msg.SetContent(new Chat() { Content = cont, ChatType = (Chat.Type)talktype, SendName = SteamClient.Name });
+            msg.To = SteamClient.SteamId;
+            switch (talktype)
+            {
+                case 0:
+                    wmp.SendMessage(friend.Id, msg);
+                    break;
+                case 1:
+                    wmp.SendMessageALL(msg);
+                    break;
+                case 2:
+                    wmp.SendMessageALL(msg);
+                    break;
+            }
+        });
+    }
+
+    private void cbTalk_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        switch (cbTalk.SelectedIndex)
+        {
+            case 0:
+                Panuon.WPF.UI.TextBoxHelper.SetWatermark(tbTalk, "和{0}悄悄说".Translate(friend.Name));
+                break;
+            case 1:
+                Panuon.WPF.UI.TextBoxHelper.SetWatermark(tbTalk, "和{0}说".Translate(friend.Name));
+                break;
+            case 2:
+                Panuon.WPF.UI.TextBoxHelper.SetWatermark(tbTalk, "和大家说");
+                break;
+        }
     }
 }

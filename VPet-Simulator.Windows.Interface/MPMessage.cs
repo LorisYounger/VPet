@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Interop;
+using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows.Interface;
 
@@ -23,9 +25,9 @@ public struct MPMessage
         /// </summary>
         Empty,
         /// <summary>
-        /// 聊天消息 (string)
+        /// 聊天消息 (chat)
         /// </summary>
-        Message,
+        Chat,
         /// <summary>
         /// 显示动画 (graphinfo)
         /// </summary>
@@ -51,7 +53,7 @@ public struct MPMessage
     /// <summary>
     /// 消息内容
     /// </summary>
-    [Line] public string Content { get; set; }
+    [Line] private string Content { get; set; }
     /// <summary>
     /// 被操作者 (显示动画用)
     /// </summary>
@@ -59,4 +61,49 @@ public struct MPMessage
 
     public static byte[] ConverTo(MPMessage data) => Encoding.UTF8.GetBytes(LPSConvert.SerializeObject(data).ToString());
     public static MPMessage ConverTo(byte[] data) => LPSConvert.DeserializeObject<MPMessage>(new LPS(Encoding.UTF8.GetString(data)));
+
+    public void SetContent(object content)
+    {
+        Content = LPSConvert.GetObjectString(content, convertNoneLineAttribute: true);
+    }
+    public T GetContent<T>()
+    {
+        return (T)LPSConvert.GetStringObject(Content, typeof(T), convertNoneLineAttribute: true);
+    }
+    /// <summary>
+    /// 聊天结构
+    /// </summary>
+    public struct Chat
+    {
+        /// <summary>
+        /// 聊天内容
+        /// </summary>
+        public string Content { get; set; }
+        /// <summary>
+        /// 消息类型
+        /// </summary>
+        public enum Type
+        {
+            /// <summary>
+            /// 私有
+            /// </summary>
+            Private,
+            /// <summary>
+            /// 半公开
+            /// </summary>
+            Internal,
+            /// <summary>
+            /// 公开
+            /// </summary>
+            Public
+        }
+        /// <summary>
+        /// 聊天类型
+        /// </summary>
+        public Type ChatType { get; set; }
+        /// <summary>
+        /// 发送者名字
+        /// </summary>
+        public string SendName { get; set; }
+    }
 }

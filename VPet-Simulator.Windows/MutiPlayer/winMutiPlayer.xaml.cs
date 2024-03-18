@@ -22,6 +22,7 @@ using System.Windows.Media.Imaging;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphInfo;
+using static VPet_Simulator.Windows.Interface.MPMessage;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -207,16 +208,34 @@ public partial class winMutiPlayer : Window
             return;
         }
         MPMessage msg = new MPMessage();
-        msg.Type = MPMessage.MSGType.DispayGraph;
-        msg.Content = LPSConvert.GetObjectString(info, convertNoneLineAttribute: true);
+        msg.Type = MSGType.DispayGraph;
+        msg.SetContent(info);
         msg.To = SteamClient.SteamId.Value;
-        byte[] data = MPMessage.ConverTo(msg);
+        SendMessageALL(msg);
+    }
+    /// <summary>
+    /// 给指定好友发送消息
+    /// </summary>
+    /// <param name="mpf"></param>
+    /// <param name="msg"></param>
+    public void SendMessage(ulong friendid, MPMessage msg)
+    {
+        byte[] data = ConverTo(msg);
+        SteamNetworking.SendP2PPacket(friendid, data);
+    }
+    /// <summary>
+    /// 给所有人发送消息
+    /// </summary>
+    public void SendMessageALL(MPMessage msg)
+    {
+        byte[] data = ConverTo(msg);
         for (int i = 0; i < MPFriends.Count; i++)
         {
             MPFriends v = MPFriends[i];
             SteamNetworking.SendP2PPacket(v.friend.Id, data);
         }
     }
+
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
@@ -241,33 +260,42 @@ public partial class winMutiPlayer : Window
     }
     private void LoopP2PPacket()
     {
-        while (SteamNetworking.IsP2PPacketAvailable())
+        try
         {
-            var packet = SteamNetworking.ReadP2PPacket();
-            if (packet.HasValue)
+            while (SteamNetworking.IsP2PPacketAvailable())
             {
-                var From = packet.Value.SteamId;
-                var test = Encoding.UTF8.GetString(packet.Value.Data);
-                var MSG = MPMessage.ConverTo(packet.Value.Data);
-                var TO = MPFriends.Find(x => x.friend.Id == MSG.To);
-                switch (MSG.Type)
+                var packet = SteamNetworking.ReadP2PPacket();
+                if (packet.HasValue)
                 {
-                    case MPMessage.MSGType.DispayGraph:
-                        TO.DisplayGraph((GraphInfo)LPSConvert.GetStringObject(MSG.Content, typeof(GraphInfo), convertNoneLineAttribute: true));
-                        break;
+                    var From = packet.Value.SteamId;
+                    var MSG = ConverTo(packet.Value.Data);
+                    var To = MPFriends.Find(x => x.friend.Id == MSG.To);
+                    switch (MSG.Type)
+                    {
+                        case MSGType.DispayGraph:
+                            To.DisplayGraph(MSG.GetContent<GraphInfo>());
+                            break;
+                        case MSGType.Chat:
+                            To.DisplayMessage(MSG.GetContent<Chat>());
+                            break;
+                    }
                 }
+                Thread.Sleep(100);
             }
-            Thread.Sleep(100);
+            Thread.Sleep(1000);
+            if (isOPEN)
+                LoopP2PPacket();
         }
-        Thread.Sleep(1000);
-        if (isOPEN)
-            LoopP2PPacket();
+        catch
+        {
 
+        }
     }
     private void Window_Closed(object sender, EventArgs e)
     {
         SteamMatchmaking.OnLobbyDataChanged -= SteamMatchmaking_OnLobbyDataChanged;
         mw.Main.GraphDisplayHandler -= Main_GraphDisplayHandler;
+        SteamMatchmaking.OnLobbyMemberJoined -= SteamMatchmaking_OnLobbyMemberJoined;
         lb.Leave();
         for (int i = 0; i < MPFriends.Count; i++)
         {

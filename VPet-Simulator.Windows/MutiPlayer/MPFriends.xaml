@@ -10,6 +10,30 @@
         <WindowChrome GlassFrameThickness="-1" />
     </WindowChrome.WindowChrome>
     <Grid x:Name="MGHost" x:FieldModifier="public">
+        <Grid x:Name="HideForDesign" Visibility="Collapsed" d:Visibility="Visible">
+            <Border x:Name="MPTalkBox" Background="{DynamicResource PrimaryLighter}"
+                    BorderBrush="{DynamicResource Primary}" BorderThickness="5" VerticalAlignment="Top"
+                    Margin="5,50,5,5" CornerRadius="5" Padding="5,5,5,3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="cbTalk" Style="{DynamicResource StandardComboBoxStyle}" Height="Auto"
+                            FontSize="30" VerticalAlignment="Center" Grid.Column="0"
+                            SelectionChanged="cbTalk_SelectionChanged" />
+                    <TextBox x:Name="tbTalk" Style="{DynamicResource StandardTextBoxStyle}" Height="Auto" FontSize="30"
+                            AcceptsReturn="True" TextWrapping="WrapWithOverflow" PreviewKeyDown="tbTalk_KeyDown"
+                            Grid.Column="1" ToolTip="{ll:Str 选择说话对象}" />
+                    <Button pu:ButtonHelper.CornerRadius="4" Content="{ll:Str '发送'}" BorderThickness="2"
+                            Background="{DynamicResource SecondaryLight}" Grid.Column="3"
+                            BorderBrush="{DynamicResource DARKPrimaryDarker}" FontSize="30"
+                            ToolTip="{ll:Str '按 Ctrl+Enter 发送'}" Click="Send_Click" />
+                </Grid>
+            </Border>
+        </Grid>
         <Grid x:Name="MGrid" Width="250" Height="Auto" x:FieldModifier="public">
             <Label x:Name="LoadingText" HorizontalAlignment="Center" VerticalAlignment="Center"
                     Background="{DynamicResource DARKPrimaryLight}" Foreground="{DynamicResource DARKPrimaryText}"
