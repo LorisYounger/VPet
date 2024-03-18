@@ -23,10 +23,10 @@
 	  <None Include="..\.editorconfig" Link=".editorconfig" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="LinePutScript" Version="1.11.4" />
+		<PackageReference Include="LinePutScript" Version="1.11.5" />
 		<PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.6" />
 		<PackageReference Include="Panuon.WPF" Version="1.1.0" />
-		<PackageReference Include="Panuon.WPF.UI" Version="1.2.0.3" />
+		<PackageReference Include="Panuon.WPF.UI" Version="1.2.0.4" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Properties\Resources.Designer.cs">
