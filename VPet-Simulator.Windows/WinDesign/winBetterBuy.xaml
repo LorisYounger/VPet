@@ -177,7 +177,7 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal"
-                                                                Width="{Binding ActualWidth, Converter={StaticResource {x:Static pu:ConverterKeys.DoubleDivideByConverter}},ConverterParameter=2, ElementName=StkContainer}">
+                                                            Width="{Binding ActualWidth, Converter={x:Static pu:Converters.DoubleDivideByConverter},ConverterParameter=2, ElementName=StkContainer}">
                                                         <TextBlock Foreground="{DynamicResource DARKPrimaryText}" FontSize="12" Width="37"
                                                                    Padding="0" VerticalAlignment="Center" Text="{Binding Key}" />
                                                         <TextBlock Text="："
@@ -206,7 +206,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Border x:Name="BdrImage" Margin="10,35,0,10" CornerRadius="5"
-                            Visibility="{Binding IsChecked,Converter={StaticResource {x:Static pu:ConverterKeys.TrueToCollapseConverter}}, ElementName=TbtnDetail}">
+                            Visibility="{Binding IsChecked,Converter={x:Static pu:Converters.TrueToCollapseConverter}, ElementName=TbtnDetail}">
                         <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
                     </Border>
                     <ToggleButton x:Name="TbtnStar" Grid.ColumnSpan="2" Margin="0,5,32,0" HorizontalAlignment="Right"
