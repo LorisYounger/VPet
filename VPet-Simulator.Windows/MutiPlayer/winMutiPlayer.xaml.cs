@@ -19,7 +19,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphInfo;
@@ -109,59 +108,74 @@ public partial class winMutiPlayer : Window
         return result;
     }
     ulong owner;
-    public async void ShowLobbyInfo()
+    public void ShowLobbyInfo()
     {
-        lb.SetMemberData("save", mw.GameSavesData.GameSave.ToLine().ToString());
-        lb.SetMemberData("onmod", mw.Set.FindLine("onmod")?.ToString() ?? "onmod");
-        lb.SetMemberData("petgraph", mw.Set.PetGraph);
+        _ = Task.Run(async () =>
+        {
+            lb.SetMemberData("save", mw.GameSavesData.GameSave.ToLine().ToString());
+            lb.SetMemberData("onmod", mw.Set.FindLine("onmod")?.ToString() ?? "onmod");
+            lb.SetMemberData("petgraph", mw.Set.PetGraph);
 
-        SteamMatchmaking.OnLobbyDataChanged += SteamMatchmaking_OnLobbyDataChanged;
-        SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
-        SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
-        hostName.Text = lb.Owner.Name;
-        owner = lb.Owner.Id.Value;
-        lbLid.Text = lb.Id.Value.ToString("x");
-        Steamworks.Data.Image? img = await lb.Owner.GetMediumAvatarAsync();
-        HostHead.Source = ConvertToImageSource(img.Value);
-        SteamNetworking.AllowP2PPacketRelay(true);
-        SteamNetworking.OnP2PSessionRequest = (steamid) =>
-        {
-            SteamNetworking.AcceptP2PSessionWithUser(steamid);
-        };
+            SteamMatchmaking.OnLobbyDataChanged += SteamMatchmaking_OnLobbyDataChanged;
+            SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
+            SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
+            Steamworks.Data.Image? img = await lb.Owner.GetMediumAvatarAsync();
 
-        //给自己动画添加绑定
-        mw.Main.GraphDisplayHandler += Main_GraphDisplayHandler;
-        if (lb.Owner.IsMe)
-        {
-            hostPet.Text = mw.GameSavesData.GameSave.Name;
-            Title = "{0}的访客表".Translate(mw.GameSavesData.GameSave.Name);
-        }
-        //获取成员列表
-        foreach (var v in lb.Members)
-        {
-            if (v.Id == SteamClient.SteamId) continue;
-            var mpf = new MPFriends(this, mw, lb, v);
-            MPFriends.Add(mpf);
-            mpf.Show();
-            var mpuc = new MPUserControl(this, mpf);
-            MUUCList.Children.Add(mpuc);
-            MPUserControls.Add(mpuc);
-            if (v.Id == lb.Owner.Id)
-                _ = Task.Run(() =>
+            Dispatcher.Invoke(() =>
+            {
+                hostName.Text = lb.Owner.Name;
+                owner = lb.Owner.Id.Value;
+                lbLid.Text = lb.Id.Value.ToString("x");
+                HostHead.Source = ConvertToImageSource(img.Value);
+            });
+
+            SteamNetworking.AllowP2PPacketRelay(true);
+            SteamNetworking.OnP2PSessionRequest = (steamid) =>
+            {
+                SteamNetworking.AcceptP2PSessionWithUser(steamid);
+            };
+
+            //给自己动画添加绑定
+            mw.Main.GraphDisplayHandler += Main_GraphDisplayHandler;
+            if (lb.Owner.IsMe)
+            {
+                Dispatcher.Invoke(() =>
                 {
-                    //加载lobby传过来的数据       
-                    while (!mpf.Loaded)
-                    {
-                        Thread.Sleep(500);
-                    }
-                    Dispatcher.Invoke(() =>
-                    {
-                        Title = "{0}的访客表".Translate(mpf.Core.Save.Name);
-                        hostPet.Text = mpf.Core.Save.Name;
-                    });
+                    hostPet.Text = mw.GameSavesData.GameSave.Name;
+                    Title = "{0}的访客表".Translate(mw.GameSavesData.GameSave.Name);
                 });
-        }
-        _ = Task.Run(LoopP2PPacket);
+            }
+            //获取成员列表
+            foreach (var v in lb.Members)
+            {
+                if (v.Id == SteamClient.SteamId) continue;
+                var mpf = Dispatcher.Invoke(() =>
+                  {
+                      var mpf = new MPFriends(this, mw, lb, v);
+                      MPFriends.Add(mpf);
+                      mpf.Show();
+                      var mpuc = new MPUserControl(this, mpf);
+                      MUUCList.Children.Add(mpuc);
+                      MPUserControls.Add(mpuc);
+                      return mpf;
+                  });
+                if (v.Id == lb.Owner.Id)
+                    _ = Task.Run(() =>
+                    {
+                        //加载lobby传过来的数据       
+                        while (!mpf.Loaded)
+                        {
+                            Thread.Sleep(500);
+                        }
+                        Dispatcher.Invoke(() =>
+                        {
+                            Title = "{0}的访客表".Translate(mpf.Core.Save.Name);
+                            hostPet.Text = mpf.Core.Save.Name;
+                        });
+                    });
+            }
+            LoopP2PPacket();
+        });
     }
 
     private void SteamMatchmaking_OnLobbyMemberLeave(Lobby lobby, Friend friend)
@@ -194,7 +208,7 @@ public partial class winMutiPlayer : Window
         }
         MPMessage msg = new MPMessage();
         msg.Type = MPMessage.MSGType.DispayGraph;
-        msg.Content = LPSConvert.SerializeObject(info).ToString();
+        msg.Content = LPSConvert.GetObjectString(info, convertNoneLineAttribute: true);
         msg.To = SteamClient.SteamId.Value;
         byte[] data = MPMessage.ConverTo(msg);
         for (int i = 0; i < MPFriends.Count; i++)
@@ -227,25 +241,28 @@ public partial class winMutiPlayer : Window
     }
     private void LoopP2PPacket()
     {
-        while (SteamNetworking.IsP2PPacketAvailable() && isOPEN)
+        while (SteamNetworking.IsP2PPacketAvailable())
         {
             var packet = SteamNetworking.ReadP2PPacket();
             if (packet.HasValue)
             {
                 var From = packet.Value.SteamId;
+                var test = Encoding.UTF8.GetString(packet.Value.Data);
                 var MSG = MPMessage.ConverTo(packet.Value.Data);
                 var TO = MPFriends.Find(x => x.friend.Id == MSG.To);
                 switch (MSG.Type)
                 {
                     case MPMessage.MSGType.DispayGraph:
-                        var info = LPSConvert.DeserializeObject<GraphInfo>(new LPS(MSG.Content));
-                        TO.DisplayGraph(info);
+                        TO.DisplayGraph((GraphInfo)LPSConvert.GetStringObject(MSG.Content, typeof(GraphInfo), convertNoneLineAttribute: true));
                         break;
                 }
             }
+            Thread.Sleep(100);
         }
-        Thread.Sleep(100);
-        LoopP2PPacket();
+        Thread.Sleep(1000);
+        if (isOPEN)
+            LoopP2PPacket();
+
     }
     private void Window_Closed(object sender, EventArgs e)
     {

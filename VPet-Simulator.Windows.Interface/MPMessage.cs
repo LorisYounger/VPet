@@ -11,7 +11,6 @@ namespace VPet_Simulator.Windows.Interface;
 /// <summary>
 /// 多人模式传输的消息
 /// </summary>
-[Serializable]
 public struct MPMessage
 {
     /// <summary>
@@ -19,6 +18,10 @@ public struct MPMessage
     /// </summary>
     public enum MSGType
     {
+        /// <summary>
+        /// 一般是出错或者空消息
+        /// </summary>
+        Empty,
         /// <summary>
         /// 聊天消息 (string)
         /// </summary>
@@ -43,16 +46,16 @@ public struct MPMessage
     /// <summary>
     /// 消息类型
     /// </summary>
-    public MSGType Type;
+    [Line] public MSGType Type { get; set; }
 
     /// <summary>
     /// 消息内容
     /// </summary>
-    public string Content;
+    [Line] public string Content { get; set; }
     /// <summary>
     /// 被操作者 (显示动画用)
     /// </summary>
-    public ulong To;
+    [Line] public ulong To { get; set; }
 
     public static byte[] ConverTo(MPMessage data) => Encoding.UTF8.GetBytes(LPSConvert.SerializeObject(data).ToString());
     public static MPMessage ConverTo(byte[] data) => LPSConvert.DeserializeObject<MPMessage>(new LPS(Encoding.UTF8.GetString(data)));

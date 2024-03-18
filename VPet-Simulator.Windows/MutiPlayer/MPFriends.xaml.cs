@@ -118,20 +118,22 @@ public partial class MPFriends : WindowX
             Close();
             return;
         }
+
+        ImageSources.AddRange(mw.ImageSources);
+
+
+        //加载所有MOD
+        List<DirectoryInfo> Path = new List<DirectoryInfo>();
+        Path.AddRange(new DirectoryInfo(mw.ModPath).EnumerateDirectories());
+
+        var workshop = mw.Set["workshop"];
+        foreach (Sub ws in workshop)
+        {
+            Path.Add(new DirectoryInfo(ws.Name));
+        }
+
         Task.Run(async () =>
         {
-            ImageSources.AddRange(mw.ImageSources);
-
-            //加载所有MOD
-            List<DirectoryInfo> Path = new List<DirectoryInfo>();
-            Path.AddRange(new DirectoryInfo(mw.ModPath).EnumerateDirectories());
-
-            var workshop = mw.Set["workshop"];
-            foreach (Sub ws in workshop)
-            {
-                Path.Add(new DirectoryInfo(ws.Name));
-            }
-
             //加载lobby传过来的数据
             string tmp = lb.GetMemberData(friend, "save");
             while (string.IsNullOrEmpty(tmp))
@@ -205,9 +207,9 @@ public partial class MPFriends : WindowX
             Main.EventTimer.Enabled = false;
 
             //清空资源
-            Main.Resources = Application.Current.Resources;
-            Main.MsgBar.This.Resources = Application.Current.Resources;
-            Main.ToolBar.Resources = Application.Current.Resources;
+            //Main.Resources = Application.Current.Resources;
+            //Main.MsgBar.This.Resources = Application.Current.Resources;
+            //Main.ToolBar.Resources = Application.Current.Resources;
             Main.ToolBar.LoadClean();
 
             LoadingText.Content = "正在加载游戏\n该步骤可能会耗时比较长\n请耐心等待".Translate();
@@ -216,13 +218,12 @@ public partial class MPFriends : WindowX
 
             DisplayGrid.Child = Main;
 
-            Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
-            Main.SetLogicInterval(1500);
+            //Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
+            //Main.SetLogicInterval(1500);
             if (mw.Set.MessageBarOutside)
                 Main.MsgBar.SetPlaceOUT();
 
-            Main.WorkCheck = mw.WorkCheck;
-
+            //Main.WorkCheck = mw.WorkCheck;
 
             //添加捏脸动画(若有)
             if (Core.Graph.GraphConfig.Data.ContainsLine("pinch"))
