@@ -314,13 +314,20 @@ public partial class MPFriends : WindowX
     /// </summary>
     public void Quit()
     {
-        Main.Display(GraphType.Shutdown, AnimatType.Single, () => Dispatcher.Invoke(Close));
-        Task.Run(() =>
+        try
         {
-            Thread.Sleep(5000);
-            if (Loaded)
-                Dispatcher.Invoke(Close);
-        });
+            Main.Display(GraphType.Shutdown, AnimatType.Single, () => Dispatcher.Invoke(Close));
+            Task.Run(() =>
+            {
+                Thread.Sleep(5000);
+                if (Loaded)
+                    Dispatcher.Invoke(Close);
+            });
+        }
+        catch
+        {
+            Close();
+        }
     }
 
     /// <summary>
@@ -420,16 +427,20 @@ public partial class MPFriends : WindowX
             msg.Type = MSGType.Chat;
             msg.SetContent(new Chat() { Content = cont, ChatType = (Chat.Type)talktype, SendName = SteamClient.Name });
             msg.To = SteamClient.SteamId;
+
             switch (talktype)
             {
                 case 0:
                     wmp.SendMessage(friend.Id, msg);
+                    mw.Main.Say("{0} 悄悄地对你说: {1}".Translate(SteamClient.Name, cont));
                     break;
                 case 1:
                     wmp.SendMessageALL(msg);
+                    mw.Main.Say("{0} 对你说: {1}".Translate(SteamClient.Name, cont));
                     break;
                 case 2:
                     wmp.SendMessageALL(msg);
+                    mw.Main.Say("{0} 对大家说: {1}".Translate(SteamClient.Name, cont));
                     break;
             }
         });

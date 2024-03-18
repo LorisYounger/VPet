@@ -82,6 +82,9 @@ namespace VPet_Simulator.Core
             PetGrid2.Visibility = Visibility.Collapsed;
             Task.Run(() =>
             {
+                EventTimer.Elapsed += (s, e) => EventTimer_Elapsed();
+                MoveTimer.Elapsed += MoveTimer_Elapsed;
+                SmartMoveTimer.Elapsed += SmartMoveTimer_Elapsed;
                 //while (!ig.IsReady)
                 //{
                 //    Thread.Sleep(100);
@@ -111,10 +114,6 @@ namespace VPet_Simulator.Core
                     DisplayNomal();
                 });
             });
-
-            EventTimer.Elapsed += (s, e) => EventTimer_Elapsed();
-            MoveTimer.Elapsed += MoveTimer_Elapsed;
-            SmartMoveTimer.Elapsed += SmartMoveTimer_Elapsed;
         }
 
         private void Labledisplaytimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

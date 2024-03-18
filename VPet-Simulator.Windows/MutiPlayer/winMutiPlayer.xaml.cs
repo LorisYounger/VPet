@@ -199,14 +199,18 @@ public partial class winMutiPlayer : Window
             }
         }
     }
-
+    GraphInfo lastgraph = new GraphInfo() { Type = GraphType.Common };
     private void Main_GraphDisplayHandler(GraphInfo info)
     {
         if (info.Type == GraphType.Shutdown || info.Type == GraphType.Common || info.Type == GraphType.Move
-            || info.Type == GraphType.Raised_Dynamic || info.Type == GraphType.Raised_Static || info.Type == GraphType.Default)
+            || info.Type == GraphType.Raised_Dynamic || info.Type == GraphType.Raised_Static)
         {
             return;
         }
+        //如果是同一个动画就不发送
+        if (lastgraph.Type == info.Type && lastgraph.Animat == info.Animat && info.Name == lastgraph.Name)
+            return;
+        lastgraph = info;
         MPMessage msg = new MPMessage();
         msg.Type = MSGType.DispayGraph;
         msg.SetContent(info);
@@ -260,36 +264,35 @@ public partial class winMutiPlayer : Window
     }
     private void LoopP2PPacket()
     {
-        try
-        {
-            while (SteamNetworking.IsP2PPacketAvailable())
+        while (isOPEN)
+            try
             {
-                var packet = SteamNetworking.ReadP2PPacket();
-                if (packet.HasValue)
+                while (SteamNetworking.IsP2PPacketAvailable())
                 {
-                    var From = packet.Value.SteamId;
-                    var MSG = ConverTo(packet.Value.Data);
-                    var To = MPFriends.Find(x => x.friend.Id == MSG.To);
-                    switch (MSG.Type)
+                    var packet = SteamNetworking.ReadP2PPacket();
+                    if (packet.HasValue)
                     {
-                        case MSGType.DispayGraph:
-                            To.DisplayGraph(MSG.GetContent<GraphInfo>());
-                            break;
-                        case MSGType.Chat:
-                            To.DisplayMessage(MSG.GetContent<Chat>());
-                            break;
+                        var From = packet.Value.SteamId;
+                        var MSG = ConverTo(packet.Value.Data);
+                        var To = MPFriends.Find(x => x.friend.Id == MSG.To);
+                        switch (MSG.Type)
+                        {
+                            case MSGType.DispayGraph:
+                                To.DisplayGraph(MSG.GetContent<GraphInfo>());
+                                break;
+                            case MSGType.Chat:
+                                To.DisplayMessage(MSG.GetContent<Chat>());
+                                break;
+                        }
                     }
+                    Thread.Sleep(100);
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
             }
-            Thread.Sleep(1000);
-            if (isOPEN)
-                LoopP2PPacket();
-        }
-        catch
-        {
+            catch
+            {
 
-        }
+            }
     }
     private void Window_Closed(object sender, EventArgs e)
     {

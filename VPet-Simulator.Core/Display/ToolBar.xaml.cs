@@ -43,7 +43,7 @@ namespace VPet_Simulator.Core
             closePanelTimer = new Timer();
             closePanelTimer.Elapsed += ClosePanelTimer_Tick;
             m.TimeUIHandle += M_TimeUIHandle;
-            LoadWork();
+            //LoadWork();
         }
         public void LoadClean()
         {
