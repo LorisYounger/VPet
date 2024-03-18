@@ -7,7 +7,9 @@
         mc:Ignorable="d" Margin="5" Width="340" Height="100" Background="{DynamicResource SecondaryLight}"
         BorderBrush="{DynamicResource Secondary}">
     <Grid>
-        <Image x:Name="uimg" HorizontalAlignment="Left" Source="/Res/TopLogo2019.PNG" Margin="4" />
+        <Border HorizontalAlignment="Left" Margin="4" CornerRadius="43">
+            <Image x:Name="uimg" Source="/Res/TopLogo2019.PNG" />
+        </Border>
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="110,0,0,0"
                 Foreground="{DynamicResource DARKPrimaryDarker}" FontSize="16">
                 <Run Text="{ll:Str 访客}" />: <Run x:Name="rPetName" Text="{ll:Str 萝莉斯}" FontSize="20" FontWeight="Bold" /> 
@@ -16,7 +18,7 @@
             <Run x:Name="info" Text="Lv ??" />
         </TextBlock>
         <Button Style="{DynamicResource ThemedButtonStyle}" HorizontalAlignment="Right" Content="{ll:Str 重置位置}"
-                VerticalAlignment="Top" Margin="10"/>
+                VerticalAlignment="Top" Margin="10" />
         <Button Style="{DynamicResource ThemedButtonStyle}" HorizontalAlignment="Right" Content="{ll:Str 还没想好}"
                 VerticalAlignment="Bottom" Margin="10" />
     </Grid>

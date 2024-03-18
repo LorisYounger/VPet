@@ -545,7 +545,7 @@ namespace VPet_Simulator.Core
         /// 开始工作
         /// </summary>
         /// <param name="work">工作内容</param>
-        public void StartWork(Work work)
+        public bool StartWork(Work work)
         {
             if (!Core.Controller.EnableFunction || Core.Save.Mode != IGameSave.ModeType.Ill)
                 if (!Core.Controller.EnableFunction || Core.Save.Level >= work.LevelLimit)
@@ -554,8 +554,9 @@ namespace VPet_Simulator.Core
                     else
                     {
                         if (WorkCheck != null && !WorkCheck.Invoke(work))
-                            return;
+                            return false;
                         WorkTimer.Start(work);
+                        return true;
                     }
                 else
                     MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/{2}\n无法进行{1}", Core.Save.Level.ToString()
@@ -563,7 +564,7 @@ namespace VPet_Simulator.Core
             else
                 MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行{1}", Core.Save.Name,
                   work.NameTrans), LocalizeCore.Translate("{0}取消", work.NameTrans));
-            ToolBar.Visibility = Visibility.Collapsed;
+            return false;
         }
     }
 }

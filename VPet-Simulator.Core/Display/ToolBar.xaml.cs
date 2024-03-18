@@ -58,6 +58,11 @@ namespace VPet_Simulator.Core
             MenuStudy.Items.Clear();
             MenuPlay.Items.Clear();
         }
+        public void StartWork(Work w)
+        {
+            if (m.StartWork(w))
+                Visibility = Visibility.Collapsed;
+        }
 
         public void LoadWork()
         {
@@ -83,7 +88,8 @@ namespace VPet_Simulator.Core
                     {
                         Header = w.NameTrans
                     };
-                    mi.Click += (s, e) => m.StartWork(w);
+                    mi.Click += (s, e) => StartWork(w);
+
                     MenuWork.Items.Add(mi);
                 }
             }
@@ -105,7 +111,7 @@ namespace VPet_Simulator.Core
                     {
                         Header = w.NameTrans
                     };
-                    mi.Click += (s, e) => m.StartWork(w);
+                    mi.Click += (s, e) => StartWork(w);
                     MenuStudy.Items.Add(mi);
                 }
             }
@@ -127,7 +133,7 @@ namespace VPet_Simulator.Core
                     {
                         Header = w.NameTrans
                     };
-                    mi.Click += (s, e) => m.StartWork(w);
+                    mi.Click += (s, e) => StartWork(w);
                     MenuPlay.Items.Add(mi);
                 }
             }
@@ -135,20 +141,20 @@ namespace VPet_Simulator.Core
 
         private void MenuStudy_Click(object sender, RoutedEventArgs e)
         {
-            m.StartWork(wstudy);
+            StartWork(wstudy);
         }
         Work wwork;
         Work wstudy;
         Work wplay;
-     
-       
+
+
         private void MenuWork_Click(object sender, RoutedEventArgs e)
         {
-            m.StartWork(wwork);
+            StartWork(wwork);
         }
         private void MenuPlay_Click(object sender, RoutedEventArgs e)
         {
-            m.StartWork(wplay);
+            StartWork(wplay);
         }
 
         private void M_TimeUIHandle(Main m)

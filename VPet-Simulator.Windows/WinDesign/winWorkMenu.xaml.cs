@@ -178,8 +178,8 @@ public partial class winWorkMenu : Window
     {
         if (nowworkdisplay != null)
         {
-            mw.Main.StartWork(nowworkdisplay);
-            Close();
+            if (mw.Main.StartWork(nowworkdisplay))
+                Close();
         }
     }
 }
