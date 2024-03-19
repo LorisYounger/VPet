@@ -205,6 +205,15 @@ public partial class MPFriends : WindowX
 
             Core.Graph = petloader.Graph(mw.Set.Resolution);
             Main = new Main(Core);
+            Main.MsgBar = new MessageBar(Main);
+            Main.MsgBar.Visibility = Visibility.Collapsed;
+            Main.UIGrid.Children.Add(Main.MsgBar.This);
+            Main.ToolBar = new Core.ToolBar(Main);
+            Main.ToolBar.Visibility = Visibility.Collapsed;
+            Main.UIGrid.Children.Add(Main.ToolBar);
+            Main.Load_2_TouchEvent();
+            Task.Run(Main.Load_24_WaitAndStart);
+
             Main.EventTimer.AutoReset = false;
             Main.EventTimer.Enabled = false;
 
@@ -212,7 +221,6 @@ public partial class MPFriends : WindowX
             Main.Resources = Application.Current.Resources;
             Main.MsgBar.This.Resources = Application.Current.Resources;
             Main.ToolBar.Resources = Application.Current.Resources;
-            Main.ToolBar.LoadClean();
 
             HideForDesign.Children.Remove(MPTalkBox);
             Main.ToolBar.MainGrid.Children.Add(MPTalkBox);

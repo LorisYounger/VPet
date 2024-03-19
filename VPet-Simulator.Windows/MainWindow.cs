@@ -1537,7 +1537,7 @@ namespace VPet_Simulator.Windows
 
 
 
-            await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
+            //await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
             await Dispatcher.InvokeAsync(new Action(() =>
             {
                 LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate();
@@ -1552,401 +1552,404 @@ namespace VPet_Simulator.Windows
                 else
 #endif
                 Main = new Main(Core);
-                Main.NoFunctionMOD = Set.CalFunState;
-
-                //清空资源
-                Main.Resources = Application.Current.Resources;
-                Main.MsgBar.This.Resources = Application.Current.Resources;
-                Main.ToolBar.Resources = Application.Current.Resources;
-                Main.ToolBar.LoadClean();
-                Main.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
-                if (ws.Count == 0)
-                {
-                    Main.ToolBar.MenuWork.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    Main.ToolBar.MenuWork.Click += (x, y) =>
-                    {
-                        Main.ToolBar.Visibility = Visibility.Collapsed;
-                        ShowWorkMenu(Work.WorkType.Work);
-                    };
-                }
-                if (ss.Count == 0)
-                {
-                    Main.ToolBar.MenuStudy.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    Main.ToolBar.MenuStudy.Click += (x, y) =>
-                    {
-                        Main.ToolBar.Visibility = Visibility.Collapsed;
-                        ShowWorkMenu(Work.WorkType.Study);
-                    };
-                }
-                if (ps.Count == 0)
-                {
-                    Main.ToolBar.MenuPlay.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    Main.ToolBar.MenuPlay.Click += (x, y) =>
-                    {
-                        Main.ToolBar.Visibility = Visibility.Collapsed;
-                        ShowWorkMenu(Work.WorkType.Play);
-                    };
-                }
-
-
-                //加载主题:
-                LoadTheme(Set.Theme);
-                //加载字体
-                LoadFont(Set.Font);
-
-                LoadingText.Content = "正在加载游戏\n该步骤可能会耗时比较长\n请耐心等待".Translate();
+            }));
+            Main.LoadALL();
+            Main.NoFunctionMOD = Set.CalFunState;
+            await Dispatcher.InvokeAsync(() =>
+              {
+                  //清空资源
+                  Main.Resources = Application.Current.Resources;
+                  Main.MsgBar.This.Resources = Application.Current.Resources;
+                  Main.ToolBar.Resources = Application.Current.Resources;
+                  Main.ToolBar.LoadClean();
+                  Main.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
+                  if (ws.Count == 0)
+                  {
+                      Main.ToolBar.MenuWork.Visibility = Visibility.Collapsed;
+                  }
+                  else
+                  {
+                      Main.ToolBar.MenuWork.Click += (x, y) =>
+                      {
+                          Main.ToolBar.Visibility = Visibility.Collapsed;
+                          ShowWorkMenu(Work.WorkType.Work);
+                      };
+                  }
+                  if (ss.Count == 0)
+                  {
+                      Main.ToolBar.MenuStudy.Visibility = Visibility.Collapsed;
+                  }
+                  else
+                  {
+                      Main.ToolBar.MenuStudy.Click += (x, y) =>
+                      {
+                          Main.ToolBar.Visibility = Visibility.Collapsed;
+                          ShowWorkMenu(Work.WorkType.Study);
+                      };
+                  }
+                  if (ps.Count == 0)
+                  {
+                      Main.ToolBar.MenuPlay.Visibility = Visibility.Collapsed;
+                  }
+                  else
+                  {
+                      Main.ToolBar.MenuPlay.Click += (x, y) =>
+                      {
+                          Main.ToolBar.Visibility = Visibility.Collapsed;
+                          ShowWorkMenu(Work.WorkType.Play);
+                      };
+                  }
 
 
-                //加载数据合理化:工作
-                if (!Set["gameconfig"].GetBool("noAutoCal"))
-                {
-                    foreach (var work in Core.Graph.GraphConfig.Works)
-                    {
-                        if (work.LevelLimit > 100)//导入的最大合理工作不能超过100级
-                            work.LevelLimit = 100;
-                        if (work.IsOverLoad())
-                        {
-                            work.FixOverLoad();
-                        }
-                    }
-                }
+                  //加载主题:
+                  LoadTheme(Set.Theme);
+                  //加载字体
+                  LoadFont(Set.Font);
+
+                  LoadingText.Content = "正在加载游戏\n该步骤可能会耗时比较长\n请耐心等待".Translate();
 
 
-                var m = new System.Windows.Controls.MenuItem()
-                {
-                    Header = "MOD管理".Translate(),
-                    HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center,
-                };
-                m.Click += (x, y) =>
-                {
-                    Main.ToolBar.Visibility = Visibility.Collapsed;
-                    winSetting.MainTab.SelectedIndex = 5;
-                    winSetting.Show();
-                };
-                Main.FunctionSpendHandle += lowStrength;
-                Main.WorkTimer.E_FinishWork += WorkTimer_E_FinishWork;
-                Main.ToolBar.MenuMODConfig.Items.Add(m);
-                try
-                {
-                    //加载游戏创意工坊插件
-                    foreach (MainPlugin mp in Plugins)
-                        mp.LoadPlugin();
-                }
-                catch (Exception e)
-                {
-                    new winReport(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString()).Show();
-                }
-                Foods.ForEach(item => item.LoadImageSource(this));
-                Main.TimeHandle += Handle_Music;
-                if (IsSteamUser)
-                    Main.TimeHandle += Handle_Steam;
-                Main.TimeHandle += (x) => DiagnosisUPLoad();
+                  //加载数据合理化:工作
+                  if (!Set["gameconfig"].GetBool("noAutoCal"))
+                  {
+                      foreach (var work in Core.Graph.GraphConfig.Works)
+                      {
+                          if (work.LevelLimit > 100)//导入的最大合理工作不能超过100级
+                              work.LevelLimit = 100;
+                          if (work.IsOverLoad())
+                          {
+                              work.FixOverLoad();
+                          }
+                      }
+                  }
 
 
-                var tlv = Main.ToolBar.Tlv;
-                Main.ToolBar.gdPanel.Children.Remove(tlv);
-                var sp = new StackPanel();
-                Grid.SetColumnSpan(sp, 3);
-                sp.Orientation = System.Windows.Controls.Orientation.Horizontal;
-                sp.Children.Add(tlv);
-                tlvplus = new TextBlock();
-                tlvplus.Margin = new Thickness(1);
-                tlvplus.VerticalAlignment = VerticalAlignment.Bottom;
-                tlvplus.FontSize = 18;
-                tlvplus.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
-                sp.Children.Add(tlvplus);
-                Main.ToolBar.gdPanel.Children.Add(sp);
-                Main.TimeUIHandle += MWUIHandle;
-                Main.ToolBar.EventMenuPanelShow += () => MWUIHandle(Main);
+                  var m = new System.Windows.Controls.MenuItem()
+                  {
+                      Header = "MOD管理".Translate(),
+                      HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center,
+                  };
+                  m.Click += (x, y) =>
+                  {
+                      Main.ToolBar.Visibility = Visibility.Collapsed;
+                      winSetting.MainTab.SelectedIndex = 5;
+                      winSetting.Show();
+                  };
+                  Main.FunctionSpendHandle += lowStrength;
+                  Main.WorkTimer.E_FinishWork += WorkTimer_E_FinishWork;
+                  Main.ToolBar.MenuMODConfig.Items.Add(m);
+                  try
+                  {
+                      //加载游戏创意工坊插件
+                      foreach (MainPlugin mp in Plugins)
+                          mp.LoadPlugin();
+                  }
+                  catch (Exception e)
+                  {
+                      new winReport(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString()).Show();
+                  }
+                  Foods.ForEach(item => item.LoadImageSource(this));
+                  Main.TimeHandle += Handle_Music;
+                  if (IsSteamUser)
+                      Main.TimeHandle += Handle_Steam;
+                  Main.TimeHandle += (x) => DiagnosisUPLoad();
 
 
-                switch (Set["CGPT"][(gstr)"type"])
-                {
-                    case "DIY":
-                        TalkAPIIndex = TalkAPI.FindIndex(x => x.APIName == Set["CGPT"][(gstr)"DIY"]);
-                        LoadTalkDIY();
-                        break;
-                    //case "API":
-                    //    TalkBox = new TalkBoxAPI(this);
-                    //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                    //    break;
-                    case "LB":
-                        //if (IsSteamUser)
-                        //{
-                        //    TalkBox = new TalkSelect(this);
-                        //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                        //}
-                        TalkBox = new TalkSelect(this);
-                        Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                        break;
-                }
-
-                //窗口部件
-                winSetting = new winGameSetting(this);
-                winBetterBuy = new winBetterBuy(this);
-
-                Main.DefaultClickAction = () =>
-                {
-                    if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
-                    {
-                        lastclicktime = DateTime.Now.Ticks;
-                        var rt = GetClickText();
-                        if (rt != null)
-                        {
-                            //聊天效果
-                            if (rt.Exp != 0)
-                            {
-                                if (rt.Exp > 0)
-                                {
-                                    GameSavesData.Statistics[(gint)"stat_say_exp_p"]++;
-                                }
-                                else
-                                    GameSavesData.Statistics[(gint)"stat_say_exp_d"]++;
-                            }
-                            if (rt.Likability != 0)
-                            {
-                                if (rt.Likability > 0)
-                                    GameSavesData.Statistics[(gint)"stat_say_like_p"]++;
-                                else
-                                    GameSavesData.Statistics[(gint)"stat_say_like_d"]++;
-                            }
-                            if (rt.Money != 0)
-                            {
-                                if (rt.Money > 0)
-                                    GameSavesData.Statistics[(gint)"stat_say_money_p"]++;
-                                else
-                                    GameSavesData.Statistics[(gint)"stat_say_money_d"]++;
-                            }
-                            Main.Core.Save.EatFood(rt);
-                            Main.Core.Save.Money += rt.Money;
-                            Main.SayRnd(rt.TranslateText, desc: rt.FoodToDescription());
-                        }
-                    }
-                };
-                Main.PlayVoiceVolume = Set.VoiceVolume;
-                Main.FunctionSpendHandle += StatisticsCalHandle;
-                DisplayGrid.Child = Main;
-                Task.Run(async () =>
-                {
-                    while (Main.IsWorking)
-                    {
-                        Thread.Sleep(100);
-                    }
-                    await Dispatcher.InvokeAsync(() => LoadingText.Visibility = Visibility.Collapsed);
-                });
-
-                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
-                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
-                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
-                {
-                    if (LocalizeCore.CurrentCulture == "zh-Hans")
-                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
-                    else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
-                    else
-                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
-                });
-                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "反馈中心".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
-                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "设置面板".Translate(), () =>
-                {
-                    Main.ToolBar.Visibility = Visibility.Collapsed;
-                    winSetting.Show();
-                });
-
-                //this.Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.PNG")));
-
-                //Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喂食测试", () =>
-                //    {
-                //        Main.ToolBar.Visibility = Visibility.Collapsed;
-                //        IRunImage eat = (IRunImage)Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
-                //        var b = Main.FindDisplayBorder(eat);
-                //        eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/汉堡.png")), Main.DisplayToNomal);
-                //    }
-                //);
-                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "吃饭".Translate(), () =>
-                {
-                    winBetterBuy.Show(Food.FoodType.Meal);
-                });
-                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "喝水".Translate(), () =>
-                {
-                    winBetterBuy.Show(Food.FoodType.Drink);
-                });
-                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "收藏".Translate(), () =>
-                {
-                    winBetterBuy.Show(Food.FoodType.Star);
-                });
-                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "药品".Translate(), () =>
-                {
-                    winBetterBuy.Show(Food.FoodType.Drug);
-                });
-                Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "礼品".Translate(), () =>
-                {
-                    winBetterBuy.Show(Food.FoodType.Gift);
-                });
-                Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
-                Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
-                if (Set.MessageBarOutside)
-                    Main.MsgBar.SetPlaceOUT();
-
-                Main.WorkCheck = WorkCheck;
-
-                //加载图标
-                notifyIcon = new NotifyIcon();
-                notifyIcon.Text = "虚拟桌宠模拟器".Translate() + PrefixSave;
-                ContextMenu m_menu;
-
-                if (Set.PetHelper)
-                    LoadPetHelper();
+                  var tlv = Main.ToolBar.Tlv;
+                  Main.ToolBar.gdPanel.Children.Remove(tlv);
+                  var sp = new StackPanel();
+                  Grid.SetColumnSpan(sp, 3);
+                  sp.Orientation = System.Windows.Controls.Orientation.Horizontal;
+                  sp.Children.Add(tlv);
+                  tlvplus = new TextBlock();
+                  tlvplus.Margin = new Thickness(1);
+                  tlvplus.VerticalAlignment = VerticalAlignment.Bottom;
+                  tlvplus.FontSize = 18;
+                  tlvplus.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
+                  sp.Children.Add(tlvplus);
+                  Main.ToolBar.gdPanel.Children.Add(sp);
+                  Main.TimeUIHandle += MWUIHandle;
+                  Main.ToolBar.EventMenuPanelShow += () => MWUIHandle(Main);
 
 
+                  switch (Set["CGPT"][(gstr)"type"])
+                  {
+                      case "DIY":
+                          TalkAPIIndex = TalkAPI.FindIndex(x => x.APIName == Set["CGPT"][(gstr)"DIY"]);
+                          LoadTalkDIY();
+                          break;
+                      //case "API":
+                      //    TalkBox = new TalkBoxAPI(this);
+                      //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                      //    break;
+                      case "LB":
+                          //if (IsSteamUser)
+                          //{
+                          //    TalkBox = new TalkSelect(this);
+                          //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                          //}
+                          TalkBox = new TalkSelect(this);
+                          Main.ToolBar.MainGrid.Children.Add(TalkBox);
+                          break;
+                  }
 
-                m_menu = new ContextMenu();
-                m_menu.Opening += (x, y) => { GameSavesData.Statistics[(gint)"stat_menu_pop"]++; };
-                var hitThrough = new MenuItem("鼠标穿透".Translate(), null, (x, y) => { SetTransparentHitThrough(); })
-                {
-                    Name = "NotifyIcon_HitThrough",
-                    Checked = HitThrough
-                };
-                m_menu.Items.Add(hitThrough);
-                m_menu.Items.Add(new MenuItem("操作教程".Translate(), null, (x, y) =>
-                {
-                    if (LocalizeCore.CurrentCulture == "zh-Hans")
-                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
-                    else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
-                    else
-                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
-                }));
-                m_menu.Items.Add(new MenuItem("重置位置与状态".Translate(), null, (x, y) =>
-                {
-                    Main.CleanState();
-                    Main.DisplayToNomal();
-                    Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-                    Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
-                }));
-                m_menu.Items.Add(new MenuItem("反馈中心".Translate(), null, (x, y) => { new winReport(this).Show(); }));
-                m_menu.Items.Add(new MenuItem("开发控制台".Translate(), null, (x, y) => { new winConsole(this).Show(); }));
+                  //窗口部件
+                  winSetting = new winGameSetting(this);
+                  winBetterBuy = new winBetterBuy(this);
 
-                m_menu.Items.Add(new MenuItem("设置面板".Translate(), null, (x, y) =>
-                {
-                    winSetting.Show();
-                }));
-                m_menu.Items.Add(new MenuItem("退出桌宠".Translate(), null, (x, y) => Close()));
+                  Main.DefaultClickAction = () =>
+                  {
+                      if (new TimeSpan(DateTime.Now.Ticks - lastclicktime).TotalSeconds > 20)
+                      {
+                          lastclicktime = DateTime.Now.Ticks;
+                          var rt = GetClickText();
+                          if (rt != null)
+                          {
+                              //聊天效果
+                              if (rt.Exp != 0)
+                              {
+                                  if (rt.Exp > 0)
+                                  {
+                                      GameSavesData.Statistics[(gint)"stat_say_exp_p"]++;
+                                  }
+                                  else
+                                      GameSavesData.Statistics[(gint)"stat_say_exp_d"]++;
+                              }
+                              if (rt.Likability != 0)
+                              {
+                                  if (rt.Likability > 0)
+                                      GameSavesData.Statistics[(gint)"stat_say_like_p"]++;
+                                  else
+                                      GameSavesData.Statistics[(gint)"stat_say_like_d"]++;
+                              }
+                              if (rt.Money != 0)
+                              {
+                                  if (rt.Money > 0)
+                                      GameSavesData.Statistics[(gint)"stat_say_money_p"]++;
+                                  else
+                                      GameSavesData.Statistics[(gint)"stat_say_money_d"]++;
+                              }
+                              Main.Core.Save.EatFood(rt);
+                              Main.Core.Save.Money += rt.Money;
+                              Main.SayRnd(rt.TranslateText, desc: rt.FoodToDescription());
+                          }
+                      }
+                  };
+                  Main.PlayVoiceVolume = Set.VoiceVolume;
+                  Main.FunctionSpendHandle += StatisticsCalHandle;
+                  DisplayGrid.Child = Main;
+                  Task.Run(async () =>
+                  {
+                      while (Main.IsWorking)
+                      {
+                          Thread.Sleep(100);
+                      }
+                      await Dispatcher.InvokeAsync(() => LoadingText.Visibility = Visibility.Collapsed);
+                  });
 
-                LoadDIY();
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
+                  {
+                      if (LocalizeCore.CurrentCulture == "zh-Hans")
+                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
+                      else if (LocalizeCore.CurrentCulture == "zh-Hant")
+                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
+                      else
+                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
+                  });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "反馈中心".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "设置面板".Translate(), () =>
+                  {
+                      Main.ToolBar.Visibility = Visibility.Collapsed;
+                      winSetting.Show();
+                  });
 
-                notifyIcon.ContextMenuStrip = m_menu;
+                  //this.Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.PNG")));
 
-                notifyIcon.Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/vpeticon.ico")).Stream);
+                  //Main.ToolBar.AddMenuButton(VPet_Simulator.Core.ToolBar.MenuType.Feed, "喂食测试", () =>
+                  //    {
+                  //        Main.ToolBar.Visibility = Visibility.Collapsed;
+                  //        IRunImage eat = (IRunImage)Core.Graph.FindGraph(GraphType.Eat, GameSave.ModeType.Nomal);
+                  //        var b = Main.FindDisplayBorder(eat);
+                  //        eat.Run(b, new BitmapImage(new Uri("pack://application:,,,/Res/汉堡.png")), Main.DisplayToNomal);
+                  //    }
+                  //);
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "吃饭".Translate(), () =>
+                  {
+                      winBetterBuy.Show(Food.FoodType.Meal);
+                  });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "喝水".Translate(), () =>
+                  {
+                      winBetterBuy.Show(Food.FoodType.Drink);
+                  });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "收藏".Translate(), () =>
+                  {
+                      winBetterBuy.Show(Food.FoodType.Star);
+                  });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "药品".Translate(), () =>
+                  {
+                      winBetterBuy.Show(Food.FoodType.Drug);
+                  });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "礼品".Translate(), () =>
+                  {
+                      winBetterBuy.Show(Food.FoodType.Gift);
+                  });
+                  Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
+                  Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
+                  if (Set.MessageBarOutside)
+                      Main.MsgBar.SetPlaceOUT();
 
-                notifyIcon.Visible = true;
-                notifyIcon.BalloonTipClicked += (a, b) =>
-                {
-                    winSetting.Show();
-                };
-                if (Set.StartUPBoot == true && !Set["v"][(gbol)"newverstartup"])
-                {//更新到最新版开机启动方式
-                    try
-                    {
-                        winSetting.GenStartUP();
-                        Set["v"][(gbol)"newverstartup"] = true;
-                    }
-                    catch
-                    {
+                  Main.WorkCheck = WorkCheck;
 
-                    }
-                }
+                  //加载图标
+                  notifyIcon = new NotifyIcon();
+                  notifyIcon.Text = "虚拟桌宠模拟器".Translate() + PrefixSave;
+                  ContextMenu m_menu;
+
+                  if (Set.PetHelper)
+                      LoadPetHelper();
 
 
-                //成就和统计 
-                GameSavesData.Statistics[(gint)"stat_open_times"]++;
-                Main.MoveTimer.Elapsed += MoveTimer_Elapsed;
-                Main.OnSay += Main_OnSay;
-                Main.Event_TouchHead += Main_Event_TouchHead;
-                Main.Event_TouchBody += Main_Event_TouchBody;
 
-                HashCheck = HashCheck;
+                  m_menu = new ContextMenu();
+                  m_menu.Opening += (x, y) => { GameSavesData.Statistics[(gint)"stat_menu_pop"]++; };
+                  var hitThrough = new MenuItem("鼠标穿透".Translate(), null, (x, y) => { SetTransparentHitThrough(); })
+                  {
+                      Name = "NotifyIcon_HitThrough",
+                      Checked = HitThrough
+                  };
+                  m_menu.Items.Add(hitThrough);
+                  m_menu.Items.Add(new MenuItem("操作教程".Translate(), null, (x, y) =>
+                  {
+                      if (LocalizeCore.CurrentCulture == "zh-Hans")
+                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
+                      else if (LocalizeCore.CurrentCulture == "zh-Hant")
+                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
+                      else
+                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
+                  }));
+                  m_menu.Items.Add(new MenuItem("重置位置与状态".Translate(), null, (x, y) =>
+                  {
+                      Main.CleanState();
+                      Main.DisplayToNomal();
+                      Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+                      Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+                  }));
+                  m_menu.Items.Add(new MenuItem("反馈中心".Translate(), null, (x, y) => { new winReport(this).Show(); }));
+                  m_menu.Items.Add(new MenuItem("开发控制台".Translate(), null, (x, y) => { new winConsole(this).Show(); }));
 
-                //添加捏脸动画(若有)
-                if (Core.Graph.GraphConfig.Data.ContainsLine("pinch"))
-                {
-                    var pin = Core.Graph.GraphConfig.Data["pinch"];
-                    Main.Core.TouchEvent.Insert(0, new TouchArea(
-                        new Point(pin[(gdbe)"px"], pin[(gdbe)"py"]), new Size(pin[(gdbe)"sw"], pin[(gdbe)"sh"])
-                        , DisplayPinch, true));
-                }
+                  m_menu.Items.Add(new MenuItem("设置面板".Translate(), null, (x, y) =>
+                  {
+                      winSetting.Show();
+                  }));
+                  m_menu.Items.Add(new MenuItem("退出桌宠".Translate(), null, (x, y) => Close()));
+
+                  LoadDIY();
+
+                  notifyIcon.ContextMenuStrip = m_menu;
+
+                  notifyIcon.Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/vpeticon.ico")).Stream);
+
+                  notifyIcon.Visible = true;
+                  notifyIcon.BalloonTipClicked += (a, b) =>
+                  {
+                      winSetting.Show();
+                  };
+                  if (Set.StartUPBoot == true && !Set["v"][(gbol)"newverstartup"])
+                  {//更新到最新版开机启动方式
+                      try
+                      {
+                          winSetting.GenStartUP();
+                          Set["v"][(gbol)"newverstartup"] = true;
+                      }
+                      catch
+                      {
+
+                      }
+                  }
 
 
-                if (Set.HitThrough)
-                {
-                    if (!Set["v"][(gbol)"HitThrough"])
-                    {
-                        Set["v"][(gbol)"HitThrough"] = true;
-                        Set.HitThrough = false;
-                    }
-                    else
-                        SetTransparentHitThrough();
-                }
+                  //成就和统计 
+                  GameSavesData.Statistics[(gint)"stat_open_times"]++;
+                  Main.MoveTimer.Elapsed += MoveTimer_Elapsed;
+                  Main.OnSay += Main_OnSay;
+                  Main.Event_TouchHead += Main_Event_TouchHead;
+                  Main.Event_TouchBody += Main_Event_TouchBody;
 
-                if (File.Exists(ExtensionValue.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 10, 20) && App.MainWindows.Count == 1)
-                {
-                    Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
-                    if (LocalizeCore.CurrentCulture == "zh-Hans")
-                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
-                    else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
-                    else
-                        ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
-                }
-                if (!Set["SingleTips"].GetBool("helloworld"))
-                {
-                    Task.Run(() =>
-                    {
-                        Thread.Sleep(2000);
-                        Set["SingleTips"].SetBool("helloworld", true);
-                        NoticeBox.Show("欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠".Translate(),
-                           "你好".Translate() + (IsSteamUser ? SteamClient.Name : Environment.UserName), Panuon.WPF.UI.MessageBoxIcon.Info, true, 5000);
-                        //Thread.Sleep(2000);
-                        //Main.SayRnd("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate());
-                    });
-                }
-                if (Set["v"][(gint)"rank"] != DateTime.Now.Year && GameSavesData.Statistics[(gint)"stat_total_time"] > 3600)
-                {//年度报告提醒
-                    Task.Run(() =>
-                    {
-                        Thread.Sleep(120000);
-                        Set["v"][(gint)"rank"] = DateTime.Now.Year;
-                        var btn = Dispatcher.Invoke(() =>
-                         {
-                             var button = new System.Windows.Controls.Button()
-                             {
-                                 Content = "点击前往查看".Translate(),
-                                 FontSize = 20,
-                                 HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
-                                 Background = Function.ResourcesBrush(Function.BrushType.Primary),
-                                 Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
-                             };
-                             button.Click += (x, y) =>
-                             {
-                                 var panelWindow = new winCharacterPanel(this);
-                                 panelWindow.MainTab.SelectedIndex = 2;
-                                 panelWindow.Show();
-                                 Main.MsgBar.ForceClose();
-                             };
-                             return button;
-                         });
-                        Main.Say("哼哼~主人，我的考试成绩出炉了哦，快来和我一起看我的成绩单喵".Translate(), btn, "shining");
-                    });
-                }
+                  HashCheck = HashCheck;
+
+                  //添加捏脸动画(若有)
+                  if (Core.Graph.GraphConfig.Data.ContainsLine("pinch"))
+                  {
+                      var pin = Core.Graph.GraphConfig.Data["pinch"];
+                      Main.Core.TouchEvent.Insert(0, new TouchArea(
+                          new Point(pin[(gdbe)"px"], pin[(gdbe)"py"]), new Size(pin[(gdbe)"sw"], pin[(gdbe)"sh"])
+                          , DisplayPinch, true));
+                  }
+
+
+                  if (Set.HitThrough)
+                  {
+                      if (!Set["v"][(gbol)"HitThrough"])
+                      {
+                          Set["v"][(gbol)"HitThrough"] = true;
+                          Set.HitThrough = false;
+                      }
+                      else
+                          SetTransparentHitThrough();
+                  }
+
+                  if (File.Exists(ExtensionValue.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 10, 20) && App.MainWindows.Count == 1)
+                  {
+                      Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
+                      if (LocalizeCore.CurrentCulture == "zh-Hans")
+                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
+                      else if (LocalizeCore.CurrentCulture == "zh-Hant")
+                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
+                      else
+                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
+                  }
+                  if (!Set["SingleTips"].GetBool("helloworld"))
+                  {
+                      Task.Run(() =>
+                      {
+                          Thread.Sleep(2000);
+                          Set["SingleTips"].SetBool("helloworld", true);
+                          NoticeBox.Show("欢迎使用虚拟桌宠模拟器!\n如果遇到桌宠爬不见了,可以在我这里设置居中或退出桌宠".Translate(),
+                             "你好".Translate() + (IsSteamUser ? SteamClient.Name : Environment.UserName), Panuon.WPF.UI.MessageBoxIcon.Info, true, 5000);
+                          //Thread.Sleep(2000);
+                          //Main.SayRnd("欢迎使用虚拟桌宠模拟器\n这是个中期的测试版,若有bug请多多包涵\n欢迎加群虚拟主播模拟器430081239或在菜单栏-管理-反馈中提交bug或建议".Translate());
+                      });
+                  }
+                  if (Set["v"][(gint)"rank"] != DateTime.Now.Year && GameSavesData.Statistics[(gint)"stat_total_time"] > 3600)
+                  {//年度报告提醒
+                      Task.Run(() =>
+                      {
+                          Thread.Sleep(120000);
+                          Set["v"][(gint)"rank"] = DateTime.Now.Year;
+                          var btn = Dispatcher.Invoke(() =>
+                          {
+                              var button = new System.Windows.Controls.Button()
+                              {
+                                  Content = "点击前往查看".Translate(),
+                                  FontSize = 20,
+                                  HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+                                  Background = Function.ResourcesBrush(Function.BrushType.Primary),
+                                  Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
+                              };
+                              button.Click += (x, y) =>
+                              {
+                                  var panelWindow = new winCharacterPanel(this);
+                                  panelWindow.MainTab.SelectedIndex = 2;
+                                  panelWindow.Show();
+                                  Main.MsgBar.ForceClose();
+                              };
+                              return button;
+                          });
+                          Main.Say("哼哼~主人，我的考试成绩出炉了哦，快来和我一起看我的成绩单喵".Translate(), btn, "shining");
+                      });
+                  }
 #if NewYear
                 //仅新年功能
                 if (DateTime.Now < new DateTime(2024, 2, 18))
@@ -1959,17 +1962,18 @@ namespace VPet_Simulator.Windows
                     });
                 }
 #endif
-                //MOD报错
-                foreach (CoreMOD cm in CoreMODs)
-                    if (!cm.SuccessLoad)
-                        if (cm.Tag.Contains("该模组已损坏"))
-                            MessageBoxX.Show("模组 {0} 插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题".Translate(cm.Name) + '\n' + cm.ErrorMessage, "该模组已损坏".Translate());
-                        else if (Set.IsPassMOD(cm.Name))
-                            MessageBoxX.Show("模组 {0} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题".Translate(cm.Name) + '\n' + cm.ErrorMessage, "{0} 未加载代码插件".Translate(cm.Name));
-                        else if (Set.IsMSGMOD(cm.Name))
-                            MessageBoxX.Show("由于 {0} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件".Translate(cm.Name), "{0} 未加载代码插件".Translate(cm.Name));
+                  //MOD报错
+                  foreach (CoreMOD cm in CoreMODs)
+                      if (!cm.SuccessLoad)
+                          if (cm.Tag.Contains("该模组已损坏"))
+                              MessageBoxX.Show("模组 {0} 插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题".Translate(cm.Name) + '\n' + cm.ErrorMessage, "该模组已损坏".Translate());
+                          else if (Set.IsPassMOD(cm.Name))
+                              MessageBoxX.Show("模组 {0} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题".Translate(cm.Name) + '\n' + cm.ErrorMessage, "{0} 未加载代码插件".Translate(cm.Name));
+                          else if (Set.IsMSGMOD(cm.Name))
+                              MessageBoxX.Show("由于 {0} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件".Translate(cm.Name), "{0} 未加载代码插件".Translate(cm.Name));
 
-            }));
+              });
+
 
             ////游戏提示
             //if (Set["SingleTips"][(gint)"open"] == 0 && Set.StartUPBoot == true && Set.StartUPBootSteam == true)
