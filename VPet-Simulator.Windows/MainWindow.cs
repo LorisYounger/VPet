@@ -1372,6 +1372,12 @@ namespace VPet_Simulator.Windows
             //当前桌宠动画
             var petloader = Pets.Find(x => x.Name == Set.PetGraph);
             petloader ??= Pets[0];
+            //去除其他语言内容
+            var tag = petloader.Config.Data.GetString("tag", "all").Split(',');
+            LowDrinkText.RemoveAll(x => !x.FindTag(tag));
+            LowFoodText.RemoveAll(x => !x.FindTag(tag));
+            ClickTexts.RemoveAll(x => !x.FindTag(tag));
+            SelectTexts.RemoveAll(x => !x.FindTag(tag));
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏存档".Translate()));
             //加载存档

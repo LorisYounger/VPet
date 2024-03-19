@@ -24,7 +24,6 @@ namespace VPet_Simulator.Windows.Interface
             Text = text;
         }
 
-      
         /// <summary>
         /// 指定干活时说, 空为任意, sleep 为睡觉时
         /// </summary>
@@ -62,6 +61,7 @@ namespace VPet_Simulator.Windows.Interface
         [Line(IgnoreCase = true)]
         public WorkingState State { get; set; } = WorkingState.Nomal;
       
+
         /// <summary>
         /// 检查部分状态是否满足需求
         /// </summary>之所以不是全部的,是因为挨个取效率太差了      
