@@ -398,6 +398,20 @@ public partial class MPFriends : WindowX
     }
     private void WindowX_Closed(object sender, EventArgs e)
     {
+        if (Core != null && Core.Graph != null)
+        {
+            foreach (var igs in Core.Graph.GraphsList.Values)
+            {
+                foreach (var ig2 in igs.Values)
+                {
+                    foreach (var ig3 in ig2)
+                    {
+                        ig3.Stop();
+                    }
+                }
+            }
+        }
+        Main?.Dispose();
         mw.Windows.Remove(this);
     }
     private void tbTalk_KeyDown(object sender, KeyEventArgs e)

@@ -203,7 +203,7 @@ public partial class winMutiPlayer : Window
     private void Main_GraphDisplayHandler(GraphInfo info)
     {
         if (info.Type == GraphType.Shutdown || info.Type == GraphType.Common || info.Type == GraphType.Move
-            || info.Type == GraphType.Raised_Dynamic || info.Type == GraphType.Raised_Static)
+            || info.Type == GraphType.Raised_Dynamic || info.Type == GraphType.Raised_Static || info.Type == GraphType.Say)
         {
             return;
         }
