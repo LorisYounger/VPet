@@ -344,7 +344,7 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public string PetGraph
         {
-            get => this["gameconfig"].GetString("petgraph", "默认虚拟桌宠");
+            get => this["gameconfig"].GetString("petgraph", "vup");
             set => this["gameconfig"].SetString("petgraph", value);
         }
 
