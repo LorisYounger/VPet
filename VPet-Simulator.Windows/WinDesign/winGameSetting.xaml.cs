@@ -547,7 +547,12 @@ namespace VPet_Simulator.Windows
 
         private void ButtonOpenModFolder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Process.Start(mod.Path.FullName);
+            var psi = new ProcessStartInfo
+            {
+                FileName = mod.Path.FullName,
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
 
         private void ButtonEnable_MouseDown(object sender, MouseButtonEventArgs e)

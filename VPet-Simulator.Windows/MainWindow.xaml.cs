@@ -23,6 +23,8 @@ using Steamworks.Data;
 using System.Windows.Controls;
 using ToolBar = VPet_Simulator.Core.ToolBar;
 using System.Security.Cryptography;
+using System.Diagnostics;
+using System.Reflection.Metadata;
 
 namespace VPet_Simulator.Windows
 {
@@ -361,7 +363,14 @@ namespace VPet_Simulator.Windows
             catch { }
             Save();
             if (App.MainWindows.Count == 1)
-                System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = Path.ChangeExtension(System.Reflection.Assembly.GetExecutingAssembly().Location, "exe"),
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+            }
             else
             {
                 new MainWindow(PrefixSave).Show();

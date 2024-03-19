@@ -1186,11 +1186,8 @@ namespace VPet_Simulator.Windows
             //看看是否超模
             if (HashCheck && work.IsOverLoad())
             {
-                double spend = work.Spend();
-                double get = work.Get();
-                var rel = get / spend;
-                if (MessageBoxX.Show("当前工作数据属性超模,是否继续工作?\n超模工作可能会导致游戏发生不可预料的错误\n超模工作不影响大部分成就解锁\n当前数据比率 {0:f2} 推荐=0.5<0.75\n盈利速度:{1:f0} 推荐<{2}"
-                    .Translate(rel, get, (work.LevelLimit + 4) * 3), "超模工作提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                if (MessageBoxX.Show("当前工作数据属性超模,是否继续工作?\n超模工作可能会导致游戏发生不可预料的错误\n超模工作不影响大部分成就解锁\n可以在设置中开启自动计算自动为工作设置合理数值"
+                    .Translate(), "超模工作提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 {
                     return false;
                 }
@@ -1614,6 +1611,8 @@ namespace VPet_Simulator.Windows
                 {
                     foreach (var work in Core.Graph.GraphConfig.Works)
                     {
+                        if (work.LevelLimit > 100)//导入的最大合理工作不能超过100级
+                            work.LevelLimit = 100;
                         if (work.IsOverLoad())
                         {
                             work.FixOverLoad();

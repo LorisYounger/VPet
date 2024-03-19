@@ -374,7 +374,12 @@ namespace VPet_Simulator.Windows
         {
             try
             {
-                Process.Start(url);
+                var psi = new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
             }
             catch
             {

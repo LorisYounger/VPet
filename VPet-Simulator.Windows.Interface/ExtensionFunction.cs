@@ -51,14 +51,12 @@ namespace VPet_Simulator.Windows.Interface
         /// <returns>是否超模</returns>
         public static bool IsOverLoad(this Work work)
         {//判断这个工作是否超模
-            if (work.LevelLimit > 100)
-                return true;
             if (work.LevelLimit < 0)
                 work.LevelLimit = 0;
             if (work.FinishBonus < 0)
                 work.FinishBonus = 0;
             if (work.Type == Work.WorkType.Play && work.Feeling > 0)
-                work.Feeling *= -1;
+                work.Feeling *= -1;//旧版本代码兼容
             if (work.Time < 10)
                 work.Time = 10;
 
@@ -86,12 +84,6 @@ namespace VPet_Simulator.Windows.Interface
 
             for (int i = 0; i < maxIterations; i++)
             {
-                if (work.LevelLimit > 100)
-                    work.LevelLimit = 100;
-
-                if (work.FinishBonus < 0)
-                    work.FinishBonus = 0;
-
                 while (Math.Abs(work.Get()) > 1.1 * work.LevelLimit + 10) //等级获取速率限制
                 {
                     work.MoneyBase /= 2;

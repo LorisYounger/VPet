@@ -31,7 +31,6 @@ public partial class winWorkMenu : Window
     {
         InitializeComponent();
         this.mw = mw;
-
         mw.Main.WorkList(out ws, out ss, out ps);
         if (ws.Count == 0)
             tbc.Items.Remove(tiw);

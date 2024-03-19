@@ -190,15 +190,15 @@ public partial class MPFriends : WindowX
         petloader ??= Pets[0];
 
 
-        //加载数据合理化:食物       
-        foreach (Food f in Foods)
-        {
-            if (f.IsOverLoad())
-            {
-                f.Price = Math.Max((int)f.RealPrice, 1);
-                f.isoverload = false;
-            }
-        }
+        ////加载数据合理化:食物       
+        //foreach (Food f in Foods)
+        //{
+        //    if (f.IsOverLoad())
+        //    {
+        //        f.Price = Math.Max((int)f.RealPrice, 1);
+        //        f.isoverload = false;
+        //    }
+        //}
         await Dispatcher.InvokeAsync(new Action(() =>
         {
             LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate();
