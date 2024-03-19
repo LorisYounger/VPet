@@ -116,7 +116,7 @@ namespace VPet_Simulator.Core
         public void DisplayTouchHead()
         {
             CountNomal = 0;
-            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
+            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < Core.Save.FeelingMax)
             {
                 Core.Save.StrengthChange(-2);
                 Core.Save.FeelingChange(1);
@@ -154,7 +154,7 @@ namespace VPet_Simulator.Core
         public void DisplayTouchBody()
         {
             CountNomal = 0;
-            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
+            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < Core.Save.FeelingMax)
             {
                 Core.Save.StrengthChange(-2);
                 Core.Save.FeelingChange(1);
