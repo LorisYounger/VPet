@@ -73,7 +73,9 @@ namespace VPet_Simulator.Windows
                 sb.Append($"&ver={mw.version}");
                 sb.Append("&save=");
                 sb.AppendLine(HttpUtility.UrlEncode(save));
+#pragma warning disable SYSLIB0014 // 类型或成员已过时
                 var request = (HttpWebRequest)WebRequest.Create(_url);
+#pragma warning restore SYSLIB0014 // 类型或成员已过时
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";//ContentType
                 byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());

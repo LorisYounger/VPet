@@ -494,6 +494,8 @@ namespace VPet_Simulator.Windows
         int lowstrengthAskCountDrink = 20;
         private void lowStrength()
         {
+            var sm = Core.Save.StrengthMax;
+            var sm75 = sm * 0.75;
             if (Set.AutoBuy && Core.Save.Money >= 100)
             {
                 var havemoney = Core.Save.Money * 0.8;
@@ -501,15 +503,15 @@ namespace VPet_Simulator.Windows
                  && !x.IsOverLoad() // 不吃超模食物
                 );
 
-                if (Core.Save.StrengthFood < 75)
+                if (Core.Save.StrengthFood < sm75)
                 {
-                    if (Core.Save.StrengthFood < 50)
+                    if (Core.Save.StrengthFood < sm * 0.50)
                     {//太饿了,找正餐
-                        food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > 20);
+                        food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > sm * 0.20);
                     }
                     else
                     {//找零食
-                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.StrengthFood > 10);
+                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.StrengthFood > sm * 0.10);
                     }
                     if (food.Count == 0)
                         return;
@@ -519,7 +521,7 @@ namespace VPet_Simulator.Windows
                     GameSavesData.Statistics[(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
-                else if (Core.Save.StrengthDrink < 75)
+                else if (Core.Save.StrengthDrink < sm75)
                 {
                     food = food.FindAll(x => x.Type == Food.FoodType.Drink && x.StrengthDrink > 10);
                     if (food.Count == 0)
@@ -530,7 +532,7 @@ namespace VPet_Simulator.Windows
                     GameSavesData.Statistics[(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
-                else if (Set.AutoGift && Core.Save.Feeling < 50)
+                else if (Set.AutoGift && Core.Save.Feeling < Core.Save.FeelingMax * 0.50)
                 {
                     food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > 10);
                     if (food.Count == 0)
@@ -544,18 +546,18 @@ namespace VPet_Simulator.Windows
             }
             else if (Core.Save.Mode == IGameSave.ModeType.Happy || Core.Save.Mode == IGameSave.ModeType.Nomal)
             {
-                if (Core.Save.StrengthFood < 75 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
+                if (Core.Save.StrengthFood < sm75 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
                 {
                     lowstrengthAskCountFood = Set.InteractionCycle;
                     var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
                     var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like <= like);
                     if (txt.Count != 0)
-                        if (Core.Save.StrengthFood > 60)
+                        if (Core.Save.StrengthFood > sm * 0.60)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
                             Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                         }
-                        else if (Core.Save.StrengthFood > 40)
+                        else if (Core.Save.StrengthFood > sm * 0.40)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
                             Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
@@ -568,18 +570,18 @@ namespace VPet_Simulator.Windows
                     Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
-                if (Core.Save.StrengthDrink < 75 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
+                if (Core.Save.StrengthDrink < sm75 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
                 {
                     lowstrengthAskCountDrink = Set.InteractionCycle;
                     var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
                     var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like <= like);
                     if (txt.Count != 0)
-                        if (Core.Save.StrengthDrink > 60)
+                        if (Core.Save.StrengthDrink > sm * 0.60)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
                             Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                         }
-                        else if (Core.Save.StrengthDrink > 40)
+                        else if (Core.Save.StrengthDrink > sm * 0.40)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
                             Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
@@ -595,17 +597,18 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                if (Core.Save.StrengthFood < 60 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
+                var sm20 = sm * 0.20;
+                if (Core.Save.StrengthFood < sm * 0.60 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
                 {
                     lowstrengthAskCountFood = Set.InteractionCycle;
                     var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
                     var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
-                    if (Core.Save.StrengthFood > 40)
+                    if (Core.Save.StrengthFood > sm * 0.40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
                         Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
-                    else if (Core.Save.StrengthFood > 20)
+                    else if (Core.Save.StrengthFood > sm20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
                         Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
@@ -618,17 +621,17 @@ namespace VPet_Simulator.Windows
                     Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
-                if (Core.Save.StrengthDrink < 60 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
+                if (Core.Save.StrengthDrink < sm * 0.60 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
                 {
                     lowstrengthAskCountDrink = Set.InteractionCycle;
                     var like = Core.Save.Likability < 40 ? 0 : (Core.Save.Likability < 70 ? 1 : (Core.Save.Likability < 100 ? 2 : 3));
                     var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
-                    if (Core.Save.StrengthDrink > 40)
+                    if (Core.Save.StrengthDrink > sm * 0.40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
                         Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
-                    else if (Core.Save.StrengthDrink > 20)
+                    else if (Core.Save.StrengthDrink > sm20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
                         Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
@@ -969,7 +972,9 @@ namespace VPet_Simulator.Windows
                 }
             }
         }
+#pragma warning disable CS0414 // 字段“MainWindow.AudioPlayingVolumeOK”已被赋值，但从未使用过它的值
         private bool? AudioPlayingVolumeOK = null;
+#pragma warning restore CS0414 // 字段“MainWindow.AudioPlayingVolumeOK”已被赋值，但从未使用过它的值
         /// <summary>
         /// 获得当前系统音乐播放音量
         /// </summary>
@@ -1097,7 +1102,9 @@ namespace VPet_Simulator.Windows
             sb.Append("&save=");
             sb.AppendLine(HttpUtility.UrlEncode(Core.Save.ToLine().ToString() + Set.ToString()));
             //游戏设置比存档更重要,桌宠大部分内容存设置里了,所以一起上传
+#pragma warning disable SYSLIB0014 // 类型或成员已过时
             var request = (HttpWebRequest)WebRequest.Create(_url);
+#pragma warning restore SYSLIB0014 // 类型或成员已过时
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";//ContentType
             byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());
@@ -2069,7 +2076,7 @@ namespace VPet_Simulator.Windows
             }
             Main.CountNomal = 0;
 
-            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
+            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < Core.Save.FeelingMax)
             {
                 Core.Save.StrengthChange(-2);
                 Core.Save.FeelingChange(1);
