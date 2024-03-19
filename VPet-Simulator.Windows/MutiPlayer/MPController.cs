@@ -65,12 +65,12 @@ namespace VPet_Simulator.Windows
 
         public void ShowSetting()
         {
-         
+
         }
 
         public void ShowPanel()
         {
-            
+
         }
 
         public void ResetPosition()
@@ -108,7 +108,7 @@ namespace VPet_Simulator.Windows
 
         public int PressLength => mw.Set.PressLength;
 
-        public bool EnableFunction => true;
+        public bool EnableFunction => false;
 
         public int InteractionCycle => mw.Set.InteractionCycle;
 

@@ -20,6 +20,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphInfo;
@@ -109,11 +110,14 @@ public partial class winMutiPlayer : Window, IMPWindows
         BitmapFrame result = BitmapFrame.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
         return result;
     }
+
     public ulong OwnerID { get; set; }
 
     public ulong LobbyID => lb.Id.Value;
 
     public IEnumerable<IMPFriend> Friends => MPFriends;
+
+    public bool IsGameRunning { get; set; }
 
     public void ShowLobbyInfo()
     {
@@ -295,6 +299,31 @@ public partial class winMutiPlayer : Window, IMPWindows
                                 To = MPFriends.Find(x => x.friend.Id == MSG.To);
                                 To.DisplayMessage(MSG.GetContent<Chat>());
                                 break;
+                            case (int)MSGType.Interact:
+                                if (MSG.To == SteamClient.SteamId.Value)
+                                {
+                                    var byname = lb.Members.First(x => x.Id == From).Name;
+                                    bool isok = !IMPFriend.InConvenience(mw.Main);
+                                    switch (MSG.GetContent<Interact>())
+                                    {
+                                        case Interact.TouchHead:
+                                            mw.Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, mw.Core.Save.Name));
+                                            if (isok)
+                                                DisplayNOCALTouchHead();
+                                            break;
+                                        case Interact.TouchBody:
+                                            mw.Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, mw.Core.Save.Name));
+                                            if (isok)
+                                                DisplayNOCALTouchBody();
+                                            break;
+                                        case Interact.TouchPinch:
+                                            mw.Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, mw.Core.Save.Name));
+                                            if (isok)
+                                                DisplayNOCALTouchPinch();
+                                            break;
+                                    }
+                                }
+                                break;
                         }
                     }
                     Thread.Sleep(100);
@@ -344,5 +373,87 @@ public partial class winMutiPlayer : Window, IMPWindows
     private void swAllowJoin_Unchecked(object sender, RoutedEventArgs e)
     {
         lb.SetJoinable(false);
+    }
+
+    /// <summary>
+    /// 显示本体摸头情况 (会无损加心情)
+    /// </summary>
+    public void DisplayNOCALTouchHead()
+    {
+        mw.Main.Core.Save.FeelingChange(1);
+        if (mw.Main.DisplayType.Type == GraphType.Touch_Head)
+        {
+            if (mw.Main.DisplayType.Animat == AnimatType.A_Start)
+                return;
+            else if (mw.Main.DisplayType.Animat == AnimatType.B_Loop)
+                if (Dispatcher.Invoke(() => mw.Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Type == GraphType.Touch_Head && ig.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig.IsContinue = true;
+                    return;
+                }
+                else if (Dispatcher.Invoke(() => mw.Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Type == GraphType.Touch_Head && ig2.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig2.IsContinue = true;
+                    return;
+                }
+        }
+        mw.Main.Display(GraphType.Touch_Head, AnimatType.A_Start, (graphname) =>
+           mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+           mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+           mw.Main.DisplayCEndtoNomal(graphname))));
+    }
+    /// <summary>
+    /// 显示摸身体情况 (会无损加心情)
+    /// </summary>
+    public void DisplayNOCALTouchBody()
+    {
+        mw.Main.Core.Save.FeelingChange(1);
+        if (mw.Main.DisplayType.Type == GraphType.Touch_Body)
+        {
+            if (mw.Main.DisplayType.Animat == AnimatType.A_Start)
+                return;
+            else if (mw.Main.DisplayType.Animat == AnimatType.B_Loop)
+                if (Dispatcher.Invoke(() => mw.Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Type == GraphType.Touch_Body && ig.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig.IsContinue = true;
+                    return;
+                }
+                else if (Dispatcher.Invoke(() => mw.Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Type == GraphType.Touch_Body && ig2.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig2.IsContinue = true;
+                    return;
+                }
+        }
+        mw.Main.Display(GraphType.Touch_Body, AnimatType.A_Start, (graphname) =>
+         mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+         mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+         mw.Main.DisplayCEndtoNomal(graphname))));
+    }
+    /// <summary>
+    /// 显示本体捏脸情况 (会无损加心情)
+    /// </summary>
+    public void DisplayNOCALTouchPinch()
+    {
+        mw.Main.Core.Save.FeelingChange(1);
+        if (mw.Main.DisplayType.Name == "pinch")
+        {
+            if (mw.Main.DisplayType.Animat == AnimatType.A_Start)
+                return;
+            else if (mw.Main.DisplayType.Animat == AnimatType.B_Loop)
+                if (Dispatcher.Invoke(() => mw.Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Type == GraphType.Touch_Head && ig.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig.IsContinue = true;
+                    return;
+                }
+                else if (Dispatcher.Invoke(() => mw.Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Type == GraphType.Touch_Head && ig2.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig2.IsContinue = true;
+                    return;
+                }
+        }
+        mw.Main.Display("pinch", AnimatType.A_Start, (graphname) =>
+           mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+           mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+           mw.Main.DisplayCEndtoNomal(graphname))));
     }
 }

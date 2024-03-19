@@ -33,20 +33,16 @@ public struct MPMessage
         /// </summary>
         DispayGraph,
         /// <summary>
-        /// 摸身体 
+        /// 交互 (Interact)
         /// </summary>
-        TouchHead,
+        Interact,
         /// <summary>
-        /// 摸头
-        /// </summary>
-        TouchBody,
-        /// <summary>
-        /// 喂食
+        /// 喂食 (Feed)
         /// </summary>
         Feed,
     }
     /// <summary>
-    /// 消息类型
+    /// 消息类型 MOD作者可以随便抽个不是MSGTYPE的数避免冲突,支持负数
     /// </summary>
     [Line] public int Type { get; set; }
 
@@ -61,14 +57,34 @@ public struct MPMessage
 
     public static byte[] ConverTo(MPMessage data) => Encoding.UTF8.GetBytes(LPSConvert.SerializeObject(data).ToString());
     public static MPMessage ConverTo(byte[] data) => LPSConvert.DeserializeObject<MPMessage>(new LPS(Encoding.UTF8.GetString(data)));
-
+    /// <summary>
+    /// 设置消息内容(类)
+    /// </summary>
     public void SetContent(object content)
     {
         Content = LPSConvert.GetObjectString(content, convertNoneLineAttribute: true);
     }
+    /// <summary>
+    /// 获取消息内容(类)
+    /// </summary>
+    /// <typeparam name="T">类类型</typeparam>
     public T GetContent<T>()
     {
         return (T)LPSConvert.GetStringObject(Content, typeof(T), convertNoneLineAttribute: true);
+    }
+    /// <summary>
+    /// 设置消息内容(字符串)
+    /// </summary>
+    public void SetContent(string content)
+    {
+        Content = content;
+    }
+    /// <summary>
+    /// 获取消息内容(字符串)
+    /// </summary>
+    public string GetContent()
+    {
+        return Content;
     }
     /// <summary>
     /// 聊天结构
@@ -105,5 +121,37 @@ public struct MPMessage
         /// 发送者名字
         /// </summary>
         public string SendName { get; set; }
+    }
+    /// <summary>
+    /// 交互结构
+    /// </summary>
+    public struct Feed
+    {
+        /// <summary>
+        /// 对方是否启用了数据计算 (并且未丢失小标)
+        /// </summary>
+        public bool EnableFunction { get; set; }
+        /// <summary>
+        /// 食物
+        /// </summary>
+        public Food Food { get; set; }
+    }
+    /// <summary>
+    /// 交互类型
+    /// </summary>
+    public enum Interact
+    {
+        /// <summary>
+        /// 摸身体 
+        /// </summary>
+        TouchHead,
+        /// <summary>
+        /// 摸头
+        /// </summary>
+        TouchBody,
+        /// <summary>
+        /// 捏脸
+        /// </summary>
+        TouchPinch,
     }
 }

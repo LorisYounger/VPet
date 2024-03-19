@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VPet_Simulator.Core;
+using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Windows.Interface.MPMessage;
 
 namespace VPet_Simulator.Windows.Interface;
@@ -53,4 +54,22 @@ public interface IMPFriend
     /// </summary>
     /// <param name="msg">聊天内容</param>
     void DisplayMessage(Chat msg);
+
+    /// <summary>
+    /// 判断是否在忙碌 (被提起等, 不可进行互动)
+    /// </summary>
+    /// <returns></returns>
+    public bool InConvenience();
+
+    /// <summary>
+    /// 判断是否在忙碌 (被提起等, 不可进行互动)
+    /// </summary>
+    public static bool InConvenience(Main Main)
+    {
+        if (Main.DisplayType.Type == GraphType.StartUP || Main.DisplayType.Type == GraphType.Raised_Dynamic || Main.DisplayType.Type == GraphType.Raised_Static)
+        {
+            return true;
+        }
+        return false;
+    }
 }

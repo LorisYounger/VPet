@@ -121,21 +121,22 @@ public partial class MPFriends : WindowX, IMPFriend
             return;
         }
 
-        ImageSources.AddRange(mw.ImageSources);
-
-
-        //加载所有MOD
-        List<DirectoryInfo> Path = new List<DirectoryInfo>();
-        Path.AddRange(new DirectoryInfo(mw.ModPath).EnumerateDirectories());
-
-        var workshop = mw.Set["workshop"];
-        foreach (Sub ws in workshop)
-        {
-            Path.Add(new DirectoryInfo(ws.Name));
-        }
 
         Task.Run(async () =>
         {
+            ImageSources.AddRange(mw.ImageSources);
+
+
+            //加载所有MOD
+            List<DirectoryInfo> Path = new List<DirectoryInfo>();
+            Path.AddRange(new DirectoryInfo(mw.ModPath).EnumerateDirectories());
+
+            var workshop = mw.Set["workshop"];
+            foreach (Sub ws in workshop)
+            {
+                Path.Add(new DirectoryInfo(ws.Name));
+            }
+
             //加载lobby传过来的数据
             string tmp = lb.GetMemberData(friend, "save");
             while (string.IsNullOrEmpty(tmp))
@@ -161,9 +162,28 @@ public partial class MPFriends : WindowX, IMPFriend
             SetPetGraph = tmp;
 
             await GameLoad(Path);
+
+            Main.Event_TouchHead += Main_Event_TouchHead;
+            Main.Event_TouchBody += Main_Event_TouchBody;
         });
 
     }
+
+    private void Main_Event_TouchHead()
+    {
+        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name));
+        var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
+        msg.SetContent(Interact.TouchHead);
+        wmp.SendMessageALL(msg);
+    }
+    private void Main_Event_TouchBody()
+    {
+        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name));
+        var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
+        msg.SetContent(Interact.TouchBody);
+        wmp.SendMessageALL(msg);
+    }
+
     public List<MPMOD> MPMODs = new List<MPMOD>();
     public Main Main { get; set; }
 
@@ -276,13 +296,6 @@ public partial class MPFriends : WindowX, IMPFriend
         }
         Main.CountNomal = 0;
 
-        if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
-        {
-            Core.Save.StrengthChange(-2);
-            Core.Save.FeelingChange(1);
-            Core.Save.Mode = Core.Save.CalMode();
-            Main.LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
-        }
         if (Main.DisplayType.Name == "pinch")
         {
             if (Main.DisplayType.Animat == AnimatType.A_Start)
@@ -305,6 +318,10 @@ public partial class MPFriends : WindowX, IMPFriend
     }
     private void DisplayPinch_loop()
     {
+        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save.Name));
+        var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
+        msg.SetContent(Interact.TouchPinch);
+        wmp.SendMessageALL(msg);
         if (Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
         {
             if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
@@ -321,6 +338,124 @@ public partial class MPFriends : WindowX, IMPFriend
             Main.DisplayCEndtoNomal("pinch");
         }
     }
+    /// <summary>
+    /// 显示摸头情况 (无任何计算和传导)
+    /// </summary>
+    public void DisplayNOCALTouchHead()
+    {
+        if (Main.DisplayType.Type == GraphType.Touch_Head)
+        {
+            if (Main.DisplayType.Animat == AnimatType.A_Start)
+                return;
+            else if (Main.DisplayType.Animat == AnimatType.B_Loop)
+                if (Dispatcher.Invoke(() => Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Type == GraphType.Touch_Head && ig.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig.IsContinue = true;
+                    return;
+                }
+                else if (Dispatcher.Invoke(() => Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Type == GraphType.Touch_Head && ig2.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig2.IsContinue = true;
+                    return;
+                }
+        }
+        Main.Display(GraphType.Touch_Head, AnimatType.A_Start, (graphname) =>
+           Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+           Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+           Main.DisplayCEndtoNomal(graphname))));
+    }
+    /// <summary>
+    /// 显示摸身体情况 (无任何计算和传导)
+    /// </summary>
+    public void DisplayNOCALTouchBody()
+    {
+        if (Main.DisplayType.Type == GraphType.Touch_Body)
+        {
+            if (Main.DisplayType.Animat == AnimatType.A_Start)
+                return;
+            else if (Main.DisplayType.Animat == AnimatType.B_Loop)
+                if (Dispatcher.Invoke(() => Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Type == GraphType.Touch_Body && ig.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig.IsContinue = true;
+                    return;
+                }
+                else if (Dispatcher.Invoke(() => Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Type == GraphType.Touch_Body && ig2.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig2.IsContinue = true;
+                    return;
+                }
+        }
+        Main.Display(GraphType.Touch_Body, AnimatType.A_Start, (graphname) =>
+         Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+         Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+         Main.DisplayCEndtoNomal(graphname))));
+    }
+    /// <summary>
+    /// 显示摸身体情况 (无任何计算和传导)
+    /// </summary>
+    public void DisplayNOCALTouchPinch()
+    {
+        if (Main.DisplayType.Name == "pinch")
+        {
+            if (Main.DisplayType.Animat == AnimatType.A_Start)
+                return;
+            else if (Main.DisplayType.Animat == AnimatType.B_Loop)
+                if (Dispatcher.Invoke(() => Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Type == GraphType.Touch_Body && ig.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig.IsContinue = true;
+                    return;
+                }
+                else if (Dispatcher.Invoke(() => Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Type == GraphType.Touch_Body && ig2.GraphInfo.Animat == AnimatType.B_Loop)
+                {
+                    ig2.IsContinue = true;
+                    return;
+                }
+        }
+        Main.Display("pinch", AnimatType.A_Start, (graphname) =>
+         Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+         Main.Display(graphname, AnimatType.B_Loop, (graphname) => Main.DisplayCEndtoNomal(graphname))));
+    }
+
+    /// <summary>
+    /// 收到被互动通知
+    /// </summary>
+    public void ActiveInteract(string byname, Interact interact)
+    {
+        if (!Loaded)
+        {
+            return;
+        }
+        if (InConvenience())
+        {//忙碌时候只显示消息
+            switch (interact)
+            {
+                case Interact.TouchHead:
+                case Interact.TouchBody:
+                    Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name));
+                    break;
+                case Interact.TouchPinch:
+                    Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save.Name));
+                    break;
+            }
+            return;
+        }
+        switch (interact)
+        {
+            case Interact.TouchHead:
+                DisplayNOCALTouchHead();
+                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name));
+                break;
+            case Interact.TouchBody:
+                DisplayNOCALTouchBody();
+                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name));
+                break;
+            case Interact.TouchPinch:
+                DisplayNOCALTouchPinch();
+                Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save.Name));
+                break;
+        }
+    }
+
 
     /// <summary>
     /// 播放关闭动画并关闭,如果10秒后还未关闭则强制关闭
@@ -368,10 +503,12 @@ public partial class MPFriends : WindowX, IMPFriend
     /// </summary>
     public bool DisplayGraph(GraphInfo gi)
     {
-        if (!Loaded || Main.DisplayType.Type == GraphType.StartUP || Main.DisplayType.Type == GraphType.Raised_Dynamic || Main.DisplayType.Type == GraphType.Raised_Static)
+        if (!Loaded)
         {
             return false;
         }
+        if (InConvenience())
+            return false;
         if (gi.Type == Main.DisplayType.Type && gi.Animat == Main.DisplayType.Animat)
         {
             if (gi.Type != GraphType.Common)
@@ -488,4 +625,6 @@ public partial class MPFriends : WindowX, IMPFriend
                 break;
         }
     }
+
+    public bool InConvenience() => IMPFriend.InConvenience(Main);
 }

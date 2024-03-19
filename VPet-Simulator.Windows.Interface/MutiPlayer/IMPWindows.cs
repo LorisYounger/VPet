@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static VPet_Simulator.Core.GraphInfo;
+using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows.Interface;
 
@@ -58,4 +60,10 @@ public interface IMPWindows
     /// 事件: 结束访客表, 窗口关闭
     /// </summary>
     event Action ClosingMutiPlayer;
+
+    /// <summary>
+    /// 当前是否有游戏(其他mod的)正在进行 避免多个游戏同时进行而导致冲突
+    /// 如果你的游戏开始了, 请请设置为true, 并在游戏结束后设置为false
+    /// </summary>
+    bool IsGameRunning { get; set; }
 }
