@@ -1,5 +1,6 @@
 ﻿using LinePutScript;
 using LinePutScript.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -164,6 +165,10 @@ namespace VPet_Simulator.Windows.Interface
         /// 主窗体 Pet Grid
         /// </summary>
         Grid PetGrid { get; }
+        /// <summary>
+        /// 当创建/加入新的多人联机窗口(访客表)时触发
+        /// </summary>
+        event Action<IMPWindows> MutiPlayerHandle;
     }
 
 }

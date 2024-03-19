@@ -48,7 +48,7 @@ public struct MPMessage
     /// <summary>
     /// 消息类型
     /// </summary>
-    [Line] public MSGType Type { get; set; }
+    [Line] public int Type { get; set; }
 
     /// <summary>
     /// 消息内容

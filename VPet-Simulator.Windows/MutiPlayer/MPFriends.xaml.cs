@@ -30,7 +30,7 @@ namespace VPet_Simulator.Windows;
 /// <summary>
 /// MPFriends.xaml 的交互逻辑
 /// </summary>
-public partial class MPFriends : WindowX
+public partial class MPFriends : WindowX, IMPFriend
 {
     public Lobby lb;
     MainWindow mw;
@@ -42,7 +42,7 @@ public partial class MPFriends : WindowX
     public List<PetLoader> Pets { get; set; } = new List<PetLoader>();
     public ILine OnMod { get; set; }
 
-    public string SetPetGraph;
+    public string SetPetGraph { get; set; }
     public bool IsOnMod(string ModName)
     {
         if (CoreMOD.OnModDefList.Contains(ModName))
@@ -166,6 +166,11 @@ public partial class MPFriends : WindowX
     }
     public List<MPMOD> MPMODs = new List<MPMOD>();
     public Main Main { get; set; }
+
+    public ulong LobbyID => lb.Id;
+
+    public ulong FriendID => friend.Id;
+
     /// <summary>
     /// 加载游戏
     /// </summary>
@@ -446,7 +451,7 @@ public partial class MPFriends : WindowX
         Task.Run(() =>
         {
             MPMessage msg = new MPMessage();
-            msg.Type = MSGType.Chat;
+            msg.Type = (int)MSGType.Chat;
             msg.SetContent(new Chat() { Content = cont, ChatType = (Chat.Type)talktype, SendName = SteamClient.Name });
             msg.To = SteamClient.SteamId;
 

@@ -2003,6 +2003,13 @@ namespace VPet_Simulator.Windows
         }
 
         TextBlock tlvplus;
+
+        public event Action<IMPWindows> MutiPlayerHandle;
+        internal void MutiPlayerStart(IMPWindows mp)
+        {
+            MutiPlayerHandle?.Invoke(mp);
+        }
+
         private void MWUIHandle(Main main)
         {
             if (Main.ToolBar.BdrPanel.Visibility == Visibility.Visible)

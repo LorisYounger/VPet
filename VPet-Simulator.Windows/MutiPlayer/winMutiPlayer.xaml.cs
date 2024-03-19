@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace VPet_Simulator.Windows;
 /// <summary>
 /// winMutiPlayer.xaml 的交互逻辑
 /// </summary>
-public partial class winMutiPlayer : Window
+public partial class winMutiPlayer : Window, IMPWindows
 {
     Steamworks.Data.Lobby lb;
     MainWindow mw;
@@ -108,7 +109,12 @@ public partial class winMutiPlayer : Window
         BitmapFrame result = BitmapFrame.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
         return result;
     }
-    ulong owner;
+    public ulong OwnerID { get; set; }
+
+    public ulong LobbyID => lb.Id.Value;
+
+    public IEnumerable<IMPFriend> Friends => MPFriends;
+
     public void ShowLobbyInfo()
     {
         _ = Task.Run(async () =>
@@ -117,7 +123,6 @@ public partial class winMutiPlayer : Window
             lb.SetMemberData("onmod", mw.Set.FindLine("onmod")?.ToString() ?? "onmod");
             lb.SetMemberData("petgraph", mw.Set.PetGraph);
 
-            SteamMatchmaking.OnLobbyDataChanged += SteamMatchmaking_OnLobbyDataChanged;
             SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
             SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
             Steamworks.Data.Image? img = await lb.Owner.GetMediumAvatarAsync();
@@ -125,7 +130,7 @@ public partial class winMutiPlayer : Window
             Dispatcher.Invoke(() =>
             {
                 hostName.Text = lb.Owner.Name;
-                owner = lb.Owner.Id.Value;
+                OwnerID = lb.Owner.Id.Value;
                 lbLid.Text = lb.Id.Value.ToString("x");
                 HostHead.Source = ConvertToImageSource(img.Value);
             });
@@ -175,13 +180,16 @@ public partial class winMutiPlayer : Window
                         });
                     });
             }
+            mw.MutiPlayerStart(this);
             LoopP2PPacket();
         });
     }
-
+    public event Action<ulong> OnMemberLeave;
     private void SteamMatchmaking_OnLobbyMemberLeave(Lobby lobby, Friend friend)
     {
-        if (friend.Id == owner)
+        if (lobby.Id != lb.Id) return;
+        OnMemberLeave?.Invoke(friend.Id);
+        if (friend.Id == OwnerID)
         {
             Task.Run(() => MessageBox.Show("访客表已被房主{0}关闭".Translate(friend.Name)));
             lb = default(Lobby);
@@ -212,7 +220,7 @@ public partial class winMutiPlayer : Window
             return;
         lastgraph = info;
         MPMessage msg = new MPMessage();
-        msg.Type = MSGType.DispayGraph;
+        msg.Type = (int)MSGType.DispayGraph;
         msg.SetContent(info);
         msg.To = SteamClient.SteamId.Value;
         SendMessageALL(msg);
@@ -220,8 +228,6 @@ public partial class winMutiPlayer : Window
     /// <summary>
     /// 给指定好友发送消息
     /// </summary>
-    /// <param name="mpf"></param>
-    /// <param name="msg"></param>
     public void SendMessage(ulong friendid, MPMessage msg)
     {
         byte[] data = ConverTo(msg);
@@ -240,7 +246,19 @@ public partial class winMutiPlayer : Window
         }
     }
 
+    /// <summary>
+    /// 发送日志消息
+    /// </summary>
+    /// <param name="message">日志</param>
+    public void Log(string message)
+    {
+        Dispatcher.Invoke(() => tbLog.AppendText($"[{DateTime.Now.ToShortTimeString()}]{message}\n"));
+    }
 
+    /// <summary>
+    /// 事件:成员加入
+    /// </summary>
+    public event Action<ulong> OnMemberJoined;
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
         if (lobby.Id == lb.Id)
@@ -251,15 +269,7 @@ public partial class winMutiPlayer : Window
             var mpuc = new MPUserControl(this, mpf);
             MUUCList.Children.Add(mpuc);
             MPUserControls.Add(mpuc);
-        }
-    }
-
-
-    private void SteamMatchmaking_OnLobbyDataChanged(Lobby lobby)
-    {
-        if (lobby.Id == lb.Id)
-        {
-
+            OnMemberJoined?.Invoke(friend.Id);
         }
     }
     private void LoopP2PPacket()
@@ -272,15 +282,17 @@ public partial class winMutiPlayer : Window
                     var packet = SteamNetworking.ReadP2PPacket();
                     if (packet.HasValue)
                     {
-                        var From = packet.Value.SteamId;
+                        SteamId From = packet.Value.SteamId;
                         var MSG = ConverTo(packet.Value.Data);
-                        var To = MPFriends.Find(x => x.friend.Id == MSG.To);
+                        ReceivedMessage?.Invoke(From.Value, MSG);
                         switch (MSG.Type)
                         {
-                            case MSGType.DispayGraph:
+                            case (int)MSGType.DispayGraph:
+                                var To = MPFriends.Find(x => x.friend.Id == MSG.To);
                                 To.DisplayGraph(MSG.GetContent<GraphInfo>());
                                 break;
-                            case MSGType.Chat:
+                            case (int)MSGType.Chat:
+                                To = MPFriends.Find(x => x.friend.Id == MSG.To);
                                 To.DisplayMessage(MSG.GetContent<Chat>());
                                 break;
                         }
@@ -294,9 +306,10 @@ public partial class winMutiPlayer : Window
 
             }
     }
+
+    public event Action<ulong, MPMessage> ReceivedMessage;
     private void Window_Closed(object sender, EventArgs e)
     {
-        SteamMatchmaking.OnLobbyDataChanged -= SteamMatchmaking_OnLobbyDataChanged;
         mw.Main.GraphDisplayHandler -= Main_GraphDisplayHandler;
         SteamMatchmaking.OnLobbyMemberJoined -= SteamMatchmaking_OnLobbyMemberJoined;
         lb.Leave();
@@ -307,6 +320,10 @@ public partial class winMutiPlayer : Window
         mw.winMutiPlayer = null;
     }
     bool isOPEN = true;
+    /// <summary>
+    /// 事件: 结束访客表, 窗口关闭
+    /// </summary>
+    public event Action ClosingMutiPlayer;
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         if (!lb.Equals(default(Lobby)))
@@ -315,6 +332,7 @@ public partial class winMutiPlayer : Window
                 e.Cancel = true;
                 return;
             }
+        ClosingMutiPlayer?.Invoke();
         isOPEN = false;
     }
 
