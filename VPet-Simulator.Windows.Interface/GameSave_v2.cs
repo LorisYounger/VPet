@@ -166,10 +166,6 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public bool HashCheck { get; private set; } = true;
 
-        FInt64 IGetOBJ<ILine>.this[gflt subName] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-
-
         /// <summary>
         /// 关闭该玩家的HashCheck检查
         /// 请使用imw中的HashCheckOff

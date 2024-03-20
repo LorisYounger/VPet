@@ -119,6 +119,8 @@ public partial class winMutiPlayer : Window, IMPWindows
 
     public bool IsGameRunning { get; set; }
 
+    public TabControl TabControl => tabControl;
+
     public void ShowLobbyInfo()
     {
         _ = Task.Run(async () =>
@@ -129,6 +131,7 @@ public partial class winMutiPlayer : Window, IMPWindows
 
             SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
             SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
+            SteamMatchmaking.OnLobbyDataChanged += SteamMatchmaking_OnLobbyDataChanged;
             Steamworks.Data.Image? img = await lb.Owner.GetMediumAvatarAsync();
 
             Dispatcher.Invoke(() =>
@@ -188,6 +191,20 @@ public partial class winMutiPlayer : Window, IMPWindows
             LoopP2PPacket();
         });
     }
+
+    private void SteamMatchmaking_OnLobbyDataChanged(Lobby lobby)
+    {
+        if (lb.Id == lobby.Id)
+        {
+            if (lb.GetData("kick") == SteamClient.SteamId.Value.ToString())
+            {
+                Task.Run(() => MessageBox.Show("访客表已被房主{0}关闭".Translate(lb.Owner.Name)));//温柔的谎言
+                lb = default(Lobby);
+                Close();
+            }
+        }
+    }
+
     public event Action<ulong> OnMemberLeave;
     private void SteamMatchmaking_OnLobbyMemberLeave(Lobby lobby, Friend friend)
     {

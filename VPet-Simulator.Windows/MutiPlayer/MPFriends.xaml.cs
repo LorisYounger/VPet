@@ -627,4 +627,12 @@ public partial class MPFriends : WindowX, IMPFriend
     }
 
     public bool InConvenience() => IMPFriend.InConvenience(Main);
+
+    public void ReSetLocal()
+    {
+        Main.CleanState();
+        Main.DisplayToNomal();
+        Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+        Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+    }
 }

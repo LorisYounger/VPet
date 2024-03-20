@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static VPet_Simulator.Core.GraphInfo;
 using VPet_Simulator.Core;
+using System.Windows.Controls;
 
 namespace VPet_Simulator.Windows.Interface;
 
@@ -66,4 +67,8 @@ public interface IMPWindows
     /// 如果你的游戏开始了, 请请设置为true, 并在游戏结束后设置为false
     /// </summary>
     bool IsGameRunning { get; set; }
+    /// <summary>
+    /// 获取访客表菜单栏,可以插入自己的菜单
+    /// </summary>
+    TabControl TabControl { get; }
 }

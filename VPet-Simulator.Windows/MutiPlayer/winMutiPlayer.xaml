@@ -8,9 +8,9 @@
         Title="{ll:Str 访客表}" MinHeight="400" Width="400" Closed="Window_Closed" FontSize="16" SizeToContent="Height"
         MaxHeight="800" ResizeMode="CanMinimize" Closing="Window_Closing">
     <Grid>
-        <Border Margin="20" Width="80" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top" CornerRadius="40">
+        <pu:ContentControlX Margin="20" Width="80" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top" CornerRadius="40">
             <Image x:Name="HostHead" Source="/Res/TopLogo2019.PNG" />
-        </Border>
+        </pu:ContentControlX>
 
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,20,0,0"
                 Foreground="{DynamicResource DARKPrimaryDarker}">
