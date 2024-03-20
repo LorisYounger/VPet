@@ -171,6 +171,9 @@ namespace VPet_Simulator.Windows
                             if (lps.First().Name.ToLower() == "pet")
                             {
                                 var name = lps.First().Info;
+                                if (name == "默认虚拟桌宠")
+                                    name = "vup";//旧版本名称兼容
+
                                 var p = mw.Pets.FirstOrDefault(x => x.Name == name);
                                 if (p == null)
                                 {
