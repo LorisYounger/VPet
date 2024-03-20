@@ -317,11 +317,12 @@ public partial class winMutiPlayer : Window, IMPWindows
                                 To.DisplayMessage(MSG.GetContent<Chat>());
                                 break;
                             case (int)MSGType.Interact:
+                                var byname = lb.Members.First(x => x.Id == From).Name;
+                                var interact = MSG.GetContent<Interact>();
                                 if (MSG.To == SteamClient.SteamId.Value)
                                 {
-                                    var byname = lb.Members.First(x => x.Id == From).Name;
                                     bool isok = !IMPFriend.InConvenience(mw.Main);
-                                    switch (MSG.GetContent<Interact>())
+                                    switch (interact)
                                     {
                                         case Interact.TouchHead:
                                             mw.Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, mw.Core.Save.Name));
@@ -340,6 +341,39 @@ public partial class winMutiPlayer : Window, IMPWindows
                                             break;
                                     }
                                 }
+                                else
+                                {
+                                    To = MPFriends.Find(x => x.friend.Id == MSG.To);
+                                    To.ActiveInteract(byname, interact);
+                                }
+                                break;
+                            case (int)MSGType.Feed:
+                                byname = lb.Members.First(x => x.Id == From).Name;
+                                var feed = MSG.GetContent<Feed>();
+                                if (MSG.To == SteamClient.SteamId.Value)
+                                {
+                                    var item = feed.Item;
+                                    feed.Item.ImageSource = Dispatcher.Invoke(() => mw.ImageSources.FindImage("food_" + (item.Image ?? item.Name), "food"));
+                                    mw.DisplayFoodAnimation(feed.Item.GetGraph(), feed.Item.ImageSource);
+                                    if (feed.EnableFunction)
+                                    {
+                                        mw.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price));
+                                        //对于要修改数据的物品一定要再次检查,避免联机开挂毁存档
+                                        if (item.Price >= 10 && item.Price <= 1000 && item.Health >= 0 && item.Exp >= 0 && item.Likability >= 0 && giveprice < 1000)
+                                        {//单次联机收礼物上限1000
+                                            giveprice += item.Price;
+                                            mw.TakeItem(feed.Item);
+                                        }
+                                    }
+                                    else
+                                        mw.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName));
+                                }
+                                else
+                                {
+                                    To = MPFriends.Find(x => x.friend.Id == MSG.To);
+                                    To.Feed(byname, feed);
+                                }
+
                                 break;
                         }
                     }
@@ -352,7 +386,7 @@ public partial class winMutiPlayer : Window, IMPWindows
 
             }
     }
-
+    private double giveprice = 0;
     public event Action<ulong, MPMessage> ReceivedMessage;
     private void Window_Closed(object sender, EventArgs e)
     {

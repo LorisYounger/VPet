@@ -213,7 +213,7 @@ namespace VPet_Simulator.Windows
                 case "LB":
                     RBCGPTUseLB.IsChecked = true;
                     BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
-                    //if (!mw.IsSteamUser)
+                    //if (!mf.IsSteamUser)
                     //    BtnCGPTReSet.IsEnabled = false;
                     break;
                 case "OFF":
@@ -950,7 +950,7 @@ namespace VPet_Simulator.Windows
                     return;
             //else
             //{
-            //    mw.Set["SingleTips"][(gint)"open"] = 1;
+            //    mf.Set["SingleTips"][(gint)"open"] = 1;
             //    MessageBoxX.Show("游戏开机启动的实现方式是创建快捷方式,不是注册表,更健康,所以游戏卸了也不知道\n如果游戏打不开,可以去这里手动删除游戏开机启动快捷方式:\n%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\".Translate()
             //        , "关于卸载不掉的问题是因为开启了开机启动".Translate(), MessageBoxIcon.Info);
             //}
@@ -1079,7 +1079,7 @@ namespace VPet_Simulator.Windows
             switch (mw.Set["CGPT"][(gstr)"type"])
             {
                 //case "API":
-                //    new winCGPTSetting(mw).ShowDialog();
+                //    new winCGPTSetting(mf).ShowDialog();
                 //    break;
                 case "DIY":
                     if (mw.TalkBoxCurr != null)
@@ -1090,13 +1090,13 @@ namespace VPet_Simulator.Windows
                 case "LB":
                     //Task.Run(() =>
                     //{
-                    //    if (((TalkBox)mw.TalkBox).ChatGPT_Reset())
+                    //    if (((TalkBox)mf.TalkBox).ChatGPT_Reset())
                     //    {
-                    //        ((TalkBox)mw.TalkBox).btn_startup.Visibility = Visibility.Visible;
+                    //        ((TalkBox)mf.TalkBox).btn_startup.Visibility = Visibility.Visible;
                     //        MessageBoxX.Show("桌宠重置成功".Translate());
                     //    }
                     //});
-                    //((TalkSelect)mw.TalkBox).RelsTime
+                    //((TalkSelect)mf.TalkBox).RelsTime
                     break;
                 case "OFF":
                 default:
@@ -1118,7 +1118,7 @@ namespace VPet_Simulator.Windows
             }
             //else if (RBCGPTUseAPI.IsChecked == true)
             //{
-            //    mw.Set["CGPT"][(gstr)"type"] = "API";
+            //    mf.Set["CGPT"][(gstr)"type"] = "API";
             //}
             else
             {
@@ -1131,10 +1131,10 @@ namespace VPet_Simulator.Windows
                 //case "API":
                 //    BtnCGPTReSet.IsEnabled = true;
                 //    BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
-                //    if (mw.TalkBox != null)
-                //        mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
-                //    mw.TalkBox = new TalkBoxAPI(mw);
-                //    mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
+                //    if (mf.TalkBox != null)
+                //        mf.Main.ToolBar.MainGrid.Children.Remove(mf.TalkBox);
+                //    mf.TalkBox = new TalkBoxAPI(mf);
+                //    mf.Main.ToolBar.MainGrid.Children.Add(mf.TalkBox);
                 //    break;
                 case "DIY":
                     BtnCGPTReSet.IsEnabled = true;

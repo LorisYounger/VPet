@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Windows.Interface.MPMessage;
@@ -72,4 +73,10 @@ public interface IMPFriend
         }
         return false;
     }
+    /// <summary>
+    /// 显示吃东西(夹层)动画
+    /// </summary>
+    /// <param name="graphName">夹层动画名</param>
+    /// <param name="imageSource">被夹在中间的图片</param>
+    void DisplayFoodAnimation(string graphName, ImageSource imageSource);
 }

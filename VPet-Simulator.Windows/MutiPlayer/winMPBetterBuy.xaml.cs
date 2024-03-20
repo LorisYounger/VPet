@@ -2,6 +2,7 @@
 using LinePutScript.Localization.WPF;
 using Panuon.WPF;
 using Panuon.WPF.UI;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,28 +23,29 @@ using static System.Windows.Forms.LinkLabel;
 using static VPet_Simulator.Core.GraphCore;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Core.IGraph;
+using static VPet_Simulator.Windows.Interface.MPMessage;
 
 namespace VPet_Simulator.Windows
 {
     /// <summary>
-    /// winBetterBuy.xaml 的交互逻辑
+    /// winMPBetterBuy.xaml 的交互逻辑
     /// </summary>
-    public partial class winBetterBuy : WindowX
+    public partial class winMPBetterBuy : WindowX
     {
         private TextBox _searchTextBox;
-        MainWindow mw;
+        MPFriends mf;
         private bool AllowChange = false;
         private Switch _puswitch;
         private int _columns;
         private int _rows;
 
-        public winBetterBuy(MainWindow mw)
+        public winMPBetterBuy(MPFriends mf)
         {
             InitializeComponent();
-            this.mw = mw;
-            Title = "更好买".Translate() + ' ' + mw.PrefixSave;
-            LsbSortRule.SelectedIndex = mw.Set["betterbuy"].GetInt("lastorder");
-            LsbSortAsc.SelectedIndex = mw.Set["betterbuy"].GetBool("lastasc") ? 0 : 1;
+            this.mf = mf;
+            Title = "给更好的{0}买".Translate(mf.friend.Name);
+            LsbSortRule.SelectedIndex = mf.mw.Set["betterbuy"].GetInt("lastorder");
+            LsbSortAsc.SelectedIndex = mf.mw.Set["betterbuy"].GetBool("lastasc") ? 0 : 1;
             AllowChange = true;
         }
         Run rMoney;
@@ -51,7 +53,6 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            showeatanm = true;//逃出
             if (_searchTextBox != null)
                 _searchTextBox.Text = "";
             if (LsbCategory.SelectedIndex == (int)type)
@@ -59,39 +60,7 @@ namespace VPet_Simulator.Windows
             else
                 LsbCategory.SelectedIndex = (int)type;
             if (rMoney != null)
-                rMoney.Text = mw.Core.Save.Money.ToString("f2");
-
-            //喜好度刷新
-            foreach (var sub in mw.GameSavesData["buytime"])
-            {
-                var name = sub.Name;
-                var food = mw.Foods.FirstOrDefault(x => x.Name == name);
-                if (food != null)
-                {
-                    food.LoadEatTimeSource(mw);
-                    food.NotifyOfPropertyChange("Description");
-                }
-            }
-            //没钱了,宠物给你私房钱 (开罗传统)
-            if (mw.Core.Save.Money <= 1)
-            {
-                if (mw.GameSavesData[(gbol)"self"])
-                {
-                    MessageBoxX.Show("更好买老顾客大优惠!桌宠的食物钱我来出!\n更好买提示您:$10以下的食物/药品等随便赊账".Translate());
-                }
-                else
-                {
-                    MessageBoxX.Show("看到您囊中羞涩,{0}拿出了1000块私房钱出来给你".Translate(mw.Core.Save.Name));
-                    mw.GameSavesData[(gbol)"self"] = true;
-                    mw.Core.Save.Money += 1000;
-                }
-            }
-            else if (mw.Core.Save.Money >= 11000 && mw.GameSavesData[(gbol)"self"])
-            {
-                mw.Core.Save.Money -= 1000;
-                mw.GameSavesData[(gbol)"self"] = false;
-                MessageBoxX.Show("{0}偷偷藏了1000块私房钱".Translate());
-            }
+                rMoney.Text = mf.Core.Save.Money.ToString("f2");
 
             Show();
         }
@@ -103,7 +72,7 @@ namespace VPet_Simulator.Windows
                 switch (type)
                 {
                     case Food.FoodType.Food:
-                        foods = mw.Foods;
+                        foods = mf.Foods;
                         break;
                     case Food.FoodType.Star:
                         //List<Food> lf = new List<Food>();
@@ -115,10 +84,10 @@ namespace VPet_Simulator.Windows
                         //        lf.Add(food);
                         //}
                         //foods = lf;
-                        foods = mw.Foods.FindAll(x => x.Star);
+                        foods = mf.Foods.FindAll(x => x.Star);
                         break;
                     default:
-                        foods = mw.Foods.FindAll(x => x.Type == type);// || x.Type == Food.FoodType.Limit);
+                        foods = mf.Foods.FindAll(x => x.Type == type);// || x.Type == Food.FoodType.Limit);
                         break;
                 }
                 if (!string.IsNullOrEmpty(searchtext))
@@ -216,48 +185,46 @@ namespace VPet_Simulator.Windows
             //eventArg.Source = sender;
             //PageDetail.RaiseEvent(eventArg);
         }
-        /// <summary>
-        /// 是否显示吃东西动画
-        /// </summary>
-        public bool showeatanm = true;
-
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
             var Button = sender as Button;
             var item = Button.DataContext as Food;
             //看是什么模式
-            if (mw.Set.EnableFunction)
-            {//$10以内的食物允许赊账
-                if (item.Price >= 10 && item.Price >= mw.Core.Save.Money)
-                {//买不起
-                    MessageBoxX.Show("您没有足够金钱来购买 {0}\n您需要 {1:f2} 金钱来购买\n您当前 {2:f2} 拥有金钱"
-                        .Translate(item.TranslateName, item.Price, mw.Core.Save.Money)
-                        , "金钱不足".Translate());
-                    return;
-                }
-                //看看是否超模
-                if (mw.HashCheck && item.IsOverLoad())
-                {
-                    if (MessageBoxX.Show("当前食物/物品属性超模,是否继续使用?\n使用超模食物可能会导致游戏发生不可预料的错误\n使用超模食物不影响大部分成就解锁\n本物品推荐价格为{0:f0}"
-                        .Translate(item.RealPrice), "超模食物/物品使用提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-                    {
-                        return;
-                    }
-                    mw.HashCheck = false;
-                }
+            bool EnableFunction = mf.mw.Set.EnableFunction && mf.mw.HashCheck && !item.IsOverLoad()
+                && item.Price >= 1 && item.Price <= 1000 && item.Health >= 0 && item.Exp >= 0 &&
+                item.Likability >= 0 && item.Price + 1000 < mf.mw.GameSavesData.GameSave.Money;
+            //不吃负面/太贵/太便宜
 
-                mw.TakeItem(item);
-            }
+            if (EnableFunction)//扣钱
+                mf.mw.GameSavesData.GameSave.Money -= item.Price;
 
-            mw.DisplayFoodAnimation(item.GetGraph(), item.ImageSource);
+            mf.DisplayFoodAnimation(item.GetGraph(), item.ImageSource);
+
+            if (EnableFunction)
+                mf.Main.LabelDisplayShow("{0}花费${3}\n给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName, item.Price));
+            else
+                mf.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName));
+
+            var msg = new MPMessage()
+            {
+                To = mf.friend.Id.Value,
+                Type = (int)MPMessage.MSGType.Feed,
+            };
+            var feed = new Feed()
+            {
+                EnableFunction = EnableFunction,
+                Item = item,
+            };
+            msg.SetContent(feed);
+            mf.wmp.SendMessageALL(msg);
 
             if (!_puswitch.IsChecked.Value)
             {
-                TryClose();
+                Close();
             }
             else
             {
-                rMoney.Text = mw.Core.Save.Money.ToString("f2");
+                rMoney.Text = mf.mw.Core.Save.Money.ToString("f2");
             }
         }
 
@@ -295,32 +262,24 @@ namespace VPet_Simulator.Windows
                 return;
             int order = LsbSortRule.SelectedIndex;
             bool asc = LsbSortAsc.SelectedIndex == 0;
-            mw.Set["betterbuy"].SetInt("lastorder", order);
-            mw.Set["betterbuy"].SetBool("lastasc", asc);
             OrderItemSource((Food.FoodType)LsbCategory.SelectedIndex, order, asc, _searchTextBox?.Text);
         }
-        public void TryClose()
-        {
-            IcCommodity.ItemsSource = null;
-            //mf.Topmost = mf.Set.TopMost;
-            Hide();
-        }
+
         private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            TryClose();
-            e.Cancel = mw.CloseConfirm;
+
         }
 
         private void Switch_Loaded(object sender, RoutedEventArgs e)
         {
             _puswitch = sender as Switch;
-            _puswitch.IsChecked = mw.Set["betterbuy"].GetBool("noautoclose");
+            _puswitch.IsChecked = mf.mw.Set["betterbuy"].GetBool("noautoclose");
             _puswitch.Click += Switch_Checked;
         }
 
         private void Switch_Checked(object sender, RoutedEventArgs e)
         {
-            mw.Set["betterbuy"].SetBool("noautoclose", _puswitch.IsChecked.Value);
+
         }
 
         private void AutoUniformGrid_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -357,54 +316,11 @@ namespace VPet_Simulator.Windows
         private void rMoney_Loaded(object sender, RoutedEventArgs e)
         {
             rMoney = sender as Run;
-            rMoney.Text = mw.Core.Save.Money.ToString("f2");
+            rMoney.Text = mf.mw.Core.Save.Money.ToString("f2");
         }
-        private Switch _puswitchautobuy;
-        private void Switch_Loaded_1(object sender, RoutedEventArgs e)
-        {
-            _puswitchautobuy = sender as Switch;
-            _puswitchautobuy.IsChecked = mw.Set.AutoBuy;
-            _puswitchautobuy.Click += Switch_AutoBuy_Checked;
-        }
-        private void Switch_AutoBuy_Checked(object sender, RoutedEventArgs e)
-        {
-            if (_puswitchautobuy.IsChecked.Value && mw.Core.Save.Money < 100)
-            {
-                _puswitchautobuy.IsChecked = false;
-                MessageBoxX.Show(mw, "余额不足100，无法开启自动购买".Translate(), "更好买".Translate());
-                return;
-            }
-            if (_puswitchautobuy.IsChecked.Value)
-            {
-                mw.Set.AutoBuy = true;
-                _puswitchautogift.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                mw.Set.AutoBuy = false;
-                _puswitchautogift.Visibility = Visibility.Collapsed;
-            }
-        }
-        private Switch _puswitchautogift;
-        private void Switch_Loaded_2(object sender, RoutedEventArgs e)
-        {
-            _puswitchautogift = sender as Switch;
-            _puswitchautogift.IsChecked = mw.Set.AutoGift;
-            _puswitchautogift.Click += Switch_AutoGift_Checked;
-            if (mw.Set.AutoBuy)
-            {
-                _puswitchautogift.Visibility = Visibility.Visible;
-            }
-        }
-        private void Switch_AutoGift_Checked(object sender, RoutedEventArgs e)
-        {
-            mw.Set.AutoGift = _puswitchautogift.IsChecked.Value;
-        }
-
         private void Button_Loaded(object sender, RoutedEventArgs e)
         {
-            ((Button)sender).Content = "更好买".Translate() + mw.PrefixSave;
-            ;
+            ((Button)sender).Content = "给更好的{0}买".Translate(mf.friend.Name);
         }
 
         private void TbPage_PreviewKeyDown(object sender, KeyEventArgs e)

@@ -169,6 +169,12 @@ namespace VPet_Simulator.Windows.Interface
         /// 当创建/加入新的多人联机窗口(访客表)时触发
         /// </summary>
         event Action<IMPWindows> MutiPlayerHandle;
+        /// <summary>
+        /// 显示吃东西(夹层)动画
+        /// </summary>
+        /// <param name="graphName">夹层动画名</param>
+        /// <param name="imageSource">被夹在中间的图片</param>
+        void DisplayFoodAnimation(string graphName, ImageSource imageSource);
     }
 
 }

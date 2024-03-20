@@ -25,6 +25,8 @@ using System.Windows.Interop;
 using LinePutScript.Converter;
 using static VPet_Simulator.Windows.Interface.MPMessage;
 using System.Windows.Input;
+using System.Windows.Media;
+using ToolBar = VPet_Simulator.Core.ToolBar;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -33,7 +35,7 @@ namespace VPet_Simulator.Windows;
 public partial class MPFriends : WindowX, IMPFriend
 {
     public Lobby lb;
-    MainWindow mw;
+    internal MainWindow mw;
     public Friend friend;
     public winMutiPlayer wmp;
     public GameCore Core { get; set; } = new GameCore();
@@ -62,7 +64,7 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             InitializeComponent();
 
-            //MGrid.Height = 500 * mw.Set.ZoomLevel;
+            //MGrid.Height = 500 * mf.Set.ZoomLevel;
             MGrid.Width = 500 * mw.Set.ZoomLevel;
             double L = 0, T = 0;
             if (mw.Set.StartRecordLast)
@@ -188,9 +190,45 @@ public partial class MPFriends : WindowX, IMPFriend
     public Main Main { get; set; }
 
     public ulong LobbyID => lb.Id;
-
+    /// <summary>
+    /// 是否显示吃东西动画
+    /// </summary>
+    bool showeatanm = true;
+    /// <summary>
+    /// 显示吃东西(夹层)动画
+    /// </summary>
+    /// <param name="graphName">夹层动画名</param>
+    /// <param name="imageSource">被夹在中间的图片</param>
+    public void DisplayFoodAnimation(string graphName, ImageSource imageSource)
+    {
+        if (showeatanm)
+        {//显示动画
+            showeatanm = false;
+            Main.Display(graphName, imageSource, () =>
+            {
+                showeatanm = true;
+                Main.DisplayToNomal();
+                Main.EventTimer_Elapsed();
+            });
+        }
+    }
     public ulong FriendID => friend.Id;
-
+    /// <summary>
+    /// 喂食显示动画
+    /// </summary>
+    /// <param name="byname"></param>
+    /// <param name="feed"></param>
+    public void Feed(string byname, Feed feed)
+    {
+        DisplayFoodAnimation(feed.Item.GetGraph(), Dispatcher.Invoke(() => ImageSources.FindImage("food_" + (feed.Item.Image ?? feed.Item.Name), "food")));
+        if (feed.EnableFunction)
+        {
+            mw.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price));
+            mw.TakeItem(feed.Item);
+        }
+        else
+            mw.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName));
+    }
     /// <summary>
     /// 加载游戏
     /// </summary>
@@ -257,16 +295,22 @@ public partial class MPFriends : WindowX, IMPFriend
 
             LoadingText.Content = "正在加载游戏\n该步骤可能会耗时比较长\n请耐心等待".Translate();
 
+            Foods.ForEach(item =>
+            {
+                item.ImageSource = ImageSources.FindImage("food_" + (item.Image ?? item.Name), "food");
+                item.Star = mw.Set.BetterBuyData["star"].GetInfos().Contains(Name);
+            });
+
             Main.PlayVoiceVolume = mw.Set.VoiceVolume;
 
             DisplayGrid.Child = Main;
 
-            //Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
+            //Main.SetMoveMode(mf.Set.AllowMove, mf.Set.SmartMove, mf.Set.SmartMoveInterval * 1000);
             //Main.SetLogicInterval(1500);
             if (mw.Set.MessageBarOutside)
                 Main.MsgBar.SetPlaceOUT();
 
-            //Main.WorkCheck = mw.WorkCheck;
+            //Main.WorkCheck = mf.WorkCheck;
 
             //添加捏脸动画(若有)
             if (Core.Graph.GraphConfig.Data.ContainsLine("pinch"))
@@ -279,6 +323,27 @@ public partial class MPFriends : WindowX, IMPFriend
             LoadingText.Content = "{0}的{1}".Translate(friend.Name, Core.Save.Name);
             LoadingText.Background = Function.ResourcesBrush(Function.BrushType.DARKPrimaryTransA);
             LoadingText.VerticalAlignment = VerticalAlignment.Top;
+
+            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "吃饭".Translate(), () =>
+            {
+                new winMPBetterBuy(this).Show(Food.FoodType.Meal);
+            });
+            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "喝水".Translate(), () =>
+            {
+                new winMPBetterBuy(this).Show(Food.FoodType.Drink);
+            });
+            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "收藏".Translate(), () =>
+            {
+                new winMPBetterBuy(this).Show(Food.FoodType.Star);
+            });
+            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "药品".Translate(), () =>
+            {
+                new winMPBetterBuy(this).Show(Food.FoodType.Drug);
+            });
+            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "礼品".Translate(), () =>
+            {
+                new winMPBetterBuy(this).Show(Food.FoodType.Gift);
+            });
 
             Loaded = true;
         }));

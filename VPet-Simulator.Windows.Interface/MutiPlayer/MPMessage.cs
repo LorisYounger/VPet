@@ -132,9 +132,10 @@ public struct MPMessage
         /// </summary>
         public bool EnableFunction { get; set; }
         /// <summary>
-        /// 食物
+        /// 食物/物品
         /// </summary>
-        public Food Food { get; set; }
+        [Line()]
+        public Food Item { get; set; }
     }
     /// <summary>
     /// 交互类型

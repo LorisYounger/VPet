@@ -2019,7 +2019,28 @@ namespace VPet_Simulator.Windows
             }
         }
 
-
+        /// <summary>
+        /// 是否显示吃东西动画
+        /// </summary>
+        bool showeatanm = true;
+        /// <summary>
+        /// 显示吃东西(夹层)动画
+        /// </summary>
+        /// <param name="graphName">夹层动画名</param>
+        /// <param name="imageSource">被夹在中间的图片</param>
+        public void DisplayFoodAnimation(string graphName, ImageSource imageSource)
+        {
+            if (showeatanm)
+            {//显示动画
+                showeatanm = false;
+                Main.Display(graphName, imageSource, () =>
+                {
+                    showeatanm = true;
+                    Main.DisplayToNomal();
+                    Main.EventTimer_Elapsed();
+                });
+            }
+        }
 
 
 #if NewYear

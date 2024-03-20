@@ -162,12 +162,12 @@ namespace VPet_Simulator.Windows
 
         private void Button_MoveToUp_Click(object sender, RoutedEventArgs e)
         {
-            //mw.Core.Graph.GraphConfig.Moves[8].Display(mw.Main);
+            //mf.Core.Graph.GraphConfig.Moves[8].Display(mf.Main);
         }
 
         private void Button_MoveToButton_Click(object sender, RoutedEventArgs e)
         {
-            //mw.Core.Graph.GraphConfig.Moves[8].Display(mw.Main);
+            //mf.Core.Graph.GraphConfig.Moves[8].Display(mf.Main);
         }
 
         private void Button_MoveToRight_Click(object sender, RoutedEventArgs e)
