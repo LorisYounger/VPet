@@ -867,6 +867,10 @@ namespace VPet_Simulator.Windows
                 SteamFriends.SetRichPresence("steam_player_group", winMutiPlayer.LobbyID.ToString("x"));
                 SteamFriends.SetRichPresence("steam_player_group_size", winMutiPlayer.lb.MemberCount.ToString());
             }
+            else
+            {
+                SteamFriends.SetRichPresence("steam_player_group_size", "0");
+            }
             if (App.MainWindows.Count > 1)
             {
                 if (App.MainWindows.FirstOrDefault() != this)

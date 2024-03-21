@@ -7,10 +7,10 @@
         mc:Ignorable="d" Margin="5" Width="340" Height="100" Background="{DynamicResource SecondaryLight}"
         BorderBrush="{DynamicResource Secondary}">
     <Grid>
-        <pu:ContentControlX HorizontalAlignment="Left" Margin="4" CornerRadius="43">
+        <pu:ContentControlX HorizontalAlignment="Left" Margin="12" CornerRadius="35">
             <Image x:Name="uimg" Source="/Res/TopLogo2019.PNG" />
         </pu:ContentControlX>
-        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="100,0,0,0"
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="90,0,0,0"
                 Foreground="{DynamicResource DARKPrimaryDarker}" FontSize="16">
                 <Run Text="{ll:Str 访客}" />: <Run x:Name="rPetName" Text="{ll:Str 萝莉斯}" FontSize="20" FontWeight="Bold" /> 
                 <LineBreak />

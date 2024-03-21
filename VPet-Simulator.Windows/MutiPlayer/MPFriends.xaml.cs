@@ -167,20 +167,35 @@ public partial class MPFriends : WindowX, IMPFriend
 
             Main.Event_TouchHead += Main_Event_TouchHead;
             Main.Event_TouchBody += Main_Event_TouchBody;
+            SteamMatchmaking.OnLobbyMemberDataChanged += SteamMatchmaking_OnLobbyMemberDataChanged;
         });
 
     }
 
+    private void SteamMatchmaking_OnLobbyMemberDataChanged(Lobby lobby, Friend friend)
+    {
+        if (lobby.Id == lb.Id && friend.Id == this.friend.Id)
+        {
+            string tmp = lb.GetMemberData(friend, "save");
+            if (!string.IsNullOrEmpty(tmp))
+            {
+                Core.Save = GameSave_VPet.Load(new Line(tmp));
+                Main.ToolBar.M_TimeUIHandle(Main);
+                Main.ToolBar.tfun.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
+
     private void Main_Event_TouchHead()
     {
-        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name));
+        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name), 5000);
         var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
         msg.SetContent(Interact.TouchHead);
         wmp.SendMessageALL(msg);
     }
     private void Main_Event_TouchBody()
     {
-        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name));
+        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name), 5000);
         var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
         msg.SetContent(Interact.TouchBody);
         wmp.SendMessageALL(msg);
@@ -253,15 +268,15 @@ public partial class MPFriends : WindowX, IMPFriend
         petloader ??= Pets[0];
 
 
-        ////加载数据合理化:食物       
-        //foreach (Food f in Foods)
-        //{
-        //    if (f.IsOverLoad())
-        //    {
-        //        f.Price = Math.Max((int)f.RealPrice, 1);
-        //        f.isoverload = false;
-        //    }
-        //}
+        //加载数据合理化:食物       
+        foreach (Food f in Foods)
+        {
+            if (f.IsOverLoad())
+            {
+                f.Price = Math.Max((int)f.RealPrice, 1);
+                f.isoverload = false;
+            }
+        }
         await Dispatcher.InvokeAsync(new Action(() =>
         {
             LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate();
@@ -276,6 +291,14 @@ public partial class MPFriends : WindowX, IMPFriend
             Main.UIGrid.Children.Add(Main.ToolBar);
             Main.Load_2_TouchEvent();
             Task.Run(Main.Load_24_WaitAndStart);
+
+            Main.ToolBar.MenuInteract.Items.Clear();
+            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "摸头".Translate(), Main.DisplayTouchHead);
+            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "摸身体".Translate(), Main.DisplayTouchBody);
+            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "捏脸".Translate(), () => DisplayPinch());
+
+            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出访客表".Translate(), wmp.Close);
+            Main.ToolBar.tfun.Visibility = Visibility.Collapsed;
 
             Main.EventTimer.AutoReset = false;
             Main.EventTimer.Enabled = false;
@@ -373,7 +396,7 @@ public partial class MPFriends : WindowX, IMPFriend
             return false;
         }
         Main.CountNomal = 0;
-
+        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save.Name), 5000);
         if (Main.DisplayType.Name == "pinch")
         {
             if (Main.DisplayType.Animat == AnimatType.A_Start)
@@ -396,19 +419,12 @@ public partial class MPFriends : WindowX, IMPFriend
     }
     private void DisplayPinch_loop()
     {
-        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save.Name));
+        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save.Name), 5000);
         var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
         msg.SetContent(Interact.TouchPinch);
         wmp.SendMessageALL(msg);
         if (Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
-        {
-            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
-            {
-                Core.Save.StrengthChange(-2);
-                Core.Save.FeelingChange(1);
-                Core.Save.Mode = Core.Save.CalMode();
-                Main.LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
-            }
+        {           
             Main.Display("pinch", AnimatType.B_Loop, DisplayPinch_loop);
         }
         else
@@ -509,7 +525,7 @@ public partial class MPFriends : WindowX, IMPFriend
             {
                 case Interact.TouchHead:
                 case Interact.TouchBody:
-                    Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name));
+                    Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 5000);
                     break;
                 case Interact.TouchPinch:
                     Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save.Name));
@@ -521,15 +537,15 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             case Interact.TouchHead:
                 DisplayNOCALTouchHead();
-                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name));
+                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 5000);
                 break;
             case Interact.TouchBody:
                 DisplayNOCALTouchBody();
-                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name));
+                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 5000);
                 break;
             case Interact.TouchPinch:
                 DisplayNOCALTouchPinch();
-                Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save.Name));
+                Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save.Name), 5000);
                 break;
         }
     }
@@ -631,6 +647,7 @@ public partial class MPFriends : WindowX, IMPFriend
                 }
             }
         }
+        SteamMatchmaking.OnLobbyMemberDataChanged -= SteamMatchmaking_OnLobbyMemberDataChanged;
         winMPBetterBuy?.Close();
         Main?.Dispose();
         mw.Windows.Remove(this);

@@ -49,9 +49,9 @@
                     </Button.ContentTemplate>
                 </Button>
                 <TextBlock x:Name="till" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#FF4C4C"
-                        Text="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}" TextWrapping="Wrap" />
+                        Text="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}" TextWrapping="Wrap" x:FieldModifier="public" />
                 <TextBlock x:Name="tfun" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#4caf50"
-                        Text="{ll:Str 已关闭数据计算\, 可放心挂机}" TextWrapping="Wrap" />
+                        Text="{ll:Str 已关闭数据计算\, 可放心挂机}" TextWrapping="Wrap" x:FieldModifier="public" />
                 <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 金钱}" />
                 <TextBlock x:Name="tMoney" Grid.Row="2" Grid.Column="2" Foreground="{DynamicResource DARKPrimary}"
                         Text="$100,000" />

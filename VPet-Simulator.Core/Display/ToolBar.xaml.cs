@@ -63,7 +63,9 @@ namespace VPet_Simulator.Core
             if (m.StartWork(w))
                 Visibility = Visibility.Collapsed;
         }
-
+        /// <summary>
+        /// 加载默认工作
+        /// </summary>
         public void LoadWork()
         {
             LoadClean();
@@ -156,8 +158,10 @@ namespace VPet_Simulator.Core
         {
             StartWork(wplay);
         }
-
-        private void M_TimeUIHandle(Main m)
+        /// <summary>
+        /// 刷新显示UI
+        /// </summary>
+        public void M_TimeUIHandle(Main m)
         {
             if (BdrPanel.Visibility == Visibility.Visible)
             {

@@ -136,6 +136,7 @@ public partial class winMutiPlayer : Window, IMPWindows
             SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
             SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
             SteamMatchmaking.OnLobbyDataChanged += SteamMatchmaking_OnLobbyDataChanged;
+            
             Steamworks.Data.Image? img = await lb.Owner.GetMediumAvatarAsync();
 
             Dispatcher.Invoke(() =>
@@ -154,6 +155,7 @@ public partial class winMutiPlayer : Window, IMPWindows
 
             //给自己动画添加绑定
             mw.Main.GraphDisplayHandler += Main_GraphDisplayHandler;
+            mw.Main.TimeHandle += Main_TimeHandle;
             if (IsHost)
             {
                 Dispatcher.Invoke(() =>
@@ -194,6 +196,11 @@ public partial class winMutiPlayer : Window, IMPWindows
             mw.MutiPlayerStart(this);
             LoopP2PPacket();
         });
+    }
+
+    private void Main_TimeHandle(Main obj)
+    {
+        lb.SetMemberData("save", mw.GameSavesData.GameSave.ToLine().ToString());
     }
 
     private void SteamMatchmaking_OnLobbyDataChanged(Lobby lobby)
@@ -341,17 +348,17 @@ public partial class winMutiPlayer : Window, IMPWindows
                                     switch (interact)
                                     {
                                         case Interact.TouchHead:
-                                            mw.Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, mw.Core.Save.Name));
+                                            mw.Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, mw.Core.Save.Name), 5000);
                                             if (isok)
                                                 DisplayNOCALTouchHead();
                                             break;
                                         case Interact.TouchBody:
-                                            mw.Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, mw.Core.Save.Name));
+                                            mw.Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, mw.Core.Save.Name), 5000);
                                             if (isok)
                                                 DisplayNOCALTouchBody();
                                             break;
                                         case Interact.TouchPinch:
-                                            mw.Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, mw.Core.Save.Name));
+                                            mw.Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, mw.Core.Save.Name), 5000);
                                             if (isok)
                                                 DisplayNOCALTouchPinch();
                                             break;
@@ -373,7 +380,7 @@ public partial class winMutiPlayer : Window, IMPWindows
                                     mw.DisplayFoodAnimation(feed.Item.GetGraph(), feed.Item.ImageSource);
                                     if (feed.EnableFunction)
                                     {
-                                        mw.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price));
+                                        mw.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price), 10000);
                                         //对于要修改数据的物品一定要再次检查,避免联机开挂毁存档
                                         if (item.Price >= 10 && item.Price <= 1000 && item.Health >= 0 && item.Exp >= 0 && item.Likability >= 0 && giveprice < 1000)
                                         {//单次联机收礼物上限1000
@@ -382,7 +389,7 @@ public partial class winMutiPlayer : Window, IMPWindows
                                         }
                                     }
                                     else
-                                        mw.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName));
+                                        mw.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName), 10000);
                                 }
                                 else
                                 {
@@ -406,8 +413,11 @@ public partial class winMutiPlayer : Window, IMPWindows
     public event Action<ulong, MPMessage> ReceivedMessage;
     private void Window_Closed(object sender, EventArgs e)
     {
+        mw.Main.TimeHandle -= Main_TimeHandle;
         mw.Main.GraphDisplayHandler -= Main_GraphDisplayHandler;
         SteamMatchmaking.OnLobbyMemberJoined -= SteamMatchmaking_OnLobbyMemberJoined;
+        SteamMatchmaking.OnLobbyMemberLeave -= SteamMatchmaking_OnLobbyMemberLeave;
+        SteamMatchmaking.OnLobbyDataChanged -= SteamMatchmaking_OnLobbyDataChanged;
         lb.Leave();
         for (int i = 0; i < MPFriends.Count; i++)
         {
