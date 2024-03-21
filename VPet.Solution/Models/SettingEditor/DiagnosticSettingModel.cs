@@ -6,8 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VPet_Simulator.Windows;
-using VPet_Simulator.Windows.Interface;
+using VPet.Solution.Models.SettingEditor;
 
 namespace VPet.Solution.Models.SettingEditor;
 
@@ -32,7 +31,7 @@ public class DiagnosticSettingModel : ObservableClass<DiagnosticSettingModel>
     /// <summary>
     /// 是否启用数据收集
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.Diagnosis))]
+    [ReflectionProperty(nameof(VPet.Solution.Models.SettingEditor.Setting.Diagnosis))]
     public bool Diagnosis
     {
         get => _diagnosis;
@@ -47,7 +46,7 @@ public class DiagnosticSettingModel : ObservableClass<DiagnosticSettingModel>
     /// 数据收集频率
     /// </summary>
     [DefaultValue(500)]
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.DiagnosisInterval))]
+    [ReflectionProperty(nameof(VPet.Solution.Models.SettingEditor.Setting.DiagnosisInterval))]
     public int DiagnosisInterval
     {
         get => _diagnosisInterval;

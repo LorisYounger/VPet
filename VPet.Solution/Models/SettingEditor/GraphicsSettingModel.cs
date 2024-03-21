@@ -3,7 +3,6 @@ using LinePutScript.Localization.WPF;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
-using VPet_Simulator.Windows;
 
 namespace VPet.Solution.Models.SettingEditor;
 
@@ -16,7 +15,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// 缩放倍率
     /// </summary>
     [DefaultValue(1)]
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.ZoomLevel))]
+    [ReflectionProperty(nameof(Setting.ZoomLevel))]
     public double ZoomLevel
     {
         get => _zoomLevel;
@@ -49,7 +48,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// 桌宠图形渲染的分辨率,越高图形越清晰
     /// </summary>
     [DefaultValue(1000)]
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.Resolution))]
+    [ReflectionProperty(nameof(Setting.Resolution))]
     public int Resolution
     {
         get => _resolution;
@@ -63,7 +62,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 是否为更大的屏幕
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.IsBiggerScreen))]
+    [ReflectionProperty(nameof(Setting.IsBiggerScreen))]
     public bool IsBiggerScreen
     {
         get => _isBiggerScreen;
@@ -84,7 +83,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 是否置于顶层
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.TopMost))]
+    [ReflectionProperty(nameof(Setting.TopMost))]
     public bool TopMost
     {
         get => _topMost;
@@ -98,7 +97,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 是否鼠标穿透
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.HitThrough))]
+    [ReflectionProperty(nameof(Setting.HitThrough))]
     public bool HitThrough
     {
         get => _hitThrough;
@@ -112,7 +111,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 语言
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.Language))]
+    [ReflectionProperty(nameof(Setting.Language))]
     public string Language
     {
         get => _language;
@@ -129,7 +128,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 字体
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.Font))]
+    [ReflectionProperty(nameof(Setting.Font))]
     public string Font
     {
         get => _font;
@@ -143,7 +142,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 主题
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.Theme))]
+    [ReflectionProperty(nameof(Setting.Theme))]
     public string Theme
     {
         get => _theme;
@@ -157,7 +156,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 开机启动
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.StartUPBoot))]
+    [ReflectionProperty(nameof(Setting.StartUPBoot))]
     public bool StartUPBoot
     {
         get => _startUPBoot;
@@ -171,7 +170,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 开机启动 Steam
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.StartUPBootSteam))]
+    [ReflectionProperty(nameof(Setting.StartUPBootSteam))]
     public bool StartUPBootSteam
     {
         get => _startUPBootSteam;
@@ -186,7 +185,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// 是否记录游戏退出位置
     /// </summary>
     [DefaultValue(true)]
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.StartRecordLast))]
+    [ReflectionProperty(nameof(Setting.StartRecordLast))]
     public bool StartRecordLast
     {
         get => _startRecordLast;
@@ -225,7 +224,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 在任务切换器(Alt+Tab)中隐藏窗口
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.HideFromTaskControl))]
+    [ReflectionProperty(nameof(Setting.HideFromTaskControl))]
     public bool HideFromTaskControl
     {
         get => _hideFromTaskControl;
@@ -239,7 +238,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 消息框外置
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.MessageBarOutside))]
+    [ReflectionProperty(nameof(Setting.MessageBarOutside))]
     public bool MessageBarOutside
     {
         get => _messageBarOutside;
@@ -253,7 +252,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 是否显示宠物帮助窗口
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.PetHelper))]
+    [ReflectionProperty(nameof(Setting.PetHelper))]
     public bool PetHelper
     {
         get => _petHelper;
@@ -269,7 +268,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 快捷穿透按钮X坐标
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.PetHelpLeft))]
+    [ReflectionProperty(nameof(Setting.PetHelpLeft))]
     public double PetHelpLeft
     {
         get => _petHelpLeft;
@@ -285,7 +284,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 快捷穿透按钮Y坐标
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.PetHelpTop))]
+    [ReflectionProperty(nameof(Setting.PetHelpTop))]
     public double PetHelpTop
     {
         get => _petHelpTop;

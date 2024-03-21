@@ -30,7 +30,6 @@ public class MainWindowVM : ObservableClass<MainWindowVM>
 
         FirstStartFailedCommand.ExecuteCommand += FirstStartFailedCommand_ExecuteCommand;
         OpenLocalTextCommand.ExecuteCommand += OpenLocalTextCommand_ExecuteCommand;
-        
     }
 
     private void OpenLocalTextCommand_ExecuteCommand()
@@ -44,10 +43,10 @@ public class MainWindowVM : ObservableClass<MainWindowVM>
     private void FirstStartFailedCommand_ExecuteCommand()
     {
         if (LocalizeCore.CurrentCulture == "zh-Hans")
-            HKWUtils.OpenLink("https://www.bilibili.com/read/cv31370459/");
+            HKWUtils.OpenLink("https://www.bilibili.com/read/cv26510496/");
         else
             HKWUtils.OpenLink(
-                "https://store.steampowered.com/news/app/1920960/view/7950611950256749982"
+                "https://steamcommunity.com/games/1920960/announcements/detail/3681184905256253203"
             );
     }
 

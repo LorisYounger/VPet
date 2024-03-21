@@ -15,7 +15,7 @@ public class SystemSettingModel : ObservableClass<SystemSettingModel>
     /// <summary>
     /// 自动保存频率 (min)
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.AutoSaveInterval))]
+    [ReflectionProperty(nameof(Setting.AutoSaveInterval))]
     public int AutoSaveInterval
     {
         get => _autoSaveInterval;
@@ -32,7 +32,7 @@ public class SystemSettingModel : ObservableClass<SystemSettingModel>
     /// <summary>
     /// 备份保存最大数量
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.BackupSaveMaxNum))]
+    [ReflectionProperty(nameof(Setting.BackupSaveMaxNum))]
     public int BackupSaveMaxNum
     {
         get => _backupSaveMaxNum;

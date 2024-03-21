@@ -2,7 +2,6 @@
 cd /d %~dp0
 
 mklink /d "%~dp0\bin\x64\Debug\net8.0-windows\mod" "%~dp0\mod"
-mklink /d "%~dp0\bin\x64\Debug\net8.0-windows\mod" "%~dp0\mod"
 
 echo The following is the automatic link generation for other related MODs. If an error is prompted, it is a normal phenomenon and can be ignored
 
