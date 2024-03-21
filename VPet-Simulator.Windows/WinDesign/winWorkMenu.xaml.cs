@@ -26,7 +26,7 @@ public partial class winWorkMenu : Window
     List<Work> ws;
     List<Work> ss;
     List<Work> ps;
-    public void ShowImageDefault(Work.WorkType type) => WorkViewImage.Source = mw.ImageSources.FindImage(mw.Set.PetGraph + "_" + type.ToString(), "work");
+    public void ShowImageDefault(Work.WorkType type) => WorkViewImage.Source = mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_t_" + type.ToString(), "work_" + type.ToString());
     public winWorkMenu(MainWindow mw, Work.WorkType type)
     {
         InitializeComponent();
@@ -96,7 +96,7 @@ public partial class winWorkMenu : Window
         nowworkdisplay = work;
         lName.Content = work.NameTrans;
         //显示图像
-        string source = mw.ImageSources.FindSource("work_" + work.Graph) ?? mw.ImageSources.FindSource("work_" + work.Name);
+        string source = mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Graph) ?? mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Name);
         if (source == null)
         {
             //尝试显示默认图像
