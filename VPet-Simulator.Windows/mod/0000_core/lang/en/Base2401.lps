@@ -4,3 +4,4 @@
 检测到经验值超过 9,223,372,036 导致算数溢出\n已经自动回正#Detected experience value exceeding 9,223,372,036 causing arithmetic overflow\nAutomatically corrected:|
 检测到金钱超过 9,223,372,036 导致算数溢出\n已经自动回正#Detected money exceeding 9,223,372,036 causing arithmetic overflow\nAutomatically corrected:|
 数据溢出警告#Data Overflow Warning:|
+缓存清理完成#Cache cleared:|
