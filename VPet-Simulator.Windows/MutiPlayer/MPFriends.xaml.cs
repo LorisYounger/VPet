@@ -631,7 +631,7 @@ public partial class MPFriends : WindowX, IMPFriend
                 }
             }
         }
-        winMPBetterBuy.Close();
+        winMPBetterBuy?.Close();
         Main?.Dispose();
         mw.Windows.Remove(this);
     }

@@ -25,7 +25,11 @@ public interface IMPWindows
     /// <summary>
     /// 主持人SteamID
     /// </summary>
-    ulong OwnerID { get; }
+    ulong HostID { get; }
+    /// <summary>
+    /// 当前玩家是否是主持人
+    /// </summary>
+    bool IsHost { get; }
 
     /// <summary>
     /// 事件:成员退出
@@ -71,4 +75,8 @@ public interface IMPWindows
     /// 获取访客表菜单栏,可以插入自己的菜单
     /// </summary>
     TabControl TabControl { get; }
+    /// <summary>
+    /// 是否可加入
+    /// </summary>
+    bool Joinable { get; }
 }

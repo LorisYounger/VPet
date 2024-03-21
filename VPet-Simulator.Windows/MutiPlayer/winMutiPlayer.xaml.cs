@@ -32,7 +32,7 @@ namespace VPet_Simulator.Windows;
 /// </summary>
 public partial class winMutiPlayer : Window, IMPWindows
 {
-    Steamworks.Data.Lobby lb;
+    public Lobby lb;
     MainWindow mw;
     /// <summary>
     /// 好友宠物模块
@@ -72,7 +72,8 @@ public partial class winMutiPlayer : Window, IMPWindows
         lb = lbt.Value;
         lb.SetJoinable(true);
         lb.SetPublic();
-        swAllowJoin.Visibility = Visibility.Visible;
+        IsHost = true;
+        swAllowJoin.IsEnabled = true;
         ShowLobbyInfo();
     }
     public static ImageSource ConvertToImageSource(Steamworks.Data.Image? img)
@@ -111,9 +112,12 @@ public partial class winMutiPlayer : Window, IMPWindows
         return result;
     }
 
-    public ulong OwnerID { get; set; }
+    public ulong HostID { get; set; }
+    public bool IsHost { get; set; } = false;
 
     public ulong LobbyID => lb.Id.Value;
+
+    public bool Joinable { get; set; } = true;
 
     public IEnumerable<IMPFriend> Friends => MPFriends;
 
@@ -137,7 +141,7 @@ public partial class winMutiPlayer : Window, IMPWindows
             Dispatcher.Invoke(() =>
             {
                 hostName.Text = lb.Owner.Name;
-                OwnerID = lb.Owner.Id.Value;
+                HostID = lb.Owner.Id.Value;
                 lbLid.Text = lb.Id.Value.ToString("x");
                 HostHead.Source = ConvertToImageSource(img.Value);
             });
@@ -150,7 +154,7 @@ public partial class winMutiPlayer : Window, IMPWindows
 
             //给自己动画添加绑定
             mw.Main.GraphDisplayHandler += Main_GraphDisplayHandler;
-            if (lb.Owner.IsMe)
+            if (IsHost)
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -199,8 +203,20 @@ public partial class winMutiPlayer : Window, IMPWindows
             if (lb.GetData("kick") == SteamClient.SteamId.Value.ToString())
             {
                 Task.Run(() => MessageBox.Show("访客表已被房主{0}关闭".Translate(lb.Owner.Name)));//温柔的谎言
+                lb.Leave();
                 lb = default(Lobby);
                 Close();
+            }
+
+            if (lb.GetData("nojoin") == "true")
+            {
+                Joinable = false;
+                Dispatcher.Invoke(() => swAllowJoin.IsChecked = false);
+            }
+            else
+            {
+                Joinable = true;
+                Dispatcher.Invoke(() => swAllowJoin.IsChecked = true);
             }
         }
     }
@@ -210,7 +226,7 @@ public partial class winMutiPlayer : Window, IMPWindows
     {
         if (lobby.Id != lb.Id) return;
         OnMemberLeave?.Invoke(friend.Id);
-        if (friend.Id == OwnerID)
+        if (friend.Id == HostID)
         {
             Task.Run(() => MessageBox.Show("访客表已被房主{0}关闭".Translate(friend.Name)));
             lb = default(Lobby);
@@ -418,11 +434,13 @@ public partial class winMutiPlayer : Window, IMPWindows
 
     private void swAllowJoin_Checked(object sender, RoutedEventArgs e)
     {
+        lb.SetData("nojoin", "false");
         lb.SetJoinable(true);
     }
 
     private void swAllowJoin_Unchecked(object sender, RoutedEventArgs e)
     {
+        lb.SetData("nojoin", "true");
         lb.SetJoinable(false);
     }
 

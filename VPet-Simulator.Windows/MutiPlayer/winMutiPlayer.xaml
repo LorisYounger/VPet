@@ -38,7 +38,7 @@
                 Foreground="{DynamicResource DARKPrimaryDarker}" CheckedBackground="{DynamicResource Primary}"
                 CheckedBorderBrush="{DynamicResource Primary}" CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
                 Content="{ll:Str 允许好友加入}" ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
-                ToggleSize="14" IsChecked="True" Visibility="Collapsed" Checked="swAllowJoin_Checked"
-                Unchecked="swAllowJoin_Unchecked" />
+                ToggleSize="14" IsChecked="True" Checked="swAllowJoin_Checked"
+                Unchecked="swAllowJoin_Unchecked" IsEnabled="False"/>
     </Grid>
 </Window>

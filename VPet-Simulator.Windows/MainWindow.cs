@@ -859,6 +859,14 @@ namespace VPet_Simulator.Windows
 
         private void Handle_Steam(Main obj)
         {
+            string jointab = " ";
+            if (winMutiPlayer != null)
+            {
+                if (winMutiPlayer.Joinable)
+                    jointab += "可加入".Translate();
+                SteamFriends.SetRichPresence("steam_player_group", winMutiPlayer.LobbyID.ToString("x"));
+                SteamFriends.SetRichPresence("steam_player_group_size", winMutiPlayer.lb.MemberCount.ToString());
+            }
             if (App.MainWindows.Count > 1)
             {
                 if (App.MainWindows.FirstOrDefault() != this)
@@ -897,11 +905,11 @@ namespace VPet_Simulator.Windows
                 SteamFriends.SetRichPresence("usernames", str.Trim(','));
                 if (lv > 0)
                 {
-                    SteamFriends.SetRichPresence("lv", $" (lv{lv}/{App.MainWindows.Count})");
+                    SteamFriends.SetRichPresence("lv", $" (lv{lv}/{App.MainWindows.Count})" + jointab);
                 }
                 else
                 {
-                    SteamFriends.SetRichPresence("lv", " ");
+                    SteamFriends.SetRichPresence("lv", " " + jointab);
                 }
                 if (workcount > allcount)
                 {
@@ -924,11 +932,11 @@ namespace VPet_Simulator.Windows
             {
                 if (HashCheck)
                 {
-                    SteamFriends.SetRichPresence("lv", $" (lv{GameSavesData.GameSave.Level})");
+                    SteamFriends.SetRichPresence("lv", $" (lv{GameSavesData.GameSave.Level})" + jointab);
                 }
                 else
                 {
-                    SteamFriends.SetRichPresence("lv", " ");
+                    SteamFriends.SetRichPresence("lv", " " + jointab);
                 }
                 if (Core.Save.Mode == IGameSave.ModeType.Ill)
                 {
