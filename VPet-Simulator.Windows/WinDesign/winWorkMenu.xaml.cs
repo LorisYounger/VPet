@@ -123,7 +123,6 @@ public partial class winWorkMenu : Window
         sb.AppendLine('x' + (1 + work.FinishBonus).ToString("f2"));
         sb.AppendLine('x' + wDouble.Value.ToString("f0"));
         tbDisplay.Text = sb.ToString();
-
     }
 
     private void tbc_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -154,18 +153,21 @@ public partial class winWorkMenu : Window
     {
         nowwork = (ws[lbWork.SelectedIndex]);
         ShowWork();
+        e.Handled = true;
     }
 
     private void lbStudy_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         nowwork = (ss[lbStudy.SelectedIndex]);
         ShowWork();
+        e.Handled = true;
     }
 
     private void lbPlay_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         nowwork = (ps[lbPlay.SelectedIndex]);
         ShowWork();
+        e.Handled = true;
     }
 
     private void Window_Closed(object sender, EventArgs e)

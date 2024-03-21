@@ -1388,6 +1388,10 @@ namespace VPet_Simulator.Windows
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏MOD".Translate()));
 
+            //旧版本设置兼容
+            if(Set.PetGraph == "默认虚拟桌宠")
+                Set.PetGraph = "vup";
+
             //当前桌宠动画
             var petloader = Pets.Find(x => x.Name == Set.PetGraph);
             petloader ??= Pets[0];
