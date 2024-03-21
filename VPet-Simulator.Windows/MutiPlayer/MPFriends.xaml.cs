@@ -326,28 +326,41 @@ public partial class MPFriends : WindowX, IMPFriend
 
             Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "吃饭".Translate(), () =>
             {
-                new winMPBetterBuy(this).Show(Food.FoodType.Meal);
+                ShowBetterBuy(Food.FoodType.Meal);
             });
             Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "喝水".Translate(), () =>
             {
-                new winMPBetterBuy(this).Show(Food.FoodType.Drink);
+                ShowBetterBuy(Food.FoodType.Drink);
             });
             Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "收藏".Translate(), () =>
             {
-                new winMPBetterBuy(this).Show(Food.FoodType.Star);
+                ShowBetterBuy(Food.FoodType.Star);
             });
             Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "药品".Translate(), () =>
             {
-                new winMPBetterBuy(this).Show(Food.FoodType.Drug);
+                ShowBetterBuy(Food.FoodType.Drug);
             });
             Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "礼品".Translate(), () =>
             {
-                new winMPBetterBuy(this).Show(Food.FoodType.Gift);
+                ShowBetterBuy(Food.FoodType.Gift);
             });
 
             Loaded = true;
         }));
     }
+    public winMPBetterBuy winMPBetterBuy;
+
+    public void ShowBetterBuy(Food.FoodType foodType)
+    {
+        if (winMPBetterBuy != null)
+            winMPBetterBuy.Show(foodType);
+        else
+        {
+            winMPBetterBuy = new winMPBetterBuy(this);
+            winMPBetterBuy.Show(foodType);
+        }
+    }
+
     public new bool Loaded = false;
 
     /// <summary>
@@ -618,6 +631,7 @@ public partial class MPFriends : WindowX, IMPFriend
                 }
             }
         }
+        winMPBetterBuy.Close();
         Main?.Dispose();
         mw.Windows.Remove(this);
     }

@@ -267,7 +267,7 @@ namespace VPet_Simulator.Windows
 
         private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            mf.winMPBetterBuy = null;
         }
 
         private void Switch_Loaded(object sender, RoutedEventArgs e)
