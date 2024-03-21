@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -255,7 +256,12 @@ namespace VPet_Simulator.Windows
                 if (mw.IsSteamUser && cb_AgreeUpload.IsChecked == true)
                     SteamScreenshots.AddScreenshot(path, null, image.PixelWidth, image.PixelHeight);
 
-                Process.Start(path);
+                var psi = new ProcessStartInfo
+                {
+                    FileName = path,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
             }
         }
 

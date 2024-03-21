@@ -14,7 +14,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     ///// <summary>
     ///// 宠物名称
     ///// </summary>
-    //[ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PetName))]
+    //[ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.PetName))]
     //public string PetName
     //{
     //    get => _petName;
@@ -28,7 +28,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 播放声音大小
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.VoiceVolume))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.VoiceVolume))]
     public double VoiceVolume
     {
         get => _voiceVolume;
@@ -42,7 +42,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 启用计算等数据功能
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.EnableFunction))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.EnableFunction))]
     public bool EnableFunction
     {
         get => _enableFunction;
@@ -51,20 +51,20 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     #endregion
 
     #region CalFunState
-    private GameSave.ModeType _calFunState;
+    private IGameSave.ModeType _calFunState;
 
     /// <summary>
     /// 非计算模式下默认模式
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.CalFunState))]
-    public GameSave.ModeType CalFunState
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.CalFunState))]
+    public IGameSave.ModeType CalFunState
     {
         get => _calFunState;
         set => SetProperty(ref _calFunState, value);
     }
 
-    public ObservableCollection<GameSave.ModeType> ModeTypes { get; } =
-        new(Enum.GetValues(typeof(GameSave.ModeType)).Cast<GameSave.ModeType>());
+    public ObservableCollection<IGameSave.ModeType> ModeTypes { get; } =
+        new(Enum.GetValues(typeof(IGameSave.ModeType)).Cast<IGameSave.ModeType>());
     #endregion
 
     #region LastCacheDate
@@ -73,7 +73,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 上次清理缓存日期
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.LastCacheDate))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.LastCacheDate))]
     public DateTime LastCacheDate
     {
         get => _lastCacheDate;
@@ -87,7 +87,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 储存顺序次数
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.SaveTimes))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.SaveTimes))]
     public int SaveTimes
     {
         get => _saveTimes;
@@ -101,7 +101,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 按多久视为长按 单位毫秒
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PressLength))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.PressLength))]
     public int PressLength
     {
         get => _pressLength;
@@ -115,7 +115,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 互动周期
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.InteractionCycle))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.InteractionCycle))]
     public int InteractionCycle
     {
         get => _interactionCycle;
@@ -129,7 +129,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 计算间隔 (秒)
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.LogicInterval))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.LogicInterval))]
     public double LogicInterval
     {
         get => _logicInterval;
@@ -143,7 +143,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 允许移动事件
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.AllowMove))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.AllowMove))]
     public bool AllowMove
     {
         get => _allowMove;
@@ -157,7 +157,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 智能移动
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.SmartMove))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.SmartMove))]
     public bool SmartMove
     {
         get => _smartMove;
@@ -172,7 +172,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// 智能移动周期 (秒)
     /// </summary>
     [DefaultValue(1)]
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.SmartMoveInterval))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.SmartMoveInterval))]
     [ReflectionPropertyConverter(typeof(SecondToMinuteConverter))]
     public int SmartMoveInterval
     {
@@ -190,7 +190,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 桌宠选择内容
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PetGraph))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.PetGraph))]
     public string PetGraph
     {
         get => _petGraph;
@@ -204,7 +204,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 当实时播放音量达到该值时运行音乐动作
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.MusicCatch))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.MusicCatch))]
     [ReflectionPropertyConverter(typeof(PercentageConverter))]
     public int MusicCatch
     {
@@ -219,7 +219,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 当实时播放音量达到该值时运行特殊音乐动作
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.MusicMax))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.MusicMax))]
     [ReflectionPropertyConverter(typeof(PercentageConverter))]
     public int MusicMax
     {
@@ -235,7 +235,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 允许桌宠自动购买食品
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.AutoBuy))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.AutoBuy))]
     public bool AutoBuy
     {
         get => _autoBuy;
@@ -250,7 +250,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     /// <summary>
     /// 允许桌宠自动购买礼物
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.AutoGift))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.AutoGift))]
     public bool AutoGift
     {
         get => _autoGift;
@@ -261,7 +261,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     #region MoveAreaDefault
     private bool _moveAreaDefault;
 
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.MoveAreaDefault))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.MoveAreaDefault))]
     public bool MoveAreaDefault
     {
         get => _moveAreaDefault;
@@ -272,7 +272,7 @@ public class InteractiveSettingModel : ObservableClass<InteractiveSettingModel>
     #region MoveArea
     private System.Drawing.Rectangle _moveArea;
 
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.MoveArea))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.MoveArea))]
     public System.Drawing.Rectangle MoveArea
     {
         get => _moveArea;

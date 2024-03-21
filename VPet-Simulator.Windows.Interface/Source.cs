@@ -143,7 +143,7 @@ namespace VPet_Simulator.Windows.Interface
                 throw new Exception($"image nofound {imagename}");
             return v;
 #else
-            return FindSourceUri(imagename, "pack://application:,,,/Res/Image/system/error.png");
+            return FindSourceUri(imagename, "pack://application:,,,/Res/img/error.png");
 #endif
         }
 

@@ -39,7 +39,7 @@ namespace VPet_Simulator.Windows
         {
             InitializeComponent();
             this.mw = mw;
-            //set = mw.Set["pethelp"];
+            //set = mf.Set["pethelp"];
             x = mw.Set.PetHelpLeft * mw.Width;
             y = mw.Set.PetHelpTop * mw.Width;
             Width = 50 * mw.Set.ZoomLevel;

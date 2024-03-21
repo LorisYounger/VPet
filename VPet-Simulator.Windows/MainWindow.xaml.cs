@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using VPet_Simulator.Core;
-using System.Windows.Forms;
 using System.Timers;
 using LinePutScript;
 using Panuon.WPF.UI;
@@ -21,6 +20,11 @@ using static VPet_Simulator.Core.GraphInfo;
 using System.Globalization;
 using LinePutScript.Dictionary;
 using Steamworks.Data;
+using System.Windows.Controls;
+using ToolBar = VPet_Simulator.Core.ToolBar;
+using System.Security.Cryptography;
+using System.Diagnostics;
+using System.Reflection.Metadata;
 
 namespace VPet_Simulator.Windows
 {
@@ -29,7 +33,7 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public partial class MainWindow : WindowX
     {
-        private NotifyIcon notifyIcon;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
         public PetHelper petHelper;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
 
@@ -100,7 +104,7 @@ namespace VPet_Simulator.Windows
 
             GameInitialization();
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 //加载所有MOD
                 List<DirectoryInfo> Path = new List<DirectoryInfo>();
@@ -216,10 +220,118 @@ namespace VPet_Simulator.Windows
                 else//新玩家,默认设置为
                     Set["CGPT"][(gstr)"type"] = "LB";
 
-                GameLoad(Path);
+                await GameLoad(Path);
+                if (IsSteamUser)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        var menuItem = new MenuItem()
+                        {
+                            Header = "访客表".Translate(),
+                            HorizontalContentAlignment = HorizontalAlignment.Center
+                        };
+                        Main.ToolBar.MenuInteract.Items.Add(menuItem);
+
+                        var menuCreate = new MenuItem()
+                        {
+                            Header = "创建".Translate(),
+                            HorizontalContentAlignment = HorizontalAlignment.Center
+                        };
+                        menuCreate.Click += (_, _) =>
+                        {
+                            if (winMutiPlayer == null)
+                            {
+                                winMutiPlayer = new winMutiPlayer(this);
+                                winMutiPlayer.Show();
+                            }
+                            else
+                            {
+                                MessageBoxX.Show("已经有加入了一个访客表,无法再创建更多".Translate());
+                                winMutiPlayer.Focus();
+                            }
+                        };
+                        menuItem.Items.Add(menuCreate);
+
+                        var menuJoin = new MenuItem()
+                        {
+                            Header = "加入".Translate(),
+                            HorizontalContentAlignment = HorizontalAlignment.Center
+                        };
+                        menuJoin.Click += (_, _) =>
+                        {
+                            if (winMutiPlayer == null)
+                            {
+                                winInputBox.Show(this, "请输入访客表ID".Translate(), "加入访客表".Translate(), "", (id) =>
+                                {
+                                    if (ulong.TryParse(id, NumberStyles.HexNumber, null, out ulong lid))
+                                    {
+                                        winMutiPlayer = new winMutiPlayer(this, lid);
+                                        winMutiPlayer.Show();
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                MessageBoxX.Show("已经有加入了一个访客表,无法再创建更多".Translate());
+                                winMutiPlayer.Focus();
+                            }
+                        };
+                        menuItem.Items.Add(menuJoin);
+
+                        int clid = Array.IndexOf(App.Args, "connect_lobby");
+                        if (clid != -1)
+                        {
+                            if (ulong.TryParse(App.Args[clid + 1], out ulong lid))
+                            {
+                                winMutiPlayer = new winMutiPlayer(this, lid);
+                                winMutiPlayer.Show();
+                            }
+                        }
+                    });
+                    SteamMatchmaking.OnLobbyInvite += SteamMatchmaking_OnLobbyInvite;
+                    SteamFriends.OnGameLobbyJoinRequested += SteamFriends_OnGameLobbyJoinRequested;
+                }
             });
         }
 
+        private void SteamFriends_OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (winMutiPlayer == null)
+                {
+                    winMutiPlayer = new winMutiPlayer(this, lobby.Id.Value);
+                    winMutiPlayer.Show();
+                }
+                else
+                {
+                    MessageBoxX.Show("已经有加入了一个访客表,无法再创建更多".Translate());
+                    winMutiPlayer.Focus();
+                }
+            });
+        }
+
+        private void SteamMatchmaking_OnLobbyInvite(Friend friend, Lobby lobby)
+        {
+            if (winMutiPlayer != null)
+                return;
+            Dispatcher.Invoke(() =>
+            {
+                Button btn = new Button();
+                btn.Content = "加入访客表";
+                btn.Style = FindResource("ThemedButtonStyle") as Style;
+                btn.Click += (_, _) =>
+                {
+                    winMutiPlayer = new winMutiPlayer(this, lobby.Id);
+                    winMutiPlayer.Show();
+                    Main.MsgBar.ForceClose();
+                };
+                Main.Say("收到来自{0}的访客邀请,是否加入?".Translate(friend.Name), msgcontent: btn);
+            });
+        }
+
+
+        internal winMutiPlayer winMutiPlayer;
 
         public new void Close()
         {
@@ -251,7 +363,14 @@ namespace VPet_Simulator.Windows
             catch { }
             Save();
             if (App.MainWindows.Count == 1)
-                System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = Path.ChangeExtension(System.Reflection.Assembly.GetExecutingAssembly().Location, "exe"),
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+            }
             else
             {
                 new MainWindow(PrefixSave).Show();
@@ -260,6 +379,11 @@ namespace VPet_Simulator.Windows
         }
         private void Exit()
         {
+            Task.Run(() =>
+            {
+                Thread.Sleep(10000);//等待10秒不退出强退
+                Environment.Exit(0);
+            });
             if (App.MainWindows.Count <= 1)
             {
                 try
@@ -279,7 +403,9 @@ namespace VPet_Simulator.Windows
                     }
                     while (Windows.Count != 0)
                     {
-                        Windows[0].Close();
+                        var w = Windows[0];
+                        w.Close();
+                        Windows.Remove(w);
                     }
                     Main?.Dispose();
                     AutoSaveTimer?.Stop();
@@ -287,6 +413,7 @@ namespace VPet_Simulator.Windows
                     petHelper?.Close();
                     winSetting?.Close();
                     winBetterBuy?.Close();
+                    winWorkMenu?.Close();
                     if (IsSteamUser)
                         SteamClient.Shutdown();//关掉和Steam的连线
                     if (notifyIcon != null)
@@ -328,6 +455,7 @@ namespace VPet_Simulator.Windows
                 petHelper?.Close();
                 winSetting?.Close();
                 winBetterBuy?.Close();
+                winWorkMenu?.Close();
                 App.MainWindows.Remove(this);
                 if (notifyIcon != null)
                 {
@@ -366,16 +494,20 @@ namespace VPet_Simulator.Windows
                     var latestsave = ds[i];
                     if (latestsave != null)
                     {
+#if !DEBUG
                         try
                         {
-                            if (SavesLoad(new LPS(File.ReadAllText(latestsave))))
-                                return;
-                            //MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
+#endif
+                        if (SavesLoad(new LPS(File.ReadAllText(latestsave))))
+                            return;
+                        //MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
+#if !DEBUG
                         }
-                        catch // (Exception ex)
+                        catch (Exception ex)
                         {
-                            //MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
+                            MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
                         }
+#endif
                     }
                 }
 
@@ -497,7 +629,7 @@ namespace VPet_Simulator.Windows
                 //uint extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
                 //SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
                 HitThrough = !HitThrough;
-                notifyIcon.ContextMenu.MenuItems.Find("NotifyIcon_HitThrough", false).First().Checked = HitThrough;
+                (notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_HitThrough", false).First() as System.Windows.Forms.ToolStripMenuItem).Checked = HitThrough;
                 if (HitThrough)
                 {
                     Win32.User32.SetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE,

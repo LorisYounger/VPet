@@ -15,6 +15,7 @@ using static VPet_Simulator.Core.GraphHelper;
 using System.ComponentModel;
 using System.Reflection;
 using static VPet_Simulator.Core.Main;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VPet_Simulator.Core
 {
@@ -42,10 +43,9 @@ namespace VPet_Simulator.Core
             closePanelTimer = new Timer();
             closePanelTimer.Elapsed += ClosePanelTimer_Tick;
             m.TimeUIHandle += M_TimeUIHandle;
-            LoadWork();
+            //LoadWork();
         }
-
-        public void LoadWork()
+        public void LoadClean()
         {
             MenuWork.Click -= MenuWork_Click;
             MenuWork.Visibility = Visibility.Visible;
@@ -57,24 +57,21 @@ namespace VPet_Simulator.Core
             MenuWork.Items.Clear();
             MenuStudy.Items.Clear();
             MenuPlay.Items.Clear();
-            List<Work> ws = new List<Work>();
-            List<Work> ss = new List<Work>();
-            List<Work> ps = new List<Work>();
-            foreach (var w in m.Core.Graph.GraphConfig.Works)
-            {
-                switch (w.Type)
-                {
-                    case Work.WorkType.Study:
-                        ss.Add(w);
-                        break;
-                    case Work.WorkType.Work:
-                        ws.Add(w);
-                        break;
-                    case Work.WorkType.Play:
-                        ps.Add(w);
-                        break;
-                }
-            }
+        }
+        public void StartWork(Work w)
+        {
+            if (m.StartWork(w))
+                Visibility = Visibility.Collapsed;
+        }
+        /// <summary>
+        /// 加载默认工作
+        /// </summary>
+        public void LoadWork()
+        {
+            LoadClean();
+
+            m.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
+
             if (ws.Count == 0)
             {
                 MenuWork.Visibility = Visibility.Collapsed;
@@ -94,6 +91,7 @@ namespace VPet_Simulator.Core
                         Header = w.NameTrans
                     };
                     mi.Click += (s, e) => StartWork(w);
+
                     MenuWork.Items.Add(mi);
                 }
             }
@@ -150,27 +148,8 @@ namespace VPet_Simulator.Core
         Work wwork;
         Work wstudy;
         Work wplay;
-        public Func<Work, bool> WorkCheck;
-        public void StartWork(Work work)
-        {
-            if (!m.Core.Controller.EnableFunction || m.Core.Save.Mode != GameSave.ModeType.Ill)
-                if (!m.Core.Controller.EnableFunction || m.Core.Save.Level >= work.LevelLimit)
-                    if (m.State == Main.WorkingState.Work && m.StateID == m.Core.Graph.GraphConfig.Works.IndexOf(work))
-                        m.WorkTimer.Stop();
-                    else
-                    {
-                        if (WorkCheck != null && !WorkCheck.Invoke(work))
-                            return;
-                        m.WorkTimer.Start(work);
-                    }
-                else
-                    MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/{2}\n无法进行{1}", m.Core.Save.Level.ToString()
-                        , work.NameTrans, work.LevelLimit), LocalizeCore.Translate("{0}取消", work.NameTrans));
-            else
-                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行{1}", m.Core.Save.Name,
-                  work.NameTrans), LocalizeCore.Translate("{0}取消", work.NameTrans));
-            Visibility = Visibility.Collapsed;
-        }
+
+
         private void MenuWork_Click(object sender, RoutedEventArgs e)
         {
             StartWork(wwork);
@@ -179,16 +158,19 @@ namespace VPet_Simulator.Core
         {
             StartWork(wplay);
         }
-
-        private void M_TimeUIHandle(Main m)
+        /// <summary>
+        /// 刷新显示UI
+        /// </summary>
+        public void M_TimeUIHandle(Main m)
         {
             if (BdrPanel.Visibility == Visibility.Visible)
             {
                 Tlv.Text = "Lv " + m.Core.Save.Level.ToString();
+                tExp.Text = "x" + m.Core.Save.ExpBonus.ToString("f2");
                 tMoney.Text = "$ " + m.Core.Save.Money.ToString("N2");
                 if (m.Core.Controller.EnableFunction)
                 {
-                    till.Visibility = m.Core.Save.Mode == GameSave.ModeType.Ill ? Visibility.Visible : Visibility.Collapsed;
+                    till.Visibility = m.Core.Save.Mode == IGameSave.ModeType.Ill ? Visibility.Visible : Visibility.Collapsed;
                     tfun.Visibility = Visibility.Collapsed;
                 }
                 else
@@ -197,35 +179,38 @@ namespace VPet_Simulator.Core
                     tfun.Visibility = Visibility.Visible;
                 }
                 var max = m.Core.Save.LevelUpNeed();
-                if (max > pExp.Minimum)
-                {
-                    pExp.Maximum = max;
-                }
+                pExp.Value = 0;
+                pExp.Maximum = max;
                 if (m.Core.Save.Exp < 0)
                 {
                     pExp.Minimum = m.Core.Save.Exp;
                 }
                 else
                 {
-                    var bl = m.Core.Save.Level - 2;
-                    if (bl <= 0)
-                        pExp.Minimum = 0;
-                    else
-                        pExp.Minimum = (int)(Math.Pow((bl) * 10, 2));
+                    pExp.Minimum = 0;
                 }
-                if (max < pExp.Minimum)
-                {
-                    pExp.Maximum = max;
-                }
-
                 pExp.Value = m.Core.Save.Exp;
+
+
+                pStrengthFood.Value = 0;
+                pStrengthDrink.Value = 0;
+                pStrength.Value = 0;
+                pFeeling.Value = 0;
+
+                pStrengthFood.Maximum = m.Core.Save.StrengthMax;
+                pStrengthDrink.Maximum = m.Core.Save.StrengthMax;
+                pStrength.Maximum = m.Core.Save.StrengthMax;
+                pFeeling.Maximum = m.Core.Save.FeelingMax;
+
+
 
                 pStrength.Value = m.Core.Save.Strength;
                 pFeeling.Value = m.Core.Save.Feeling;
+
                 pStrengthFood.Value = m.Core.Save.StrengthFood;
                 pStrengthDrink.Value = m.Core.Save.StrengthDrink;
-                pStrengthFoodMax.Value = Math.Min(100, m.Core.Save.StrengthFood + m.Core.Save.StoreStrengthFood);
-                pStrengthDrinkMax.Value = Math.Min(100, m.Core.Save.StrengthDrink + m.Core.Save.StoreStrengthDrink);
+                pStrengthFoodMax.Value = Math.Min(100, (m.Core.Save.StrengthFood + m.Core.Save.StoreStrengthFood) / m.Core.Save.StrengthMax * 100);
+                pStrengthDrinkMax.Value = Math.Min(100, (m.Core.Save.StrengthDrink + m.Core.Save.StoreStrengthDrink) / m.Core.Save.StrengthMax * 100);
 
                 if (Math.Abs(m.Core.Save.ChangeStrength) > 1)
                     tStrength.Text = $"{m.Core.Save.ChangeStrength:f1}/t";
@@ -277,12 +262,12 @@ namespace VPet_Simulator.Core
         public event Action EventShow;
         public void Show()
         {
+            EventShow?.Invoke();
             if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
             {
                 Panel.SetZIndex(this, m.UIGrid.Children.Count);
             }
             Visibility = Visibility.Visible;
-            EventShow?.Invoke();
             if (CloseTimer.Enabled)
                 onFocus = true;
             else
@@ -368,28 +353,28 @@ namespace VPet_Simulator.Core
 
         private void PgbStrength_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
         {
-            e.Text = $"{e.Value:f2} / 100";
+            e.Text = $"{e.Value:f2} / {pStrength.Maximum:f0}";
         }
 
         private void PgbSpirit_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
         {
             var progressBar = (ProgressBar)sender;
-            progressBar.Foreground = GetForeground(e.Value);
-            e.Text = $"{e.Value:f2} / 100";
+            progressBar.Foreground = GetForeground(e.Value / pFeeling.Maximum);
+            e.Text = $"{e.Value:f2} / {pFeeling.Maximum:f0}";
         }
 
         private void PgbHunger_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
         {
             var progressBar = (ProgressBar)sender;
-            progressBar.Foreground = GetForeground(e.Value);
-            e.Text = $"{e.Value:f2} / 100";
+            progressBar.Foreground = GetForeground(e.Value / pStrength.Maximum);
+            e.Text = $"{e.Value:f2} / {pStrength.Maximum:f0}";
         }
 
         private void PgbThirsty_GeneratingPercentText(object sender, GeneratingPercentTextRoutedEventArgs e)
         {
             var progressBar = (ProgressBar)sender;
-            progressBar.Foreground = GetForeground(e.Value);
-            e.Text = $"{e.Value:f2} / 100";
+            progressBar.Foreground = GetForeground(e.Value / pStrength.Maximum);
+            e.Text = $"{e.Value:f2} / {pStrength.Maximum:f0}";
             //if (e.Value <= 20)
             //{
             //    tHearth.Visibility = Visibility.Visible;
@@ -398,11 +383,11 @@ namespace VPet_Simulator.Core
 
         private Brush GetForeground(double value)
         {
-            if (value >= 80)
+            if (value >= .8)
             {
                 return FindResource("SuccessProgressBarForeground") as Brush;
             }
-            else if (value >= 50)
+            else if (value >= .3)
             {
                 return FindResource("WarningProgressBarForeground") as Brush;
             }
@@ -411,10 +396,16 @@ namespace VPet_Simulator.Core
                 return FindResource("DangerProgressBarForeground") as Brush;
             }
         }
+        /// <summary>
+        /// MenuPanel显示事件
+        /// </summary>
+        public event Action EventMenuPanelShow;
+
         private void MenuPanel_MouseEnter(object sender, MouseEventArgs e)
         {
             BdrPanel.Visibility = Visibility.Visible;
             M_TimeUIHandle(m);
+            EventMenuPanelShow?.Invoke();
         }
 
         private void MenuPanel_MouseLeave(object sender, MouseEventArgs e)
@@ -432,7 +423,7 @@ namespace VPet_Simulator.Core
         private void Sleep_Click(object sender, RoutedEventArgs e)
         {
             this.Visibility = Visibility.Collapsed;
-            if (m.Core.Save.Mode != GameSave.ModeType.Ill)
+            if (m.Core.Save.Mode != IGameSave.ModeType.Ill)
                 if (m.State == Main.WorkingState.Sleep)
                 {
                     m.State = WorkingState.Nomal;

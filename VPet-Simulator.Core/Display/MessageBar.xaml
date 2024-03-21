@@ -3,23 +3,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:pu="https://opensource.panuon.com/wpf-ui"
         xmlns:local="clr-namespace:VPet_Simulator.Core" mc:Ignorable="d" Height="500" Width="500"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         MouseDoubleClick="UserControl_MouseDoubleClick">
     <UserControl.Resources>
-        <ResourceDictionary Source="Theme.xaml" />
+        <ResourceDictionary Source="Theme.xaml" d:IsDataSource="True" />
     </UserControl.Resources>
-    <Border x:Name="BorderMain" Background="{DynamicResource Primary}" BorderBrush="{DynamicResource DARKPrimaryDark}" BorderThickness="5"
-            VerticalAlignment="Bottom" Padding="10" Margin="5" CornerRadius="5" MouseEnter="Border_MouseEnter"
-            MouseLeave="Border_MouseLeave">
+    <UserControl.ContextMenu>
+        <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
+            <MenuItem Header="{ll:Str 复制全文}" Click="MenuItemCopy_Click" />
+            <MenuItem Header="{ll:Str 关闭}" Click="MenuItemClose_Click" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
+    <Border x:Name="BorderMain" Background="{DynamicResource Primary}" BorderBrush="{DynamicResource DARKPrimaryDark}"
+            BorderThickness="5" VerticalAlignment="Bottom" Padding="10" Margin="5" CornerRadius="5"
+            MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave">
         <StackPanel>
             <Label x:Name="LName" Content="虚拟桌宠名字:" Foreground="{DynamicResource PrimaryText}"
                     HorizontalAlignment="Left" Padding="0" FontWeight="Bold" Margin="0,0,0,6" FontSize="32"
                     Background="{x:Null}" />
-            <ScrollViewer MaxHeight="400">
-                <TextBlock x:Name="TText" Text="我说话长这样,这是我说的话巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉"
-                        TextWrapping="WrapWithOverflow" FontSize="24" x:FieldModifier="public" />
+            <ScrollViewer x:Name="sv" MaxHeight="400">
+                <TextBox x:Name="TText" Text="我说话长这样,这是我说的话巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉" IsReadOnly="True"
+                        TextWrapping="WrapWithOverflow" FontSize="24" x:FieldModifier="public" Background="{x:Null}"
+                        BorderBrush="{x:Null}" BorderThickness="0" SizeChanged="TText_SizeChanged" />
             </ScrollViewer>
             <Grid x:Name="MessageBoxContent" x:FieldModifier="public">
-                
+
             </Grid>
         </StackPanel>
     </Border>

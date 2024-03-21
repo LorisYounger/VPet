@@ -7,7 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" d:DesignHeight="1000"
         xmlns:system="clr-namespace:System;assembly=mscorlib" Width="{ll:Dbe SettingWidth, DefValue=650}" Height="550"
-        Closing="WindowX_Closing" FontSize="16" Style="{DynamicResource BaseWindowXStyle}" Topmost="True" 
+        Closing="WindowX_Closing" FontSize="16" Style="{DynamicResource BaseWindowXStyle}" Topmost="True"
         WindowStartupLocation="CenterScreen" mc:Ignorable="d">
     <!--<pu:WindowX.Resources>
         <DataTemplate x:Key="DIYDataTemplate">
@@ -20,11 +20,12 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <TextBox x:Name="tb_seach_menu" FontSize="16" pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
-                Style="{DynamicResource StandardTextBoxStyle}" VerticalAlignment="Top" Margin="3,6,6,0" TextChanged="tb_seach_menu_textchange" />
+                Style="{DynamicResource StandardTextBoxStyle}" VerticalAlignment="Top" Margin="3,6,6,0"
+                TextChanged="tb_seach_menu_textchange" />
         <ListBox x:Name="ListMenu" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                 ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="3,40,6,3"
-                BorderBrush="{DynamicResource Primary}"
-                pu:ListBoxHelper.CornerRadius="5" BorderThickness="2" Background="{DynamicResource SecondaryLighter}"
+                BorderBrush="{DynamicResource Primary}" pu:ListBoxHelper.CornerRadius="5" BorderThickness="2"
+                Background="{DynamicResource SecondaryLighter}"
                 pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
                 pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource SecondaryLight}" />
         <GridSplitter Width="3" Background="{DynamicResource PrimaryDarker}" />
@@ -149,12 +150,12 @@
                             <TextBlock Grid.Row="5" Grid.ColumnSpan="2" VerticalAlignment="Center" Text="{ll:Str 渲染分辨率}" />
                             <TextBlock Grid.Row="6" VerticalAlignment="Center" Text="{ll:Str 主题}" />
                             <ComboBox x:Name="ThemeBox" Grid.Row="6" Grid.Column="2" Margin="0,3,0,2" FontSize="16"
-                                    IsEnabled="False" SelectionChanged="ThemeBox_SelectionChanged"
+                                    SelectionChanged="ThemeBox_SelectionChanged"
                                     Style="{DynamicResource StandardComboBoxStyle}" />
 
                             <TextBlock Grid.Row="7" VerticalAlignment="Center" Text="{ll:Str 字体}" />
                             <ComboBox x:Name="FontBox" Grid.Row="7" Grid.Column="2" Margin="0,2,0,3" FontSize="16"
-                                    IsEnabled="False" SelectionChanged="FontBox_SelectionChanged"
+                                    SelectionChanged="FontBox_SelectionChanged"
                                     Style="{DynamicResource StandardComboBoxStyle}" />
                             <TextBlock Grid.Row="8" VerticalAlignment="Center" Text="{ll:Str 启动位置}" />
                             <Grid Grid.Row="8" Grid.Column="2">
@@ -395,10 +396,7 @@
                                 ToolTip="{ll:Str '重新开始新游戏,重置统计等信息\&#13;对于想要获得脱离超模从而获得成就非常有帮助'}" Click="restart_click" />
                         <Button x:Name="btn_cleancache" Grid.Row="1" Grid.Column="2" Margin="4" Padding="1"
                                 pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
-                                Click="cleancache_click" Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
-                        <Button  Grid.Row="1" Grid.Column="2" Margin="4" Padding="1"
-                                pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
-                                Click="cleancache_click" Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
+                                Click="cleancache_click" Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />                        
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
                             <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 桌宠多开}" /> <LineBreak />
@@ -429,9 +427,10 @@
                                     Background="{DynamicResource SecondaryLight}" Content="{ll:Str 打开}"
                                     ToolTip="{ll:Str 打开当前选择的多开存档}" VerticalAlignment="Top" Height="25"
                                     Click="btn_muti_open_click" />
-                            <Button x:Name="btn_mutidel" Grid.Row="1" Grid.Column="3" Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str 删除}"
-                                    ToolTip="{ll:Str 删除当前选择的多开存档}" VerticalAlignment="Bottom" Height="25" Click="btn_mutidel_Click" />
+                            <Button x:Name="btn_mutidel" Grid.Row="1" Grid.Column="3" Margin="5" Padding="1"
+                                    pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
+                                    Content="{ll:Str 删除}" ToolTip="{ll:Str 删除当前选择的多开存档}" VerticalAlignment="Bottom"
+                                    Height="25" Click="btn_mutidel_Click" />
                             <ListBox x:Name="LBHave" Grid.Row="1" Grid.Column="2" Margin="1,2,1,2"
                                     pu:ListBoxHelper.CornerRadius="4" BorderBrush="{DynamicResource DARKPrimary}"
                                     BorderThickness="2" MinHeight="66"

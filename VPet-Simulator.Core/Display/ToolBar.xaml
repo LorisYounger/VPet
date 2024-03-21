@@ -18,7 +18,7 @@
         <Border x:Name="BdrPanel" Margin="0,0,0,55" VerticalAlignment="Bottom" x:FieldModifier="public"
                 Background="{DynamicResource DARKPrimaryText}" BorderBrush="{DynamicResource DARKPrimaryDarker}"
                 BorderThickness="1" CornerRadius="5" MouseLeave="MenuPanel_MouseLeave" TextBlock.FontSize="24"
-                TextElement.FontSize="24" Visibility="Collapsed" Cursor="">
+                TextElement.FontSize="24" Visibility="Collapsed" Cursor="" d:Visibility="Visible">
             <Grid Margin="15" x:Name="gdPanel" x:FieldModifier="public">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -37,7 +37,7 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="Tlv" Grid.ColumnSpan="3" VerticalAlignment="Center"
+                <TextBlock x:Name="Tlv" Grid.ColumnSpan="3" VerticalAlignment="Center" x:FieldModifier="public"
                         Foreground="{DynamicResource DARKPrimary}" Text="Lv 14" />
                 <Button Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Right" VerticalAlignment="Center"
                         Background="Transparent" Click="MenuPanel_Click" Content="{ll:Str 详细}" Cursor="Hand"
@@ -49,9 +49,9 @@
                     </Button.ContentTemplate>
                 </Button>
                 <TextBlock x:Name="till" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#FF4C4C"
-                        Text="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}" TextWrapping="Wrap" />
+                        Text="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}" TextWrapping="Wrap" x:FieldModifier="public" />
                 <TextBlock x:Name="tfun" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#4caf50"
-                        Text="{ll:Str 已关闭数据计算\, 可放心挂机}" TextWrapping="Wrap" />
+                        Text="{ll:Str 已关闭数据计算\, 可放心挂机}" TextWrapping="Wrap" x:FieldModifier="public" />
                 <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 金钱}" />
                 <TextBlock x:Name="tMoney" Grid.Row="2" Grid.Column="2" Foreground="{DynamicResource DARKPrimary}"
                         Text="$100,000" />
@@ -109,7 +109,7 @@
         <Menu Width="500" VerticalAlignment="Bottom" pu:MenuHelper.SubmenuItemsHorizontalContentAlignment="Center"
                 pu:MenuHelper.TopLevelItemsHorizontalContentAlignment="Center"
                 Style="{DynamicResource ToolBarMenuStyle}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled" pu:DropDownHelper.Width="NaN"
                 pu:DropDownHelper.MaxHeight="500" Height="60">
             <Menu.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -119,7 +119,7 @@
             <MenuItem x:Name="MenuFeed" Padding="0" x:FieldModifier="public" Header="{ll:Str 投喂}" />
             <MenuItem x:Name="MenuPanel" Padding="0" Header="{ll:Str 面板}" MouseEnter="MenuPanel_MouseEnter"
                     MouseLeave="MenuPanel_MouseLeave" />
-            <MenuItem x:Name="MenuInteract" Width="99" Padding="0" Header="{ll:Str 互动}">
+            <MenuItem x:Name="MenuInteract" Width="99" Padding="0" Header="{ll:Str 互动}" x:FieldModifier="public">
                 <MenuItem Click="Sleep_Click" Header="{ll:Str 睡觉}" />                
                 <MenuItem x:Name="MenuStudy" Header="{ll:Str 学习}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                         pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public"/>

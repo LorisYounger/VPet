@@ -22,13 +22,20 @@ namespace VPet_Simulator.Core
     public class GraphInfo
     {
         /// <summary>
+        /// 用于Convert的空动画信息
+        /// </summary>
+        public GraphInfo()
+        {
+
+        }
+        /// <summary>
         /// 创建动画信息
         /// </summary>
         /// <param name="name">动画名字: 用户自定义 同名字动画支持相同随机,不再使用StoreRand</param>
         /// <param name="animat">动作: 动画的动作 Start Loop End</param>
         /// <param name="type">类型: 主要动作分类</param>
         /// <param name="modeType">状态: 4种状态</param>
-        public GraphInfo(string name, GraphType type = GraphType.Common, AnimatType animat = AnimatType.Single, GameSave.ModeType modeType = GameSave.ModeType.Nomal)
+        public GraphInfo(string name, GraphType type = GraphType.Common, AnimatType animat = AnimatType.Single, IGameSave.ModeType modeType = IGameSave.ModeType.Nomal)
         {
             Name = name;
             Animat = animat;
@@ -50,27 +57,27 @@ namespace VPet_Simulator.Core
 
             var path_name = pn.Replace('\\', '_').Split('_').ToList();
             path_name.RemoveAll(string.IsNullOrWhiteSpace);
-            if (!Enum.TryParse(info[(gstr)"mode"], true, out GameSave.ModeType modetype))
+            if (!Enum.TryParse(info[(gstr)"mode"], true, out IGameSave.ModeType modetype))
             {
                 if (path_name.Remove("happy"))
                 {
-                    modetype = GameSave.ModeType.Happy;
+                    modetype = IGameSave.ModeType.Happy;
                 }
                 else if (path_name.Remove("nomal"))
                 {
-                    modetype = GameSave.ModeType.Nomal;
+                    modetype = IGameSave.ModeType.Nomal;
                 }
                 else if (path_name.Remove("poorcondition"))
                 {
-                    modetype = GameSave.ModeType.PoorCondition;
+                    modetype = IGameSave.ModeType.PoorCondition;
                 }
                 else if (path_name.Remove("ill"))
                 {
-                    modetype = GameSave.ModeType.Ill;
+                    modetype = IGameSave.ModeType.Ill;
                 }
                 else
                 {
-                    modetype = GameSave.ModeType.Nomal;
+                    modetype = IGameSave.ModeType.Nomal;
                 }
             }
 
@@ -263,7 +270,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 状态: 4种状态
         /// </summary>
-        public GameSave.ModeType ModeType { get; set; }
+        public IGameSave.ModeType ModeType { get; set; }
         ///// <summary>
         ///// 其他附带的储存信息
         ///// </summary>

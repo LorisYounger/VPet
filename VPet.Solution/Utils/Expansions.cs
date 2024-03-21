@@ -28,29 +28,6 @@ public static class Extensions
         return source.IndexOf(value, comparisonType) >= 0;
     }
 
-    public static TSource MaxBy<TSource, TKey>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector
-    )
-    {
-        using IEnumerator<TSource> e = source.GetEnumerator();
-        if (e.MoveNext() is false)
-            return default;
-        TSource value = e.Current;
-        TKey key = keySelector(value);
-        while (e.MoveNext())
-        {
-            TSource nextValue = e.Current;
-            TKey nextKey = keySelector(nextValue);
-            if (Comparer<TKey>.Default.Compare(nextKey, key) > 0)
-            {
-                key = nextKey;
-                value = nextValue;
-            }
-        }
-        return value;
-    }
-
     //public static string GetSourceFile(this BitmapImage image)
     //{
     //    return ((FileStream)image.StreamSource).Name;
@@ -363,7 +340,7 @@ public static class Extensions
         window.Activate();
     }
 
-    private static void WindowCloseState_Closing(object sender, CancelEventArgs e)
+    private static void WindowCloseState_Closing(object? sender, CancelEventArgs e)
     {
         if (sender is not Window window)
             return;
@@ -386,10 +363,10 @@ public static class Extensions
 [Flags]
 public enum WindowCloseState
 {
-    SkipNext = 0,
     Close = 1 << 0,
-    Hidden = 1 << 1,
-    Collapsed = 1 << 2
+    SkipNext = 1 << 1,
+    Hidden = 1 << 2,
+    Collapsed = 1 << 3
 }
 
 /// <summary>

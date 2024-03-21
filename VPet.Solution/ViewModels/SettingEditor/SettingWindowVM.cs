@@ -1,8 +1,4 @@
-﻿using HKW.HKWUtils.Observable;
-using LinePutScript;
-using LinePutScript.Localization.WPF;
-using Panuon.WPF;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,18 +6,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using HKW.HKWUtils.Observable;
+using LinePutScript;
+using LinePutScript.Localization.WPF;
+using Panuon.WPF;
 using VPet.Solution.Models;
 using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.Views.SettingEditor;
-using VPet_Simulator.Windows.Interface;
+using VPet_Simulator.Windows;
 
 namespace VPet.Solution.ViewModels.SettingEditor;
 
 public class SettingWindowVM : ObservableClass<SettingWindowVM>
 {
-    public static SettingWindowVM Current { get; private set; }
+    public static SettingWindowVM Current { get; private set; } = null!;
     #region Properties
-    private SettingModel _currentSetting;
+    private SettingModel _currentSetting = null!;
     public SettingModel CurrentSetting
     {
         get => _currentSetting;
@@ -47,25 +47,30 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
                     return;
                 }
             }
-            SetProperty(ref _currentSetting, value);
+            SetProperty(ref _currentSetting!, value);
         }
     }
 
-    private readonly ObservableCollection<SettingModel> _settings = new();
+    public readonly ObservableCollection<SettingModel> Settings = new();
 
-    private IEnumerable<SettingModel> _showSettings;
+    #region ShowSettings
+    private IEnumerable<SettingModel> _showSettings = null!;
     public IEnumerable<SettingModel> ShowSettings
     {
         get => _showSettings;
         set => SetProperty(ref _showSettings, value);
     }
 
-    private string _searchSetting;
+    #endregion
+
+    #region SearchSetting
+    private string _searchSetting = string.Empty;
     public string SearchSetting
     {
         get => _searchSetting;
         set => SetProperty(ref _searchSetting, value);
     }
+    #endregion
 
     #endregion
 
@@ -104,7 +109,7 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
     {
         Current = this;
         LoadSettings();
-        ShowSettings = _settings = new(_settings.OrderBy(m => m.Name));
+        ShowSettings = Settings = new(Settings.OrderBy(m => m.Name));
 
         PropertyChanged += MainWindowVM_PropertyChanged;
         OpenFileCommand.ExecuteCommand += OpenFileCommand_ExecuteCommand;
@@ -128,8 +133,8 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
             is not MessageBoxResult.Yes
         )
             return;
-        for (var i = 0; i < _settings.Count; i++)
-            _settings[i] = new SettingModel();
+        for (var i = 0; i < Settings.Count; i++)
+            Settings[i] = new SettingModel();
     }
 
     private void OpenFileInExplorerCommand_ExecuteCommand(SettingModel parameter)
@@ -155,7 +160,7 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
             is not MessageBoxResult.Yes
         )
             return;
-        foreach (var setting in _settings)
+        foreach (var setting in Settings)
             setting.Save();
     }
 
@@ -177,7 +182,7 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
             is not MessageBoxResult.Yes
         )
             return;
-        CurrentSetting = _settings[_settings.IndexOf(CurrentSetting)] = new SettingModel()
+        CurrentSetting = Settings[Settings.IndexOf(CurrentSetting)] = new SettingModel()
         {
             Name = CurrentSetting.Name,
             FilePath = CurrentSetting.FilePath
@@ -188,14 +193,14 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
     public void RefreshShowSettings(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            ShowSettings = _settings;
+            ShowSettings = Settings;
         else
-            ShowSettings = _settings.Where(
-                s => s.Name.Contains(SearchSetting, StringComparison.OrdinalIgnoreCase)
+            ShowSettings = Settings.Where(s =>
+                s.Name.Contains(SearchSetting, StringComparison.OrdinalIgnoreCase)
             );
     }
 
-    private void MainWindowVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void MainWindowVM_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(SearchSetting))
         {
@@ -210,9 +215,9 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
             var fileName = Path.GetFileNameWithoutExtension(file);
             try
             {
-                var setting = new Setting(File.ReadAllText(file));
+                var setting = new Setting(null, File.ReadAllText(file));
                 var settingModel = new SettingModel(setting) { Name = fileName, FilePath = file };
-                _settings.Add(settingModel);
+                Settings.Add(settingModel);
             }
             catch (Exception ex)
             {
@@ -231,7 +236,7 @@ public class SettingWindowVM : ObservableClass<SettingWindowVM>
                 )
                     return;
                 var setting = new SettingModel() { Name = fileName, FilePath = file };
-                _settings.Add(setting);
+                Settings.Add(setting);
                 setting.Save();
             }
         }

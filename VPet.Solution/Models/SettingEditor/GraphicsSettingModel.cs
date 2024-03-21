@@ -3,6 +3,7 @@ using LinePutScript.Localization.WPF;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using VPet_Simulator.Windows;
 
 namespace VPet.Solution.Models.SettingEditor;
 
@@ -15,7 +16,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// 缩放倍率
     /// </summary>
     [DefaultValue(1)]
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.ZoomLevel))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.ZoomLevel))]
     public double ZoomLevel
     {
         get => _zoomLevel;
@@ -48,7 +49,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// 桌宠图形渲染的分辨率,越高图形越清晰
     /// </summary>
     [DefaultValue(1000)]
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.Resolution))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.Resolution))]
     public int Resolution
     {
         get => _resolution;
@@ -62,7 +63,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 是否为更大的屏幕
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.IsBiggerScreen))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.IsBiggerScreen))]
     public bool IsBiggerScreen
     {
         get => _isBiggerScreen;
@@ -83,7 +84,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 是否置于顶层
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.TopMost))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.TopMost))]
     public bool TopMost
     {
         get => _topMost;
@@ -97,7 +98,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 是否鼠标穿透
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.HitThrough))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.HitThrough))]
     public bool HitThrough
     {
         get => _hitThrough;
@@ -111,7 +112,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 语言
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.Language))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.Language))]
     public string Language
     {
         get => _language;
@@ -128,7 +129,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 字体
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.Font))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.Font))]
     public string Font
     {
         get => _font;
@@ -142,7 +143,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 主题
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.Theme))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.Theme))]
     public string Theme
     {
         get => _theme;
@@ -156,7 +157,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 开机启动
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.StartUPBoot))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.StartUPBoot))]
     public bool StartUPBoot
     {
         get => _startUPBoot;
@@ -170,7 +171,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 开机启动 Steam
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.StartUPBootSteam))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.StartUPBootSteam))]
     public bool StartUPBootSteam
     {
         get => _startUPBootSteam;
@@ -185,7 +186,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// 是否记录游戏退出位置
     /// </summary>
     [DefaultValue(true)]
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.StartRecordLast))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.StartRecordLast))]
     public bool StartRecordLast
     {
         get => _startRecordLast;
@@ -224,7 +225,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 在任务切换器(Alt+Tab)中隐藏窗口
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.HideFromTaskControl))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.HideFromTaskControl))]
     public bool HideFromTaskControl
     {
         get => _hideFromTaskControl;
@@ -238,7 +239,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 消息框外置
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.MessageBarOutside))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.MessageBarOutside))]
     public bool MessageBarOutside
     {
         get => _messageBarOutside;
@@ -252,7 +253,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 是否显示宠物帮助窗口
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PetHelper))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.PetHelper))]
     public bool PetHelper
     {
         get => _petHelper;
@@ -268,7 +269,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 快捷穿透按钮X坐标
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PetHelpLeft))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.PetHelpLeft))]
     public double PetHelpLeft
     {
         get => _petHelpLeft;
@@ -284,7 +285,7 @@ public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
     /// <summary>
     /// 快捷穿透按钮Y坐标
     /// </summary>
-    [ReflectionProperty(nameof(VPet_Simulator.Windows.Interface.Setting.PetHelpTop))]
+    [ReflectionProperty(nameof(VPet_Simulator.Windows.Setting.PetHelpTop))]
     public double PetHelpTop
     {
         get => _petHelpTop;

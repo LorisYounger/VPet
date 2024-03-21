@@ -29,7 +29,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 消息栏
         /// </summary>
-        public MessageBar MsgBar;
+        public IMassageBar MsgBar;
         /// <summary>
         /// 工作显示栏
         /// </summary>
@@ -45,59 +45,58 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 如果不开启功能模式,默认状态设置
         /// </summary>
-        public GameSave.ModeType NoFunctionMOD = GameSave.ModeType.Happy;
+        public IGameSave.ModeType NoFunctionMOD = IGameSave.ModeType.Happy;
         /// <summary>
         /// 是否开始运行
         /// </summary>
         public bool IsWorking { get; private set; } = false;
         public SoundPlayer soundPlayer = new SoundPlayer();
         public bool windowMediaPlayerAvailable = true;
-        public Main(GameCore core, bool loadtouchevent = true, IGraph startUPGraph = null)
-        {
-            //Console.WriteLine(DateTime.Now.ToString("T:fff"));
-            InitializeComponent();
-            Core = core;
-            WorkTimer = new WorkTimer(this);
-            WorkTimer.Visibility = Visibility.Collapsed;
-            UIGrid.Children.Add(WorkTimer);
-            ToolBar = new ToolBar(this);
-            ToolBar.Visibility = Visibility.Collapsed;
-            UIGrid.Children.Add(ToolBar);
-            MsgBar = new MessageBar(this);
-            MsgBar.Visibility = Visibility.Collapsed;
-            UIGrid.Children.Add(MsgBar);
-            labeldisplaytimer.Elapsed += Labledisplaytimer_Elapsed;
 
-            if (loadtouchevent)
+        public void Load_0_BaseConsole()
+        {
+            Dispatcher.Invoke(() =>
             {
-                LoadTouchEvent();
-            }
-            if (!core.Controller.EnableFunction)
-                Core.Save.Mode = NoFunctionMOD;
-            IGraph ig = startUPGraph ?? Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, core.Save.Mode);
-            ig ??= Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Default), AnimatType.Single, core.Save.Mode);
-            //var ig2 = Core.Graph.FindGraph(GraphType.Default, core.GameSave.Mode);
-            PetGrid2.Visibility = Visibility.Collapsed;
-            Task.Run(() =>
+                WorkTimer = new WorkTimer(this);
+                WorkTimer.Visibility = Visibility.Collapsed;
+                UIGrid.Children.Add(WorkTimer);
+                ToolBar = new ToolBar(this);
+                ToolBar.Visibility = Visibility.Collapsed;
+                UIGrid.Children.Add(ToolBar);
+                MsgBar = new MessageBar(this);
+                MsgBar.Visibility = Visibility.Collapsed;
+                UIGrid.Children.Add(MsgBar.This);
+            });
+        }
+        public void Load_3_BindingTimer()
+        {
+            EventTimer.Elapsed += (s, e) => EventTimer_Elapsed();
+            MoveTimer.Elapsed += MoveTimer_Elapsed;
+            SmartMoveTimer.Elapsed += SmartMoveTimer_Elapsed;
+        }
+        public async Task Load_2_WaitGraph()
+        {
+            //新功能:等待所有图像加载完成再跑
+            foreach (var igs in Core.Graph.GraphsList.Values)
             {
-                //while (!ig.IsReady)
-                //{
-                //    Thread.Sleep(100);
-                //}//新功能:等待所有图像加载完成再跑
-                foreach (var igs in Core.Graph.GraphsList.Values)
+                foreach (var ig2 in igs.Values)
                 {
-                    foreach (var ig2 in igs.Values)
+                    foreach (var ig3 in ig2)
                     {
-                        foreach (var ig3 in ig2)
+                        while (!ig3.IsReady)
                         {
-                            while (!ig3.IsReady)
-                            {
-                                Thread.Sleep(100);
-                            }
+                            await Task.Delay(100);
                         }
                     }
                 }
-
+            }
+        }
+        public void Load_4_Start(IGraph startUPGraph = null)
+        {
+            IGraph ig = startUPGraph ?? Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, Core.Save.Mode);
+            ig ??= Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Default), AnimatType.Single, Core.Save.Mode);
+            Task.Run(() =>
+            {
                 ig.Run(PetGrid, () =>
                 {
                     IsWorking = true;
@@ -109,10 +108,33 @@ namespace VPet_Simulator.Core
                     DisplayNomal();
                 });
             });
+        }
 
-            EventTimer.Elapsed += (s, e) => EventTimer_Elapsed();
-            MoveTimer.Elapsed += MoveTimer_Elapsed;
-            SmartMoveTimer.Elapsed += SmartMoveTimer_Elapsed;
+        public void Load_24_WaitAndStart()
+        {
+            Load_2_WaitGraph().Wait();
+            Load_4_Start();
+        }
+
+        public Main(GameCore core)
+        {
+            InitializeComponent();
+            Core = core;
+
+            labeldisplaytimer.Elapsed += Labledisplaytimer_Elapsed;
+
+            DisplayNomal = DisplayDefault;
+
+            if (!core.Controller.EnableFunction)
+                Core.Save.Mode = NoFunctionMOD;
+        }
+        public void LoadALL()
+        {
+            Load_0_BaseConsole();
+            Load_2_TouchEvent();
+            Load_2_WaitGraph().Wait();
+            Load_3_BindingTimer();
+            Load_4_Start();
         }
 
         private void Labledisplaytimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -139,13 +161,13 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 自动加载触摸事件
         /// </summary>
-        public void LoadTouchEvent()
+        public void Load_2_TouchEvent()
         {
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, () => { DisplayTouchHead(); return true; }));
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchBodyLocate, Core.Graph.GraphConfig.TouchBodySize, () => { DisplayTouchBody(); return true; }));
             for (int i = 0; i < 4; i++)
             {
-                GameSave.ModeType m = (GameSave.ModeType)i;
+                IGameSave.ModeType m = (IGameSave.ModeType)i;
                 Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate[i], Core.Graph.GraphConfig.TouchRaisedSize[i],
                     () =>
                     {

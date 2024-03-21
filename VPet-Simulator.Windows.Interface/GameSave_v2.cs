@@ -26,10 +26,10 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public GameSave_v2(string petname)
         {
-            GameSave = new GameSave(petname);
+            GameSave = new GameSave_VPet(petname);
             Statistics = new Statistics();
         }
-        protected void load(ILPS lps, Statistics oldStatistics = null, GameSave oldGameSave = null, ILPS olddata = null)
+        protected void load(ILPS lps, Statistics oldStatistics = null, GameSave_VPet oldGameSave = null, ILPS olddata = null)
         {
             if (lps.FindLine("statistics") == null)
             {//尝试从老存档加载
@@ -44,7 +44,7 @@ namespace VPet_Simulator.Windows.Interface
             long hash;
             if (vpet != null)
             {
-                GameSave = GameSave.Load(vpet);
+                GameSave = GameSave_VPet.Load(vpet);
                 hash = vpet.GetInt64("hash");
                 if (vpet.Remove("hash"))
                 {
@@ -114,7 +114,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="oldStatistics">老统计</param>
         /// <param name="oldGameSave">老存档</param>
         /// <param name="olddata">老数据</param>
-        public GameSave_v2(ILPS lps, Statistics oldStatistics = null, GameSave oldGameSave = null, ILPS olddata = null)
+        public GameSave_v2(ILPS lps, Statistics oldStatistics = null, GameSave_VPet oldGameSave = null, ILPS olddata = null)
         {
             load(lps, oldStatistics, oldGameSave, olddata);
         }
@@ -135,7 +135,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 游戏存档
         /// </summary>
-        public GameSave GameSave;
+        public GameSave_VPet GameSave;
         /// <summary>
         /// 统计
         /// </summary>
@@ -165,10 +165,6 @@ namespace VPet_Simulator.Windows.Interface
         /// Hash检查
         /// </summary>
         public bool HashCheck { get; private set; } = true;
-
-        FInt64 IGetOBJ<ILine>.this[gflt subName] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-
 
         /// <summary>
         /// 关闭该玩家的HashCheck检查

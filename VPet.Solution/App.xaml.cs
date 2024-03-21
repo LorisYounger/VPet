@@ -8,13 +8,10 @@ namespace VPet.Solution;
 /// </summary>
 public partial class App : Application
 {
-    public static bool IsDone { get; set; } = false;
-
     protected override void OnStartup(StartupEventArgs e)
     {
         if (e.Args != null && e.Args.Count() > 0)
         {
-            IsDone = true;
             switch (e.Args[0].ToLower())
             {
                 case "removestarup":
@@ -25,12 +22,20 @@ public partial class App : Application
                     {
                         File.Delete(path);
                     }
-                    return;
+                    break;
                 case "launchsteam":
-                    Process.Start("steam://rungameid/1920960");
-                    return;
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = "cmd",
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        Arguments = "/c start steam://rungameid/1920960"
+                    };
+                    Process.Start(psi);
+                    break;
             }
+            Application.Current.Shutdown();
         }
-        IsDone = false;
     }
 }

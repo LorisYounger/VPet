@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32804.467
@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet.Solution", "VPet.Solution\VPet.Solution.csproj", "{4DF0C967-9AF9-4F39-968F-21F604DAFE11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VPet.Solution", "VPet.Solution\VPet.Solution.csproj", "{4DF0C967-9AF9-4F39-968F-21F604DAFE11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

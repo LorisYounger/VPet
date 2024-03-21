@@ -1,7 +1,9 @@
 ﻿using LinePutScript;
 using LinePutScript.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using VPet_Simulator.Core;
 
@@ -27,7 +29,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 游戏设置
         /// </summary>
-        Setting Set { get; }
+        ISetting Set { get; }
         /// <summary>
         /// 宠物加载器列表
         /// </summary>
@@ -155,6 +157,24 @@ namespace VPet_Simulator.Windows.Interface
         /// 游戏存档数据
         /// </summary>
         GameSave_v2 GameSavesData { get; }
+        /// <summary>
+        /// 主窗体 Grid
+        /// </summary>
+        Grid MGHost { get; }
+        /// <summary>
+        /// 主窗体 Pet Grid
+        /// </summary>
+        Grid PetGrid { get; }
+        /// <summary>
+        /// 当创建/加入新的多人联机窗口(访客表)时触发
+        /// </summary>
+        event Action<IMPWindows> MutiPlayerHandle;
+        /// <summary>
+        /// 显示吃东西(夹层)动画
+        /// </summary>
+        /// <param name="graphName">夹层动画名</param>
+        /// <param name="imageSource">被夹在中间的图片</param>
+        void DisplayFoodAnimation(string graphName, ImageSource imageSource);
     }
 
 }

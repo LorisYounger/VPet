@@ -81,7 +81,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 工作/学习
         /// </summary>
-        public class Work
+        public class Work : ICloneable
         {
             /// <summary>
             /// 类型
@@ -106,11 +106,6 @@ namespace VPet_Simulator.Core
             /// </summary>
             [Line(ignoreCase: true)]
             public string Graph { get; set; }
-            /// <summary>
-            /// 工作盈利/学习等级倍率
-            /// </summary>
-            [Line(ignoreCase: true)]
-            public double MoneyLevel { get; set; }
             /// <summary>
             /// 工作盈利/学习基本倍率
             /// </summary>
@@ -185,6 +180,33 @@ namespace VPet_Simulator.Core
             public void Display(Main m)
             {
                 m.Display(Graph, AnimatType.A_Start, () => m.DisplayBLoopingForce(Graph));
+            }
+            /// <summary>
+            /// 克隆相同的工作/学习
+            /// </summary>
+            public object Clone()
+            {
+                return new Work
+                {
+                    Type = this.Type,
+                    Name = this.Name,
+                    Graph = this.Graph,
+                    MoneyBase = this.MoneyBase,
+                    StrengthFood = this.StrengthFood,
+                    StrengthDrink = this.StrengthDrink,
+                    Feeling = this.Feeling,
+                    LevelLimit = this.LevelLimit,
+                    Time = this.Time,
+                    FinishBonus = this.FinishBonus,
+                    BorderBrush = this.BorderBrush,
+                    Background = this.Background,
+                    ButtonBackground = this.ButtonBackground,
+                    ButtonForeground = this.ButtonForeground,
+                    Foreground = this.Foreground,
+                    Left = this.Left,
+                    Top = this.Top,
+                    Width = this.Width
+                };
             }
         }
 
@@ -270,17 +292,17 @@ namespace VPet_Simulator.Core
                 /// </summary>
                 Ill = 16,
             }
-            public static ModeType GetModeType(GameSave.ModeType type)
+            public static ModeType GetModeType(IGameSave.ModeType type)
             {
                 switch (type)
                 {
-                    case GameSave.ModeType.Happy:
+                    case IGameSave.ModeType.Happy:
                         return ModeType.Happy;
-                    case GameSave.ModeType.Nomal:
+                    case IGameSave.ModeType.Nomal:
                         return ModeType.Nomal;
-                    case GameSave.ModeType.PoorCondition:
+                    case IGameSave.ModeType.PoorCondition:
                         return ModeType.PoorCondition;
-                    case GameSave.ModeType.Ill:
+                    case IGameSave.ModeType.Ill:
                         return ModeType.Ill;
                     default:
                         return ModeType.Nomal;

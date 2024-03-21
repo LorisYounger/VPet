@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static VPet_Simulator.Core.GameSave;
+using static VPet_Simulator.Core.IGameSave;
 using static VPet_Simulator.Core.GraphCore;
 
 

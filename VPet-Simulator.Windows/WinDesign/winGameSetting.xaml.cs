@@ -20,6 +20,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
+using static VPet_Simulator.Windows.Win32;
+using System.Runtime.InteropServices;
 
 namespace VPet_Simulator.Windows
 {
@@ -145,6 +147,19 @@ namespace VPet_Simulator.Windows
                 }
             }
 
+            foreach (var v in mw.Fonts)
+            {
+                FontBox.Items.Add(v.Name);
+            }
+            FontBox.SelectedItem = mw.Set.Font;
+
+            foreach (var v in mw.Themes)
+            {
+                ThemeBox.Items.Add(v.Name);
+            }
+            if (mw.Theme != null)
+                ThemeBox.SelectedItem = mw.Theme.Name;
+
             VoiceCatchSilder.Value = mw.Set.MusicCatch;
             VoiceMaxSilder.Value = mw.Set.MusicMax;
 
@@ -198,7 +213,7 @@ namespace VPet_Simulator.Windows
                 case "LB":
                     RBCGPTUseLB.IsChecked = true;
                     BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
-                    //if (!mw.IsSteamUser)
+                    //if (!mf.IsSteamUser)
                     //    BtnCGPTReSet.IsEnabled = false;
                     break;
                 case "OFF":
@@ -351,7 +366,7 @@ namespace VPet_Simulator.Windows
                 ImageMOD.Source = ImageResources.NewSafeBitmapImage(@"pack://application:,,,/Res/TopLogo2019.PNG");
             if (mod.GameVer < mw.version)
             {
-                if (mod.GameVer / 10 == mw.version / 10)
+                if (mod.GameVer / 1000 == mw.version / 1000)
                 {
                     runMODGameVer.Text += " (兼容)".Translate();
                 }
@@ -363,7 +378,7 @@ namespace VPet_Simulator.Windows
             }
             else if (mod.GameVer > mw.version)
             {
-                if (mod.GameVer / 10 == mw.version / 10)
+                if (mod.GameVer / 1000 == mw.version / 1000)
                 {
                     runMODGameVer.Text += " (兼容)".Translate();
                     runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
@@ -474,28 +489,27 @@ namespace VPet_Simulator.Windows
 
         private void ThemeBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (!AllowChange)
+                return;
+            string str = (string)(ThemeBox.SelectedItem);
+            mw.LoadTheme(str);
+            mw.Set.Theme = mw.Theme.xName;
         }
 
         private void FontBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (!AllowChange)
+                return;
+            string str = (string)(FontBox.SelectedItem);
+            mw.LoadFont(str);
+            mw.Set.Font = str;
         }
 
         private void CBAutoSave_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!AllowChange)
                 return;
-            mw.Set.AutoSaveInterval = (int)((ComboBoxItem)CBAutoSave.SelectedItem).Tag;
-            if (mw.Set.AutoSaveInterval > 0)
-            {
-                mw.AutoSaveTimer.Interval = mw.Set.AutoSaveInterval * 60000;
-                mw.AutoSaveTimer.Start();
-            }
-            else
-            {
-                mw.AutoSaveTimer.Stop();
-            }
+            mw.Set.SetAutoSaveInterval((int)((ComboBoxItem)CBAutoSave.SelectedItem).Tag);
         }
 
 
@@ -533,7 +547,12 @@ namespace VPet_Simulator.Windows
 
         private void ButtonOpenModFolder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Process.Start(mod.Path.FullName);
+            var psi = new ProcessStartInfo
+            {
+                FileName = mod.Path.FullName,
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
 
         private void ButtonEnable_MouseDown(object sender, MouseButtonEventArgs e)
@@ -785,8 +804,6 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.SetZoomLevel(ZoomSlider.Value / 2);
-            //this.Width = 400 * Math.Sqrt(ZoomSlider.Value);
-            //this.Height = 450 * Math.Sqrt(ZoomSlider.Value);
         }
 
         private void PressLengthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -861,8 +878,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Set.LogicInterval = CalSlider.Value;
-            mw.Main.SetLogicInterval((int)(CalSlider.Value * 1000));
+            mw.Set.SetLogicInterval(CalSlider.Value);
             CalTimeInteraction();
         }
 
@@ -870,31 +886,24 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Set.AllowMove = MoveEventBox.IsChecked == true;
-            SetSmartMove();
+            mw.Set.SetAllowMove(MoveEventBox.IsChecked == true);
         }
 
         private void SmartMoveEventBox_Checked(object sender, RoutedEventArgs e)
         {
             if (!AllowChange)
                 return;
-            mw.Set.SmartMove = SmartMoveEventBox.IsChecked == true;
-            SetSmartMove();
+            mw.Set.SetSmartMove(SmartMoveEventBox.IsChecked == true);
         }
 
         private void CBSmartMove_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!AllowChange)
                 return;
-            mw.Set.SmartMoveInterval = (int)((ComboBoxItem)CBSmartMove.SelectedItem).Tag;
-            SetSmartMove();
+            mw.Set.SetSmartMoveInterval((int)((ComboBoxItem)CBSmartMove.SelectedItem).Tag);
         }
-        public void SetSmartMove()
-        {
-            if (!AllowChange)
-                return;
-            mw.Main.SetMoveMode(mw.Set.AllowMove, mw.Set.SmartMove, mw.Set.SmartMoveInterval * 1000);
-        }
+
+
         public void GenStartUP()
         {
             mw.Set["v"][(gbol)"newverstartup"] = true;
@@ -903,22 +912,22 @@ namespace VPet_Simulator.Windows
             {
                 if (File.Exists(path))
                     File.Delete(path);
-                IWshRuntimeLibrary.WshShell shell = new IWshRuntimeLibrary.WshShell();
-                IWshRuntimeLibrary.IWshShortcut shortcut = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(path);
+                var link = (IShellLink)new ShellLink();
                 if (mw.Set.StartUPBootSteam)
                 {
-                    shortcut.TargetPath = ExtensionValue.BaseDirectory + @"\VPet.Solution.exe";
-                    shortcut.Arguments = "launchsteam";
+                    link.SetPath(ExtensionValue.BaseDirectory + @"\VPet.Solution.exe");
+                    link.SetArguments("launchsteam");
                 }
                 else
-                    shortcut.TargetPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                    link.SetPath(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
-                shortcut.Description = "VPet Simulator";
-                shortcut.WorkingDirectory = ExtensionValue.BaseDirectory;
-                shortcut.IconLocation = ExtensionValue.BaseDirectory + @"vpeticon.ico";
+                link.SetDescription("VPet Simulator");
+                link.SetPath(ExtensionValue.BaseDirectory);
+                link.SetIconLocation(ExtensionValue.BaseDirectory + @"vpeticon.ico", 0);
                 try
                 {
-                    shortcut.Save();
+                    var file = (IPersistFile)link;
+                    file.Save(path, false);
                 }
                 catch
                 {
@@ -941,7 +950,7 @@ namespace VPet_Simulator.Windows
                     return;
             //else
             //{
-            //    mw.Set["SingleTips"][(gint)"open"] = 1;
+            //    mf.Set["SingleTips"][(gint)"open"] = 1;
             //    MessageBoxX.Show("游戏开机启动的实现方式是创建快捷方式,不是注册表,更健康,所以游戏卸了也不知道\n如果游戏打不开,可以去这里手动删除游戏开机启动快捷方式:\n%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\".Translate()
             //        , "关于卸载不掉的问题是因为开启了开机启动".Translate(), MessageBoxIcon.Info);
             //}
@@ -1070,7 +1079,7 @@ namespace VPet_Simulator.Windows
             switch (mw.Set["CGPT"][(gstr)"type"])
             {
                 //case "API":
-                //    new winCGPTSetting(mw).ShowDialog();
+                //    new winCGPTSetting(mf).ShowDialog();
                 //    break;
                 case "DIY":
                     if (mw.TalkBoxCurr != null)
@@ -1081,13 +1090,13 @@ namespace VPet_Simulator.Windows
                 case "LB":
                     //Task.Run(() =>
                     //{
-                    //    if (((TalkBox)mw.TalkBox).ChatGPT_Reset())
+                    //    if (((TalkBox)mf.TalkBox).ChatGPT_Reset())
                     //    {
-                    //        ((TalkBox)mw.TalkBox).btn_startup.Visibility = Visibility.Visible;
+                    //        ((TalkBox)mf.TalkBox).btn_startup.Visibility = Visibility.Visible;
                     //        MessageBoxX.Show("桌宠重置成功".Translate());
                     //    }
                     //});
-                    //((TalkSelect)mw.TalkBox).RelsTime
+                    //((TalkSelect)mf.TalkBox).RelsTime
                     break;
                 case "OFF":
                 default:
@@ -1109,7 +1118,7 @@ namespace VPet_Simulator.Windows
             }
             //else if (RBCGPTUseAPI.IsChecked == true)
             //{
-            //    mw.Set["CGPT"][(gstr)"type"] = "API";
+            //    mf.Set["CGPT"][(gstr)"type"] = "API";
             //}
             else
             {
@@ -1122,10 +1131,10 @@ namespace VPet_Simulator.Windows
                 //case "API":
                 //    BtnCGPTReSet.IsEnabled = true;
                 //    BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
-                //    if (mw.TalkBox != null)
-                //        mw.Main.ToolBar.MainGrid.Children.Remove(mw.TalkBox);
-                //    mw.TalkBox = new TalkBoxAPI(mw);
-                //    mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
+                //    if (mf.TalkBox != null)
+                //        mf.Main.ToolBar.MainGrid.Children.Remove(mf.TalkBox);
+                //    mf.TalkBox = new TalkBoxAPI(mf);
+                //    mf.Main.ToolBar.MainGrid.Children.Add(mf.TalkBox);
                 //    break;
                 case "DIY":
                     BtnCGPTReSet.IsEnabled = true;
@@ -1321,8 +1330,8 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Set.CalFunState = (GameSave.ModeType)combCalFunState.SelectedIndex;
-            mw.Main.NoFunctionMOD = (GameSave.ModeType)combCalFunState.SelectedIndex;
+            mw.Set.CalFunState = (IGameSave.ModeType)combCalFunState.SelectedIndex;
+            mw.Main.NoFunctionMOD = (IGameSave.ModeType)combCalFunState.SelectedIndex;
             mw.Main.EventTimer_Elapsed();
         }
 
@@ -1359,18 +1368,8 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            var petloader = mw.Pets.Find(x => x.Name == mw.Set.PetGraph);
-            petloader ??= mw.Pets[0];
-            bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
-            LocalizeCore.LoadCulture((string)LanguageBox.SelectedItem);
-            mw.Set.Language = LocalizeCore.CurrentCulture;
-            if (ischangename)
-            {
-                mw.Core.Save.Name = petloader.PetName.Translate();
-                TextBoxPetName.Text = mw.Core.Save.Name;
-                if (mw.IsSteamUser)
-                    SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
-            }
+            mw.Set.SetLanguage((string)LanguageBox.SelectedItem);
+            TextBoxPetName.Text = mw.Core.Save.Name;
         }
 
         private void MainTab_SelectionChanged(object sender, SelectionChangedEventArgs e)

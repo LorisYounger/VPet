@@ -1,13 +1,13 @@
-﻿using FastMember;
-using HKW.HKWUtils.Observable;
-using LinePutScript;
-using LinePutScript.Localization.WPF;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using FastMember;
+using HKW.HKWUtils.Observable;
+using LinePutScript;
+using LinePutScript.Localization.WPF;
 using VPet.Solution.Properties;
-using VPet_Simulator.Windows.Interface;
+using VPet_Simulator.Windows;
 
 namespace VPet.Solution.Models.SettingEditor;
 
@@ -97,7 +97,7 @@ public class SettingModel : ObservableClass<SettingModel>
     private readonly ReflectionOptions _saveReflectionOptions = new() { CheckValueEquals = true };
 
     public SettingModel()
-        : this(new("")) { }
+        : this(new(null, "Setting#VPET:|\n")) { }
 
     public SettingModel(Setting setting)
     {
@@ -131,7 +131,7 @@ public class SettingModel : ObservableClass<SettingModel>
         }
     }
 
-    private void Notify_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void Notify_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         IsChanged = true;
     }

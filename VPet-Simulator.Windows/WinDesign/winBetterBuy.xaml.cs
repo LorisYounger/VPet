@@ -1,5 +1,4 @@
-﻿using IWshRuntimeLibrary;
-using LinePutScript;
+﻿using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF;
 using Panuon.WPF.UI;
@@ -108,10 +107,10 @@ namespace VPet_Simulator.Windows
                         break;
                     case Food.FoodType.Star:
                         //List<Food> lf = new List<Food>();
-                        //foreach (var sub in mw.Set["betterbuy"].FindAll("star"))
+                        //foreach (var sub in mf.Set["betterbuy"].FindAll("star"))
                         //{
                         //    var str = sub.Info;
-                        //    var food = mw.Foods.FirstOrDefault(x => x.Name == str);
+                        //    var food = mf.Foods.FirstOrDefault(x => x.Name == str);
                         //    if (food != null)
                         //        lf.Add(food);
                         //}
@@ -217,7 +216,10 @@ namespace VPet_Simulator.Windows
             //eventArg.Source = sender;
             //PageDetail.RaiseEvent(eventArg);
         }
-        bool showeatanm = true;
+        /// <summary>
+        /// 是否显示吃东西动画
+        /// </summary>
+        public bool showeatanm = true;
 
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
@@ -246,16 +248,9 @@ namespace VPet_Simulator.Windows
 
                 mw.TakeItem(item);
             }
-            if (showeatanm)
-            {//显示动画
-                showeatanm = false;
-                mw.Main.Display(item.GetGraph(), item.ImageSource, () =>
-                {
-                    showeatanm = true;
-                    mw.Main.DisplayToNomal();
-                    mw.Main.EventTimer_Elapsed();
-                });
-            }
+
+            mw.DisplayFoodAnimation(item.GetGraph(), item.ImageSource);
+
             if (!_puswitch.IsChecked.Value)
             {
                 TryClose();
@@ -307,7 +302,7 @@ namespace VPet_Simulator.Windows
         public void TryClose()
         {
             IcCommodity.ItemsSource = null;
-            //mw.Topmost = mw.Set.TopMost;
+            //mf.Topmost = mf.Set.TopMost;
             Hide();
         }
         private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -414,7 +409,7 @@ namespace VPet_Simulator.Windows
 
         private void TbPage_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key ==  Key.Enter 
+            if (e.Key == Key.Enter
                 && int.TryParse(TbPage.Text?.Trim(), out int page))
             {
                 pagination.CurrentPage = Math.Max(0, Math.Min(pagination.MaxPage, page));

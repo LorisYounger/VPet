@@ -6,7 +6,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="https://opensource.panuon.com/wpf-ui" xmlns:local="clr-namespace:VPet_Simulator.Windows"
         mc:Ignorable="d" Height="550" Width="800" FontSize="14"
-        WindowStartupLocation="CenterScreen" Background="#E0F6FF" pu:WindowXCaption.Height="45"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource PrimaryLighter}" pu:WindowXCaption.Height="45"
         pu:WindowXCaption.Background="{DynamicResource DARKPrimary}" pu:WindowXCaption.Foreground="#FFFFFF"
         pu:WindowXCaption.Buttons="Close" Icon="/Res/BetterBuy.png"
         pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}" Closing="WindowX_Closing">
@@ -176,7 +177,7 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal"
-                                                                Width="{Binding ActualWidth, Converter={StaticResource {x:Static pu:ConverterKeys.DoubleDivideByConverter}},ConverterParameter=2, ElementName=StkContainer}">
+                                                            Width="{Binding ActualWidth, Converter={x:Static pu:Converters.DoubleDivideByConverter},ConverterParameter=2, ElementName=StkContainer}">
                                                         <TextBlock Foreground="{DynamicResource DARKPrimaryText}" FontSize="12" Width="37"
                                                                    Padding="0" VerticalAlignment="Center" Text="{Binding Key}" />
                                                         <TextBlock Text="："
@@ -205,7 +206,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Border x:Name="BdrImage" Margin="10,35,0,10" CornerRadius="5"
-                            Visibility="{Binding IsChecked,Converter={StaticResource {x:Static pu:ConverterKeys.TrueToCollapseConverter}}, ElementName=TbtnDetail}">
+                            Visibility="{Binding IsChecked,Converter={x:Static pu:Converters.TrueToCollapseConverter}, ElementName=TbtnDetail}">
                         <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
                     </Border>
                     <ToggleButton x:Name="TbtnStar" Grid.ColumnSpan="2" Margin="0,5,32,0" HorizontalAlignment="Right"

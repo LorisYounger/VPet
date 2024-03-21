@@ -82,23 +82,23 @@ namespace VPet_Simulator.Core
             if (Visibility == Visibility.Collapsed) return;
             TimeSpan ts = DateTime.Now - StartTime;
             TimeSpan tleft;
-            if (ts.TotalMinutes > nowWork.Time)
+            if (ts.TotalMinutes > m.NowWork.Time)
             {
                 //学完了,停止
                 //ts = TimeSpan.FromMinutes(MaxTime);
                 //tleft = TimeSpan.Zero;
                 //PBLeft.Value = MaxTime;
-                FinishWorkInfo fwi = new FinishWorkInfo(nowWork, GetCount);
+                FinishWorkInfo fwi = new FinishWorkInfo(m.NowWork, GetCount);
                 E_FinishWork?.Invoke(fwi);
-                if (nowWork.Type == Work.WorkType.Work)
+                if (m.NowWork.Type == Work.WorkType.Work)
                 {
-                    m.Core.Save.Money += GetCount * nowWork.FinishBonus;
+                    m.Core.Save.Money += GetCount * m.NowWork.FinishBonus;
                     Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟", fwi.count,
                         fwi.spendtime, fwi.work.NameTrans), true));
                 }
                 else
                 {
-                    m.Core.Save.Exp += GetCount * nowWork.FinishBonus;
+                    m.Core.Save.Exp += GetCount * m.NowWork.FinishBonus;
                     Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟", fwi.count,
                         fwi.spendtime, fwi.work.NameTrans), true));
                 }
@@ -106,7 +106,7 @@ namespace VPet_Simulator.Core
             }
             else
             {
-                tleft = TimeSpan.FromMinutes(nowWork.Time) - ts;
+                tleft = TimeSpan.FromMinutes(m.NowWork.Time) - ts;
                 PBLeft.Value = ts.TotalMinutes;
             }
             switch (DisplayType)
@@ -118,7 +118,7 @@ namespace VPet_Simulator.Core
                     ShowTimeSpan(tleft); break;
                 case 2:
                     tNumber.Text = GetCount.ToString("f0");
-                    if (nowWork.Type == Work.WorkType.Work)
+                    if (m.NowWork.Type == Work.WorkType.Work)
                         tNumberUnit.Text = LocalizeCore.Translate("钱");
                     else
                         tNumberUnit.Text = "EXP";
@@ -154,18 +154,18 @@ namespace VPet_Simulator.Core
             else
             {
                 DisplayBorder.Visibility = Visibility.Visible;
-                btnStop.Content = LocalizeCore.Translate("停止") + nowWork.NameTrans;
+                btnStop.Content = LocalizeCore.Translate("停止") + m.NowWork.NameTrans;
                 switch (DisplayType)
                 {
                     default:
                     case 0:
-                        tNow.Text = LocalizeCore.Translate("当前已{0}", nowWork.NameTrans);
+                        tNow.Text = LocalizeCore.Translate("当前已{0}", m.NowWork.NameTrans);
                         break;
                     case 1:
-                        tNow.Text = LocalizeCore.Translate("剩余{0}时间", nowWork.NameTrans);
+                        tNow.Text = LocalizeCore.Translate("剩余{0}时间", m.NowWork.NameTrans);
                         break;
                     case 2:
-                        if (nowWork.Type == Work.WorkType.Work)
+                        if (m.NowWork.Type == Work.WorkType.Work)
                             tNow.Text = LocalizeCore.Translate("累计金钱收益");
                         else
                             tNow.Text = LocalizeCore.Translate("获得经验值");
@@ -187,7 +187,7 @@ namespace VPet_Simulator.Core
             //    return;
             Visibility = Visibility.Visible;
             m.State = Main.WorkingState.Work;
-            m.StateID = m.Core.Graph.GraphConfig.Works.IndexOf(work);
+            m.NowWork = work;
             StartTime = DateTime.Now;
             GetCount = 0;
 
@@ -195,20 +195,22 @@ namespace VPet_Simulator.Core
             work.Display(m);
 
             PBLeft.Maximum = work.Time;
-            nowWork = work;
             DisplayUI();
         }
-        private Work nowWork;
+        /// <summary>
+        /// 停止工作
+        /// </summary>
+        /// <param name="then"></param>
         public void Stop(Action @then = null)
         {
-            if (m.State == Main.WorkingState.Work && nowWork != null)
+            if (m.State == Main.WorkingState.Work && m.NowWork != null)
             {
-                FinishWorkInfo fwi = new FinishWorkInfo(nowWork, GetCount);
+                FinishWorkInfo fwi = new FinishWorkInfo(m.NowWork, GetCount);
                 E_FinishWork?.Invoke(fwi);
             }
             Visibility = Visibility.Collapsed;
             m.State = Main.WorkingState.Nomal;
-            m.Display(nowWork.Graph, AnimatType.C_End, then ?? m.DisplayNomal);
+            m.Display(m.NowWork.Graph, AnimatType.C_End, then ?? m.DisplayNomal);
         }
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +8,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Core
@@ -41,6 +44,9 @@ namespace VPet_Simulator.Core
         /// 说话
         /// </summary>
         /// <param name="text">说话内容</param>
+        /// <param name="graphname">图像名</param>
+        /// <param name="desc">描述</param>
+        /// <param name="force">强制显示图像</param>
         public void Say(string text, string graphname = null, bool force = false, string desc = null)
         {
             Task.Run(() =>
@@ -51,9 +57,8 @@ namespace VPet_Simulator.Core
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            if (!string.IsNullOrWhiteSpace(desc))
-                                MsgBar.MessageBoxContent.Children.Add(new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = System.Windows.HorizontalAlignment.Right });
-                            MsgBar.Show(Core.Save.Name, text, graphname);
+                            MsgBar.Show(Core.Save.Name, text, graphname, (string.IsNullOrWhiteSpace(desc) ? null :
+                                new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = HorizontalAlignment.Right }));
                         });
                         DisplayBLoopingForce(graphname);
                     });
@@ -61,9 +66,38 @@ namespace VPet_Simulator.Core
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        if (!string.IsNullOrWhiteSpace(desc))
-                            MsgBar.MessageBoxContent.Children.Add(new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = System.Windows.HorizontalAlignment.Right });
-                        MsgBar.Show(Core.Save.Name, text);
+                        MsgBar.Show(Core.Save.Name, text, msgcontent: (string.IsNullOrWhiteSpace(desc) ? null :
+                            new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = HorizontalAlignment.Right }));
+                    });
+                }
+            });
+        }
+        /// <summary>
+        /// 说话
+        /// </summary>
+        /// <param name="text">说话内容</param>
+        /// <param name="graphname">图像名</param>
+        /// <param name="msgcontent">消息内容</param>
+        /// <param name="force">强制显示图像</param>
+        public void Say(string text, UIElement msgcontent, string graphname = null, bool force = false)
+        {
+            Task.Run(() =>
+            {
+                OnSay?.Invoke(text);
+                if (force || !string.IsNullOrWhiteSpace(graphname) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
+                    Display(graphname, AnimatType.A_Start, () =>
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            MsgBar.Show(Core.Save.Name, text, graphname, msgcontent);
+                        });
+                        DisplayBLoopingForce(graphname);
+                    });
+                else
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        MsgBar.Show(Core.Save.Name, text, msgcontent: msgcontent);
                     });
                 }
             });
@@ -122,6 +156,7 @@ namespace VPet_Simulator.Core
                 labeldisplaytimer.Start();
             });
         }
+        public Work NowWork;
         /// <summary>
         /// 根据消耗计算相关数据
         /// </summary>
@@ -134,9 +169,11 @@ namespace VPet_Simulator.Core
             if (freedrop < 1)
                 freedrop = 0.25 * TimePass;
             else
-                freedrop = Math.Sqrt(freedrop) * TimePass / 2;
+                freedrop = Math.Min(Math.Sqrt(freedrop) * TimePass / 2, Core.Save.FeelingMax / 400);
             switch (State)
             {
+                case WorkingState.Empty:
+                    break;
                 case WorkingState.Sleep:
                     //睡觉不消耗
                     Core.Save.StrengthChange(TimePass * 2);
@@ -155,12 +192,13 @@ namespace VPet_Simulator.Core
                     LastInteractionTime = DateTime.Now;
                     break;
                 case WorkingState.Work:
-                    var nowwork = nowWork;
-                    var needfood = TimePass * nowwork.StrengthFood;
-                    var needdrink = TimePass * nowwork.StrengthDrink;
+                    if (NowWork == null)
+                        break;
+                    var needfood = TimePass * NowWork.StrengthFood;
+                    var needdrink = TimePass * NowWork.StrengthDrink;
                     double efficiency = 0;
                     int addhealth = -2;
-                    if (Core.Save.StrengthFood <= 25)
+                    if (Core.Save.StrengthFood <= Core.Save.StrengthMax * 0.25)
                     {//低状态低效率
                         Core.Save.StrengthChangeFood(-needfood / 2);
                         efficiency += 0.25;
@@ -178,7 +216,7 @@ namespace VPet_Simulator.Core
                         if (Core.Save.StrengthFood >= 75)
                             addhealth += Function.Rnd.Next(1, 3);
                     }
-                    if (Core.Save.StrengthDrink <= 25)
+                    if (Core.Save.StrengthDrink <= Core.Save.StrengthMax * 0.25)
                     {//低状态低效率
                         Core.Save.StrengthChangeDrink(-needdrink / 2);
                         efficiency += 0.25;
@@ -198,19 +236,21 @@ namespace VPet_Simulator.Core
                     }
                     if (addhealth > 0)
                         Core.Save.Health += addhealth * TimePass;
-                    var addmoney = Math.Max(0, TimePass * (nowwork.MoneyBase * (efficiency) + Math.Pow(Core.Save.Level, 0.75) * nowwork.MoneyLevel * (efficiency - 0.5) * 2));
-                    if (nowwork.Type == GraphHelper.Work.WorkType.Work)
+                    var addmoney = Math.Max(0, TimePass * NowWork.MoneyBase * (2 * efficiency - 0.5));
+                    if (NowWork.Type == Work.WorkType.Work)
                         Core.Save.Money += addmoney;
                     else
                         Core.Save.Exp += addmoney;
                     WorkTimer.GetCount += addmoney;
-                    if (nowwork.Type == GraphHelper.Work.WorkType.Play)
+                    if (NowWork.Type == Work.WorkType.Play)
                     {
                         LastInteractionTime = DateTime.Now;
-                        Core.Save.FeelingChange(nowwork.Feeling * TimePass);
+                        Core.Save.FeelingChange(-NowWork.Feeling * TimePass);
                     }
                     else
-                        Core.Save.FeelingChange(-freedrop * nowwork.Feeling);
+                        Core.Save.FeelingChange(-freedrop * NowWork.Feeling);
+                    if (Core.Save.Mode == IGameSave.ModeType.Ill)//生病时候停止工作
+                        WorkTimer.Stop();
                     break;
                 default://默认
                     //饮食等乱七八糟的消耗
@@ -285,12 +325,12 @@ namespace VPet_Simulator.Core
                 Core.Save.Mode = newmod;
             }
             //看情况播放停止工作动画
-            if (Core.Save.Mode == GameSave.ModeType.Ill && State == WorkingState.Work)
+            if (Core.Save.Mode == IGameSave.ModeType.Ill && State == WorkingState.Work)
             {
                 WorkTimer.Stop();
             }
         }
-        private void playSwitchAnimat(GameSave.ModeType before, GameSave.ModeType after)
+        private void playSwitchAnimat(IGameSave.ModeType before, IGameSave.ModeType after)
         {
             if (!(DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Switch_Down || DisplayType.Type == GraphType.Switch_Up))
             {
@@ -304,12 +344,12 @@ namespace VPet_Simulator.Core
             else if (before < after)
             {
                 Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Down), AnimatType.Single, before),
-                    () => playSwitchAnimat((GameSave.ModeType)(((int)before) + 1), after));
+                    () => playSwitchAnimat((IGameSave.ModeType)(((int)before) + 1), after));
             }
             else
             {
                 Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Up), AnimatType.Single, before),
-                    () => playSwitchAnimat((GameSave.ModeType)(((int)before) - 1), after));
+                    () => playSwitchAnimat((IGameSave.ModeType)(((int)before) - 1), after));
             }
         }
         /// <summary>
@@ -443,14 +483,7 @@ namespace VPet_Simulator.Core
         /// 当前状态
         /// </summary>
         public WorkingState State = WorkingState.Nomal;
-        /// <summary>
-        /// 当前状态辅助ID
-        /// </summary>
-        public int StateID = 0;
-        /// <summary>
-        /// 当前工作
-        /// </summary>
-        public GraphHelper.Work nowWork => Core.Graph.GraphConfig.Works[StateID];
+
         /// <summary>
         /// 当前正在的状态
         /// </summary>
@@ -476,6 +509,62 @@ namespace VPet_Simulator.Core
             /// 其他状态,给开发者留个空位计算
             /// </summary>
             Empty,
+        }
+        /// <summary>
+        /// 获得工作列表分类
+        /// </summary>
+        /// <param name="ws">所有工作</param>
+        /// <param name="ss">所有学习</param>
+        /// <param name="ps">所有娱乐</param>
+        public void WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps)
+        {
+            ws = new List<Work>();
+            ss = new List<Work>();
+            ps = new List<Work>();
+            foreach (var w in Core.Graph.GraphConfig.Works)
+            {
+                switch (w.Type)
+                {
+                    case Work.WorkType.Study:
+                        ss.Add(w);
+                        break;
+                    case Work.WorkType.Work:
+                        ws.Add(w);
+                        break;
+                    case Work.WorkType.Play:
+                        ps.Add(w);
+                        break;
+                }
+            }
+        }
+        /// <summary>
+        /// 工作检测
+        /// </summary>
+        public Func<Work, bool> WorkCheck;
+        /// <summary>
+        /// 开始工作
+        /// </summary>
+        /// <param name="work">工作内容</param>
+        public bool StartWork(Work work)
+        {
+            if (!Core.Controller.EnableFunction || Core.Save.Mode != IGameSave.ModeType.Ill)
+                if (!Core.Controller.EnableFunction || Core.Save.Level >= work.LevelLimit)
+                    if (State == Main.WorkingState.Work && NowWork.Name == work.Name)
+                        WorkTimer.Stop();
+                    else
+                    {
+                        if (WorkCheck != null && !WorkCheck.Invoke(work))
+                            return false;
+                        WorkTimer.Start(work);
+                        return true;
+                    }
+                else
+                    MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/{2}\n无法进行{1}", Core.Save.Level.ToString()
+                        , work.NameTrans, work.LevelLimit), LocalizeCore.Translate("{0}取消", work.NameTrans));
+            else
+                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行{1}", Core.Save.Name,
+                  work.NameTrans), LocalizeCore.Translate("{0}取消", work.NameTrans));
+            return false;
         }
     }
 }

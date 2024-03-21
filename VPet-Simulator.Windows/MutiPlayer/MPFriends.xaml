@@ -1,0 +1,44 @@
+﻿<pu:WindowX x:Class="VPet_Simulator.Windows.MPFriends" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Background="{x:Null}" WindowStyle="None"
+        SizeToContent="Height" xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" ShowInTaskbar="False"
+        ResizeMode="NoResize" Title="MWFriends" Width="250" pu:WindowXCaption.Height="0" Closed="WindowX_Closed">
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" />
+    </WindowChrome.WindowChrome>
+    <Grid x:Name="MGHost" x:FieldModifier="public">
+        <Grid x:Name="HideForDesign" Visibility="Collapsed" d:Visibility="Visible">
+            <Border x:Name="MPTalkBox" Background="{DynamicResource PrimaryLighter}"
+                    BorderBrush="{DynamicResource Primary}" BorderThickness="5" VerticalAlignment="Top"
+                    Margin="5,50,5,5" CornerRadius="5" Padding="5,5,5,3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="cbTalk" Style="{DynamicResource StandardComboBoxStyle}" Height="Auto"
+                            FontSize="30" VerticalAlignment="Center" Grid.Column="0"
+                            SelectionChanged="cbTalk_SelectionChanged" />
+                    <TextBox x:Name="tbTalk" Style="{DynamicResource StandardTextBoxStyle}" Height="Auto" FontSize="30"
+                            AcceptsReturn="True" TextWrapping="WrapWithOverflow" PreviewKeyDown="tbTalk_KeyDown"
+                            Grid.Column="1" ToolTip="{ll:Str 选择说话对象}" />
+                    <Button pu:ButtonHelper.CornerRadius="4" Content="{ll:Str '发送'}" BorderThickness="2"
+                            Background="{DynamicResource SecondaryLight}" Grid.Column="3"
+                            BorderBrush="{DynamicResource DARKPrimaryDarker}" FontSize="30"
+                            ToolTip="{ll:Str '按 Ctrl+Enter 发送'}" Click="Send_Click" />
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid x:Name="MGrid" Width="250" Height="Auto" x:FieldModifier="public">
+            <Label x:Name="LoadingText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Background="{DynamicResource DARKPrimaryLight}" Foreground="{DynamicResource DARKPrimaryText}"
+                    Content="Loading" />
+            <Border x:Name="DisplayGrid" />
+        </Grid>
+    </Grid>
+</pu:WindowX>

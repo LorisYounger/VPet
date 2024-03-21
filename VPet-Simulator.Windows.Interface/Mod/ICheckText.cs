@@ -13,7 +13,7 @@ namespace VPet_Simulator.Windows.Interface
     /// <summary>
     /// 所有可以检查的文本格式
     /// </summary>
-    public class ICheckText
+    public abstract class ICheckText : IText
     {
         [Line(ignoreCase: true)]
         public int mode { get; set; } = 7;
@@ -119,33 +119,9 @@ namespace VPet_Simulator.Windows.Interface
         [Line(IgnoreCase = true)] public double StrengthMax { get; set; } = int.MaxValue;
 
         /// <summary>
-        /// 说话的内容
-        /// </summary>
-        [Line(IgnoreCase = true)] public string Text { get; set; }
-
-        private string transText = null;
-        /// <summary>
-        /// 说话的内容 (翻译)
-        /// </summary>
-        public string TranslateText
-        {
-            get
-            {
-                if (transText == null)
-                {
-                    transText = LocalizeCore.Translate(Text);
-                }
-                return transText;
-            }
-            set
-            {
-                transText = value;
-            }
-        }
-        /// <summary>
         /// 检查部分状态是否满足需求
         /// </summary>之所以不是全部的,是因为挨个取效率太差了
-        public virtual bool CheckState(GameSave save)
+        public virtual bool CheckState(IGameSave save)
         {
             if (save.Likability < LikeMin || save.Likability > LikeMax)
                 return false;

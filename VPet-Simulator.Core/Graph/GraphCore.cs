@@ -96,7 +96,7 @@ namespace VPet_Simulator.Core
         /// <param name="GraphName">动画名字</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
-        public IGraph FindGraph(string GraphName, AnimatType animat, GameSave.ModeType mode)
+        public IGraph FindGraph(string GraphName, AnimatType animat, IGameSave.ModeType mode)
         {
             if (GraphName == null)
                 return null;
@@ -109,7 +109,7 @@ namespace VPet_Simulator.Core
                         return list[0];
                     return list[Function.Rnd.Next(list.Count)];
                 }
-                if (mode == GameSave.ModeType.Ill)
+                if (mode == IGameSave.ModeType.Ill)
                 {
                     return null;
                 }
@@ -117,7 +117,7 @@ namespace VPet_Simulator.Core
                 if (i < 3)
                 {
                     //向下兼容的动画
-                    list = gl.FindAll(x => x.GraphInfo.ModeType == (GameSave.ModeType)i);
+                    list = gl.FindAll(x => x.GraphInfo.ModeType == (IGameSave.ModeType)i);
                     if (list.Count > 0)
                         return list[Function.Rnd.Next(list.Count)];
                 }
@@ -125,12 +125,12 @@ namespace VPet_Simulator.Core
                 if (i >= 1)
                 {
                     //向上兼容的动画
-                    list = gl.FindAll(x => x.GraphInfo.ModeType == (GameSave.ModeType)i);
+                    list = gl.FindAll(x => x.GraphInfo.ModeType == (IGameSave.ModeType)i);
                     if (list.Count > 0)
                         return list[Function.Rnd.Next(list.Count)];
                 }
                 //如果实在找不到,就走随机数(无生病)
-                list = gl.FindAll(x => x.GraphInfo.ModeType != GameSave.ModeType.Ill);
+                list = gl.FindAll(x => x.GraphInfo.ModeType != IGameSave.ModeType.Ill);
                 if (list.Count > 0)
                     return list[Function.Rnd.Next(list.Count)];
             }
@@ -141,7 +141,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
-        public List<IGraph> FindGraphs(string GraphName, AnimatType animat, GameSave.ModeType mode)
+        public List<IGraph> FindGraphs(string GraphName, AnimatType animat, IGameSave.ModeType mode)
         {
             if (GraphName == null)
                 return null;
@@ -156,7 +156,7 @@ namespace VPet_Simulator.Core
                 if (i < 3)
                 {
                     //向下兼容的动画
-                    list = gl.FindAll(x => x.GraphInfo.ModeType == (GameSave.ModeType)i);
+                    list = gl.FindAll(x => x.GraphInfo.ModeType == (IGameSave.ModeType)i);
                     if (list.Count > 0)
                         return list;
                 }
@@ -164,7 +164,7 @@ namespace VPet_Simulator.Core
                 if (i >= 0)
                 {
                     //向上兼容的动画
-                    list = gl.FindAll(x => x.GraphInfo.ModeType == (GameSave.ModeType)i);
+                    list = gl.FindAll(x => x.GraphInfo.ModeType == (IGameSave.ModeType)i);
                     if (list.Count > 0)
                         return list;
                 }

@@ -12,7 +12,7 @@ namespace VPet_Simulator.Windows.Interface
     /// <summary>
     /// 低状态自动说的话
     /// </summary>
-    public class LowText
+    public class LowText : IText
     {
         /// <summary>
         /// 状态
@@ -79,26 +79,6 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 好感度要求
         /// </summary>
-        [Line(IgnoreCase = true)] public LikeType Like { get; set; } = LikeType.N;
-        /// <summary>
-        /// 说话的内容
-        /// </summary>
-        [Line(IgnoreCase = true)] public string Text { get; set; }
-
-        private string transText = null;
-        /// <summary>
-        /// 说话的内容 (翻译)
-        /// </summary>
-        public string TranslateText
-        {
-            get
-            {
-                if (transText == null)
-                {
-                    transText = LocalizeCore.Translate(Text);
-                }
-                return transText;
-            }
-        }
+        [Line(IgnoreCase = true)] public LikeType Like { get; set; } = LikeType.N;       
     }
 }

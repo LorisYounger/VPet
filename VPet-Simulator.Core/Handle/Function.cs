@@ -7,6 +7,18 @@ namespace VPet_Simulator.Core
 {
     public static partial class Function
     {
+        /// <summary>
+        /// HEX值转颜色
+        /// </summary>
+        /// <param name="HEX">HEX值</param>
+        /// <returns>颜色</returns>
+        public static Color HEXToColor(string HEX) => (Color)ColorConverter.ConvertFromString(HEX);
+        /// <summary>
+        /// 颜色转HEX值
+        /// </summary>
+        /// <param name="color">颜色</param>
+        /// <returns>HEX值</returns>
+        public static string ColorToHEX(Color color) => "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
         public static Random Rnd = new Random();
         /// <summary>
         /// 获取资源笔刷
@@ -15,7 +27,7 @@ namespace VPet_Simulator.Core
         /// <returns></returns>
         public static Brush ResourcesBrush(BrushType name)
         {
-            return (Brush)Application.Current.Resources.MergedDictionaries[0].MergedDictionaries[0][name.ToString()];
+            return (Brush)Application.Current.Resources[name.ToString()];
         }
         public enum BrushType
         {

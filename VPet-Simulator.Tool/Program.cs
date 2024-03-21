@@ -5,8 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Xml.Linq;
-using VPet_Simulator.Core;
-using static VPet_Simulator.Core.GraphCore;
 
 namespace VPet_Simulator.Tool
 {
