@@ -79,4 +79,8 @@ public interface IMPFriend
     /// <param name="graphName">夹层动画名</param>
     /// <param name="imageSource">被夹在中间的图片</param>
     void DisplayFoodAnimation(string graphName, ImageSource imageSource);
+    /// <summary>
+    /// 是否不允许交互
+    /// </summary>
+    bool NOTouch { get; }
 }

@@ -133,6 +133,7 @@ public partial class winMutiPlayer : Window, IMPWindows
             lb.SetMemberData("save", mw.GameSavesData.GameSave.ToLine().ToString());
             lb.SetMemberData("onmod", mw.Set.FindLine("onmod")?.ToString() ?? "onmod");
             lb.SetMemberData("petgraph", mw.Set.PetGraph);
+            lb.SetMemberData("notouch", mw.Set.MPNOTouch.ToString());
 
             SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
             SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
@@ -542,5 +543,17 @@ public partial class winMutiPlayer : Window, IMPWindows
            mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
            mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
            mw.Main.DisplayCEndtoNomal(graphname))));
+    }
+
+    private void swAllowTouch_Checked(object sender, RoutedEventArgs e)
+    {
+        lb.SetMemberData("notouch", "true");
+        mw.Set.MPNOTouch = false;
+    }
+
+    private void swAllowTouch_Unchecked(object sender, RoutedEventArgs e)
+    {
+        lb.SetMemberData("notouch", "false");
+        mw.Set.MPNOTouch = false;
     }
 }

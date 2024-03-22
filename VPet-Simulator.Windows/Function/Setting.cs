@@ -492,7 +492,14 @@ namespace VPet_Simulator.Windows
                 line.SetInt("h", value.Height);
             }
         }
-
+        /// <summary>
+        /// 消息框外置
+        /// </summary>
+        public bool MPNOTouch
+        {
+            get => this["mutiplay"].GetBool("notouch");
+            set => this["mutiplay"].SetBool("notouch", value);
+        }
         public ILine BetterBuyData => FindorAddLine("betterbuy");
 
         public ILine GameData => FindorAddLine("gamedata");

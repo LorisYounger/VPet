@@ -8,7 +8,8 @@
         Title="{ll:Str 访客表}" MinHeight="400" Width="400" Closed="Window_Closed" FontSize="16" SizeToContent="Height"
         MaxHeight="800" ResizeMode="CanMinimize" Closing="Window_Closing">
     <Grid>
-        <pu:ContentControlX Margin="20" Width="80" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top" CornerRadius="40">
+        <pu:ContentControlX Margin="20" Width="80" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top"
+                CornerRadius="20">
             <Image x:Name="HostHead" Source="/Res/TopLogo2019.PNG" />
         </pu:ContentControlX>
 
@@ -19,16 +20,16 @@
             <Run Text="{ll:Str 主持人}" />: <Run x:Name="hostName" Text="XXX" /><LineBreak />
             <Run Text="{ll:Str 访客表ID}" />:
         </TextBlock>
-        <TextBox x:Name="lbLid" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="200,70,0,0"
+        <TextBox x:Name="lbLid" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="210,70,0,0"
                 BorderThickness="0" IsReadOnly="True" Text="1145141919" Background="{DynamicResource DARKPrimaryTrans4}"
                 Foreground="{DynamicResource DARKPrimaryDarker}" Padding="0" />
-        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Margin="15,115,15,15">
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Margin="15,135,15,15">
             <TabItem Header="{ll:Str 访客列表}">
                 <StackPanel x:Name="MUUCList" Background="{DynamicResource SecondaryLighter}" />
             </TabItem>
             <TabItem Header="{ll:Str 消息日志}">
                 <TextBox x:Name="tbLog" Margin="0" BorderThickness="0" Background="{DynamicResource DARKPrimaryTrans4}"
-                        Foreground="{DynamicResource DARKPrimaryDarker}" IsReadOnly="True"
+                        Foreground="{DynamicResource DARKPrimaryDarker}" IsReadOnly="True" TextWrapping="WrapWithOverflow"
                         VerticalScrollBarVisibility="Visible" />
             </TabItem>
 
@@ -38,7 +39,13 @@
                 Foreground="{DynamicResource DARKPrimaryDarker}" CheckedBackground="{DynamicResource Primary}"
                 CheckedBorderBrush="{DynamicResource Primary}" CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
                 Content="{ll:Str 允许好友加入}" ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
-                ToggleSize="14" IsChecked="True" Checked="swAllowJoin_Checked"
-                Unchecked="swAllowJoin_Unchecked" IsEnabled="False"/>
+                ToggleSize="14" IsChecked="True" Checked="swAllowJoin_Checked" Unchecked="swAllowJoin_Unchecked"
+                IsEnabled="False" />
+        <pu:Switch x:Name="swAllowTouch" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,110,20,0"
+                Background="Transparent" BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="16" BoxWidth="35"
+                Foreground="{DynamicResource DARKPrimaryDarker}" CheckedBackground="{DynamicResource Primary}"
+                CheckedBorderBrush="{DynamicResource Primary}" CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                Content="{ll:Str 允许好友交互}" ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
+                ToggleSize="14" IsChecked="True" Checked="swAllowTouch_Checked" Unchecked="swAllowTouch_Unchecked" />
     </Grid>
 </Window>

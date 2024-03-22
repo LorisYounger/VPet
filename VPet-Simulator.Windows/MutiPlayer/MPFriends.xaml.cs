@@ -28,6 +28,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using ToolBar = VPet_Simulator.Core.ToolBar;
 using Microsoft.VisualBasic.Logging;
+using System.Windows.Threading;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -52,6 +53,8 @@ public partial class MPFriends : WindowX, IMPFriend
             return true;
         return OnMod.Find(ModName.ToLower()) != null;
     }
+    public bool NOTouch { get; set; } = false;
+
 
     public MPFriends(winMutiPlayer wmp, MainWindow mw, Lobby lb, Friend friend)
     {
@@ -178,13 +181,30 @@ public partial class MPFriends : WindowX, IMPFriend
         if (lobby.Id == lb.Id && friend.Id == this.friend.Id)
         {
             string tmp = lb.GetMemberData(friend, "save");
-            if (!string.IsNullOrEmpty(tmp))
+            Dispatcher.Invoke(() =>
             {
-                Core.Save = GameSave_VPet.Load(new Line(tmp));
-                Main.ToolBar.M_TimeUIHandle(Main);
-                Main.ToolBar.tfun.Visibility = Visibility.Collapsed;
-            }
+                if (!string.IsNullOrEmpty(tmp))
+                {
+                    Core.Save = GameSave_VPet.Load(new Line(tmp));
+                    Main.ToolBar.M_TimeUIHandle(Main);
+                    Main.ToolBar.tfun.Visibility = Visibility.Collapsed;
+                }
+                if (lb.GetMemberData(friend, "onmod") == "true")
+                {
+                    NoTouchTrue();
+                }
+                else
+                {
+                    NOTouch = false;
+                }
+            });
         }
+    }
+    private void NoTouchTrue()
+    {
+        NOTouch = true;
+        Main.ToolBar.MenuInteract.IsEnabled = false;
+
     }
 
     private void Main_Event_TouchHead()
@@ -294,12 +314,29 @@ public partial class MPFriends : WindowX, IMPFriend
             Main.ToolBar = new Core.ToolBar(Main);
             Main.ToolBar.Visibility = Visibility.Collapsed;
             Main.UIGrid.Children.Add(Main.ToolBar);
-            Main.Load_2_TouchEvent();
+            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, () => { DisplayTouchHead(); return true; }));
+            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchBodyLocate, Core.Graph.GraphConfig.TouchBodySize, () => { DisplayTouchBody(); return true; }));
+            for (int i = 0; i < 4; i++)
+            {
+                IGameSave.ModeType m = (IGameSave.ModeType)i;
+                Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate[i], Core.Graph.GraphConfig.TouchRaisedSize[i],
+                    () =>
+                    {
+                        if (Core.Save.Mode == m)
+                        {
+                            Main.DisplayRaised();
+                            return true;
+                        }
+                        else
+                            return false;
+
+                    }, true));
+            }
             Task.Run(Main.Load_24_WaitAndStart);
 
             Main.ToolBar.MenuInteract.Items.Clear();
-            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "摸头".Translate(), Main.DisplayTouchHead);
-            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "摸身体".Translate(), Main.DisplayTouchBody);
+            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "摸头".Translate(), DisplayTouchHead);
+            Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "摸身体".Translate(), DisplayTouchBody);
             Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "捏脸".Translate(), () => DisplayPinch());
 
             Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出访客表".Translate(), wmp.Close);
@@ -391,11 +428,23 @@ public partial class MPFriends : WindowX, IMPFriend
 
     public new bool Loaded = false;
 
+    public void DisplayTouchHead()
+    {
+        if (NOTouch) return;
+        Main.DisplayTouchHead();
+    }
+    public void DisplayTouchBody()
+    {
+        if (NOTouch) return;
+        Main.DisplayTouchBody();
+    }
+
     /// <summary>
     /// 显示捏脸情况
     /// </summary>
     public bool DisplayPinch()
     {
+        if (NOTouch) return false;
         if (Core.Graph.FindGraphs("pinch", AnimatType.A_Start, Core.Save.Mode) == null)
         {
             return false;
@@ -520,7 +569,7 @@ public partial class MPFriends : WindowX, IMPFriend
     /// </summary>
     public void ActiveInteract(string byname, Interact interact)
     {
-        if (!Loaded)
+        if (!Loaded || NOTouch)
         {
             return;
         }

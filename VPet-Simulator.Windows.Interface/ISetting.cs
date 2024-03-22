@@ -147,7 +147,7 @@ namespace VPet_Simulator.Windows.Interface
         /// 获取或设置消息框是否外置
         /// </summary>
         bool MessageBarOutside { get; set; }
-               
+
         /// <summary>
         /// 获取当前是否记录游戏退出位置
         /// </summary>
@@ -201,6 +201,10 @@ namespace VPet_Simulator.Windows.Interface
         /// 游戏数据
         /// </summary>
         ILine GameData { get; }
+        /// <summary>
+        /// 联机允许交互
+        /// </summary>
+        bool MPNOTouch { get; set; }
     }
 
 }
