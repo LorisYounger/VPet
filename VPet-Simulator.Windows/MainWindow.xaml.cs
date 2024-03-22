@@ -378,14 +378,14 @@ namespace VPet_Simulator.Windows
             Exit();
         }
         private void Exit()
-        {
-            Task.Run(() =>
-            {
-                Thread.Sleep(10000);//等待10秒不退出强退
-                Environment.Exit(0);
-            });
+        {           
             if (App.MainWindows.Count <= 1)
             {
+                Task.Run(() =>
+                {
+                    Thread.Sleep(10000);//等待10秒不退出强退
+                    Environment.Exit(0);
+                });
                 try
                 {
                     if (Core != null && Core.Graph != null)
