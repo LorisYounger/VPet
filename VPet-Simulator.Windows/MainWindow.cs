@@ -851,6 +851,7 @@ namespace VPet_Simulator.Windows
             }
             if (tmp.Data[(gbol)"round"])
             {//根据游玩时间补偿数据溢出
+                Dispatcher.Invoke(() => MessageBoxX.Show("您以前遭遇过数据溢出, 已根据游戏时长自动添加进当前数值".Translate(), "数据溢出恢复".Translate()));
                 var totalhour = (int)(tmp.Statistics[(gint)"stat_total_time"] / 3600);//总计游玩时间/小时
                 if (totalhour < 500)
                 {
@@ -859,9 +860,12 @@ namespace VPet_Simulator.Windows
                 else
                 {
                     double lm = Math.Sqrt(totalhour / 500);
-                    tmp.GameSave.LevelMax = (int)lm;
+                    tmp.GameSave.LevelMax += (int)lm;
                     tmp.GameSave.Exp += (totalhour % 500 + (lm - (int)lm) * 500) * 200;
+
                 }
+                tmp.GameSave.LikabilityMax += totalhour / 10;
+                tmp.Data[(gbol)"round"] = false;
             }
             GameSavesData = tmp;
             Core.Save = tmp.GameSave;
