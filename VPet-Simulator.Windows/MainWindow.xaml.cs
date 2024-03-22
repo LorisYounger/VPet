@@ -414,6 +414,7 @@ namespace VPet_Simulator.Windows
                     winSetting?.Close();
                     winBetterBuy?.Close();
                     winWorkMenu?.Close();
+                    winMutiPlayer?.Close();
                     if (IsSteamUser)
                         SteamClient.Shutdown();//关掉和Steam的连线
                     if (notifyIcon != null)

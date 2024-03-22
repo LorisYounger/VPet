@@ -1,0 +1,52 @@
+可加入#Joinable:|
+访客表#Guest List:|
+创建#Create:|
+已经有加入了一个访客表,无法再创建更多#A Guest List has already been join, no more can be created.:|
+加入#Add:|
+加入访客表#Join Guest List:|
+请输入访客表ID#Please enter a Guest List ID.:|
+收到来自{0}的访客邀请,是否加入?#Received a Guest List invitation from {0}, do you want to join?:|
+{0}在摸{1}的头#{0} is touching {1}'s head.:|
+{0}花费${3}给{1}买了{2}#{0} bought {2} for {1} at a cost of ${3}.:|
+{0}给{1}买了{2}#{0} bought {2} for {1}.:|
+摸头#Touch head:|
+摸身体#Touch body:|
+捏脸#Pinch face:|
+退出访客表#Exit Guest List:|
+私聊#Private Chat:|
+公聊#Public Chat:|
+大家#Everyone:|
+{0}的{1}#{0}'s {1}:|
+{0}在捏{1}的脸#{0} is pinching {1}'s face.:|
+{0} 悄悄地对你说: {1}#{0} Whispering to you, {1}:|
+{0} 对你说: {1}#{0} Says to you: {1}:|
+{0} 对大家说: {1}#{0} To all of you, say: {1}:|
+和{0}悄悄说#Whisper to {0}:|
+和{0}说#Say it with {0}:|
+给更好的{0}买#Buy for Better {0}:|
+{0}花费${3}\n给{1}买了{2}#{0} spends ${3}\n to buy {1} for {2}:|
+加入/创建访客表失败，请检查网络连接或重启游戏#Failed to join/create Guest List, please check your internet connection or restart the game!:|
+{0}的访客表#The Guest List for {0}:|
+访客表已被房主{0}关闭#Guest List has been closed by Host {0}:|
+确定要关闭访客表吗?#Sure you want to close the Guest List?:|
+默认存档无法删除,请使用重新开始功能重新开始游戏#Default archive cannot be deleted, please restart the game using the restart function.:|
+当前多开已经加载,请先关闭改多开后重试#Please close the multicomputer and try again.:|
+删除前确认#Confirm before deleting:|
+是否删除当前选择({0})的多开存档?#Do you want to delete the currently selected ({0}) multi save?:|
+开始工作#Start Working:|
+开始学习#Start Learning:|
+开始玩耍#Start Playing:|
+复制全文#Copy full text:|
+关闭#Close:|
+theme#Theme:|
+的访客表#'s Guest List:|
+主持人#Host:|
+访客表ID#Guest List ID:|
+访客列表#Visitor List:|
+消息日志#Message Log:|
+允许好友加入#Allow Friends to Join:|
+选择说话对象#Select who to talk to:|
+访客#Visitors:|
+来自#From:|
+重置位置#Reset Location:|
+送客#Sending Guests:|
