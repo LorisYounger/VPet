@@ -849,6 +849,20 @@ namespace VPet_Simulator.Windows
                 tmp.GameSave.Money = 100000;
                 Dispatcher.Invoke(() => MessageBoxX.Show("检测到金钱超过 9,223,372,036 导致算数溢出\n已经自动回正".Translate(), "数据溢出警告".Translate()));
             }
+            if (tmp.Data[(gbol)"round"])
+            {//根据游玩时间补偿数据溢出
+                var totalhour = (int)(tmp.Statistics[(gint)"stat_total_time"] / 3600);//总计游玩时间/小时
+                if (totalhour < 500)
+                {
+                    tmp.GameSave.Exp += totalhour * 200;
+                }
+                else
+                {
+                    double lm = Math.Sqrt(totalhour / 500);
+                    tmp.GameSave.LevelMax = (int)lm;
+                    tmp.GameSave.Exp += (totalhour % 500 + (lm - (int)lm) * 500) * 200;
+                }
+            }
             GameSavesData = tmp;
             Core.Save = tmp.GameSave;
             HashCheck = HashCheck;
@@ -1389,7 +1403,7 @@ namespace VPet_Simulator.Windows
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏MOD".Translate()));
 
             //旧版本设置兼容
-            if(Set.PetGraph == "默认虚拟桌宠")
+            if (Set.PetGraph == "默认虚拟桌宠")
                 Set.PetGraph = "vup";
 
             //当前桌宠动画
