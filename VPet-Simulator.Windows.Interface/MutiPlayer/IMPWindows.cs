@@ -44,7 +44,7 @@ public interface IMPWindows
     /// </summary>
     /// <param name="friendid">好友id</param>
     /// <param name="msg">消息内容(数据包)</param>
-    void SendMessage(ulong friendid, MPMessage msg);
+    bool SendMessage(ulong friendid, MPMessage msg);
 
     /// <summary>
     /// 给所有人发送消息

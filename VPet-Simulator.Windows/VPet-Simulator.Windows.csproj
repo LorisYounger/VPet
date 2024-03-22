@@ -63,9 +63,13 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Remove="GameAssets\**" />
 		<Compile Remove="mod\**" />
+		<EmbeddedResource Remove="GameAssets\**" />
 		<EmbeddedResource Remove="mod\**" />
+		<None Remove="GameAssets\**" />
 		<None Remove="mod\**" />
+		<Page Remove="GameAssets\**" />
 		<Page Remove="mod\**" />
 	</ItemGroup>
 	<ItemGroup>

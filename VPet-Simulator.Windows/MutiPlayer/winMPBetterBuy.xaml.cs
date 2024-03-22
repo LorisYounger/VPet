@@ -202,9 +202,9 @@ namespace VPet_Simulator.Windows
             mf.DisplayFoodAnimation(item.GetGraph(), item.ImageSource);
 
             if (EnableFunction)
-                mf.Main.LabelDisplayShow("{0}花费${3}\n给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName, item.Price), 10000);
+                mf.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName, item.Price), 6000);
             else
-                mf.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName), 10000);
+                mf.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName), 6000);
 
             var msg = new MPMessage()
             {

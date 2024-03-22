@@ -190,7 +190,7 @@ public partial class MPFriends : WindowX, IMPFriend
                     Main.ToolBar.M_TimeUIHandle(Main);
                     Main.ToolBar.tfun.Visibility = Visibility.Collapsed;
                 }
-                if (lb.GetMemberData(friend, "onmod") == "true")
+                if (lb.GetMemberData(friend, "notouch") == "true")
                 {
                     NoTouchTrue();
                 }
@@ -214,14 +214,14 @@ public partial class MPFriends : WindowX, IMPFriend
 
     private void Main_Event_TouchHead()
     {
-        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name), 5000);
+        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name), 3000);
         var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
         msg.SetContent(Interact.TouchHead);
         wmp.SendMessageALL(msg);
     }
     private void Main_Event_TouchBody()
     {
-        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name), 5000);
+        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name), 3000);
         var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
         msg.SetContent(Interact.TouchBody);
         wmp.SendMessageALL(msg);
@@ -371,7 +371,7 @@ public partial class MPFriends : WindowX, IMPFriend
             HideForDesign.Children.Remove(MPTalkBox);
             Main.ToolBar.MainGrid.Children.Add(MPTalkBox);
 
-            if (lb.GetMemberData(friend, "onmod") == "true")
+            if (lb.GetMemberData(friend, "notouch") == "true")
             {
                 NoTouchTrue();
             }
@@ -441,6 +441,8 @@ public partial class MPFriends : WindowX, IMPFriend
             Loaded = true;
         }));
     }
+
+
     public winMPBetterBuy winMPBetterBuy;
 
     public void ShowBetterBuy(Food.FoodType foodType)
@@ -478,7 +480,7 @@ public partial class MPFriends : WindowX, IMPFriend
             return false;
         }
         Main.CountNomal = 0;
-        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save.Name), 5000);
+        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save.Name), 3000);
         if (Main.DisplayType.Name == "pinch")
         {
             if (Main.DisplayType.Animat == AnimatType.A_Start)
@@ -501,7 +503,7 @@ public partial class MPFriends : WindowX, IMPFriend
     }
     private void DisplayPinch_loop()
     {
-        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save.Name), 5000);
+        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save.Name), 3000);
         var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
         msg.SetContent(Interact.TouchPinch);
         wmp.SendMessageALL(msg);
@@ -607,7 +609,7 @@ public partial class MPFriends : WindowX, IMPFriend
             {
                 case Interact.TouchHead:
                 case Interact.TouchBody:
-                    Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 5000);
+                    Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 3000);
                     break;
                 case Interact.TouchPinch:
                     Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save.Name));
@@ -619,15 +621,15 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             case Interact.TouchHead:
                 DisplayNOCALTouchHead();
-                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 5000);
+                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 3000);
                 break;
             case Interact.TouchBody:
                 DisplayNOCALTouchBody();
-                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 5000);
+                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 3000);
                 break;
             case Interact.TouchPinch:
                 DisplayNOCALTouchPinch();
-                Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save.Name), 5000);
+                Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save.Name), 3000);
                 break;
         }
     }
@@ -643,7 +645,7 @@ public partial class MPFriends : WindowX, IMPFriend
             Main.Display(GraphType.Shutdown, AnimatType.Single, () => Dispatcher.Invoke(Close));
             Task.Run(() =>
             {
-                Thread.Sleep(5000);
+                Thread.Sleep(3000);
                 if (Loaded)
                     Dispatcher.Invoke(Close);
             });
@@ -811,8 +813,8 @@ public partial class MPFriends : WindowX, IMPFriend
 
     public void ReSetLocal()
     {
-        Main.CleanState();
-        Main.DisplayToNomal();
+        Main?.CleanState();
+        Main?.DisplayToNomal();
         Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
         Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
     }
