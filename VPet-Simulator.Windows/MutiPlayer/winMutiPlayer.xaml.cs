@@ -547,6 +547,7 @@ public partial class winMutiPlayer : Window, IMPWindows
 
     private void swAllowTouch_Checked(object sender, RoutedEventArgs e)
     {
+        if (mw == null) return;
         lb.SetMemberData("notouch", "true");
         mw.Set.MPNOTouch = false;
     }

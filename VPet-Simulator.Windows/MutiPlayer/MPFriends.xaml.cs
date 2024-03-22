@@ -29,6 +29,7 @@ using System.Windows.Media;
 using ToolBar = VPet_Simulator.Core.ToolBar;
 using Microsoft.VisualBasic.Logging;
 using System.Windows.Threading;
+using static VPet_Simulator.Core.ToolBar;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -166,6 +167,14 @@ public partial class MPFriends : WindowX, IMPFriend
                 tmp = lb.GetMemberData(friend, "onmod");
             }
             SetPetGraph = tmp;
+            if (lb.GetMemberData(friend, "onmod") == "true")
+            {
+                NoTouchTrue();
+            }
+            else
+            {
+                NoTouchFalse();
+            }
 
             await GameLoad(Path);
 
@@ -195,7 +204,7 @@ public partial class MPFriends : WindowX, IMPFriend
                 }
                 else
                 {
-                    NOTouch = false;
+                    NoTouchFalse();
                 }
             });
         }
@@ -204,7 +213,11 @@ public partial class MPFriends : WindowX, IMPFriend
     {
         NOTouch = true;
         Main.ToolBar.MenuInteract.IsEnabled = false;
-
+    }
+    private void NoTouchFalse()
+    {
+        NOTouch = false;
+        Main.ToolBar.MenuInteract.IsEnabled = true;
     }
 
     private void Main_Event_TouchHead()
@@ -340,6 +353,19 @@ public partial class MPFriends : WindowX, IMPFriend
             Main.ToolBar.AddMenuButton(ToolBar.MenuType.Interact, "捏脸".Translate(), () => DisplayPinch());
 
             Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出访客表".Translate(), wmp.Close);
+            var menuItem = new MenuItem()
+            {
+                Header = "置于顶层".Translate(),
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                IsCheckable = true,
+                IsChecked = Topmost
+            };
+            menuItem.Click += delegate
+            {
+                Topmost = !Topmost;
+            };
+            Main.ToolBar.MenuSetting.Items.Add(menuItem);
+
             Main.ToolBar.tfun.Visibility = Visibility.Collapsed;
 
             Main.EventTimer.AutoReset = false;
@@ -385,6 +411,7 @@ public partial class MPFriends : WindowX, IMPFriend
                     new Point(pin[(gdbe)"px"], pin[(gdbe)"py"]), new Size(pin[(gdbe)"sw"], pin[(gdbe)"sh"])
                     , DisplayPinch, true));
             }
+            Title = "{0}的{1}".Translate(friend.Name, Core.Save.Name);
             LoadingText.Content = "{0}的{1}".Translate(friend.Name, Core.Save.Name);
             LoadingText.Background = Function.ResourcesBrush(Function.BrushType.DARKPrimaryTransA);
             LoadingText.VerticalAlignment = VerticalAlignment.Top;
