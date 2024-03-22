@@ -192,7 +192,8 @@ namespace VPet_Simulator.Windows
             //看是什么模式
             bool EnableFunction = mf.mw.Set.EnableFunction && mf.mw.HashCheck && !item.IsOverLoad()
                 && item.Price >= 1 && item.Price <= 1000 && item.Health >= 0 && item.Exp >= 0 &&
-                item.Likability >= 0 && item.Price + 1000 < mf.mw.GameSavesData.GameSave.Money;
+                item.Likability >= 0 && item.Price + 1000 < mf.mw.GameSavesData.GameSave.Money &&
+                item.Strength >= 0 && item.StrengthDrink >= 0 && item.StrengthFood >= 0 && item.Feeling >= 0;
             //不吃负面/太贵/太便宜
 
             if (EnableFunction)//扣钱

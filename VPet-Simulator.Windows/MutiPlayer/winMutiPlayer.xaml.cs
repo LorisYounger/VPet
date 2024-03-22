@@ -387,7 +387,8 @@ public partial class winMutiPlayer : Window, IMPWindows
                                         mw.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price), 10000);
                                         Log("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price));
                                         //对于要修改数据的物品一定要再次检查,避免联机开挂毁存档
-                                        if (item.Price >= 10 && item.Price <= 1000 && item.Health >= 0 && item.Exp >= 0 && item.Likability >= 0 && giveprice < 1000)
+                                        if (item.Price >= 10 && item.Price <= 1000 && item.Health >= 0 && item.Exp >= 0 && item.Likability >= 0 && giveprice < 1000
+                                           && item.Strength >= 0 && item.StrengthDrink >= 0 && item.StrengthFood >= 0 && item.Feeling >= 0)
                                         {//单次联机收礼物上限1000
                                             giveprice += item.Price;
                                             mw.TakeItem(feed.Item);
