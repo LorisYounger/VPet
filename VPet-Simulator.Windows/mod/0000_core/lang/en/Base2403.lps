@@ -41,15 +41,15 @@
 theme#Theme:|
 的访客表#'s Guest List:|
 主持人#Host:|
-访客表ID#Guest List ID:|
+访客表ID#List ID:|
 访客列表#Visitor List:|
 消息日志#Message Log:|
 允许好友加入#Allow Friends to Join:|
 选择说话对象#Select who to talk to:|
 访客#Visitors:|
 来自#From:|
-重置位置#Reset Location:|
-送客#Sending Guests:|
+重置位置#ResetLoc:|
+送客#SendGuest:|
 已成功连接到访客表#Successfully connected to the Guest List:|
 好友{0}已退出访客表#Friend {0} has exited the Guest List:|
 好友{0}已加入访客表#Friend {0} has joined the Guest List:|
