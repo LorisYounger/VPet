@@ -120,7 +120,7 @@ namespace VPet_Simulator.Core
             labeldisplayhash = text.GetHashCode();
             Dispatcher.Invoke(() =>
             {
-                LabelDisplay.Content = text;
+                LabelDisplayText.Text = text;
                 LabelDisplay.Opacity = 1;
                 LabelDisplay.Visibility = Visibility.Visible;
                 labeldisplaycount = time / 10;
@@ -149,7 +149,7 @@ namespace VPet_Simulator.Core
             }
             Dispatcher.Invoke(() =>
             {
-                LabelDisplay.Content = string.Format(text, labeldisplaychangenum1, labeldisplaychangenum2);
+                LabelDisplayText.Text = string.Format(text, labeldisplaychangenum1, labeldisplaychangenum2);
                 LabelDisplay.Opacity = 1;
                 LabelDisplay.Visibility = Visibility.Visible;
                 labeldisplaycount = time / 10;

@@ -484,7 +484,7 @@ namespace VPet_Simulator.Core
                     {//连Nomal都没有, 证明是未完成的动画, 修改设置+退出游戏
                         Dispatcher.Invoke(() =>
                         {
-                            LabelDisplay.Content = "未找到可播放动画, 已停止运行桌宠模块".Translate();
+                            LabelDisplayText.Text = "未找到可播放动画, 已停止运行桌宠模块".Translate();
                             LabelDisplay.Visibility = Visibility.Visible;
                             IsEnabled = false;
                         });

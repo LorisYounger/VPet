@@ -9,14 +9,18 @@
                 MouseMove="MainGrid_MouseWave">
             <MediaElement x:Name="VoicePlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" x:FieldModifier="public" />
             <Grid x:Name="UIGrid_Back" x:FieldModifier="public" VerticalAlignment="Top" Width="500" />
-            <Border x:Name="PetGrid" Height="500" VerticalAlignment="Top" Width="500" x:FieldModifier="public"/>
-            <Border x:Name="PetGrid2" Height="500" VerticalAlignment="Top" Width="500" x:FieldModifier="public" Visibility="Collapsed"/>
+            <Border x:Name="PetGrid" Height="500" VerticalAlignment="Top" Width="500" x:FieldModifier="public" />
+            <Border x:Name="PetGrid2" Height="500" VerticalAlignment="Top" Width="500" x:FieldModifier="public"
+                    Visibility="Collapsed" />
             <Grid x:Name="UIGrid" x:FieldModifier="public" VerticalAlignment="Top" Width="500" />
-            <Label x:Name="LabelDisplay" HorizontalAlignment="Center" VerticalAlignment="Center" Content="内容显示如下"
-                    FontSize="30" Background="{DynamicResource DARKPrimaryTransA}"
+            <Label x:Name="LabelDisplay" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"
+                    Background="{DynamicResource DARKPrimaryTransA}" d:Visibility="Visible"
                     Foreground="{DynamicResource DARKPrimaryText}" pu:LabelHelper.CornerRadius="15"
                     pu:LabelHelper.ShadowColor="{DynamicResource ShadowColor}" pu:ShadowHelper.Opacity="0.8"
-                    x:FieldModifier="public" Margin="0,300,0,0" Padding="15,7" Visibility="Collapsed" />
+                    x:FieldModifier="public" Margin="0,300,0,0" Padding="15,7" Visibility="Collapsed">
+                <TextBlock x:Name="LabelDisplayText" Text="Hello World!" x:FieldModifier="public"
+                        TextWrapping="WrapWithOverflow" />
+            </Label>
         </Grid>
     </Viewbox>
 </pu:ContentControlX>
