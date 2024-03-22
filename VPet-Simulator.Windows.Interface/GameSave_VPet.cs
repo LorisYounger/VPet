@@ -72,7 +72,7 @@ public class GameSave_VPet : IGameSave
     /// </summary>
     public double Strength { get => strength; set => strength = Math.Min(StrengthMax, Math.Max(0, value)); }
 
-    public double StrengthMax => 100 + (int)Math.Sqrt(Level) * 4;
+    public double StrengthMax => 100 + (int)(Math.Pow(Level * (1 + LevelMax), 0.75) * 4);
 
     [Line(Type = LPSConvert.ConvertType.ToFloat, IgnoreCase = true)]
     protected double strength { get; set; }
@@ -296,7 +296,7 @@ public class GameSave_VPet : IGameSave
     [Line]
     public double LikabilityMax { get; set; } = 100;
 
-    public double FeelingMax => 100 + (int)Math.Sqrt(Level) * 2;
+    public double FeelingMax => 100 + (int)(Math.Pow(Level * (1 + LevelMax), 0.75) * 2);
     /// <summary>
     /// 经验值加成 TODO
     /// </summary>
