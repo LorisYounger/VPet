@@ -27,6 +27,7 @@ using static VPet_Simulator.Windows.Interface.MPMessage;
 using System.Windows.Input;
 using System.Windows.Media;
 using ToolBar = VPet_Simulator.Core.ToolBar;
+using Microsoft.VisualBasic.Logging;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -239,10 +240,14 @@ public partial class MPFriends : WindowX, IMPFriend
         if (feed.EnableFunction)
         {
             mw.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price));
+            wmp.Log("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price));
             mw.TakeItem(feed.Item);
         }
         else
+        {
             mw.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName));
+            wmp.Log("{0}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName));
+        }
     }
     /// <summary>
     /// 加载游戏
@@ -424,7 +429,7 @@ public partial class MPFriends : WindowX, IMPFriend
         msg.SetContent(Interact.TouchPinch);
         wmp.SendMessageALL(msg);
         if (Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
-        {           
+        {
             Main.Display("pinch", AnimatType.B_Loop, DisplayPinch_loop);
         }
         else
@@ -623,12 +628,15 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             case Chat.Type.Private:
                 Main.Say("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
+                wmp.Log("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
                 break;
             case Chat.Type.Internal:
                 Main.Say("{0} 对你说: {1}".Translate(msg.SendName, msg.Content));
+                wmp.Log("{0} 对你说: {1}".Translate(msg.SendName, msg.Content));
                 break;
             case Chat.Type.Public:
                 Main.Say("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
+                wmp.Log("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
                 break;
         }
     }

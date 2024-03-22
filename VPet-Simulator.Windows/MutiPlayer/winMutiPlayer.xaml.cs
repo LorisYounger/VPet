@@ -1,6 +1,7 @@
 ﻿using LinePutScript;
 using LinePutScript.Converter;
 using LinePutScript.Localization.WPF;
+using Microsoft.VisualBasic.Logging;
 using Panuon.WPF.UI;
 using Steamworks;
 using Steamworks.Data;
@@ -136,7 +137,7 @@ public partial class winMutiPlayer : Window, IMPWindows
             SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
             SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
             SteamMatchmaking.OnLobbyDataChanged += SteamMatchmaking_OnLobbyDataChanged;
-            
+
             Steamworks.Data.Image? img = await lb.Owner.GetMediumAvatarAsync();
 
             Dispatcher.Invoke(() =>
@@ -194,6 +195,7 @@ public partial class winMutiPlayer : Window, IMPWindows
                     });
             }
             mw.MutiPlayerStart(this);
+            Log("已成功连接到访客表".Translate());
             LoopP2PPacket();
         });
     }
@@ -249,6 +251,7 @@ public partial class winMutiPlayer : Window, IMPWindows
                 MPFriends.Remove(mpuc.mpf);
                 mpuc.mpf.Quit();
             }
+            Log("好友{0}已退出访客表".Translate(friend.Name));
         }
     }
     GraphInfo lastgraph = new GraphInfo() { Type = GraphType.Common };
@@ -307,6 +310,7 @@ public partial class winMutiPlayer : Window, IMPWindows
     {
         if (lobby.Id == lb.Id)
         {
+            Log("好友{0}已加入访客表".Translate(friend.Name));
             var mpf = new MPFriends(this, mw, lb, friend);
             MPFriends.Add(mpf);
             mpf.Show();
@@ -381,6 +385,7 @@ public partial class winMutiPlayer : Window, IMPWindows
                                     if (feed.EnableFunction)
                                     {
                                         mw.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price), 10000);
+                                        Log("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price));
                                         //对于要修改数据的物品一定要再次检查,避免联机开挂毁存档
                                         if (item.Price >= 10 && item.Price <= 1000 && item.Health >= 0 && item.Exp >= 0 && item.Likability >= 0 && giveprice < 1000)
                                         {//单次联机收礼物上限1000
@@ -389,14 +394,16 @@ public partial class winMutiPlayer : Window, IMPWindows
                                         }
                                     }
                                     else
+                                    {
                                         mw.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName), 10000);
+                                        Log("{0}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName));
+                                    }
                                 }
                                 else
                                 {
                                     To = MPFriends.Find(x => x.friend.Id == MSG.To);
                                     To.Feed(byname, feed);
                                 }
-
                                 break;
                         }
                     }
