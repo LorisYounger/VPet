@@ -5,7 +5,7 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d"
         xmlns:pu="https://opensource.panuon.com/wpf-ui"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-        Title="{ll:Str 访客表}" MinHeight="400" Width="400" Closed="Window_Closed" FontSize="16" SizeToContent="Height"
+        Title="{ll:Str 访客表}" MinHeight="400" Width="440" Closed="Window_Closed" FontSize="16" SizeToContent="Height"
         MaxHeight="800" ResizeMode="CanMinimize" Closing="Window_Closing">
     <Grid>
         <pu:ContentControlX Margin="20" Width="80" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top"

@@ -4,7 +4,7 @@
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Windows"
-        mc:Ignorable="d" Margin="5" Width="338" Height="80" Background="{DynamicResource SecondaryLight}"
+        mc:Ignorable="d" Margin="5" Width="350" Height="80" Background="{DynamicResource SecondaryLight}"
         BorderBrush="{DynamicResource Secondary}">
     <Grid>
         <pu:ContentControlX HorizontalAlignment="Left" Margin="10" CornerRadius="27">

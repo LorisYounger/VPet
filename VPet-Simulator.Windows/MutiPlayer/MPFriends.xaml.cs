@@ -167,14 +167,6 @@ public partial class MPFriends : WindowX, IMPFriend
                 tmp = lb.GetMemberData(friend, "onmod");
             }
             SetPetGraph = tmp;
-            if (lb.GetMemberData(friend, "onmod") == "true")
-            {
-                NoTouchTrue();
-            }
-            else
-            {
-                NoTouchFalse();
-            }
 
             await GameLoad(Path);
 
@@ -378,6 +370,15 @@ public partial class MPFriends : WindowX, IMPFriend
 
             HideForDesign.Children.Remove(MPTalkBox);
             Main.ToolBar.MainGrid.Children.Add(MPTalkBox);
+
+            if (lb.GetMemberData(friend, "onmod") == "true")
+            {
+                NoTouchTrue();
+            }
+            else
+            {
+                NoTouchFalse();
+            }
 
             cbTalk.Items.Add("私聊".Translate());
             cbTalk.Items.Add("公聊".Translate());
