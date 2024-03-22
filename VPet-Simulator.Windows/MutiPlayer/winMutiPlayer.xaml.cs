@@ -338,11 +338,11 @@ public partial class winMutiPlayer : Window, IMPWindows
                         {
                             case (int)MSGType.DispayGraph:
                                 var To = MPFriends.Find(x => x.friend.Id == MSG.To);
-                                To.DisplayGraph(MSG.GetContent<GraphInfo>());
+                                To?.DisplayGraph(MSG.GetContent<GraphInfo>());
                                 break;
                             case (int)MSGType.Chat:
                                 To = MPFriends.Find(x => x.friend.Id == MSG.To);
-                                To.DisplayMessage(MSG.GetContent<Chat>());
+                                To?.DisplayMessage(MSG.GetContent<Chat>());
                                 break;
                             case (int)MSGType.Interact:
                                 var byname = lb.Members.First(x => x.Id == From).Name;
@@ -372,7 +372,7 @@ public partial class winMutiPlayer : Window, IMPWindows
                                 else
                                 {
                                     To = MPFriends.Find(x => x.friend.Id == MSG.To);
-                                    To.ActiveInteract(byname, interact);
+                                    To?.ActiveInteract(byname, interact);
                                 }
                                 break;
                             case (int)MSGType.Feed:
@@ -404,7 +404,7 @@ public partial class winMutiPlayer : Window, IMPWindows
                                 else
                                 {
                                     To = MPFriends.Find(x => x.friend.Id == MSG.To);
-                                    To.Feed(byname, feed);
+                                    To?.Feed(byname, feed);
                                 }
                                 break;
                         }
@@ -464,11 +464,10 @@ public partial class winMutiPlayer : Window, IMPWindows
     }
 
     /// <summary>
-    /// 显示本体摸头情况 (会无损加心情)
+    /// 显示本体摸头情况
     /// </summary>
     public void DisplayNOCALTouchHead()
     {
-        mw.Main.Core.Save.FeelingChange(1);
         if (mw.Main.DisplayType.Type == GraphType.Touch_Head)
         {
             if (mw.Main.DisplayType.Animat == AnimatType.A_Start)
@@ -491,11 +490,10 @@ public partial class winMutiPlayer : Window, IMPWindows
            mw.Main.DisplayCEndtoNomal(graphname))));
     }
     /// <summary>
-    /// 显示摸身体情况 (会无损加心情)
+    /// 显示摸身体情况
     /// </summary>
     public void DisplayNOCALTouchBody()
     {
-        mw.Main.Core.Save.FeelingChange(1);
         if (mw.Main.DisplayType.Type == GraphType.Touch_Body)
         {
             if (mw.Main.DisplayType.Animat == AnimatType.A_Start)
@@ -518,11 +516,10 @@ public partial class winMutiPlayer : Window, IMPWindows
          mw.Main.DisplayCEndtoNomal(graphname))));
     }
     /// <summary>
-    /// 显示本体捏脸情况 (会无损加心情)
+    /// 显示本体捏脸情况
     /// </summary>
     public void DisplayNOCALTouchPinch()
     {
-        mw.Main.Core.Save.FeelingChange(1);
         if (mw.Main.DisplayType.Name == "pinch")
         {
             if (mw.Main.DisplayType.Animat == AnimatType.A_Start)
