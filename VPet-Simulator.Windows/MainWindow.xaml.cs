@@ -414,7 +414,13 @@ namespace VPet_Simulator.Windows
                     winSetting?.Close();
                     winBetterBuy?.Close();
                     winWorkMenu?.Close();
-                    winMutiPlayer?.Close();
+                    if (winMutiPlayer != null)
+                    {
+                        winMutiPlayer.lb.Leave();
+                        winMutiPlayer.lb = default;
+                        winMutiPlayer.Close();
+                    }
+
                     if (IsSteamUser)
                         SteamClient.Shutdown();//关掉和Steam的连线
                     if (notifyIcon != null)
@@ -457,6 +463,12 @@ namespace VPet_Simulator.Windows
                 winSetting?.Close();
                 winBetterBuy?.Close();
                 winWorkMenu?.Close();
+                if (winMutiPlayer != null)
+                {
+                    winMutiPlayer.lb.Leave();
+                    winMutiPlayer.lb = default;
+                    winMutiPlayer.Close();
+                }
                 App.MainWindows.Remove(this);
                 if (notifyIcon != null)
                 {
