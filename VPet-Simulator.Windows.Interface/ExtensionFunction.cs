@@ -59,6 +59,8 @@ namespace VPet_Simulator.Windows.Interface
                 work.Feeling *= -1;//旧版本代码兼容
             if (work.Time < 10)
                 work.Time = 10;
+            if (work.FinishBonus > 4)
+                work.FinishBonus = 4;
 
             var spend = work.Spend();
             var get = work.Get();
@@ -81,6 +83,17 @@ namespace VPet_Simulator.Windows.Interface
             // 设置梯度下降的步长和最大迭代次数
             double stepSize = 0.01;
             int maxIterations = 100;
+
+            if (work.LevelLimit < 0)
+                work.LevelLimit = 0;
+            if (work.FinishBonus < 0)
+                work.FinishBonus = 0;
+            if (work.Type == Work.WorkType.Play && work.Feeling > 0)
+                work.Feeling *= -1;//旧版本代码兼容
+            if (work.Time < 10)
+                work.Time = 10;
+            if (work.FinishBonus > 4)
+                work.FinishBonus = 4;
 
             for (int i = 0; i < maxIterations; i++)
             {
