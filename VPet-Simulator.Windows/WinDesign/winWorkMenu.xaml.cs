@@ -26,6 +26,7 @@ public partial class winWorkMenu : Window
     List<Work> ws;
     List<Work> ss;
     List<Work> ps;
+    List<Work> starList;
     public void ShowImageDefault(Work.WorkType type) => WorkViewImage.Source = mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_t_" + type.ToString(), "work_" + type.ToString());
     public winWorkMenu(MainWindow mw, Work.WorkType type)
     {
@@ -53,6 +54,7 @@ public partial class winWorkMenu : Window
             {
                 lbPlay.Items.Add(v.NameTrans);
             }
+
 
         tbc.SelectedIndex = (int)type;
         ShowImageDefault(type);
@@ -82,7 +84,7 @@ public partial class winWorkMenu : Window
             {
                 wDouble.IsEnabled = true;
                 wDouble.Maximum = max;
-                wDouble.Value = mw.Set.GameData.GetInt("workmenu_" + nowwork.Name, 1);
+                wDouble.Value = mw.Set["workmenu"].GetInt("workmenu_" + nowwork.Name, 1);
             }
         }
         if (wDouble.Value == 1)
@@ -127,7 +129,6 @@ public partial class winWorkMenu : Window
 
     private void tbc_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ShowImageDefault((Work.WorkType)tbc.SelectedIndex);
         switch (tbc.SelectedIndex)
         {
             case 0:
@@ -139,13 +140,17 @@ public partial class winWorkMenu : Window
             case 2:
                 btnStart.Content = "开始玩耍".Translate();
                 break;
+            case 3:
+                btnStart.Content = "开始工作".Translate();
+                return;
         }
+        ShowImageDefault((Work.WorkType)tbc.SelectedIndex);
     }
 
     private void wDouble_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (!AllowChange) return;
-        mw.Set.GameData.SetInt("workmenu_" + nowwork.Name, (int)wDouble.Value);
+        mw.Set["workmenu"].SetInt("double_" + nowwork.Name, (int)wDouble.Value);
         ShowWork(nowwork.Double((int)wDouble.Value));
     }
 
@@ -182,5 +187,10 @@ public partial class winWorkMenu : Window
             if (mw.Main.StartWork(nowworkdisplay))
                 Close();
         }
+    }
+
+    private void lbStart_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+
     }
 }

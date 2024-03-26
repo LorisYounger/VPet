@@ -34,6 +34,7 @@ using Image = System.Windows.Controls.Image;
 using System.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
+using MessageBox = System.Windows.MessageBox;
 
 namespace VPet_Simulator.Windows
 {
@@ -1693,7 +1694,7 @@ namespace VPet_Simulator.Windows
                   }
                   catch (Exception e)
                   {
-                      new winReport(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString()).Show();
+                      Task.Run(() => MessageBox.Show(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString()));
                   }
                   Foods.ForEach(item => item.LoadImageSource(this));
                   Main.TimeHandle += Handle_Music;

@@ -192,15 +192,14 @@ namespace VPet_Simulator.Windows.Interface
         /// 获取或设置在任务切换器(Alt+Tab)中是否隐藏窗口，重启后生效
         /// </summary>
         bool HideFromTaskControl { get; set; }
+       
+        /// <summary>
+        /// 读写自定义游戏设置(给mod准备的接口)
+        /// </summary>
+        /// <param name="lineName">游戏设置</param>
+        /// <returns>如果找到相同名称的第一个Line,则为该Line; 否则为新建的相同名称Line</returns>
+        ILine this[string lineName] { get; set; }
 
-        /// <summary>
-        /// 更好买数据
-        /// </summary>
-        ILine BetterBuyData { get; }
-        /// <summary>
-        /// 游戏数据
-        /// </summary>
-        ILine GameData { get; }
         /// <summary>
         /// 联机允许交互
         /// </summary>

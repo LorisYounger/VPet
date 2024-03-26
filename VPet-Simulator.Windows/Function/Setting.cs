@@ -500,9 +500,26 @@ namespace VPet_Simulator.Windows
             get => this["mutiplay"].GetBool("notouch");
             set => this["mutiplay"].SetBool("notouch", value);
         }
-        public ILine BetterBuyData => FindorAddLine("betterbuy");
-
-        public ILine GameData => FindorAddLine("gamedata");
+        /// <summary>
+        /// 读写自定义游戏设置(给mod准备的接口)
+        /// </summary>
+        /// <param name="lineName">游戏设置</param>
+        /// <returns>如果找到相同名称的第一个Line,则为该Line; 否则为新建的相同名称Line</returns>
+        ILine ISetting.this[string lineName]
+        {
+            get
+            {
+                if (lineName == "onmod")
+                    return new Line("onmod", "true");
+                return FindorAddLine(lineName);
+            }
+            set
+            {
+                if (value.Name == "onmod")
+                    return;
+                AddorReplaceLine(value);
+            }
+        }
 
         public void SetZoomLevel(double level) => mw.SetZoomLevel(level);
 

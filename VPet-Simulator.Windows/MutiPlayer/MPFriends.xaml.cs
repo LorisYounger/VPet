@@ -390,7 +390,7 @@ public partial class MPFriends : WindowX, IMPFriend
             Foods.ForEach(item =>
             {
                 item.ImageSource = ImageSources.FindImage("food_" + (item.Image ?? item.Name), "food");
-                item.Star = mw.Set.BetterBuyData["star"].GetInfos().Contains(Name);
+                item.Star = mw.Set["betterbuy"]["star"].GetInfos().Contains(Name);
             });
 
             Main.PlayVoiceVolume = mw.Set.VoiceVolume;

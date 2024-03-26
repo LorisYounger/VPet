@@ -49,9 +49,11 @@
                     </Button.ContentTemplate>
                 </Button>
                 <TextBlock x:Name="till" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#FF4C4C"
-                        Text="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}" TextWrapping="Wrap" x:FieldModifier="public" />
+                        Text="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}" ToolTip="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}" TextWrapping="Wrap"
+                        x:FieldModifier="public" />
                 <TextBlock x:Name="tfun" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#4caf50"
-                        Text="{ll:Str 已关闭数据计算\, 可放心挂机}" TextWrapping="Wrap" x:FieldModifier="public" />
+                        Text="{ll:Str 已关闭数据计算\, 可放心挂机}" ToolTip="{ll:Str 已关闭数据计算\, 可放心挂机}" TextWrapping="Wrap"
+                        x:FieldModifier="public" />
                 <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 金钱}" />
                 <TextBlock x:Name="tMoney" Grid.Row="2" Grid.Column="2" Foreground="{DynamicResource DARKPrimary}"
                         Text="$100,000" />
@@ -120,13 +122,13 @@
             <MenuItem x:Name="MenuPanel" Padding="0" Header="{ll:Str 面板}" MouseEnter="MenuPanel_MouseEnter"
                     MouseLeave="MenuPanel_MouseLeave" />
             <MenuItem x:Name="MenuInteract" Width="99" Padding="0" Header="{ll:Str 互动}" x:FieldModifier="public">
-                <MenuItem Click="Sleep_Click" Header="{ll:Str 睡觉}" />                
+                <MenuItem Click="Sleep_Click" Header="{ll:Str 睡觉}" />
                 <MenuItem x:Name="MenuStudy" Header="{ll:Str 学习}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public"/>
+                        pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public" />
                 <MenuItem x:Name="MenuPlay" Header="{ll:Str 玩耍}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public"/>
+                        pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public" />
                 <MenuItem x:Name="MenuWork" Header="{ll:Str 工作}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public"/>
+                        pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public" />
                 <!--<MenuItem Header="说话"  IsEnabled="False" />-->
             </MenuItem>
             <MenuItem x:Name="MenuDIY" Padding="0" x:FieldModifier="public" Header="{ll:Str 自定}" />
