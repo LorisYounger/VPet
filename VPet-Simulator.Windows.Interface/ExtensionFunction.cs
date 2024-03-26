@@ -59,8 +59,8 @@ namespace VPet_Simulator.Windows.Interface
                 work.Feeling *= -1;//旧版本代码兼容
             if (work.Time < 10)
                 work.Time = 10;
-            if (work.FinishBonus > 4)
-                work.FinishBonus = 4;
+            if (work.FinishBonus > 2)
+                work.FinishBonus = 2;
 
             var spend = work.Spend();
             var get = work.Get();
@@ -92,8 +92,8 @@ namespace VPet_Simulator.Windows.Interface
                 work.Feeling *= -1;//旧版本代码兼容
             if (work.Time < 10)
                 work.Time = 10;
-            if (work.FinishBonus > 4)
-                work.FinishBonus = 4;
+            if (work.FinishBonus > 2)
+                work.FinishBonus = 2;
 
             for (int i = 0; i < maxIterations; i++)
             {
