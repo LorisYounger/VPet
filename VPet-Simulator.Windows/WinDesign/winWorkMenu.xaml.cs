@@ -208,6 +208,7 @@ public partial class winWorkMenu : Window
         SetWorkStar(nowwork, tbtn_star.IsChecked == true);
         AllowChange = false;
         lbStar.Items.Clear();
+        mw.WorkStarMenu.Items.Clear();
         //更新星标
         foreach (var v in mw.WorkStar())
         {
