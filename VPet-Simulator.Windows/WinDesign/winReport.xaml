@@ -41,6 +41,8 @@
             <TextBox x:Name="tContact" pu:TextBoxHelper.Watermark="{ll:Str '提供联系方式以获得反馈,可不填\&#13;eg:QQ430081239'}"
                     AcceptsReturn="True" MaxHeight="44" />
         </pu:FormGroup>
+        <Label
+                Content="{ll:Str '如果比较重要或需要反馈,请联系:\&#13;B站: 虚拟桌宠模拟器 \&#13;邮箱: service@exlb.net \&#13;Github: https://github.com/LorisYounger/VPet'}" Background="{x:Null}" />
         <Button x:Name="btn_Report" Content="{ll:Str '提交'}" Margin="10,10,0,10" FontSize="16"
                 Background="{DynamicResource DARKPrimary}" BorderThickness="1" pu:ButtonHelper.CornerRadius="5"
                 BorderBrush="{DynamicResource DARKPrimaryDarker}" Foreground="{DynamicResource DARKPrimaryText}"

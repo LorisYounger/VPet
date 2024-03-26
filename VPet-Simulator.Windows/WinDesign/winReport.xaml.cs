@@ -51,7 +51,7 @@ namespace VPet_Simulator.Windows
         {
             if (tDescription.Text == "" && tType.SelectedIndex != 0)
             {
-                MessageBoxX.Show("请填写问题描述".Translate(), "问题详细描述是反馈具体问题\n例如如何触发这个报错,游戏有什么地方不合理等".Translate());
+                MessageBoxX.Show("问题详细描述是反馈具体问题\n例如如何触发这个报错,游戏有什么地方不合理等".Translate(), "请填写问题描述".Translate());
                 return;
             }
             if (!mw.IsSteamUser)
