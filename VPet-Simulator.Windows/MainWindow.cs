@@ -1611,6 +1611,7 @@ namespace VPet_Simulator.Windows
                   Main.ToolBar.Resources = Application.Current.Resources;
                   Main.ToolBar.LoadClean();
                   Main.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
+
                   if (ws.Count == 0)
                   {
                       Main.ToolBar.MenuWork.Visibility = Visibility.Collapsed;
@@ -1647,7 +1648,21 @@ namespace VPet_Simulator.Windows
                           ShowWorkMenu(Work.WorkType.Play);
                       };
                   }
-
+                  WorkStarMenu = new System.Windows.Controls.MenuItem()
+                  {
+                      Header = "收藏".Translate(),
+                      HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center,
+                  };
+                  foreach (var w in WorkStar())
+                  {
+                      var mi = new System.Windows.Controls.MenuItem()
+                      {
+                          Header = w.NameTrans
+                      };
+                      mi.Click += (s, e) => Main.ToolBar.StartWork(w.Double(Set["workmenu"].GetInt("double_" + w.Name, 1)));
+                      WorkStarMenu.Items.Add(mi);
+                  }
+                  Main.ToolBar.MenuInteract.Items.Add(WorkStarMenu);
 
                   //加载主题:
                   LoadTheme(Set.Theme);
@@ -2186,5 +2201,19 @@ namespace VPet_Simulator.Windows
                 Main.DisplayCEndtoNomal("pinch");
             }
         }
+        /// <summary>
+        /// 获取收藏的工作
+        /// </summary>
+        public List<Work> WorkStar()
+        {
+            List<Work> works = new List<Work>();
+            foreach (var work in Core.Graph.GraphConfig.Works)
+            {
+                if (Set["work_star"].GetBool(work.Name))
+                    works.Add(work);
+            }
+            return works;
+        }
+        public System.Windows.Controls.MenuItem WorkStarMenu;
     }
 }

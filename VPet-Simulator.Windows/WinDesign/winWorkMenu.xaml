@@ -24,6 +24,9 @@
             <TabItem x:Name="tip" Header="{ll:Str '玩耍'}">
                 <ListBox x:Name="lbPlay" SelectionChanged="lbPlay_SelectionChanged" />
             </TabItem>
+            <TabItem x:Name="tstar" Header="{ll:Str '收藏'}">
+                <ListBox x:Name="lbStar" SelectionChanged="lbStar_SelectionChanged" />
+            </TabItem>
         </TabControl>
         <Image x:Name="WorkViewImage" Grid.Column="1" Margin="10,10,10,33" Source="/Res/img/r_singlemoney_1.png" />
         <Button x:Name="btnStart" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Margin="5" Height="30"
@@ -31,8 +34,12 @@
                 pu:ButtonHelper.CornerRadius="5" BorderBrush="{DynamicResource DARKPrimaryDarker}"
                 Foreground="{DynamicResource DARKPrimaryText}" FontWeight="Bold" FontSize="20" IsEnabled="False"
                 Click="btnStart_Click" />
-        <Label x:Name="lName" Background="{x:Null}" Grid.Column="1" VerticalAlignment="Bottom" Content="{ll:Str 请从侧边栏选择}" FontSize="24"
-                Foreground="{DynamicResource DARKPrimaryDark}" FontWeight="Bold" />
+        <Label x:Name="lName" Background="{x:Null}" Grid.Column="1" VerticalAlignment="Bottom"
+                Content="{ll:Str 请从侧边栏选择}" FontSize="24" Foreground="{DynamicResource DARKPrimaryDark}"
+                FontWeight="Bold" />
+        <ToggleButton x:Name="tbtn_star" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                Content="&#xF18B;" FontFamily="remixicon" Style="{DynamicResource TextToggleButtonStyle}" FontSize="24"
+                Margin="6" pu:ToggleButtonHelper.CheckedContent="&#xF186;" Click="tbtn_star_Click"/>
         <TextBlock Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="10,5,0,0" HorizontalAlignment="Left">
             <Run Text="{ll:Str '获得内容'}" /> : <LineBreak />
             <Run Text="{ll:Str '获取效率'}" /> : <LineBreak />

@@ -26,7 +26,6 @@ public partial class winWorkMenu : Window
     List<Work> ws;
     List<Work> ss;
     List<Work> ps;
-    List<Work> starList;
     public void ShowImageDefault(Work.WorkType type) => WorkViewImage.Source = mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_t_" + type.ToString(), "work_" + type.ToString());
     public winWorkMenu(MainWindow mw, Work.WorkType type)
     {
@@ -54,11 +53,15 @@ public partial class winWorkMenu : Window
             {
                 lbPlay.Items.Add(v.NameTrans);
             }
-
-
+        foreach (var v in mw.WorkStar())
+        {
+            lbStar.Items.Add(v.NameTrans);
+        }
         tbc.SelectedIndex = (int)type;
         ShowImageDefault(type);
     }
+    public bool IsWorkStar(Work work) => mw.Set["work_star"].GetBool(work.Name);
+    public void SetWorkStar(Work work, bool setvalue) => mw.Set["work_star"].SetBool(work.Name, setvalue);
     private bool AllowChange = false;
     Work nowwork;
     Work nowworkdisplay;
@@ -84,7 +87,7 @@ public partial class winWorkMenu : Window
             {
                 wDouble.IsEnabled = true;
                 wDouble.Maximum = max;
-                wDouble.Value = mw.Set["workmenu"].GetInt("workmenu_" + nowwork.Name, 1);
+                wDouble.Value = mw.Set["workmenu"].GetInt("double_" + nowwork.Name, 1);
             }
         }
         if (wDouble.Value == 1)
@@ -125,6 +128,7 @@ public partial class winWorkMenu : Window
         sb.AppendLine('x' + (1 + work.FinishBonus).ToString("f2"));
         sb.AppendLine('x' + wDouble.Value.ToString("f0"));
         tbDisplay.Text = sb.ToString();
+        tbtn_star.IsChecked = IsWorkStar(work);
     }
 
     private void tbc_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -189,8 +193,32 @@ public partial class winWorkMenu : Window
         }
     }
 
-    private void lbStart_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void lbStar_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (!AllowChange) return;
+        var works = mw.WorkStar();
+        if (works.Count <= lbStar.SelectedIndex) return;
+        nowwork = (works[lbStar.SelectedIndex]);
+        ShowWork();
+        e.Handled = true;
+    }
 
+    private void tbtn_star_Click(object sender, RoutedEventArgs e)
+    {
+        SetWorkStar(nowwork, tbtn_star.IsChecked == true);
+        AllowChange = false;
+        lbStar.Items.Clear();
+        //更新星标
+        foreach (var v in mw.WorkStar())
+        {
+            lbStar.Items.Add(v.NameTrans);
+            var mi = new System.Windows.Controls.MenuItem()
+            {
+                Header = nowwork.NameTrans
+            };
+            mi.Click += (s, e) => mw.Main.ToolBar.StartWork(nowwork.Double(mw.Set["workmenu"].GetInt("double_" + nowwork.Name, 1)));
+            mw.WorkStarMenu.Items.Add(mi);
+        }
+        AllowChange = true;
     }
 }
