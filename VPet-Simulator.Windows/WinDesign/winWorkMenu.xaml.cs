@@ -2,6 +2,7 @@
 using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,10 +30,10 @@ public partial class winWorkMenu : WindowX
     List<Work> ss;
     List<Work> ps;
 
-    private readonly List<string> _workDetails = new List<string>();
-    private readonly List<string> _studyDetails = new List<string>();
-    private readonly List<string> _playDetails = new List<string>();
-    private readonly List<string> _starDetails = new List<string>();
+    private readonly ObservableCollection<string> _workDetails = new ObservableCollection<string>();
+    private readonly ObservableCollection<string> _studyDetails = new ObservableCollection<string>();
+    private readonly ObservableCollection<string> _playDetails = new ObservableCollection<string>();
+    private readonly ObservableCollection<string> _starDetails = new ObservableCollection<string>();
 
     public void ShowImageDefault(Work.WorkType type)
     {
@@ -74,6 +75,7 @@ public partial class winWorkMenu : WindowX
         }
         LsbCategory.SelectedIndex = (int)type;
         ShowImageDefault(type);
+        AllowChange = true;
     }
     public bool IsWorkStar(Work work) => mw.Set["work_star"].GetBool(work.Name);
     public void SetWorkStar(Work work, bool setvalue) => mw.Set["work_star"].SetBool(work.Name, setvalue);
@@ -114,7 +116,7 @@ public partial class winWorkMenu : WindowX
     public void ShowWork(Work work)
     {
         nowworkdisplay = work;
-        
+
         //显示图像
         string source = mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Graph) ?? mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Name);
         if (source == null)
@@ -127,9 +129,9 @@ public partial class winWorkMenu : WindowX
             WorkViewImage.Source = Interface.ImageResources.NewSafeBitmapImage(source);
         }
         if (work.Type == Work.WorkType.Work)
-            tbGain.Text = $"${"金钱".Translate()}";
+            tbGain.Text = "金钱".Translate();
         else
-            tbGain.Text = $"Exp{"经验".Translate()}";
+            tbGain.Text = "经验".Translate();
         tbSpeed.Text = "+" + work.Get().ToString("f2");
         tbFood.Text = "-" + work.StrengthFood.ToString("f2");
         tbDrink.Text = "-" + work.StrengthDrink.ToString("f2");
@@ -148,9 +150,9 @@ public partial class winWorkMenu : WindowX
     {
         Dispatcher.BeginInvoke(() =>
         {
-            ShowImageDefault((Work.WorkType)LsbCategory.SelectedIndex);
-            tbtn_star.Visibility = Visibility.Visible;
             var lastIndex = detailTypes.SelectedIndex;
+            if (LsbCategory.SelectedIndex != 3)
+                ShowImageDefault((Work.WorkType)LsbCategory.SelectedIndex);
             switch (LsbCategory.SelectedIndex)
             {
                 case 0:
@@ -166,20 +168,19 @@ public partial class winWorkMenu : WindowX
                     btnStart.Content = "开始玩耍".Translate();
                     break;
                 case 3:
-                    tbtn_star.Visibility = Visibility.Collapsed;
                     detailTypes.ItemsSource = _starDetails;
                     btnStart.Content = "开始工作".Translate();
                     break;
             }
-            if(detailTypes.SelectedIndex == -1)
-            {
-                detailTypes.SelectedIndex = 0;
-            }
-            else if(detailTypes.SelectedIndex == lastIndex)
-            {
-                detailTypes_SelectionChanged(null, null);
-            }
-        }, System.Windows.Threading.DispatcherPriority.Loaded);
+            //if (detailTypes.SelectedIndex == -1)
+            //{
+            //    detailTypes.SelectedIndex = 0;
+            //}
+            //else if (detailTypes.SelectedIndex == lastIndex)
+            //{
+            detailTypes_SelectionChanged(null, null);
+            //}
+        }, DispatcherPriority.Loaded);
     }
 
     private void wDouble_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -225,7 +226,7 @@ public partial class winWorkMenu : WindowX
                     break;
             }
             ShowWork();
-        }, System.Windows.Threading.DispatcherPriority.Loaded);
+        }, DispatcherPriority.Loaded);
     }
 
     private void Window_Closed(object sender, EventArgs e)
@@ -244,6 +245,8 @@ public partial class winWorkMenu : WindowX
 
     private void tbtn_star_Click(object sender, RoutedEventArgs e)
     {
+        if (nowwork == null)
+            return;
         SetWorkStar(nowwork, tbtn_star.IsChecked == true);
         AllowChange = false;
         _starDetails.Clear();
@@ -252,17 +255,16 @@ public partial class winWorkMenu : WindowX
         foreach (var v in mw.WorkStar())
         {
             _starDetails.Add(v.NameTrans);
-            var mi = new System.Windows.Controls.MenuItem()
+            var mi = new MenuItem()
             {
-                Header = nowwork.NameTrans
+                Header = v.NameTrans
             };
-            mi.Click += (s, e) => mw.Main.ToolBar.StartWork(nowwork.Double(mw.Set["workmenu"].GetInt("double_" + nowwork.Name, 1)));
+            mi.Click += (s, e) => mw.Main.ToolBar.StartWork(v.Double(mw.Set["workmenu"].GetInt("double_" + v.Name, 1)));
             mw.WorkStarMenu.Items.Add(mi);
         }
-        if(detailTypes.ItemsSource == _starDetails
-            && detailTypes.SelectedIndex == -1)
+        if (detailTypes.ItemsSource == _starDetails)
         {
-            detailTypes.SelectedIndex = 0;
+            detailTypes_SelectionChanged(null, null);
         }
         AllowChange = true;
     }

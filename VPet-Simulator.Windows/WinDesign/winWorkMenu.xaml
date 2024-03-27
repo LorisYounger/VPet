@@ -4,16 +4,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 工作面板}" Height="350" Style="{DynamicResource BaseWindowXStyle}"
-        Background="{DynamicResource PrimaryLighter}" Width="580" ResizeMode="CanMinimize" Closed="Window_Closed">
+        Background="{DynamicResource PrimaryLighter}" Width="600" ResizeMode="CanMinimize" Closed="Window_Closed">
     <Grid>
         <Grid >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="170" />
+                <ColumnDefinition Width="140" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Border Background="{DynamicResource DARKPrimaryText}" />
             <StackPanel Margin="12, 10">
-                <TextBlock Text="工作和娱乐"
+                <TextBlock Text="{ll:Str 工作面板}"
                            FontSize="18"
                            Margin="5"
                            Foreground="{DynamicResource DARKPrimary}" />
@@ -37,7 +37,7 @@
             <Grid Grid.Column="1"
                   Margin="15">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="15"/>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
@@ -56,10 +56,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <ComboBox x:Name="detailTypes"
-                              Style="{DynamicResource StandardComboBoxStyle}" SelectionChanged="detailTypes_SelectionChanged" />
-                        <ToggleButton x:Name="tbtn_star" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                            Content="&#xF18B;" FontFamily="remixicon" Style="{DynamicResource TextToggleButtonStyle}" FontSize="24"
-                            Margin="6" pu:ToggleButtonHelper.CheckedContent="&#xF186;" Click="tbtn_star_Click"/>
+                              Style="{DynamicResource StandardComboBoxStyle}" SelectionChanged="detailTypes_SelectionChanged" />                        
                     </Grid>
                     <Image x:Name="WorkViewImage"
                            RenderOptions.BitmapScalingMode="HighQuality"
@@ -77,6 +74,10 @@
                         <RowDefinition />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
+                    <ToggleButton x:Name="tbtn_star" VerticalAlignment="Top" HorizontalAlignment="Right"
+                            Content="&#xF18B;" FontFamily="remixicon" Style="{DynamicResource TextToggleButtonStyle}"
+                            FontSize="24" Margin="6" pu:ToggleButtonHelper.CheckedContent="&#xF186;"
+                            Click="tbtn_star_Click" Grid.Column="4" Grid.RowSpan="3" Grid.ColumnSpan="4" />
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -91,11 +92,12 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="75" />
+                            <ColumnDefinition Width="70" />
                             <ColumnDefinition Width="15" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
+                        
                         <TextBlock x:Name="tbGain" VerticalAlignment="Bottom" Foreground="{DynamicResource PrimaryDarker}"
                                    FontSize="{Binding FontSize, Converter={x:Static pu:Converters.DoublePlusConverter}, ConverterParameter=6, Source={x:Static pu:GlobalSettings.Setting}}">$金钱</TextBlock>
                         <TextBlock x:Name="tbSpeed" Grid.Column="2" VerticalAlignment="Bottom" Foreground="{DynamicResource PrimaryDarker}" Text="+ 4/t"/>
@@ -117,8 +119,8 @@
                         <TextBlock Grid.Row="8">倍率调整</TextBlock>
                         <TextBlock x:Name="tbRatio" Grid.Row="8" Grid.Column="2" Foreground="{DynamicResource PrimaryDarker}" Text="x2"/>
                         <Slider x:Name="wDouble" pu:SliderHelper.ThumbWidth="10" pu:SliderHelper.ThumbCornerRadius="2" pu:SliderHelper.ThumbHeight="16" pu:SliderHelper.ThumbBorderThickness="2"
-                                Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2"
-                                SmallChange="1" Value="1" Minimum="1" IsEnabled="False" TickFrequency="1" IsSnapToTickEnabled="True"
+                                Grid.Row="9"
+                                Grid.Column="0" Grid.ColumnSpan="4" SmallChange="1" Value="1" Minimum="1" IsEnabled="False" TickFrequency="1" IsSnapToTickEnabled="True"
                                 ValueChanged="wDouble_ValueChanged" LargeChange="1" Style="{DynamicResource StandardSliderStyle}" TickPlacement="Both" />
                     </Grid>
                     <Button x:Name="btnStart"

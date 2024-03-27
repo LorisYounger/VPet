@@ -41,6 +41,10 @@ namespace VPet_Simulator.Core
         /// 该消息框的Control
         /// </summary>
         Control This { get; }
+        /// <summary>
+        /// 被关闭时事件
+        /// </summary>
+        event Action EndAction;
     }
     /// <summary>
     /// MessageBar.xaml 的交互逻辑
@@ -120,7 +124,10 @@ namespace VPet_Simulator.Core
                 EndTimer.Start();
             }
         }
-        public Action EndAction;
+        /// <summary>
+        /// 被关闭时事件
+        /// </summary>
+        public event Action EndAction;
         private void EndTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
 
