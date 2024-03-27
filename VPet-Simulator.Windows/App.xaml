@@ -15,6 +15,19 @@
                 <ResourceDictionary>
                     <pu:GlobalSettings x:Key="globalSettings" FontFamily="{StaticResource MainFont}" FontSize="14"
                             IconFontFamily="/VPet-Simulator.Windows;component/Res/#remixicon" IconFontSize="16" />
+
+                    <pu:MessageBoxXSettings x:Key="messageBoxSettings">
+                        <pu:MessageBoxXSettings.WindowXStyle>
+                            <Style TargetType="pu:WindowX"
+                                   BasedOn="{StaticResource {x:Static pu:MessageBoxX.WindowXStyleKey}}">
+                                <Setter Property="pu:WindowXCaption.Background"
+                                        Value="{DynamicResource DARKPrimary}" />
+                                <Setter Property="pu:WindowXCaption.Foreground"
+                                        Value="{DynamicResource DARKPrimaryText}" />
+                            </Style>
+                        </pu:MessageBoxXSettings.WindowXStyle>
+
+                    </pu:MessageBoxXSettings>
                 </ResourceDictionary>
                 <ResourceDictionary Source="/VPet-Simulator.Windows.Interface;component/ResourceStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>

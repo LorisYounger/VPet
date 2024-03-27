@@ -31,7 +31,7 @@ namespace VPet_Simulator.Windows;
 /// <summary>
 /// winMutiPlayer.xaml 的交互逻辑
 /// </summary>
-public partial class winMutiPlayer : Window, IMPWindows
+public partial class winMutiPlayer : WindowX, IMPWindows
 {
     public Lobby lb;
     MainWindow mw;
@@ -147,7 +147,7 @@ public partial class winMutiPlayer : Window, IMPWindows
                 hostName.Text = lb.Owner.Name;
                 HostID = lb.Owner.Id.Value;
                 lbLid.Text = lb.Id.Value.ToString("x");
-                HostHead.Source = ConvertToImageSource(img.Value);
+                HostHead.ImageSource = ConvertToImageSource(img.Value);
             });
 
             SteamNetworking.AllowP2PPacketRelay(true);

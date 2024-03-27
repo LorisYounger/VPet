@@ -1,61 +1,135 @@
-﻿<Window x:Class="VPet_Simulator.Windows.winWorkMenu" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<pu:WindowX x:Class="VPet_Simulator.Windows.winWorkMenu" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:pu="https://opensource.panuon.com/wpf-ui"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 工作面板}" Height="550"
-        Width="680" ResizeMode="CanMinimize" FontSize="16" Closed="Window_Closed">
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 工作面板}" Height="350" Style="{DynamicResource BaseWindowXStyle}"
+        Background="{DynamicResource PrimaryLighter}" Width="580" ResizeMode="CanMinimize" Closed="Window_Closed">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-        <TabControl x:Name="tbc" Grid.RowSpan="2" SelectionChanged="tbc_SelectionChanged">
-            <TabItem x:Name="tiw" Header="{ll:Str '工作'}">
-                <ListBox x:Name="lbWork" SelectionChanged="lbWork_SelectionChanged" />
-            </TabItem>
-            <TabItem x:Name="tis" Header="{ll:Str '学习'}">
-                <ListBox x:Name="lbStudy" SelectionChanged="lbStudy_SelectionChanged" />
-            </TabItem>
-            <TabItem x:Name="tip" Header="{ll:Str '玩耍'}">
-                <ListBox x:Name="lbPlay" SelectionChanged="lbPlay_SelectionChanged" />
-            </TabItem>
-            <TabItem x:Name="tstar" Header="{ll:Str '收藏'}">
-                <ListBox x:Name="lbStar" SelectionChanged="lbStar_SelectionChanged" />
-            </TabItem>
-        </TabControl>
-        <Image x:Name="WorkViewImage" Grid.Column="1" Margin="10,10,10,33" Source="/Res/img/r_singlemoney_1.png" />
-        <Button x:Name="btnStart" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Margin="5" Height="30"
-                Content="{ll:Str 开始工作}" Background="{DynamicResource DARKPrimary}" BorderThickness="1"
-                pu:ButtonHelper.CornerRadius="5" BorderBrush="{DynamicResource DARKPrimaryDarker}"
-                Foreground="{DynamicResource DARKPrimaryText}" FontWeight="Bold" FontSize="20" IsEnabled="False"
-                Click="btnStart_Click" />
-        <Label x:Name="lName" Background="{x:Null}" Grid.Column="1" VerticalAlignment="Bottom"
-                Content="{ll:Str 请从侧边栏选择}" FontSize="24" Foreground="{DynamicResource DARKPrimaryDark}"
-                FontWeight="Bold" />
-        <ToggleButton x:Name="tbtn_star" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                Content="&#xF18B;" FontFamily="remixicon" Style="{DynamicResource TextToggleButtonStyle}" FontSize="24"
-                Margin="6" pu:ToggleButtonHelper.CheckedContent="&#xF186;" Click="tbtn_star_Click"/>
-        <TextBlock Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="10,5,0,0" HorizontalAlignment="Left">
-            <Run Text="{ll:Str '获得内容'}" /> : <LineBreak />
-            <Run Text="{ll:Str '获取效率'}" /> : <LineBreak />
-            <Run Text="{ll:Str '饱腹消耗'}" /> : <LineBreak />
-            <Run Text="{ll:Str '口渴消耗'}" /> : <LineBreak />
-            <Run Text="{ll:Str '心情消耗'}" /> : <LineBreak />
-            <Run Text="{ll:Str '等级限制'}" /> : <LineBreak />
-            <Run Text="{ll:Str '花费时间'}" /> : <LineBreak />
-            <Run Text="{ll:Str '奖励倍率'}" /> : <LineBreak />
-            <Run Text="{ll:Str '倍率调整'}" /> :
-        </TextBlock>
-        <TextBlock x:Name="tbDisplay" Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Margin="150,5,0,0"
-                HorizontalAlignment="Left" />
-        <Slider x:Name="wDouble" Grid.Column="1" Margin="20,190,20,0" Grid.Row="1" VerticalAlignment="Top"
-                SmallChange="1" Value="1" Minimum="1" IsEnabled="False" TickFrequency="1" IsSnapToTickEnabled="True"
-                ValueChanged="wDouble_ValueChanged" LargeChange="1" Style="{DynamicResource StandardSliderStyle}"
-                TickPlacement="Both" />
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="170" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border Background="{DynamicResource DARKPrimaryText}" />
+            <StackPanel Margin="12, 10">
+                <TextBlock Text="工作和娱乐"
+                           FontSize="18"
+                           Margin="5"
+                           Foreground="{DynamicResource DARKPrimary}" />
+
+                <ListBox x:Name="LsbCategory"
+                         Grid.Row="1"
+                         Margin="-12,10,-12,0"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         SelectedIndex="0"
+                         pu:ListBoxHelper.ItemsPadding="15,8"
+                         pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"
+                         pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
+                         SelectionChanged="LsbCategory_SelectionChanged">
+                    <ListBoxItem x:Name="LsbiWork" Content="{ll:Str '工作'}" />
+                    <ListBoxItem x:Name="LsbiStudy" Content="{ll:Str '学习'}" />
+                    <ListBoxItem x:Name="LsbiPlay" Content="{ll:Str '玩耍'}" />
+                    <ListBoxItem x:Name="LsbiStar" Content="{ll:Str '收藏'}" />
+                </ListBox>
+            </StackPanel>
+            <Grid Grid.Column="1"
+                  Margin="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="工作内容"
+                               FontSize="{Binding FontSize, Converter={x:Static pu:Converters.DoubleMinusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}" />
+                    <Grid Grid.Row="1"
+                          Margin="0,3,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="detailTypes"
+                              Style="{DynamicResource StandardComboBoxStyle}" SelectionChanged="detailTypes_SelectionChanged" />
+                        <ToggleButton x:Name="tbtn_star" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                            Content="&#xF18B;" FontFamily="remixicon" Style="{DynamicResource TextToggleButtonStyle}" FontSize="24"
+                            Margin="6" pu:ToggleButtonHelper.CheckedContent="&#xF186;" Click="tbtn_star_Click"/>
+                    </Grid>
+                    <Image x:Name="WorkViewImage"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           Grid.Row="2"
+                           Margin="-20,0"
+                           Stretch="Uniform"
+                           Source="/Res/img/r_singlemoney_1.png" />
+                </Grid>
+                <Border Grid.Column="2"
+                        Background="White"
+                        CornerRadius="4" />
+                <Grid Grid.Column="2"
+                      Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="15" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="75" />
+                            <ColumnDefinition Width="15" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="tbGain" VerticalAlignment="Bottom" Foreground="{DynamicResource PrimaryDarker}"
+                                   FontSize="{Binding FontSize, Converter={x:Static pu:Converters.DoublePlusConverter}, ConverterParameter=6, Source={x:Static pu:GlobalSettings.Setting}}">$金钱</TextBlock>
+                        <TextBlock x:Name="tbSpeed" Grid.Column="2" VerticalAlignment="Bottom" Foreground="{DynamicResource PrimaryDarker}" Text="+ 4/t"/>
+                        <TextBlock Grid.Row="2">饱腹度</TextBlock>
+                        <TextBlock x:Name="tbFood" Grid.Row="2" Grid.Column="2" Foreground="{DynamicResource DangerBrush}" Text="- 1/t"/>
+                        <TextBlock Grid.Row="3">口渴度</TextBlock>
+                        <TextBlock x:Name="tbDrink" Grid.Row="3" Grid.Column="2" Foreground="{DynamicResource DangerBrush}" Text="- 4/t"/>
+                        <TextBlock Grid.Row="4">心情</TextBlock>
+                        <TextBlock x:Name="tbSpirit" Grid.Row="4" Grid.Column="2" Foreground="{DynamicResource DangerBrush}" Text="- 4/t"/>
+                        <TextBlock Grid.Row="5">等级限制</TextBlock>
+                        <TextBlock x:Name="tbLvLimit"
+                                   Grid.Row="5"
+                                   Grid.Column="2"
+                                   Foreground="{DynamicResource PrimaryDarker}" Text="- 4/t"/>
+                        <TextBlock Grid.Row="6">花费时间</TextBlock>
+                        <TextBlock x:Name="tbTime" Grid.Row="6" Grid.Column="2" Foreground="{DynamicResource PrimaryDarker}" Text="10 t"/>
+                        <TextBlock Grid.Row="7">奖励倍率</TextBlock>
+                        <TextBlock x:Name="tbBonus" Grid.Row="7" Grid.Column="2" Foreground="{DynamicResource PrimaryDarker}" Text="x2"/>
+                        <TextBlock Grid.Row="8">倍率调整</TextBlock>
+                        <TextBlock x:Name="tbRatio" Grid.Row="8" Grid.Column="2" Foreground="{DynamicResource PrimaryDarker}" Text="x2"/>
+                        <Slider x:Name="wDouble" pu:SliderHelper.ThumbWidth="10" pu:SliderHelper.ThumbCornerRadius="2" pu:SliderHelper.ThumbHeight="16" pu:SliderHelper.ThumbBorderThickness="2"
+                                Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2"
+                                SmallChange="1" Value="1" Minimum="1" IsEnabled="False" TickFrequency="1" IsSnapToTickEnabled="True"
+                                ValueChanged="wDouble_ValueChanged" LargeChange="1" Style="{DynamicResource StandardSliderStyle}" TickPlacement="Both" />
+                    </Grid>
+                    <Button x:Name="btnStart"
+                            Grid.Row="1"
+                            Height="30"
+                            Content="{ll:Str 开始工作}"
+                            Style="{DynamicResource ThemedButtonStyle}"
+                            Background="{DynamicResource PrimaryDarker}"
+                            Click="btnStart_Click" />
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
-</Window>
+</pu:WindowX>

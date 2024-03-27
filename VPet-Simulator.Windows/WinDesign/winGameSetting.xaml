@@ -16,19 +16,24 @@
     </pu:WindowX.Resources>-->
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="SettingMenuWidth" Width="150" />
+            <ColumnDefinition x:Name="SettingMenuWidth" Width="180" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="tb_seach_menu" FontSize="16" pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
-                Style="{DynamicResource StandardTextBoxStyle}" VerticalAlignment="Top" Margin="3,6,6,0"
+        <TextBox x:Name="tb_seach_menu" FontSize="16" pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}" BorderThickness="0,0,0,1" pu:TextBoxHelper.CornerRadius="0" BorderBrush="LightGray"
+                Style="{DynamicResource StandardTextBoxStyle}" VerticalAlignment="Top" Margin="3,6,7,0"
                 TextChanged="tb_seach_menu_textchange" />
-        <ListBox x:Name="ListMenu" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="3,40,6,3"
-                BorderBrush="{DynamicResource Primary}" pu:ListBoxHelper.CornerRadius="5" BorderThickness="2"
-                Background="{DynamicResource SecondaryLighter}"
-                pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
-                pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource SecondaryLight}" />
-        <GridSplitter Width="3" Background="{DynamicResource PrimaryDarker}" />
+        <ListBox x:Name="ListMenu" ScrollViewer.HorizontalScrollBarVisibility="Auto" BorderThickness="0"
+                ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,40,5,3"
+                pu:ListBoxHelper.ItemsPadding="15,8" pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}" pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}" />
+        <GridSplitter Margin="0,15" Background="LightGray">
+            <GridSplitter.Template>
+                <ControlTemplate TargetType="GridSplitter">
+                    <Border Background="Transparent">
+                        <Rectangle Margin="2,0" Width="1" Fill="{TemplateBinding Background}" />
+                    </Border>
+                </ControlTemplate>
+            </GridSplitter.Template>
+        </GridSplitter>
         <TabControl x:Name="MainTab" Margin="5" pu:TabControlHelper.CanHeaderPanelScroll="True"
                 pu:TabControlHelper.ItemsCornerRadius="4" pu:TabControlHelper.ItemsHeight="NaN"
                 pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"

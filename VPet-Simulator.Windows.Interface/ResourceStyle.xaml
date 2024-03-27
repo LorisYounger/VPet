@@ -12,7 +12,10 @@
   <Style x:Key="BaseWindowXStyle" TargetType="pu:WindowX">
     <Setter Property="pu:WindowXCaption.Background" Value="{DynamicResource DARKPrimary}" />
     <Setter Property="pu:WindowXCaption.Foreground" Value="{DynamicResource DARKPrimaryText}" />
-    <Setter Property="pu:WindowXCaption.Buttons" Value="Close" />
+    <Setter Property="pu:ScrollBarHelper.ThumbBackground" Value="{DynamicResource DARKPrimaryTrans4}" />
+    <Setter Property="pu:ScrollBarHelper.HoverThumbBackground" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:ScrollViewerHelper.ScrollBarThickness" Value="8" />
+    <Setter Property="pu:ScrollBarHelper.ThumbCornerRadius" Value="4" />
     <Setter Property="pu:WindowXCaption.CloseButtonStyle">
       <Setter.Value>
         <Style BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}" TargetType="Button">
@@ -20,6 +23,36 @@
         </Style>
       </Setter.Value>
     </Setter>
+        <Setter Property="pu:WindowXCaption.MinimizeButtonStyle">
+            <Setter.Value>
+                <Style BasedOn="{StaticResource {x:Static pu:WindowXCaption.MinimizeButtonStyleKey}}"
+                       TargetType="Button">
+                    <Setter Property="pu:ButtonHelper.HoverBackground"
+                            Value="{x:Null}" />
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="pu:WindowXCaption.MaximizeButtonStyle">
+            <Setter.Value>
+                <Style BasedOn="{StaticResource {x:Static pu:WindowXCaption.MaximizeButtonStyleKey}}"
+                       TargetType="Button">
+                    <Setter Property="pu:ButtonHelper.HoverBackground"
+                            Value="{x:Null}" />
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="ResizeMode"
+                     Value="CanMinimize">
+                <Setter Property="pu:WindowXCaption.Buttons"
+                        Value="MinimizeClose" />
+            </Trigger>
+            <Trigger Property="ResizeMode"
+                     Value="NoResize">
+                <Setter Property="pu:WindowXCaption.Buttons"
+                        Value="Close" />
+            </Trigger>
+        </Style.Triggers>
   </Style>
 
   <Style
