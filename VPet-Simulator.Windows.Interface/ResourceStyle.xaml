@@ -13,6 +13,10 @@
     <Setter Property="pu:WindowXCaption.Background" Value="{DynamicResource DARKPrimary}" />
     <Setter Property="pu:WindowXCaption.Foreground" Value="{DynamicResource DARKPrimaryText}" />
     <Setter Property="pu:WindowXCaption.Buttons" Value="Close" />
+    <Setter Property="pu:ScrollBarHelper.ThumbBackground" Value="{DynamicResource DARKPrimaryTrans4}" />
+    <Setter Property="pu:ScrollBarHelper.HoverThumbBackground" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="pu:ScrollViewerHelper.ScrollBarThickness" Value="8" />
+    <Setter Property="pu:ScrollBarHelper.ThumbCornerRadius" Value="4" />
     <Setter Property="pu:WindowXCaption.CloseButtonStyle">
       <Setter.Value>
         <Style BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}" TargetType="Button">

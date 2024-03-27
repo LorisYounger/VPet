@@ -1,4 +1,6 @@
 ﻿using LinePutScript.Localization.WPF;
+using Microsoft.VisualBasic.Devices;
+using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +22,24 @@ namespace VPet_Simulator.Windows;
 /// <summary>
 /// winWorkMenu.xaml 的交互逻辑
 /// </summary>
-public partial class winWorkMenu : Window
+public partial class winWorkMenu : WindowX
 {
     MainWindow mw;
     List<Work> ws;
     List<Work> ss;
     List<Work> ps;
-    public void ShowImageDefault(Work.WorkType type) => WorkViewImage.Source = mw.ImageSources.FindImage(mw.Set.PetGraph + "_" + type.ToString(), "work");
+
+    private readonly List<string> _workDetails = new List<string>();
+    private readonly List<string> _studyDetails = new List<string>();
+    private readonly List<string> _playDetails = new List<string>();
+
+    public void ShowImageDefault(Work.WorkType type)
+    {
+        Dispatcher.BeginInvoke(() =>
+        {
+            WorkViewImage.Source = mw.ImageSources.FindImage(mw.Set.PetGraph + "_" + type.ToString(), "work");
+        }, System.Windows.Threading.DispatcherPriority.Loaded);
+    }
     public winWorkMenu(MainWindow mw, Work.WorkType type)
     {
         InitializeComponent();
@@ -34,28 +47,28 @@ public partial class winWorkMenu : Window
 
         mw.Main.WorkList(out ws, out ss, out ps);
         if (ws.Count == 0)
-            tbc.Items.Remove(tiw);
+            LsbCategory.Items.Remove(LsbiWork);
         else
             foreach (var v in ws)
             {
-                lbWork.Items.Add(v.NameTrans);
+                _workDetails.Add(v.NameTrans);
             }
         if (ss.Count == 0)
-            tbc.Items.Remove(tis);
+            LsbCategory.Items.Remove(LsbiStudy);
         else
             foreach (var v in ss)
             {
-                lbStudy.Items.Add(v.NameTrans);
+                _studyDetails.Add(v.NameTrans);
             }
         if (ps.Count == 0)
-            tbc.Items.Remove(tip);
+            LsbCategory.Items.Remove(LsbiPlay);
         else
             foreach (var v in ps)
             {
-                lbPlay.Items.Add(v.NameTrans);
+                _playDetails.Add(v.NameTrans);
             }
 
-        tbc.SelectedIndex = (int)type;
+        LsbCategory.SelectedIndex = (int)type;
         ShowImageDefault(type);
     }
     private bool AllowChange = false;
@@ -95,7 +108,6 @@ public partial class winWorkMenu : Window
     public void ShowWork(Work work)
     {
         nowworkdisplay = work;
-        lName.Content = work.NameTrans;
         //显示图像
         string source = mw.ImageSources.FindSource("work_" + work.Graph) ?? mw.ImageSources.FindSource("work_" + work.Name);
         if (source == null)
@@ -107,41 +119,48 @@ public partial class winWorkMenu : Window
         {
             WorkViewImage.Source = Interface.ImageResources.NewSafeBitmapImage(source);
         }
-        StringBuilder sb = new StringBuilder();
         if (work.Type == Work.WorkType.Work)
-            sb.AppendLine("金钱".Translate());
+            tbGain.Text = $"${"金钱".Translate()}";
         else
-            sb.AppendLine("经验".Translate());
-        sb.AppendLine(work.Get().ToString("f2"));
-        sb.AppendLine(work.StrengthFood.ToString("f2"));
-        sb.AppendLine(work.StrengthDrink.ToString("f2"));
-        sb.AppendLine(work.Feeling.ToString("f2"));
-        sb.AppendLine(work.LevelLimit.ToString("f0"));
+            tbGain.Text = $"Exp{"经验".Translate()}";
+        tbSpeed.Text = "+" + work.Get().ToString("f2");
+        tbFood.Text = "-" + work.StrengthFood.ToString("f2");
+        tbDrink.Text = "-" + work.StrengthDrink.ToString("f2");
+        tbSpirit.Text = "-" + work.Feeling.ToString("f2");
+        tbLvLimit.Text = work.LevelLimit.ToString("f0");
         if (work.Time > 100)
-            sb.AppendLine((work.Time / 60).ToString("f2") + 'h');
+            tbTime.Text = (work.Time / 60).ToString("f2") + 'h';
         else
-            sb.AppendLine(work.Time.ToString() + 'm');
-        sb.AppendLine('x' + (1 + work.FinishBonus).ToString("f2"));
-        sb.AppendLine('x' + wDouble.Value.ToString("f0"));
-        tbDisplay.Text = sb.ToString();
+            tbTime.Text =work.Time.ToString() + 'm';
+        tbBonus.Text ='x' + (1 + work.FinishBonus).ToString("f2");
+        tbRatio.Text ='x' + wDouble.Value.ToString("f0");
 
     }
 
-    private void tbc_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void LsbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ShowImageDefault((Work.WorkType)tbc.SelectedIndex);
-        switch (tbc.SelectedIndex)
+        Dispatcher.BeginInvoke(() =>
         {
-            case 0:
-                btnStart.Content = "开始工作".Translate();
-                break;
-            case 1:
-                btnStart.Content = "开始学习".Translate();
-                break;
-            case 2:
-                btnStart.Content = "开始玩耍".Translate();
-                break;
-        }
+            ShowImageDefault((Work.WorkType)LsbCategory.SelectedIndex);
+            switch (LsbCategory.SelectedIndex)
+            {
+                case 0:
+                    detailTypes.ItemsSource = _workDetails;
+                    detailTypes.SelectedIndex = 0;
+                    btnStart.Content = "开始工作".Translate();
+                    break;
+                case 1:
+                    detailTypes.ItemsSource = _studyDetails;
+                    detailTypes.SelectedIndex = 0;
+                    btnStart.Content = "开始学习".Translate();
+                    break;
+                case 2:
+                    detailTypes.ItemsSource = _playDetails;
+                    detailTypes.SelectedIndex = 0;
+                    btnStart.Content = "开始玩耍".Translate();
+                    break;
+            }
+        }, System.Windows.Threading.DispatcherPriority.Loaded);
     }
 
     private void wDouble_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -151,22 +170,29 @@ public partial class winWorkMenu : Window
         ShowWork(nowwork.Double((int)wDouble.Value));
     }
 
-    private void lbWork_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        nowwork = (ws[lbWork.SelectedIndex]);
-        ShowWork();
-    }
 
-    private void lbStudy_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        nowwork = (ss[lbStudy.SelectedIndex]);
-        ShowWork();
-    }
 
-    private void lbPlay_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void detailTypes_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        nowwork = (ps[lbPlay.SelectedIndex]);
-        ShowWork();
+        Dispatcher.BeginInvoke(() =>
+        {
+            switch (LsbCategory.SelectedIndex)
+            {
+                case 0:
+                    nowwork = (ws[detailTypes.SelectedIndex]);
+                    //btnStart.Content = "开始工作".Translate();
+                    break;
+                case 1:
+                    nowwork = (ss[detailTypes.SelectedIndex]);
+                    //btnStart.Content = "开始学习".Translate();
+                    break;
+                case 2:
+                    nowwork = (ps[detailTypes.SelectedIndex]);
+                    //btnStart.Content = "开始玩耍".Translate();
+                    break;
+            }
+            ShowWork();
+        }, System.Windows.Threading.DispatcherPriority.Loaded);
     }
 
     private void Window_Closed(object sender, EventArgs e)

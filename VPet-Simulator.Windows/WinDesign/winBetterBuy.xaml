@@ -62,27 +62,27 @@
                         </Grid.RowDefinitions>
                         <pu:Switch Content="{ll:Str 购买后不自动关闭窗口}" Grid.Column="2" FontSize="14" Margin="10,0,5,0"
                                 Height="20" VerticalAlignment="Center" HorizontalAlignment="Left" BoxHeight="14"
-                                ToggleSize="18" CheckedBackground="{DynamicResource Primary}"
+                                ToggleSize="10" CheckedBackground="{DynamicResource Primary}"
                                 CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
                                 ToggleShadowColor="{x:Null}" CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                ToggleBrush="{DynamicResource PrimaryDark}" pu:WindowX.IsDragMoveArea="False"
-                                BoxWidth="30" Loaded="Switch_Loaded" />
+                                ToggleBrush="{DynamicResource DARKPrimaryText}" pu:WindowX.IsDragMoveArea="False"
+                                BoxWidth="24" Loaded="Switch_Loaded" />
                         <pu:Switch Content="{ll:Str 让宠物自己买东西吃}" Grid.Column="2" FontSize="14" Margin="10,0,5,0"
                                 Height="20" VerticalAlignment="Center" HorizontalAlignment="Left" BoxHeight="14"
-                                ToggleSize="18" CheckedBackground="{DynamicResource Primary}"
+                                ToggleSize="10" CheckedBackground="{DynamicResource Primary}"
                                 CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
                                 ToggleShadowColor="{x:Null}" CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                Grid.Row="1" ToggleBrush="{DynamicResource PrimaryDark}"
-                                pu:WindowX.IsDragMoveArea="False" BoxWidth="30"
+                                Grid.Row="1" ToggleBrush="{DynamicResource DARKPrimaryText}"
+                                pu:WindowX.IsDragMoveArea="False" BoxWidth="24"
                                 ToolTip="{ll:Str '当宠物口渴或者饥饿的时候会自己买东西吃\&#13;请注意,宠物可能会乱花钱和吃错误的东西\&#13;额外加收20%外卖运送费用'}"
                                 Loaded="Switch_Loaded_1" />
                         <pu:Switch Content="{ll:Str 让宠物自己买礼物}" Grid.Column="2" FontSize="14" Margin="10,0,5,0"
                                 Height="20" VerticalAlignment="Center" HorizontalAlignment="Left" BoxHeight="14"
-                                ToggleSize="18" CheckedBackground="{DynamicResource Primary}"
+                                ToggleSize="10" CheckedBackground="{DynamicResource Primary}"
                                 CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
                                 ToggleShadowColor="{x:Null}" CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                Grid.Row="2" ToggleBrush="{DynamicResource PrimaryDark}"
-                                pu:WindowX.IsDragMoveArea="False" BoxWidth="30" Visibility="Collapsed"
+                                Grid.Row="2" ToggleBrush="{DynamicResource DARKPrimaryText}"
+                                pu:WindowX.IsDragMoveArea="False" BoxWidth="24" Visibility="Collapsed"
                                 ToolTip="{ll:Str '当宠物不开心的时候会自己给自己买礼物\&#13;请注意,宠物可能会乱花钱,而且礼物一般都非常贵\&#13;额外加收20%运送费用'}"
                                 Loaded="Switch_Loaded_2" />
                     </Grid>

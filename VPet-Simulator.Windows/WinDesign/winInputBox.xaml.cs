@@ -13,12 +13,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static System.Net.Mime.MediaTypeNames;
 using VPet_Simulator.Core;
+using Panuon.WPF.UI;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
 /// winInputBox.xaml 的交互逻辑
 /// </summary>
-public partial class winInputBox : Window
+public partial class winInputBox : WindowX
 {
     MainWindow mw;
     public winInputBox(MainWindow mainw, string title, string text, string defaulttext, bool AllowMutiLine = false, bool CanHide = false, bool TextCenter = true)

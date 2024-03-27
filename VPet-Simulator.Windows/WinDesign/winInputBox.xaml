@@ -1,25 +1,26 @@
-﻿<Window x:Class="VPet_Simulator.Windows.winInputBox"
+﻿<pu:WindowX x:Class="VPet_Simulator.Windows.winInputBox"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" MinWidth="300"
         xmlns:pu="https://opensource.panuon.com/wpf-ui" Title="winInputBox" ResizeMode="NoResize"
-        WindowStartupLocation="CenterScreen" Topmost="True" Background="{DynamicResource SecondaryLighter}"
-        Closing="Window_Closing" Closed="Window_Closed" SizeToContent="WidthAndHeight">
+        WindowStartupLocation="CenterScreen" Topmost="True" Style="{DynamicResource BaseWindowXStyle}" Background="{DynamicResource SecondaryLighter}"
+        Closing="Window_Closing" Closed="Window_Closed" SizeToContent="Width" Height="170">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        
         <TextBlock x:Name="Text" Text="文本消息内容就显示在这里,无论你是否接受,你也没法接受这样的弹窗?" Margin="20,5,20,5" VerticalAlignment="Top"
-                HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" />
-        <TextBox x:Name="TextBoxInput" Grid.Row="1" Margin="20,5,20,10" FontSize="14"
+                TextWrapping="Wrap" />
+        <TextBox x:Name="TextBoxInput" Grid.Row="1" Margin="20,0,20,10" VerticalAlignment="Top" FontSize="14" Style="{DynamicResource StandardTextBoxStyle}"
                 PreviewKeyDown="TextBoxInput_PreviewKeyDown" />
         <Button Grid.Row="2" x:Name="ButtonOK" Content="确定" HorizontalAlignment="Right" Margin="5,0,0,0"
-                VerticalAlignment="Bottom" Height="26" Width="75" Foreground="{DynamicResource DARKPrimaryText}"
+                VerticalAlignment="Bottom" Height="30" Width="75" Foreground="{DynamicResource DARKPrimaryText}"
                 Background="{DynamicResource PrimaryDarker}" Click="ButtonYes_Click" FontSize="12"
                 pu:ButtonHelper.CornerRadius="5" />
     </Grid>
-</Window>
+</pu:WindowX>

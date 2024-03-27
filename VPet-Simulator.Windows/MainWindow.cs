@@ -481,7 +481,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                winWorkMenu.tbc.SelectedIndex = (int)type;
+                winWorkMenu.LsbCategory.SelectedIndex = (int)type;
                 winWorkMenu.Focus();
                 winWorkMenu.Topmost = true;
             }

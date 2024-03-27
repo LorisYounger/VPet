@@ -29,6 +29,7 @@
             </DrawingGroup>
         </DrawingBrush.Drawing>
     </DrawingBrush>
+    <SolidColorBrush x:Key="SuccessBrush">#AACC6C</SolidColorBrush>
     <DrawingBrush x:Key="SuccessProgressBarForeground" Stretch="None" TileMode="Tile" Viewport="0,0,8,22"
             ViewportUnits="Absolute">
         <DrawingBrush.RelativeTransform>
@@ -53,6 +54,7 @@
             </DrawingGroup>
         </DrawingBrush.Drawing>
     </DrawingBrush>
+    <SolidColorBrush x:Key="WarningBrush">#FFCC4C</SolidColorBrush>
     <DrawingBrush x:Key="WarningProgressBarForeground" Stretch="None" TileMode="Tile" Viewport="0,0,8,22"
             ViewportUnits="Absolute">
         <DrawingBrush.RelativeTransform>
@@ -77,7 +79,9 @@
             </DrawingGroup>
         </DrawingBrush.Drawing>
     </DrawingBrush>
-    <DrawingBrush x:Key="DangerProgressBarForeground" Stretch="None" TileMode="Tile" Viewport="0,0,8,22"
+    <SolidColorBrush x:Key="DangerBrush">#FF4C4C</SolidColorBrush>
+    <DrawingBrush x:Key="DangerProgressBarForeground"
+                  Stretch="None" TileMode="Tile" Viewport="0,0,8,22"
             ViewportUnits="Absolute">
         <DrawingBrush.RelativeTransform>
             <RotateTransform Angle="2" />
@@ -236,7 +240,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
         <Setter Property="Padding" Value="7,0,15,0" />
         <Setter Property="pu:TextBoxHelper.CornerRadius" Value="5" />
-        <Setter Property="pu:TextBoxHelper.WatermarkForeground" Value="#DCDCDC" />
+        <Setter Property="pu:TextBoxHelper.WatermarkForeground" Value="#AAAAAA" />
         <Setter Property="pu:ShadowHelper.BlurRadius" Value="15" />
         <Setter Property="pu:ShadowHelper.Opacity" Value="0.5" />
     </Style>
