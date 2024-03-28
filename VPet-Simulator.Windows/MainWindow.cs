@@ -508,11 +508,11 @@ namespace VPet_Simulator.Windows
                 {
                     if (Core.Save.StrengthFood < sm * 0.50)
                     {//太饿了,找正餐
-                        food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > sm * 0.20);
+                        food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > Math.Min(sm * 0.20, 100));
                     }
                     else
                     {//找零食
-                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.StrengthFood > sm * 0.10);
+                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.StrengthFood > Math.Min(sm * 0.10, 50));
                     }
                     if (food.Count == 0)
                         return;
@@ -524,7 +524,7 @@ namespace VPet_Simulator.Windows
                 }
                 else if (Core.Save.StrengthDrink < sm75)
                 {
-                    food = food.FindAll(x => x.Type == Food.FoodType.Drink && x.StrengthDrink > 10);
+                    food = food.FindAll(x => x.Type == Food.FoodType.Drink && x.StrengthDrink > Math.Min(sm * 0.10, 50));
                     if (food.Count == 0)
                         return;
                     var item = food[Function.Rnd.Next(food.Count)];
@@ -535,7 +535,7 @@ namespace VPet_Simulator.Windows
                 }
                 else if (Set.AutoGift && Core.Save.Feeling < Core.Save.FeelingMax * 0.50)
                 {
-                    food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > 10);
+                    food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > Math.Min(Core.Save.FeelingMax * 0.10, 50));
                     if (food.Count == 0)
                         return;
                     var item = food[Function.Rnd.Next(food.Count)];
