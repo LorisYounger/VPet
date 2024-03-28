@@ -64,6 +64,24 @@ public class GameSave_VPet : IGameSave
         }
     }
     /// <summary>
+    /// 玩家总共获得的经验值数量
+    /// </summary>
+    public double TotalExpGained()
+    {
+        double totalExp = 0;
+        // 首先，添加LevelMax的经验值
+        for (int i = 1; i <= LevelMax; i++)
+        {
+            for (int j = 100 * i + 1; j <= 1000 + 100 * i; j++)
+                totalExp += 200 * j - 100;
+        }
+        // 然后，添加当前等级的经验值
+        totalExp += (Level - 100 * LevelMax) * (200 * (Level - 1) - 100);
+        // 最后，添加剩余的经验值
+        totalExp += Exp;
+        return totalExp;
+    }
+    /// <summary>
     /// 升级所需经验值
     /// </summary>
     public int LevelUpNeed() => 200 * Level - 100;

@@ -43,7 +43,7 @@ namespace VPet_Simulator.Windows
             DataGridStatic.ItemsSource = StatList;
             mw.GameSavesData.Statistics.StatisticChanged += Statistics_StatisticChanged;
 
-            if (mw.GameSavesData.HashCheck && mw.GameSavesData.GameSave.Exp < int.MaxValue && mw.GameSavesData.GameSave.Money < int.MaxValue)
+            if (mw.GameSavesData.HashCheck)
             {
                 cb_NoCheat.IsEnabled = true;
                 if (mw.IsSteamUser)
@@ -639,7 +639,7 @@ namespace VPet_Simulator.Windows
                 r_i_timelength.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_timelength_{timelength_i}.png"));
 
                 r_r_level.Text = mw.GameSavesData.GameSave.Level.ToString();
-                r_r_exp.Text = mw.GameSavesData.GameSave.Exp.ToString("f0");
+                r_r_exp.Text = mw.GameSavesData.GameSave.TotalExpGained().ToString("f0");
                 r_r_studytime.Text = (mw.GameSavesData.Statistics[(gint)"stat_study_time"] / 60).ToString();
                 r_r_studytext.Text = studytext;
                 r_i_exp.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_level_{study_i}.png"));
