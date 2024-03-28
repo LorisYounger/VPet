@@ -132,10 +132,10 @@ public partial class winWorkMenu : WindowX
             tbGain.Text = "金钱".Translate();
         else
             tbGain.Text = "经验".Translate();
-        tbSpeed.Text = "+" + work.Get().ToString("f2");
-        tbFood.Text = "-" + work.StrengthFood.ToString("f2");
-        tbDrink.Text = "-" + work.StrengthDrink.ToString("f2");
-        tbSpirit.Text = "-" + work.Feeling.ToString("f2");
+        tbSpeed.Text = work.Get().ToString("f2");
+        tbFood.Text = work.StrengthFood.ToString("f2");
+        tbDrink.Text = work.StrengthDrink.ToString("f2");
+        tbSpirit.Text = work.Feeling.ToString("f2");
         tbLvLimit.Text = work.LevelLimit.ToString("f0");
         if (work.Time > 100)
             tbTime.Text = (work.Time / 60).ToString("f2") + 'h';

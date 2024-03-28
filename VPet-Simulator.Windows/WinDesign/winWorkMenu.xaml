@@ -68,7 +68,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <ToggleButton x:Name="tbtn_star" VerticalAlignment="Top" HorizontalAlignment="Right"
-                            Content="&#xF18B;" FontFamily="remixicon" Style="{DynamicResource TextToggleButtonStyle}"
+                            Content="&#xF18B;" FontFamily="pack://application:,,,/Res/#remixicon" Style="{DynamicResource TextToggleButtonStyle}"
                             FontSize="24" Margin="6" pu:ToggleButtonHelper.CheckedContent="&#xF186;"
                             Click="tbtn_star_Click" Grid.Column="4" Grid.RowSpan="3" Grid.ColumnSpan="4" />
                     <Grid>
@@ -85,7 +85,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="70" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="15" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
