@@ -313,7 +313,7 @@ namespace VPet_Simulator.Core
                     if (DisplayType.Type != GraphType.Default)
                     {//不是nomal! 可能会卡timer,所有全部timer清空下
                         CleanState();
-                        if (!IsIdel && DisplayStop(DisplayToNomal))
+                        if (!IsIdel && State != WorkingState.Sleep && DisplayStop(DisplayToNomal))
                             return;
                     }
                     DefaultClickAction?.Invoke();
