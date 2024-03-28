@@ -171,7 +171,7 @@ namespace VPet_Simulator.Windows.Interface
         public void LoadImageSource(IMainWindow imw)
         {
             ImageSource = imw.ImageSources.FindImage("food_" + (Image ?? Name), "food");
-            Star = imw.Set["betterbuy"].GetInfos().Contains(Name);
+            Star = imw.Set["betterbuy"]["star"].GetInfos().Contains(Name);
             LoadEatTimeSource(imw);
         }
         public void LoadEatTimeSource(IMainWindow imw)

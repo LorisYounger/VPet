@@ -44,7 +44,8 @@
                                 FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}">ID: </TextBlock> 
                         <TextBox x:Name="lbLid" VerticalAlignment="Center"
                                 Background="{DynamicResource SecondaryTrans4}" BorderThickness="0"
-                                FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}" />
+                                FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}"
+                                Margin="5,0,0,0" />
                     </StackPanel>
                     <pu:Switch x:Name="swAllowJoin"
                             FontSize="{Binding FontSize, Converter={x:Static pu:Converters.DoublePlusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}"
