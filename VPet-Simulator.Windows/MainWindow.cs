@@ -556,17 +556,20 @@ namespace VPet_Simulator.Windows
                         if (Core.Save.StrengthFood > sm * 0.60)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                         }
                         else if (Core.Save.StrengthFood > sm * 0.40)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                         }
                         else
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                         }
                     Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
                     return;
@@ -580,17 +583,20 @@ namespace VPet_Simulator.Windows
                         if (Core.Save.StrengthDrink > sm * 0.60)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                         }
                         else if (Core.Save.StrengthDrink > sm * 0.40)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                         }
                         else
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                         }
                     Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
                     return;
@@ -607,17 +613,20 @@ namespace VPet_Simulator.Windows
                     if (Core.Save.StrengthFood > sm * 0.40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        if (txt.Count != 0)
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else if (Core.Save.StrengthFood > sm20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        if (txt.Count != 0)
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        if (txt.Count != 0)
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
                     return;
@@ -630,17 +639,20 @@ namespace VPet_Simulator.Windows
                     if (Core.Save.StrengthDrink > sm * 0.40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        if (txt.Count != 0)
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else if (Core.Save.StrengthDrink > sm20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        if (txt.Count != 0)
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     else
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
+                        if (txt.Count != 0)
+                            Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateText);
                     }
                     Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
                     return;
