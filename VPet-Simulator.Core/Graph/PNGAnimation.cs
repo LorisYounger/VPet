@@ -167,7 +167,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 最大同时加载数
         /// </summary>
-        public static int MaxLoadNumber = 20;
+        public static int MaxLoadNumber = 40;
 
         private void startup(string path, FileInfo[] paths)
         {
@@ -179,7 +179,7 @@ namespace VPet_Simulator.Core
             //新方法:加载大图片
             //生成大文件加载非常慢,先看看有没有缓存能用
             Path = System.IO.Path.Combine(GraphCore.CachePath, $"{GraphCore.Resolution}_{Math.Abs(Sub.GetHashCode(path))}_{paths.Length}.png");
-            Width = 500 * (paths.Length + 1);            
+            Width = 500 * (paths.Length + 1);
             if (!File.Exists(Path) && !((List<string>)GraphCore.CommConfig["Cache"]).Contains(path))
             {
                 ((List<string>)GraphCore.CommConfig["Cache"]).Add(path);
@@ -194,7 +194,7 @@ namespace VPet_Simulator.Core
                     w = GraphCore.Resolution;
                     h = (int)(h * (GraphCore.Resolution / (double)img.Width));
                 }
-                if(paths.Length * w >= 60000)
+                if (paths.Length * w >= 60000)
                 {//修复大长动画导致过长分辨率导致可能的报错
                     w = 60000 / paths.Length;
                     h = (int)(img.Height * (w / (double)img.Width));
@@ -325,6 +325,11 @@ namespace VPet_Simulator.Core
             //    endwilldo.Invoke();
             //    endwilldo = null;
             //}
+            if (!IsReady)
+            {
+                EndAction?.Invoke();
+                return;
+            }
             if (PlayState)
             {//如果当前正在运行,重置状态
              //IsResetPlay = true;
