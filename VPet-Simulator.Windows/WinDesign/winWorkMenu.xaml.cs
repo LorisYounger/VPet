@@ -178,6 +178,7 @@ public partial class winWorkMenu : WindowX
             //}
             //else if (detailTypes.SelectedIndex == lastIndex)
             //{
+            detailTypes.IsDropDownOpen = true;
             detailTypes_SelectionChanged(null, null);
             //}
         }, DispatcherPriority.Loaded);
