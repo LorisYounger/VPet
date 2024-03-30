@@ -19,7 +19,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 自动启用MOD名称
         /// </summary>
-        public static readonly string[] OnModDefList = new string[] { "Core", "PCat", };//"ModMaker" 暂时移除MODMaker
+        public static readonly string[] OnModDefList = new string[] { "Core", "PCat", "ModMaker" };
 
         public static HashSet<string> LoadedDLL { get; } = new HashSet<string>()
         {
@@ -279,63 +279,65 @@ namespace VPet_Simulator.Windows
                                     continue;
                                 }
 #endif
-
+#if !DEBUG5
                             try
                             {
-
-                                var path = tmpfi.Name;
-                                if (LoadedDLL.Contains(path))
+#endif
+                            var path = tmpfi.Name;
+                            if (LoadedDLL.Contains(path))
+                                continue;
+                            LoadedDLL.Add(path);
+                            X509Certificate2 certificate;
+                            try
+                            {
+                                certificate = new X509Certificate2(tmpfi.FullName);
+                            }
+                            catch
+                            {
+                                certificate = null;
+                            }
+                            if (certificate != null)
+                            {
+                                if (certificate.Subject == "CN=\"Shenzhen Lingban Computer Technology Co., Ltd.\", O=\"Shenzhen Lingban Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
+                                    && certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US")
+                                {//LBGame 信任的证书
+                                    if (authtype != "FAIL")
+                                        authtype = "[认证]".Translate();
+                                }
+                                else if (!(certificate.Subject.Contains("Microsoft Corporation") &&
+                                    certificate.Issuer.Contains("Microsoft Corporation")) && !IsPassMOD(mw))
+                                {//不是通过模组,不加载
+                                    SuccessLoad = false;
                                     continue;
-                                LoadedDLL.Add(path);
-                                X509Certificate2 certificate;
-                                try
-                                {
-                                    certificate = new X509Certificate2(tmpfi.FullName);
                                 }
-                                catch
-                                {
-                                    certificate = null;
+                            }
+                            else
+                            {
+                                authtype = "FAIL";
+                                if (!IsPassMOD(mw))
+                                {//不是通过模组,不加载
+                                    SuccessLoad = false;
+                                    Author = modlps.FindSub("author").Info.Split('[').First();
+                                    continue;
                                 }
-                                if (certificate != null)
+                            }
+                            Assembly dll = Assembly.LoadFrom(tmpfi.FullName);
+                            var v = dll.GetExportedTypes();
+                            foreach (Type exportedType in v)
+                            {
+                                if (exportedType.BaseType == typeof(MainPlugin))
                                 {
-                                    if (certificate.Subject == "CN=\"Shenzhen Lingban Computer Technology Co., Ltd.\", O=\"Shenzhen Lingban Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
-                                        && certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US")
-                                    {//LBGame 信任的证书
-                                        if (authtype != "FAIL")
-                                            authtype = "[认证]".Translate();
-                                    }
-                                    else if (certificate.Subject != "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" && !IsPassMOD(mw))
-                                    {//不是通过模组,不加载
-                                        SuccessLoad = false;
-                                        continue;
-                                    }
+                                    mw.Plugins.Add((MainPlugin)Activator.CreateInstance(exportedType, mw));
                                 }
-                                else
-                                {
-                                    authtype = "FAIL";
-                                    if (!IsPassMOD(mw))
-                                    {//不是通过模组,不加载
-                                        SuccessLoad = false;
-                                        Author = modlps.FindSub("author").Info.Split('[').First();
-                                        continue;
-                                    }
-                                }
-                                Assembly dll = Assembly.LoadFrom(tmpfi.FullName);
-                                var v = dll.GetExportedTypes();
-                                foreach (Type exportedType in v)
-                                {
-                                    if (exportedType.BaseType == typeof(MainPlugin))
-                                    {
-                                        mw.Plugins.Add((MainPlugin)Activator.CreateInstance(exportedType, mw));
-                                    }
-                                }
-
+                            }
+#if !DEBUG5
                             }
                             catch (Exception e)
                             {
                                 ErrorMessage = e.Message;
                                 SuccessLoad = false;
                             }
+#endif
                         }
                         if (authtype != "FAIL")
                             Author += authtype;
