@@ -1,28 +1,16 @@
-﻿using LinePutScript;
-using LinePutScript.Localization.WPF;
+﻿using LinePutScript.Localization.WPF;
 using Panuon.WPF;
 using Panuon.WPF.UI;
 using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
-using static System.Windows.Forms.LinkLabel;
-using static VPet_Simulator.Core.GraphCore;
-using static VPet_Simulator.Core.GraphInfo;
-using static VPet_Simulator.Core.IGraph;
 using static VPet_Simulator.Windows.Interface.MPMessage;
 
 namespace VPet_Simulator.Windows

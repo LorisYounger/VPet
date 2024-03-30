@@ -1,6 +1,4 @@
 ﻿using LinePutScript;
-using LinePutScript.Converter;
-using System;
 
 namespace VPet_Simulator.Core
 {

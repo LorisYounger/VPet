@@ -1,23 +1,11 @@
-﻿using LinePutScript;
-using LinePutScript.Localization.WPF;
+﻿using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace VPet_Simulator.Windows
@@ -66,7 +54,7 @@ namespace VPet_Simulator.Windows
                 Dispatcher.Invoke(() =>
                     {
                         if (isclick)
-                        {                            
+                        {
                             try
                             {
                                 DragMove();
@@ -74,7 +62,8 @@ namespace VPet_Simulator.Windows
                                 Cursor = Cursors.Hand;
                                 Opacity = 1;
                             }
-                            catch { 
+                            catch
+                            {
                             }
 
                         }

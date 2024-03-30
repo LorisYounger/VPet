@@ -1,5 +1,4 @@
-﻿using LinePutScript;
-using LinePutScript.Dictionary;
+﻿using LinePutScript.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Windows;

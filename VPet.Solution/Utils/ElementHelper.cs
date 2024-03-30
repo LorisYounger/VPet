@@ -1,7 +1,6 @@
-﻿using System.Windows;
-using System.Windows.Data;
+﻿using HKW.WPF.Extensions;
+using System.Windows;
 using System.Windows.Input;
-using HKW.WPF.Extensions;
 
 namespace HKW.WPF.Helpers;
 

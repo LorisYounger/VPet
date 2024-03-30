@@ -1,8 +1,5 @@
-﻿using HKW.HKWUtils.Observable;
-using LinePutScript.Localization.WPF;
-using System.Collections.ObjectModel;
+﻿using LinePutScript.Localization.WPF;
 using System.ComponentModel;
-using System.Windows;
 
 namespace VPet.Solution.Models.SettingEditor;
 

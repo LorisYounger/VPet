@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Xml.Linq;
 
 namespace VPet_Simulator.Tool
 {
@@ -90,7 +86,7 @@ namespace VPet_Simulator.Tool
             lastf.MoveTo(Path.Combine(directoryInfo.FullName, $"{GetFileName(lastf)}_{id++:D3}_{rpt * time}.png"));
             Console.WriteLine("图片处理已完成");
         }
-       
+
 
         public static string GetFileHash(FileInfo fileInfo)
         {

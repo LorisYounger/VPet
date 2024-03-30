@@ -1,10 +1,4 @@
-﻿using HKW.HKWUtils.Observable;
-using LinePutScript.Localization.WPF;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LinePutScript.Localization.WPF;
 using System.Windows;
 using VPet.Solution.Models.SettingEditor;
 

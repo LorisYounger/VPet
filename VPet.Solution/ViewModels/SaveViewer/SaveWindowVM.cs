@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using LinePutScript;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using HKW.HKWUtils.Observable;
-using LinePutScript;
-using LinePutScript.Localization.WPF;
-using Panuon.WPF.UI;
-using VPet.Solution.Models;
 using VPet.Solution.Models.SaveViewer;
-using VPet.Solution.Models.SettingEditor;
-using VPet.Solution.Views.SettingEditor;
 using VPet_Simulator.Windows.Interface;
 
 namespace VPet.Solution.ViewModels.SaveViewer;

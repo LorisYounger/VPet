@@ -2,14 +2,12 @@
 using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using VPet_Simulator.Core;
-using static VPet_Simulator.Core.GraphCore;
 using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Windows
@@ -77,7 +75,7 @@ namespace VPet_Simulator.Windows
             if (DisplayListBox.SelectedItem == null)
                 return;
             LabelSuccess.Content = "当前正在运行".Translate() + ": " + (string)((ListBoxItem)DisplayListBox.SelectedItem).Content;
-             mw.RunAction((string)((ListBoxItem)DisplayListBox.SelectedItem).Content);
+            mw.RunAction((string)((ListBoxItem)DisplayListBox.SelectedItem).Content);
         }
 
         private void Say_Click(object sender, RoutedEventArgs e)

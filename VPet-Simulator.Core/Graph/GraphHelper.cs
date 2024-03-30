@@ -1,20 +1,15 @@
 ﻿using LinePutScript;
+using LinePutScript.Converter;
+using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Core.IGraph;
 using static VPet_Simulator.Core.Picture;
-using System.Windows.Controls;
-using System.Windows.Media;
-using LinePutScript.Converter;
-using System.Windows;
-using Panuon.WPF.UI;
-using LinePutScript.Localization.WPF;
 
 namespace VPet_Simulator.Core
 {

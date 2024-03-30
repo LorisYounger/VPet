@@ -1,11 +1,4 @@
 ﻿using LinePutScript.Converter;
-using LinePutScript.Localization.WPF;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -79,6 +72,6 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 好感度要求
         /// </summary>
-        [Line(IgnoreCase = true)] public LikeType Like { get; set; } = LikeType.N;       
+        [Line(IgnoreCase = true)] public LikeType Like { get; set; } = LikeType.N;
     }
 }

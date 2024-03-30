@@ -1,15 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using LinePutScript.Localization.WPF;
+using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
-using static VPet_Simulator.Core.GraphCore;
-using Panuon.WPF.UI;
-using LinePutScript.Localization.WPF;
-using static VPet_Simulator.Core.GraphInfo;
-using System.Xml.Linq;
-using System.Linq;
 using System.Windows.Media;
+using System.Windows.Threading;
+using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Core
 {

@@ -1,10 +1,5 @@
 ﻿using LinePutScript.Converter;
-using LinePutScript.Localization.WPF;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.Main;
 
@@ -54,13 +49,13 @@ namespace VPet_Simulator.Windows.Interface
             get => (DayTime)dayTime;
             set => dayTime = (int)value;
         }
-     
+
         /// <summary>
         /// 工作状态
         /// </summary>
         [Line(IgnoreCase = true)]
         public WorkingState State { get; set; } = WorkingState.Nomal;
-      
+
 
         /// <summary>
         /// 检查部分状态是否满足需求

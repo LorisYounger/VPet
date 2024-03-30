@@ -1,9 +1,8 @@
-﻿using System.ComponentModel;
+﻿using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using HKW.HKWUtils;
-using LinePutScript.Localization.WPF;
-using Panuon.WPF.UI;
 using VPet.Solution.ViewModels.SettingEditor;
 
 namespace VPet.Solution.Views.SettingEditor;

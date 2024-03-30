@@ -1,5 +1,4 @@
-﻿using Panuon.WPF.UI;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
@@ -49,7 +48,7 @@ namespace VPet_Simulator.Windows
             if (!double.IsNaN(ItemsMinWidth))
             {
                 var columns = (int)Math.Floor(sizeInfo.NewSize.Width / ItemsMinWidth);
-                if(Columns != columns)
+                if (Columns != columns)
                 {
                     isChanged = true;
                 }
@@ -58,13 +57,13 @@ namespace VPet_Simulator.Windows
             if (!double.IsNaN(ItemsMinHeight))
             {
                 var rows = (int)Math.Floor(sizeInfo.NewSize.Height / ItemsMinHeight);
-                if(Rows != rows)
+                if (Rows != rows)
                 {
                     isChanged = true;
                 }
                 SetCurrentValue(RowsProperty, rows);
             }
-            if(isChanged)
+            if (isChanged)
             {
                 RaiseEvent(new RoutedEventArgs(ChangedEvent));
             }

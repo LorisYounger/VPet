@@ -1,9 +1,5 @@
 ﻿using LinePutScript;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace VPet_Simulator.Windows.Interface
@@ -192,7 +188,7 @@ namespace VPet_Simulator.Windows.Interface
         /// 获取或设置在任务切换器(Alt+Tab)中是否隐藏窗口，重启后生效
         /// </summary>
         bool HideFromTaskControl { get; set; }
-       
+
         /// <summary>
         /// 读写自定义游戏设置(给mod准备的接口)
         /// </summary>

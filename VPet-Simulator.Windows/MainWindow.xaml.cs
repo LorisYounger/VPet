@@ -1,30 +1,27 @@
-﻿using Steamworks;
+﻿using LinePutScript;
+using LinePutScript.Dictionary;
+using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
+using Steamworks;
+using Steamworks.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using VPet_Simulator.Core;
 using System.Timers;
-using LinePutScript;
-using Panuon.WPF.UI;
-using VPet_Simulator.Windows.Interface;
-using System.Linq;
-using LinePutScript.Localization.WPF;
-using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
+using VPet_Simulator.Core;
+using VPet_Simulator.Windows.Interface;
+using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Windows.PerformanceDesktopTransparentWindow;
 using Line = LinePutScript.Line;
-using static VPet_Simulator.Core.GraphInfo;
-using System.Globalization;
-using LinePutScript.Dictionary;
-using Steamworks.Data;
-using System.Windows.Controls;
-using ToolBar = VPet_Simulator.Core.ToolBar;
-using System.Security.Cryptography;
-using System.Diagnostics;
-using System.Reflection.Metadata;
 
 namespace VPet_Simulator.Windows
 {
@@ -378,7 +375,7 @@ namespace VPet_Simulator.Windows
             Exit();
         }
         private void Exit()
-        {           
+        {
             if (App.MainWindows.Count <= 1)
             {
                 Task.Run(() =>

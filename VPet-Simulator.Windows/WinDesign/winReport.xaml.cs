@@ -1,11 +1,11 @@
-﻿using Panuon.WPF.UI;
+﻿using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
 using System;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Windows;
 using System.Web;
-using LinePutScript.Localization.WPF;
+using System.Windows;
 
 namespace VPet_Simulator.Windows
 {
@@ -36,6 +36,7 @@ namespace VPet_Simulator.Windows
             {
                 MessageBoxX.Show("您不是Steam用户，无法使用反馈中心\n欢迎加入虚拟主播模拟器群430081239反馈问题".Translate(),
                     "非Steam用户无法使用反馈中心".Translate(), MessageBoxButton.OK, MessageBoxIcon.Info);
+                btn_Report.IsEnabled = false;
             }
         }
 

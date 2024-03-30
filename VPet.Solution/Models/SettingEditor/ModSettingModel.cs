@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-using HKW.HKWUtils.Observable;
-using LinePutScript;
+﻿using LinePutScript;
 using LinePutScript.Localization.WPF;
-using VPet.Solution.Views.SettingEditor;
-using VPet_Simulator.Windows;
+using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace VPet.Solution.Models.SettingEditor;
 

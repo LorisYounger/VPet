@@ -1,8 +1,4 @@
-﻿using System.Windows.Data;
-
-using System.Windows;
-
-namespace HKW.WPF.Converters;
+﻿namespace HKW.WPF.Converters;
 
 public class MaxConverter : MultiValueConverterBase
 {

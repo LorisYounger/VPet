@@ -1,10 +1,7 @@
 ﻿using LinePutScript;
 using LinePutScript.Dictionary;
-using LinePutScript.Localization.WPF;
 using System.Windows;
-using System.Windows.Controls;
 using VPet_Simulator.Core;
-using VPet_Simulator.Windows.Interface;
 
 namespace VPet.Solution.Models.SettingEditor
 {

@@ -1,5 +1,4 @@
-﻿using HKW.HKWUtils.Observable;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using VPet_Simulator.Core;
 

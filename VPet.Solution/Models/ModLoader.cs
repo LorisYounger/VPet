@@ -1,21 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using LinePutScript;
-using LinePutScript.Converter;
+﻿using LinePutScript;
 using LinePutScript.Dictionary;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using VPet_Simulator.Core;
-using VPet_Simulator.Windows.Interface;
-using System.Windows.Media.Imaging;
 using LinePutScript.Localization.WPF;
+using System.Windows.Media.Imaging;
 
 namespace VPet.Solution.Models;
 

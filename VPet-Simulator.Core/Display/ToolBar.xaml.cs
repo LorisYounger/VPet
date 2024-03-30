@@ -1,21 +1,16 @@
-﻿using System;
+﻿using Panuon.WPF.UI;
+using System;
+using System.Collections.Generic;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Timers;
-using Timer = System.Timers.Timer;
-using Panuon.WPF.UI;
 using System.Windows.Threading;
-using LinePutScript;
-using LinePutScript.Localization.WPF;
-using static VPet_Simulator.Core.GraphInfo;
-using System.Collections.Generic;
 using static VPet_Simulator.Core.GraphHelper;
-using System.ComponentModel;
-using System.Reflection;
+using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Core.Main;
-using static System.Net.Mime.MediaTypeNames;
+using Timer = System.Timers.Timer;
 
 namespace VPet_Simulator.Core
 {

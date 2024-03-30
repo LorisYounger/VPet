@@ -1,16 +1,13 @@
-﻿using System;
+﻿using LinePutScript;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using static VPet_Simulator.Core.Picture;
 using static VPet_Simulator.Core.IGraph;
-using LinePutScript;
-using System.IO;
-using static VPet_Simulator.Core.GraphCore;
-using System.Linq;
 
 namespace VPet_Simulator.Core
 {

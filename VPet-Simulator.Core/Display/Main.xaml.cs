@@ -1,8 +1,6 @@
-﻿using LinePutScript;
-using LinePutScript.Localization.WPF;
+﻿using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
-using System.Linq;
 using System.Media;
 using System.Threading;
 using System.Threading.Tasks;

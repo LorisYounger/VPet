@@ -1,11 +1,7 @@
-﻿using LinePutScript;
-using LinePutScript.Converter;
+﻿using LinePutScript.Localization.WPF;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using LinePutScript.Localization.WPF;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
 

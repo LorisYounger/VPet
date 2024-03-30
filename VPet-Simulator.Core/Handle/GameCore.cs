@@ -16,7 +16,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 触摸范围和事件列表
         /// </summary>
-        public List<TouchArea> TouchEvent = new List<TouchArea>();     
+        public List<TouchArea> TouchEvent = new List<TouchArea>();
         /// <summary>
         /// 图形核心
         /// </summary>

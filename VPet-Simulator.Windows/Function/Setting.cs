@@ -1,16 +1,11 @@
 ﻿using LinePutScript;
 using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
-using NAudio.Gui;
 using Steamworks;
 using System;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
-using static VPet_Simulator.Windows.Win32;
 
 namespace VPet_Simulator.Windows
 {

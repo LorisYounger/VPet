@@ -3,16 +3,8 @@ using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Security.Policy;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using VPet_Simulator.Core;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace VPet_Simulator.Windows.Interface
 {

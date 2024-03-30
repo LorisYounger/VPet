@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
+﻿using LinePutScript.Localization.WPF;
+using System.ComponentModel;
 using System.Windows.Media.Imaging;
-using LinePutScript.Localization.WPF;
 
 namespace VPet.Solution.Models.SettingEditor;
 

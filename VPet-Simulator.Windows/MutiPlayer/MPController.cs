@@ -1,7 +1,4 @@
-﻿using System.Windows.Forms;
-using System.Windows.Interop;
-using System.Drawing;
-using VPet_Simulator.Core;
+﻿using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows
 {
