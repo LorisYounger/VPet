@@ -96,7 +96,7 @@ namespace VPet_Simulator.Windows
         /// <param name="themename">主题名称</param>
         public void LoadTheme(string themename)
         {
-            Theme ctheme = Themes.Find(x => x.Name == themename || x.xName == themename);
+            Theme ctheme = Themes.Find(x => x.xName == themename);
             if (ctheme == null)
             {
                 return;
@@ -152,8 +152,9 @@ namespace VPet_Simulator.Windows
             {
                 return;
             }
-            Application.Current.Resources["MainFont"] = cfont.Font;
-            Panuon.WPF.UI.GlobalSettings.Setting.FontFamily = cfont.Font;
+            var font = cfont.Font;
+            Application.Current.Resources["MainFont"] = font;
+            Panuon.WPF.UI.GlobalSettings.Setting.FontFamily = font;
         }
 
         public List<Food> Foods { get; } = new List<Food>();

@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Localization.WPF;
 using System.IO;
 using System.Windows.Media;
 
@@ -9,6 +10,22 @@ namespace VPet_Simulator.Windows.Interface
     /// </summary>
     public class Theme
     {
+        private string transname = null;
+        /// <summary>
+        /// 名字 (翻译)
+        /// </summary>
+        public string TranslateName
+        {
+            get
+            {
+                if (transname == null)
+                {
+                    transname = LocalizeCore.Translate(Name);
+                }
+                return transname;
+            }
+        }
+
         public string Name;
         public string xName;
         public string Image;
@@ -31,7 +48,25 @@ namespace VPet_Simulator.Windows.Interface
     /// </summary>
     public class IFont
     {
+        /// <summary>
+        /// 字体名字
+        /// </summary>
         public string Name;
+        private string transname = null;
+        /// <summary>
+        /// 名字 (翻译)
+        /// </summary>
+        public string TranslateName
+        {
+            get
+            {
+                if (transname == null)
+                {
+                    transname = LocalizeCore.Translate(Name);
+                }
+                return transname;
+            }
+        }
         public string Path;
         public IFont(FileInfo path)
         {
