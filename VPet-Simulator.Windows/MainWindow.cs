@@ -507,13 +507,13 @@ namespace VPet_Simulator.Windows
 
                 if (Core.Save.StrengthFood < sm75)
                 {
-                    if (Core.Save.StrengthFood < sm * 0.50)
+                    if (Core.Save.StrengthFood < sm * 0.50 || sm * 0.10 > 50)
                     {//太饿了,找正餐
                         food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > Math.Min(sm * 0.20, 100));
                     }
                     else
                     {//找零食
-                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.StrengthFood > Math.Min(sm * 0.10, 50));
+                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.StrengthFood > sm * 0.10);
                     }
                     if (food.Count == 0)
                         return;
