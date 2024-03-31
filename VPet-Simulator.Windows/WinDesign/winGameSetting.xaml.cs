@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
@@ -356,8 +357,26 @@ namespace VPet_Simulator.Windows
             runMODAuthor.Text = mod.Author;
             runMODGameVer.Text = CoreMOD.INTtoVER(mod.GameVer);
             runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
+            if(ImageMOD.Source is BitmapImage bitmapImage)
+            {
+                bitmapImage.StreamSource?.Dispose();
+            }
             if (File.Exists(mod.Path.FullName + @"\icon.png"))
-                ImageMOD.Source = ImageResources.NewSafeBitmapImage(mod.Path.FullName + @"\icon.png");
+            {
+                bitmapImage = new();
+                bitmapImage.BeginInit();
+                try
+                {
+                    var bytes = File.ReadAllBytes(mod.Path.FullName + @"\icon.png");
+                    bitmapImage.StreamSource = new MemoryStream(bytes);
+                    bitmapImage.DecodePixelWidth = 250;
+                }
+                finally
+                {
+                    bitmapImage.EndInit();
+                }
+                ImageMOD.Source = bitmapImage;
+            }
             else
                 ImageMOD.Source = ImageResources.NewSafeBitmapImage(@"pack://application:,,,/Res/TopLogo2019.PNG");
             if (mod.GameVer < mw.version)
