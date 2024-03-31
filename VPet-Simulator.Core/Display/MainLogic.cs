@@ -176,15 +176,17 @@ namespace VPet_Simulator.Core
                 case WorkingState.Sleep:
                     //睡觉 缓慢恢复所有(除了心情,但是心情不会下降)
                     Core.Save.StrengthChange(TimePass * 2);
+                    Core.Save.StrengthChangeFood(TimePass);
                     if (Core.Save.StrengthFood <= 25)
-                    {//低状态3倍恢复速度
-                        Core.Save.StrengthChangeFood(TimePass * 2);
+                    {//低状态2倍恢复速度
+                        Core.Save.StrengthChangeFood(TimePass);
                     }
                     else if (Core.Save.StrengthFood >= 75)
                         Core.Save.Health += TimePass * 2;
+                    Core.Save.StrengthChangeDrink(TimePass);
                     if (Core.Save.StrengthDrink >= 25)
                     {
-                        Core.Save.StrengthChangeDrink(TimePass * 2);
+                        Core.Save.StrengthChangeDrink(TimePass);
                     }
                     else if (Core.Save.StrengthDrink >= 75)
                         Core.Save.Health += TimePass * 2;
@@ -193,8 +195,8 @@ namespace VPet_Simulator.Core
                 case WorkingState.Work:
                     if (NowWork == null)
                         break;
-                    var needfood = TimePass * NowWork.StrengthFood;
-                    var needdrink = TimePass * NowWork.StrengthDrink;
+                    var needfood = TimePass * (0.5 + NowWork.StrengthFood / 2);
+                    var needdrink = TimePass * (0.5 + NowWork.StrengthDrink / 2);
                     double efficiency = 0;
                     int addhealth = -2;
                     if (Core.Save.StrengthFood <= Core.Save.StrengthMax * 0.25)
@@ -247,7 +249,7 @@ namespace VPet_Simulator.Core
                         Core.Save.FeelingChange(-NowWork.Feeling * TimePass);
                     }
                     else
-                        Core.Save.FeelingChange(-freedrop * NowWork.Feeling);
+                        Core.Save.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2));
                     if (Core.Save.Mode == IGameSave.ModeType.Ill)//生病时候停止工作
                         WorkTimer.Stop();
                     break;
