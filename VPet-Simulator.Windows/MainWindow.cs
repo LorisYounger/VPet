@@ -534,11 +534,20 @@ namespace VPet_Simulator.Windows
                     GameSavesData.Statistics[(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
-                else if (Set.AutoGift && Core.Save.Feeling < Core.Save.FeelingMax * 0.50)
+                else if (Core.Save.Feeling < Core.Save.FeelingMax * 0.50)
                 {
-                    food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > Math.Min(Core.Save.FeelingMax * 0.10, 50));
-                    if (food.Count == 0)
-                        return;
+                    if (Set.AutoGift)
+                    {
+                        food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > Math.Min(Core.Save.FeelingMax * 0.10, 50));
+                        if (food.Count == 0)
+                            return;
+                    }
+                    else // 没有自动购买礼物的可以试试自动购买零食能加点是一点
+                    {
+                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.Feeling > Math.Min(Core.Save.FeelingMax * 0.10, 50));
+                        if (food.Count == 0)
+                            return;
+                    }
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
                     TakeItem(item);
