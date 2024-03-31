@@ -1690,8 +1690,8 @@ namespace VPet_Simulator.Windows
                   {
                       foreach (var work in Core.Graph.GraphConfig.Works)
                       {
-                          if (work.LevelLimit > 100)//导入的最大合理工作不能超过100级
-                              work.LevelLimit = 100;
+                          if (work.LevelLimit > 200)//导入的最大合理工作不能超过200级
+                              work.LevelLimit = 200;
                           if (work.IsOverLoad())
                           {
                               work.FixOverLoad();
