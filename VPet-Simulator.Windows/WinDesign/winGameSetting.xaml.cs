@@ -357,7 +357,7 @@ namespace VPet_Simulator.Windows
             runMODAuthor.Text = mod.Author;
             runMODGameVer.Text = CoreMOD.INTtoVER(mod.GameVer);
             runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
-            if(ImageMOD.Source is BitmapImage bitmapImage)
+            if (ImageMOD.Source is BitmapImage bitmapImage)
             {
                 bitmapImage.StreamSource?.Dispose();
             }
@@ -379,31 +379,32 @@ namespace VPet_Simulator.Windows
             }
             else
                 ImageMOD.Source = ImageResources.NewSafeBitmapImage(@"pack://application:,,,/Res/TopLogo2019.PNG");
-            if (mod.GameVer < mw.version)
-            {
-                if (mod.GameVer / 1000 == mw.version / 1000)
+            if (mod.GameVer / 100 != mw.version / 100)
+                if (mod.GameVer < mw.version)
                 {
-                    runMODGameVer.Text += " (兼容)".Translate();
+                    if (mod.GameVer / 1000 == mw.version / 1000)
+                    {
+                        runMODGameVer.Text += " (兼容)".Translate();
+                    }
+                    else
+                    {
+                        runMODGameVer.Text += " (版本低)".Translate();
+                        runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
+                    }
                 }
-                else
+                else if (mod.GameVer > mw.version)
                 {
-                    runMODGameVer.Text += " (版本低)".Translate();
-                    runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
+                    if (mod.GameVer / 1000 == mw.version / 1000)
+                    {
+                        runMODGameVer.Text += " (兼容)".Translate();
+                        runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
+                    }
+                    else
+                    {
+                        runMODGameVer.Text += " (版本高)".Translate();
+                        runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
+                    }
                 }
-            }
-            else if (mod.GameVer > mw.version)
-            {
-                if (mod.GameVer / 1000 == mw.version / 1000)
-                {
-                    runMODGameVer.Text += " (兼容)".Translate();
-                    runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
-                }
-                else
-                {
-                    runMODGameVer.Text += " (版本高)".Translate();
-                    runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
-                }
-            }
             if (!mod.IsOnMOD(mw))
             {
                 LabelModName.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
