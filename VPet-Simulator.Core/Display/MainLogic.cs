@@ -166,9 +166,9 @@ namespace VPet_Simulator.Core
             Core.Save.StoreTake();
             double freedrop = (DateTime.Now - LastInteractionTime).TotalMinutes;
             if (freedrop < 1)
-                freedrop = 0.25 * TimePass;
+                freedrop = 0;
             else
-                freedrop = Math.Min(Math.Sqrt(freedrop) * TimePass / 2, Core.Save.FeelingMax / 400);
+                freedrop = Math.Min(Math.Sqrt(freedrop) * TimePass / 4, Core.Save.FeelingMax / 800);
             switch (State)
             {
                 case WorkingState.Empty:
