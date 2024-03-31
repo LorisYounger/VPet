@@ -174,17 +174,17 @@ namespace VPet_Simulator.Core
                 case WorkingState.Empty:
                     break;
                 case WorkingState.Sleep:
-                    //睡觉不消耗
+                    //睡觉 缓慢恢复所有(除了心情,但是心情不会下降)
                     Core.Save.StrengthChange(TimePass * 2);
                     if (Core.Save.StrengthFood <= 25)
-                    {
-                        Core.Save.StrengthChangeFood(TimePass / 2);
+                    {//低状态3倍恢复速度
+                        Core.Save.StrengthChangeFood(TimePass * 2);
                     }
                     else if (Core.Save.StrengthFood >= 75)
                         Core.Save.Health += TimePass * 2;
                     if (Core.Save.StrengthDrink >= 25)
                     {
-                        Core.Save.StrengthChangeDrink(TimePass / 2);
+                        Core.Save.StrengthChangeDrink(TimePass * 2);
                     }
                     else if (Core.Save.StrengthDrink >= 75)
                         Core.Save.Health += TimePass * 2;
