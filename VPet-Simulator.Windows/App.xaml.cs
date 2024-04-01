@@ -50,8 +50,10 @@ namespace VPet_Simulator.Windows
             var expt = e.ToString();
             if (expt.Contains("MainWindow.Close"))
                 return;
-            else if ((expt.ToLower().Contains("value") && expt.ToLower().Contains("nan")) ||
-                expt.Contains("System.OverflowException") || expt.Contains("System.DivideByZeroException"))
+            else if ((!isFatality && MainWindow != null && ((MainWindow)MainWindow).GameSavesData?.GameSave != null &&
+                (((MainWindow)MainWindow).GameSavesData.GameSave.Money > int.MaxValue || ((MainWindow)MainWindow).GameSavesData.GameSave.Exp > int.MaxValue)
+                ) && ((expt.ToLower().Contains("value") && expt.ToLower().Contains("nan")) ||
+                expt.Contains("System.OverflowException") || expt.Contains("System.DivideByZeroException")))
             {
                 MessageBox.Show("由于修改游戏数据导致数据溢出,存档可能会出错\n开发者提醒您请不要使用过于超模的MOD".Translate());
                 return;
