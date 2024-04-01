@@ -275,7 +275,7 @@ namespace VPet_Simulator.Windows
                         };
                         menuItem.Items.Add(menuJoin);
 
-                        int clid = Array.IndexOf(App.Args, "connect_lobby");
+                        int clid = Array.IndexOf(App.Args, "+connect_lobby");
                         if (clid != -1)
                         {
                             if (ulong.TryParse(App.Args[clid + 1], out ulong lid))

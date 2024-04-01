@@ -94,6 +94,10 @@ namespace VPet_Simulator.Windows
             else
                 ItemID = 0;
             CacheDate = modlps.GetDateTime("cachedate", DateTime.MinValue);
+            if (CacheDate > DateTime.Now)
+            {//去掉不合理的清理缓存日期
+                CacheDate = DateTime.MinValue;
+            }
 
             //MOD未加载时支持翻译
             foreach (var line in modlps.FindAllLine("lang"))
@@ -304,7 +308,7 @@ namespace VPet_Simulator.Windows
                                         if (authtype != "FAIL")
                                             authtype = "[认证]".Translate();
                                     }
-                                    else if (!(certificate.Issuer.Contains("Microsoft Corporation") || certificate.Issuer.Contains(".NET Foundation Projects")) 
+                                    else if (!(certificate.Issuer.Contains("Microsoft Corporation") || certificate.Issuer.Contains(".NET Foundation Projects"))
                                         && !IsPassMOD(mw))
                                     {//不是通过模组,不加载
                                         SuccessLoad = false;
