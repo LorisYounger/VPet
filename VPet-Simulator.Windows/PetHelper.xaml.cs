@@ -57,7 +57,11 @@ namespace VPet_Simulator.Windows
                         {
                             try
                             {
-                                DragMove();
+                                try
+                                {
+                                    DragMove();
+                                }
+                                catch { }
                                 isdragmove = Opacity == 0.8;
                                 Cursor = Cursors.Hand;
                                 Opacity = 1;
