@@ -98,7 +98,7 @@ namespace VPet_Simulator.Windows
 
         private void btn_Send_Click(object sender, RoutedEventArgs e)
         {
-            if (tbTalk.SelectedIndex == -1 || tbTalk.Text == "没有可以说的话".Translate())
+            if (tbTalk.SelectedIndex == -1 || tbTalk.Text == "没有可以说的话".Translate() || textList.Count == 0)
             {
                 return;
             }
