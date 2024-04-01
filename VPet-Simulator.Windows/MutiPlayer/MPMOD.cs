@@ -9,7 +9,7 @@ using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows;
-public class MPMOD
+internal class MPMOD
 {
     public static void LoadImage(MPFriends mw, DirectoryInfo di, string pre = "")
     {

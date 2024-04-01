@@ -12,7 +12,7 @@ namespace VPet_Simulator.Windows
     /// <summary>
     /// 游戏设置
     /// </summary>
-    public class Setting : LPS_D, ISetting
+    internal class Setting : LPS_D, ISetting
     {
         MainWindow mw;
         /// <summary>

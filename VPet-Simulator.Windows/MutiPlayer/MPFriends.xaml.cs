@@ -218,7 +218,7 @@ public partial class MPFriends : WindowX, IMPFriend
         wmp.SendMessageALL(msg);
     }
 
-    public List<MPMOD> MPMODs = new List<MPMOD>();
+    internal List<MPMOD> MPMODs = new List<MPMOD>();
     public Main Main { get; set; }
 
     public ulong LobbyID => lb.Id;

@@ -14,7 +14,7 @@ using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows
 {
-    public class CoreMOD
+    internal class CoreMOD
     {
         /// <summary>
         /// 自动启用MOD名称
@@ -422,7 +422,7 @@ namespace VPet_Simulator.Windows
             save.Health += food.Health * buff;
             save.Likability += food.Likability * buff;
         }
-        public static bool IsOnMod(this Setting t, string ModName)
+        internal static bool IsOnMod(this Setting t, string ModName)
         {
             if (CoreMOD.OnModDefList.Contains(ModName))
                 return true;
@@ -431,14 +431,14 @@ namespace VPet_Simulator.Windows
                 return false;
             return line.Find(ModName.ToLower()) != null;
         }
-        public static bool IsPassMOD(this Setting t, string ModName)
+        internal static bool IsPassMOD(this Setting t, string ModName)
         {
             var line = t.FindLine("passmod");
             if (line == null)
                 return false;
             return line.Find(ModName.ToLower()) != null;
         }
-        public static bool IsMSGMOD(this Setting t, string ModName)
+        internal static bool IsMSGMOD(this Setting t, string ModName)
         {
             var line = t.FindorAddLine("msgmod");
             if (line.GetBool(ModName))
@@ -446,21 +446,21 @@ namespace VPet_Simulator.Windows
             line.SetBool(ModName, true);
             return true;
         }
-        public static void OnMod(this Setting t, string ModName)
+        internal static void OnMod(this Setting t, string ModName)
         {
             if (string.IsNullOrWhiteSpace(ModName))
                 return;
             t.FindorAddLine("onmod").AddorReplaceSub(new Sub(ModName.ToLower()));
         }
-        public static void OnModRemove(this Setting t, string ModName)
+        internal static void OnModRemove(this Setting t, string ModName)
         {
             t.FindorAddLine("onmod").Remove(ModName.ToLower());
         }
-        public static void PassMod(this Setting t, string ModName)
+        internal static void PassMod(this Setting t, string ModName)
         {
             t.FindorAddLine("passmod").AddorReplaceSub(new Sub(ModName.ToLower()));
         }
-        public static void PassModRemove(this Setting t, string ModName)
+        internal static void PassModRemove(this Setting t, string ModName)
         {
             t.FindorAddLine("passmod").Remove(ModName.ToLower());
         }
