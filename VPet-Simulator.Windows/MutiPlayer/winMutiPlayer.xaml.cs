@@ -384,6 +384,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                                            && item.Strength >= 0 && item.StrengthDrink >= 0 && item.StrengthFood >= 0 && item.Feeling >= 0)
                                         {//单次联机收礼物上限1000
                                             giveprice += item.Price;
+                                            mw.Core.Save.Money += item.Price;
                                             mw.TakeItem(feed.Item);
                                         }
                                     }
