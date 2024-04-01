@@ -872,6 +872,7 @@ namespace VPet_Simulator.Windows
                 tmp.GameSave.Money = 100000;
                 Dispatcher.Invoke(() => MessageBoxX.Show("检测到金钱超过 9,223,372,036 导致算数溢出\n已经自动回正".Translate(), "数据溢出警告".Translate()));
             }
+
             if (tmp.Data[(gbol)"round"])
             {//根据游玩时间补偿数据溢出
                 Dispatcher.Invoke(() => MessageBoxX.Show("您以前遭遇过数据溢出, 已根据游戏时长自动添加进当前数值".Translate(), "数据溢出恢复".Translate()));
@@ -1033,10 +1034,17 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public float AudioPlayingVolume()
         {
-            using (var enumerator = new MMDeviceEnumerator())
+            try
             {
-                var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
-                return device.AudioMeterInformation.MasterPeakValue;
+                using (var enumerator = new MMDeviceEnumerator())
+                {
+                    var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+                    return device.AudioMeterInformation.MasterPeakValue;
+                }
+            }
+            catch
+            {
+                return -1;
             }
         }
         /// <summary>
