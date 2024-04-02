@@ -40,7 +40,7 @@ namespace VPet_Simulator.Windows
 {
     public partial class MainWindow : IMainWindow
     {
-        
+
         /// <summary>
         /// 加载主题
         /// </summary>
@@ -108,7 +108,7 @@ namespace VPet_Simulator.Windows
             Panuon.WPF.UI.GlobalSettings.Setting.FontFamily = font;
         }
 
-      
+
         /// <summary>
         /// 获得自动点击的文本
         /// </summary>
@@ -629,6 +629,8 @@ namespace VPet_Simulator.Windows
             item.NotifyOfPropertyChange("Description");
 
             Core.Save.Money -= item.Price;
+            //吃完东西记得计算下状态
+            Core.Save.Mode = Core.Save.CalMode();
             //统计
             GameSavesData.Statistics[(gint)"stat_buytimes"]++;
             GameSavesData.Statistics[(gint)("buy_" + item.Name)]++;
