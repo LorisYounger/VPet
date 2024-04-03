@@ -973,8 +973,15 @@ namespace VPet_Simulator.Windows
             {
                 using (var enumerator = new MMDeviceEnumerator())
                 {
-                    var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
-                    return device.AudioMeterInformation.MasterPeakValue;
+                    if (enumerator.HasDefaultAudioEndpoint(DataFlow.Render, Role.Console))
+                    {
+                        var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+                        return device.AudioMeterInformation.MasterPeakValue;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
                 }
             }
             catch
@@ -1189,12 +1196,20 @@ namespace VPet_Simulator.Windows
             //看看是否超模
             if (HashCheck && work.IsOverLoad())
             {
-                if (MessageBoxX.Show("当前工作数据属性超模,是否继续工作?\n超模工作可能会导致游戏发生不可预料的错误\n超模工作不影响大部分成就解锁\n可以在设置中开启自动计算自动为工作设置合理数值"
-                    .Translate(), "超模工作提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                if (Set["gameconfig"].GetBool("noAutoCal"))
                 {
+                    if (MessageBoxX.Show("当前工作数据属性超模,是否继续工作?\n超模工作可能会导致游戏发生不可预料的错误\n超模工作不影响大部分成就解锁\n可以在设置中开启自动计算自动为工作设置合理数值"
+                        .Translate(), "超模工作提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                    {
+                        return false;
+                    }
+                    HashCheck = false;
+                }
+                else
+                {
+                    MessageBoxX.Show("当前工作数据属性超模,已自动取消".Translate(), "超模工作提醒".Translate());
                     return false;
                 }
-                HashCheck = false;
             }
             return true;
         }
