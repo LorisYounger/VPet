@@ -105,6 +105,10 @@ public partial class winWorkMenu : WindowX
     }
     public void ShowWork(Work work)
     {
+        if (!mw.Set["gameconfig"].GetBool("noAutoCal") && work.IsOverLoad())
+        {
+            work.FixOverLoad();
+        }
         nowworkdisplay = work;
 
         //显示图像
