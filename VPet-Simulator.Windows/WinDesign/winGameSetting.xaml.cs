@@ -934,7 +934,7 @@ namespace VPet_Simulator.Windows
                     link.SetArguments("launchsteam");
                 }
                 else
-                    link.SetPath(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                    link.SetPath(System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(".dll", ".exe"));
 
                 link.SetDescription("VPet Simulator");
                 link.SetIconLocation(ExtensionValue.BaseDirectory + @"vpeticon.ico", 0);
