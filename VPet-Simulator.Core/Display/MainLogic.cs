@@ -249,9 +249,7 @@ namespace VPet_Simulator.Core
                         Core.Save.FeelingChange(-NowWork.Feeling * TimePass);
                     }
                     else
-                        Core.Save.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2));
-                    if (Core.Save.Mode == IGameSave.ModeType.Ill)//生病时候停止工作
-                        WorkTimer.Stop();
+                        Core.Save.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2));                  
                     break;
                 default://默认
                     //饮食等乱七八糟的消耗

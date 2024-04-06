@@ -174,6 +174,11 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="graphName">夹层动画名</param>
         /// <param name="imageSource">被夹在中间的图片</param>
         void DisplayFoodAnimation(string graphName, ImageSource imageSource);
+        /// <summary>
+        /// 使用/食用物品 (自动扣钱) (不包括显示动画)
+        /// </summary>
+        /// <param name="item">物品</param>
+        void TakeItem(Food item);
     }
 
 }
