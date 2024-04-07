@@ -961,16 +961,43 @@ namespace VPet_Simulator.Windows
                 }
             }
         }
-#pragma warning disable CS0414 // 字段“MainWindow.AudioPlayingVolumeOK”已被赋值，但从未使用过它的值
         private bool? AudioPlayingVolumeOK = null;
-#pragma warning restore CS0414 // 字段“MainWindow.AudioPlayingVolumeOK”已被赋值，但从未使用过它的值
         /// <summary>
         /// 获得当前系统音乐播放音量
         /// </summary>
         public float AudioPlayingVolume()
         {
-            try
+            if (AudioPlayingVolumeOK == null)
+            {//第一调用检查是否支持
+                try
+                {//后续容错可能是偶发性
+                    using (var enumerator = new MMDeviceEnumerator())
+                    {
+                        if (enumerator.HasDefaultAudioEndpoint(DataFlow.Render, Role.Console))
+                        {
+                            var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+                            AudioPlayingVolumeOK = true;
+                            return device.AudioMeterInformation.MasterPeakValue;
+                        }
+                        else
+                        {
+                            AudioPlayingVolumeOK = false;
+                            return -1;
+                        }
+                    }
+                }
+                catch
+                {
+                    AudioPlayingVolumeOK = false;
+                    return -1;
+                }
+            }
+            else if (AudioPlayingVolumeOK == false)
             {
+                return -1;
+            }
+            try
+            {//后续容错可能是偶发性
                 using (var enumerator = new MMDeviceEnumerator())
                 {
                     if (enumerator.HasDefaultAudioEndpoint(DataFlow.Render, Role.Console))
