@@ -48,7 +48,7 @@ namespace VPet_Simulator.Windows
         private void UnhandledException(Exception e, bool isFatality)
         {
             var expt = e.ToString();
-            if (expt.Contains("MainWindow.Close"))
+            if (expt.Contains("MainWindow.Close") && expt.Contains("System.ArgumentException"))//临时处理不报错
                 return;
             else if ((!isFatality && MainWindow != null && ((MainWindow)MainWindow).GameSavesData?.GameSave != null &&
                 (((MainWindow)MainWindow).GameSavesData.GameSave.Money > int.MaxValue || ((MainWindow)MainWindow).GameSavesData.GameSave.Exp > int.MaxValue)
