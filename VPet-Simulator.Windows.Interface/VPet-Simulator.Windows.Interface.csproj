@@ -19,6 +19,6 @@
     <PackageReference Include="LinePutScript" Version="1.11.6" />
     <PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.6" />
     <PackageReference Include="Panuon.WPF" Version="1.1.0" />
-    <PackageReference Include="Panuon.WPF.UI" Version="1.2.1.1" />
+    <PackageReference Include="Panuon.WPF.UI" Version="1.2.1.2" />
   </ItemGroup>
 </Project>
