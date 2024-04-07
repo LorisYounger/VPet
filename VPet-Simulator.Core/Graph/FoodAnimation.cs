@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using static VPet_Simulator.Core.IGraph;
 
 namespace VPet_Simulator.Core
@@ -280,7 +281,14 @@ namespace VPet_Simulator.Core
                 var BL = GraphCore.FindGraph(Back_Lay, GraphInfo.Animat, GraphInfo.ModeType);
                 var t1 = FL?.Run(FoodGrid.Front);
                 var t2 = BL?.Run(FoodGrid.Back);
-                FoodGrid.Food.Source = image;
+                if (FoodGrid.Food.Source != image)
+                {
+                    if (FoodGrid.Food.Source is BitmapImage bitmapImage)
+                    {//内存回收
+                        bitmapImage.StreamSource?.Dispose();
+                    }
+                    FoodGrid.Food.Source = image;
+                }
                 t1?.Start();
                 t2?.Start();
                 Task.Run(() => Animations[0].Run(FoodGrid.Food, EndAction));
