@@ -249,7 +249,7 @@ namespace VPet_Simulator.Core
                         Core.Save.FeelingChange(-NowWork.Feeling * TimePass);
                     }
                     else
-                        Core.Save.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2));                  
+                        Core.Save.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2));
                     break;
                 default://默认
                     //饮食等乱七八糟的消耗
@@ -326,7 +326,7 @@ namespace VPet_Simulator.Core
             //看情况播放停止工作动画
             if (Core.Save.Mode == IGameSave.ModeType.Ill && State == WorkingState.Work)
             {
-                WorkTimer.Stop();
+                Dispatcher.Invoke(() => WorkTimer.Stop());
             }
         }
         private void playSwitchAnimat(IGameSave.ModeType before, IGameSave.ModeType after)
