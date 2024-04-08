@@ -137,6 +137,7 @@ namespace VPet_Simulator.Windows.Interface
                 switch (work.Type)
                 {
                     case Work.WorkType.Play:
+                        work.FinishBonus = 0.2;
                         work.MoneyBase = 18;
                         work.StrengthFood = 1;
                         work.StrengthDrink = 1.5;
@@ -144,6 +145,7 @@ namespace VPet_Simulator.Windows.Interface
                         work.LevelLimit = 0;
                         break;
                     case Work.WorkType.Work:
+                        work.FinishBonus = 0.1;
                         work.MoneyBase = 8;
                         work.StrengthFood = 3.5;
                         work.StrengthDrink = 2.5;
@@ -151,6 +153,7 @@ namespace VPet_Simulator.Windows.Interface
                         work.LevelLimit = 0;
                         break;
                     case Work.WorkType.Study:
+                        work.FinishBonus = 0.2;
                         work.MoneyBase = 80;
                         work.StrengthFood = 2;
                         work.StrengthDrink = 2;
