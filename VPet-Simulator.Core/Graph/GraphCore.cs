@@ -289,12 +289,12 @@ namespace VPet_Simulator.Core
             /// </summary>
             public void Set(LpsDocument lps)
             {
-                if (lps.FindLine("touchhead") != null)
+                if (lps.FindLine("touchhead") != null && lps["touchhead"][(gdbe)"py"] != 0)
                 {
                     TouchHeadLocate = new Point(lps["touchhead"][(gdbe)"px"], lps["touchhead"][(gdbe)"py"]);
                     TouchHeadSize = new Size(lps["touchhead"][(gdbe)"sw"], lps["touchhead"][(gdbe)"wh"]);
                 }
-                if (lps.FindLine("touchbody") != null)
+                if (lps.FindLine("touchbody") != null && lps["touchbody"][(gdbe)"py"] != 0)
                 {
                     TouchBodyLocate = new Point(lps["touchbody"][(gdbe)"px"], lps["touchbody"][(gdbe)"py"]);
                     TouchBodySize = new Size(lps["touchbody"][(gdbe)"sw"], lps["touchbody"][(gdbe)"sh"]);
@@ -302,21 +302,22 @@ namespace VPet_Simulator.Core
 
                 if (lps.FindLine("touchraised") != null)
                 {
-                    TouchRaisedLocate = new Point[] {
+                    if (lps["touchraised"][(gdbe)"happy_py"] != 0)
+                        TouchRaisedLocate = new Point[] {
                         new Point(lps["touchraised"].GetDouble("happy_px", TouchRaisedLocate[0].X), lps["touchraised"].GetDouble("happy_py", TouchRaisedLocate[0].Y)),
                         new Point(lps["touchraised"].GetDouble("nomal_px", TouchRaisedLocate[1].X), lps["touchraised"].GetDouble("nomal_py", TouchRaisedLocate[1].Y)),
                         new Point(lps["touchraised"].GetDouble("poorcondition_px", TouchRaisedLocate[2].X), lps["touchraised"].GetDouble("poorcondition_py", TouchRaisedLocate[2].Y)),
                         new Point(lps["touchraised"].GetDouble("ill_px", TouchRaisedLocate[3].X), lps["touchraised"].GetDouble("ill_py", TouchRaisedLocate[3].Y))
                     };
-
-                    TouchRaisedSize = new Size[] {
+                    if (lps["touchraised"][(gdbe)"happy_sh"] != 0)
+                        TouchRaisedSize = new Size[] {
                         new Size(lps["touchraised"].GetDouble("happy_sw", TouchRaisedSize[0].Width), lps["touchraised"].GetDouble("happy_sh", TouchRaisedSize[0].Height)),
                         new Size(lps["touchraised"].GetDouble("nomal_sw", TouchRaisedSize[1].Width), lps["touchraised"].GetDouble("nomal_sh", TouchRaisedSize[1].Height)),
                         new Size(lps["touchraised"].GetDouble("poorcondition_sw", TouchRaisedSize[2].Width), lps["touchraised"].GetDouble("poorcondition_sh", TouchRaisedSize[2].Height)),
                         new Size(lps["touchraised"].GetDouble("ill_sw", TouchRaisedSize[3].Width), lps["touchraised"].GetDouble("ill_sh", TouchRaisedSize[3].Height))
                     };
                 }
-                if (lps.FindLine("raisepoint") != null)
+                if (lps.FindLine("raisepoint") != null && lps["raisepoint"][(gdbe)"happy_y"] != 0)
                 {
                     RaisePoint = new Point[] {
                     new Point(lps["raisepoint"].GetDouble("happy_x",RaisePoint[0].X), lps["raisepoint"].GetDouble("happy_y",RaisePoint[0].Y)),

@@ -166,8 +166,16 @@ namespace VPet_Simulator.Windows.Interface
         Grid PetGrid { get; }
         /// <summary>
         /// 当创建/加入新的多人联机窗口(访客表)时触发
+        /// 如果你想写联机功能,请监听这个事件
         /// </summary>
         event Action<IMPWindows> MutiPlayerHandle;
+        /// <summary>
+        /// 当创建/加入新的多人联机窗口(访客表)时触发
+        /// 用于给MOD定义自己的联机窗口时准备的, 一般联机功能不需要调用这个
+        /// </summary>
+        /// <param name="mp"></param>
+        void MutiPlayerStart(IMPWindows mp);
+
         /// <summary>
         /// 显示吃东西(夹层)动画
         /// </summary>
@@ -179,6 +187,8 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         /// <param name="item">物品</param>
         void TakeItem(Food item);
+
+
     }
 
 }

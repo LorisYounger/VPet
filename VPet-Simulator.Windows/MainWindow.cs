@@ -2062,7 +2062,7 @@ namespace VPet_Simulator.Windows
         TextBlock tlvplus;
 
         public event Action<IMPWindows> MutiPlayerHandle;
-        internal void MutiPlayerStart(IMPWindows mp)
+        public void MutiPlayerStart(IMPWindows mp)
         {
             MutiPlayerHandle?.Invoke(mp);
         }

@@ -67,7 +67,7 @@ namespace VPet_Simulator.Windows.Interface
                 lvlimit *= 10;
             if (Math.Abs(work.MoneyBase) > lvlimit) //等级获取速率限制
                 return true;
-            return rel > 1.3; // 推荐rel为1左右 超过1.3就是超模
+            return rel > 1.4; // 推荐rel为1左右 超过1.3就是超模
         }
         /// <summary>
         /// 数值梯度下降法 修复超模工作
