@@ -115,6 +115,10 @@ public struct MPMessage
         /// 发送者名字
         /// </summary>
         public string SendName { get; set; }
+        /// <summary>
+        /// 接受者名字
+        /// </summary>
+        public string ToName { get; set; }
     }
     /// <summary>
     /// 交互结构

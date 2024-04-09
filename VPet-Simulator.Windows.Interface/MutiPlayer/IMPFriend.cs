@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using LinePutScript;
+using System.Windows.Media;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Windows.Interface.MPMessage;
@@ -25,7 +26,6 @@ public interface IMPFriend
     /// 图像资源集
     /// </summary>
     ImageResources ImageSources { get; }
-
     /// <summary>
     /// 当前宠物图形名称
     /// </summary>

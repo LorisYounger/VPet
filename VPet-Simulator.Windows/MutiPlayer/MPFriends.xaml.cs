@@ -701,8 +701,8 @@ public partial class MPFriends : WindowX, IMPFriend
                 wmp.Log("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
                 break;
             case Chat.Type.Internal:
-                Main.Say("{0} 对你说: {1}".Translate(msg.SendName, msg.Content));
-                wmp.Log("{0} 对你说: {1}".Translate(msg.SendName, msg.Content));
+                Main.Say("{0} 对 {2} 说: {1}".Translate(msg.SendName, msg.Content, msg.ToName));
+                wmp.Log("{0} 对 {2} 说: {1}".Translate(msg.SendName, msg.Content, msg.ToName));
                 break;
             case Chat.Type.Public:
                 Main.Say("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
@@ -763,7 +763,7 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             MPMessage msg = new MPMessage();
             msg.Type = (int)MSGType.Chat;
-            msg.SetContent(new Chat() { Content = cont, ChatType = (Chat.Type)talktype, SendName = SteamClient.Name });
+            msg.SetContent(new Chat() { Content = cont, ChatType = (Chat.Type)talktype, SendName = SteamClient.Name, ToName = friend.Name });
             msg.To = SteamClient.SteamId;
 
             switch (talktype)
@@ -775,8 +775,8 @@ public partial class MPFriends : WindowX, IMPFriend
                     break;
                 case 1:
                     wmp.SendMessageALL(msg);
-                    mw.Main.Say("{0} 对你说: {1}".Translate(SteamClient.Name, cont));
-                    wmp.Log("{0} 对你说: {1}".Translate(SteamClient.Name, cont));
+                    mw.Main.Say("{0} 对 {2} 说: {1}".Translate(SteamClient.Name, cont, friend.Name));
+                    wmp.Log("{0} 对 {2} 说: {1}".Translate(SteamClient.Name, cont, friend.Name));
                     break;
                 case 2:
                     wmp.SendMessageALL(msg);
