@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows.Interface
@@ -188,7 +189,21 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="item">物品</param>
         void TakeItem(Food item);
 
-
+        /// <summary>
+        /// 显示输入框
+        /// </summary>
+        /// <param name="title">标题</param>
+        /// <param name="text">文本</param>
+        /// <param name="defaulttext">默认文本</param>
+        /// <param name="ENDAction">结束事件</param>
+        /// <param name="AllowMutiLine">是否允许多行输入</param>
+        /// <param name="TextCenter">文本居中</param>
+        /// <param name="CanHide">能否隐藏</param>
+        void Show(string title, string text, string defaulttext, Action<string> ENDAction, bool AllowMutiLine = false, bool TextCenter = true, bool CanHide = false);
+        /// <summary>
+        /// UI线程调用位置
+        /// </summary>
+        Dispatcher Dispatcher { get; }
     }
 
 }

@@ -659,16 +659,19 @@ namespace VPet_Simulator.Windows
         {
             petHelper?.SetLocation();
         }
-        //public void DEBUGValue()
-        //{
-        //  Dispatcher.Invoke(() =>
-        //  {
-        //    Console.WriteLine("Left:" + mwc.GetWindowsDistanceLeft());
-        //    Console.WriteLine("Right:" + mwc.GetWindowsDistanceRight());
-        //  });
-        //  Thread.Sleep(1000);
-        //  DEBUGValue(); 
-        //}
-        //
+        /// <summary>
+        /// 显示输入框
+        /// </summary>
+        /// <param name="title">标题</param>
+        /// <param name="text">文本</param>
+        /// <param name="defaulttext">默认文本</param>
+        /// <param name="ENDAction">结束事件</param>
+        /// <param name="AllowMutiLine">是否允许多行输入</param>
+        /// <param name="TextCenter">文本居中</param>
+        /// <param name="CanHide">能否隐藏</param>
+        public void Show(string title, string text, string defaulttext, Action<string> ENDAction, bool AllowMutiLine = false, bool TextCenter = true, bool CanHide = false)
+        {
+            winInputBox.Show(this, title, text, defaulttext, ENDAction, AllowMutiLine, TextCenter, CanHide);
+        }
     }
 }

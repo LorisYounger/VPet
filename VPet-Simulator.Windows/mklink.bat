@@ -14,5 +14,5 @@ mklink /d "%~dp0\mod\1100_DemoClock" "%~dp0\..\..\VPet.Plugin.Demo\VPet.Plugin.D
 mklink /d "%~dp0\mod\1111_ChatGPTPlus" "%~dp0\..\..\VPet.Plugin.ChatGPTPlus\VPet.Plugin.ChatGPTPlus\1111_ChatGPTPlus"
 mklink /d "%~dp0\mod\1101_EdgeTTS" "%~dp0\..\..\VPet.Plugin.Demo\VPet.Plugin.EdgeTTS\1101_EdgeTTS"
 mklink /d "%~dp0\mod\1110_ChatGPT" "%~dp0\..\..\VPet.Plugin.Demo\VPet.Plugin.ChatGPT\1110_ChatGPT" 
-
+mklink /d "%~dp0\mod\1111_MutiPlayerStream" "%~dp0\..\..\VPet.Plugin.Demo\VPet.MutiPlayer.Stream\1111_MutiPlayerStream" 
 pause
