@@ -33,6 +33,13 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     public winMutiPlayer(MainWindow mw, ulong? lobbyid = null)
     {
         InitializeComponent();
+        if(mw.Core.Save.Mode == IGameSave.ModeType.Ill)
+        {
+            MessageBoxX.Show("{0}生病了,无法创建或者加入访客表".Translate());
+            Close();
+            return;
+        }
+
         swAllowTouch.IsChecked = !mw.Set.MPNOTouch;
         this.mw = mw;
         if (lobbyid == null)
@@ -194,7 +201,16 @@ public partial class winMutiPlayer : WindowX, IMPWindows
 
     private void Main_TimeHandle(Main obj)
     {
-
+        if (mw.GameSavesData.GameSave.Mode == IGameSave.ModeType.Ill)
+        {//生病自动退出访客表
+            ClosingMutiPlayer?.Invoke();
+            isOPEN = false;
+            lb.Leave();
+            lb = default;
+            MessageBoxX.Show("{0}生病了,已自动退出访客表".Translate(obj.Core.Save.Name));
+            Close();
+            return;
+        }
 
         lb.SetMemberData("save", mw.GameSavesData.GameSave.ToLine().ToString());
     }
