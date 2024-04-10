@@ -127,7 +127,7 @@ clicktext:|State#Work:|Working#学习:|dayTime#2:|Text#没有午休的吗？！:
 clicktext:|State#Work:|Working#直播:|dayTime#2:|Text#打游戏才不用睡午觉呢:|tag#vup,girl:|
 clicktext:|State#Work:|Working#直播:|dayTime#2:|Text#大残！一丝！:|Exp#-1:|tag#vup,girl:|
 clicktext:|State#Nomal:|dayTime#4:|Text#晚上好主人~:|tag#vup,girl:|
-clicktext:|State#Nomal:|dayTime#4:|Text#是先吃饭，还是先洗澡，还是说，先·吃·我？:|Likability#1:|tag#vup,girl:|
+clicktext:|State#Nomal:|dayTime#4:|Text#欢迎回来主人，好好吃晚饭吗？:|Likability#1:|tag#vup,girl:|
 clicktext:|State#Work:|Working#学习:|dayTime#4:|Text#晚修达~:|Exp#1:|tag#vup,girl:|
 clicktext:|State#Work:|Working#学习:|dayTime#4:|Text#夜来风雨声，花落知多少。:|Exp#1:|tag#vup,girl:|
 clicktext:|State#Work:|Working#直播:|dayTime#4:|Text#8点了？下播！:|tag#vup,girl:|

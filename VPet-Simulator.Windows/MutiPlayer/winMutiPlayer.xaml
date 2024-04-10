@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d"
         xmlns:pu="https://opensource.panuon.com/wpf-ui"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-        Title="{ll:Str 访客表}" MinHeight="400" Height="400" Width="600" Closed="Window_Closed"
+        Title="{ll:Str 访客表}" MinHeight="400" Height="400" Width="660" Closed="Window_Closed"
         Style="{DynamicResource BaseWindowXStyle}" Background="{DynamicResource PrimaryLighter}"
         FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}" MaxHeight="400"
         ResizeMode="CanMinimize" Closing="Window_Closing">
@@ -69,7 +69,9 @@
             </Grid>
         </pu:TabControlHelper.FrontControl>
         <TabItem Header="{ll:Str 访客列表}">
-            <StackPanel x:Name="MUUCList" />
+            <ScrollViewer>
+                <StackPanel x:Name="MUUCList" />
+            </ScrollViewer>
         </TabItem>
         <TabItem Header="{ll:Str 消息日志}">
             <TextBox x:Name="tbLog" Margin="0" Padding="7" VerticalContentAlignment="Stretch" BorderThickness="0"

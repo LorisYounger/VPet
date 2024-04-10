@@ -33,7 +33,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     public winMutiPlayer(MainWindow mw, ulong? lobbyid = null)
     {
         InitializeComponent();
-        if(mw.Core.Save.Mode == IGameSave.ModeType.Ill)
+        if (mw.Core.Save.Mode == IGameSave.ModeType.Ill)
         {
             MessageBoxX.Show("{0}生病了,无法创建或者加入访客表".Translate());
             Close();
@@ -126,6 +126,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
 
     public void ShowLobbyInfo()
     {
+        giveprice = -1000 + mw.Core.Save.Level * -10;
         _ = Task.Run(async () =>
         {
             lb.SetMemberData("save", mw.GameSavesData.GameSave.ToLine().ToString());
@@ -201,17 +202,16 @@ public partial class winMutiPlayer : WindowX, IMPWindows
 
     private void Main_TimeHandle(Main obj)
     {
-        if (mw.GameSavesData.GameSave.Mode == IGameSave.ModeType.Ill)
-        {//生病自动退出访客表
-            ClosingMutiPlayer?.Invoke();
-            isOPEN = false;
-            lb.Leave();
-            lb = default;
-            MessageBoxX.Show("{0}生病了,已自动退出访客表".Translate(obj.Core.Save.Name));
-            Close();
-            return;
-        }
-
+        //if (mw.GameSavesData.GameSave.Mode == IGameSave.ModeType.Ill)
+        //{//生病自动退出访客表
+        //    ClosingMutiPlayer?.Invoke();
+        //    isOPEN = false;
+        //    lb.Leave();
+        //    lb = default;
+        //    MessageBoxX.Show("{0}生病了,已自动退出访客表".Translate(obj.Core.Save.Name));
+        //    Close();
+        //    return;
+        //}
         lb.SetMemberData("save", mw.GameSavesData.GameSave.ToLine().ToString());
     }
 
@@ -398,7 +398,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                                         mw.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price), 6000);
                                         Log("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price));
                                         //对于要修改数据的物品一定要再次检查,避免联机开挂毁存档
-                                        if (item.Price >= 10 && item.Price <= 1000 && item.Health >= 0 && item.Exp >= 0 && item.Likability >= 0 && giveprice < 1000
+                                        if (item.Price >= 10 && item.Price <= 1000 && item.Health >= 0 && item.Exp >= 0 && item.Likability >= 0 && giveprice < 0
                                            && item.Strength >= 0 && item.StrengthDrink >= 0 && item.StrengthFood >= 0 && item.Feeling >= 0)
                                         {//单次联机收礼物上限1000
                                             giveprice += item.Price;
