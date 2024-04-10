@@ -669,7 +669,7 @@ namespace VPet_Simulator.Windows
         /// <param name="AllowMutiLine">是否允许多行输入</param>
         /// <param name="TextCenter">文本居中</param>
         /// <param name="CanHide">能否隐藏</param>
-        public void Show(string title, string text, string defaulttext, Action<string> ENDAction, bool AllowMutiLine = false, bool TextCenter = true, bool CanHide = false)
+        public void ShowInputBox(string title, string text, string defaulttext, Action<string> ENDAction, bool AllowMutiLine = false, bool TextCenter = true, bool CanHide = false)
         {
             winInputBox.Show(this, title, text, defaulttext, ENDAction, AllowMutiLine, TextCenter, CanHide);
         }

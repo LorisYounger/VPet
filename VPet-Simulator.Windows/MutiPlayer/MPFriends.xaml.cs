@@ -255,14 +255,16 @@ public partial class MPFriends : WindowX, IMPFriend
         DisplayFoodAnimation(feed.Item.GetGraph(), Dispatcher.Invoke(() => ImageSources.FindImage("food_" + (feed.Item.Image ?? feed.Item.Name), "food")));
         if (feed.EnableFunction)
         {
-            mw.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price));
-            wmp.Log("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price));
+            mw.Main.LabelDisplayShow("{0}花费${3}给{4}的{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, 
+                feed.Item.TranslateName, feed.Item.Price, friend.Name));
+            wmp.Log("{0}花费${3}{4}的给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName,
+                feed.Item.Price, friend.Name));
             mw.TakeItem(feed.Item);
         }
         else
         {
-            mw.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName));
-            wmp.Log("{0}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName));
+            mw.Main.LabelDisplayShow("{0}给{3}的{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, friend.Name));
+            wmp.Log("{0}给{3}的{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, friend.Name));
         }
     }
     /// <summary>
