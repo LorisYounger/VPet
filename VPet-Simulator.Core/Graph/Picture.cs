@@ -69,7 +69,7 @@ namespace VPet_Simulator.Core
 
         public bool IsReady => true;
 
-        public void Run(Border parant, Action EndAction = null)
+        public void Run(Decorator parant, Action EndAction = null)
         {
             if (PlayState)
             {

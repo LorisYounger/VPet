@@ -556,7 +556,7 @@ namespace VPet_Simulator.Core
         /// 查找可用与显示的Border (自动多层切换)
         /// </summary>
         /// <param name="graph">动画</param>
-        public Border FindDisplayBorder(IGraph graph)
+        public Decorator FindDisplayBorder(IGraph graph)
         {
             DisplayType = graph.GraphInfo;
             var PetGridTag = Dispatcher.Invoke(() => PetGrid.Tag);

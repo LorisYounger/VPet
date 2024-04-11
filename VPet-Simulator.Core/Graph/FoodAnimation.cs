@@ -253,9 +253,9 @@ namespace VPet_Simulator.Core
             public Image Back;
         }
 
-        public void Run(Border parant, Action EndAction = null) => Run(parant, null, EndAction);
+        public void Run(Decorator parant, Action EndAction = null) => Run(parant, null, EndAction);
 
-        public void Run(Border parant, ImageSource image, Action EndAction = null)
+        public void Run(Decorator parant, ImageSource image, Action EndAction = null)
         {
             if (PlayState)
             {//如果当前正在运行,重置状态
@@ -273,7 +273,7 @@ namespace VPet_Simulator.Core
                 {
                     if (FoodGrid.Parent != null)
                     {
-                        ((Border)FoodGrid.Parent).Child = null;
+                        ((Decorator)FoodGrid.Parent).Child = null;
                     }
                     parant.Child = FoodGrid;
                 }

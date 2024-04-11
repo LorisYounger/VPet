@@ -42,7 +42,7 @@ namespace VPet_Simulator.Core
         /// <param name="parant">显示位置</param>
         /// <param name="EndAction">结束方法</param>
         /// <param name="image">额外图片</param>
-        public static void Run(this IGraph graph, Border parant, ImageSource image, Action EndAction = null)
+        public static void Run(this IGraph graph, Decorator parant, ImageSource image, Action EndAction = null)
         {
             if (graph is IRunImage iri)
             {

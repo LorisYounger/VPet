@@ -237,23 +237,24 @@ namespace VPet_Simulator.Core
                 else
                 {
                     parent.IsContinue = false;
-                    //parent.Dispatcher.Invoke(Hidden);
-                    if (parent.DoEndAction)
-                        EndAction?.Invoke();//运行结束动画时事件
-                    parent.StopAction?.Invoke();
-                    parent.StopAction = null;
-                    //Task.Run(() =>
-                    //{
-                    //    Thread.Sleep(25);
-                    //    parent.Dispatcher.Invoke(Hidden);
-                    //});
+                    //不运行结束事件
+                    ////parent.Dispatcher.Invoke(Hidden);
+                    //if (parent.DoEndAction)
+                    //    EndAction?.Invoke();//运行结束动画时事件
+                    //parent.StopAction?.Invoke();
+                    //parent.StopAction = null;
+                    ////Task.Run(() =>
+                    ////{
+                    ////    Thread.Sleep(25);
+                    ////    parent.Dispatcher.Invoke(Hidden);
+                    ////});
                 }
             }
         }
         /// <summary>
         /// 从0开始运行该动画
         /// </summary>
-        public void Run(Border parant, Action EndAction = null)
+        public void Run(Decorator parant, Action EndAction = null)
         {
             //if(endwilldo != null && nowid != Animations.Count)
             //{

@@ -12,7 +12,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 从0开始运行该动画
         /// </summary>
-        void Run(Border parant, Action EndAction = null);
+        void Run(Decorator parant, Action EndAction = null);
         /// <summary>
         /// 当前动画播放状态
         /// </summary>
@@ -49,7 +49,7 @@ namespace VPet_Simulator.Core
             /// <param name="parant">显示位置</param>
             /// <param name="EndAction">结束方法</param>
             /// <param name="image">额外图片</param>
-            void Run(Border parant, ImageSource image, Action EndAction = null);
+            void Run(Decorator parant, ImageSource image, Action EndAction = null);
         }
     }
 }
