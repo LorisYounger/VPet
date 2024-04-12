@@ -56,9 +56,12 @@ namespace VPet_Simulator.Windows
 #endif
             ExtensionValue.BaseDirectory = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName;
 
+
             LocalizeCore.StoreTranslation = true;
+            LocalizeCore.TranslateFunc = (str) => Sub.TextDeReplace(str).Translate();
             CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
             CultureInfo.CurrentCulture.NumberFormat = new CultureInfo("en-US").NumberFormat;
+
 
             //判断是不是Steam用户,因为本软件会发布到Steam
             //在 https://store.steampowered.com/app/1920960/VPet
