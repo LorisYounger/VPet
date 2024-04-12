@@ -805,6 +805,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set.TopMost = true;
+            (mw.notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_TopMost", false).First() as System.Windows.Forms.ToolStripMenuItem).Checked = true;
         }
 
         private void TopMostBox_Unchecked(object sender, RoutedEventArgs e)
@@ -812,6 +813,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set.TopMost = false;
+            (mw.notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_TopMost", false).First() as System.Windows.Forms.ToolStripMenuItem).Checked = false;
         }
 
         private void ZoomSlider_MouseUp(object sender, MouseButtonEventArgs e)

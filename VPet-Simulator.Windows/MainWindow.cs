@@ -1890,6 +1890,16 @@ namespace VPet_Simulator.Windows
                       Checked = HitThrough
                   };
                   m_menu.Items.Add(hitThrough);
+                  var topmost = new MenuItem("置于顶层".Translate(), null, (x, y) =>
+                  {
+                      Topmost = ((MenuItem)x).Checked;
+                  })
+                  {
+                      Name = "NotifyIcon_TopMost",
+                      CheckOnClick = true,
+                      Checked = Topmost
+                  };
+                  m_menu.Items.Add(topmost);
                   m_menu.Items.Add(new MenuItem("操作教程".Translate(), null, (x, y) =>
                   {
                       if (LocalizeCore.CurrentCulture == "zh-Hans")

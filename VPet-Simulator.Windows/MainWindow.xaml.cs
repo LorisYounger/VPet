@@ -31,7 +31,7 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public partial class MainWindow : WindowX
     {
-        private System.Windows.Forms.NotifyIcon notifyIcon;
+        internal System.Windows.Forms.NotifyIcon notifyIcon;
         public PetHelper petHelper;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
 
@@ -62,7 +62,7 @@ namespace VPet_Simulator.Windows
             LocalizeCore.TranslateFunc = (str) =>
             {
                 var destr = Sub.TextDeReplace(str);
-                if(destr == str)
+                if (destr == str)
                     return str;
                 return destr.Translate();
             };
