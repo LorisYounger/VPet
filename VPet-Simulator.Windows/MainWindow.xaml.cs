@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Interop;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
@@ -58,7 +59,14 @@ namespace VPet_Simulator.Windows
 
 
             LocalizeCore.StoreTranslation = true;
-            LocalizeCore.TranslateFunc = (str) => Sub.TextDeReplace(str).Translate();
+            LocalizeCore.TranslateFunc = (str) =>
+            {
+                var destr = Sub.TextDeReplace(str);
+                if(destr == str)
+                    return str;
+                return destr.Translate();
+            };
+
             CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
             CultureInfo.CurrentCulture.NumberFormat = new CultureInfo("en-US").NumberFormat;
 
