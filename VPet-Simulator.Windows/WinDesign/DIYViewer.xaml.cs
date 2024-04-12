@@ -185,14 +185,16 @@ namespace VPet_Simulator.Windows
 
         private void Send_Top_Click(object sender, RoutedEventArgs e)
         {
-            ((StackPanel)this.Parent).Children.Remove(this);
-            ((StackPanel)this.Parent).Children.Insert(0, this);
+            var sp = ((StackPanel)this.Parent);
+            sp.Children.Remove(this);
+            sp.Children.Insert(0, this);
         }
 
         private void Send_Botton_Click(object sender, RoutedEventArgs e)
         {
-            ((StackPanel)this.Parent).Children.Remove(this);
-            ((StackPanel)this.Parent).Children.Add(this);
+            var sp = ((StackPanel)this.Parent);
+            sp.Children.Remove(this);
+            sp.Children.Add(this);
         }
     }
 }
