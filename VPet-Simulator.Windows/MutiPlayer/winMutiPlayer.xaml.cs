@@ -453,7 +453,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         if (!lb.Equals(default(Lobby)))
-            if (MessageBoxX.Show("确定要关闭访客表吗?".Translate(), "离开游戏", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (MessageBoxX.Show("确定要关闭访客表吗?".Translate(), "离开访客表".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
             {
                 e.Cancel = true;
                 return;

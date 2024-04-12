@@ -480,8 +480,7 @@
                                     ToggleShadowColor="{x:Null}" ToggleSize="14"
                                     ToolTip="{ll:Str '启用数据计算,桌宠会有状态变化,需要按时投喂等.\&#13;如果嫌麻烦可以关掉'}"
                                     Unchecked="CalFunctionBox_Checked" />
-                            <Grid Grid.Row="1" Grid.Column="2"
-                                    ToolTip="{ll:Str '当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能\&#13;将在下次交互时解除'}">
+                            <Grid Grid.Row="1" Grid.Column="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
@@ -491,10 +490,10 @@
                                         SelectionChanged="combCalFunState_SelectionChanged"
                                         Style="{DynamicResource StandardComboBoxStyle}"
                                         ToolTip="{ll:Str '当关闭数据计算时\&#13;桌宠显示的状态'}">
-                                    <ComboBoxItem Content="Happy" />
-                                    <ComboBoxItem Content="Nomal" />
-                                    <ComboBoxItem Content="PoorCondition" />
-                                    <ComboBoxItem Content="Ill" />
+                                    <ComboBoxItem Content="{ll:Str Happy}" />
+                                    <ComboBoxItem Content="{ll:Str Nomal}" />
+                                    <ComboBoxItem Content="{ll:Str PoorCondition}" />
+                                    <ComboBoxItem Content="{ll:Str Ill}" />
                                 </ComboBox>
                             </Grid>
                             <Grid Grid.Row="5" Grid.RowSpan="4" Grid.Column="2">

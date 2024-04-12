@@ -330,7 +330,7 @@
                 <StackPanel Grid.Column="1" Margin="5,0,0,0" Orientation="Horizontal">
                     <TextBox x:Name="TbPage" MinWidth="50" Style="{DynamicResource StandardTextBoxStyle}" 
                          PreviewKeyDown="TbPage_PreviewKeyDown" />
-                    <TextBlock Margin="3,0,0,0" Text="页" VerticalAlignment="Center"/> 
+                    <TextBlock Margin="3,0,0,0" Text="{ll:Str 页}" VerticalAlignment="Center"/> 
                 </StackPanel>
             </Grid>
         </Grid>

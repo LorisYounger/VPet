@@ -40,7 +40,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <TextBlock Text="工作内容"
+                    <TextBlock Text="{ll:Str 工作内容}"
                             FontSize="{Binding FontSize, Converter={x:Static pu:Converters.DoubleMinusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}" />
                     <Grid Grid.Row="1" Margin="0,3,0,0">
                         <Grid.ColumnDefinitions>

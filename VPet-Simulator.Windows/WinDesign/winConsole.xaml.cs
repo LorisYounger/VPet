@@ -155,22 +155,22 @@ namespace VPet_Simulator.Windows
 
         private void Button_MoveToLeft_Click(object sender, RoutedEventArgs e)
         {
-            mw.Core.Graph.GraphConfig.Moves[8].Display(mw.Main);
+            mw.Core.Graph.GraphConfig.Moves.Find(x => x.SpeedX < 0 && x.Checked(mw.MWController))?.Display(mw.Main);
         }
 
         private void Button_MoveToUp_Click(object sender, RoutedEventArgs e)
         {
-            //mf.Core.Graph.GraphConfig.Moves[8].Display(mf.Main);
+            mw.Core.Graph.GraphConfig.Moves.Find(x => x.SpeedY < 0 && x.Checked(mw.MWController))?.Display(mw.Main);
         }
 
         private void Button_MoveToButton_Click(object sender, RoutedEventArgs e)
         {
-            //mf.Core.Graph.GraphConfig.Moves[8].Display(mf.Main);
+            mw.Core.Graph.GraphConfig.Moves.Find(x => x.SpeedY > 0 && x.Checked(mw.MWController))?.Display(mw.Main);
         }
 
         private void Button_MoveToRight_Click(object sender, RoutedEventArgs e)
         {
-            mw.Core.Graph.GraphConfig.Moves[9].Display(mw.Main);
+            mw.Core.Graph.GraphConfig.Moves.Find(x => x.SpeedX > 0 && x.Checked(mw.MWController))?.Display(mw.Main);
         }
 
         private void Window_Closed(object sender, EventArgs e)

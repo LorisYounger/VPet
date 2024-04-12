@@ -48,7 +48,7 @@
                         MouseDoubleClick="GraphListPlayerBox_MouseDoubleClick" />
                 <ListBox x:Name="GraphListWillPlayBox" Grid.Row="1" Grid.Column="1" Margin="5"
                         MouseDoubleClick="GraphListWillPlayBox_MouseDoubleClick" />
-                <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="5" Click="Play_Click" Content="开始播放" />
+                <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="5" Click="Play_Click" Content="{ll:Str 开始播放}" />
                 <Button Grid.Column="1" Margin="5" HorizontalAlignment="Right" VerticalAlignment="Top"
                         Click="PlayADD_Click" Content="ADD" />
             </Grid>
@@ -104,10 +104,10 @@
                 </Grid>
                 <Grid Grid.Row="1">
                     <StackPanel>
-                        <Button x:Name="Button_MoveToLeft" Click="Button_MoveToLeft_Click" Content="向左移动" />
-                        <Button x:Name="Button_MoveToUp" Click="Button_MoveToUp_Click" Content="向上移动" />
-                        <Button x:Name="Button_MoveToRight" Click="Button_MoveToRight_Click" Content="向右移动" />
-                        <Button x:Name="Button_MoveToButton" Click="Button_MoveToButton_Click" Content="向下移动" />
+                        <Button x:Name="Button_MoveToLeft" Click="Button_MoveToLeft_Click" Content="{ll:Str 向左移动}" />
+                        <Button x:Name="Button_MoveToUp" Click="Button_MoveToUp_Click" Content="{ll:Str 向上移动}" />
+                        <Button x:Name="Button_MoveToRight" Click="Button_MoveToRight_Click" Content="{ll:Str 向右移动}" />
+                        <Button x:Name="Button_MoveToButton" Click="Button_MoveToButton_Click" Content="{ll:Str 向下移动}" />
                     </StackPanel>
                 </Grid>
             </Grid>

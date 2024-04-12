@@ -632,7 +632,7 @@ namespace VPet_Simulator.Windows
             MessageBoxX.Show("经测试,除正式版均无创意工坊权限,此功能仅作为展示", "特殊版无法上传创意工坊");
 #endif
             ButtonPublish.IsEnabled = false;
-            ButtonPublish.Text = "正在上传";
+            ButtonPublish.Text = "正在上传".Translate();
             ProgressBarUpload.Visibility = Visibility.Visible;
             ProgressBarUpload.Value = 0;
             if (mods.ItemID == 0)
