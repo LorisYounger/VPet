@@ -44,10 +44,13 @@ namespace VPet_Simulator.Windows
                 MutiSaves.Add("");
             }
         }
-
+        HashSet<string> ErrorReport = new HashSet<string>();
         private void UnhandledException(Exception e, bool isFatality)
         {
             var expt = e.ToString();
+            if (ErrorReport.Contains(expt))
+                return;//防止重复报错
+            ErrorReport.Add(expt);
             if (expt.Contains("MainWindow.Close"))
                 return;
             else if ((!isFatality && MainWindow != null && ((MainWindow)MainWindow).GameSavesData?.GameSave != null &&
