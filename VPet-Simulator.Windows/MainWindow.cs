@@ -629,8 +629,8 @@ namespace VPet_Simulator.Windows
             item.NotifyOfPropertyChange("Description");
 
             Core.Save.Money -= item.Price;
-            //吃完东西记得计算下状态
-            Core.Save.Mode = Core.Save.CalMode();
+            ////吃完东西记得计算下状态
+            //Core.Save.Mode = Core.Save.CalMode();
             //统计
             GameSavesData.Statistics[(gint)"stat_buytimes"]++;
             GameSavesData.Statistics[(gint)("buy_" + item.Name)]++;
@@ -2103,9 +2103,17 @@ namespace VPet_Simulator.Windows
                 Main.Display(graphName, imageSource, () =>
                 {
                     showeatanm = true;
-                    Main.DisplayToNomal();
                     Main.EventTimer_Elapsed();
+                    Main.DisplayToNomal();
                 });
+            }
+            else
+            {//如果不显示动画, 则看看是不是有覆盖
+                if (Main.DisplayType.Animat != AnimatType.Single && Main.DisplayType.Name != graphName)
+                {
+                    showeatanm = true;
+                }
+                Main.EventTimer_Elapsed();
             }
         }
 
