@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -255,7 +256,7 @@ public partial class MPFriends : WindowX, IMPFriend
         DisplayFoodAnimation(feed.Item.GetGraph(), Dispatcher.Invoke(() => ImageSources.FindImage("food_" + (feed.Item.Image ?? feed.Item.Name), "food")));
         if (feed.EnableFunction)
         {
-            mw.Main.LabelDisplayShow("{0}花费${3}给{4}的{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, 
+            mw.Main.LabelDisplayShow("{0}花费${3}给{4}的{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name,
                 feed.Item.TranslateName, feed.Item.Price, friend.Name));
             wmp.Log("{0}花费${3}{4}的给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName,
                 feed.Item.Price, friend.Name));
@@ -685,10 +686,10 @@ public partial class MPFriends : WindowX, IMPFriend
             if (gi.Type != GraphType.Common)
                 return false;
         }
-        var img = Core.Graph.FindGraph(gi.Name, gi.Animat, Core.Save.Mode);
-        if (img != null)
+        var img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+        if (img.Count != 0)
         {
-            Main.Display(img, () => DisplayAuto(gi));
+            Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
             return true;
         }
         return false;
