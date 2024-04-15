@@ -337,7 +337,11 @@ namespace VPet_Simulator.Core
                 {
                     Moves.Add(LPSConvert.DeserializeObject<Move>(line));
                 }
-                Data.AddRange(lps);
+                foreach (var line in lps)
+                {
+                    if (!string.IsNullOrEmpty(line.info))
+                        Data.Add(line);
+                }
             }
         }
 
