@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Interop;
 using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows
@@ -43,6 +44,18 @@ namespace VPet_Simulator.Windows
             {
                 MutiSaves.Add("");
             }
+            if (!Args.Any(x => x.Contains("prefix")))
+            {
+                var file = new DirectoryInfo(ExtensionValue.BaseDirectory).GetFiles("startup_*").FirstOrDefault();
+                if (file != null)
+                {
+                    var su = file.Name.Substring(8);
+                    var al = Args.ToList();
+                    al.Add($"prefix#{su}:|");
+                    Args = al.ToArray();
+                }
+            }
+
         }
         HashSet<string> ErrorReport = new HashSet<string>();
         private void UnhandledException(Exception e, bool isFatality)

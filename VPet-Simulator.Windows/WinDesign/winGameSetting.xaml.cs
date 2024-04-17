@@ -1541,6 +1541,20 @@ namespace VPet_Simulator.Windows
             }
         }
 
+        private void btn_muti_master_click(object sender, RoutedEventArgs e)
+        {
+            if (LBHave.SelectedIndex == -1)
+                return;
+            var str = App.MutiSaves[LBHave.SelectedIndex];
+            foreach (var sp in new DirectoryInfo(ExtensionValue.BaseDirectory).GetFiles("startup_*"))
+            {
+                sp.Delete();
+            }
+            if (str != "")
+                File.Create(ExtensionValue.BaseDirectory + @"\startup_" + str).Close();
+            MessageBoxX.Show("已将当前选择 {0} 设为默认启动存档".Translate(str.Translate()));
+        }
+
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
         {
             if (!AllowChange)

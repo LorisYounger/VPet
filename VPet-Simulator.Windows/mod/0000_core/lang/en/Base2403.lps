@@ -81,3 +81,6 @@ OPPOSans R#OPPOSans R:|
 {0}生病了,无法创建或者加入访客表#{0} is sick and cannot create or join a Guest List:|
 {0}花费${3}给{4}的{1}买了{2}#{0} bought {2} for {4}'s {1} at a cost of ${3}.:|
 {0}给{3}的{1}买了{2}#{0} bought {2} for {3}'s {1}.:|
+已将当前选择 {0} 设为默认启动存档#The current selection {0} has been set as the default startup archive:|
+默认#Default:|
+设置当前多开存档为默认启动项#Set the current multi-save archive as the default startup item:|
