@@ -71,15 +71,19 @@ namespace VPet_Simulator.Windows.Interface
             }
         }
         /// <summary>
-        /// 显示思考结束动画
+        /// 显示思考结束并说话
         /// </summary>
-        public void DisplayThinkEnd(Action Next = null)
+        public void DisplayThinkToSayRnd(string text, string desc = null)
         {
             var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.C_End, MainPlugin.MW.Core.Save.Mode);
-            Next ??= MainPlugin.MW.Main.DisplayToNomal;
+            Action Next = () => { MainPlugin.MW.Main.SayRnd(text, true, desc); };
             if (think.Count > 0)
             {
                 MainPlugin.MW.Main.Display(think[Function.Rnd.Next(think.Count)], Next);
+            }
+            else
+            {
+                Next();
             }
         }
         /// <summary>

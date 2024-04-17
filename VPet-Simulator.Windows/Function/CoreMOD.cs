@@ -359,7 +359,11 @@ namespace VPet_Simulator.Windows
 #endif
         }
         public bool IsOnMOD(MainWindow mw) => mw.Set.IsOnMod(Name);
+#if DEBUG
+        public bool IsPassMOD(MainWindow mw) => true;
+#else
         public bool IsPassMOD(MainWindow mw) => mw.Set.IsPassMOD(Name);
+#endif
 
         public void WriteFile()
         {

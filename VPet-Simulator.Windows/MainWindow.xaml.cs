@@ -269,7 +269,7 @@ namespace VPet_Simulator.Windows
                         {
                             if (winMutiPlayer == null)
                             {
-                                winInputBox.Show(this, "请输入访客表ID".Translate(), "加入访客表".Translate(), "", (id) =>
+                                winInputBox.Show(this, "请输入访客表ID".Translate(), "加入访客表".Translate(), "1860000", (id) =>
                                 {
                                     if (ulong.TryParse(id, NumberStyles.HexNumber, null, out ulong lid))
                                     {

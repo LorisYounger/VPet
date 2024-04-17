@@ -211,7 +211,7 @@ namespace VPet_Simulator.Core
                             else
                             {
                                 Control.Type = TaskControl.ControlType.Status_Stoped;
-                                Control.EndAction?.Invoke(); //运行结束动画时事件
+                                Control.EndAction?.Invoke(); //运行结束动画时事件                                
                                 return;
                             }
                         //要下一步
