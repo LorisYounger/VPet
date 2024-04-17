@@ -404,7 +404,7 @@ namespace VPet_Simulator.Windows
                             {
                                 foreach (var ig3 in ig2)
                                 {
-                                    ig3.Stop();
+                                    ig3.Stop(true);
                                 }
                             }
                         }
@@ -455,7 +455,7 @@ namespace VPet_Simulator.Windows
                         {
                             foreach (var ig3 in ig2)
                             {
-                                ig3.Stop();
+                                ig3.Stop(true);
                             }
                         }
                     }

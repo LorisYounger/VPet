@@ -2193,12 +2193,12 @@ namespace VPet_Simulator.Windows
                 else if (Main.DisplayType.Animat == AnimatType.B_Loop)
                     if (Dispatcher.Invoke(() => Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Name == "pinch" && ig.GraphInfo.Animat == AnimatType.B_Loop)
                     {
-                        ig.IsContinue = true;
+                        ig.SetContinue();
                         return true;
                     }
                     else if (Dispatcher.Invoke(() => Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Name == "pinch" && ig2.GraphInfo.Animat == AnimatType.B_Loop)
                     {
-                        ig2.IsContinue = true;
+                        ig2.SetContinue();
                         return true;
                     }
             }

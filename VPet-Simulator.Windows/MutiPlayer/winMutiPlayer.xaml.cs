@@ -486,12 +486,12 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             else if (mw.Main.DisplayType.Animat == AnimatType.B_Loop)
                 if (Dispatcher.Invoke(() => mw.Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Type == GraphType.Touch_Head && ig.GraphInfo.Animat == AnimatType.B_Loop)
                 {
-                    ig.IsContinue = true;
+                    ig.SetContinue();
                     return;
                 }
                 else if (Dispatcher.Invoke(() => mw.Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Type == GraphType.Touch_Head && ig2.GraphInfo.Animat == AnimatType.B_Loop)
                 {
-                    ig2.IsContinue = true;
+                    ig2.SetContinue();
                     return;
                 }
         }
@@ -512,12 +512,12 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             else if (mw.Main.DisplayType.Animat == AnimatType.B_Loop)
                 if (Dispatcher.Invoke(() => mw.Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Type == GraphType.Touch_Body && ig.GraphInfo.Animat == AnimatType.B_Loop)
                 {
-                    ig.IsContinue = true;
+                    ig.SetContinue();
                     return;
                 }
                 else if (Dispatcher.Invoke(() => mw.Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Type == GraphType.Touch_Body && ig2.GraphInfo.Animat == AnimatType.B_Loop)
                 {
-                    ig2.IsContinue = true;
+                    ig2.SetContinue();
                     return;
                 }
         }
@@ -538,12 +538,12 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             else if (mw.Main.DisplayType.Animat == AnimatType.B_Loop)
                 if (Dispatcher.Invoke(() => mw.Main.PetGrid.Tag) is IGraph ig && ig.GraphInfo.Type == GraphType.Touch_Head && ig.GraphInfo.Animat == AnimatType.B_Loop)
                 {
-                    ig.IsContinue = true;
+                    ig.SetContinue();
                     return;
                 }
                 else if (Dispatcher.Invoke(() => mw.Main.PetGrid2.Tag) is IGraph ig2 && ig2.GraphInfo.Type == GraphType.Touch_Head && ig2.GraphInfo.Animat == AnimatType.B_Loop)
                 {
-                    ig2.IsContinue = true;
+                    ig2.SetContinue();
                     return;
                 }
         }

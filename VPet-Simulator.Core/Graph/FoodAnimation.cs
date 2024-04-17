@@ -63,22 +63,12 @@ namespace VPet_Simulator.Core
         /// 所有动画帧
         /// </summary>
         public List<Animation> Animations;
-        /// <summary>
-        /// 当前动画播放状态
-        /// </summary>
-        public bool PlayState { get; set; } = false;
-        /// <summary>
-        /// 当前动画是否执行ENDACTION
-        /// </summary>
-        private bool DoEndAction = true;
+       
         /// <summary>
         /// 是否循环播放
         /// </summary>
         public bool IsLoop { get; set; }
-        /// <summary>
-        /// 是否继续播放
-        /// </summary>
-        public bool IsContinue { get; set; } = false;
+      
         /// <summary>
         /// 动画信息
         /// </summary>
@@ -87,10 +77,9 @@ namespace VPet_Simulator.Core
         /// 是否准备完成
         /// </summary>
         public bool IsReady => true;
-        /// <summary>
-        /// 动画停止时运行的方法
-        /// </summary>
-        private Action StopAction;
+
+        public TaskControl Control { get; set; }
+      
         int nowid;
         /// <summary>
         /// 图片资源
@@ -153,7 +142,7 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 运行该图层
             /// </summary>
-            public void Run(FrameworkElement This, Action EndAction = null)
+            public void Run(FrameworkElement This, TaskControl Control)
             {
                 //先显示该图层
                 This.Dispatcher.Invoke(() =>
@@ -176,53 +165,43 @@ namespace VPet_Simulator.Core
                 //然后等待帧时间毫秒
                 Thread.Sleep(Time);
                 //判断是否要下一步
-                if (parent.PlayState)
+                switch (Control.Type)
                 {
-                    if (++parent.nowid >= parent.Animations.Count)
-                        if (parent.IsLoop)
-                            parent.nowid = 0;
-                        else if (parent.IsContinue)
-                        {
-                            parent.IsContinue = false;
-                            parent.nowid = 0;
-                        }
-                        else
-                        {
-                            //parent.endwilldo = () => parent.Dispatcher.Invoke(Hidden);
-                            //parent.Dispatcher.Invoke(Hidden);
-                            parent.PlayState = false;
-                            //等待其他两个动画完成
-                            if (parent.DoEndAction)
-                                EndAction?.Invoke();//运行结束动画时事件
-                            parent.StopAction?.Invoke();
-                            parent.StopAction = null;
-                            ////延时隐藏
-                            //Task.Run(() =>
-                            //{
-                            //    Thread.Sleep(25);
-                            //    parent.Dispatcher.Invoke(Hidden);
-                            //});
-                            return;
-                        }
-                    //要下一步,现在就隐藏图层
-                    //隐藏该图层
-                    //parent.Dispatcher.Invoke(Hidden);
-                    parent.Animations[parent.nowid].Run(This, EndAction);
-                    return;
-                }
-                else
-                {
-                    parent.IsContinue = false;
-                    //parent.Dispatcher.Invoke(Hidden);
-                    if (parent.DoEndAction)
-                        EndAction?.Invoke();//运行结束动画时事件
-                    parent.StopAction?.Invoke();
-                    parent.StopAction = null;
-                    //Task.Run(() =>
-                    //{
-                    //    Thread.Sleep(25);
-                    //    parent.Dispatcher.Invoke(Hidden);
-                    //});
+                    case TaskControl.ControlType.Stop:
+                        Control.EndAction?.Invoke();
+                        return;
+                    case TaskControl.ControlType.Status_Stoped:
+                        return;
+                    case TaskControl.ControlType.Status_Quo:
+                    case TaskControl.ControlType.Continue:
+                        if (++parent.nowid >= parent.Animations.Count)
+                            if (parent.IsLoop)
+                                parent.nowid = 0;
+                            else if (Control.Type == TaskControl.ControlType.Continue)
+                            {
+                                Control.Type = TaskControl.ControlType.Status_Quo;
+                                parent.nowid = 0;
+                            }
+                            else
+                            {
+                                //parent.endwilldo = () => parent.Dispatcher.Invoke(Hidden);
+                                //parent.Dispatcher.Invoke(Hidden);
+                                Control.Type = TaskControl.ControlType.Status_Stoped;
+                                //等待其他两个动画完成
+                                Control.EndAction?.Invoke(); //运行结束动画时事件
+                                ////延时隐藏
+                                //Task.Run(() =>
+                                //{
+                                //    Thread.Sleep(25);
+                                //    parent.Dispatcher.Invoke(Hidden);
+                                //});
+                                return;
+                            }
+                        //要下一步,现在就隐藏图层
+                        //隐藏该图层
+                        //parent.Dispatcher.Invoke(Hidden);
+                        parent.Animations[parent.nowid].Run(This, Control);
+                        return;
                 }
             }
         }
@@ -257,15 +236,13 @@ namespace VPet_Simulator.Core
 
         public void Run(Decorator parant, ImageSource image, Action EndAction = null)
         {
-            if (PlayState)
+            if (Control?.PlayState == true)
             {//如果当前正在运行,重置状态
-             //IsResetPlay = true;
-                StopAction = () => Run(parant, image, EndAction);
+                Control.Stop(() => Run(parant, EndAction));
                 return;
             }
             nowid = 0;
-            PlayState = true;
-            DoEndAction = true;
+            Control = new TaskControl(EndAction);
             parant.Dispatcher.Invoke(() =>
             {
                 parant.Tag = this;
@@ -291,14 +268,8 @@ namespace VPet_Simulator.Core
                 }
                 t1?.Start();
                 t2?.Start();
-                Task.Run(() => Animations[0].Run(FoodGrid.Food, EndAction));
+                Task.Run(() => Animations[0].Run(FoodGrid.Food, Control));
             });
-        }
-
-        public void Stop(bool StopEndAction = false)
-        {
-            DoEndAction = !StopEndAction;
-            PlayState = false;
         }
     }
 }

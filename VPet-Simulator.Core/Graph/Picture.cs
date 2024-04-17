@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+using static VPet_Simulator.Core.IGraph;
 using static VPet_Simulator.Core.Picture;
 
 
@@ -32,6 +34,7 @@ namespace VPet_Simulator.Core
                 GraphCore.CommConfig["PIC_Setup"] = true;
                 GraphCore.CommUIElements["Image1.Picture"] = new Image() { Width = 500, Height = 500 };
                 GraphCore.CommUIElements["Image2.Picture"] = new Image() { Width = 500, Height = 500 };
+                GraphCore.CommUIElements["Image3.Picture"] = new Image() { Width = 500, Height = 500 };
             }
         }
         public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
@@ -56,11 +59,12 @@ namespace VPet_Simulator.Core
         /// </summary>
         public string Path;
         private GraphCore GraphCore;
-        public bool PlayState { get; set; }
         public bool IsLoop { get; set; }
+        /// <summary>
+        /// 播放持续时间 毫秒
+        /// </summary>
         public int Length { get; set; }
         //public bool StoreMemory => true;//经过测试,储存到内存好处多多,不储存也要占用很多内存,干脆存了吧
-        public bool IsContinue { get; set; }
 
         /// <summary>
         /// 动画信息
@@ -69,15 +73,18 @@ namespace VPet_Simulator.Core
 
         public bool IsReady => true;
 
+        public TaskControl Control { get; set; }
+
         public void Run(Decorator parant, Action EndAction = null)
         {
-            if (PlayState)
-            {
-                IsContinue = true;
+            if (Control?.PlayState == true)
+            {//如果当前正在运行,重置状态
+                Control.SetContinue();
+                Control.EndAction = EndAction;
                 return;
             }
-            PlayState = true;
-            DoEndAction = true;
+            Control = new TaskControl(EndAction);
+
             parant.Dispatcher.Invoke(() =>
             {
                 if (parant.Tag != this)
@@ -87,6 +94,10 @@ namespace VPet_Simulator.Core
                     {
                         img = (Image)GraphCore.CommUIElements["Image1.Picture"];
                     }
+                    else if (parant.Child == GraphCore.CommUIElements["Image3.Picture"])
+                    {
+                        img = (Image)GraphCore.CommUIElements["Image3.Picture"];
+                    }
                     else
                     {
                         img = (Image)GraphCore.CommUIElements["Image2.Picture"];
@@ -94,7 +105,6 @@ namespace VPet_Simulator.Core
                         {
                             if (img.Parent == null)
                             {
-                                parant.Child = null;
                                 parant.Child = img;
                             }
                             else
@@ -106,78 +116,65 @@ namespace VPet_Simulator.Core
                             }
                         }
                     }
-                    //var bitmap = new BitmapImage();
-                    //bitmap.BeginInit();
-                    //stream.Seek(0, SeekOrigin.Begin);
-                    //bitmap.StreamSource = stream;
-                    //bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    //bitmap.EndInit();
                     img.Width = 500;
                     img.Source = new BitmapImage(new Uri(Path));
                     parant.Tag = this;
                 }
-                Task.Run(() =>
-                {
-                    Thread.Sleep(Length);
-                    if (IsLoop && PlayState)
-                    {
-                        Run(parant, EndAction);
-                    }
-                    else
-                    {
-                        PlayState = false;
-                        if (DoEndAction)
-                            EndAction?.Invoke();//运行结束动画时事件
-                    }
-                });
+                Task.Run(() => Run(Control));
             });
         }
         bool DoEndAction = true;
-        public void Stop(bool StopEndAction = false)
+        /// <summary>
+        /// 通过控制器运行
+        /// </summary>
+        /// <param name="Control"></param>
+        public void Run(TaskControl Control)
         {
-            PlayState = false;
-            this.DoEndAction = !StopEndAction;
+            Thread.Sleep(Length);
+            //判断是否要下一步
+            switch (Control.Type)
+            {
+                case TaskControl.ControlType.Stop:
+                    Control.EndAction?.Invoke();
+                    return;
+                case TaskControl.ControlType.Status_Stoped:
+                    return;
+                case TaskControl.ControlType.Continue:
+                    Control.Type = TaskControl.ControlType.Status_Quo;
+                    Run(Control);
+                    return;
+                case TaskControl.ControlType.Status_Quo:
+                    if (IsLoop)
+                    {
+                        Run(Control);
+                    }
+                    else
+                    {
+                        Control.Type = TaskControl.ControlType.Status_Stoped;
+                        Control.EndAction?.Invoke(); //运行结束动画时事件
+                    }
+                    return;
+            }
         }
-        public Task Run(System.Windows.Controls.Image img, Action EndAction = null)
+
+        public Task Run(Image img, Action EndAction = null)
         {
-            PlayState = true;
-            DoEndAction = true;
+            if (Control?.PlayState == true)
+            {//如果当前正在运行,重置状态
+                Control.EndAction = null;
+                Control.Type = TaskControl.ControlType.Stop;
+            }
+            Control = new TaskControl(EndAction);
             return img.Dispatcher.Invoke(() =>
             {
                 if (img.Tag == this)
                 {
-                    return new Task(() =>
-                    {
-                        Thread.Sleep(Length);
-                        if (IsLoop && PlayState)
-                        {
-                            Run(img, EndAction);
-                        }
-                        else
-                        {
-                            PlayState = false;
-                            if (DoEndAction)
-                                EndAction?.Invoke();//运行结束动画时事件
-                        }
-                    });
+                    return new Task(() => Run(Control));
                 }
                 img.Tag = this;
                 img.Source = new BitmapImage(new Uri(Path));
                 img.Width = 500;
-                return new Task(() =>
-                {
-                    Thread.Sleep(Length);
-                    if (IsLoop && PlayState)
-                    {
-                        Run(img, EndAction);
-                    }
-                    else
-                    {
-                        PlayState = false;
-                        if (DoEndAction)
-                            EndAction?.Invoke();//运行结束动画时事件
-                    }
-                });
+                return new Task(() => Run(Control));
             });
         }
         public interface IImageRun : IGraph

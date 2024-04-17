@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using static VPet_Simulator.Core.IGraph;
 using static VPet_Simulator.Core.Picture;
 
 namespace VPet_Simulator.Core
@@ -23,21 +24,9 @@ namespace VPet_Simulator.Core
         /// </summary>
         public List<Animation> Animations;
         /// <summary>
-        /// 当前动画播放状态
-        /// </summary>
-        public bool PlayState { get; set; } = false;
-        /// <summary>
-        /// 当前动画是否执行ENDACTION
-        /// </summary>
-        private bool DoEndAction = true;
-        /// <summary>
         /// 是否循环播放
         /// </summary>
         public bool IsLoop { get; set; }
-        /// <summary>
-        /// 是否循环播放
-        /// </summary>
-        public bool IsContinue { get; set; } = false;
 
         /// <summary>
         /// 动画信息
@@ -48,10 +37,9 @@ namespace VPet_Simulator.Core
         /// 是否准备完成
         /// </summary>
         public bool IsReady { get; private set; } = false;
-        /// <summary>
-        /// 动画停止时运行的方法
-        /// </summary>
-        private Action StopAction;
+
+        public TaskControl Control { get; set; }
+
         int nowid;
         /// <summary>
         /// 图片资源
@@ -80,6 +68,7 @@ namespace VPet_Simulator.Core
                 GraphCore.CommConfig["PA_Setup"] = true;
                 GraphCore.CommUIElements["Image1.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
                 GraphCore.CommUIElements["Image2.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
+                GraphCore.CommUIElements["Image3.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 }; // 多整个, 防止动画闪烁
             }
             Task.Run(() => startup(path, paths));
         }
@@ -163,7 +152,6 @@ namespace VPet_Simulator.Core
             Interlocked.Decrement(ref NowLoading);
         }
 
-
         /// <summary>
         /// 单帧动画
         /// </summary>
@@ -194,60 +182,41 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 运行该图层
             /// </summary>
-            public void Run(FrameworkElement This, Action EndAction = null)
+            /// <param name="Control">动画控制</param>
+            /// <param name="This">显示的图层</param>
+            public void Run(FrameworkElement This, TaskControl Control)
             {
                 //先显示该图层
                 This.Dispatcher.Invoke(() => This.Margin = new Thickness(MarginWIX, 0, 0, 0));
                 //然后等待帧时间毫秒
                 Thread.Sleep(Time);
                 //判断是否要下一步
-                if (parent.PlayState)
+                switch (Control.Type)
                 {
-                    if (++parent.nowid >= parent.Animations.Count)
-                        if (parent.IsLoop)
-                            parent.nowid = 0;
-                        else if (parent.IsContinue)
-                        {
-                            parent.IsContinue = false;
-                            parent.nowid = 0;
-                        }
-                        else
-                        {
-                            //parent.endwilldo = () => parent.Dispatcher.Invoke(Hidden);
-                            //parent.Dispatcher.Invoke(Hidden);
-                            parent.PlayState = false;
-                            if (parent.DoEndAction)
-                                EndAction?.Invoke();//运行结束动画时事件
-                            parent.StopAction?.Invoke();
-                            parent.StopAction = null;
-                            ////延时隐藏
-                            //Task.Run(() =>
-                            //{
-                            //    Thread.Sleep(25);
-                            //    parent.Dispatcher.Invoke(Hidden);
-                            //});
-                            return;
-                        }
-                    //要下一步,现在就隐藏图层
-                    //隐藏该图层
-                    //parent.Dispatcher.Invoke(Hidden);
-                    parent.Animations[parent.nowid].Run(This, EndAction);
-                    return;
-                }
-                else
-                {
-                    parent.IsContinue = false;
-                    //不运行结束事件
-                    ////parent.Dispatcher.Invoke(Hidden);
-                    //if (parent.DoEndAction)
-                    //    EndAction?.Invoke();//运行结束动画时事件
-                    //parent.StopAction?.Invoke();
-                    //parent.StopAction = null;
-                    ////Task.Run(() =>
-                    ////{
-                    ////    Thread.Sleep(25);
-                    ////    parent.Dispatcher.Invoke(Hidden);
-                    ////});
+                    case TaskControl.ControlType.Stop:
+                        Control.EndAction?.Invoke();
+                        return;
+                    case TaskControl.ControlType.Status_Stoped:
+                        return;
+                    case TaskControl.ControlType.Status_Quo:
+                    case TaskControl.ControlType.Continue:
+                        if (++parent.nowid >= parent.Animations.Count)
+                            if (parent.IsLoop)
+                                parent.nowid = 0;
+                            else if (Control.Type == TaskControl.ControlType.Continue)
+                            {
+                                Control.Type = TaskControl.ControlType.Status_Quo;
+                                parent.nowid = 0;
+                            }
+                            else
+                            {
+                                Control.Type = TaskControl.ControlType.Status_Stoped;
+                                Control.EndAction?.Invoke(); //运行结束动画时事件
+                                return;
+                            }
+                        //要下一步
+                        parent.Animations[parent.nowid].Run(This, Control);
+                        return;
                 }
             }
         }
@@ -256,31 +225,23 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void Run(Decorator parant, Action EndAction = null)
         {
-            //if(endwilldo != null && nowid != Animations.Count)
-            //{
-            //    endwilldo.Invoke();
-            //    endwilldo = null;
-            //}
             if (!IsReady)
             {
                 EndAction?.Invoke();
                 return;
             }
-            if (PlayState)
+            if (Control?.PlayState == true)
             {//如果当前正在运行,重置状态
-             //IsResetPlay = true;
-                Stop();
-                StopAction = () => Run(parant, EndAction);
+                Control.Stop(() => Run(parant, EndAction));
                 return;
             }
             nowid = 0;
-            PlayState = true;
-            DoEndAction = true;
+            Control = new TaskControl(EndAction);
             parant.Dispatcher.Invoke(() =>
             {
                 if (parant.Tag == this)
                 {
-                    Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, EndAction));
+                    Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, Control));
                     return;
                 }
                 System.Windows.Controls.Image img;
@@ -288,6 +249,10 @@ namespace VPet_Simulator.Core
                 if (parant.Child == GraphCore.CommUIElements["Image1.PNGAnimation"])
                 {
                     img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image1.PNGAnimation"];
+                }
+                else if (parant.Child == GraphCore.CommUIElements["Image3.PNGAnimation"])
+                {
+                    img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image3.PNGAnimation"];
                 }
                 else
                 {
@@ -308,16 +273,9 @@ namespace VPet_Simulator.Core
                     }
                 }
                 parant.Tag = this;
-                //var bitmap = new BitmapImage();
-                //bitmap.BeginInit();
-                //stream.Seek(0, SeekOrigin.Begin);
-                //bitmap.StreamSource = stream;
-                //bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                //bitmap.EndInit();
                 img.Source = new BitmapImage(new Uri(Path));
-
                 img.Width = Width;
-                Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, EndAction));
+                Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, Control));
             });
         }
         /// <summary>
@@ -328,26 +286,30 @@ namespace VPet_Simulator.Core
         /// <returns>准备好的线程</returns>
         public Task Run(System.Windows.Controls.Image img, Action EndAction = null)
         {
+            if (!IsReady)
+            {
+                EndAction?.Invoke();
+                return Task.CompletedTask;
+            }
+            if (Control?.PlayState == true)
+            {//如果当前正在运行,重置状态
+                Control.EndAction = null;
+                Control.Type = TaskControl.ControlType.Stop;
+            }
             nowid = 0;
-            PlayState = true;
-            DoEndAction = true;
+            Control = new TaskControl(EndAction);
             return img.Dispatcher.Invoke(() =>
-              {
-                  if (img.Tag == this)
-                  {
-                      return new Task(() => Animations[0].Run(img, EndAction));
-                  }
-                  img.Tag = this;
-                  img.Source = new BitmapImage(new Uri(Path));
-                  img.Width = Width;
-                  return new Task(() => Animations[0].Run(img, EndAction));
-              });
+            {
+                if (img.Tag == this)
+                {
+                    return new Task(() => Animations[0].Run(img, Control));
+                }                
+                img.Tag = this;
+                img.Source = new BitmapImage(new Uri(Path));
+                img.Width = Width;
+                return new Task(() => Animations[0].Run(img, Control));
+            });
         }
-        public void Stop(bool StopEndAction = false)
-        {
-            DoEndAction = !StopEndAction;
-            PlayState = false;
-            //IsResetPlay = false;
-        }
+
     }
 }
