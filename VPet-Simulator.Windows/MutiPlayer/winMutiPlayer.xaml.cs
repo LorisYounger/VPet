@@ -267,7 +267,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     GraphInfo lastgraph = new GraphInfo() { Type = GraphType.Common };
     private void Main_GraphDisplayHandler(GraphInfo info)
     {
-        if (info.Type == GraphType.Shutdown || info.Type == GraphType.Common || info.Type == GraphType.Move
+        if (info.Type == GraphType.Shutdown || info.Type == GraphType.Common
             || info.Type == GraphType.Raised_Dynamic || info.Type == GraphType.Raised_Static || info.Type == GraphType.Say)
         {
             return;
