@@ -338,7 +338,7 @@ namespace VPet_Simulator.Windows
                 }
                 else
                 {
-                    if (mod.GameVer / 10 == mw.version / 10)
+                    if (mod.GameVer / 1000 == mw.version / 1000)
                     {
                         moditem.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
                     }
