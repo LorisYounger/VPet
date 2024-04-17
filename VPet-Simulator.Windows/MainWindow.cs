@@ -434,7 +434,7 @@ namespace VPet_Simulator.Windows
             if (Set.AutoBuy && Core.Save.Money >= 100)
             {
                 var havemoney = Core.Save.Money * 0.8;
-                List<Food> food = Foods.FindAll(x => x.Price >= 2 && x.Health >= 0 && x.Exp >= 0 && x.Likability >= 0 && x.Price < havemoney //桌宠不吃负面的食物
+                List<Food> food = Foods.FindAll(x => x.Price >= 2 && x.Health >= -5 && x.Exp >= -10 && x.Likability >= 0 && x.Price < havemoney //桌宠不吃负面的食物
                  && !x.IsOverLoad() // 不吃超模食物
                 );
 
@@ -620,7 +620,7 @@ namespace VPet_Simulator.Windows
                 eattimes = (eattime - now).TotalHours;
             }
             //开始加点
-            Core.Save.EatFood(item, Math.Max(0.5, 1 - Math.Pow(eattimes, 2) * 0.01));
+            Core.Save.EatFood(item, Math.Max(0.5, 1 - eattimes * eattimes * 0.01));
             //吃腻了
             eattimes += 2;
             GameSavesData["buytime"].SetDateTime(item.Name, now.AddHours(eattimes));
