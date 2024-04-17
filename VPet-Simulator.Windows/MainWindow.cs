@@ -388,7 +388,7 @@ namespace VPet_Simulator.Windows
             {
                 try
                 {
-                    ExtensionSetting.StartURL(content);
+                    ExtensionFunction.StartURL(content);
                 }
                 catch (Exception e)
                 {
@@ -1838,11 +1838,11 @@ namespace VPet_Simulator.Windows
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
                   {
                       if (LocalizeCore.CurrentCulture == "zh-Hans")
-                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
+                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
                       else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
+                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
                       else
-                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
+                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
                   });
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "反馈中心".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "设置面板".Translate(), () =>
@@ -1919,11 +1919,11 @@ namespace VPet_Simulator.Windows
                   m_menu.Items.Add(new MenuItem("操作教程".Translate(), null, (x, y) =>
                   {
                       if (LocalizeCore.CurrentCulture == "zh-Hans")
-                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
+                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
                       else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
+                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
                       else
-                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
+                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
                   }));
                   m_menu.Items.Add(new MenuItem("重置位置与状态".Translate(), null, (x, y) =>
                   {
@@ -2000,11 +2000,11 @@ namespace VPet_Simulator.Windows
                   {
                       Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
                       if (LocalizeCore.CurrentCulture == "zh-Hans")
-                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
+                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
                       else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
+                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
                       else
-                          ExtensionSetting.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
+                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
                   }
                   if (!Set["SingleTips"].GetBool("helloworld"))
                   {

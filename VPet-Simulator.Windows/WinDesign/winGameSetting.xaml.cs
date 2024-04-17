@@ -656,7 +656,7 @@ namespace VPet_Simulator.Windows
                     //await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
                     if (MessageBoxX.Show("{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑详细介绍和图标?".Translate(mods.Name), "MOD上传成功".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
                     {
-                        ExtensionSetting.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
+                        ExtensionFunction.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
                     }
                 }
                 else
@@ -697,7 +697,7 @@ namespace VPet_Simulator.Windows
                     mods.WriteFile();
                     if (MessageBoxX.Show("{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑新内容?".Translate(mods.Name)
                         , "MOD更新成功".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
-                        ExtensionSetting.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
+                        ExtensionFunction.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
                 }
                 else
                     MessageBoxX.Show("{0} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{1}"
@@ -712,7 +712,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            ExtensionSetting.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + mod.ItemID);
+            ExtensionFunction.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + mod.ItemID);
         }
 
         private void ButtonAllow_Click(object sender, RoutedEventArgs e)
@@ -780,7 +780,7 @@ namespace VPet_Simulator.Windows
 
         private void hyper_moreInfo(object sender, RoutedEventArgs e)
         {
-            ExtensionSetting.StartURL("https://www.exlb.net/Diagnosis");
+            ExtensionFunction.StartURL("https://www.exlb.net/Diagnosis");
         }
 
         public new void Show()
@@ -846,48 +846,48 @@ namespace VPet_Simulator.Windows
         #region Link
         private void Git_Click(object sender, RoutedEventArgs e)
         {
-            ExtensionSetting.StartURL("https://github.com/LorisYounger/VPet/graphs/contributors");
+            ExtensionFunction.StartURL("https://github.com/LorisYounger/VPet/graphs/contributors");
         }
 
         private void Steam_Click(object sender, RoutedEventArgs e)
         {
-            ExtensionSetting.StartURL("https://store.steampowered.com/app/1920960/_/");
+            ExtensionFunction.StartURL("https://store.steampowered.com/app/1920960/_/");
         }
 
         private void Github_Click(object sender, RoutedEventArgs e)
         {
-            ExtensionSetting.StartURL("https://github.com/LorisYounger/VPet");
+            ExtensionFunction.StartURL("https://github.com/LorisYounger/VPet");
         }
 
         private void LB_Click(object sender, RoutedEventArgs e)
         {
-            ExtensionSetting.StartURL("https://space.bilibili.com/609610777");
+            ExtensionFunction.StartURL("https://space.bilibili.com/609610777");
         }
 
         private void VPET_Click(object sender, RoutedEventArgs e)
         {
-            ExtensionSetting.StartURL("https://www.exlb.net/");
+            ExtensionFunction.StartURL("https://www.exlb.net/");
         }
         private void VUP_Click(object sender, RoutedEventArgs e)
         {
-            ExtensionSetting.StartURL("https://store.steampowered.com/app/1352140/_/");
+            ExtensionFunction.StartURL("https://store.steampowered.com/app/1352140/_/");
         }
 
         private void Group_Click(object sender, RoutedEventArgs e)
         {
             if (LocalizeCore.CurrentCulture.StartsWith("zh"))
-                ExtensionSetting.StartURL("https://space.bilibili.com/690425399");
+                ExtensionFunction.StartURL("https://space.bilibili.com/690425399");
             else
-                ExtensionSetting.StartURL("https://github.com/LorisYounger/VPet");
+                ExtensionFunction.StartURL("https://github.com/LorisYounger/VPet");
         }
         private void sendkey_click(object sender, RoutedEventArgs e)
         {
             if (LocalizeCore.CurrentCulture.StartsWith("zh"))
-                ExtensionSetting.StartURL("https://www.exlb.net/SendKeys");
+                ExtensionFunction.StartURL("https://www.exlb.net/SendKeys");
             else if (LocalizeCore.CurrentCulture == "null")
-                ExtensionSetting.StartURL("https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks");
+                ExtensionFunction.StartURL("https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks");
             else
-                ExtensionSetting.StartURL($"https://learn.microsoft.com/{LocalizeCore.CurrentCulture}/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks");
+                ExtensionFunction.StartURL($"https://learn.microsoft.com/{LocalizeCore.CurrentCulture}/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks");
         }
         #endregion        
 
@@ -1101,7 +1101,7 @@ namespace VPet_Simulator.Windows
                     if (mw.TalkBoxCurr != null)
                         mw.TalkBoxCurr.Setting();
                     else
-                        ExtensionSetting.StartURL("https://steamcommunity.com/app/1920960/workshop/");
+                        ExtensionFunction.StartURL("https://steamcommunity.com/app/1920960/workshop/");
                     break;
                 case "LB":
                     //Task.Run(() =>

@@ -1,6 +1,7 @@
 ﻿using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using VPet_Simulator.Core;
@@ -212,6 +213,54 @@ namespace VPet_Simulator.Windows.Interface
                 return new string('+', v);
         }
 
+        /// <summary>
+        /// 启动URL
+        /// </summary>
+        public static void StartURL(string url)
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+            }
+            catch
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = "explorer.exe";
+                startInfo.UseShellExecute = false;
+                startInfo.Arguments = url;
+                Process.Start(startInfo);
+            }
+        }
+
+        /// <summary>
+        /// 吃食物 附带倍率
+        /// </summary>
+        /// <param name="save">存档</param>
+        /// <param name="food">食物</param>
+        /// <param name="buff">默认1倍</param>
+        public static void EatFood(this IGameSave save, IFood food, double buff)
+        {
+            save.Exp += food.Exp * buff;
+            var tmp = food.Strength / 2 * buff;
+            save.StrengthChange(tmp);
+            save.StoreStrength += tmp;
+            tmp = food.StrengthFood / 2 * buff;
+            save.StrengthChangeFood(tmp);
+            save.StoreStrengthFood += tmp;
+            tmp = food.StrengthDrink / 2 * buff;
+            save.StrengthChangeDrink(tmp);
+            save.StoreStrengthDrink += tmp;
+            tmp = food.Feeling / 2 * buff;
+            save.FeelingChange(tmp);
+            save.StoreFeeling += tmp * buff;
+            save.Health += food.Health * buff;
+            save.Likability += food.Likability * buff;
+        }
     }
     public static partial class ExtensionValue
     {
