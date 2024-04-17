@@ -27,6 +27,7 @@ using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
+using static VPet_Simulator.Windows.Interface.Food;
 using Application = System.Windows.Application;
 using ContextMenu = System.Windows.Forms.ContextMenuStrip;
 using Image = System.Windows.Controls.Image;
@@ -619,10 +620,15 @@ namespace VPet_Simulator.Windows
             {
                 eattimes = (eattime - now).TotalHours;
             }
+            double eatuseps;
+            if (item.Type == FoodType.Gift)
+                eatuseps = Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01);
+            else
+                eatuseps = Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.02);
             //开始加点
-            Core.Save.EatFood(item, Math.Max(0.5, 1 - eattimes * eattimes * 0.01));
+            Core.Save.EatFood(item, Math.Max(0.5, eatuseps));
             //吃腻了
-            eattimes += Math.Max(0.5, Math.Min(2, 2 - (item.Likability + item.Feeling / 2) / 5));
+            eattimes += Math.Max(0.5, Math.Min(4, 2 - (item.Likability + item.Feeling / 2) / 5));
             GameSavesData["buytime"].SetDateTime(item.Name, now.AddHours(eattimes));
             //通知
             item.LoadEatTimeSource(this);

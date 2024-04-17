@@ -190,9 +190,9 @@ namespace VPet_Simulator.Windows.Interface
                 else
                     descs = "有效度".Translate();
                 if (Type == FoodType.Gift)
-                    descs += ":\t" + Math.Max(0.4, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
+                    descs += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
                 else
-                    descs += ":\t" + Math.Max(0.2, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.02).ToString("p0");
+                    descs += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.02).ToString("p0");
                 descs += "\t\t" + "恢复".Translate() + ":\t" + (eattime).ToString("MM/dd HH");
             }
         }
