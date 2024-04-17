@@ -1,5 +1,6 @@
 ﻿using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,10 @@ public partial class MainWindow
     /// 版本号
     /// </summary>
     public string Version => $"{version / 10000}.{version % 10000 / 100}.{version % 100:00}";
+    /// <summary>
+    /// SteamID
+    /// </summary>
+    public ulong SteamID => IsSteamUser ? SteamClient.SteamId.Value : 0;
 
     public List<LowText> LowFoodText { get; set; } = new List<LowText>();
 

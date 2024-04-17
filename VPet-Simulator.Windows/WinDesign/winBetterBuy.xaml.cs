@@ -234,7 +234,6 @@ namespace VPet_Simulator.Windows
                     }
                     mw.HashCheck = false;
                 }
-
                 mw.TakeItem(item);
             }
 

@@ -27,6 +27,10 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         bool IsSteamUser { get; }
         /// <summary>
+        /// SteamID
+        /// </summary>
+        public ulong SteamID { get; }
+        /// <summary>
         /// 游戏设置
         /// </summary>
         ISetting Set { get; }
