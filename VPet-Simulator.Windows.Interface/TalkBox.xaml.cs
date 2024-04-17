@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Navigation;
+using VPet_Simulator.Core;
+using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -54,7 +56,31 @@ namespace VPet_Simulator.Windows.Interface
             var cont = tbTalk.Text;
             tbTalk.Text = "";
             MainPlugin.MW.Main.ToolBar.Visibility = Visibility.Collapsed;
+
             Task.Run(() => Responded(cont));
+        }
+        /// <summary>
+        /// 显示思考动画
+        /// </summary>
+        public void DisplayThink()
+        {
+            var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.B_Loop, MainPlugin.MW.Core.Save.Mode);
+            if (think.Count > 0)
+            {
+                MainPlugin.MW.Main.Display("think", AnimatType.A_Start, MainPlugin.MW.Main.DisplayBLoopingForce);
+            }
+        }
+        /// <summary>
+        /// 显示思考结束动画
+        /// </summary>
+        public void DisplayThinkEnd(Action Next = null)
+        {
+            var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.C_End, MainPlugin.MW.Core.Save.Mode);
+            Next ??= MainPlugin.MW.Main.DisplayToNomal;
+            if (think.Count > 0)
+            {
+                MainPlugin.MW.Main.Display(think[Function.Rnd.Next(think.Count)], Next);
+            }
         }
         /// <summary>
         /// 聊天设置
