@@ -85,7 +85,6 @@ namespace VPet_Simulator.Core
                 //tleft = TimeSpan.Zero;
                 //PBLeft.Value = MaxTime;
                 FinishWorkInfo fwi = new FinishWorkInfo(m.NowWork, GetCount);
-                E_FinishWork?.Invoke(fwi);
                 if (m.NowWork.Type == Work.WorkType.Work)
                 {
                     m.Core.Save.Money += GetCount * m.NowWork.FinishBonus;
