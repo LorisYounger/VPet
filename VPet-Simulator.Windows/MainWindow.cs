@@ -235,6 +235,10 @@ namespace VPet_Simulator.Windows
                     //timecount = DateTime.Now;
                 }
                 Set.StartRecordLastPoint = new Point(Dispatcher.Invoke(() => Left), Dispatcher.Invoke(() => Top));
+                if (PrefixSave == "")
+                {//对于主设置的备份
+                    File.Move(ExtensionValue.BaseDirectory + @"\Setting.lps", ExtensionValue.BaseDirectory + @"\Setting.bkp");
+                }
                 File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps", Set.ToString());
 
                 if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
@@ -1258,6 +1262,10 @@ namespace VPet_Simulator.Windows
                 if (new FileInfo(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps").Exists)
                 {
                     Set = new Setting(this, File.ReadAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps"));
+                }
+                else if (PrefixSave == "" && File.Exists(ExtensionValue.BaseDirectory + @"\Setting.lps"))
+                {
+                    Set = new Setting(this, File.ReadAllText(ExtensionValue.BaseDirectory + @"\Setting.lps"));
                 }
                 else
                     Set = new Setting(this, "Setting#VPET:|\n");

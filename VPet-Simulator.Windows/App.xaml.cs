@@ -34,6 +34,10 @@ namespace VPet_Simulator.Windows
         {
             Args = e.Args;
 
+            //旧版本多开bug修复
+            if (File.Exists(ExtensionValue.BaseDirectory + @"\Setting-.lps"))
+                File.Delete(ExtensionValue.BaseDirectory + @"\Setting-.lps");
+
             foreach (var mss in new DirectoryInfo(ExtensionValue.BaseDirectory).GetFiles("Setting*.lps"))
             {
                 var n = mss.Name.Substring(7).Trim('-');
