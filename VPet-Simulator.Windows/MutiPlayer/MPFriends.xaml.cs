@@ -659,10 +659,26 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             case AnimatType.A_Start:
                 gi.Animat = AnimatType.B_Loop;
-                Main.Display(gi.Name, AnimatType.B_Loop, () => DisplayAuto(gi));
+                var img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+                if (img.Count != 0)
+                {
+                    Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
+                }
+                else
+                {
+                    Main.DisplayToNomal();
+                }
                 break;
             case AnimatType.B_Loop:
-                Main.Display(gi.Name, AnimatType.B_Loop, () => DisplayAuto(gi));
+                img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+                if (img.Count != 0)
+                {
+                    Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
+                }
+                else
+                {
+                    Main.DisplayToNomal();
+                }
                 break;
             case AnimatType.C_End:
             case AnimatType.Single:
