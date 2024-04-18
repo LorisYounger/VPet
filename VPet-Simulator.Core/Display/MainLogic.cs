@@ -65,7 +65,7 @@ namespace VPet_Simulator.Core
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        MsgBar.Show(Core.Save.Name, text, msgcontent: (string.IsNullOrWhiteSpace(desc) ? null :
+                        MsgBar.Show(Core.Save.Name, text, graphname, msgcontent: (string.IsNullOrWhiteSpace(desc) ? null :
                             new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = HorizontalAlignment.Right }));
                     });
                 }

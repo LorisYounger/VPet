@@ -68,10 +68,10 @@ namespace VPet_Simulator.Core
             {
                 Dispatcher.Invoke(() =>
                 {
+                    Opacity = 1;
                     this.Visibility = Visibility.Collapsed;
                     MessageBoxContent.Children.Clear();
                 });
-
                 EndAction?.Invoke();
             }
             else
@@ -114,12 +114,6 @@ namespace VPet_Simulator.Core
                         }
                     }
                 }
-                Task.Run(() =>
-                {
-                    Thread.Sleep(timeleft * 50);
-                    if (!string.IsNullOrEmpty(graphName) && m.DisplayType.Type == GraphInfo.GraphType.Say)
-                        m.DisplayCEndtoNomal(graphName);
-                });
                 ShowTimer.Stop();
                 EndTimer.Start();
             }
@@ -130,9 +124,10 @@ namespace VPet_Simulator.Core
         public event Action EndAction;
         private void EndTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-
             if (--timeleft <= 0)
             {
+                if ((m.DisplayType.Name == graphName || m.DisplayType.Type == GraphInfo.GraphType.Say) && m.DisplayType.Animat != GraphInfo.AnimatType.C_End)
+                    m.DisplayCEndtoNomal(graphName);
                 EndTimer.Stop();
                 CloseTimer.Start();
             }
@@ -194,6 +189,8 @@ namespace VPet_Simulator.Core
             EndTimer.Stop(); ShowTimer.Stop(); CloseTimer.Close();
             this.Visibility = Visibility.Collapsed;
             MessageBoxContent.Children.Clear();
+            if ((m.DisplayType.Name == graphName || m.DisplayType.Type == GraphInfo.GraphType.Say) && m.DisplayType.Animat != GraphInfo.AnimatType.C_End)
+                m.DisplayCEndtoNomal(graphName);
             EndAction?.Invoke();
         }
         public void Dispose()
