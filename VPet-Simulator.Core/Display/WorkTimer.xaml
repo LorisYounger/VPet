@@ -49,7 +49,7 @@
                         pu:ButtonHelper.HoverBackground="{DynamicResource ButtonBackgroundHover}" />
             </Grid>
         </Border>
-        <Button HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5,5,8,7"
+        <Button x:Name="btnSwitch" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5,5,8,7"
                 Background="{DynamicResource BorderBrush}" pu:ButtonHelper.CornerRadius="5" Margin="10,10,0,0"
                 Click="SwitchState_Click">
             <Path Fill="{DynamicResource ButtonForeground}"

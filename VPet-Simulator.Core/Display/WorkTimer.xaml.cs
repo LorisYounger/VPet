@@ -144,10 +144,12 @@ namespace VPet_Simulator.Core
         {
             if (DisplayType == 3)
             {
+                btnSwitch.Opacity = 0.5;
                 DisplayBorder.Visibility = Visibility.Collapsed;
             }
             else
             {
+                btnSwitch.Opacity = 1;
                 DisplayBorder.Visibility = Visibility.Visible;
                 btnStop.Content = LocalizeCore.Translate("停止") + m.NowWork.NameTrans;
                 switch (DisplayType)
