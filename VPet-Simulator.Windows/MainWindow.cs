@@ -632,7 +632,7 @@ namespace VPet_Simulator.Windows
             else
                 eatuseps = Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.02);
             //开始加点
-            Core.Save.EatFood(item, Math.Max(0.5, eatuseps));
+            Core.Save.EatFood(item, Math.Min(0.5, eatuseps));
             //吃腻了
             eattimes += Math.Max(0.5, Math.Min(4, 2 - (item.Likability + item.Feeling / 2) / 5));
             GameSavesData["buytime"].SetDateTime(item.Name, now.AddHours(eattimes));
