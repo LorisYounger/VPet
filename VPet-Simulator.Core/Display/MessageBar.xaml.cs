@@ -190,7 +190,7 @@ namespace VPet_Simulator.Core
             this.Visibility = Visibility.Collapsed;
             MessageBoxContent.Children.Clear();
             if ((m.DisplayType.Name == graphName || m.DisplayType.Type == GraphInfo.GraphType.Say) && m.DisplayType.Animat != GraphInfo.AnimatType.C_End)
-                m.DisplayCEndtoNomal(graphName);
+                m.DisplayCEndtoNomal(m.DisplayType.Name);
             EndAction?.Invoke();
         }
         public void Dispose()
