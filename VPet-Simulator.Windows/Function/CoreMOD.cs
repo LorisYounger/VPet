@@ -71,6 +71,19 @@ namespace VPet_Simulator.Windows
                     mw.ImageSources.AddImages(tmp, di.FullName);
             }
         }
+        public static void LoadFile(MainWindow mw, DirectoryInfo di, string pre = "")
+        {
+            //加载其他放在文件夹的文件
+            foreach (FileInfo fi in di.EnumerateFiles())
+            {
+                mw.FileSources.AddSource(pre + fi.Name, fi.FullName);
+            }
+            //加载其他放在文件夹中文件夹的文件
+            foreach (DirectoryInfo fordi in di.EnumerateDirectories())
+            {
+                LoadFile(mw, fordi, pre + fordi.Name + "_");
+            }
+        }
         public CoreMOD(DirectoryInfo directory, MainWindow mw)
         {
 #if !DEBUG
@@ -215,6 +228,10 @@ namespace VPet_Simulator.Windows
                     case "image":
                         Tag.Add("image");
                         LoadImage(mw, di);
+                        break;
+                    case "file":
+                        Tag.Add("file");
+                        LoadFile(mw, di);
                         break;
                     case "text":
                         Tag.Add("text");

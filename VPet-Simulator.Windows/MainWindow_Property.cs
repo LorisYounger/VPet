@@ -73,6 +73,8 @@ public partial class MainWindow
     public winWorkMenu winWorkMenu { get; set; }
     //public ChatGPTClient CGPTClient;
     public ImageResources ImageSources { get; set; } = new ImageResources();
+    public Resources FileSources { get; set; } = new Resources();
+
     /// <summary>
     /// 所有三方插件
     /// </summary>

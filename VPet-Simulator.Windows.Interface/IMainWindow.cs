@@ -100,6 +100,10 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         ImageResources ImageSources { get; }
         /// <summary>
+        /// 文件资源, 储存的为文件路径 : 可以给代码插件MOD用
+        /// </summary>
+        Resources FileSource { get; }
+        /// <summary>
         /// 设置游戏缩放倍率
         /// </summary>
         /// <param name="zl">缩放倍率 范围0.1-10</param>
