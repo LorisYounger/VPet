@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d"
-        xmlns:pu="https://opensource.panuon.com/wpf-ui"
+        xmlns:pu="https://opensource.panuon.com/wpf-ui" Foreground="{StaticResource PrimaryText}"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         Title="{ll:Str 访客表}" MinHeight="400" Height="400" Width="660" Closed="Window_Closed"
         Style="{DynamicResource BaseWindowXStyle}" Background="{DynamicResource PrimaryLighter}"

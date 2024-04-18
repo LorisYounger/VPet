@@ -3,7 +3,7 @@
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Windows"
-        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Foreground="{StaticResource PrimaryText}"
         xmlns:system="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d"
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" Width="500" MinHeight="250"
         Height="Auto" ResizeMode="NoResize" WindowState="Normal" Icon="../vpeticon.ico" SizeToContent="Height"
