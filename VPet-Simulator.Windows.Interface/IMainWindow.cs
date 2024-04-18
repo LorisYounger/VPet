@@ -102,7 +102,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 文件资源, 储存的为文件路径 : 可以给代码插件MOD用
         /// </summary>
-        Resources FileSource { get; }
+        Resources FileSources { get; }
         /// <summary>
         /// 设置游戏缩放倍率
         /// </summary>
