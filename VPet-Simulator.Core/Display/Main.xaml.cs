@@ -358,6 +358,10 @@ namespace VPet_Simulator.Core
             var mp = e.GetPosition(MainGrid);
             var x = mp.X - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].X;
             var y = mp.Y - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].Y;
+            if (Math.Abs(x) < 1)
+                x = 0;
+            if (Math.Abs(y) < 1)
+                y = 0;
             Core.Controller.MoveWindows(x, y);
             if (Math.Abs(x) + Math.Abs(y) > 20 && rasetype >= 1)
                 rasetype = 0;
