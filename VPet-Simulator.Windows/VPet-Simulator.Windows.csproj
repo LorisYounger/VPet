@@ -219,7 +219,7 @@
 		<PackageReference Include="Facepunch.Steamworks" Condition="'$(Platform)' == 'x64'" Version="2.3.3" />
 		<PackageReference Include="Facepunch.Steamworks.win32" Condition="'$(Platform)' == 'x86'" Version="2.3.3" />
 		<PackageReference Include="LinePutScript" Version="1.11.6" />
-		<PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.6" />
+		<PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.7" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Panuon.WPF" Version="1.1.0" />

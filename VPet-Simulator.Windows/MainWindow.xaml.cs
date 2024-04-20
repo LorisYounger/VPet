@@ -64,7 +64,11 @@ namespace VPet_Simulator.Windows
                 var destr = Sub.TextDeReplace(str);
                 if (destr == str)
                     return str;
-                return destr.Translate();
+                if (LocalizeCore.CurrentLPS != null && LocalizeCore.CurrentLPS.Assemblage.TryGetValue(destr, out ILine line))
+                {
+                    return line.GetString();
+                }
+                return str;
             };
 
             CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
