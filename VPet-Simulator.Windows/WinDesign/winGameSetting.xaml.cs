@@ -758,7 +758,28 @@ namespace VPet_Simulator.Windows
             var windowInteropHelper = new System.Windows.Interop.WindowInteropHelper(mw);
             var currentScreen = System.Windows.Forms.Screen.FromHandle(windowInteropHelper.Handle);
             var mwCtrl = mw.Core.Controller as MWController;
-            mwCtrl.ScreenBorder = currentScreen.Bounds;
+
+            // 获取窗口的 DPI 信息
+            var hwndSource = System.Windows.Interop.HwndSource.FromHwnd(windowInteropHelper.Handle);
+            if (hwndSource != null && hwndSource.CompositionTarget != null)
+            {
+                var dpiScale = hwndSource.CompositionTarget.TransformToDevice;
+
+                // 使用 DPI 缩放调整当前屏幕的边界，然后将其转换为整数坐标的矩形
+                var dpiAdjustedBounds = new System.Drawing.Rectangle(
+                    (int)(currentScreen.Bounds.X / dpiScale.M11),
+                    (int)(currentScreen.Bounds.Y / dpiScale.M22),
+                    (int)(currentScreen.Bounds.Width / dpiScale.M11),
+                    (int)(currentScreen.Bounds.Height / dpiScale.M22));
+                if (mwCtrl != null)
+                    mwCtrl.ScreenBorder = dpiAdjustedBounds;
+            }
+            else
+            {
+                if (mwCtrl != null)
+                    // 如果无法获取 DPI 信息，回退到未调整的边界
+                    mwCtrl.ScreenBorder = currentScreen.Bounds;
+            }
             UpdateMoveAreaText();
         }
 
