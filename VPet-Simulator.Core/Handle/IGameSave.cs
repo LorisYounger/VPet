@@ -11,7 +11,10 @@ namespace VPet_Simulator.Core
         /// 宠物名字
         /// </summary>
         string Name { get; set; }
-
+        /// <summary>
+        /// 主人称呼
+        /// </summary>
+        string HostName { get; set; }
         /// <summary>
         /// 金钱
         /// </summary>

@@ -15,6 +15,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         [Line(name: "name")]
         public string Name { get; set; }
+        public string HostName { get; set; }
 
         /// <summary>
         /// 金钱

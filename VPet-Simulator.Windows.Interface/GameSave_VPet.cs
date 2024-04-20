@@ -16,6 +16,7 @@ public class GameSave_VPet : IGameSave
     /// </summary>
     [Line(name: "name")]
     public string Name { get; set; }
+    public string HostName { get; set; }
 
     /// <summary>
     /// 金钱

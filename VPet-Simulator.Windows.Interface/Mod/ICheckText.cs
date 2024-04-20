@@ -139,25 +139,5 @@ namespace VPet_Simulator.Windows.Interface
         /// 检查部分状态是否满足需求
         /// </summary>之所以不是全部的,是因为挨个取效率太差了
         public virtual bool CheckState(Main m) => CheckState(m.Core.Save);
-
-        /// <summary>
-        /// 将文本转换成实际值
-        /// </summary>
-        public string ConverText(Main m) => ConverText(TranslateText, m);
-        /// <summary>
-        /// 将文本转换成实际值
-        /// </summary>
-        public static string ConverText(string text, Main m)
-        {
-            if (text.Contains('{') && text.Contains('}'))
-            {
-                return text.Replace("{name}", m.Core.Save.Name).Replace("{food}", m.Core.Save.StrengthFood.ToString("f0"))
-                    .Replace("{drink}", m.Core.Save.StrengthDrink.ToString("f0")).Replace("{feel}", m.Core.Save.Feeling.ToString("f0")).
-                    Replace("{strength}", m.Core.Save.Strength.ToString("f0")).Replace("{money}", m.Core.Save.Money.ToString("f0"))
-                    .Replace("{level}", m.Core.Save.Level.ToString("f0")).Replace("{health}", m.Core.Save.Health.ToString("f0"));
-            }
-            else
-                return text;
-        }
     }
 }
