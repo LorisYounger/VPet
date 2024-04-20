@@ -628,11 +628,11 @@ namespace VPet_Simulator.Windows
             }
             double eatuseps;
             if (item.Type == FoodType.Gift)
-                eatuseps = Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01);
+                eatuseps = Math.Max(0.5, 1 - eattimes * eattimes * 0.01);
             else
-                eatuseps = Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.02);
+                eatuseps = Math.Max(0.5, 1 - eattimes * eattimes * 0.02);
             //开始加点
-            Core.Save.EatFood(item, Math.Min(0.5, eatuseps));
+            Core.Save.EatFood(item, eatuseps);
             //吃腻了
             eattimes += Math.Max(0.5, Math.Min(4, 2 - (item.Likability + item.Feeling / 2) / 5));
             GameSavesData["buytime"].SetDateTime(item.Name, now.AddHours(eattimes));
