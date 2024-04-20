@@ -30,6 +30,8 @@ namespace VPet_Simulator.Windows
 
         public static List<MainWindow> MainWindows { get; set; } = new List<MainWindow>();
 
+        public static HashSet<string> MODType { get; set; } = new HashSet<string>();
+
         protected override void OnStartup(StartupEventArgs e)
         {
             Args = e.Args;
@@ -103,6 +105,19 @@ namespace VPet_Simulator.Windows
                      + expt, "游戏发生错误,可能是".Translate() + exptin);
                 return;
             }
+
+            foreach (var modname in MODType)
+            {
+                if (expt.Contains(modname))
+                {
+                    var exptin = modname.Split('.').Last();
+                    MessageBox.Show("游戏发生错误,可能是".Translate() + $"MOD({modname})" +
+                        "导致的\n如有可能请发送 错误信息截图和引发错误之前的操作给相应MOD作者\n感谢您对MOD开发的支持\n".Translate()
+                         + expt, "游戏发生错误,可能是".Translate() + exptin);
+                    return;
+                }
+            }
+
 
             string errstr = "游戏发生错误,可能是".Translate() + (string.IsNullOrWhiteSpace(CoreMOD.NowLoading) ?
                 "游戏或者MOD".Translate() : $"MOD({CoreMOD.NowLoading})") +

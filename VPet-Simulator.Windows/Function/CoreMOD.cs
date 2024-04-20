@@ -348,6 +348,9 @@ namespace VPet_Simulator.Windows
                                 {
                                     if (exportedType.BaseType == typeof(MainPlugin))
                                     {
+                                        var n = exportedType.FullName.ToLower();
+                                        if (!(n.Contains("modmaker") || n.Contains("dlc")))
+                                            App.MODType.Add(exportedType.FullName);
                                         mw.Plugins.Add((MainPlugin)Activator.CreateInstance(exportedType, mw));
                                     }
                                 }
