@@ -68,7 +68,8 @@ namespace VPet_Simulator.Windows
             if (ErrorReport.Contains(expt))
                 return;//防止重复报错
             ErrorReport.Add(expt);
-            if (expt.Contains("MainWindow.Close"))
+            if (expt.Contains("MainWindow.Close") || expt.Contains("System.Windows.Window.DragMove") ||
+                expt.Contains("winConsole"))
                 return;
             else if ((!isFatality && MainWindow != null && ((MainWindow)MainWindow).GameSavesData?.GameSave != null &&
                 (((MainWindow)MainWindow).GameSavesData.GameSave.Money > int.MaxValue || ((MainWindow)MainWindow).GameSavesData.GameSave.Exp > int.MaxValue)
