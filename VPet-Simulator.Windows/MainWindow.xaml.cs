@@ -235,6 +235,17 @@ namespace VPet_Simulator.Windows
                 await GameLoad(Path);
                 if (IsSteamUser)
                 {
+                    //COD Check
+                    if (!Set["v"][(gbol)"CODC"])
+                    {
+                        var di = new DirectoryInfo(ExtensionValue.BaseDirectory).Parent;
+                        if (di.Exists && di.GetDirectories("*Call of Duty*").Length != 0)
+                        {
+                            Dispatcher.Invoke(() => MessageBoxX.Show("检测到游戏库中包含使命召唤,建议不要在运行COD时运行桌宠\n根据社区反馈, COD可能会误报桌宠为作弊软件".Translate(),
+                                "Call of Duty Check"));
+                        }
+                        Set["v"][(gbol)"CODC"] = true;
+                    }
                     Dispatcher.Invoke(() =>
                     {
                         var menuItem = new MenuItem()
