@@ -1481,44 +1481,24 @@ namespace VPet_Simulator.Windows
                 foreach (var selet in SelectTexts)
                 {
                     selet.Exp = Math.Max(Math.Min(selet.Exp, 1000), -1000);
-                    //food.Exp += selet.Exp;
-                    selet.Feeling = Math.Max(Math.Min(selet.Feeling, 1000), -1000);
-                    //food.Feeling += selet.Feeling;
-                    selet.Health = Math.Max(Math.Min(selet.Feeling, 100), -100);
-                    //food.Health += selet.Health;
+                    selet.Feeling = Math.Max(Math.Min(selet.Feeling, 100), -100);
+                    selet.Health = Math.Max(Math.Min(selet.Health, 100), -100);
                     selet.Likability = Math.Max(Math.Min(selet.Likability, 50), -50);
-                    //food.Likability += selet.Likability;
                     selet.Money = Math.Max(Math.Min(selet.Money, 1000), -1000);
-                    //food.Price -= selet.Money;
                     selet.Strength = Math.Max(Math.Min(selet.Strength, 1000), -1000);
-                    //food.Strength += selet.Strength;
                     selet.StrengthDrink = Math.Max(Math.Min(selet.StrengthDrink, 1000), -1000);
-                    //food.StrengthDrink += selet.StrengthDrink;
                     selet.StrengthFood = Math.Max(Math.Min(selet.StrengthFood, 1000), -1000);
-                    //food.StrengthFood += selet.StrengthFood;
                 }
-                //if (food.IsOverLoad())
-                //{
-                //    MessageBox.Show(food.RealPrice.ToString());
-                //}
                 foreach (var selet in ClickTexts)
                 {
                     selet.Exp = Math.Max(Math.Min(selet.Exp, 1000), -1000);
-                    //food.Exp += selet.Exp;
                     selet.Feeling = Math.Max(Math.Min(selet.Feeling, 1000), -1000);
-                    //food.Feeling += selet.Feeling;
-                    selet.Health = Math.Max(Math.Min(selet.Feeling, 100), -100);
-                    //food.Health += selet.Health;
+                    selet.Health = Math.Max(Math.Min(selet.Health, 100), -100);
                     selet.Likability = Math.Max(Math.Min(selet.Likability, 50), -50);
-                    //food.Likability += selet.Likability;
                     selet.Money = Math.Max(Math.Min(selet.Money, 1000), -1000);
-                    //food.Price -= selet.Money;
                     selet.Strength = Math.Max(Math.Min(selet.Strength, 1000), -1000);
-                    //food.Strength += selet.Strength;
                     selet.StrengthDrink = Math.Max(Math.Min(selet.StrengthDrink, 1000), -1000);
-                    //food.StrengthDrink += selet.StrengthDrink;
                     selet.StrengthFood = Math.Max(Math.Min(selet.StrengthFood, 1000), -1000);
-                    //food.StrengthFood += selet.StrengthFood;
                 }
             }
 
