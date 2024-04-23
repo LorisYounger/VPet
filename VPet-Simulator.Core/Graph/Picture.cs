@@ -146,7 +146,7 @@ namespace VPet_Simulator.Core
                 case TaskControl.ControlType.Status_Quo:
                     if (IsLoop)
                     {
-                        Run(Control);
+                        Task.Run(() => Run(Control));
                     }
                     else
                     {

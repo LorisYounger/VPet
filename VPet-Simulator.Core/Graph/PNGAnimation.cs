@@ -202,7 +202,12 @@ namespace VPet_Simulator.Core
                     case TaskControl.ControlType.Continue:
                         if (++parent.nowid >= parent.Animations.Count)
                             if (parent.IsLoop)
+                            {
                                 parent.nowid = 0;
+                                //让循环动画重新开始立线程,不stackoverflow
+                                Task.Run(() => parent.Animations[0].Run(This, Control));
+                                return;
+                            }
                             else if (Control.Type == TaskControl.ControlType.Continue)
                             {
                                 Control.Type = TaskControl.ControlType.Status_Quo;
@@ -303,7 +308,7 @@ namespace VPet_Simulator.Core
                 if (img.Tag == this)
                 {
                     return new Task(() => Animations[0].Run(img, Control));
-                }                
+                }
                 img.Tag = this;
                 img.Source = new BitmapImage(new Uri(Path));
                 img.Width = Width;
