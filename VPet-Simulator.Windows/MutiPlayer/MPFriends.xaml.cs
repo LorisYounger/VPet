@@ -61,7 +61,7 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             InitializeComponent();
 
-            //MGrid.Height = 500 * mf.Set.ZoomLevel;
+            MGrid.Height = 500 * mw.Set.ZoomLevel;
             MGrid.Width = 500 * mw.Set.ZoomLevel;
             double L = 0, T = 0;
             if (mw.Set.StartRecordLast)

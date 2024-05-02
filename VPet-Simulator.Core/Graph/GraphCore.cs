@@ -173,7 +173,7 @@ namespace VPet_Simulator.Core
                     return list;
                 //}                
             }
-            return null;// FindGraph(GraphType.Default, mode);
+            return new List<IGraph>();// FindGraph(GraphType.Default, mode);
         }
 
         public Config GraphConfig;
