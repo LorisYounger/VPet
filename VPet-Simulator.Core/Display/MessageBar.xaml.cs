@@ -127,7 +127,7 @@ namespace VPet_Simulator.Core
             if (--timeleft <= 0)
             {
                 if ((m.DisplayType.Name == graphName || m.DisplayType.Type == GraphInfo.GraphType.Say) && m.DisplayType.Animat != GraphInfo.AnimatType.C_End)
-                    m.DisplayCEndtoNomal(graphName);
+                    m.DisplayCEndtoNomal(m.DisplayType.Name);
                 EndTimer.Stop();
                 CloseTimer.Start();
             }
