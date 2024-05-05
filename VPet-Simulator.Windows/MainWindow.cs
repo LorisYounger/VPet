@@ -1258,9 +1258,9 @@ namespace VPet_Simulator.Windows
                 {
                     Set = new Setting(this, File.ReadAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps"));
                 }
-                else if (PrefixSave == "" && File.Exists(ExtensionValue.BaseDirectory + @"\Setting.lps"))
+                else if (PrefixSave == "" && File.Exists(ExtensionValue.BaseDirectory + @"\Setting.bkp"))
                 {
-                    Set = new Setting(this, File.ReadAllText(ExtensionValue.BaseDirectory + @"\Setting.lps"));
+                    Set = new Setting(this, File.ReadAllText(ExtensionValue.BaseDirectory + @"\Setting.bkp"));
                 }
                 else
                     Set = new Setting(this, "Setting#VPET:|\n");
