@@ -103,10 +103,6 @@ namespace VPet_Simulator.Core
         /// 心情最大值
         /// </summary>
         double FeelingMax { get; }
-        /// <summary>
-        /// 待补充的心情,随着时间缓慢加给桌宠
-        /// </summary>//让游戏更有游戏性
-        double StoreFeeling { get; set; }
 
         /// <summary>
         /// 健康(生病)(隐藏)

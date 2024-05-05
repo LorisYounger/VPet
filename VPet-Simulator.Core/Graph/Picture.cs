@@ -123,7 +123,6 @@ namespace VPet_Simulator.Core
                 Task.Run(() => Run(Control));
             });
         }
-        bool DoEndAction = true;
         /// <summary>
         /// 通过控制器运行
         /// </summary>

@@ -146,12 +146,7 @@ namespace VPet_Simulator.Core
         }
 
         [Line(Type = LPSConvert.ConvertType.ToFloat)]
-        protected double feeling { get; set; }
-        /// <summary>
-        /// 待补充的心情,随着时间缓慢加给桌宠
-        /// </summary>//让游戏更有游戏性
-        [Line(Type = LPSConvert.ConvertType.ToFloat)]
-        public double StoreFeeling { get; set; }
+        protected double feeling { get; set; }       
         /// <summary>
         /// 变化 心情
         /// </summary>
@@ -206,14 +201,8 @@ namespace VPet_Simulator.Core
         public void StoreTake()
         {
             const int t = 10;
-            var s = StoreFeeling / t;
-            StoreFeeling -= s;
-            if (Math.Abs(StoreFeeling) < 1)
-                StoreFeeling = 0;
-            else
-                FeelingChange(s);
 
-            s = StoreStrength / t;
+            var s = StoreStrength / t;
             StoreStrength -= s;
             if (Math.Abs(StoreStrength) < 1)
                 StoreStrength = 0;
@@ -250,9 +239,7 @@ namespace VPet_Simulator.Core
             tmp = food.StrengthDrink / 2;
             StrengthChangeDrink(tmp);
             StoreStrengthDrink += tmp;
-            tmp = food.Feeling / 2;
-            FeelingChange(tmp);
-            StoreFeeling += tmp;
+            FeelingChange(food.Feeling);
             Health += food.Health;
             Likability += food.Likability;
         }

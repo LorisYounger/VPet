@@ -25,7 +25,7 @@ LowFoodText:|Mode#L:|Strength#S:|Like#L:|Text#好想再吃一次主人做的料�
 LowDrinkText:|Mode#H:|Strength#L:|Like#N:|Text#喝！继续喝！还没尽兴呢！:|tag#vup,girl:|
 LowDrinkText:|Mode#H:|Strength#M:|Like#N:|Text#大家好，我是本群的“提醒喝水小助手”希望此刻看到消息的人可以和我一起来喝一杯水。和我一起成为一天八杯水的人吧!:|tag#vup,girl:|
 LowDrinkText:|Mode#H:|Strength#S:|Like#N:|Text#主人我的宠物快乐水呢！:|tag#vup,girl:|
-LowDrinkText:|Mode#H:|Strength#L:|Like#S:|Text#渴了就喝水,别老扒拉我腿行不行呀:|tag#vup,girl:|
+LowDrinkText:|Mode#H:|Strength#L:|Like#S:|Text#口渴时该喝水了。:|tag#vup,girl:|
 LowDrinkText:|Mode#H:|Strength#M:|Like#M:|Text#本人自愿放下水杯停止喝水, 没有受到客观阻碍,不能算喝水未遂,只能算喝水中止:|tag#vup,girl:|
 LowDrinkText:|Mode#H:|Strength#S:|Like#M:|Text#我夸父只喝一口:|tag#vup,girl:|
 LowDrinkText:|Mode#H:|Strength#L:|Like#N:|Text#主人该喝水了:|tag#vup,girl:|

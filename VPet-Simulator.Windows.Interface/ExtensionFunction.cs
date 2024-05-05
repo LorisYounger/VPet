@@ -255,9 +255,7 @@ namespace VPet_Simulator.Windows.Interface
             tmp = food.StrengthDrink / 2 * buff;
             save.StrengthChangeDrink(tmp);
             save.StoreStrengthDrink += tmp;
-            tmp = food.Feeling / 2 * buff;
-            save.FeelingChange(tmp);
-            save.StoreFeeling += tmp * buff;
+            save.FeelingChange(food.Feeling * buff);
             save.Health += food.Health * buff;
             save.Likability += food.Likability * buff;
         }

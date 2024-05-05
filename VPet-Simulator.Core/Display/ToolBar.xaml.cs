@@ -378,7 +378,7 @@ namespace VPet_Simulator.Core
 
         private Brush GetForeground(double value)
         {
-            if (value >= .8)
+            if (value >= .6)
             {
                 return FindResource("SuccessProgressBarForeground") as Brush;
             }
