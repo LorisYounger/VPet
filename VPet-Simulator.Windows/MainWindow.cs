@@ -1128,7 +1128,7 @@ namespace VPet_Simulator.Windows
             if (LastDiagnosisTime++ < Set.DiagnosisInterval)
                 return;//等待间隔
             LastDiagnosisTime = 0;
-            string _url = "http://cn.exlb.org:5810/VPET/Report";
+            string _url = "http://exlb.panuon.com:5810/VPET/Report";
             //参数
             StringBuilder sb = new StringBuilder();
             sb.Append("action=data");

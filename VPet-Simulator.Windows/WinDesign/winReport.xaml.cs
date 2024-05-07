@@ -62,7 +62,7 @@ namespace VPet_Simulator.Windows
             }
             try
             {
-                string _url = "http://cn.exlb.org:5810/VPET/Report";
+                string _url = "http://exlb.panuon.com:5810/VPET/Report";
                 //参数
                 StringBuilder sb = new StringBuilder();
                 sb.Append("action=error");
