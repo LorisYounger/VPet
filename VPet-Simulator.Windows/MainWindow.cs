@@ -437,7 +437,7 @@ namespace VPet_Simulator.Windows
         private void lowStrength()
         {
             var sm = Core.Save.StrengthMax;
-            var sm75 = sm * 0.75;
+            var sm75 = sm * 0.70;
             if (Set.AutoBuy && Core.Save.Money >= 100)
             {
                 var havemoney = Core.Save.Money * 0.8;
