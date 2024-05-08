@@ -2092,18 +2092,20 @@ namespace VPet_Simulator.Windows
                 Main.Display(graphName, imageSource, () =>
                 {
                     showeatanm = true;
-                    var newmod = Core.Save.CalMode();
-                    if (Core.Save.Mode != newmod)
+                    if (Core.Controller.EnableFunction)
                     {
-                        //魔改下参数以免不播放切换动画
-                        Main.DisplayType.Type = GraphType.Default;
-                        //切换显示动画
-                        Main.PlaySwitchAnimat(Core.Save.Mode, newmod);
-                        Core.Save.Mode = newmod;
+                        var newmod = Core.Save.CalMode();
+                        if (Core.Save.Mode != newmod)
+                        {
+                            //魔改下参数以免不播放切换动画
+                            Main.DisplayType.Type = GraphType.Default;
+                            //切换显示动画
+                            Main.PlaySwitchAnimat(Core.Save.Mode, newmod);
+                            Core.Save.Mode = newmod;
+                        }
+                        else
+                            Main.DisplayToNomal();
                     }
-                    else
-                        Main.DisplayToNomal();
-
                 });
             }
             else
