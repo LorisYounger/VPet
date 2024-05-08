@@ -2106,6 +2106,8 @@ namespace VPet_Simulator.Windows
                         else
                             Main.DisplayToNomal();
                     }
+                    else
+                        Main.DisplayToNomal();
                 });
             }
             else
