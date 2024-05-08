@@ -199,10 +199,12 @@ namespace VPet_Simulator.Core
                     var needdrink = TimePass * (0.5 + NowWork.StrengthDrink / 2);
                     double efficiency = 0;
                     int addhealth = -2;
-                    if (Core.Save.StrengthFood <= Core.Save.StrengthMax * 0.25)
+                    double sm25 = Core.Save.StrengthMax * 0.25;
+                    double sm60 = Core.Save.StrengthMax * 0.6;
+                    if (Core.Save.StrengthFood <= sm25)
                     {//低状态低效率
                         Core.Save.StrengthChangeFood(-needfood / 2);
-                        efficiency += 0.25;
+                        efficiency += 0.2;
                         if (Core.Save.Strength >= needfood)
                         {
                             Core.Save.StrengthChange(-needfood);
@@ -213,14 +215,17 @@ namespace VPet_Simulator.Core
                     else
                     {
                         Core.Save.StrengthChangeFood(-needfood);
-                        efficiency += 0.5;
-                        if (Core.Save.StrengthFood >= 75)
+                        efficiency += 0.4;
+                        if (Core.Save.StrengthFood >= sm60)
+                        {
                             addhealth += Function.Rnd.Next(1, 3);
+                            efficiency += 0.1;
+                        }
                     }
-                    if (Core.Save.StrengthDrink <= Core.Save.StrengthMax * 0.25)
+                    if (Core.Save.StrengthDrink <= sm25)
                     {//低状态低效率
                         Core.Save.StrengthChangeDrink(-needdrink / 2);
-                        efficiency += 0.25;
+                        efficiency += 0.2;
                         if (Core.Save.Strength >= needdrink)
                         {
                             Core.Save.StrengthChange(-needdrink);
@@ -231,9 +236,12 @@ namespace VPet_Simulator.Core
                     else
                     {
                         Core.Save.StrengthChangeDrink(-needdrink);
-                        efficiency += 0.5;
-                        if (Core.Save.StrengthDrink >= 75)
+                        efficiency += 0.4;
+                        if (Core.Save.StrengthDrink >= sm60)
+                        {
                             addhealth += Function.Rnd.Next(1, 3);
+                            efficiency += 0.1;
+                        }
                     }
                     if (addhealth > 0)
                         Core.Save.Health += addhealth * TimePass;
