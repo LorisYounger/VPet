@@ -2044,12 +2044,26 @@ namespace VPet_Simulator.Windows
                   foreach (CoreMOD cm in CoreMODs)
                       if (!cm.SuccessLoad)
                           if (cm.Tag.Contains("该模组已损坏"))
-                              MessageBoxX.Show("模组 {0} 插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题".Translate(cm.Name) + '\n' + cm.ErrorMessage, "该模组已损坏".Translate());
+                              MessageBoxX.Show("模组 {0} 插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系MOD作者修复该问题".Translate(cm.Name) + '\n' + cm.ErrorMessage, "该模组已损坏".Translate());
                           else if (Set.IsPassMOD(cm.Name) || !string.IsNullOrEmpty(cm.ErrorMessage))
-                              MessageBoxX.Show("模组 {0} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系作者修复该问题".Translate(cm.Name) + '\n' + cm.ErrorMessage, "{0} 未加载代码插件".Translate(cm.Name));
+                              MessageBoxX.Show("模组 {0} 的代码插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系MOD作者修复该问题".Translate(cm.Name) + '\n' + cm.ErrorMessage, "{0} 未加载代码插件".Translate(cm.Name));
                           else if (Set.IsMSGMOD(cm.Name))
                               MessageBoxX.Show("由于 {0} 包含代码插件\n虚拟桌宠模拟器已自动停止加载该插件\n请手动前往设置允许启用该mod 代码插件".Translate(cm.Name), "{0} 未加载代码插件".Translate(cm.Name));
+                  //动画错误
+                  if (Main.ErrorMessage.Count != 0)
+                  {
+                      var errstr = string.Join("\n------\n", Main.ErrorMessage);
+                      if (errstr.Contains("0000_core"))
+                      {
+                          var winrep = new winReport(this, errstr);
+                          winrep.tDescription.Text = "动画加载错误".Translate();
+                          winrep.Show();
+                      }
+                      else
+                          MessageBoxX.Show("动画加载错误\n虚拟桌宠模拟器未能成功加载该动画\n请联系MOD作者修复该问题".Translate() + '\n' + errstr, "动画加载错误".Translate());
 
+                      Main.ErrorMessage.Clear();
+                  }
               });
 
 
