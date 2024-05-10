@@ -1391,15 +1391,24 @@ namespace VPet_Simulator.Windows
             Task.Run(() => GameLoad(Path));
         }
         /// <summary>
+        /// MOD地址
+        /// </summary>
+        public List<DirectoryInfo> MODPath { get; private set; }
+
+        public IEnumerable<IModInfo> ModInfo => CoreMODs;
+
+        public IEnumerable<IModInfo> OnModInfo => CoreMODs.FindAll(x => x.IsOnMOD(this));
+
+        /// <summary>
         /// 加载游戏
         /// </summary>
         /// <param name="Path">MOD地址</param>
         public async Task GameLoad(List<DirectoryInfo> Path)
         {
-            Path = Path.Distinct().ToList();
+            MODPath = Path.Distinct().ToList();
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading MOD"));
             //加载mod
-            foreach (DirectoryInfo di in Path)
+            foreach (DirectoryInfo di in MODPath)
             {
                 if (!File.Exists(di.FullName + @"\info.lps"))
                     continue;

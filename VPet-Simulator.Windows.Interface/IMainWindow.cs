@@ -1,6 +1,7 @@
 ﻿using LinePutScript.Dictionary;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -212,6 +213,19 @@ namespace VPet_Simulator.Windows.Interface
         /// UI线程调用位置
         /// </summary>
         Dispatcher Dispatcher { get; }
+        /// <summary>
+        /// 获取当前所有MOD信息
+        /// </summary>
+        IEnumerable<IModInfo> ModInfo { get; }
+        /// <summary>
+        /// 获取当前所有已启用的MOD信息
+        /// </summary>
+        IEnumerable<IModInfo> OnModInfo { get; }
+
+        /// <summary>
+        /// 所有MOD文件位置
+        /// </summary>
+        public List<DirectoryInfo> MODPath { get; }
     }
 
 }

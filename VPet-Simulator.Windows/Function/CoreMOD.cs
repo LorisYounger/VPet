@@ -14,7 +14,7 @@ using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows
 {
-    internal class CoreMOD
+    internal class CoreMOD : IModInfo
     {
         /// <summary>
         /// 自动启用MOD名称
@@ -29,21 +29,21 @@ namespace VPet_Simulator.Windows
             "CSCore.dll"
         };
         public static string NowLoading = null;
-        public string Name;
-        public string Author;
+        public string Name { get; set; }
+        public string Author { get; set; }
         /// <summary>
         /// 如果是上传至Steam,则为SteamUserID
         /// </summary>
-        public long AuthorID;
+        public long AuthorID { get; set; }
         /// <summary>
         /// 上传至Steam的ItemID
         /// </summary>
-        public ulong ItemID;
-        public string Intro;
-        public DirectoryInfo Path;
-        public int GameVer;
-        public int Ver;
-        public HashSet<string> Tag = new HashSet<string>();
+        public ulong ItemID { get; set; }
+        public string Intro { get; set; }
+        public DirectoryInfo Path { get; set; }
+        public int GameVer { get; set; }
+        public int Ver { get; set; }
+        public HashSet<string> Tag { get; set; } = new HashSet<string>();
         public bool SuccessLoad = true;
         public DateTime CacheDate;
         public string ErrorMessage;
