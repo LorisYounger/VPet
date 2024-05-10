@@ -50,6 +50,10 @@ namespace VPet_Simulator.Core
         /// 反正一次性生成太多导致闪退
         /// </summary>
         public static int NowLoading = 0;
+
+        public bool IsFail { get; set; } = false;
+
+        public string FailMessage { get; set; } = "";
         /// <summary>
         /// 新建 PNG 动画
         /// </summary>
@@ -100,56 +104,67 @@ namespace VPet_Simulator.Core
                 Thread.Sleep(100);
             }
             Interlocked.Increment(ref NowLoading);
-            //新方法:加载大图片
-            //生成大文件加载非常慢,先看看有没有缓存能用
-            Path = System.IO.Path.Combine(GraphCore.CachePath, $"{GraphCore.Resolution}_{Math.Abs(Sub.GetHashCode(path))}_{paths.Length}.png");
-            Width = 500 * (paths.Length + 1);
-            if (!File.Exists(Path) && !((List<string>)GraphCore.CommConfig["Cache"]).Contains(path))
+            try
             {
-                ((List<string>)GraphCore.CommConfig["Cache"]).Add(path);
-                int w = 0;
-                int h = 0;
-                FileInfo firstImage = paths[0];
-                var img = System.Drawing.Image.FromFile(firstImage.FullName);
-                w = img.Width;
-                h = img.Height;
-                if (w > GraphCore.Resolution)
+                //新方法:加载大图片
+                //生成大文件加载非常慢,先看看有没有缓存能用
+                Path = System.IO.Path.Combine(GraphCore.CachePath, $"{GraphCore.Resolution}_{Math.Abs(Sub.GetHashCode(path))}_{paths.Length}.png");
+                Width = 500 * (paths.Length + 1);
+                if (!File.Exists(Path) && !((List<string>)GraphCore.CommConfig["Cache"]).Contains(path))
                 {
-                    w = GraphCore.Resolution;
-                    h = (int)(h * (GraphCore.Resolution / (double)img.Width));
-                }
-                if (paths.Length * w >= 60000)
-                {//修复大长动画导致过长分辨率导致可能的报错
-                    w = 60000 / paths.Length;
-                    h = (int)(img.Height * (w / (double)img.Width));
-                }
-
-                using (Bitmap joinedBitmap = new Bitmap(w * paths.Length, h))
-                using (Graphics graph = Graphics.FromImage(joinedBitmap))
-                {
-                    using (img)
-                        graph.DrawImage(img, 0, 0, w, h);
-                    Parallel.For(1, paths.Length, i =>
+                    ((List<string>)GraphCore.CommConfig["Cache"]).Add(path);
+                    int w = 0;
+                    int h = 0;
+                    FileInfo firstImage = paths[0];
+                    var img = System.Drawing.Image.FromFile(firstImage.FullName);
+                    w = img.Width;
+                    h = img.Height;
+                    if (w > GraphCore.Resolution)
                     {
-                        using (var img = System.Drawing.Image.FromFile(paths[i].FullName))
+                        w = GraphCore.Resolution;
+                        h = (int)(h * (GraphCore.Resolution / (double)img.Width));
+                    }
+                    if (paths.Length * w >= 60000)
+                    {//修复大长动画导致过长分辨率导致可能的报错
+                        w = 60000 / paths.Length;
+                        h = (int)(img.Height * (w / (double)img.Width));
+                    }
+
+                    using (Bitmap joinedBitmap = new Bitmap(w * paths.Length, h))
+                    using (Graphics graph = Graphics.FromImage(joinedBitmap))
+                    {
+                        using (img)
+                            graph.DrawImage(img, 0, 0, w, h);
+                        Parallel.For(1, paths.Length, i =>
                         {
-                            lock (graph)
-                                graph.DrawImage(img, w * i, 0, w, h);
-                        }
-                    });
-                    if (!File.Exists(Path))
-                        joinedBitmap.Save(Path);
+                            using (var img = System.Drawing.Image.FromFile(paths[i].FullName))
+                            {
+                                lock (graph)
+                                    graph.DrawImage(img, w * i, 0, w, h);
+                            }
+                        });
+                        if (!File.Exists(Path))
+                            joinedBitmap.Save(Path);
+                    }
                 }
+                for (int i = 0; i < paths.Length; i++)
+                {
+                    var noExtFileName = System.IO.Path.GetFileNameWithoutExtension(paths[i].Name);
+                    int time = int.Parse(noExtFileName.Substring(noExtFileName.LastIndexOf('_') + 1));
+                    Animations.Add(new Animation(this, time, -500 * i));
+                }
+                //stream = new MemoryStream(File.ReadAllBytes(cp));
+                IsReady = true;
             }
-            for (int i = 0; i < paths.Length; i++)
+            catch (Exception e)
             {
-                var noExtFileName = System.IO.Path.GetFileNameWithoutExtension(paths[i].Name);
-                int time = int.Parse(noExtFileName.Substring(noExtFileName.LastIndexOf('_') + 1));
-                Animations.Add(new Animation(this, time, -500 * i));
+                IsFail = true;
+                FailMessage =$"--PNGAnimation--{GraphInfo}--\nPath: {path}\n{e.Message}";
             }
-            //stream = new MemoryStream(File.ReadAllBytes(cp));
-            IsReady = true;
-            Interlocked.Decrement(ref NowLoading);
+            finally
+            {
+                Interlocked.Decrement(ref NowLoading);
+            }
         }
 
         /// <summary>
@@ -316,5 +331,6 @@ namespace VPet_Simulator.Core
             });
         }
 
+        
     }
 }

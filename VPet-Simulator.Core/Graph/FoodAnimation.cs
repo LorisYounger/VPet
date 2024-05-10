@@ -43,6 +43,7 @@ namespace VPet_Simulator.Core
                 Animations.Add(new Animation(this, sub));
                 sub = animations.Find("a" + ++i);
             }
+            IsReady = true;
         }
 
         public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
@@ -63,12 +64,12 @@ namespace VPet_Simulator.Core
         /// 所有动画帧
         /// </summary>
         public List<Animation> Animations;
-       
+
         /// <summary>
         /// 是否循环播放
         /// </summary>
         public bool IsLoop { get; set; }
-      
+
         /// <summary>
         /// 动画信息
         /// </summary>
@@ -76,10 +77,12 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 是否准备完成
         /// </summary>
-        public bool IsReady => true;
+        public bool IsReady { get; set; } = false;
+        public bool IsFail => false;
+        public string FailMessage => "";
 
         public TaskControl Control { get; set; }
-      
+
         int nowid;
         /// <summary>
         /// 图片资源

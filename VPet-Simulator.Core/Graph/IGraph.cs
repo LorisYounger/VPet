@@ -25,6 +25,15 @@ namespace VPet_Simulator.Core
         /// 是否准备完成
         /// </summary>
         bool IsReady { get; }
+
+        /// <summary>
+        /// 是否读取失败
+        /// </summary>
+        bool IsFail { get; }
+        /// <summary>
+        /// 失败报错信息
+        /// </summary>
+        string FailMessage { get; }
         /// <summary>
         /// 该动画信息
         /// </summary>

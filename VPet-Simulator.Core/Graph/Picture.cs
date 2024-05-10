@@ -36,6 +36,7 @@ namespace VPet_Simulator.Core
                 GraphCore.CommUIElements["Image2.Picture"] = new Image() { Width = 500, Height = 500 };
                 GraphCore.CommUIElements["Image3.Picture"] = new Image() { Width = 500, Height = 500 };
             }
+            IsReady = true;
         }
         public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
         {
@@ -71,9 +72,13 @@ namespace VPet_Simulator.Core
         /// </summary>
         public GraphInfo GraphInfo { get; private set; }
 
-        public bool IsReady => true;
+        public bool IsReady { get; set; } = false;
 
         public TaskControl Control { get; set; }
+
+        public bool IsFail => false;
+
+        public string FailMessage => "";
 
         public void Run(Decorator parant, Action EndAction = null)
         {
@@ -176,6 +181,9 @@ namespace VPet_Simulator.Core
                 return new Task(() => Run(Control));
             });
         }
+        /// <summary>
+        /// 可以通过图片模块运行该动画
+        /// </summary>
         public interface IImageRun : IGraph
         {
             /// <summary>

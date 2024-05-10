@@ -272,5 +272,9 @@ namespace VPet_Simulator.Core
         ///// 其他附带的储存信息
         ///// </summary>
         //public ILine Info { get; set; }
+        public override string ToString()
+        {
+            return $"[{Name}]{Type}_{ModeType.ToString()[0]}{Animat.ToString()[0]}]";
+        }
     }
 }

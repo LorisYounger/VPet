@@ -1,6 +1,7 @@
 ﻿using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
+using System.Collections.Generic;
 using System.Media;
 using System.Threading;
 using System.Threading.Tasks;
@@ -72,6 +73,7 @@ namespace VPet_Simulator.Core
             MoveTimer.Elapsed += MoveTimer_Elapsed;
             SmartMoveTimer.Elapsed += SmartMoveTimer_Elapsed;
         }
+        public List<string> ErrorMessage = new List<string>();
         public async Task Load_2_WaitGraph()
         {
             //新功能:等待所有图像加载完成再跑
@@ -79,11 +81,19 @@ namespace VPet_Simulator.Core
             {
                 foreach (var ig2 in igs.Values)
                 {
-                    foreach (var ig3 in ig2)
+                    for (int i = 0; i < ig2.Count; i++)
                     {
+                        IGraph ig3 = ig2[i];
                         while (!ig3.IsReady)
                         {
-                            await Task.Delay(100);
+                            if (ig3.IsFail)
+                            {
+                                ErrorMessage.Add(ig3.FailMessage);
+                                ig2.Remove(ig3);
+                                break;
+                            }
+                            else
+                                await Task.Delay(100);
                         }
                     }
                 }
