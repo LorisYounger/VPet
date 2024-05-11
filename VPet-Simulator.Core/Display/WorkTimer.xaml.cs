@@ -68,6 +68,17 @@ namespace VPet_Simulator.Core
                 this.count = count * (1 + work.FinishBonus);
                 this.spendtime = work.Time;
             }
+            /// <summary>
+            /// 完成工作信息
+            /// </summary>
+            /// <param name="work">当前工作</param>
+            /// <param name="count">当前盈利(自动计算附加)</param>
+            public FinishWorkInfo(Work work, double count, DateTime starttime)
+            {
+                this.work = work;
+                this.count = count * (1 + work.FinishBonus);
+                this.spendtime = DateTime.Now.Subtract(starttime).TotalMinutes;
+            }
         }
         /// <summary>
         /// UI相关显示
@@ -202,7 +213,7 @@ namespace VPet_Simulator.Core
         {
             if (m.State == Main.WorkingState.Work && m.NowWork != null)
             {
-                FinishWorkInfo fwi = new FinishWorkInfo(m.NowWork, GetCount);
+                FinishWorkInfo fwi = new FinishWorkInfo(m.NowWork, GetCount, StartTime);
                 E_FinishWork?.Invoke(fwi);
             }
             Visibility = Visibility.Collapsed;
