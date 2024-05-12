@@ -292,7 +292,7 @@ namespace VPet_Simulator.Core
                 if (lps.FindLine("touchhead") != null && lps["touchhead"][(gdbe)"py"] != 0)
                 {
                     TouchHeadLocate = new Point(lps["touchhead"][(gdbe)"px"], lps["touchhead"][(gdbe)"py"]);
-                    TouchHeadSize = new Size(lps["touchhead"][(gdbe)"sw"], lps["touchhead"][(gdbe)"wh"]);
+                    TouchHeadSize = new Size(lps["touchhead"][(gdbe)"sw"], lps["touchhead"][(gdbe)"sh"]);
                 }
                 if (lps.FindLine("touchbody") != null && lps["touchbody"][(gdbe)"py"] != 0)
                 {
