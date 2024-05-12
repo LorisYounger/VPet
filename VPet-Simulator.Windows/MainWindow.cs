@@ -1405,7 +1405,7 @@ namespace VPet_Simulator.Windows
         /// <param name="Path">MOD地址</param>
         public async Task GameLoad(List<DirectoryInfo> Path)
         {
-            MODPath = Path.Distinct().ToList();
+            MODPath = Path.GroupBy(x => x.FullName).Select(group => group.First()).ToList();
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading MOD"));
             //加载mod
             foreach (DirectoryInfo di in MODPath)
