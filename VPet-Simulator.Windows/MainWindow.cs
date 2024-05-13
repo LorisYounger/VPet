@@ -3,6 +3,7 @@ using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using NAudio.CoreAudioApi;
 using Panuon.WPF.UI;
+using Panuon.WPF.UI.Configurations;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -1430,7 +1431,16 @@ namespace VPet_Simulator.Windows
             }
 
 
-            await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏MOD".Translate()));
+
+            await Dispatcher.InvokeAsync(() =>
+            {
+                MessageBoxXSettings.Setting.OKButtonContent = "好的".Translate();
+                MessageBoxXSettings.Setting.CancelButtonContent = "取消".Translate();
+                MessageBoxXSettings.Setting.YesButtonContent = "是".Translate();
+                MessageBoxXSettings.Setting.NoButtonContent = "否".Translate();
+                PendingBoxSettings.Setting.CancelButtonContent = "取消".Translate();
+                LoadingText.Content = "尝试加载游戏MOD".Translate();
+            });
 
             //旧版本设置兼容
             if (Set.PetGraph == "默认虚拟桌宠")
