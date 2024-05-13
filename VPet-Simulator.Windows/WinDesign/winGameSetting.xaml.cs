@@ -1027,8 +1027,11 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
+            
+            var petloader = mw.Pets.Find(x => x.Name == mw.Set.PetGraph);
+            petloader ??= mw.Pets[0];
 
-            if (mw.PrefixSave == "" && mw.Pets.Find(x => x.Name == mw.Set.PetGraph).PetName != mw.Pets[PetBox.SelectedIndex].PetName)
+            if (mw.PrefixSave == "" && petloader.PetName != mw.Pets[PetBox.SelectedIndex].PetName)
             {//多一个名称判断, 如果宠物名称一致,则切换皮肤不提示多开
                 switch (MessageBoxX.Show("是否多开一个新的桌宠使用 {0} 皮肤\n各自存档独立保存,互不影响\n支持同时显示多个宠物".Translate(mw.Pets[PetBox.SelectedIndex].Name.Translate()),
                     "是否多开".Translate(), MessageBoxButton.YesNoCancel))
@@ -1069,8 +1072,7 @@ namespace VPet_Simulator.Windows
                 }
             }
 
-            var petloader = mw.Pets.Find(x => x.Name == mw.Set.PetGraph);
-            petloader ??= mw.Pets[0];
+
             bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
             petboxbef = PetBox.SelectedIndex;
             mw.Set.PetGraph = mw.Pets[petboxbef].Name;
