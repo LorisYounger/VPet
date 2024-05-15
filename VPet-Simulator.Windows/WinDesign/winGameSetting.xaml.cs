@@ -1409,6 +1409,8 @@ namespace VPet_Simulator.Windows
                 return;
             mw.Set.SetLanguage((string)LanguageBox.SelectedItem);
             TextBoxPetName.Text = mw.Core.Save.Name;
+            ButtonRestartGraph.Visibility = Visibility.Visible;
+
         }
 
         private void MainTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
