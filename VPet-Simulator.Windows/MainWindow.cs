@@ -2247,7 +2247,7 @@ namespace VPet_Simulator.Windows
         {
             if (Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
             {
-                if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < 100)
+                if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < Core.Save.FeelingMax)
                 {
                     Core.Save.StrengthChange(-2);
                     Core.Save.FeelingChange(1);
