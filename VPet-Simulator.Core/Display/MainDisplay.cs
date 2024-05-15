@@ -502,7 +502,7 @@ namespace VPet_Simulator.Core
             GraphDisplayHandler?.Invoke(graph.GraphInfo);
             var PetGridTag = Dispatcher.Invoke(() => PetGrid.Tag);
             var PetGrid2Tag = Dispatcher.Invoke(() => PetGrid2.Tag);
-            if (PetGridTag == graph)
+            if (graph.Equals(PetGridTag))
             {
                 petgridcrlf = true;
                 ((IGraph)(PetGrid2Tag)).Stop(true);
@@ -514,7 +514,7 @@ namespace VPet_Simulator.Core
                 graph.Run(PetGrid, EndAction);//(x) => PetGrid.Child = x
                 return;
             }
-            else if (PetGrid2Tag == graph)
+            else if (graph.Equals(PetGrid2Tag))
             {
                 petgridcrlf = false;
                 ((IGraph)(PetGridTag)).Stop(true);

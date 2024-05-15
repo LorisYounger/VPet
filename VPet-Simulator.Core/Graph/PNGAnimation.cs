@@ -330,7 +330,5 @@ namespace VPet_Simulator.Core
                 return new Task(() => Animations[0].Run(img, Control));
             });
         }
-
-        
     }
 }
