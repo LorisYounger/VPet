@@ -35,7 +35,7 @@ VPet を [Steam で](https://store.steampowered.com/app/1920960/VPet)無料で�
 ### 無料！
 
 このゲームは **100% 無料**です! ~~だから、もし良ければ試してみてね。~~ <br/>
-私たちの主な目標は、[VUP-Simulator](https://store.steampowered.com/app/1352140/_/) を普及させることです; こちらではデフォルトのキャラクターが、あちらでは主役です。
+このゲームの主な目的は、バーチャル アンカー シミュレーターの人気テーブルである [バーチャル アンカー シミュレーター](https://store.steampowered.com/app/1352140/_/) を宣伝することです。
 
 ### オープンソース！
 

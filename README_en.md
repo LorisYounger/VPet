@@ -35,7 +35,7 @@ Up to 32<sub>(types)</sub> * 4<sub>(states)</sub> * 3<sub>(variants)</sub> = 384
 ### Free!
 
 This game is **100% free**! ~~So if it looks good to you, try it out, it won't hurt.~~ <br/>
-Our main goal is to promote [VUP-Simulator](https://store.steampowered.com/app/1352140/_/) with it; the default character here is the main character there.
+Our main goal is to promote [VUP-Simulator](https://store.steampowered.com/app/1352140/_/) with it; This is the VPet inside the VUP Simulator.
 
 ### Open source!
 
