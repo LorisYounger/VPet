@@ -98,11 +98,11 @@ namespace VPet_Simulator.Windows.Interface
 
                 if (work.Type == Work.WorkType.Work)
                 {
-                    work.MoneyBase = Math.Round(work.MoneyBase * 10) / 10;
+                    work.MoneyBase = Math.Round(work.MoneyBase, 1);
                 }
                 else
                 {
-                    work.MoneyBase = Math.Round(work.MoneyBase * 100) / 10;
+                    work.MoneyBase = Math.Round(work.MoneyBase * 10, 1);
                 }
                 work.MoneyBase = Math.Min(work.MoneyBase, lvlimit);
             }
@@ -146,9 +146,9 @@ namespace VPet_Simulator.Windows.Interface
         {
             if (value == 1) return work;
             Work w = (Work)work.Clone();
-            w.StrengthFood *= 0.4 + 0.45 * value;
-            w.StrengthDrink *= 0.4 + 0.45 * value;
-            w.Feeling *= 0.4 + 0.45 * value;
+            w.StrengthFood *= 0.5 + 0.4 * value;
+            w.StrengthDrink *= 0.5 + 0.4 * value;
+            w.Feeling *= 0.5 + 0.4 * value;
             w.LevelLimit = (work.LevelLimit + 10) * value;
             FixOverLoad(w);
             return w;

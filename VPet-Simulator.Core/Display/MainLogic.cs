@@ -197,10 +197,22 @@ namespace VPet_Simulator.Core
                         break;
                     var needfood = TimePass * NowWork.StrengthFood;
                     var needdrink = TimePass * NowWork.StrengthDrink;
+
                     double efficiency = 0;
                     int addhealth = -2;
                     double sm25 = Core.Save.StrengthMax * 0.25;
                     double sm60 = Core.Save.StrengthMax * 0.6;
+
+                    var nsfood = needfood * .3;
+                    var nsdrink = needdrink * .3;
+                    if (Core.Save.Strength > sm25 + nsfood + nsdrink)
+                    {//可以用体力减少一些消耗,并且增加效率
+                        Core.Save.StrengthChange(-nsfood - nsdrink);
+                        efficiency += 0.1;
+                        needfood -= nsfood;
+                        needdrink -= nsdrink;
+                    }
+
                     if (Core.Save.StrengthFood <= sm25)
                     {//低状态低效率
                         Core.Save.StrengthChangeFood(-needfood / 2);
