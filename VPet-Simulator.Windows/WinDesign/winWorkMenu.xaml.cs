@@ -145,7 +145,7 @@ public partial class winWorkMenu : WindowX
         Dispatcher.BeginInvoke(() =>
         {
             var lastIndex = detailTypes.SelectedIndex;
-            if (LsbCategory.SelectedIndex != 3)
+            if (LsbCategory.SelectedIndex < 3)
                 ShowImageDefault((Work.WorkType)LsbCategory.SelectedIndex);
             switch (LsbCategory.SelectedIndex)
             {
@@ -165,16 +165,13 @@ public partial class winWorkMenu : WindowX
                     detailTypes.ItemsSource = _starDetails;
                     btnStart.Content = "开始工作".Translate();
                     break;
+                case 4:
+                    gdWork.Visibility = Visibility.Collapsed;
+                    return;
             }
-            //if (detailTypes.SelectedIndex == -1)
-            //{
-            //    detailTypes.SelectedIndex = 0;
-            //}
-            //else if (detailTypes.SelectedIndex == lastIndex)
-            //{
+            gdWork.Visibility = Visibility.Visible;
             detailTypes.IsDropDownOpen = true;
             detailTypes_SelectionChanged(null, null);
-            //}
         }, DispatcherPriority.Loaded);
     }
 
@@ -219,6 +216,8 @@ public partial class winWorkMenu : WindowX
                     if (works.Count <= detailTypes.SelectedIndex) return;
                     nowwork = (works[detailTypes.SelectedIndex]);
                     break;
+                case 4:
+                    return;
             }
             ShowWork();
         }, DispatcherPriority.Loaded);
