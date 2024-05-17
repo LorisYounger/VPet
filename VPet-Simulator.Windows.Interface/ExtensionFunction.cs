@@ -71,15 +71,11 @@ namespace VPet_Simulator.Windows.Interface
             return rel > 1.4; // 推荐rel为1左右 超过1.3就是超模
         }
         /// <summary>
-        /// 数值梯度下降法 修复超模工作
+        /// 为所有工作进行1.2倍效率修正
         /// </summary>
         /// <param name="work"></param>
         public static void FixOverLoad(this Work work)
         {
-            // 设置梯度下降的步长和最大迭代次数
-            double stepSize = 0.01;
-            int maxIterations = 100;
-
             if (work.LevelLimit < 0)
                 work.LevelLimit = 0;
             if (work.FinishBonus < 0)
@@ -91,45 +87,24 @@ namespace VPet_Simulator.Windows.Interface
             if (work.FinishBonus > 2)
                 work.FinishBonus = 2;
 
-            for (int i = 0; i < maxIterations; i++)
+            var spend = work.Spend();
+            if (spend > 0)
             {
-                while (Math.Abs(work.Get()) > 1.1 * work.LevelLimit + 10) //等级获取速率限制
+                work.MoneyBase = 2 * (1.15 * Math.Pow(spend, 0.8) - 1) / (2 + work.FinishBonus);
+
+                var lvlimit = 1.1 * work.LevelLimit + 10;
+                if (work.Type != Work.WorkType.Work)
+                    lvlimit *= 10;
+
+                if (work.Type == Work.WorkType.Work)
                 {
-                    work.MoneyBase /= 2;
+                    work.MoneyBase = Math.Round(work.MoneyBase * 10) / 10;
                 }
-
-                // 判断是否已经合理
-                if (!work.IsOverLoad())
+                else
                 {
-                    return;
+                    work.MoneyBase = Math.Round(work.MoneyBase * 100) / 10;
                 }
-
-
-                // 计算当前的Spend和Get
-                double currentSpend = work.Spend();
-                double currentGet = work.Get();
-
-                // 为每个参数增加一个小的delta值，然后重新计算Spend和Get
-                double delta = 0.0001;
-                work.MoneyBase += delta;
-                double getGradient = (work.Get() - currentGet) / delta;
-                work.MoneyBase -= delta; // 还原MoneyBase的值
-
-                work.StrengthFood += delta;
-                work.StrengthDrink += delta;
-                work.Feeling += delta;
-
-                double spendGradient = (work.Spend() - currentSpend) / delta;
-                // 还原所有的值
-                work.StrengthFood -= delta;
-                work.StrengthDrink -= delta;
-                work.Feeling -= delta;
-
-                // 根据梯度更新属性值
-                work.MoneyBase += stepSize * getGradient;
-                work.StrengthFood -= stepSize * spendGradient;
-                work.StrengthDrink -= stepSize * spendGradient;
-                work.Feeling -= stepSize * spendGradient;
+                work.MoneyBase = Math.Min(work.MoneyBase, lvlimit);
             }
 
             // 如果仍然不合理，设定一个默认值
@@ -171,11 +146,11 @@ namespace VPet_Simulator.Windows.Interface
         {
             if (value == 1) return work;
             Work w = (Work)work.Clone();
-            w.MoneyBase *= value;
-            w.StrengthFood *= 0.48 + 0.6 * value;
-            w.StrengthDrink *= 0.48 + 0.6 * value;
-            w.Feeling *= 0.48 + 0.6 * value;
+            w.StrengthFood *= 0.4 + 0.45 * value;
+            w.StrengthDrink *= 0.4 + 0.45 * value;
+            w.Feeling *= 0.4 + 0.45 * value;
             w.LevelLimit = (work.LevelLimit + 10) * value;
+            FixOverLoad(w);
             return w;
         }
 

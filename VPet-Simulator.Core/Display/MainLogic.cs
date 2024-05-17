@@ -195,8 +195,8 @@ namespace VPet_Simulator.Core
                 case WorkingState.Work:
                     if (NowWork == null)
                         break;
-                    var needfood = TimePass * (0.375 + NowWork.StrengthFood / 1.6);
-                    var needdrink = TimePass * (0.375 + NowWork.StrengthDrink / 1.6);
+                    var needfood = TimePass * NowWork.StrengthFood;
+                    var needdrink = TimePass * NowWork.StrengthDrink;
                     double efficiency = 0;
                     int addhealth = -2;
                     double sm25 = Core.Save.StrengthMax * 0.25;

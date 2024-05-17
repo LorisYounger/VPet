@@ -1694,10 +1694,7 @@ namespace VPet_Simulator.Windows
                       {
                           if (work.LevelLimit > 200)//导入的最大合理工作不能超过200级
                               work.LevelLimit = 200;
-                          if (work.IsOverLoad())
-                          {
-                              work.FixOverLoad();
-                          }
+                          work.FixOverLoad();//导入的工作默认1.2倍
                       }
                   }
 
