@@ -1,10 +1,15 @@
 ﻿using LinePutScript.Localization.WPF;
+using Panuon.WPF;
 using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
@@ -24,13 +29,16 @@ public partial class winWorkMenu : WindowX
     private readonly ObservableCollection<string> _studyDetails = new ObservableCollection<string>();
     private readonly ObservableCollection<string> _playDetails = new ObservableCollection<string>();
     private readonly ObservableCollection<string> _starDetails = new ObservableCollection<string>();
-
+    private readonly ObservableCollection<ScheduleItemBase> _schedules = new ObservableCollection<ScheduleItemBase>();
     public void ShowImageDefault(Work.WorkType type)
     {
         Dispatcher.BeginInvoke(() =>
         {
             WorkViewImage.Source = mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_t_" + type.ToString(), "work_" + type.ToString());
         }, DispatcherPriority.Loaded);
+
+        _schedules.CollectionChanged += Schedules_CollectionChanged;
+        icSchedule.ItemsSource = _schedules;
     }
 
     public winWorkMenu(MainWindow mw, Work.WorkType type)
@@ -66,6 +74,18 @@ public partial class winWorkMenu : WindowX
         LsbCategory.SelectedIndex = (int)type;
         ShowImageDefault(type);
         AllowChange = true;
+
+        _schedules.Add(new WorkScheduleItem(
+            mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_t_" + type.ToString(), "work_" + type.ToString()),
+            "学习",
+            60
+            ));
+        _schedules.Add(new RestScheduleItem(10));
+        _schedules.Add(new WorkScheduleItem(
+            mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_t_" + type.ToString(), "work_" + type.ToString()),
+            "学习",
+            70
+            ));
     }
     public bool IsWorkStar(Work work) => mw.Set["work_star"].GetBool(work.Name);
     public void SetWorkStar(Work work, bool setvalue) => mw.Set["work_star"].SetBool(work.Name, setvalue);
@@ -147,6 +167,8 @@ public partial class winWorkMenu : WindowX
             var lastIndex = detailTypes.SelectedIndex;
             if (LsbCategory.SelectedIndex < 3)
                 ShowImageDefault((Work.WorkType)LsbCategory.SelectedIndex);
+            gdWork.Visibility = Visibility.Visible;
+            gdSchedule.Visibility = Visibility.Collapsed;
             switch (LsbCategory.SelectedIndex)
             {
                 case 0:
@@ -167,9 +189,9 @@ public partial class winWorkMenu : WindowX
                     break;
                 case 4:
                     gdWork.Visibility = Visibility.Collapsed;
+                    gdSchedule.Visibility = Visibility.Visible;
                     return;
             }
-            gdWork.Visibility = Visibility.Visible;
             detailTypes.IsDropDownOpen = true;
             detailTypes_SelectionChanged(null, null);
         }, DispatcherPriority.Loaded);
@@ -228,6 +250,11 @@ public partial class winWorkMenu : WindowX
         mw.winWorkMenu = null;
     }
 
+    private void Schedules_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        CalculateSceduleTime();
+    }
+
     private void btnStart_Click(object sender, RoutedEventArgs e)
     {
         if (nowworkdisplay != null)
@@ -261,5 +288,222 @@ public partial class winWorkMenu : WindowX
             detailTypes_SelectionChanged(null, null);
         }
         AllowChange = true;
+    }
+
+    private void btnStartSchedule_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void NumberInput_ValueChanged(object sender, SelectedValueChangedRoutedEventArgs<double?> e)
+    {
+        CalculateSceduleTime();
+    }
+
+    private void CalculateSceduleTime()
+    {
+        int workTime = 0;
+        int restTime = 0;
+        for (int i = 0; i < _schedules.Count; i++)
+        {
+            var item = _schedules[i];
+            var lastItem = i == 0 ? null : _schedules[i - 1];
+            if (item is WorkScheduleItem workItem)
+            {
+                workItem.IsPreviousIsRest = lastItem is RestScheduleItem;
+                workTime += workItem.WorkTime;
+            }
+            else if (item is RestScheduleItem restItem)
+            {
+                restTime += restItem.RestTime;
+            }
+        }
+        rpgbSchedule.Maximum = workTime + restTime;
+        rpgbSchedule.Value = workTime;
+
+        runScheduleWork.Text = workTime.ToString();
+        runScheduleRest.Text = restTime.ToString();
+    }
+
+    private void tbtn_Agency_CheckChanged(object sender, RoutedEventArgs e)
+    {
+        if (imgAgency == null)
+        {
+            return;
+        }
+
+        if (sender == tbtnAgencyJob)
+        {
+            imgAgency.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_agency_job.png"));
+            tbtnAgencyTraning.IsChecked = false;
+        }
+        else if (sender == tbtnAgencyTraning)
+        {
+            imgAgency.Source = new BitmapImage(new Uri($"pack://application:,,,/Res/img/r_agency_training.png"));
+            tbtnAgencyJob.IsChecked = false;
+        }
+    }
+
+    private void tbtnAgency_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        var toggleButton = sender as ToggleButton;
+        if (toggleButton.IsChecked == true)
+        {
+            e.Handled = true;
+        }
+    }
+
+    private void btnSignAgency_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btn_addRest_Click(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        var scheduleItem = button.DataContext as ScheduleItemBase;
+        if (scheduleItem == null)
+        {
+            if(_schedules.LastOrDefault() is RestScheduleItem lastRest)
+            {
+                lastRest.RestTime += 30;
+            }
+            else
+            {
+                _schedules.Add(new RestScheduleItem(30));
+            }
+        }
+        else
+        {
+            var index = _schedules.IndexOf(scheduleItem);
+            _schedules.Insert(index, new RestScheduleItem(30));
+        }
+    }
+
+    private void btn_removeSchedule_Click(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        var scheduleItem = button.DataContext as ScheduleItemBase;
+        var index = _schedules.IndexOf(scheduleItem);
+        var previousItem = index == 0 ? null : _schedules[index - 1];
+        var nextItem = index == _schedules.Count - 1 ? null : _schedules[index + 1];
+
+        if (previousItem is RestScheduleItem previousRest
+            && nextItem is RestScheduleItem nextRest)
+        {
+            previousRest.RestTime += nextRest.RestTime;
+            _schedules.Remove(nextRest);
+        }
+        _schedules.Remove(scheduleItem);
+    }
+
+    private void btn_scheduleUp_Click(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        var scheduleItem = button.DataContext as ScheduleItemBase;
+        var index = _schedules.IndexOf(scheduleItem);
+        if(index == 0)
+        {
+            return;
+        }
+        var previousItem = index == 0 ? null : _schedules[index - 1];
+        var nextItem = index == _schedules.Count - 1 ? null : _schedules[index + 1];
+
+        if (previousItem is RestScheduleItem previousRest
+            && nextItem is RestScheduleItem nextRest)
+        {
+            previousRest.RestTime += nextRest.RestTime;
+            _schedules.Remove(nextRest);
+        }
+        _schedules.Remove(scheduleItem);
+        _schedules.Insert(Math.Max(index - 1, 0), scheduleItem);
+    }
+
+    private void btn_scheduleDown_Click(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        var scheduleItem = button.DataContext as ScheduleItemBase;
+        var index = _schedules.IndexOf(scheduleItem);
+        if (index == _schedules.Count - 1)
+        {
+            return;
+        }
+        var previousItem = index == 0 ? null : _schedules[index - 1];
+        var nextItem = index == _schedules.Count - 1 ? null : _schedules[index + 1];
+
+        if (previousItem is RestScheduleItem previousRest
+            && nextItem is RestScheduleItem nextRest)
+        {
+            previousRest.RestTime += nextRest.RestTime;
+            _schedules.Remove(nextRest);
+        }
+        _schedules.Remove(scheduleItem);
+        _schedules.Insert(Math.Min(index + 1, _schedules.Count), scheduleItem);
+    }
+}
+
+public abstract class ScheduleItemBase
+    : NotifyPropertyChangedBase
+{
+
+}
+public class WorkScheduleItem
+    : ScheduleItemBase
+{
+    public WorkScheduleItem()
+    {
+    }
+
+    public WorkScheduleItem(ImageSource image,
+        string workName,
+        int workTime)
+    {
+        Image = image;
+        WorkName = workName;
+        WorkTime = workTime;
+    }
+
+    public ImageSource Image { get; set; }
+
+    public string WorkName { get; set; }
+
+    public int WorkTime { get; set; }
+
+    public bool IsPreviousIsRest { get => _isPreviousIsRest; set => Set(ref _isPreviousIsRest, value); }
+    private bool _isPreviousIsRest;
+}
+
+public class RestScheduleItem
+    : ScheduleItemBase
+{
+    public RestScheduleItem()
+    {
+    }
+
+    public RestScheduleItem(int restTime)
+    {
+        RestTime = restTime;
+    }
+
+    public int RestTime { get => _restTime; set => Set(ref _restTime, value); }
+    private int _restTime;
+}
+
+internal class ScheduleItemTemplateSelector
+    : DataTemplateSelector
+{
+    public override DataTemplate SelectTemplate(object item, DependencyObject container)
+    {
+        var element = container as FrameworkElement;
+
+        if(item is WorkScheduleItem workItem)
+        {
+            return element.FindResource("WorkScheduleTemplate") as DataTemplate;
+        }
+        else if(item is RestScheduleItem restItem)
+        {
+            return element.FindResource("RestScheduleTemplate") as DataTemplate;
+        }
+        throw new NotImplementedException();
     }
 }

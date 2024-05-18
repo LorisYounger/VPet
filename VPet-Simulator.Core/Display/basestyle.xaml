@@ -159,7 +159,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="StndardToggleButtonStyle" BasedOn="{StaticResource {x:Type ToggleButton}}"
+    <Style x:Key="ThemedToggleButtonStyle" BasedOn="{StaticResource {x:Type ToggleButton}}"
             TargetType="{x:Type ToggleButton}">
         <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
         <Setter Property="pu:ToggleButtonHelper.CheckedBackground" Value="{DynamicResource DARKPrimaryDarker}" />

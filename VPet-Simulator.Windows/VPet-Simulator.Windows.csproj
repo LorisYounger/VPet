@@ -87,6 +87,8 @@
 		<None Remove="Res\img\rank6.png" />
 		<None Remove="Res\img\rbgb.png" />
 		<None Remove="Res\img\rbgt.png" />
+		<None Remove="Res\img\r_agency_job.png" />
+		<None Remove="Res\img\r_agency_training.png" />
 		<None Remove="Res\img\r_autobuy_1.png" />
 		<None Remove="Res\img\r_autobuy_2.png" />
 		<None Remove="Res\img\r_autobuy_3.png" />
@@ -137,6 +139,8 @@
 		<Resource Include="Res\img\rank1.png" />
 		<Resource Include="Res\img\rank3.png" />
 		<Resource Include="Res\img\rbgb.png" />
+		<Resource Include="Res\img\r_agency_job.png" />
+		<Resource Include="Res\img\r_agency_training.png" />
 		<Resource Include="Res\img\r_mostfood_Food.png" />
 		<Resource Include="Res\remixicon.ttf" />
 		<Resource Include="vpeticon.ico">
@@ -227,7 +231,7 @@
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Panuon.WPF" Version="1.1.0" />
-		<PackageReference Include="Panuon.WPF.UI" Version="1.2.1.2" />
+		<PackageReference Include="Panuon.WPF.UI" Version="1.2.1.3" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\VPet-Simulator.Core\VPet-Simulator.Core.csproj" />

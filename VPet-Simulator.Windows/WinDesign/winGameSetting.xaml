@@ -988,17 +988,17 @@
                             FontSize="20" FontWeight="Bold" Text="{ll:Str 制作组名单}" />
                     <TextBlock Grid.Column="1" Margin="0,130,0,0" VerticalAlignment="Top"
                             TextWrapping="WrapWithOverflow">
-                        <Run Text="{ll:Str '杨远洛里斯'}" />
-                        ,<Run Text="{ll:Str '吉娜'}" />
-                        ,<Hyperlink Click="Mod_Click" Foreground="{DynamicResource PrimaryText}">
+                        <Run Text="{ll:Str '杨远洛里斯'}" />,
+                        <Run Text="{ll:Str '吉娜'}" />,
+                        <Hyperlink Click="Mod_Click" Foreground="{DynamicResource PrimaryText}">
                             <Run Text="{ll:Str 广大MOD作者}" />
                         </Hyperlink><LineBreak />
-                        <Run Text="{ll:Str '洛里斯杨远'}" />
-                        , トニーちゃん<Hyperlink Click="Git_Click">
+                        <Run Text="{ll:Str '洛里斯杨远'}" />,
+                        末城via <Hyperlink Click="Git_Click">
                             <Run Text="{ll:Str Git贡献名单}" />
                         </Hyperlink><LineBreak />
-                        <Run Text="{ll:Str '叶书天'}" />
-                        ,<Hyperlink Click="Mod_Click" Foreground="{DynamicResource PrimaryText}">
+                        <Run Text="{ll:Str '叶书天'}" />,
+                        <Hyperlink Click="Mod_Click" Foreground="{DynamicResource PrimaryText}">
                             <Run Text="{ll:Str 广大MOD作者}" />
                         </Hyperlink>
                         <LineBreak />
