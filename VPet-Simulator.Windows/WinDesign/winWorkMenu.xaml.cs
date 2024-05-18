@@ -86,6 +86,11 @@ public partial class winWorkMenu : WindowX
             "学习",
             70
             ));
+
+        ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "---");
+
+        ComboBoxHelper.SetWatermark(combTaskType, "---" + "请选择".Translate() + "套餐".Translate() + "---");
+
     }
     public bool IsWorkStar(Work work) => mw.Set["work_star"].GetBool(work.Name);
     public void SetWorkStar(Work work, bool setvalue) => mw.Set["work_star"].SetBool(work.Name, setvalue);
@@ -174,25 +179,29 @@ public partial class winWorkMenu : WindowX
                 case 0:
                     detailTypes.ItemsSource = _workDetails;
                     btnStart.Content = "开始工作".Translate();
+                    ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "工作".Translate() + "---");
                     break;
                 case 1:
                     detailTypes.ItemsSource = _studyDetails;
                     btnStart.Content = "开始学习".Translate();
+                    ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "学习".Translate() + "---");
                     break;
                 case 2:
                     detailTypes.ItemsSource = _playDetails;
                     btnStart.Content = "开始玩耍".Translate();
+                    ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "玩耍".Translate() + "---");
                     break;
                 case 3:
                     detailTypes.ItemsSource = _starDetails;
                     btnStart.Content = "开始工作".Translate();
+                    ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "---");
                     break;
                 case 4:
                     gdWork.Visibility = Visibility.Collapsed;
                     gdSchedule.Visibility = Visibility.Visible;
                     return;
             }
-            detailTypes.IsDropDownOpen = true;
+            //detailTypes.IsDropDownOpen = true;
             detailTypes_SelectionChanged(null, null);
         }, DispatcherPriority.Loaded);
     }
@@ -364,7 +373,7 @@ public partial class winWorkMenu : WindowX
         var scheduleItem = button.DataContext as ScheduleItemBase;
         if (scheduleItem == null)
         {
-            if(_schedules.LastOrDefault() is RestScheduleItem lastRest)
+            if (_schedules.LastOrDefault() is RestScheduleItem lastRest)
             {
                 lastRest.RestTime += 30;
             }
@@ -402,7 +411,7 @@ public partial class winWorkMenu : WindowX
         var button = sender as Button;
         var scheduleItem = button.DataContext as ScheduleItemBase;
         var index = _schedules.IndexOf(scheduleItem);
-        if(index == 0)
+        if (index == 0)
         {
             return;
         }
@@ -496,11 +505,11 @@ internal class ScheduleItemTemplateSelector
     {
         var element = container as FrameworkElement;
 
-        if(item is WorkScheduleItem workItem)
+        if (item is WorkScheduleItem workItem)
         {
             return element.FindResource("WorkScheduleTemplate") as DataTemplate;
         }
-        else if(item is RestScheduleItem restItem)
+        else if (item is RestScheduleItem restItem)
         {
             return element.FindResource("RestScheduleTemplate") as DataTemplate;
         }
