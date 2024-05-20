@@ -1,5 +1,5 @@
-﻿using LinePutScript.Localization.WPF;
-using System.Windows;
+﻿using System.Windows;
+using LinePutScript.Localization.WPF;
 using VPet.Solution.Models.SettingEditor;
 
 namespace VPet.Solution.ViewModels.SettingEditor;
@@ -37,16 +37,16 @@ public class ModSettingPageVM : ObservableClass<ModSettingPageVM>
     #endregion
 
     #region CurrentModMoel
-    private ModModel _currentModModel;
-    public ModModel CurrentModMoel
+    private ModModel _currentModModel = null!;
+    public ModModel CurrentModModel
     {
         get => _currentModModel;
         set
         {
             if (_currentModModel is not null)
                 _currentModModel.PropertyChangingX -= CurrentModModel_PropertyChangingX;
-            SetProperty(ref _currentModModel, value);
-            if (value is not null)
+            SetProperty(ref _currentModModel!, value);
+            if (_currentModModel is not null)
                 _currentModModel.PropertyChangingX += CurrentModModel_PropertyChangingX;
         }
     }
@@ -117,7 +117,7 @@ public class ModSettingPageVM : ObservableClass<ModSettingPageVM>
         for (var i = 0; i < ModSetting.Mods.Count; i++)
         {
             if (ModSetting.Mods[i].IsEnabled is null)
-                ModSetting.Mods.RemoveAt(i);
+                ModSetting.Mods.RemoveAt(i--);
         }
         SearchMod = string.Empty;
     }
@@ -158,8 +158,8 @@ public class ModSettingPageVM : ObservableClass<ModSettingPageVM>
         if (string.IsNullOrWhiteSpace(name))
             ShowMods = ModSetting.Mods;
         else
-            ShowMods = ModSetting.Mods.Where(
-                s => s.Name.Contains(SearchMod, StringComparison.OrdinalIgnoreCase)
+            ShowMods = ModSetting.Mods.Where(s =>
+                s.Name.Contains(SearchMod, StringComparison.OrdinalIgnoreCase)
             );
     }
 }

@@ -1,7 +1,7 @@
-﻿using LinePutScript;
-using LinePutScript.Localization.WPF;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
+using LinePutScript;
+using LinePutScript.Localization.WPF;
 
 namespace VPet.Solution.Models.SettingEditor;
 
@@ -94,10 +94,10 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
         setting.Remove(ModLineName);
         setting.Remove(PassModLineName);
         setting.Remove(MsgModLineName);
-        if (Mods.Any() is false)
-            return;
         foreach (var mod in Mods)
         {
+            if (mod.IsEnabled is false)
+                continue;
             setting[ModLineName].Add(new Sub(mod.ID.ToLower()));
             setting[MsgModLineName].Add(new Sub(mod.ID, "True"));
             if (mod.IsPass)

@@ -38,7 +38,7 @@
         AutoGenerateColumns="False"
         CanUserAddRows="False"
         ItemsSource="{Binding ShowMods}"
-        SelectedItem="{Binding CurrentModMoel}">
+        SelectedItem="{Binding CurrentModModel}">
         <DataGrid.Columns>
           <DataGridTextColumn
             Binding="{Binding Name}"
