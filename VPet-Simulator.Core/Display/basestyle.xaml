@@ -159,6 +159,20 @@
         </Setter>
     </Style>
 
+    <Style x:Key="StandardToggleButtonStyle" BasedOn="{StaticResource {x:Type ToggleButton}}"
+        TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="pu:ToggleButtonHelper.HoverBackground" Value="{DynamicResource DARKPrimaryLighter}" />
+        <Setter Property="pu:ToggleButtonHelper.HoverForeground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="pu:ToggleButtonHelper.CheckedBackground" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:ToggleButtonHelper.CheckedForeground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="pu:ButtonHelper.CornerRadius" Value="5" />
+    </Style>
+    
     <Style x:Key="ThemedToggleButtonStyle" BasedOn="{StaticResource {x:Type ToggleButton}}"
             TargetType="{x:Type ToggleButton}">
         <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />

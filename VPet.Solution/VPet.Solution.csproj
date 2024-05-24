@@ -22,8 +22,8 @@
     <PackageReference Include="LinePutScript" Version="1.11.6" />
     <PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.7" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Panuon.WPF" Version="1.1.0" />
-    <PackageReference Include="Panuon.WPF.UI" Version="1.2.1.3" />
+    <PackageReference Include="Panuon.WPF" Version="1.1.0.1" />
+    <PackageReference Include="Panuon.WPF.UI" Version="1.2.1.5" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 </Project>

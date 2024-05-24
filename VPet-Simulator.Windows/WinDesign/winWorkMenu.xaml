@@ -151,7 +151,7 @@
                             Background="Transparent" BorderThickness="0" Foreground="{DynamicResource PrimaryText}"
                             SelectedIndex="0">
                         <TabItem Header="机构签署">
-                            <Grid Margin="7">
+                            <Grid Margin="7,3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="15" />
@@ -162,6 +162,7 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <UniformGrid Columns="2">
                                         <UniformGrid.Resources>
@@ -187,67 +188,175 @@
                                                 Checked="tbtn_Agency_CheckChanged"
                                                 PreviewMouseLeftButtonDown="tbtnAgency_PreviewMouseLeftButtonDown" />
                                     </UniformGrid>
-                                    <Image x:Name="imgAgency" RenderOptions.BitmapScalingMode="HighQuality" Grid.Row="2"
+                                    <Image x:Name="imgAgency" RenderOptions.BitmapScalingMode="HighQuality" Grid.Row="2" Grid.RowSpan="2"
                                             Margin="-20,0" Stretch="Uniform" Source="/Res/img/r_agency_job.png" />
+                                    <ToggleButton x:Name="tbtnCurrentPlan"
+                                                  Grid.Row="3"
+                                                  HorizontalAlignment="Right"
+                                                  Style="{DynamicResource StandardToggleButtonStyle}"
+                                                  Padding="5,3"
+                                                  Content="当前套餐">
+                                        <pu:ToggleButtonHelper.CheckedContent>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock>当前套餐</TextBlock>
+                                                <TextBlock Margin="3,0,0,0" VerticalAlignment="Center" FontFamily="{StaticResource RemixIcon}">&#xeb97;</TextBlock>
+                                            </StackPanel>
+                                        </pu:ToggleButtonHelper.CheckedContent>
+                                    </ToggleButton>
                                 </Grid>
                                 <Border Grid.Column="2" Background="White" CornerRadius="4" />
-                                <Grid Grid.Column="2" Margin="15">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <ComboBox x:Name="combTaskType" Margin="0,3,0,0"
-                                            Style="{DynamicResource StandardComboBoxStyle}"
-                                            pu:ComboBoxHelper.Watermark="--请选择套餐--" />
-                                    <TextBlock Grid.Row="1" Margin="0,7,0,0" VerticalAlignment="Bottom"
-                                            Text="{ll:Str 选择等级}" />
-                                    <TextBlock Grid.Row="1" Margin="0,7,0,0" FontSize="16" HorizontalAlignment="Right"
-                                            Foreground="{DynamicResource DARKPrimary}">
+                                <Grid Grid.Column="2"
+                                      Margin="7">
+                                    <Grid Visibility="{Binding IsChecked, Converter={x:Static pu:Converters.TrueToCollapseConverter}, ElementName=tbtnCurrentPlan}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <ComboBox x:Name="combTaskType"
+                                                  Margin="0,3,0,0"
+                                                  Style="{DynamicResource StandardComboBoxStyle}"
+                                                  pu:ComboBoxHelper.Watermark="--请选择套餐--" />
+                                        <TextBlock Grid.Row="1"
+                                                   Margin="0,7,0,0"
+                                                   VerticalAlignment="Bottom"
+                                                   Text="{ll:Str 选择等级}" />
+                                        <TextBlock Grid.Row="1"
+                                                   Margin="0,7,0,0"
+                                                   FontSize="16"
+                                                   HorizontalAlignment="Right"
+                                                   Foreground="{DynamicResource DARKPrimary}">
                                         <Run Text="Lv." />
                                         <Run Text="50" />
-                                    </TextBlock>
-                                    <Slider Grid.Row="2" pu:SliderHelper.ThumbWidth="10"
-                                            pu:SliderHelper.ThumbCornerRadius="2" pu:SliderHelper.ThumbHeight="16"
-                                            pu:SliderHelper.ThumbBorderThickness="2" SmallChange="1" Value="1"
-                                            Minimum="1" TickFrequency="1" IsSnapToTickEnabled="True" LargeChange="1"
-                                            Style="{DynamicResource StandardSliderStyle}" TickPlacement="Both"></Slider>
-                                    <Grid Grid.Row="4" Margin="0,3,0,0">
+                                        </TextBlock>
+                                        <Slider Grid.Row="2"
+                                                pu:SliderHelper.ThumbWidth="10"
+                                                pu:SliderHelper.ThumbCornerRadius="2"
+                                                pu:SliderHelper.ThumbHeight="16"
+                                                pu:SliderHelper.ThumbBorderThickness="2"
+                                                SmallChange="1"
+                                                Value="1"
+                                                Minimum="1"
+                                                TickFrequency="1"
+                                                IsSnapToTickEnabled="True"
+                                                LargeChange="1"
+                                                Style="{DynamicResource StandardSliderStyle}"
+                                                TickPlacement="BottomRight"></Slider>
+                                        <Grid Grid.Row="4"
+                                              Margin="0,7,0,0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="22" />
+                                                <RowDefinition Height="22" />
+                                                <RowDefinition Height="22" />
+                                                <RowDefinition />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="rTaskType">抽成</TextBlock>
+                                            <TextBlock Grid.Column="2"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="{DynamicResource DARKPrimary}"
+                                                       Text="20%" />
+                                            <TextBlock Grid.Row="1"
+                                                       Text="{ll:Str '等级需求'}" />
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="2"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="{DynamicResource DARKPrimary}"
+                                                       Text="Lv 100" />
+                                            <TextBlock Grid.Row="2"
+                                                       Text="{ll:Str '合同持续时间'}" />
+                                            <TextBlock Grid.Row="2"
+                                                       Grid.Column="2"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="{DynamicResource DARKPrimary}"
+                                                       Text="7 天" />
+                                            <TextBlock Grid.Row="4"
+                                                       Text="{ll:Str '办理费用'}"
+                                                       VerticalAlignment="Bottom" />
+                                            <TextBlock Grid.Row="4"
+                                                       Grid.Column="2"
+                                                       HorizontalAlignment="Right"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource DARKPrimary}"
+                                                       Text="100000"
+                                                       FontSize="26" />
+                                        </Grid>
+                                        <Button x:Name="btnSignAgency"
+                                                Grid.Row="6"
+                                                Margin="0,5,0,0"
+                                                Height="30"
+                                                Content="{ll:Str 签署}"
+                                                Style="{DynamicResource ThemedButtonStyle}"
+                                                Background="{DynamicResource PrimaryDarker}"
+                                                Click="btnSignAgency_Click"
+                                                FontSize="16"
+                                                FontWeight="Bold" />
+                                    </Grid>
+                                    <Grid Visibility="{Binding IsChecked, Converter={x:Static pu:Converters.FalseToCollapseConverter}, ElementName=tbtnCurrentPlan}">
                                         <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition Height="5" />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition Height="10"/>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="35" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock x:Name="rTaskType">抽成</TextBlock>
-                                        <TextBlock Grid.Column="2" HorizontalAlignment="Right"
-                                                Foreground="{DynamicResource DARKPrimary}" Text="20%" />
-                                        <TextBlock Grid.Row="5" Text="{ll:Str '办理费用'}" />
-                                        <TextBlock Grid.Row="5" Grid.Column="2" HorizontalAlignment="Right"
-                                                Foreground="{DynamicResource DARKPrimary}" Text="100000"
-                                                FontWeight="Bold" FontSize="16" />
-                                        <TextBlock Grid.Row="2" Text="{ll:Str '等级需求'}" />
-                                        <TextBlock Grid.Row="3" Text="{ll:Str '合同持续时间'}" />
-                                        <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right"
-                                                Foreground="{DynamicResource DARKPrimary}" Text="Lv 100" />
-                                        <TextBlock Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right"
-                                                Foreground="{DynamicResource DARKPrimary}" Text="7 天" />
+                                        <TextBlock Text="当前套餐"
+                                                   Opacity="0.7" />
+                                        <TextBlock Grid.Row="1"
+                                                   Text="特别周特训套餐"
+                                                   FontSize="24"
+                                                   Foreground="{DynamicResource DARKPrimary}" />
+                                        <Grid Grid.Row="2"
+                                              Margin="0,7,0,0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="22" />
+                                                <RowDefinition Height="22" />
+                                                <RowDefinition Height="22" />
+                                                <RowDefinition />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock >抽成</TextBlock>
+                                            <TextBlock Grid.Column="2"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="{DynamicResource DARKPrimary}"
+                                                       Text="20%" />
+                                            <TextBlock Grid.Row="1"
+                                                       Text="{ll:Str '等级需求'}" />
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="2"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="{DynamicResource DARKPrimary}"
+                                                       Text="Lv 100" />
+                                            <TextBlock Grid.Row="2"
+                                                       Text="{ll:Str '合同剩余时间'}" />
+                                            <TextBlock Grid.Row="2"
+                                                       Grid.Column="2"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="{DynamicResource DARKPrimary}"
+                                                       Text="7 天" />
+                                            <TextBlock Grid.Row="4"
+                                                       Text="{ll:Str '办理费用'}"
+                                                       VerticalAlignment="Bottom" />
+                                            <TextBlock Grid.Row="4"
+                                                       Grid.Column="2"
+                                                       HorizontalAlignment="Right"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource DARKPrimary}"
+                                                       Text="100000"
+                                                       FontSize="26" />
+                                        </Grid>
                                     </Grid>
-                                    <Button x:Name="btnSignAgency" Grid.Row="6" Height="30" Content="{ll:Str 签署}"
-                                            Style="{DynamicResource ThemedButtonStyle}"
-                                            Background="{DynamicResource PrimaryDarker}" Click="btnSignAgency_Click"
-                                            FontSize="16" FontWeight="Bold" />
                                 </Grid>
                             </Grid>
                         </TabItem>
@@ -332,10 +441,8 @@
                                                                     </Grid.ColumnDefinitions>
                                                                     <StackPanel Orientation="Horizontal" Margin="7,0">
                                                                         <TextBlock VerticalAlignment="Center">休息</TextBlock>
-                                                                        <pu:NumberInput Minimum="0" Interval="1"
-                                                                                IsSnapToIntervalEnabled="True"
-                                                                                Background="Transparent"
-                                                                                BorderThickness="0"
+                                                                        <pu:NumberInput Minimum="0" Interval="1" StepFactor="5"
+                                                                                IsSnapToIntervalEnabled="True" Background="Transparent" BorderThickness="0"
                                                                                 Foreground="{DynamicResource DARKPrimary}"
                                                                                 FontSize="16" Padding="0"
                                                                                 Value="{Binding RestTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
