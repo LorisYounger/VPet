@@ -11,8 +11,10 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
+using static VPet_Simulator.Windows.Interface.ScheduleItemBase;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -104,7 +106,7 @@ public partial class winWorkMenu : WindowX
         //判断倍率
         if (nowwork.LevelLimit > mw.GameSavesData.GameSave.Level)
         {
-            wDouble.IsEnabled = false;
+            wDouble.Visibility = Visibility.Collapsed;
             wDouble.Value = 1;
         }
         else
@@ -112,12 +114,12 @@ public partial class winWorkMenu : WindowX
             int max = Math.Min(4000, mw.GameSavesData.GameSave.Level) / (nowwork.LevelLimit + 10);
             if (max <= 1)
             {
-                wDouble.IsEnabled = false;
+                wDouble.Visibility = Visibility.Collapsed;
                 wDouble.Value = 1;
             }
             else
             {
-                wDouble.IsEnabled = true;
+                wDouble.Visibility = Visibility.Visible;
                 wDouble.Maximum = max;
                 wDouble.Value = mw.Set["workmenu"].GetInt("double_" + nowwork.Name, 1);
             }
@@ -332,6 +334,14 @@ public partial class winWorkMenu : WindowX
 
         runScheduleWork.Text = workTime.ToString();
         runScheduleRest.Text = restTime.ToString();
+
+        double ps = workTime / (double)(workTime + restTime);
+        runSchedulePercentage.Text = ps.ToString("p0");
+        if (ps > 0.71)
+            runSchedulePercentage.Foreground = new SolidColorBrush(Colors.OrangeRed);
+        else
+            runSchedulePercentage.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimary);
+        rpgbSchedule.Foreground = runSchedulePercentage.Foreground;
     }
 
     private void tbtn_Agency_CheckChanged(object sender, RoutedEventArgs e)
@@ -451,52 +461,6 @@ public partial class winWorkMenu : WindowX
     }
 }
 
-public abstract class ScheduleItemBase
-    : NotifyPropertyChangedBase
-{
-
-}
-public class WorkScheduleItem
-    : ScheduleItemBase
-{
-    public WorkScheduleItem()
-    {
-    }
-
-    public WorkScheduleItem(ImageSource image,
-        string workName,
-        int workTime)
-    {
-        Image = image;
-        WorkName = workName;
-        WorkTime = workTime;
-    }
-
-    public ImageSource Image { get; set; }
-
-    public string WorkName { get; set; }
-
-    public int WorkTime { get; set; }
-
-    public bool IsPreviousIsRest { get => _isPreviousIsRest; set => Set(ref _isPreviousIsRest, value); }
-    private bool _isPreviousIsRest;
-}
-
-public class RestScheduleItem
-    : ScheduleItemBase
-{
-    public RestScheduleItem()
-    {
-    }
-
-    public RestScheduleItem(int restTime)
-    {
-        RestTime = restTime;
-    }
-
-    public int RestTime { get => _restTime; set => Set(ref _restTime, value); }
-    private int _restTime;
-}
 
 internal class ScheduleItemTemplateSelector
     : DataTemplateSelector
@@ -508,7 +472,7 @@ internal class ScheduleItemTemplateSelector
         if (item is WorkScheduleItem workItem)
         {
             return element.FindResource("WorkScheduleTemplate") as DataTemplate;
-        }
+        }        
         else if (item is RestScheduleItem restItem)
         {
             return element.FindResource("RestScheduleTemplate") as DataTemplate;
