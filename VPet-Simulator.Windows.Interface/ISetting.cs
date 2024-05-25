@@ -200,6 +200,10 @@ namespace VPet_Simulator.Windows.Interface
         /// 联机允许交互
         /// </summary>
         bool MPNOTouch { get; set; }
+        /// <summary>
+        /// 桌宠皮肤(不一定是这个,如果找不到则为默认低0个)
+        /// </summary>
+        string PetGraph { get; }
     }
 
 }

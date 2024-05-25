@@ -326,7 +326,7 @@
                                                 <ItemsControl x:Name="icSchedule"
                                                         ItemTemplateSelector="{StaticResource ScheduleItemTemplateSelector}">
                                                     <ItemsControl.Resources>
-                                                        <DataTemplate x:Key="WorkScheduleTemplate">
+                                                        <DataTemplate x:Key="WorkScheduleItem">
                                                             <StackPanel>
                                                                 <Button Margin="-20,-5,0,-5" HorizontalAlignment="Left"
                                                                         Visibility="{Binding IsPreviousIsRest, Converter={x:Static pu:Converters.TrueToCollapseConverter}}"
@@ -378,7 +378,7 @@
                                                                 </Border>
                                                             </StackPanel>
                                                         </DataTemplate>
-                                                        <DataTemplate x:Key="StudyScheduleTemplate">
+                                                        <DataTemplate x:Key="StudyScheduleItem">
                                                             <StackPanel>
                                                                 <Button Margin="-20,-5,0,-5" HorizontalAlignment="Left"
                                                                         Visibility="{Binding IsPreviousIsRest, Converter={x:Static pu:Converters.TrueToCollapseConverter}}"
@@ -430,7 +430,7 @@
                                                                 </Border>
                                                             </StackPanel>
                                                         </DataTemplate>
-                                                        <DataTemplate x:Key="PlayScheduleTemplate">
+                                                        <DataTemplate x:Key="PlayScheduleItem">
                                                             <StackPanel>
                                                                 <Button Margin="-20,-5,0,-5" HorizontalAlignment="Left"
                                                                         Visibility="{Binding IsPreviousIsRest, Converter={x:Static pu:Converters.TrueToCollapseConverter}}"
@@ -482,7 +482,7 @@
                                                                 </Border>
                                                             </StackPanel>
                                                         </DataTemplate>
-                                                        <DataTemplate x:Key="RestScheduleTemplate">
+                                                        <DataTemplate x:Key="RestScheduleItem">
                                                             <Border Margin="0,7,0,7" Height="30" CornerRadius="5"
                                                                     Padding="0,3" Background="#F1F2F3">
                                                                 <Grid>

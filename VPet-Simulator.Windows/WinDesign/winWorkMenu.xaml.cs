@@ -14,7 +14,7 @@ using System.Windows.Threading;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
-using static VPet_Simulator.Windows.Interface.ScheduleItemBase;
+using static VPet_Simulator.Windows.Interface.ScheduleTask;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -31,7 +31,7 @@ public partial class winWorkMenu : WindowX
     private readonly ObservableCollection<string> _studyDetails = new ObservableCollection<string>();
     private readonly ObservableCollection<string> _playDetails = new ObservableCollection<string>();
     private readonly ObservableCollection<string> _starDetails = new ObservableCollection<string>();
-    private readonly ObservableCollection<ScheduleItemBase> _schedules = new ObservableCollection<ScheduleItemBase>();
+    private readonly ObservableCollection<ScheduleItemBase> _schedules;
     public void ShowImageDefault(Work.WorkType type)
     {
         Dispatcher.BeginInvoke(() =>
@@ -77,17 +77,7 @@ public partial class winWorkMenu : WindowX
         ShowImageDefault(type);
         AllowChange = true;
 
-        _schedules.Add(new WorkScheduleItem(
-            mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_t_" + type.ToString(), "work_" + type.ToString()),
-            "学习",
-            60
-            ));
-        _schedules.Add(new RestScheduleItem(10));
-        _schedules.Add(new WorkScheduleItem(
-            mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_t_" + type.ToString(), "work_" + type.ToString()),
-            "学习",
-            70
-            ));
+        _schedules = mw.ScheduleTask.ScheduleItems;
 
         ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "---");
 
@@ -322,12 +312,9 @@ public partial class winWorkMenu : WindowX
             if (item is WorkScheduleItem workItem)
             {
                 workItem.IsPreviousIsRest = lastItem is RestScheduleItem;
-                workTime += workItem.WorkTime;
             }
-            else if (item is RestScheduleItem restItem)
-            {
-                restTime += restItem.RestTime;
-            }
+            workTime += item.WorkTime;
+            restTime += item.RestTime;
         }
         rpgbSchedule.Maximum = workTime + restTime;
         rpgbSchedule.Value = workTime;
@@ -389,13 +376,13 @@ public partial class winWorkMenu : WindowX
             }
             else
             {
-                _schedules.Add(new RestScheduleItem(30));
+                _schedules.Add(new RestScheduleItem(mw.ScheduleTask, 30));
             }
         }
         else
         {
             var index = _schedules.IndexOf(scheduleItem);
-            _schedules.Insert(index, new RestScheduleItem(30));
+            _schedules.Insert(index, new RestScheduleItem(mw.ScheduleTask, 30));
         }
     }
 
@@ -469,14 +456,22 @@ internal class ScheduleItemTemplateSelector
     {
         var element = container as FrameworkElement;
 
-        if (item is WorkScheduleItem workItem)
-        {
-            return element.FindResource("WorkScheduleTemplate") as DataTemplate;
-        }        
-        else if (item is RestScheduleItem restItem)
-        {
-            return element.FindResource("RestScheduleTemplate") as DataTemplate;
-        }
-        throw new NotImplementedException();
+        return element.FindResource(item.GetType().ToString()) as DataTemplate;
+        //if (item is WorkScheduleItem)
+        //{
+        //    return element.FindResource("WorkScheduleTemplate") as DataTemplate;
+        //}
+        //else if (item is StudyScheduleItem)
+        //{
+        //    return element.FindResource("StudyScheduleItem") as DataTemplate;
+        //}
+        //else if (item is PlayScheduleItem)
+        //{
+        //    return element.FindResource("PlayScheduleItem") as DataTemplate;
+        //}
+        //else if (item is RestScheduleItem)
+        //{
+        //    return element.FindResource("RestScheduleTemplate") as DataTemplate;
+        //}
     }
 }

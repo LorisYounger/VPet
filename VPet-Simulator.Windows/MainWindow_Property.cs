@@ -91,4 +91,9 @@ public partial class MainWindow
     /// 当前启用主题
     /// </summary>
     public Theme Theme = null;
+    /// <summary>
+    /// 日程表
+    /// </summary>
+
+    public ScheduleTask ScheduleTask { get; set; }
 }

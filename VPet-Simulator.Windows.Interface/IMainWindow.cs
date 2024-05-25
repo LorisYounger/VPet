@@ -225,7 +225,12 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 所有MOD文件位置
         /// </summary>
-        public List<DirectoryInfo> MODPath { get; }
+        List<DirectoryInfo> MODPath { get; }
+        /// <summary>
+        /// 日程表
+        /// </summary>
+
+        ScheduleTask ScheduleTask { get; }
     }
 
 }

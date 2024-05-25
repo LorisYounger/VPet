@@ -220,6 +220,9 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public void Save()
         {
+            //保存日程表
+            ScheduleTask?.Save();
+            //保存插件
             foreach (MainPlugin mp in Plugins)
                 mp.Save();
             //游戏存档
@@ -1598,6 +1601,8 @@ namespace VPet_Simulator.Windows
             };
             MusicTimer.Elapsed += MusicTimer_Elapsed;
 
+            //日程表加载
+            ScheduleTask = new ScheduleTask(this);
 
 
             //await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
