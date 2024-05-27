@@ -20,7 +20,7 @@
             </Grid.RowDefinitions>
             <TextBox x:Name="tbTalk" Style="{DynamicResource StandardTextBoxStyle}" Height="Auto"
                     pu:TextBoxHelper.Watermark="{ll:Str 和桌宠说}" FontSize="30" AcceptsReturn="True"
-                    TextWrapping="WrapWithOverflow" PreviewKeyDown="tbTalk_KeyDown" />
+                    TextWrapping="WrapWithOverflow" PreviewKeyDown="tbTalk_KeyDown" InputMethod.IsInputMethodEnabled="True" />
             <Button pu:ButtonHelper.CornerRadius="4" Content="{ll:Str '发送'}" BorderThickness="2"
                     Background="{DynamicResource SecondaryLight}" Grid.Column="2"
                     BorderBrush="{DynamicResource DARKPrimaryDarker}" FontSize="30"

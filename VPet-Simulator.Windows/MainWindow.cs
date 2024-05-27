@@ -1601,9 +1601,6 @@ namespace VPet_Simulator.Windows
             };
             MusicTimer.Elapsed += MusicTimer_Elapsed;
 
-            //日程表加载
-            ScheduleTask = new ScheduleTask(this);
-
 
             //await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
             await Dispatcher.InvokeAsync(new Action(() =>
@@ -1631,6 +1628,9 @@ namespace VPet_Simulator.Windows
                   Main.ToolBar.Resources = Application.Current.Resources;
                   Main.ToolBar.LoadClean();
                   Main.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
+
+                  //日程表加载
+                  ScheduleTask = new ScheduleTask(this);
 
                   if (ws.Count == 0)
                   {

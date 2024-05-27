@@ -205,7 +205,7 @@
                                 </Grid>
                                 <Border Grid.Column="2" Background="White" CornerRadius="4" />
                                 <Grid Grid.Column="2" Margin="7">
-                                    <Grid d:Visibility="Collapsed"
+                                    <Grid
                                             Visibility="{Binding IsChecked, Converter={x:Static pu:Converters.TrueToCollapseConverter}, ElementName=tbtnCurrentPlan}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -223,7 +223,7 @@
                                         <TextBlock Grid.Row="1" Margin="0,7,0,0" FontSize="16"
                                                 HorizontalAlignment="Right" Foreground="{DynamicResource DARKPrimary}">
                                         <Run Text="Lv." />
-                                        <Run x:Name="rTaskLevel" Text="50" />
+                                        <Run Text="{Binding Value,ElementName=sliderTaskLevel}" />
                                         </TextBlock>
                                         <Slider x:Name="sliderTaskLevel" Grid.Row="2" pu:SliderHelper.ThumbWidth="10"
                                                 pu:SliderHelper.ThumbCornerRadius="2" pu:SliderHelper.ThumbHeight="16"
@@ -264,9 +264,8 @@
                                                 Background="{DynamicResource PrimaryDarker}" Click="btnSignAgency_Click"
                                                 FontSize="16" FontWeight="Bold" />
                                     </Grid>
-                                    <Grid
-                                            Visibility="{Binding IsChecked, Converter={x:Static pu:Converters.FalseToCollapseConverter}, ElementName=tbtnCurrentPlan}"
-                                            d:Visibility="Visible">
+                                    <Grid d:Visibility="Collapsed"
+                                            Visibility="{Binding IsChecked, Converter={x:Static pu:Converters.FalseToCollapseConverter}, ElementName=tbtnCurrentPlan}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
@@ -277,6 +276,7 @@
                                                 Foreground="{DynamicResource DARKPrimary}" />
                                         <Grid Grid.Row="2" Margin="0,7,0,0">
                                             <Grid.RowDefinitions>
+                                                <RowDefinition Height="22" />
                                                 <RowDefinition Height="22" />
                                                 <RowDefinition Height="22" />
                                                 <RowDefinition Height="22" />
@@ -291,14 +291,17 @@
                                             <TextBlock Text="{Binding Text,ElementName=rTaskType}" />
                                             <TextBlock Grid.Column="2" HorizontalAlignment="Right"
                                                     Foreground="{DynamicResource DARKPrimary}" Text="20%" />
-                                            <TextBlock Grid.Row="1" Text="{ll:Str '等级需求'}" />
+                                            <TextBlock Grid.Row="1" Text="{ll:Str '可用等级'}" />
                                             <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right"
                                                     Foreground="{DynamicResource DARKPrimary}" Text="Lv 100" />
-                                            <TextBlock Grid.Row="2" Text="{ll:Str '合同剩余时间'}" />
+                                            <TextBlock Grid.Row="2" Text="{ll:Str '剩余时间'}" />
                                             <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right"
                                                     Foreground="{DynamicResource DARKPrimary}" Text="7 天" />
-                                            <TextBlock Grid.Row="4" Text="{ll:Str '办理费用'}" VerticalAlignment="Bottom" />
-                                            <TextBlock Grid.Row="4" Grid.Column="2" HorizontalAlignment="Right"
+                                            <TextBlock Grid.Row="3" Text="{ll:Str '截止日期'}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right"
+                                                    Foreground="{DynamicResource DARKPrimary}" Text="05/27" />
+                                            <TextBlock Grid.Row="5" Text="{ll:Str '办理费用'}" VerticalAlignment="Bottom" />
+                                            <TextBlock Grid.Row="5" Grid.Column="2" HorizontalAlignment="Right"
                                                     VerticalAlignment="Center"
                                                     Foreground="{DynamicResource DARKPrimary}" Text="100000"
                                                     FontSize="26" />
@@ -578,6 +581,9 @@
                             </Grid>
                         </TabItem>
                     </TabControl>
+                    <Label x:Name="blockTask" Content="{ll:Str '日程表将在15级开放'}" Background="{DynamicResource DARKPrimaryTransA}"
+                            Foreground="{DynamicResource DARKPrimaryText}" FontSize="36" FontWeight="Bold" Margin="-15"
+                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center" d:Visibility="Collapsed" />
                 </Grid>
             </Grid>
         </Grid>

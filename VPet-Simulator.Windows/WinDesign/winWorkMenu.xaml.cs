@@ -74,10 +74,13 @@ public partial class winWorkMenu : WindowX
             _starDetails.Add(v.NameTrans);
         }
         LsbCategory.SelectedIndex = (int)type;
+        _schedules = mw.ScheduleTask.ScheduleItems;
         ShowImageDefault(type);
+        CalculateSceduleTime();
+        if (mw.Core.Save.Level > 15)
+            blockTask.Visibility = Visibility.Collapsed;
         AllowChange = true;
 
-        _schedules = mw.ScheduleTask.ScheduleItems;
 
         ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "---");
 
@@ -96,7 +99,7 @@ public partial class winWorkMenu : WindowX
         //判断倍率
         if (nowwork.LevelLimit > mw.GameSavesData.GameSave.Level)
         {
-            wDouble.Visibility = Visibility.Collapsed;
+            wDouble.IsEnabled = false;
             wDouble.Value = 1;
         }
         else
@@ -104,12 +107,12 @@ public partial class winWorkMenu : WindowX
             int max = Math.Min(4000, mw.GameSavesData.GameSave.Level) / (nowwork.LevelLimit + 10);
             if (max <= 1)
             {
-                wDouble.Visibility = Visibility.Collapsed;
+                wDouble.IsEnabled = false;
                 wDouble.Value = 1;
             }
             else
             {
-                wDouble.Visibility = Visibility.Visible;
+                wDouble.IsEnabled = true;
                 wDouble.Maximum = max;
                 wDouble.Value = mw.Set["workmenu"].GetInt("double_" + nowwork.Name, 1);
             }
@@ -155,6 +158,11 @@ public partial class winWorkMenu : WindowX
         tbBonus.Text = 'x' + (1 + work.FinishBonus).ToString("f2");
         tbRatio.Text = 'x' + wDouble.Value.ToString("f0");
         tbtn_star.IsChecked = IsWorkStar(work);
+    }
+
+    public void LoadSchedule()
+    {
+
     }
 
     private void LsbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -456,7 +464,7 @@ internal class ScheduleItemTemplateSelector
     {
         var element = container as FrameworkElement;
 
-        return element.FindResource(item.GetType().ToString()) as DataTemplate;
+        return element.FindResource(item.GetType().Name) as DataTemplate;
         //if (item is WorkScheduleItem)
         //{
         //    return element.FindResource("WorkScheduleTemplate") as DataTemplate;
