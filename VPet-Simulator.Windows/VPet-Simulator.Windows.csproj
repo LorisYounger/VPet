@@ -87,8 +87,6 @@
 		<None Remove="Res\img\rank6.png" />
 		<None Remove="Res\img\rbgb.png" />
 		<None Remove="Res\img\rbgt.png" />
-		<None Remove="Res\img\r_agency_job.png" />
-		<None Remove="Res\img\r_agency_training.png" />
 		<None Remove="Res\img\r_autobuy_1.png" />
 		<None Remove="Res\img\r_autobuy_2.png" />
 		<None Remove="Res\img\r_autobuy_3.png" />
@@ -139,8 +137,6 @@
 		<Resource Include="Res\img\rank1.png" />
 		<Resource Include="Res\img\rank3.png" />
 		<Resource Include="Res\img\rbgb.png" />
-		<Resource Include="Res\img\r_agency_job.png" />
-		<Resource Include="Res\img\r_agency_training.png" />
 		<Resource Include="Res\img\r_mostfood_Food.png" />
 		<Resource Include="Res\remixicon.ttf" />
 		<Resource Include="vpeticon.ico">

@@ -140,7 +140,7 @@ public class ScheduleTask
             }
             if (ScheduleItems[NowIndex] is WorkScheduleItem wsi)
             {
-                mw.Main.StartWork(wsi.Work);
+                mw.Main.StartWork(wsi.Work.Double(wsi.DBL));
                 NowIndex++;
             }
             else if (ScheduleItems[NowIndex] is RestScheduleItem rsi)
@@ -162,6 +162,41 @@ public class ScheduleTask
 
     public Package PackageWork { get; set; }
     public Package PackageStudy { get; set; }
+    /// <summary>
+    /// 添加工作到日程表
+    /// </summary>
+    /// <param name="work">工作</param>
+    /// <param name="dbl">倍率</param>
+    public void AddWork(Work work, int dbl)
+    {
+        ScheduleItems.Add(new WorkScheduleItem(this, work, dbl));
+    }
+    /// <summary>
+    /// 添加学习到日程表
+    /// </summary>
+    /// <param name="work">工作</param>
+    /// <param name="dbl">倍率</param>
+    public void AddStudy(Work work, int dbl)
+    {
+        ScheduleItems.Add(new StudyScheduleItem(this, work, dbl));
+    }
+    /// <summary>
+    /// 添加游玩到日程表
+    /// </summary>
+    /// <param name="work">工作</param>
+    /// <param name="dbl">倍率</param>
+    public void AddPlay(Work work, int dbl)
+    {
+        ScheduleItems.Add(new PlayScheduleItem(this, work, dbl));
+    }
+    /// <summary>
+    /// 添加休息到日程表
+    /// </summary>
+    /// <param name="restTime">休息时间</param>
+    public void AddRest(int restTime)
+    {
+        ScheduleItems.Add(new RestScheduleItem(this, restTime));
+    }
     /// <summary>
     /// 日程表日程
     /// </summary>
@@ -296,6 +331,11 @@ public class ScheduleTask
         /// 可用等级
         /// </summary>
         [Line] public int Level { get; set; }
+        /// <summary>
+        /// 是否生效
+        /// </summary>
+        /// <returns>判断套餐是否生效</returns>
+        public bool IsActive() => DateTime.Now < EndTime;
     }
     /// <summary>
     /// 套餐详细

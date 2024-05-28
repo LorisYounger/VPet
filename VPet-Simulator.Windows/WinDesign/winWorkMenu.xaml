@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Foreground="{StaticResource PrimaryText}"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 工作面板}" Height="375"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 工作面板}" Height="400"
         Style="{DynamicResource BaseWindowXStyle}" Background="{DynamicResource PrimaryLighter}" Width="650"
         ResizeMode="CanMinimize" Closed="Window_Closed">
     <pu:WindowX.Resources>
@@ -136,7 +136,7 @@
                         </Grid>
                         <Button x:Name="btnAddAuto" Grid.Row="1" Content="{ll:Str 添加至日程表}" Padding="0"
                                 Style="{DynamicResource ThemedButtonStyle}" Background="{DynamicResource PrimaryDarker}"
-                                Click="btnStart_Click" Margin="5" Height="25" Visibility="Collapsed" />
+                                Click="btnAddAuto_Click" Margin="5" Height="25" IsEnabled="False" />
                         <Button x:Name="btnStart" Grid.Row="2" Height="30" Content="{ll:Str 开始工作}"
                                 Style="{DynamicResource ThemedButtonStyle}" Background="{DynamicResource PrimaryDarker}"
                                 Click="btnStart_Click" FontSize="16" FontWeight="Bold" />
@@ -190,7 +190,7 @@
                                     </UniformGrid>
                                     <Image x:Name="imgAgency" RenderOptions.BitmapScalingMode="HighQuality" Grid.Row="2"
                                             Grid.RowSpan="2" Margin="-20,0" Stretch="Uniform"
-                                            Source="/Res/img/r_agency_job.png" />
+                                            Source="/Res/img/r_singleexp_3.png" />
                                     <ToggleButton x:Name="tbtnCurrentPlan" Grid.Row="3" HorizontalAlignment="Right"
                                             Style="{DynamicResource StandardToggleButtonStyle}" Padding="5,3"
                                             Content="{ll:Str '当前套餐'}">
@@ -228,8 +228,8 @@
                                         <Slider x:Name="sliderTaskLevel" Grid.Row="2" pu:SliderHelper.ThumbWidth="10"
                                                 pu:SliderHelper.ThumbCornerRadius="2" pu:SliderHelper.ThumbHeight="16"
                                                 pu:SliderHelper.ThumbBorderThickness="2" SmallChange="1" Value="1"
-                                                Minimum="1" TickFrequency="1" IsSnapToTickEnabled="True" LargeChange="1"
-                                                Style="{DynamicResource StandardSliderStyle}"
+                                                Maximum="25" Minimum="15" TickFrequency="5" IsSnapToTickEnabled="True"
+                                                LargeChange="1" Style="{DynamicResource StandardSliderStyle}"
                                                 TickPlacement="BottomRight"></Slider>
                                         <Grid Grid.Row="4" Margin="0,7,0,0">
                                             <Grid.RowDefinitions>
@@ -250,9 +250,13 @@
                                             <TextBlock Grid.Row="1" Text="{ll:Str '等级需求'}" />
                                             <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right"
                                                     Foreground="{DynamicResource DARKPrimary}" Text="Lv 100" />
-                                            <TextBlock Grid.Row="2" Text="{ll:Str '合同持续时间'}" />
+                                            <TextBlock Grid.Row="2" Text="{ll:Str '持续时间'}" />
                                             <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right"
                                                     Foreground="{DynamicResource DARKPrimary}" Text="7 天" />
+                                            <TextBlock Grid.Row="3" Text="{ll:Str '描述'}" />
+                                            <TextBlock Grid.Row="3" Text="游玩《虚拟桌宠模拟器》，参加桌宠 ChatVPet 项目。任务目标，即刻拯救桌宠！"
+                                                    Grid.Column="1" Grid.ColumnSpan="2" TextWrapping="Wrap"
+                                                    FontSize="12" />
                                             <TextBlock Grid.Row="4" Text="{ll:Str '办理费用'}" VerticalAlignment="Bottom" />
                                             <TextBlock Grid.Row="4" Grid.Column="2" HorizontalAlignment="Right"
                                                     VerticalAlignment="Center"
@@ -300,6 +304,10 @@
                                             <TextBlock Grid.Row="3" Text="{ll:Str '截止日期'}" />
                                             <TextBlock Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right"
                                                     Foreground="{DynamicResource DARKPrimary}" Text="05/27" />
+                                            <TextBlock Grid.Row="4" Text="{ll:Str '描述'}" />
+                                            <TextBlock Grid.Row="4" Text="游玩《虚拟桌宠模拟器》，参加桌宠 ChatVPet 项目。任务目标，即刻拯救桌宠！"
+                                                    Grid.Column="1" Grid.ColumnSpan="2" TextWrapping="Wrap"
+                                                    Margin="10,0,0,0" />
                                             <TextBlock Grid.Row="5" Text="{ll:Str '办理费用'}" VerticalAlignment="Bottom" />
                                             <TextBlock Grid.Row="5" Grid.Column="2" HorizontalAlignment="Right"
                                                     VerticalAlignment="Center"
@@ -581,9 +589,11 @@
                             </Grid>
                         </TabItem>
                     </TabControl>
-                    <Label x:Name="blockTask" Content="{ll:Str '日程表将在15级开放'}" Background="{DynamicResource DARKPrimaryTransA}"
+                    <Label x:Name="blockTask" Content="{ll:Str '日程表将在15级开放'}"
+                            Background="{DynamicResource DARKPrimaryTransA}"
                             Foreground="{DynamicResource DARKPrimaryText}" FontSize="36" FontWeight="Bold" Margin="-15"
-                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center" d:Visibility="Collapsed" />
+                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                            d:Visibility="Collapsed" />
                 </Grid>
             </Grid>
         </Grid>
