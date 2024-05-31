@@ -1,0 +1,97 @@
+MOD移动设计错误#MOD mobile design error:|
+当前动画移动设计错误: 已到达边界 左侧\n动画名称: {0}\n距离: {1}#Current animation movement design error: boundary reached left\nAnimation name: {0}\nDistance: {1}:|
+当前动画移动设计错误: 已到达边界 右侧\n动画名称: {0}\n距离: {1}#Current animation movement design error: boundary reached on the right side\nAnimation name: {0}\nDistance: {1}:|
+当前动画移动设计错误: 已到达边界 上侧\n动画名称: {0}\n距离: {1}#Current animation movement design error: reached boundary upper side\nAnimation name: {0}\nDistance: {1}:|
+当前动画移动设计错误: 已到达边界 下侧\n动画名称: {0}\n距离: {1}#Current animation movement design error: boundary reached lower side\nAnimation name: {0}\nDistance: {1}:|
+取消#cancel:|
+{0}花费${3}{4}的给{1}买了{2}#{0} spent ${3}{4} to buy {2} for {1}:|
+抽成#take a percentage:|
+请选择#Please select:|
+套餐#Package:|
+工作时间过长#Working hours are too long:|
+工作时间过长,请添加更多的休息时间#The working hours are too long. Please add more rest time:|
+暂无签署套餐#No subscription package has been signed:|
+效率#efficiency:|
+签署失败#Signing failed:|
+套餐已激活#The package has been activated:|
+工作套餐已激活,是否替换?#The work package has been activated. Do you want to replace it?:|
+学习套餐已激活,是否替换?#The learning package has been activated. Do you want to replace it?:|
+签署成功#Signed successfully:|
+套餐 {0} 签署成功#Package {0} signed successfully:|
+套餐未激活#The package is not activated:|
+工作套餐未激活,请前往日程表签署工作中介套餐#The work package is not activated. Please go to the calendar to sign up for the work intermediary package:|
+工作套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的工作或前往日程表签署新的工作中介套餐#The work package level is insufficient ({0}/{1}),\nPlease select a lower level requirement/ratio work or go to the schedule to sign a new work intermediary package:|
+套餐等级不足#Insufficient package level:|
+学习套餐未激活,请前往日程表签署培训机构套餐#The learning package has not been activated. Please go to the calendar to sign up for the training institution package:|
+学习套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的学习或前往日程表签署新的培训机构套餐#The learning package level is insufficient ({0}/{1}),\nPlease choose a lower level requirement/rate of learning or go to the schedule to sign up for a new training institution package:|
+等级不足#Insufficient level:|
+等级不足15级,无法使用日程表#You cannot use the calendar if your level is less than 15:|
+已启用#Enabled:|
+已禁用#disabled :|
+已损坏#Damaged:|
+未知, 可能是{0}#Unknown, possibly {0}:|
+模组载入错误\n路径:{0}\n异常:{1}#Module loading error\nPath: {0}\nException: {1}:|
+确定清空吗#Are you sure to clear:|
+未在路径\n{0}\n中找到模组#Module not found in path\n{0}\n:|
+当前设置未保存 确定要保存吗#The current settings have not been saved. Are you sure you want to save:|
+确定全部重置吗#Are you sure to reset all:|
+确定全部保存吗#Are you sure to save all:|
+确定重置设置吗\n名称: {0}\n路径: {1}#Are you sure to reset the settings? \nName: {0}\nPath: {1}:|
+设置载入失败, 是否强制载入并重置\n[是]: 载入并重置\t[否]: 取消载入\n名称: {0}\n路径: {1}\n异常: {2}#Failed to set loading. Do you want to force loading and resetting? \n[Yes]: Load and reset \t[No]: Cancel loading \nName: {0} \nPath: {1} \nException: {2}:|
+载入设置出错#Error loading settings:|
+日程表#calendar:|
+添加至日程表#Add to calendar:|
+机构签署#Institutional signature:|
+工作中介#Work intermediary:|
+培训机构#Training institutions:|
+当前套餐#Current package:|
+选择等级#Select level:|
+可用等级#Available levels:|
+持续时间#Duration:|
+天#day:|
+办理费用#Handling fees:|
+签署#sign:|
+剩余时间#Remaining time:|
+截止日期#Deadline:|
+日程安排#Schedule of Events:|
+添加休息#Add a break:|
+合计#Total amount:|
+工作时间#Working time:|
+休息时间#Rest time:|
+停止日程#Stop the schedule:|
+开始日程#Start the schedule:|
+日程表将在15级开放#The Schedule will be open at level 15:|
+大佬套餐#Big Package:|
+基础套餐#Basic Package:|
+补习班#cram school:|
+琪露诺的算术教室#Cirno's Arithmetic Classroom:|
+休息#Have a rest:|
+当前日程进度#Current schedule progress:|
+上移#Move up:|
+下移#Move down:|
+学习内容#Learning content:|
+玩耍内容#Play content:|
+萌新套餐#Newbie Package:|
+实习#Internship:|
+交学费#pay tuition fees:|
+桌宠会员专属#VPet exclusive for table pet members:|
+入职体验#Entry experience:|
+从入门到入土#From entry to burial:|
+老兵夏令营#Veterans' Summer Camp:|
+速成班#crash course:|
+暑假班#Summer vacation class:|
+体验课#Experience class:|
+基础套餐，给你们看标准的，反正也没人用。#Basic package, I'll show you the standard one, since no one uses it anyway.:|
+要求低，萌新很友好，但是抽成多了，欺负新来的。#The requirements are low, and the newcomers are friendly, but the commission is too high:|
+哇，等级好高！是大佬！#Wow, such a high level! You are a big shot!:|
+记得实习证明叫单位盖章#Remember to have the internship certificate stamped by the unit:|
+上学交学费，工作也交学费#Pay tuition fees for school and work:|
+《虚拟桌宠模拟器》会员专享权益，多达11项功能，首次开通连续包月只要4块.#The "VPet Simulator" membership offers exclusive benefits, with up to 11 features:|
+无要求体验一天，还是老板赚钱#No requirement to experience a day, or the boss makes money:|
+非常普通的补习班，数据也很普通，让你怀疑怎么会出现在这里。#It's a very ordinary cram school with ordinary data:|
+报名就送《从入门到跑路》，《从入门到放弃》。#Upon registration, you will receive "From Beginner to Giving Up".:|
+报名就送老兵烧烤5块代金券#Sign up and receive 5 vouchers for the veteran barbecue:|
+当你打了个喷嚏，老师已经开始讲下一本书了。#When you sneeze, the teacher has already started talking about the next book.:|
+如果暑假就是用来补课的那不如取消算了。#If summer vacation is just for catching up on missed lessons, why not just cancel it.:|
+帅哥，美女，游泳健身了解一下。#Get to know about swimming for fitness.:|
+效率低很正常，你能听懂50%已经是⑨级别了。#Low efficiency is normal, and you can understand 50% of the ⑨ level.:|

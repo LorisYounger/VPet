@@ -189,31 +189,28 @@ public partial class winWorkMenu : WindowX
                 ShowImageDefault((Work.WorkType)LsbCategory.SelectedIndex);
             gdWork.Visibility = Visibility.Visible;
             gdSchedule.Visibility = Visibility.Collapsed;
+
             switch (LsbCategory.SelectedIndex)
             {
                 case 0:
                     detailTypes.ItemsSource = _workDetails;
                     btnStart.Content = "开始工作".Translate();
                     ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "工作".Translate() + "---");
-                    btnAddAuto.IsEnabled = mw.ScheduleTask.PackageWork?.IsActive() == true;
                     break;
                 case 1:
                     detailTypes.ItemsSource = _studyDetails;
                     btnStart.Content = "开始学习".Translate();
                     ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "学习".Translate() + "---");
-                    btnAddAuto.IsEnabled = mw.ScheduleTask.PackageStudy?.IsActive() == true;
                     break;
                 case 2:
                     detailTypes.ItemsSource = _playDetails;
                     btnStart.Content = "开始玩耍".Translate();
                     ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "玩耍".Translate() + "---");
-                    btnAddAuto.IsEnabled = mw.Core.Save.Level >= 15;
                     break;
                 case 3:
                     detailTypes.ItemsSource = _starDetails;
                     btnStart.Content = "开始工作".Translate();
                     ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "---");
-                    btnAddAuto.IsEnabled = mw.Core.Save.Level >= 15;
                     break;
                 case 4:
                     gdWork.Visibility = Visibility.Collapsed;
@@ -238,6 +235,8 @@ public partial class winWorkMenu : WindowX
         {
             if (detailTypes.SelectedIndex < 0)
             {
+                btnStart.IsEnabled = false;
+                btnAddAuto.IsEnabled = false;
                 tbGain.Text = "??";
                 tbSpeed.Text = "??";
                 tbFood.Text = "??";
@@ -249,22 +248,27 @@ public partial class winWorkMenu : WindowX
                 tbRatio.Text = "??";
                 return;
             }
+            btnStart.IsEnabled = true;
             switch (LsbCategory.SelectedIndex)
             {
                 case 0:
                     nowwork = (ws[detailTypes.SelectedIndex]);
+                    btnAddAuto.IsEnabled = mw.ScheduleTask.PackageWork?.IsActive() == true;
                     break;
                 case 1:
                     nowwork = (ss[detailTypes.SelectedIndex]);
+                    btnAddAuto.IsEnabled = mw.ScheduleTask.PackageStudy?.IsActive() == true;
                     break;
                 case 2:
                     nowwork = (ps[detailTypes.SelectedIndex]);
+                    btnAddAuto.IsEnabled = mw.Core.Save.Level >= 15;
                     break;
                 case 3:
                     if (!AllowChange) return;
                     var works = mw.WorkStar();
                     if (works.Count <= detailTypes.SelectedIndex) return;
                     nowwork = (works[detailTypes.SelectedIndex]);
+                    btnAddAuto.IsEnabled = mw.Core.Save.Level >= 15;
                     break;
                 case 4:
                     return;
@@ -285,7 +289,7 @@ public partial class winWorkMenu : WindowX
 
     private void btnStart_Click(object sender, RoutedEventArgs e)
     {
-        if (nowworkdisplay != null)
+        if (nowwork != null || nowworkdisplay != null)
         {
             if (mw.Main.StartWork(nowworkdisplay))
                 Close();
@@ -391,7 +395,7 @@ public partial class winWorkMenu : WindowX
         {
             rpnCommissions.Text = (1 - package.Commissions).ToString("p0");
         }
-        rpnDescribe.Text = package.Describe;
+        rpnDescribe.Text = package.DescribeTrans;
         rpnPrice.Text = package.Price.ToString("N0");
         rpnEndDate.Text = package.EndTime.ToString("MM/dd");
         rpnLevelInNeed.Text = package.Level.ToString();
@@ -570,46 +574,47 @@ public partial class winWorkMenu : WindowX
 
     private void btnAddAuto_Click(object sender, RoutedEventArgs e)
     {
-        //看看套餐
-        switch (nowwork.Type)
-        {
-            case Work.WorkType.Work:
-                if (mw.ScheduleTask.PackageWork?.IsActive() != true)
-                {
-                    MessageBoxX.Show("工作套餐未激活,请前往日程表签署工作中介套餐".Translate(), "套餐未激活".Translate());
-                    return;
-                }
-                else if (mw.ScheduleTask.PackageWork.Level < nowworkdisplay.LevelLimit)
-                {
-                    MessageBoxX.Show("工作套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的工作或前往日程表签署新的工作中介套餐".Translate(mw.ScheduleTask.PackageWork.Level,
-                        nowworkdisplay.LevelLimit), "套餐等级不足".Translate());
-                    return;
-                }
-                mw.ScheduleTask.AddWork(nowwork, 30);
-                break;
-            case Work.WorkType.Study:
-                if (mw.ScheduleTask.PackageStudy?.IsActive() != true)
-                {
-                    MessageBoxX.Show("学习套餐未激活,请前往日程表签署培训机构套餐".Translate(), "套餐未激活".Translate());
-                    return;
-                }
-                else if (mw.ScheduleTask.PackageStudy.Level < nowworkdisplay.LevelLimit)
-                {
-                    MessageBoxX.Show("学习套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的学习或前往日程表签署新的培训机构套餐".Translate(mw.ScheduleTask.PackageStudy.Level,
-                        nowworkdisplay.LevelLimit), "套餐等级不足".Translate());
-                    return;
-                }
-                mw.ScheduleTask.AddStudy(nowwork, 30);
-                break;
-            case Work.WorkType.Play:
-                if (mw.Core.Save.Level < 15)
-                {
-                    MessageBoxX.Show("等级不足15级,无法使用日程表".Translate(), "等级不足".Translate());
-                    return;
-                }
-                mw.ScheduleTask.AddPlay(nowwork, 30);
-                break;
-        }
+        if (nowwork != null || nowworkdisplay != null)
+            //看看套餐
+            switch (nowwork.Type)
+            {
+                case Work.WorkType.Work:
+                    if (mw.ScheduleTask.PackageWork?.IsActive() != true)
+                    {
+                        MessageBoxX.Show("工作套餐未激活,请前往日程表签署工作中介套餐".Translate(), "套餐未激活".Translate());
+                        return;
+                    }
+                    else if (mw.ScheduleTask.PackageWork.Level < nowworkdisplay.LevelLimit)
+                    {
+                        MessageBoxX.Show("工作套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的工作或前往日程表签署新的工作中介套餐".Translate(mw.ScheduleTask.PackageWork.Level,
+                            nowworkdisplay.LevelLimit), "套餐等级不足".Translate());
+                        return;
+                    }
+                    mw.ScheduleTask.AddWork(nowwork, (int)wDouble.Value);
+                    break;
+                case Work.WorkType.Study:
+                    if (mw.ScheduleTask.PackageStudy?.IsActive() != true)
+                    {
+                        MessageBoxX.Show("学习套餐未激活,请前往日程表签署培训机构套餐".Translate(), "套餐未激活".Translate());
+                        return;
+                    }
+                    else if (mw.ScheduleTask.PackageStudy.Level < nowworkdisplay.LevelLimit)
+                    {
+                        MessageBoxX.Show("学习套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的学习或前往日程表签署新的培训机构套餐".Translate(mw.ScheduleTask.PackageStudy.Level,
+                            nowworkdisplay.LevelLimit), "套餐等级不足".Translate());
+                        return;
+                    }
+                    mw.ScheduleTask.AddStudy(nowwork, (int)wDouble.Value);
+                    break;
+                case Work.WorkType.Play:
+                    if (mw.Core.Save.Level < 15)
+                    {
+                        MessageBoxX.Show("等级不足15级,无法使用日程表".Translate(), "等级不足".Translate());
+                        return;
+                    }
+                    mw.ScheduleTask.AddPlay(nowwork, (int)wDouble.Value);
+                    break;
+            }
     }
     PackageFull nowselefull;
     private void combTaskType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -636,7 +641,7 @@ public partial class winWorkMenu : WindowX
         rLevelNeed.Text = ((int)(sliderTaskLevel.Value / nowselefull.LevelInNeed)).ToString();
         rDuration.Text = nowselefull.Duration.ToString();
         rpPrice.Text = ((200 * level - 100) * nowselefull.Price).ToString("N0");
-        rDescribe.Text = nowselefull.Describe;
+        rDescribe.Text = nowselefull.DescribeTrans;
     }
 
     private void sliderTaskLevel_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

@@ -301,6 +301,7 @@ public class ScheduleTask
         public Work Work { get; set; }
         public WorkScheduleItem(ScheduleTask task, Work work, int dbl) : base(task)
         {
+            this.DBL = dbl;
             this.Work = work;
             string source = task.mw.ImageSources.FindSource("work_" + task.mw.Set.PetGraph + "_" + work.Graph) ?? task.mw.ImageSources.FindSource("work_" + task.mw.Set.PetGraph + "_" + work.Name);
 
@@ -326,7 +327,7 @@ public class ScheduleTask
 
         public string WorkLevel
         {
-            get => $"Lv {(Work.LevelLimit + 10) * DBL}";
+            get => $"Lv {(DBL == 0 ? Work.LevelLimit : (Work.LevelLimit + 10) * DBL)}";
             set { }
         }
 
@@ -421,6 +422,22 @@ public class ScheduleTask
         /// 描述
         /// </summary>
         [Line] public string Describe { get; set; }
+        /// <summary>
+        /// 描述 已翻译
+        /// </summary>
+        public string DescribeTrans
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(describetrans))
+                {
+                    describetrans = Describe.Translate();
+                }
+                return describetrans;
+            }
+            set => describetrans = value;
+        }
+        private string describetrans;
         /// <summary>
         /// 抽成
         /// </summary>
