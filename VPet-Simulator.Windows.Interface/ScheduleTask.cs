@@ -2,6 +2,7 @@
 using LinePutScript.Converter;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF;
+using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
 using System.Windows.Media;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphHelper.Work;
@@ -126,7 +128,9 @@ public class ScheduleTask
             RestTimer.Start();
         }
     }
-
+    /// <summary>
+    /// 开始工作
+    /// </summary>
     public void StartWork()
     {
         RestTime = -100;
@@ -140,6 +144,40 @@ public class ScheduleTask
             }
             if (ScheduleItems[NowIndex] is WorkScheduleItem wsi)
             {
+                //判断能否工作
+                if (wsi.Work.Type == WorkType.Work)
+                {
+                    if (PackageWork?.IsActive() != true)
+                    {
+                        mw.Dispatcher.Invoke(() => MessageBoxX.Show("工作套餐未激活,请前往日程表签署工作中介套餐".Translate(), "套餐未激活".Translate()));
+                        IsOn = false;
+                        return;
+                    }
+                    else if (PackageWork.Level < wsi.Work.LevelLimit)
+                    {
+                        mw.Dispatcher.Invoke(() => MessageBoxX.Show("工作套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的工作或前往日程表签署新的工作中介套餐".Translate(PackageWork.Level,
+                        wsi.Work.LevelLimit), "套餐等级不足".Translate()));
+                        IsOn = false;
+                        return;
+                    }
+                }
+                else if (wsi.Work.Type == WorkType.Study)
+                {
+                    if (PackageStudy?.IsActive() != true)
+                    {
+                        mw.Dispatcher.Invoke(() => MessageBoxX.Show("学习套餐未激活,请前往日程表签署培训机构套餐".Translate(), "套餐未激活".Translate()));
+                        IsOn = false;
+                        return;
+                    }
+                    else if (PackageStudy.Level < wsi.Work.LevelLimit)
+                    {
+                        mw.Dispatcher.Invoke(() => MessageBoxX.Show("学习套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的学习或前往日程表签署新的培训机构套餐".Translate(PackageStudy.Level,
+                        wsi.Work.LevelLimit), "套餐等级不足".Translate()));
+                        IsOn = false;
+                        return;
+                    }
+                }
+
                 mw.Main.StartWork(wsi.Work.Double(wsi.DBL));
                 NowIndex++;
             }
@@ -150,6 +188,22 @@ public class ScheduleTask
                 RestTimer.Start();
             }
         }
+    }
+    /// <summary>
+    /// 开始日程表
+    /// </summary>
+    public void Start()
+    {
+        IsOn = true;
+        StartWork();
+    }
+    /// <summary>
+    /// 停止日程表
+    /// </summary>
+    public void Stop()
+    {
+        IsOn = false;
+        RestTime = -100;
     }
     private int RestTime = 2;
     private Timer RestTimer = new Timer()
@@ -229,6 +283,7 @@ public class ScheduleTask
                 return Task.ScheduleItems[Task.NowIndex] == this;
             }
         }
+        public Visibility IsNowVisibility => IsNow ? Visibility.Visible : Visibility.Collapsed;
     }
     /// <summary>
     /// 工作日程表日程
@@ -263,9 +318,25 @@ public class ScheduleTask
 
         public ImageSource Image { get; set; }
 
-        public string WorkName => Work.NameTrans;
+        public string WorkName
+        {
+            get => Work.NameTrans;
+            set { }
+        }
 
-        public override int WorkTime => Work.Time;
+        public string WorkLevel
+        {
+            get => $"Lv {(Work.LevelLimit + 10) * DBL}";
+            set { }
+        }
+
+        public override int WorkTime
+        {
+            get => Work.Time;
+            set { }
+        }
+
+        public Visibility IsOKVisibility => (Task.PackageWork?.IsActive() != true || Task.PackageWork.Level < Work.LevelLimit) ? Visibility.Visible : Visibility.Collapsed;
 
         public bool IsPreviousIsRest { get => _isPreviousIsRest; set => Set(ref _isPreviousIsRest, value); }
         private bool _isPreviousIsRest;
@@ -278,6 +349,8 @@ public class ScheduleTask
         public StudyScheduleItem(ScheduleTask task, Work work, int dbl) : base(task, work, dbl)
         {
         }
+        public new Visibility IsOKVisibility => (Task.PackageStudy?.IsActive() != true || Task.PackageStudy.Level < Work.LevelLimit) ? Visibility.Visible : Visibility.Collapsed;
+
     }
     /// <summary>
     /// 工作日程表日程
@@ -287,8 +360,18 @@ public class ScheduleTask
         public PlayScheduleItem(ScheduleTask task, Work work, int dbl) : base(task, work, dbl)
         {
         }
-        public override int WorkTime => Work.Time / 2;
-        public override int RestTime => Work.Time / 2;
+        public override int WorkTime
+        {
+            get => Work.Time / 2;
+            set { }
+        }
+        public override int RestTime
+        {
+            get => Work.Time / 2;
+            set { }
+        }
+
+        public new Visibility IsOKVisibility => Visibility.Collapsed;
     }
     /// <summary>
     /// 休息日程表日程
@@ -311,6 +394,9 @@ public class ScheduleTask
     /// </summary>
     public class Package
     {
+        public Package()
+        {
+        }
         /// <summary>
         /// 套餐名称
         /// </summary>
@@ -346,7 +432,7 @@ public class ScheduleTask
         /// <summary>
         /// 截止时间
         /// </summary>
-        [Line] public DateTime EndTime { get; set; }
+        [Line] public DateTime EndTime { get; set; } = DateTime.MinValue;
         /// <summary>
         /// 可用等级
         /// </summary>
@@ -356,12 +442,25 @@ public class ScheduleTask
         /// </summary>
         /// <returns>判断套餐是否生效</returns>
         public bool IsActive() => DateTime.Now < EndTime;
+
+        public Package(PackageFull packageFull, int level)
+        {
+            Name = packageFull.Name;
+            Describe = packageFull.Describe;
+            Commissions = packageFull.Commissions;
+            Price = packageFull.Price * (200 * level - 100);
+            EndTime = DateTime.Now.AddDays(packageFull.Duration);
+            Level = (int)(level / packageFull.LevelInNeed);
+        }
     }
     /// <summary>
     /// 套餐详细
     /// </summary>
     public class PackageFull : Package
     {
+        public PackageFull()
+        {
+        }
         /// <summary>
         /// 持续时间 (天)
         /// </summary>
@@ -374,7 +473,7 @@ public class ScheduleTask
         /// <summary>
         /// 工作类型
         /// </summary>
-        [Line] public Work.WorkType WorkType { get; set; }
+        [Line] public WorkType WorkType { get; set; }
 
         public void FixOverLoad()
         {
@@ -382,7 +481,7 @@ public class ScheduleTask
             {
                 Duration = 1;
             }
-            if (Price > 0)
+            if (Price < 0)
             {
                 Price = 1;
             }
@@ -394,8 +493,8 @@ public class ScheduleTask
             {
                 Commissions = 0.2;
             }
-            var use = Math.Sign(Commissions - 0.25) * Math.Pow(Math.Abs(Commissions * 100 - 15), 1.5) +
-                Math.Sign(LevelInNeed - 1.2) * Math.Pow(Math.Abs(LevelInNeed * 100 - 15), 1.5) +
+            var use = Math.Sign(Commissions - 0.15) * Math.Pow(Math.Abs(Commissions * 100 - 15), 1.5) +
+                Math.Sign(LevelInNeed - 1.2) * Math.Pow(Math.Abs(LevelInNeed * 100 - 120), 1.5) +
                 (Price * LevelInNeed * 100 - 100) / 4;
             var get = Math.Sqrt(Duration);
             var realvalue = use / get;
@@ -407,6 +506,8 @@ public class ScheduleTask
                 Duration = 7;
             }
         }
+
+        public override string ToString() => NameTrans;
     }
 }
 

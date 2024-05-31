@@ -78,10 +78,24 @@ public partial class winWorkMenu : WindowX
         ShowImageDefault(type);
         CalculateSceduleTime();
         imgAgency.Source = mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_agency_job", "work_agency_job");
+        tbtnAgencyTraning.IsChecked = false;
+        rTaskType.Text = "抽成".Translate();
+        foreach (var v in mw.SchedulePackage.FindAll(x => x.WorkType == Work.WorkType.Work))
+            combTaskType.Items.Add(v);
 
         if (mw.Core.Save.Level > 15)
             blockTask.Visibility = Visibility.Collapsed;
+        rpnDisplay(mw.ScheduleTask.PackageWork, Work.WorkType.Work);
+        sliderTaskLevel.Maximum = mw.Core.Save.Level / 5 * 5;
+        if (mw.Core.Save.Level > 200)
+            sliderTaskLevel.TickFrequency = mw.Core.Save.Level / 100 * 5;
+        else
+            sliderTaskLevel.TickFrequency = 5;
+        tbtnCurrentPlan.IsChecked = mw.ScheduleTask.PackageWork?.IsActive() == true;
+        btnStartSchedule.IsChecked = false;
+
         AllowChange = true;
+        combTaskType.SelectedIndex = 0;
 
 
         ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "---");
@@ -116,6 +130,10 @@ public partial class winWorkMenu : WindowX
             {
                 wDouble.IsEnabled = true;
                 wDouble.Maximum = max;
+                if (max > 25)
+                    wDouble.TickFrequency = max / 25;
+                else
+                    wDouble.TickFrequency = 1;
                 wDouble.Value = mw.Set["workmenu"].GetInt("double_" + nowwork.Name, 1);
             }
         }
@@ -160,11 +178,6 @@ public partial class winWorkMenu : WindowX
         tbBonus.Text = 'x' + (1 + work.FinishBonus).ToString("f2");
         tbRatio.Text = 'x' + wDouble.Value.ToString("f0");
         tbtn_star.IsChecked = IsWorkStar(work);
-    }
-
-    public void LoadSchedule()
-    {
-
     }
 
     private void LsbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -307,18 +320,34 @@ public partial class winWorkMenu : WindowX
 
     private void btnStartSchedule_Click(object sender, RoutedEventArgs e)
     {
-
+        if (btnStartSchedule.IsChecked == mw.ScheduleTask.IsOn)
+            return;
+        if (mw.ScheduleTask.IsOn)
+        {
+            mw.ScheduleTask.Stop();
+        }
+        else
+        {
+            if (sworkTime / (double)(sworkTime + srestTime) > 0.71)
+            {
+                MessageBoxX.Show("工作时间过长,请添加更多的休息时间".Translate(), "工作时间过长".Translate());
+                btnStartSchedule.IsChecked = false;
+                return;
+            }
+            mw.ScheduleTask.Start();
+        }
     }
 
     private void NumberInput_ValueChanged(object sender, SelectedValueChangedRoutedEventArgs<double?> e)
     {
         CalculateSceduleTime();
     }
-
+    int sworkTime = 0;
+    int srestTime = 0;
     private void CalculateSceduleTime()
     {
-        int workTime = 0;
-        int restTime = 0;
+        sworkTime = 0;
+        srestTime = 0;
         for (int i = 0; i < _schedules.Count; i++)
         {
             var item = _schedules[i];
@@ -327,16 +356,16 @@ public partial class winWorkMenu : WindowX
             {
                 workItem.IsPreviousIsRest = lastItem is RestScheduleItem;
             }
-            workTime += item.WorkTime;
-            restTime += item.RestTime;
+            sworkTime += item.WorkTime;
+            srestTime += item.RestTime;
         }
-        rpgbSchedule.Maximum = workTime + restTime;
-        rpgbSchedule.Value = workTime;
+        rpgbSchedule.Maximum = sworkTime + srestTime;
+        rpgbSchedule.Value = sworkTime;
 
-        runScheduleWork.Text = workTime.ToString();
-        runScheduleRest.Text = restTime.ToString();
+        runScheduleWork.Text = sworkTime.ToString();
+        runScheduleRest.Text = srestTime.ToString();
 
-        double ps = workTime / (double)(workTime + restTime);
+        double ps = sworkTime / (double)(sworkTime + srestTime);
         runSchedulePercentage.Text = ps.ToString("p0");
         if (ps > 0.71)
             runSchedulePercentage.Foreground = new SolidColorBrush(Colors.OrangeRed);
@@ -344,6 +373,38 @@ public partial class winWorkMenu : WindowX
             runSchedulePercentage.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimary);
         rpgbSchedule.Foreground = runSchedulePercentage.Foreground;
     }
+    private void rpnDisplay(Package package, Work.WorkType type)
+    {
+        if (package == null)
+        {
+            rpnDescribe.Text = rpnName.Text = "暂无签署套餐".Translate();
+            rpnEndDate.Text = rpnPrice.Text = rpnCommissions.Text = "-";
+            rpnEndDay.Text = "0";
+            return;
+        }
+        rpnName.Text = package.NameTrans;
+        if (Work.WorkType.Work == type)
+        {
+            rpnCommissions.Text = package.Commissions.ToString("p0");
+        }
+        else
+        {
+            rpnCommissions.Text = (1 - package.Commissions).ToString("p0");
+        }
+        rpnDescribe.Text = package.Describe;
+        rpnPrice.Text = package.Price.ToString("N0");
+        rpnEndDate.Text = package.EndTime.ToString("MM/dd");
+        rpnLevelInNeed.Text = package.Level.ToString();
+        var totalhour = (package.EndTime - DateTime.Now).TotalHours;
+        if (totalhour <= 0)
+            rpnEndDay.Text = "0";
+        else if (totalhour <= 24)
+            rpnEndDay.Text = totalhour.ToString("f1");
+        else
+            rpnEndDay.Text = totalhour.ToString("f0");
+
+    }
+
 
     private void tbtn_Agency_CheckChanged(object sender, RoutedEventArgs e)
     {
@@ -352,22 +413,37 @@ public partial class winWorkMenu : WindowX
             return;
         }
         sliderTaskLevel.Maximum = mw.Core.Save.Level / 5 * 5;
+        if (mw.Core.Save.Level > 200)
+            sliderTaskLevel.TickFrequency = mw.Core.Save.Level / 100 * 5;
+        else
+            sliderTaskLevel.TickFrequency = 5;
         if (sender == tbtnAgencyJob)
         {
             imgAgency.Source = mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_agency_job", "work_agency_job");
             tbtnAgencyTraning.IsChecked = false;
-            //TODO:加载套餐combTaskType
+            //加载套餐combTaskType
             rTaskType.Text = "抽成".Translate();
-
+            combTaskType.Items.Clear();
+            foreach (var v in mw.SchedulePackage.FindAll(x => x.WorkType == Work.WorkType.Work))
+                combTaskType.Items.Add(v);
+            combTaskType.SelectedIndex = 0;
+            //加载现有套餐
+            rpnDisplay(mw.ScheduleTask.PackageWork, nowselefull.WorkType);
+            tbtnCurrentPlan.IsChecked = mw.ScheduleTask.PackageWork?.IsActive() == true;
         }
         else if (sender == tbtnAgencyTraning)
         {
             imgAgency.Source = mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_agency_training", "work_agency_training");
             tbtnAgencyJob.IsChecked = false;
 
-
             rTaskType.Text = "效率".Translate();
-
+            combTaskType.Items.Clear();
+            foreach (var v in mw.SchedulePackage.FindAll(x => x.WorkType == Work.WorkType.Study))
+                combTaskType.Items.Add(v);
+            combTaskType.SelectedIndex = 0;
+            //加载现有套餐
+            rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull.WorkType);
+            tbtnCurrentPlan.IsChecked = mw.ScheduleTask.PackageStudy?.IsActive() == true;
         }
     }
 
@@ -382,7 +458,31 @@ public partial class winWorkMenu : WindowX
 
     private void btnSignAgency_Click(object sender, RoutedEventArgs e)
     {
-
+        if (nowselefull == null) return;
+        Package package = new Package(nowselefull, (int)sliderTaskLevel.Value);
+        if (package.Price > mw.Core.Save.Money)
+        {
+            MessageBoxX.Show("金钱不足".Translate(), "签署失败".Translate());
+            return;
+        }
+        if (nowselefull.WorkType == Work.WorkType.Work)
+        {
+            if (mw.ScheduleTask.PackageWork?.IsActive() == true
+                && MessageBoxX.Show("工作套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.No)
+                return;
+            mw.ScheduleTask.PackageWork = package;
+            rpnDisplay(mw.ScheduleTask.PackageWork, nowselefull.WorkType);
+        }
+        else
+        {
+            if (mw.ScheduleTask.PackageStudy?.IsActive() == true
+                && MessageBoxX.Show("学习套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.No)
+                return;
+            mw.ScheduleTask.PackageStudy = package;
+            rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull.WorkType);
+        }
+        mw.Core.Save.Money -= package.Price;
+        MessageBoxX.Show("套餐 {0} 签署成功".Translate(package.NameTrans), "签署成功".Translate());
     }
 
     private void btn_addRest_Click(object sender, RoutedEventArgs e)
@@ -479,7 +579,7 @@ public partial class winWorkMenu : WindowX
                     MessageBoxX.Show("工作套餐未激活,请前往日程表签署工作中介套餐".Translate(), "套餐未激活".Translate());
                     return;
                 }
-                else if (mw.ScheduleTask.PackageWork.Level > nowworkdisplay.LevelLimit)
+                else if (mw.ScheduleTask.PackageWork.Level < nowworkdisplay.LevelLimit)
                 {
                     MessageBoxX.Show("工作套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的工作或前往日程表签署新的工作中介套餐".Translate(mw.ScheduleTask.PackageWork.Level,
                         nowworkdisplay.LevelLimit), "套餐等级不足".Translate());
@@ -493,7 +593,7 @@ public partial class winWorkMenu : WindowX
                     MessageBoxX.Show("学习套餐未激活,请前往日程表签署培训机构套餐".Translate(), "套餐未激活".Translate());
                     return;
                 }
-                else if (mw.ScheduleTask.PackageStudy.Level > nowworkdisplay.LevelLimit)
+                else if (mw.ScheduleTask.PackageStudy.Level < nowworkdisplay.LevelLimit)
                 {
                     MessageBoxX.Show("学习套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的学习或前往日程表签署新的培训机构套餐".Translate(mw.ScheduleTask.PackageStudy.Level,
                         nowworkdisplay.LevelLimit), "套餐等级不足".Translate());
@@ -510,6 +610,39 @@ public partial class winWorkMenu : WindowX
                 mw.ScheduleTask.AddPlay(nowwork, 30);
                 break;
         }
+    }
+    PackageFull nowselefull;
+    private void combTaskType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!AllowChange) return;
+        if (combTaskType.SelectedItem is not PackageFull sf)
+        {
+            return;
+        }
+        nowselefull = sf;
+        nowselefullDisplay();
+    }
+    private void nowselefullDisplay()
+    {
+        if (nowselefull.WorkType == Work.WorkType.Work)
+        {
+            rCommissions.Text = nowselefull.Commissions.ToString("p0");
+        }
+        else
+        {
+            rCommissions.Text = (1 - nowselefull.Commissions).ToString("p0");
+        }
+        int level = (int)sliderTaskLevel.Value;
+        rLevelNeed.Text = ((int)(sliderTaskLevel.Value / nowselefull.LevelInNeed)).ToString();
+        rDuration.Text = nowselefull.Duration.ToString();
+        rpPrice.Text = ((200 * level - 100) * nowselefull.Price).ToString("N0");
+        rDescribe.Text = nowselefull.Describe;
+    }
+
+    private void sliderTaskLevel_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (!AllowChange) return;
+        nowselefullDisplay();
     }
 }
 
