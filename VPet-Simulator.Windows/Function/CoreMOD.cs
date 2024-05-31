@@ -258,6 +258,9 @@ namespace VPet_Simulator.Windows
                                         mw.SelectTexts.Add(LPSConvert.DeserializeObject<SelectText>(li));
                                         Tag.Add("selecttext");
                                         break;
+                                    case "schedulepackage":
+                                        mw.SchedulePackage.Add(LPSConvert.DeserializeObject<ScheduleTask.PackageFull>(li));
+                                        break;
                                 }
                             }
                         }

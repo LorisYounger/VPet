@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 using VPet_Simulator.Core;
+using static VPet_Simulator.Windows.Interface.ScheduleTask;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -229,8 +230,11 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 日程表
         /// </summary>
-
         ScheduleTask ScheduleTask { get; }
+        /// <summary>
+        /// 所有可用套餐
+        /// </summary>
+        List<PackageFull> SchedulePackage { get;}
     }
 
 }

@@ -1702,6 +1702,9 @@ namespace VPet_Simulator.Windows
                           work.FixOverLoad();//导入的工作默认1.2倍
                       }
                   }
+                  //加载数据合理化:自动工作
+                  foreach (var stp in SchedulePackage)
+                      stp.FixOverLoad();
 
 
                   var m = new System.Windows.Controls.MenuItem()

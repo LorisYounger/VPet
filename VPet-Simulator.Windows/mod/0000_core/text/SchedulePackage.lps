@@ -1,0 +1,14 @@
+SchedulePackage:|Name#基础套餐:|Commissions#20%:|LevelInNeed#125%:|Duration#7:|Price#1:|Describe#基础套餐，给你们看标准的，反正也没人用。:|WorkType#Work:|
+SchedulePackage:|Name#萌新套餐:|Commissions#35%:|LevelInNeed#105%:|Duration#7:|Price#0.8:|Describe#要求低，萌新很友好，但是抽成多了，欺负新来的。:|WorkType#Work:|
+SchedulePackage:|Name#大佬套餐:|Commissions#5%:|LevelInNeed#140%:|Duration#14:|Price#0.2:|Describe#哇，等级好高！是大佬！:|WorkType#Work:|
+SchedulePackage:|Name#实习:|Commissions#30%:|LevelInNeed#120%:|Duration#15:|Price#0.3:|Describe#记得实习证明叫单位盖章:|WorkType#Work:|
+SchedulePackage:|Name#交学费:|Commissions#15%:|LevelInNeed#120%:|Duration#14:|Price#2.2:|Describe#上学交学费，工作也交学费:|WorkType#Work:|
+SchedulePackage:|Name#桌宠会员专属:|Commissions#5%:|LevelInNeed#110%:|Duration#30:|Price#5.5:|Describe#《虚拟桌宠模拟器》会员专享权益，多达11项功能，首次开通连续包月只要4块.:|WorkType#Work:|
+SchedulePackage:|Name#入职体验:|Commissions#20%:|LevelInNeed#120%:|Duration#1:|Price#0.8:|Describe#无要求体验一天，还是老板赚钱:|WorkType#Work:|
+SchedulePackage:|Name#补习班:|Commissions#20%:|LevelInNeed#125%:|Duration#7:|Price#1:|Describe#非常普通的补习班，数据也很普通，让你怀疑怎么会出现在这里。:|WorkType#Study:|
+SchedulePackage:|Name#从入门到入土:|Commissions#35%:|LevelInNeed#105%:|Duration#7:|Price#0.8:|Describe#报名就送《从入门到跑路》，《从入门到放弃》。:|WorkType#Study:|
+SchedulePackage:|Name#老兵夏令营:|Commissions#5%:|LevelInNeed#140%:|Duration#14:|Price#0.2:|Describe#报名就送老兵烧烤5快代金券:|WorkType#Study:|
+SchedulePackage:|Name#速成班:|Commissions#30%:|LevelInNeed#120%:|Duration#15:|Price#0.3:|Describe#当你打了个喷嚏，老师已经开始讲下一本书了。:|WorkType#Study:|
+SchedulePackage:|Name#暑假班:|Commissions#15%:|LevelInNeed#120%:|Duration#14:|Price#2.2:|Describe#如果暑假就是用来补课的那不如取消算了。:|WorkType#Study:|
+SchedulePackage:|Name#体验课:|Commissions#20%:|LevelInNeed#120%:|Duration#1:|Price#0.8:|Describe#帅哥，美女，游泳健身了解一下。:|WorkType#Study:|
+SchedulePackage:|Name#琪露诺的算术教室:|Commissions#50%:|LevelInNeed#100%:|Duration#14:|Price#0:|Describe#效率低很正常，你能听懂50%已经是⑨级别了。:|WorkType#Study:|

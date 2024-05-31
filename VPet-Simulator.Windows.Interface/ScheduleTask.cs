@@ -312,9 +312,29 @@ public class ScheduleTask
     public class Package
     {
         /// <summary>
+        /// 套餐名称
+        /// </summary>
+        [Line] public string Name { get; set; }
+        /// <summary>
         /// 协议名称 (已翻译)
         /// </summary>
-        public string NameTrans { get; set; }
+        public string NameTrans
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(nametrans))
+                {
+                    nametrans = Name.Translate();
+                }
+                return nametrans;
+            }
+            set => nametrans = value;
+        }
+        private string nametrans;
+        /// <summary>
+        /// 描述
+        /// </summary>
+        [Line] public string Describe { get; set; }
         /// <summary>
         /// 抽成
         /// </summary>
@@ -343,26 +363,7 @@ public class ScheduleTask
     public class PackageFull : Package
     {
         /// <summary>
-        /// 套餐名称
-        /// </summary>
-        [Line] public string Name { get; set; }
-        /// <summary>
-        /// 协议名称 (已翻译)
-        /// </summary>
-        public new string NameTrans
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(base.NameTrans))
-                {
-                    base.NameTrans = Name.Translate();
-                }
-                return base.NameTrans;
-            }
-            set => base.NameTrans = value;
-        }
-        /// <summary>
-        /// 持续时间
+        /// 持续时间 (天)
         /// </summary>
         [Line] public int Duration { get; set; }
         /// <summary>
@@ -374,40 +375,38 @@ public class ScheduleTask
         /// 工作类型
         /// </summary>
         [Line] public Work.WorkType WorkType { get; set; }
-    }
-    /// <summary>
-    /// 所有可用套餐
-    /// </summary>
-    public List<PackageFull> PackageFulls { get; set; }
-    /// <summary>
-    /// 获取基本可用套餐
-    /// </summary>
-    public static List<PackageFull> GetBasePackageFulls()
-    {
-        return new List<PackageFull>
+
+        public void FixOverLoad()
         {
-            new PackageFull
+            if (Duration < 1)
             {
-                Name = "work",
-                Duration = 1,
-                LevelInNeed = 0,
-                WorkType = Work.WorkType.Work
-            },
-            new PackageFull
-            {
-                Name = "study",
-                Duration = 1,
-                LevelInNeed = 0,
-                WorkType = Work.WorkType.Study
-            },
-            new PackageFull
-            {
-                Name = "play",
-                Duration = 1,
-                LevelInNeed = 0,
-                WorkType = Work.WorkType.Play
+                Duration = 1;
             }
-        };
+            if (Price > 0)
+            {
+                Price = 1;
+            }
+            if (LevelInNeed < 1)
+            {
+                LevelInNeed = 1.25;
+            }
+            if (Commissions < 0)
+            {
+                Commissions = 0.2;
+            }
+            var use = Math.Sign(Commissions - 0.25) * Math.Pow(Math.Abs(Commissions * 100 - 15), 1.5) +
+                Math.Sign(LevelInNeed - 1.2) * Math.Pow(Math.Abs(LevelInNeed * 100 - 15), 1.5) +
+                (Price * LevelInNeed * 100 - 100) / 4;
+            var get = Math.Sqrt(Duration);
+            var realvalue = use / get;
+            if (realvalue < 10)
+            {
+                Commissions = 0.2;
+                LevelInNeed = 1.25;
+                Price = 1;
+                Duration = 7;
+            }
+        }
     }
 }
 

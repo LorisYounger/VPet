@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
+using static VPet_Simulator.Windows.Interface.ScheduleTask;
 
 namespace VPet_Simulator.Windows;
 
@@ -96,4 +97,9 @@ public partial class MainWindow
     /// </summary>
 
     public ScheduleTask ScheduleTask { get; set; }
+
+    /// <summary>
+    /// 所有可用套餐
+    /// </summary>
+    public List<PackageFull> SchedulePackage { get; set; } = new List<PackageFull>();
 }
