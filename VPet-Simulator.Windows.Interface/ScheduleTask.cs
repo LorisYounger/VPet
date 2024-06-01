@@ -178,7 +178,7 @@ public class ScheduleTask
                     }
                 }
 
-                mw.Main.StartWork(wsi.Work.Double(wsi.DBL));
+                mw.Dispatcher.Invoke(() => mw.Main.StartWork(wsi.Work.Double(wsi.DBL)));
                 NowIndex++;
             }
             else if (ScheduleItems[NowIndex] is RestScheduleItem rsi)
