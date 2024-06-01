@@ -293,7 +293,11 @@ public class ScheduleTask
                 return Task.ScheduleItems[Task.NowIndex] == this;
             }
         }
-        public Visibility IsNowVisibility => IsNow ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsNowVisibility
+        {
+            get => IsNow ? Visibility.Visible : Visibility.Collapsed;
+            set { }
+        }
     }
     /// <summary>
     /// 工作日程表日程
@@ -347,7 +351,11 @@ public class ScheduleTask
             set { }
         }
 
-        public Visibility IsOKVisibility => (Task.PackageWork?.IsActive() != true || Task.PackageWork.Level < Work.LevelLimit) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsOKVisibility
+        {
+            get => (Task.PackageWork?.IsActive() != true || Task.PackageWork.Level < Work.LevelLimit) ? Visibility.Visible : Visibility.Collapsed;
+            set { }
+        }
 
         public bool IsPreviousIsRest { get => _isPreviousIsRest; set => Set(ref _isPreviousIsRest, value); }
         private bool _isPreviousIsRest;
