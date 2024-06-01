@@ -84,7 +84,7 @@ namespace VPet_Simulator.Core
                 Picture.LoadGraph(graph, path, info);
                 return;
             }
-            var paths = p.GetFiles();
+            var paths = p.GetFiles("*.png");
 
             bool isLoop = info[(gbol)"loop"];
             PNGAnimation pa = new PNGAnimation(graph, path.FullName, paths, new GraphInfo(path, info), isLoop);
@@ -159,7 +159,7 @@ namespace VPet_Simulator.Core
             catch (Exception e)
             {
                 IsFail = true;
-                FailMessage =$"--PNGAnimation--{GraphInfo}--\nPath: {path}\n{e.Message}";
+                FailMessage = $"--PNGAnimation--{GraphInfo}--\nPath: {path}\n{e.Message}";
             }
             finally
             {
