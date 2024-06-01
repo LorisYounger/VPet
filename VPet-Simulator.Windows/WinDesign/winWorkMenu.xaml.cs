@@ -485,6 +485,7 @@ public partial class winWorkMenu : WindowX
             mw.ScheduleTask.PackageStudy = package;
             rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull.WorkType);
         }
+        tbtnCurrentPlan.IsChecked = true;
         mw.Core.Save.Money -= package.Price;
         MessageBoxX.Show("套餐 {0} 签署成功".Translate(package.NameTrans), "签署成功".Translate());
     }

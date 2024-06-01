@@ -5,13 +5,13 @@ MOD移动设计错误#MOD mobile design error:|
 当前动画移动设计错误: 已到达边界 下侧\n动画名称: {0}\n距离: {1}#Current animation movement design error: boundary reached lower side\nAnimation name: {0}\nDistance: {1}:|
 取消#cancel:|
 {0}花费${3}{4}的给{1}买了{2}#{0} spent ${3}{4} to buy {2} for {1}:|
-抽成#take a percentage:|
+抽成#Percentage:|
 请选择#Please select:|
 套餐#Package:|
 工作时间过长#Working hours are too long:|
 工作时间过长,请添加更多的休息时间#The working hours are too long. Please add more rest time:|
 暂无签署套餐#No subscription package has been signed:|
-效率#efficiency:|
+效率#Efficiency:|
 签署失败#Signing failed:|
 套餐已激活#The package has been activated:|
 工作套餐已激活,是否替换?#The work package has been activated. Do you want to replace it?:|
@@ -19,13 +19,13 @@ MOD移动设计错误#MOD mobile design error:|
 签署成功#Signed successfully:|
 套餐 {0} 签署成功#Package {0} signed successfully:|
 套餐未激活#The package is not activated:|
-工作套餐未激活,请前往日程表签署工作中介套餐#The work package is not activated. Please go to the calendar to sign up for the work intermediary package:|
-工作套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的工作或前往日程表签署新的工作中介套餐#The work package level is insufficient ({0}/{1}),\nPlease select a lower level requirement/ratio work or go to the schedule to sign a new work intermediary package:|
+工作套餐未激活,请前往日程表签署工作中介套餐#The work package is not activated. Please go to the Schedule to sign up for the work intermediary package:|
+工作套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的工作或前往日程表签署新的工作中介套餐#The work package level is insufficient ({0}/{1}),\nPlease select a lower level requirement/ratio work or go to the Schedule to sign a new work intermediary package:|
 套餐等级不足#Insufficient package level:|
-学习套餐未激活,请前往日程表签署培训机构套餐#The learning package has not been activated. Please go to the calendar to sign up for the training institution package:|
-学习套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的学习或前往日程表签署新的培训机构套餐#The learning package level is insufficient ({0}/{1}),\nPlease choose a lower level requirement/rate of learning or go to the schedule to sign up for a new training institution package:|
+学习套餐未激活,请前往日程表签署培训机构套餐#The learning package has not been activated. Please go to the Schedule to sign up for the training institution package:|
+学习套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的学习或前往日程表签署新的培训机构套餐#The learning package level is insufficient ({0}/{1}),\nPlease choose a lower level requirement/rate of learning or go to the Schedule to sign up for a new training institution package:|
 等级不足#Insufficient level:|
-等级不足15级,无法使用日程表#You cannot use the calendar if your level is less than 15:|
+等级不足15级,无法使用日程表#You cannot use the Schedule if your level is less than 15:|
 已启用#Enabled:|
 已禁用#disabled :|
 已损坏#Damaged:|
@@ -39,11 +39,11 @@ MOD移动设计错误#MOD mobile design error:|
 确定重置设置吗\n名称: {0}\n路径: {1}#Are you sure to reset the settings? \nName: {0}\nPath: {1}:|
 设置载入失败, 是否强制载入并重置\n[是]: 载入并重置\t[否]: 取消载入\n名称: {0}\n路径: {1}\n异常: {2}#Failed to set loading. Do you want to force loading and resetting? \n[Yes]: Load and reset \t[No]: Cancel loading \nName: {0} \nPath: {1} \nException: {2}:|
 载入设置出错#Error loading settings:|
-日程表#calendar:|
-添加至日程表#Add to calendar:|
-机构签署#Institutional signature:|
-工作中介#Work intermediary:|
-培训机构#Training institutions:|
+日程表#Schedule:|
+添加至日程表#Add to Schedule:|
+机构签署#Institutional Signature:|
+工作中介#Work Int:|
+培训机构#Training Ins:|
 当前套餐#Current package:|
 选择等级#Select level:|
 可用等级#Available levels:|
@@ -58,15 +58,15 @@ MOD移动设计错误#MOD mobile design error:|
 合计#Total amount:|
 工作时间#Working time:|
 休息时间#Rest time:|
-停止日程#Stop the schedule:|
-开始日程#Start the schedule:|
+停止日程#Stop Schedule:|
+开始日程#Start Schedule:|
 日程表将在15级开放#The Schedule will be open at level 15:|
 大佬套餐#Big Package:|
 基础套餐#Basic Package:|
-补习班#cram school:|
+补习班#Cram school:|
 琪露诺的算术教室#Cirno's Arithmetic Classroom:|
 休息#Have a rest:|
-当前日程进度#Current schedule progress:|
+当前日程进度#Current Schedule progress:|
 上移#Move up:|
 下移#Move down:|
 学习内容#Learning content:|
@@ -74,7 +74,7 @@ MOD移动设计错误#MOD mobile design error:|
 萌新套餐#Newbie Package:|
 实习#Internship:|
 交学费#pay tuition fees:|
-桌宠会员专属#VPet exclusive for table pet members:|
+桌宠会员专属#VPet exclusive for vpet members:|
 入职体验#Entry experience:|
 从入门到入土#From entry to burial:|
 老兵夏令营#Veterans' Summer Camp:|
