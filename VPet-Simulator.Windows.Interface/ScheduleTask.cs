@@ -195,6 +195,7 @@ public class ScheduleTask
     public void Start()
     {
         IsOn = true;
+        NowIndex = 0;
         StartWork();
     }
     /// <summary>
@@ -212,7 +213,16 @@ public class ScheduleTask
         AutoReset = false
     };
 
-    private void WorkTimer_E_FinishWork(Core.WorkTimer.FinishWorkInfo obj) => StartWork();
+    private void WorkTimer_E_FinishWork(Core.WorkTimer.FinishWorkInfo obj)
+    {
+        if (obj.spendtime < obj.work.Time / 2)
+            Stop();
+        else
+        {
+            RestTime = 1;
+            RestTimer.Start();
+        }
+    }
 
     public Package PackageWork { get; set; }
     public Package PackageStudy { get; set; }

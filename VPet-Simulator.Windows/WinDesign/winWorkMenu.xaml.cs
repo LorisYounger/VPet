@@ -92,7 +92,7 @@ public partial class winWorkMenu : WindowX
         else
             sliderTaskLevel.TickFrequency = 5;
         tbtnCurrentPlan.IsChecked = mw.ScheduleTask.PackageWork?.IsActive() == true;
-        btnStartSchedule.IsChecked = false;
+        btnStartSchedule.IsChecked = mw.ScheduleTask.IsOn;
 
         AllowChange = true;
         combTaskType.SelectedIndex = 0;
@@ -472,7 +472,7 @@ public partial class winWorkMenu : WindowX
         if (nowselefull.WorkType == Work.WorkType.Work)
         {
             if (mw.ScheduleTask.PackageWork?.IsActive() == true
-                && MessageBoxX.Show("工作套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.No)
+                && MessageBoxX.Show("工作套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 return;
             mw.ScheduleTask.PackageWork = package;
             rpnDisplay(mw.ScheduleTask.PackageWork, nowselefull.WorkType);
@@ -480,7 +480,7 @@ public partial class winWorkMenu : WindowX
         else
         {
             if (mw.ScheduleTask.PackageStudy?.IsActive() == true
-                && MessageBoxX.Show("学习套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.No)
+                && MessageBoxX.Show("学习套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 return;
             mw.ScheduleTask.PackageStudy = package;
             rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull.WorkType);
