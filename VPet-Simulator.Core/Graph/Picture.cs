@@ -45,6 +45,8 @@ namespace VPet_Simulator.Core
                 PNGAnimation.LoadGraph(graph, path, info);
                 return;
             }
+            if (path.Extension != ".png")
+                return;
             int length = info.GetInt("length");
             if (length == 0)
             {

@@ -85,6 +85,15 @@ namespace VPet_Simulator.Core
                 return;
             }
             var paths = p.GetFiles("*.png");
+            if (paths.Length == 0)
+            {
+                return;
+            }
+            else if (paths.Length == 1)
+            {
+                Picture.LoadGraph(graph, paths[0], info);
+                return;
+            }
 
             bool isLoop = info[(gbol)"loop"];
             PNGAnimation pa = new PNGAnimation(graph, path.FullName, paths, new GraphInfo(path, info), isLoop);
