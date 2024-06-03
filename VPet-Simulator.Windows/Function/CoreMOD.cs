@@ -107,6 +107,10 @@ namespace VPet_Simulator.Windows
             else
                 ItemID = 0;
             CacheDate = modlps.GetDateTime("cachedate", DateTime.MinValue);
+            foreach (var skip in modlps["dllskip"])
+            {
+                LoadedDLL.Add(skip.Name);
+            }
             if (CacheDate > DateTime.Now)
             {//去掉不合理的清理缓存日期
                 CacheDate = DateTime.MinValue;
