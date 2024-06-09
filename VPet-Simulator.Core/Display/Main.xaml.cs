@@ -102,17 +102,12 @@ namespace VPet_Simulator.Core
         public void Load_4_Start(IGraph startUPGraph = null)
         {
             IGraph ig = startUPGraph ?? Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, Core.Save.Mode);
-            ig ??= Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Default), AnimatType.Single, Core.Save.Mode);
+            ig ??= Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Default), AnimatType.Single, Core.Save.Mode);            
             Task.Run(() =>
             {
                 ig.Run(PetGrid, () =>
-                {
-                    IsWorking = true;
-                    Dispatcher.Invoke(() =>
-                    {
-                        PetGrid.Tag = ig;
-                        PetGrid2.Tag = ig;
-                    });
+                {                    
+                    IsWorking = true;                    
                     DisplayNomal();
                 });
             });

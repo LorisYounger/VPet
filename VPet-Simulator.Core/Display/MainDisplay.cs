@@ -505,7 +505,8 @@ namespace VPet_Simulator.Core
             if (graph.Equals(PetGridTag))
             {
                 petgridcrlf = true;
-                ((IGraph)(PetGrid2Tag)).Stop(true);
+                if(PetGrid2Tag is IGraph ig)
+                    ig.Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid.Visibility = Visibility.Visible;
@@ -517,7 +518,8 @@ namespace VPet_Simulator.Core
             else if (graph.Equals(PetGrid2Tag))
             {
                 petgridcrlf = false;
-                ((IGraph)(PetGridTag)).Stop(true);
+                if (PetGridTag is IGraph ig)
+                    ig.Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid2.Visibility = Visibility.Visible;
