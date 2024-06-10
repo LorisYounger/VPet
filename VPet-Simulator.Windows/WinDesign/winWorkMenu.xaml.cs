@@ -209,7 +209,7 @@ public partial class winWorkMenu : WindowX
                     break;
                 case 3:
                     detailTypes.ItemsSource = _starDetails;
-                    btnStart.Content = "开始工作".Translate();
+                    btnStart.Content = "开始活动".Translate();
                     ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "---");
                     break;
                 case 4:

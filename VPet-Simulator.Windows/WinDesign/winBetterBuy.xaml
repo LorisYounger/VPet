@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Foreground="{StaticResource PrimaryText}"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="https://opensource.panuon.com/wpf-ui" xmlns:local="clr-namespace:VPet_Simulator.Windows"
-        mc:Ignorable="d" Height="550" Width="800" FontSize="14"
+        mc:Ignorable="d" Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}" Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}" FontSize="14"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource PrimaryLighter}" pu:WindowXCaption.Height="45"
         pu:WindowXCaption.Background="{DynamicResource DARKPrimary}" pu:WindowXCaption.Foreground="#FFFFFF"

@@ -5,7 +5,8 @@
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" Foreground="{StaticResource PrimaryText}"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Title="面板" Width="500" Height="500"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Title="面板"
+        Width="{ll:Dbe CharacterPanelWidth_500, DefValue=500}" Height="{ll:Dbe CharacterPanelHeight_500, DefValue=500}"
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" mc:Ignorable="d"
         Closed="WindowX_Closed">
     <Window.Resources>

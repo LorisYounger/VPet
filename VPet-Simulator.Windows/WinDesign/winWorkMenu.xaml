@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Foreground="{StaticResource PrimaryText}"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 工作面板}" Height="400"
-        Style="{DynamicResource BaseWindowXStyle}" Background="{DynamicResource PrimaryLighter}" Width="650"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 工作面板}"
+        Height="{ll:Dbe WorkMenuHeight_400, DefValue=400}" Style="{DynamicResource BaseWindowXStyle}"
+        Background="{DynamicResource PrimaryLighter}" Width="{ll:Dbe WorkMenuWidth_650, DefValue=650}"
         ResizeMode="CanMinimize" Closed="Window_Closed">
     <pu:WindowX.Resources>
         <Style x:Key="IconButtonStyle" TargetType="Button"
@@ -22,7 +23,7 @@
     <Grid>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140" />
+                <ColumnDefinition Width="{ll:Dbe WorkMenuColumnWidth_140, DefValue=140}" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Border Background="{DynamicResource DARKPrimaryText}" />

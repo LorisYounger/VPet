@@ -4,7 +4,8 @@
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" Foreground="{StaticResource PrimaryText}"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Width="450" Height="450" FontSize="16"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Width="{ll:Dbe ConsoleWidth_450, DefValue=450}"
+        Height="{ll:Dbe ConsoleHeight_450, DefValue=450}" FontSize="16"
         mc:Ignorable="d" Closed="Window_Closed">
     <TabControl pu:TabControlHelper.HeaderPanelBackground="{DynamicResource PrimaryLight}"
             pu:TabControlHelper.ItemsSelectedBackground="White">

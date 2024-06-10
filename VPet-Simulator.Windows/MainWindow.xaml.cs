@@ -62,13 +62,13 @@ namespace VPet_Simulator.Windows
             LocalizeCore.TranslateFunc = (str) =>
             {
                 var destr = Sub.TextDeReplace(str);
-                if (destr == str)
-                    return str;
-                if (LocalizeCore.CurrentLPS != null && LocalizeCore.CurrentLPS.Assemblage.TryGetValue(destr, out ILine line))
+                if (destr != str && LocalizeCore.CurrentLPS != null && LocalizeCore.CurrentLPS.Assemblage.TryGetValue(destr, out ILine line))
                 {
                     return line.GetString();
                 }
-                return str;
+                if(str.Contains('_') && double.TryParse(str.Split('_').Last(), out double d))
+                    return d.ToString();
+                return null;
             };
 
             CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
