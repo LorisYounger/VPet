@@ -11,7 +11,8 @@
         FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}" MaxHeight="400"
         ResizeMode="CanMinimize" Closing="Window_Closing">
     <TabControl x:Name="tabControl" TabStripPlacement="Left"
-            pu:TabControlHelper.ItemsHorizontalHeaderAlignment="Stretch" pu:TabControlHelper.ItemsWidth="240"
+            pu:TabControlHelper.ItemsHorizontalHeaderAlignment="Stretch"
+            pu:TabControlHelper.ItemsWidth="{ll:Dbe MutiPlayerItemsWidth_240, DefValue=240}"
             pu:TabControlHelper.ItemsPadding="15,8" pu:TabControlHelper.ItemsHeight="34"
             pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"
             pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}">
