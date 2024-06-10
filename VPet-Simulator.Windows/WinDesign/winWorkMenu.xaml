@@ -23,7 +23,7 @@
     <Grid>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{ll:Dbe WorkMenuColumnWidth_140, DefValue=140}" />
+                <ColumnDefinition Width="140" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Border Background="{DynamicResource DARKPrimaryText}" />
