@@ -83,7 +83,7 @@ public partial class winWorkMenu : WindowX
         foreach (var v in mw.SchedulePackage.FindAll(x => x.WorkType == Work.WorkType.Work))
             combTaskType.Items.Add(v);
 
-        if (mw.Core.Save.Level > 15)
+        if (mw.Core.Save.Level >= 15)
             blockTask.Visibility = Visibility.Collapsed;
         rpnDisplay(mw.ScheduleTask.PackageWork, Work.WorkType.Work);
         sliderTaskLevel.Maximum = mw.Core.Save.Level / 5 * 5;
