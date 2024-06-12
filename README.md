@@ -75,7 +75,7 @@ MOD制作器:  https://github.com/LorisYounger/VPet.ModMaker
     * CoreMOD Mod管理类
     * MWController 窗体控制器
   
-  * *WinDesign 窗口和UI设计
+  * *WinDesign 窗口和UI设计*
     * winBetterBuy 更好买窗口
     * winCGPTSetting ChatGPT 设置
     * winSetting 软件设置/MOD 窗口
@@ -135,7 +135,7 @@ MOD制作器:  https://github.com/LorisYounger/VPet.ModMaker
 
 在github中 [桌宠动画文件](https://github.com/LorisYounger/VPet/tree/main/VPet-Simulator.Windows/mod/0000_core/pet/vup) 动画版权归 [虚拟主播模拟器制作组](https://www.exlb.net/VUP-Simulator)所有, 当使用本类库时,您可能需要自行准备动画文件,或遵循以下协议
 
-> **注 **
+> **注**
 > 本动画声明仅限于桌宠自带的动画, 若有画师/开发者画自己的动画适配给桌宠,并不遵循用本声明
 
 ### 非商用用途授权

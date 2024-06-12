@@ -1,6 +1,6 @@
 # VPet-Simulator
 
-简体中文(./README.md) | 繁體中文 | [English](./README_en.md) | [日本語](./README_ja.md)
+[简体中文](./README.md) | 繁體中文 | [English](./README_en.md) | [日本語](./README_ja.md)
 
 《虛擬桌寵模擬器》一個開源的桌寵軟體，可以內建至任何WPF應用程式中。
 
@@ -64,7 +64,7 @@
   * 加入新功能（鬧鐘、記事本等）
   * 幾乎無所不能，範例請見[VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo)
 
-###聯絡我們
+### 聯絡我們
 
 若有建議或意見，可以在Steam商店、Steam社群中評論，在Github發Issue，使用虛擬桌寵模擬器QQ群（907101442）或電子郵件[mailto:service@exlb.net](mailto:service@exlb.net)聯絡作者。
 
@@ -76,7 +76,7 @@
     * CoreMOD 模組管理
     * MWController 視窗控制器
 
-  * *WinDesign 視窗及UI設計
+  * *WinDesign 視窗及UI設計*
     * winBetterBuy 更好買視窗
     * winCGPTSetting ChatGPT設定
     * winSetting 軟體設定、模組視窗
