@@ -101,7 +101,7 @@ namespace VPet_Simulator.Windows
             /// </summary>
             public double StatCount
             {
-                get { return _statCount; }
+                get { return Math.Round(_statCount, 2); }
                 set
                 {
                     if (_statCount != value)
