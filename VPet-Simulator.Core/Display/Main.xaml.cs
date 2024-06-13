@@ -102,12 +102,12 @@ namespace VPet_Simulator.Core
         public void Load_4_Start(IGraph startUPGraph = null)
         {
             IGraph ig = startUPGraph ?? Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, Core.Save.Mode);
-            ig ??= Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Default), AnimatType.Single, Core.Save.Mode);            
+            ig ??= Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Default), AnimatType.Single, Core.Save.Mode);
             Task.Run(() =>
             {
                 ig.Run(PetGrid, () =>
-                {                    
-                    IsWorking = true;                    
+                {
+                    IsWorking = true;
                     DisplayNomal();
                 });
             });
@@ -250,6 +250,7 @@ namespace VPet_Simulator.Core
         {
             if (DisplayType.Type != GraphType.Move || !MoveTimerSmartMove)
             {
+                MoveTimer.Stop();
                 return;
             }
             Core.Controller.MoveWindows(MoveTimerPoint.X, MoveTimerPoint.Y);
