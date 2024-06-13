@@ -417,19 +417,19 @@ namespace VPet_Simulator.Core
 
         private void Sleep_Click(object sender, RoutedEventArgs e)
         {
-            this.Visibility = Visibility.Collapsed;
-            if (m.Core.Save.Mode != IGameSave.ModeType.Ill)
-                if (m.State == Main.WorkingState.Sleep)
-                {
-                    m.State = WorkingState.Nomal;
-                    m.Display(GraphType.Sleep, AnimatType.C_End, m.DisplayNomal);
-                }
-                else if (m.State == Main.WorkingState.Nomal)
-                    m.DisplaySleep(true);
-                else
-                {
-                    m.WorkTimer.Stop(() => m.DisplaySleep(true));
-                }
+            if (m.State == Main.WorkingState.Sleep)
+            {
+                if (m.Core.Save.Mode == IGameSave.ModeType.Ill)
+                    return;
+                m.State = WorkingState.Nomal;
+                m.Display(GraphType.Sleep, AnimatType.C_End, m.DisplayNomal);
+            }
+            else if (m.State == Main.WorkingState.Nomal)
+                m.DisplaySleep(true);
+            else
+            {
+                m.WorkTimer.Stop(() => m.DisplaySleep(true));
+            }
         }
     }
 }
