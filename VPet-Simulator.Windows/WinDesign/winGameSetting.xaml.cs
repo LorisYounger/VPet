@@ -1,5 +1,6 @@
 ﻿using LinePutScript;
 using LinePutScript.Localization.WPF;
+using NAudio.SoundFont;
 using Panuon.WPF.UI;
 using Steamworks;
 using Steamworks.Ugc;
@@ -8,8 +9,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -182,6 +186,7 @@ namespace VPet_Simulator.Windows
             {
                 runUserName.Text = Environment.UserName;
                 runActivate.Text = "尚未激活 您可能需要启动Steam或去Steam上免费领个".Translate();
+                btn_fixdata.Visibility = Visibility.Collapsed;
             }
             //CGPT
             if (mw.TalkAPI.Count > 0)
@@ -1027,7 +1032,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            
+
             var petloader = mw.Pets.Find(x => x.Name == mw.Set.PetGraph);
             petloader ??= mw.Pets[0];
 
@@ -1578,6 +1583,74 @@ namespace VPet_Simulator.Windows
             if (str != "")
                 File.Create(ExtensionValue.BaseDirectory + @"\startup_" + str).Close();
             MessageBoxX.Show("已将当前选择 {0} 设为默认启动存档".Translate(str.Translate()));
+        }
+
+        private void btn_fixdata_Click(object sender, RoutedEventArgs e)
+        {
+            //先拿玩家游戏时间
+            int playtime;
+            try
+            {
+                string _url = "https://aiopen.exlb.net:5810/VPet/GetPlayTime?steamid=" + SteamClient.SteamId.Value;
+#pragma warning disable SYSLIB0014 // 类型或成员已过时
+                var request = (HttpWebRequest)WebRequest.Create(_url);
+#pragma warning restore SYSLIB0014 // 类型或成员已过时
+                request.Method = "GET";
+                string responseString;
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
+                    response.Dispose();
+                }
+                playtime = int.Parse(responseString);
+            }
+            catch
+            {
+                MessageBoxX.Show("获取玩家游戏时间失败,请检查网络连接或稍后再试".Translate());
+                return;
+            }
+            if (playtime == 0) return;
+            if (mw.GameSavesData.HashCheck)
+            {//对于
+                int hours = mw.GameSavesData.Statistics[(gint)"stat_total_time"] / 60;
+                if (hours < playtime)
+                {
+                    mw.GameSavesData.Statistics[(gint)"stat_total_time"] = playtime * 60;
+                    MessageBoxX.Show("陪伴时长已更新".Translate() + $"\n{hours}Min->{playtime}Min", "修复成功".Translate());
+                }
+                else
+                    MessageBoxX.Show("当前游戏时间已经大于Steam服务器记录时间,无需修复".Translate());
+            }
+            else
+            {
+                GameSave_v2 ogs = mw.GameSavesData;
+                mw.GameSavesData = new GameSave_v2(ogs.GameSave.Name);
+                mw.GameSavesData.Statistics[(gint)"stat_total_time"] = playtime * 60;
+
+                //同步等级
+                //按2小时=1级进行计算
+                int newlevel = playtime / 120;
+                int newmaxlevel = 0;
+                if (newlevel > 0)
+                {
+                    while (newlevel > (newmaxlevel * 100 + 1000))
+                    {
+                        newlevel -= (newmaxlevel * 100 + 1000);
+                        newmaxlevel++;
+                    }
+                    mw.GameSavesData.GameSave.LevelMax = Math.Min(newmaxlevel, ogs.GameSave.LevelMax);
+                    mw.GameSavesData.GameSave.Level = Math.Min(newlevel, ogs.GameSave.Level);
+                }
+                //同步金钱
+                //根据当前等级计算金钱
+                int newmoney = (200 * mw.GameSavesData.GameSave.Level - 100) * mw.GameSavesData.GameSave.LevelMax;
+                mw.GameSavesData.GameSave.Money = Math.Min(newmoney, ogs.GameSave.Money);
+
+                //同步好感度
+                mw.GameSavesData.GameSave.Likability = ogs.GameSave.Likability;
+
+                MessageBoxX.Show("数据修复成功".Translate());
+            }
         }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)

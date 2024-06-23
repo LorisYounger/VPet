@@ -233,7 +233,7 @@ namespace VPet_Simulator.Core
         {
             windowMediaPlayerAvailable = false;
             PlayingVoice = false;
-            MessageBoxX.Show("音频播放失败,已尝试自动切换到备用播放器. 如果问题持续,请检查是否已安装WindowsMediaPlayer".Translate(), "音频错误".Translate(), Panuon.WPF.UI.MessageBoxIcon.Warning);
+            MessageBoxX.Show("音频播放失败,已尝试自动切换到备用播放器. 如果问题持续,请检查是否已安装WindowsMediaPlayer".Translate(), "音频错误".Translate(), MessageBoxIcon.Warning);
         }
         private void Clock_Completed(object sender, EventArgs e)
         {
