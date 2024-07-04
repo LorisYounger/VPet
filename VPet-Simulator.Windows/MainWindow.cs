@@ -241,9 +241,17 @@ namespace VPet_Simulator.Windows
                 Set.StartRecordLastPoint = new Point(Dispatcher.Invoke(() => Left), Dispatcher.Invoke(() => Top));
                 if (PrefixSave == "" && File.Exists(ExtensionValue.BaseDirectory + @"\Setting.lps"))
                 {//对于主设置的备份
-                    if (File.Exists(ExtensionValue.BaseDirectory + @"\Setting.bkp"))
-                        File.Delete(ExtensionValue.BaseDirectory + @"\Setting.bkp");
-                    File.Move(ExtensionValue.BaseDirectory + @"\Setting.lps", ExtensionValue.BaseDirectory + @"\Setting.bkp");
+                    if (new FileInfo(ExtensionValue.BaseDirectory + @"\Setting.lps").Length < 10)
+                    {//文件大小小于10字节,可能是损坏的文件
+                        File.Delete(ExtensionValue.BaseDirectory + @"\Setting.lps");
+                    }
+                    else
+                    {
+                        if (File.Exists(ExtensionValue.BaseDirectory + @"\Setting.bkp"))
+                            File.Delete(ExtensionValue.BaseDirectory + @"\Setting.bkp");
+                        File.Move(ExtensionValue.BaseDirectory + @"\Setting.lps", ExtensionValue.BaseDirectory + @"\Setting.bkp");
+                    }
+
                 }
                 File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps", Set.ToString());
 
@@ -1263,8 +1271,8 @@ namespace VPet_Simulator.Windows
                 {
                     Set = new Setting(this, File.ReadAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps"));
                 }
-                else if (PrefixSave == "" && File.Exists(ExtensionValue.BaseDirectory + @"\Setting.bkp"))
-                {
+                if (PrefixSave == "" && !Set["SingleTips"].GetBool("helloworld") && File.Exists(ExtensionValue.BaseDirectory + @"\Setting.bkp"))
+                {//如果设置是损坏的, 读取备份设置
                     Set = new Setting(this, File.ReadAllText(ExtensionValue.BaseDirectory + @"\Setting.bkp"));
                 }
                 else
