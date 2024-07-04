@@ -764,7 +764,8 @@ namespace VPet_Simulator.Windows
                 if (save.StrengthFood < 1)
                     stat["stat_0_sd_sf"] = 1;
             }
-            if (save.Strength > 99 && save.Feeling > 99 && save.StrengthFood > 99 && save.StrengthDrink > 99)
+            var smm = save.StrengthMax - 1;
+            if (save.Strength > smm && save.Feeling > save.FeelingMax && save.StrengthFood > smm && save.StrengthDrink > smm)
                 stat[(gint)"stat_100_all"]++;
 
             if (IsSteamUser)
