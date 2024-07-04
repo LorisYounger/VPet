@@ -481,7 +481,7 @@ namespace VPet_Simulator.Windows
                     }
                     else // 没有自动购买礼物的可以试试自动购买零食能加点是一点
                     {
-                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.Feeling > Math.Min(Core.Save.FeelingMax * 0.10, 50));
+                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.Feeling > Math.Min(Core.Save.FeelingMax * 0.10, 40));
                         if (food.Count == 0)
                             return;
                     }
