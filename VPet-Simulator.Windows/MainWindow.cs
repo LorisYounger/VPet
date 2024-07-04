@@ -1271,12 +1271,12 @@ namespace VPet_Simulator.Windows
                 {
                     Set = new Setting(this, File.ReadAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps"));
                 }
-                if (PrefixSave == "" && !Set["SingleTips"].GetBool("helloworld") && File.Exists(ExtensionValue.BaseDirectory + @"\Setting.bkp"))
+                if (PrefixSave == "" && (Set == null || (Set != null && !Set["SingleTips"].GetBool("helloworld"))) && File.Exists(ExtensionValue.BaseDirectory + @"\Setting.bkp"))
                 {//如果设置是损坏的, 读取备份设置
                     Set = new Setting(this, File.ReadAllText(ExtensionValue.BaseDirectory + @"\Setting.bkp"));
                 }
-                else
-                    Set = new Setting(this, "Setting#VPET:|\n");
+
+                Set ??= new Setting(this, "Setting#VPET:|\n");
 
                 var visualTree = new FrameworkElementFactory(typeof(Border));
                 visualTree.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(BackgroundProperty));
