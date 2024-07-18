@@ -96,3 +96,12 @@ MOD移动设计错误#MOD mobile design error:|
 帅哥，美女，游泳健身了解一下。#Get to know about swimming for fitness.:|
 效率低很正常，你能听懂50%已经是⑨级别了。#Low efficiency is normal, and you can understand 50% of the ⑨ level.:|
 开始活动#Start activity:|
+您没有足够金钱来购买 {0}\n您需要 {1:f2} 金钱来购买\n您当前 {2:f2} 拥有金钱#You do not have enough money to buy {0}\nYou need {1:f2} money to buy\nYou currently have {2:f2} money:|
+当前食物/物品属性超模,是否继续使用?\n使用超模食物可能会导致游戏发生不可预料的错误\n使用超模食物不影响大部分成就解锁\n本物品推荐价格为{0:f0}#The current food/item attribute supermodel, do you want to continue using it?\nUsing supermodel food may cause unexpected errors in the game\nUsing supermodel food does not affect the unlocking of most achievements\nThe recommended price for this item is {0:f0}:|
+数据修复#Data repair:|
+校准玩家游玩时间数据\r为失去超模计算(Hash检查)小标玩家重新获得小标#Calibrate player game time data\r to lose supermodel calculation (Hash check) small label player re-acquire small label:|
+获取玩家游戏时间失败,请检查网络连接或稍后再试#Failed to get player game time, please check the network connection or try again later:|
+陪伴时长已更新#Companion duration has been updated:|
+修复成功#Repaired successfully:|
+当前游戏时间已经大于Steam服务器记录时间,无需修复#The current game time is already greater than the Steam server record time, no repair is needed:|
+数据修复成功#Data repair successful:|
