@@ -394,7 +394,8 @@ namespace VPet_Simulator.Windows
                     else
                     {
                         runMODGameVer.Text += " (版本低)".Translate();
-                        runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
+                        if (mod.Tag.Contains("plugin"))
+                            runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
                     }
                 }
                 else if (mod.GameVer > mw.version)
