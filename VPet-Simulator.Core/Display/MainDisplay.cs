@@ -1,8 +1,11 @@
-﻿using LinePutScript.Localization.WPF;
+﻿using LinePutScript.Converter;
+using LinePutScript.Localization.WPF;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using static VPet_Simulator.Core.GraphInfo;
@@ -326,6 +329,15 @@ namespace VPet_Simulator.Core
             MainGrid.MouseMove -= MainGrid_MouseWave;
             MainGrid.MouseMove -= MainGrid_MouseMove;
             MainGrid.MouseMove += MainGrid_MouseMove;
+
+            var mp = Dispatcher.Invoke(() => Mouse.GetPosition(MainGrid));
+            var x = mp.X - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].X;
+            var y = mp.Y - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].Y;
+            if (Math.Abs(x) < 1)
+                x = 0;
+            if (Math.Abs(y) < 1)
+                y = 0;
+            Core.Controller.MoveWindows(x, y);
             rasetype = 0;
             DisplayRaising();
         }
@@ -495,6 +507,9 @@ namespace VPet_Simulator.Core
             {
                 nodisplayLoop = 0;
             }
+#if DEBUG
+            Debug.WriteLine(LPSConvert.SerializeObject(graph.GraphInfo, "DISPLAY" + DateTime.Now.Minute, convertNoneLineAttribute: true).ToString());
+#endif
             //if(graph.GraphType == GraphType.Climb_Up_Left)
             //{
             //    Dispatcher.Invoke(() => Say(graph.GraphType.ToString()));
@@ -506,7 +521,7 @@ namespace VPet_Simulator.Core
             if (graph.Equals(PetGridTag))
             {
                 petgridcrlf = true;
-                if(PetGrid2Tag is IGraph ig)
+                if (PetGrid2Tag is IGraph ig)
                     ig.Stop(true);
                 Dispatcher.Invoke(() =>
                 {
