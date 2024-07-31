@@ -330,6 +330,7 @@ namespace VPet_Simulator.Core
             isPress = false;
             if (DisplayType.Type.ToString().StartsWith("Raised"))
             {
+                MainGrid.MouseMove -= MainGrid_MouseWave;
                 MainGrid.MouseMove -= MainGrid_MouseMove;
                 MainGrid.MouseMove += MainGrid_MouseWave;
                 rasetype = -1;
@@ -355,6 +356,7 @@ namespace VPet_Simulator.Core
         {
             if (!((UIElement)e.Source).CaptureMouse() || !isPress)
             {
+                MainGrid.MouseMove -= MainGrid_MouseWave;
                 MainGrid.MouseMove -= MainGrid_MouseMove;
                 MainGrid.MouseMove += MainGrid_MouseWave;
                 rasetype = -1;
@@ -401,6 +403,7 @@ namespace VPet_Simulator.Core
         public void CleanState()
         {
             MoveTimer.Enabled = false;
+            MainGrid.MouseMove -= MainGrid_MouseWave;
             MainGrid.MouseMove -= MainGrid_MouseMove;
             MainGrid.MouseMove += MainGrid_MouseWave;
         }

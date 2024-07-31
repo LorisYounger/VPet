@@ -324,6 +324,7 @@ namespace VPet_Simulator.Core
         {
             //位置迁移: 254-128           
             MainGrid.MouseMove -= MainGrid_MouseWave;
+            MainGrid.MouseMove -= MainGrid_MouseMove;
             MainGrid.MouseMove += MainGrid_MouseMove;
             rasetype = 0;
             DisplayRaising();
