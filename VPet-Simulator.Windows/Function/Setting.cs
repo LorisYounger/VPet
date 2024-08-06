@@ -31,7 +31,7 @@ namespace VPet_Simulator.Windows
                     zoomlevel = 0.5;
                 }
             }
-            presslength = this["gameconfig"].GetInt("presslength", 500);
+            presslength = this["gameconfig"].GetInt("presslength", 300);
             intercycle = this["gameconfig"].GetInt("intercycle", 200);
             allowmove = !this["gameconfig"].GetBool("allowmove");
             smartmove = this["gameconfig"].GetBool("smartmove");
