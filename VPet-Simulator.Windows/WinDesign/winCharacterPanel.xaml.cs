@@ -385,12 +385,18 @@ namespace VPet_Simulator.Windows
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_single_profit_exp", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
                 var result = await leaderboard?.ReplaceScore(studyexpmax);
                 var length = leaderboard?.EntryCount ?? 1.0;
-                studyexpmaxrank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
+                if (result?.NewGlobalRank != null)
+                    studyexpmaxrank = 1 - (result.Value.NewGlobalRank - 1) / length;
+                else
+                    studyexpmaxrank = 0;
 
                 leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_single_profit_money", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
                 result = await leaderboard?.ReplaceScore(studymoneymax);
                 length = leaderboard?.EntryCount ?? 1.0;
-                studymoneymaxrank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
+                if (result?.NewGlobalRank != null)
+                    studyexpmaxrank = 1 - (result.Value.NewGlobalRank - 1) / length;
+                else
+                    studymoneymaxrank = 0;
             }
             string studyexptext, workmoneytext;
             int studyexp_i, workmoney_i;
@@ -451,7 +457,9 @@ namespace VPet_Simulator.Windows
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_work_time_ph", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
                 var result = await leaderboard?.ReplaceScore((int)(worktimeph * 10000));
                 var length = leaderboard?.EntryCount ?? 1.0;
-                worktimephrank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
+                if (result?.NewGlobalRank != null)
+                    worktimephrank = 1 - (result.Value.NewGlobalRank - 1) / length;
+                else worktimephrank = 0;
             }
             string worktimephtext;
             int worktime_i;
@@ -538,7 +546,10 @@ namespace VPet_Simulator.Windows
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_autobuy_ph", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
                 var result = await leaderboard?.ReplaceScore((int)(autobuytimesph * 10000));
                 var length = leaderboard?.EntryCount ?? 1.0;
-                autobuytimesphrank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
+                if (result?.NewGlobalRank != null)
+                    autobuytimesphrank =  1 - (result.Value.NewGlobalRank - 1) / length;
+                else
+                    autobuytimesphrank = 0;
             }
             string autobuytext;
             int autobuy_i;
@@ -574,7 +585,10 @@ namespace VPet_Simulator.Windows
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("workshop", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
                 var result = await leaderboard?.ReplaceScore(modworkshop);
                 var length = leaderboard?.EntryCount ?? 1.0;
-                modworkshoprank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
+                if (result?.NewGlobalRank != null)
+                    modworkshoprank = 1 - (result.Value.NewGlobalRank - 1) / length;
+                else
+                    modworkshoprank = 0;
             }
             string modworkshoptext;
             int modworkshop_i;
@@ -617,7 +631,10 @@ namespace VPet_Simulator.Windows
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_likability", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
                 var result = await leaderboard?.ReplaceScore((int)mw.GameSavesData.GameSave.Likability);
                 var length = leaderboard?.EntryCount ?? 1.0;
-                likerank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
+                if (result?.NewGlobalRank != null)
+                    likerank = 1 - (result.Value.NewGlobalRank - 1) / length;
+                else
+                    likerank = 0;
             }
             await Dispatcher.InvokeAsync(() => pb_r_genRank.Value = 88);
 
