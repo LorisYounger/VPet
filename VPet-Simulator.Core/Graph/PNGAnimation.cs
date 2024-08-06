@@ -265,12 +265,13 @@ namespace VPet_Simulator.Core
                 return;
             }
             nowid = 0;
-            Control = new TaskControl(EndAction);
+            var NEWControl = new TaskControl(EndAction);
+            Control = NEWControl;            
             parant.Dispatcher.Invoke(() =>
             {
                 if (parant.Tag == this)
                 {
-                    Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, Control));
+                    Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, NEWControl));
                     return;
                 }
                 System.Windows.Controls.Image img;
@@ -304,7 +305,7 @@ namespace VPet_Simulator.Core
                 parant.Tag = this;
                 img.Source = new BitmapImage(new Uri(Path));
                 img.Width = Width;
-                Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, Control));
+                Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, NEWControl));
             });
         }
         /// <summary>

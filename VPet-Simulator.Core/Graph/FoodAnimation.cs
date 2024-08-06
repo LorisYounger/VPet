@@ -250,7 +250,8 @@ namespace VPet_Simulator.Core
                 return;
             }
             nowid = 0;
-            Control = new TaskControl(EndAction);
+            var NEWControl = new TaskControl(EndAction);
+            Control = NEWControl;
             parant.Dispatcher.Invoke(() =>
             {
                 parant.Tag = this;
@@ -276,7 +277,7 @@ namespace VPet_Simulator.Core
                 }
                 t1?.Start();
                 t2?.Start();
-                Task.Run(() => Animations[0].Run(FoodGrid.Food, Control));
+                Task.Run(() => Animations[0].Run(FoodGrid.Food, NEWControl));
             });
         }
     }
