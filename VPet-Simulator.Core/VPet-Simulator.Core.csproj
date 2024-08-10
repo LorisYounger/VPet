@@ -23,7 +23,7 @@
 	  <None Include="..\.editorconfig" Link=".editorconfig" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="LinePutScript" Version="1.11.7" />
+		<PackageReference Include="LinePutScript" Version="1.11.8" />
 		<PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.7" />
 		<PackageReference Include="Panuon.WPF" Version="1.1.1" />
 		<PackageReference Include="Panuon.WPF.UI" Version="1.2.2.1" />

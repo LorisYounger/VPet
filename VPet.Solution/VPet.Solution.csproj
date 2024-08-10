@@ -19,7 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FastMember" Version="1.5.0" />
-    <PackageReference Include="LinePutScript" Version="1.11.7" />
+    <PackageReference Include="LinePutScript" Version="1.11.8" />
     <PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.7" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Panuon.WPF" Version="1.1.1" />
