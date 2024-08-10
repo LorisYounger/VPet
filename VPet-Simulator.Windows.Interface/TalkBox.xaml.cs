@@ -64,8 +64,12 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public void DisplayThink()
         {
+            if (MainPlugin.MW.Main.DisplayType.Name == "think")
+                return;
+
             var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.B_Loop, MainPlugin.MW.Core.Save.Mode);
-            if (think.Count > 0)
+            var think2 = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.A_Start, MainPlugin.MW.Core.Save.Mode);
+            if (think.Count > 0 && think2.Count > 0)
             {
                 MainPlugin.MW.Main.Display("think", AnimatType.A_Start, MainPlugin.MW.Main.DisplayBLoopingForce);
             }
