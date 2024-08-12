@@ -1,6 +1,9 @@
 ﻿using LinePutScript;
 using LinePutScript.Converter;
+using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
 using System;
+using System.Windows.Threading;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.IGameSave;
 
@@ -11,6 +14,11 @@ namespace VPet_Simulator.Windows.Interface;
 /// </summary>
 public class GameSave_VPet : IGameSave
 {
+    IMainWindow imw;
+    public GameSave_VPet(IMainWindow imw)
+    {
+        this.imw = imw;
+    }
     /// <summary>
     /// 宠物名字
     /// </summary>
@@ -48,16 +56,36 @@ public class GameSave_VPet : IGameSave
         set
         {
             int lun = LevelUpNeed();
+            bool islevelup = false;
+            bool islevelmaxup = false;
             while (value >= lun)
             {
+                islevelup = true;
                 value -= lun;
                 LikabilityMax += 10;
                 if (Level++ > 1000 + LevelMax * 100)
                 {
                     LevelMax++;
+                    islevelmaxup = true;
                     Level = 100 * LevelMax;
                 }
                 lun = LevelUpNeed();
+            }
+            if (islevelup)
+            {//播放等级升级动画
+                var gf = imw.Core.Graph.FindGraph("levelup", GraphInfo.AnimatType.Single, Mode);
+                if (gf != null)
+                {
+                    imw.Main.Display(gf, imw.Main.DisplayToNomal);
+                }
+            }
+            if (islevelmaxup)
+            {//告知用户上限等级上升
+                imw.Dispatcher.Invoke(() =>
+                {
+                    imw.Main.Say("萝莉斯要说的话".Translate());
+                    MessageBoxX.Show("上限等级上升内容介绍".Translate(), "上限等级上升标题".Translate());
+                });
             }
             exp = value;
         }
@@ -249,7 +277,7 @@ public class GameSave_VPet : IGameSave
     /// </summary>
     public void StoreTake()
     {
-        const int t = 10;      
+        const int t = 10;
 
         var s = StoreStrength / t;
         StoreStrength -= s;

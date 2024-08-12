@@ -550,6 +550,7 @@ namespace VPet_Simulator.Windows
             }
             GameSavesData = new GameSave_v2(petname.Translate());
             Core.Save = GameSavesData.GameSave;
+            HashCheck = HashCheck;
         }
 
         private void WorkTimer_E_FinishWork(WorkTimer.FinishWorkInfo obj)
