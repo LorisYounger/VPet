@@ -83,8 +83,9 @@ public class GameSave_VPet : IGameSave
             {//告知用户上限等级上升
                 imw.Dispatcher.Invoke(() =>
                 {
-                    imw.Main.Say("萝莉斯要说的话".Translate());
-                    MessageBoxX.Show("上限等级上升内容介绍".Translate(), "上限等级上升标题".Translate());
+                    imw.Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
+                    MessageBoxX.Show("系统提示\n您的桌宠等级已经突破\nLv{0}→LV{1} x{2}\n已突破为尊贵的x{3}阶".Translate(
+                        1000 + (LevelMax - 1) * 100, 100 * LevelMax, LevelMax), "桌宠等级突破".Translate());
                 });
             }
             exp = value;

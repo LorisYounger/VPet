@@ -1526,7 +1526,24 @@ namespace VPet_Simulator.Windows
                 }
             }
 
-            //桌宠生日:第一次启动日期
+            //生日蛋糕默认为加满的
+            var food = new Food()
+            {
+                Name = "生日蛋糕",
+                Likability = 5,
+                Exp = 1000,
+                Feeling = 100,
+                StrengthDrink = Core.Save.StrengthMax,
+                StrengthFood = Core.Save.StrengthMax,
+                Type = FoodType.Food,
+                isoverload = false,
+                Desc = "萝莉丝的专属生日蛋糕，由3桶牛奶+2份糖+1个鸡蛋+3份小麦合。制作而成。营养丰富，可使所有状态回满。只有在萝莉丝生日才能吃的到哦。"
+            };
+            food.LoadImageSource(this);
+            food.Price = (int)Math.Max(0, food.RealPrice * .5);
+            Foods.Add(food);
+
+            //第一次启动日期
             if (GameSavesData.Data.FindLine("birthday") == null)
             {
                 var sf = new FileInfo(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps");
@@ -2037,7 +2054,7 @@ namespace VPet_Simulator.Windows
                                   Content = "点击前往查看".Translate(),
                                   FontSize = 20,
                                   HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
-                                  Background = Function.ResourcesBrush(Function.BrushType.Primary),
+                                  Background = Function.ResourcesBrush(Function.BrushType.PrimaryDark),
                                   Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
                               };
                               button.Click += (x, y) =>
@@ -2050,6 +2067,60 @@ namespace VPet_Simulator.Windows
                               return button;
                           });
                           Main.Say("哼哼~主人，我的考试成绩出炉了哦，快来和我一起看我的成绩单喵".Translate(), btn, "shining");
+                      });
+                  }
+                  if (DateTime.Now < new DateTime(2024, 8, 22))
+                  {
+                      food.Star = true;
+                      Task.Run(() =>
+                      {
+                          Thread.Sleep(10000);
+                          var btn = Dispatcher.Invoke(() =>
+                          {
+                              var button = new System.Windows.Controls.Button()
+                              {
+                                  Content = "查看生日公告/视频".Translate(),
+                                  FontSize = 20,
+                                  HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+                                  Background = Function.ResourcesBrush(Function.BrushType.PrimaryDark),
+                                  Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
+                              };
+                              button.Click += (x, y) =>
+                              {
+                                  if (LocalizeCore.CurrentCulture.StartsWith("zh"))
+                                      ExtensionFunction.StartURL("https://www.bilibili.com/opus/965218905364627474");
+                                  else
+                                      ExtensionFunction.StartURL("https://store.steampowered.com/news/app/1920960/view/4374769594847756449");
+                              };
+                              return button;
+                          });
+                          string bdt;
+                          switch (DateTime.Now.Day)
+                          {
+                              case 14:
+                                  bdt = "祝我生日快乐~♪祝我生日快乐~♪，主人猜猜今天是什么日子？我的生日！主人真聪明！我就知道主人一定会记得我的生日的！谢谢主人！快来和我一起过生日吧~主人给我买的蛋糕真香啊~首先是是吹蜡烛许愿，我看看我的愿望清单: 一台5090电脑，嗨神话:吗喽 数字豪华版，还有...";
+                                  break;
+                              case 15:
+                                  bdt = "昨天生日过得真开心啊！谢谢主人陪我！什么？冰箱里还有剩蛋糕？太可恶了！马上拿嘴巴去吃！";
+                                  break;
+                              case 16:
+                                  bdt = "嗯。。生日蛋糕真好吃啊。。还想吃。。什么？今天也可以当生日过？！谢谢主人！";
+                                  break;
+                              case 17:
+                                  bdt = "虽然生日已经过去了好几天，但是生日那天的气氛一直影响到现在呢。我才不是又想吃生日蛋糕了呢！哼！";
+                                  break;
+                              case 18:
+                                  bdt = "过生日什么的太幼稚辣。人家也老大不小了，怎么可以去学小孩子过生日呢。和体重没关系！我被蛋糕所伤，今日起，戒蛋糕！";
+                                  break;
+                              case 19:
+                                  bdt = "是突然发现一个哲学问题，只要我把每天都当生日，那我就可以每天都过生日了！这可是辩证唯物主义的大发现啊！";
+                                  break;
+                              default:
+                                  bdt = "转眼之间已经过去一周了呢。生日的感觉也在慢慢淡忘。主人，明年你还愿意陪我一起过生日吗？";
+                                  break;
+
+                          }
+                          Main.Say(bdt.Translate(), btn, "self");
                       });
                   }
 #if NewYear
