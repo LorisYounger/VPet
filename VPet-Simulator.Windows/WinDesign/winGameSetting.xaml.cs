@@ -1483,6 +1483,8 @@ namespace VPet_Simulator.Windows
                 var oldsave = mw.GameSavesData;
                 mw.GameSavesData = new GameSave_v2(mw.Core.Save.Name);
                 mw.Core.Save = mw.GameSavesData.GameSave;
+                mw.GameSavesData.GameSave.Event_LevelUp += mw.LevelUP;
+
                 if (oldsave.HashCheck) // 对于重开无作弊的玩家保留统计
                 {
                     mw.GameSavesData.Statistics = oldsave.Statistics;
@@ -1627,6 +1629,7 @@ namespace VPet_Simulator.Windows
                 GameSave_v2 ogs = mw.GameSavesData;
                 mw.GameSavesData = new GameSave_v2(ogs.GameSave.Name);
                 mw.GameSavesData.Statistics[(gint)"stat_total_time"] = playtime * 60;
+                mw.GameSavesData.GameSave.Event_LevelUp += mw.LevelUP;
 
                 //同步等级
                 //按2小时=1级进行计算

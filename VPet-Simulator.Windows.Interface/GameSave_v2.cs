@@ -5,6 +5,8 @@ using Panuon.WPF.UI;
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using static VPet_Simulator.Core.GraphHelper;
+using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -21,6 +23,7 @@ namespace VPet_Simulator.Windows.Interface
             GameSave = new GameSave_VPet(petname);
             Statistics = new Statistics();
         }
+        
         protected void load(ILPS lps, Statistics oldStatistics = null, GameSave_VPet oldGameSave = null, ILPS olddata = null)
         {
             if (lps.FindLine("statistics") == null)

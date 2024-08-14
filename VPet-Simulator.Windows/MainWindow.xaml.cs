@@ -66,7 +66,7 @@ namespace VPet_Simulator.Windows
                 {
                     return line.GetString();
                 }
-                if(str.Contains('_') && double.TryParse(str.Split('_').Last(), out double d))
+                if (str.Contains('_') && double.TryParse(str.Split('_').Last(), out double d))
                     return d.ToString();
                 return null;
             };
@@ -551,6 +551,7 @@ namespace VPet_Simulator.Windows
             GameSavesData = new GameSave_v2(petname.Translate());
             Core.Save = GameSavesData.GameSave;
             HashCheck = HashCheck;
+            GameSavesData.GameSave.Event_LevelUp += LevelUP;
         }
 
         private void WorkTimer_E_FinishWork(WorkTimer.FinishWorkInfo obj)

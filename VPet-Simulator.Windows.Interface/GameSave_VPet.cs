@@ -14,11 +14,6 @@ namespace VPet_Simulator.Windows.Interface;
 /// </summary>
 public class GameSave_VPet : IGameSave
 {
-    IMainWindow imw;
-    public GameSave_VPet(IMainWindow imw)
-    {
-        this.imw = imw;
-    }
     /// <summary>
     /// 宠物名字
     /// </summary>
@@ -58,6 +53,8 @@ public class GameSave_VPet : IGameSave
             int lun = LevelUpNeed();
             bool islevelup = false;
             bool islevelmaxup = false;
+            int BeforeLevel = Level;
+            int BeforeLevelMax = LevelMax;
             while (value >= lun)
             {
                 islevelup = true;
@@ -71,26 +68,38 @@ public class GameSave_VPet : IGameSave
                 }
                 lun = LevelUpNeed();
             }
+            exp = value;
             if (islevelup)
-            {//播放等级升级动画
-                var gf = imw.Core.Graph.FindGraph("levelup", GraphInfo.AnimatType.Single, Mode);
-                if (gf != null)
+            {
+                Event_LevelUp?.Invoke(new LevelUpEventArgs()
                 {
-                    imw.Main.Display(gf, imw.Main.DisplayToNomal);
-                }
-            }
-            if (islevelmaxup)
-            {//告知用户上限等级上升
-                imw.Dispatcher.Invoke(() =>
-                {
-                    imw.Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
-                    MessageBoxX.Show("系统提示\n您的桌宠等级已经突破\nLv{0}→LV{1} x{2}\n已突破为尊贵的x{3}阶".Translate(
-                        1000 + (LevelMax - 1) * 100, 100 * LevelMax, LevelMax), "桌宠等级突破".Translate());
+                    IsLevelMaxUp = islevelmaxup,
+                    BeforeLevel = BeforeLevel,
+                    BeforeLevelMax = BeforeLevelMax
                 });
             }
-            exp = value;
         }
     }
+    public class LevelUpEventArgs : EventArgs
+    {
+        /// <summary>
+        /// 是否升级
+        /// </summary>
+        public bool IsLevelUp => true;
+        /// <summary>
+        /// 是否升级指上限
+        /// </summary>
+        public bool IsLevelMaxUp { get; set; }
+        /// <summary>
+        /// 之前的等级
+        /// </summary>
+        public int BeforeLevel { get; set; }
+        /// <summary>
+        /// 之前的等级上限
+        /// </summary>
+        public int BeforeLevelMax { get; set; }
+    }
+    public event Action<LevelUpEventArgs> Event_LevelUp;
     /// <summary>
     /// 玩家总共获得的经验值数量
     /// </summary>

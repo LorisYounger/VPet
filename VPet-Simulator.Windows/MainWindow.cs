@@ -2360,5 +2360,24 @@ namespace VPet_Simulator.Windows
             return works;
         }
         public System.Windows.Controls.MenuItem WorkStarMenu;
+
+        public void LevelUP(GameSave_VPet.LevelUpEventArgs args)
+        {
+            var gf = Core.Graph.FindGraph("levelup", GraphInfo.AnimatType.Single, GameSavesData.GameSave.Mode);
+            if (gf != null)
+            {
+                Main.Display(gf, Main.DisplayToNomal);
+            }
+            if (args.IsLevelMaxUp)
+            {//告知用户上限等级上升
+                Dispatcher.Invoke(() =>
+                {
+                    Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
+                    MessageBoxX.Show("系统提示\n您的桌宠等级已经突破\nLv{0}→LV{1} x{2}\n已突破为尊贵的x{3}阶".Translate(
+                        1000 + args.BeforeLevelMax * 100, 100 * GameSavesData.GameSave.LevelMax, GameSavesData.GameSave.LevelMax),
+                        "桌宠等级突破".Translate());
+                });
+            }
+        }
     }
 }
