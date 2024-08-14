@@ -847,6 +847,7 @@ namespace VPet_Simulator.Windows
             GameSavesData = tmp;
             Core.Save = tmp.GameSave;
             HashCheck = HashCheck;
+            GameSavesData.GameSave.Event_LevelUp += LevelUP;
             return true;
         }
 
