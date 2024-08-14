@@ -2367,16 +2367,24 @@ namespace VPet_Simulator.Windows
             var gf = Core.Graph.FindGraph("levelup", GraphInfo.AnimatType.Single, GameSavesData.GameSave.Mode);
             if (gf != null)
             {
-                Main.Display(gf, Main.DisplayToNomal);
+                Task.Run(() =>
+                {
+                    Thread.Sleep(5000);
+                    Main.Display(gf, Main.DisplayToNomal);
+                });
             }
             if (args.IsLevelMaxUp)
             {//告知用户上限等级上升
-                Dispatcher.Invoke(() =>
+                Task.Run(() =>
                 {
-                    Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
-                    MessageBoxX.Show("系统提示\n您的桌宠等级已经突破\nLv{0}→LV{1} x{2}\n已突破为尊贵的x{3}阶".Translate(
-                        1000 + args.BeforeLevelMax * 100, 100 * GameSavesData.GameSave.LevelMax, GameSavesData.GameSave.LevelMax),
-                        "桌宠等级突破".Translate());
+                    Thread.Sleep(5000);
+                    Dispatcher.Invoke(() =>
+                    {
+                        Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
+                        MessageBoxX.Show("系统提示\n您的桌宠等级已经突破\nLv{0}→LV{1} x{2}\n已突破为尊贵的x{3}阶".Translate(
+                            1000 + args.BeforeLevelMax * 100, 100 * GameSavesData.GameSave.LevelMax, GameSavesData.GameSave.LevelMax),
+                            "桌宠等级突破".Translate());
+                    });
                 });
             }
         }
