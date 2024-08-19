@@ -617,6 +617,10 @@ namespace VPet_Simulator.Windows
 
         }
         /// <summary>
+        /// 事件:吃东西
+        /// </summary>
+        public event Action<Food> Event_TakeItem;
+        /// <summary>
         /// 使用/食用物品 (不包括显示动画)
         /// </summary>
         /// <param name="item">物品</param>
@@ -678,6 +682,8 @@ namespace VPet_Simulator.Windows
                     GameSavesData.Statistics[(gdbe)"stat_bb_gift_like"] += item.Likability;
                     break;
             }
+
+            Event_TakeItem.Invoke(item);
         }
 
         public void RunAction(string action)

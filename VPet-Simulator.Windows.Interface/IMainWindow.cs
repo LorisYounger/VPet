@@ -234,7 +234,11 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 所有可用套餐
         /// </summary>
-        List<PackageFull> SchedulePackage { get;}
+        List<PackageFull> SchedulePackage { get; }
+        /// <summary>
+        /// 事件:吃东西
+        /// </summary>
+        event Action<Food> Event_TakeItem;
     }
 
 }
