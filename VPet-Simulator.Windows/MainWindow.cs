@@ -881,6 +881,8 @@ namespace VPet_Simulator.Windows
                 int allcount = App.MainWindows.Count * 2 / 3;
                 foreach (var item in App.MainWindows)
                 {
+                    if (item.GameSavesData == null)
+                        continue;
                     str += item.GameSavesData.GameSave.Name + ",";
                     if (item.HashCheck)
                     {

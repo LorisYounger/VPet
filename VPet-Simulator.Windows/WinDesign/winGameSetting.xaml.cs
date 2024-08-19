@@ -634,6 +634,8 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("封面图片(icon.png)大于500kb,请修改后重试".Translate(), "MOD上传失败".Translate(), MessageBoxIcon.Error);
                 return;
             }
+            mods.GameVer = mw.version;
+            mods.WriteFile();
 #if DEMO
             MessageBoxX.Show("经测试,除正式版均无创意工坊权限,此功能仅作为展示", "特殊版无法上传创意工坊");
 #endif
