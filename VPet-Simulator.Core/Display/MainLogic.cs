@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
+using static VPet_Simulator.Core.WorkTimer;
 
 namespace VPet_Simulator.Core
 {
@@ -346,7 +347,7 @@ namespace VPet_Simulator.Core
             //看情况播放停止工作动画
             if (Core.Save.Mode == IGameSave.ModeType.Ill && State == WorkingState.Work)
             {
-                Dispatcher.Invoke(() => WorkTimer.Stop());
+                Dispatcher.Invoke(() => WorkTimer.Stop(reason: FinishWorkInfo.StopReason.StateFail));
             }
         }
         public void PlaySwitchAnimat(IGameSave.ModeType before, IGameSave.ModeType after)
@@ -569,7 +570,7 @@ namespace VPet_Simulator.Core
             if (!Core.Controller.EnableFunction || Core.Save.Mode != IGameSave.ModeType.Ill)
                 if (!Core.Controller.EnableFunction || Core.Save.Level >= work.LevelLimit)
                     if (State == Main.WorkingState.Work && NowWork.Name == work.Name)
-                        WorkTimer.Stop();
+                        WorkTimer.Stop(reason: FinishWorkInfo.StopReason.MenualStop);
                     else
                     {
                         if (WorkCheck != null && !WorkCheck.Invoke(work))
@@ -584,6 +585,24 @@ namespace VPet_Simulator.Core
                 MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行{1}", Core.Save.Name,
                   work.NameTrans), LocalizeCore.Translate("{0}取消", work.NameTrans));
             return false;
+        }
+        /// <summary>
+        /// 任务开始时调用该参数
+        /// </summary>
+        public event Action<Work> Event_WorkStart;
+        /// <summary>
+        /// 任务完成时调用该参数 (重定向至WorkTimer.E_FinishWork)
+        /// </summary>
+        public event Action<FinishWorkInfo> Event_WorkEnd
+        {
+            add
+            {
+                WorkTimer.E_FinishWork += value;
+            }
+            remove
+            {
+                WorkTimer.E_FinishWork -= value;
+            }
         }
     }
 }

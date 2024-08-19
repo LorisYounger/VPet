@@ -428,7 +428,7 @@ namespace VPet_Simulator.Core
                 m.DisplaySleep(true);
             else
             {
-                m.WorkTimer.Stop(() => m.DisplaySleep(true));
+                m.WorkTimer.Stop(() => m.DisplaySleep(true), WorkTimer.FinishWorkInfo.StopReason.MenualStop);
             }
         }
     }

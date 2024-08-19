@@ -1,9 +1,11 @@
 ﻿using LinePutScript.Localization.WPF;
 using System;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
+using static VPet_Simulator.Core.WorkTimer.FinishWorkInfo;
 
 namespace VPet_Simulator.Core
 {
@@ -37,10 +39,6 @@ namespace VPet_Simulator.Core
         /// </summary>
         public DateTime StartTime;
         /// <summary>
-        /// 任务完成时调用该参数
-        /// </summary>
-        public event Action<FinishWorkInfo> E_FinishWork;
-        /// <summary>
         /// 完成工作信息
         /// </summary>
         public struct FinishWorkInfo
@@ -58,26 +56,54 @@ namespace VPet_Simulator.Core
             /// </summary>
             public double spendtime;
             /// <summary>
+            /// 停止工作的原因
+            /// </summary>
+            public enum StopReason
+            {
+                /// <summary>
+                /// 时间结束完成
+                /// </summary>
+                TimeFinish,
+                /// <summary>
+                /// 玩家手动停止
+                /// </summary>
+                MenualStop,
+                /// <summary>
+                /// 因为状态等停止
+                /// </summary>
+                StateFail,
+                /// <summary>
+                /// 其他原因
+                /// </summary>
+                Other,
+            }
+            /// <summary>
+            /// 停止原因
+            /// </summary>
+            public StopReason Reason;
+            /// <summary>
             /// 完成工作信息
             /// </summary>
             /// <param name="work">当前工作</param>
             /// <param name="count">当前盈利(自动计算附加)</param>
-            public FinishWorkInfo(Work work, double count)
+            public FinishWorkInfo(Work work, double count, StopReason reason)
             {
                 this.work = work;
                 this.count = count * (1 + work.FinishBonus);
                 this.spendtime = work.Time;
+                this.Reason = reason;
             }
             /// <summary>
             /// 完成工作信息
             /// </summary>
             /// <param name="work">当前工作</param>
             /// <param name="count">当前盈利(自动计算附加)</param>
-            public FinishWorkInfo(Work work, double count, DateTime starttime)
+            public FinishWorkInfo(Work work, double count, DateTime starttime, StopReason reason)
             {
                 this.work = work;
                 this.count = count * (1 + work.FinishBonus);
                 this.spendtime = DateTime.Now.Subtract(starttime).TotalMinutes;
+                this.Reason = reason;
             }
         }
         /// <summary>
@@ -95,18 +121,18 @@ namespace VPet_Simulator.Core
                 //ts = TimeSpan.FromMinutes(MaxTime);
                 //tleft = TimeSpan.Zero;
                 //PBLeft.Value = MaxTime;
-                FinishWorkInfo fwi = new FinishWorkInfo(m.NowWork, GetCount);
+                FinishWorkInfo fwi = new FinishWorkInfo(m.NowWork, GetCount, FinishWorkInfo.StopReason.TimeFinish);
                 if (m.NowWork.Type == Work.WorkType.Work)
                 {
                     m.Core.Save.Money += GetCount * m.NowWork.FinishBonus;
                     Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟", fwi.count,
-                        fwi.spendtime, fwi.work.NameTrans), true));
+                        fwi.spendtime, fwi.work.NameTrans), true), StopReason.TimeFinish);
                 }
                 else
                 {
                     m.Core.Save.Exp += GetCount * m.NowWork.FinishBonus;
                     Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟", fwi.count,
-                        fwi.spendtime, fwi.work.NameTrans), true));
+                        fwi.spendtime, fwi.work.NameTrans), true), StopReason.TimeFinish);
                 }
                 return;
             }
@@ -209,11 +235,11 @@ namespace VPet_Simulator.Core
         /// 停止工作
         /// </summary>
         /// <param name="then"></param>
-        public void Stop(Action @then = null)
+        public void Stop(Action @then = null, StopReason reason = StopReason.MenualStop)
         {
             if (m.State == Main.WorkingState.Work && m.NowWork != null)
             {
-                FinishWorkInfo fwi = new FinishWorkInfo(m.NowWork, GetCount, StartTime);
+                FinishWorkInfo fwi = new FinishWorkInfo(m.NowWork, GetCount, StartTime, reason);
                 E_FinishWork?.Invoke(fwi);
             }
             Visibility = Visibility.Collapsed;
@@ -222,7 +248,11 @@ namespace VPet_Simulator.Core
         }
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-            Stop();
+            Stop(reason: StopReason.MenualStop);
         }
+        /// <summary>
+        /// 任务完成时调用该参数
+        /// </summary>
+        public event Action<FinishWorkInfo> E_FinishWork;
     }
 }
