@@ -222,9 +222,16 @@ namespace VPet_Simulator.Windows
         {
             //保存日程表
             ScheduleTask?.Save();
-            //保存插件
-            foreach (MainPlugin mp in Plugins)
-                mp.Save();
+            try
+            {
+                //保存插件
+                foreach (MainPlugin mp in Plugins)
+                    mp.Save();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString(), "由于插件引起的保存错误".Translate());
+            }
             //游戏存档
             if (Set != null)
             {
