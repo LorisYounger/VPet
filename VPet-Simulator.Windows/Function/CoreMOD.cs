@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
@@ -28,6 +29,7 @@ namespace VPet_Simulator.Windows
             "VPet-Simulator.Core.dll","VPet-Simulator.Windows.Interface.dll","LinePutScript.Localization.WPF.dll",
             "CSCore.dll"
         };
+        public static Dictionary<string, Type> LoadPlug { get; } = new Dictionary<string, Type>();
         public static string NowLoading = null;
         public string Name { get; set; }
         public string Author { get; set; }
@@ -312,6 +314,11 @@ namespace VPet_Simulator.Windows
                             {
 #endif
                                 var path = tmpfi.Name;
+                                if (LoadPlug.ContainsKey(path))
+                                {
+                                    mw.Plugins.Add((MainPlugin)Activator.CreateInstance(LoadPlug[path], mw));
+                                    continue;
+                                }
                                 if (LoadedDLL.Contains(path))
                                     continue;
                                 LoadedDLL.Add(path);
@@ -358,6 +365,7 @@ namespace VPet_Simulator.Windows
                                         var n = exportedType.FullName.ToLower();
                                         if (!(n.Contains("modmaker") || n.Contains("dlc")))
                                             App.MODType.Add(exportedType.FullName);
+                                        LoadPlug.Add(path, exportedType);
                                         mw.Plugins.Add((MainPlugin)Activator.CreateInstance(exportedType, mw));
                                     }
                                 }
