@@ -690,7 +690,7 @@ namespace VPet_Simulator.Windows
                     break;
             }
 
-            Event_TakeItem.Invoke(item);
+            Event_TakeItem?.Invoke(item);
         }
 
         public void RunAction(string action)
@@ -2085,6 +2085,7 @@ namespace VPet_Simulator.Windows
                           Main.Say("哼哼~主人，我的考试成绩出炉了哦，快来和我一起看我的成绩单喵".Translate(), btn, "shining");
                       });
                   }
+#if BDAY
                   if (DateTime.Now < new DateTime(2024, 8, 22))
                   {
                       food.Star = true;
@@ -2139,6 +2140,7 @@ namespace VPet_Simulator.Windows
                           Main.Say(bdt.Translate(), btn, "self");
                       });
                   }
+#endif
 #if NewYear
                 //仅新年功能
                 if (DateTime.Now < new DateTime(2024, 2, 18))
