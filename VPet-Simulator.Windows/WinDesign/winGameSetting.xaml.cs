@@ -349,7 +349,8 @@ namespace VPet_Simulator.Windows
                     }
                     else
                     {
-                        moditem.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
+                        if (mod.Tag.Contains("plugin"))
+                            moditem.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
                     }
                 }
             }
@@ -390,12 +391,21 @@ namespace VPet_Simulator.Windows
                     if (mod.GameVer / 1000 == mw.version / 1000)
                     {
                         runMODGameVer.Text += " (兼容)".Translate();
+                        runMODGameVerInfo.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
                         runMODGameVer.Text += " (版本低)".Translate();
+                        runMODGameVerInfo.Visibility = Visibility.Visible;
                         if (mod.Tag.Contains("plugin"))
+                        {
                             runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
+                            runMODGameVerInfo.ToolTip = "MOD对应游戏版本比当前游戏版本低, 因为包含代码插件, 可能有严重的兼容性问题.\n请联系MOD作者更新MOD".Translate()
+                                + $"\nv{CoreMOD.INTtoVER(mod.GameVer)} < v{mw.Version}" ;
+                        }
+                        else
+                            runMODGameVerInfo.ToolTip = "MOD对应游戏版本比当前游戏版本低, 但是游戏的兼容功能可能会生效, MOD可能可以正常使用.\n为确保最佳体验,请联系MOD作者更新MOD".Translate()
+                               + $"\nv{CoreMOD.INTtoVER(mod.GameVer)} < v{mw.Version}";
                     }
                 }
                 else if (mod.GameVer > mw.version)
@@ -403,12 +413,16 @@ namespace VPet_Simulator.Windows
                     if (mod.GameVer / 1000 == mw.version / 1000)
                     {
                         runMODGameVer.Text += " (兼容)".Translate();
+                        runMODGameVerInfo.Visibility = Visibility.Collapsed;
                         runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
                     }
                     else
                     {
                         runMODGameVer.Text += " (版本高)".Translate();
+                        runMODGameVerInfo.Visibility = Visibility.Visible;
                         runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
+                        runMODGameVerInfo.ToolTip = "MOD对应游戏版本比当前游戏版本高, 可能会有兼容性问题.\n请更新游戏".Translate()
+                            + $"\nv{CoreMOD.INTtoVER(mod.GameVer)} > v{mw.Version}";
                     }
                 }
             if (!mod.IsOnMOD(mw))

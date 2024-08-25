@@ -866,6 +866,8 @@
                                             x:Name="runMODVer" Text="1.0" />
                                     <LineBreak /><Run FontWeight="Bold" Text="{ll:Str '游戏版本: '}" /><Run
                                             x:Name="runMODGameVer" Text="1.0" />
+                                    <TextBlock x:Name="runMODGameVerInfo" Text="&#xEE59;" FontFamily="{StaticResource RemixIcon}" FontWeight="Bold" 
+                                            Foreground="{Binding Foreground,ElementName=runMODGameVer}" Margin="0,2,0,0" Visibility="Collapsed" />
                                 </TextBlock>
                             </StackPanel>
                         </Grid>
