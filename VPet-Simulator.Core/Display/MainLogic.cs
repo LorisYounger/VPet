@@ -350,6 +350,11 @@ namespace VPet_Simulator.Core
                 Dispatcher.Invoke(() => WorkTimer.Stop(reason: FinishWorkInfo.StopReason.StateFail));
             }
         }
+        /// <summary>
+        /// 播放切换动画
+        /// </summary>
+        /// <param name="before">切换前状态</param>
+        /// <param name="after">切换后状态</param>
         public void PlaySwitchAnimat(IGameSave.ModeType before, IGameSave.ModeType after)
         {
             if (!(DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Switch_Down || DisplayType.Type == GraphType.Switch_Up))
@@ -403,9 +408,12 @@ namespace VPet_Simulator.Core
 
             //UIHandle
             Dispatcher.Invoke(() => TimeUIHandle?.Invoke(this));
-
             if (IsIdel)
-                switch (Function.Rnd.Next(Math.Max(20, Core.Controller.InteractionCycle - CountNomal)))
+            {
+                int rnddisplay = Math.Max(20, Core.Controller.InteractionCycle - CountNomal);
+                if (DisplayType.Type == GraphType.Work)
+                    rnddisplay = 2 * rnddisplay + 20;
+                switch (Function.Rnd.Next(rnddisplay))
                 {
                     case 0:
                     case 1:
@@ -444,7 +452,7 @@ namespace VPet_Simulator.Core
                         }
                         break;
                 }
-
+            }
         }
         /// <summary>
         /// 定点移动位置向量
