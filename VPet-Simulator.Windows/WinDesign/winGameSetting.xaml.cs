@@ -271,6 +271,9 @@ namespace VPet_Simulator.Windows
             AllowChange = true;
 
             UpdateMoveAreaText();
+
+            ToolTipService.SetInitialShowDelay(runMODGameVerInfo, 0);
+
         }
         public List<ListBoxItem> ListMenuItems = new List<ListBoxItem>();
         private void tb_seach_menu_textchange(object sender, TextChangedEventArgs e)
