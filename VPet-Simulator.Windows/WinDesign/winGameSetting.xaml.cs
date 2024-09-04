@@ -388,13 +388,13 @@ namespace VPet_Simulator.Windows
             }
             else
                 ImageMOD.Source = ImageResources.NewSafeBitmapImage(@"pack://application:,,,/Res/TopLogo2019.PNG");
+            runMODGameVerInfo.Visibility = Visibility.Collapsed;
             if (mod.GameVer / 100 != mw.version / 100)
                 if (mod.GameVer < mw.version)
                 {
                     if (mod.GameVer / 1000 == mw.version / 1000)
                     {
                         runMODGameVer.Text += " (兼容)".Translate();
-                        runMODGameVerInfo.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
@@ -416,7 +416,6 @@ namespace VPet_Simulator.Windows
                     if (mod.GameVer / 1000 == mw.version / 1000)
                     {
                         runMODGameVer.Text += " (兼容)".Translate();
-                        runMODGameVerInfo.Visibility = Visibility.Collapsed;
                         runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
                     }
                     else
