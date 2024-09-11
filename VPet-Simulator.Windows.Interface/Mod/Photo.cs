@@ -1,8 +1,11 @@
 ﻿using LinePutScript;
+using LinePutScript.Converter;
 using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO.Compression;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +16,22 @@ using System.Windows.Media.Imaging;
 namespace VPet_Simulator.Windows.Interface;
 public class Photo
 {
+    public Photo() { }
+
+    public Photo(Line line)
+    {
+        Zip = line[(gstr)"zip"];
+        Path = line[(gstr)"zippath"];
+        if (Enum.TryParse<PhotoType>(line[(gstr)"type"], true, out var tp))
+            Type = tp;
+        Name = line[(gstr)"name"];
+        Description = line[(gstr)"desc"];
+        var tags = line.Find("tags");
+        if (tags != null)
+            Tags = tags.GetInfos().ToList();
+
+        UnlockCondition = new Unlock(line);
+    }
     /// <summary>
     /// 图片所在ZIP
     /// </summary>
@@ -21,7 +40,7 @@ public class Photo
     /// 图片所在位置
     /// </summary>
     public string Path { get; set; }
-   
+
     /// <summary>
     /// 图片类型
     /// </summary>
@@ -40,6 +59,10 @@ public class Photo
         /// </summary>
         Thumbnail
     }
+    /// <summary>
+    /// 图片类型
+    /// </summary>
+    public PhotoType Type { get; set; } = PhotoType.ALL;
     /// <summary>
     /// 图片名字
     /// </summary>
@@ -428,7 +451,7 @@ public class Photo
     /// <param name="width">长度</param>
     /// <param name="height">高度</param>
     /// <returns></returns>
-    public static ImageSource CreateThumbnail(BitmapImage originalImage, int width, int height)
+    public static BitmapSource ConvertToThumbnail(BitmapImage originalImage, int width, int height)
     {
         // 创建一个 RenderTargetBitmap
         RenderTargetBitmap renderBitmap = new RenderTargetBitmap(width, height, 96d, 96d, PixelFormats.Pbgra32);
@@ -452,5 +475,79 @@ public class Photo
         renderBitmap.Render(visual);
         return renderBitmap;
     }
+    /// <summary>
+    /// 创建灰度图 (未解锁)
+    /// </summary>
+    /// <param name="originalImage">原图</param>
+    /// <returns></returns>
+    private BitmapSource ConvertToGrayScale(BitmapSource originalImage)
+    {
+        // 创建 WriteableBitmap
+        WriteableBitmap writeableBitmap = new WriteableBitmap(originalImage);
+        int width = writeableBitmap.PixelWidth;
+        int height = writeableBitmap.PixelHeight;
+
+        // 获取像素数据
+        int[] pixels = new int[width * height];
+        writeableBitmap.CopyPixels(pixels, width * 4, 0);
+
+        // 转换为灰度
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            // 获取 ARGB 颜色
+            byte a = (byte)((pixels[i] >> 24) & 0xff); // Alpha
+            byte r = (byte)((pixels[i] >> 16) & 0xff); // Red
+            byte g = (byte)((pixels[i] >> 8) & 0xff);  // Green
+            byte b = (byte)(pixels[i] & 0xff);         // Blue
+
+            // 计算灰度值
+            byte gray = (byte)((r + g + b) / 3); // 可以使用其他公式来计算灰度
+
+            // 设置新的灰度像素值
+            pixels[i] = (a << 24) | (gray << 16) | (gray << 8) | gray; // ARGB
+        }
+
+        // 创建新的 WriteableBitmap
+        WriteableBitmap grayBitmap = new WriteableBitmap(width, height, writeableBitmap.DpiX, writeableBitmap.DpiY, PixelFormats.Pbgra32, null);
+        grayBitmap.WritePixels(new Int32Rect(0, 0, width, height), pixels, width * 4, 0);
+
+        return grayBitmap;
+    }
+    /// <summary>
+    /// 获得当前图片图片
+    /// </summary>
+    public BitmapImage GetImage(IMainWindow imw)
+    {
+        //解压zip
+        string zippath = imw.FileSources.FindSource(Zip);
+        if (zippath == null)
+        {
+            return ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
+        }
+        using (ZipArchive archive = ZipFile.OpenRead(zippath))
+        {
+            // 找到指定的文件
+            ZipArchiveEntry entry = archive.GetEntry(Path);
+            if (entry != null)
+            {
+                using (Stream stream = entry.Open())
+                {
+                    // 创建 BitmapImage
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.StreamSource = stream;
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad; // 立即加载
+                    bitmap.EndInit();
+                    bitmap.Freeze(); // 使 BitmapImage 可以在不同线程中使用
+                    return bitmap;
+                }
+            }
+            else
+            {
+                return ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
+            }
+        }
+    }
+
 }
 

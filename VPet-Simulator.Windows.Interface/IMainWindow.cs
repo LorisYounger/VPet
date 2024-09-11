@@ -98,6 +98,10 @@ namespace VPet_Simulator.Windows.Interface
         /// <returns>说话内容</returns>
         ClickText GetClickText();
         /// <summary>
+        /// 所有照片
+        /// </summary>
+        List<Photo> Photos { get; }
+        /// <summary>
         /// 图片资源
         /// </summary>
         ImageResources ImageSources { get; }
@@ -128,6 +132,10 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         /// <param name="type">食物类型</param>
         void ShowBetterBuy(Food.FoodType type);
+        /// <summary>
+        /// 显示照片图库
+        /// </summary>
+        void ShowGallery();
         /// <summary>
         /// 关闭桌宠
         /// </summary>

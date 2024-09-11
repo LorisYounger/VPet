@@ -451,6 +451,19 @@ namespace VPet_Simulator.Windows
         {
             winBetterBuy.Show(type);
         }
+        public void ShowGallery()
+        {
+            if (winGallery != null)
+            {
+                winGallery.Show();
+                winGallery.Focus();
+            }
+            else
+            {
+                winGallery = new winGallery(this);
+                winGallery.Show();
+            }
+        }
         int lowstrengthAskCountFood = 20;
         int lowstrengthAskCountDrink = 20;
         private void lowStrength()
@@ -1875,19 +1888,7 @@ namespace VPet_Simulator.Windows
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
                   if (Set.DeBug)
                       Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
-                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "照片图库".Translate(), () =>
-                  {
-                      if (winGallery != null)
-                      {
-                          winGallery.Show();
-                          winGallery.Focus();
-                      }
-                      else
-                      {
-                          winGallery = new winGallery(this);
-                          winGallery.Show();
-                      }
-                  });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "照片图库".Translate(), ShowGallery);
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
                   {
                       if (LocalizeCore.CurrentCulture == "zh-Hans")

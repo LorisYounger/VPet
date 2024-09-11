@@ -239,6 +239,19 @@ namespace VPet_Simulator.Windows
                         Tag.Add("file");
                         LoadFile(mw, di);
                         break;
+                    case "photo":
+                        Tag.Add("photo");
+                        foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
+                        {
+                            var tmp = new LPS(File.ReadAllText(fi.FullName));
+                            foreach (Line li in tmp)
+                            {
+                                if (li.Name != "photo")
+                                    continue;
+                                mw.Photos.Add(new Photo(li));
+                            }
+                        }
+                        break;
                     case "text":
                         Tag.Add("text");
                         foreach (FileInfo fi in di.EnumerateFiles("*.lps"))

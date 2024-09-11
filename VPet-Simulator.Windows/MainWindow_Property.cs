@@ -16,6 +16,9 @@ namespace VPet_Simulator.Windows;
 public partial class MainWindow
 {//主窗口部分数据
 
+    /// <summary>
+    /// 所有食物
+    /// </summary>
     public List<Food> Foods { get; } = new List<Food>();
     /// <summary>
     /// 版本号
@@ -37,6 +40,8 @@ public partial class MainWindow
     public List<SelectText> SelectTexts { get; set; } = new List<SelectText>();
 
     public List<ClickText> ClickTexts { get; set; } = new List<ClickText>();
+
+    public List<Photo> Photos { get; } = new List<Photo>();
 
     public GameSave_v2 GameSavesData { get; set; }
 
