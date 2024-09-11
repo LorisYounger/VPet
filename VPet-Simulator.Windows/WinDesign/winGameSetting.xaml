@@ -454,6 +454,18 @@
                                     pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}" />
 
                         </Grid>
+                        <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                Background="{x:Null}" TextWrapping="Wrap">
+                                <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 开发者设置}" /><LineBreak />
+                                <Run Text="{ll:Str 启用开发者相关功能}" />
+                        </TextBlock>
+                        <pu:Switch x:Name="ConsoleBox" Grid.Column="2" Background="Transparent"
+                                BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
+                                Checked="ConsoleBox_Checked" CheckedBackground="{DynamicResource Primary}"
+                                CheckedBorderBrush="{DynamicResource Primary}"
+                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str '启用开发者控制台'}"
+                                ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}" ToggleSize="14"
+                                Unchecked="ConsoleBox_Checked" />
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -866,8 +878,10 @@
                                             x:Name="runMODVer" Text="1.0" />
                                     <LineBreak /><Run FontWeight="Bold" Text="{ll:Str '游戏版本: '}" /><Run
                                             x:Name="runMODGameVer" Text="1.0" />
-                                    <TextBlock x:Name="runMODGameVerInfo" Text="&#xEE59;" FontFamily="{StaticResource RemixIcon}" FontWeight="Bold" 
-                                            Foreground="{Binding Foreground,ElementName=runMODGameVer}" Margin="0,2,0,0" Visibility="Collapsed" />
+                                    <TextBlock x:Name="runMODGameVerInfo" Text="&#xEE59;"
+                                            FontFamily="{StaticResource RemixIcon}" FontWeight="Bold"
+                                            Foreground="{Binding Foreground,ElementName=runMODGameVer}" Margin="0,2,0,0"
+                                            Visibility="Collapsed" />
                                 </TextBlock>
                             </StackPanel>
                         </Grid>

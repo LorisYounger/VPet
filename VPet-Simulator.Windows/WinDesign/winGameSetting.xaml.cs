@@ -69,6 +69,7 @@ namespace VPet_Simulator.Windows
             PressLengthSlider.Value = mw.Set.PressLength / 1000.0;
             SwitchMsgOut.IsChecked = mw.Set.MessageBarOutside;
             SwitchHideFromTaskControl.IsChecked = mw.Set.HideFromTaskControl;
+            ConsoleBox.IsChecked = mw.Set.DeBug;
 
             StartUpBox.IsChecked = mw.Set.StartUPBoot;
             StartUpSteamBox.IsChecked = mw.Set.StartUPBootSteam;
@@ -1673,6 +1674,13 @@ namespace VPet_Simulator.Windows
 
                 MessageBoxX.Show("数据修复成功".Translate());
             }
+        }
+
+        private void ConsoleBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.DeBug = ConsoleBox.IsChecked.Value;
         }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)

@@ -201,9 +201,13 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         bool MPNOTouch { get; set; }
         /// <summary>
-        /// 桌宠皮肤(不一定是这个,如果找不到则为默认低0个)
+        /// 桌宠皮肤(不一定是这个,如果找不到则为默认第0个)
         /// </summary>
         string PetGraph { get; }
+        /// <summary>
+        /// 开发者模式
+        /// </summary>
+        bool DeBug { get; set; }
     }
 
 }

@@ -495,6 +495,12 @@ namespace VPet_Simulator.Windows
             get => this["mutiplay"].GetBool("notouch");
             set => this["mutiplay"].SetBool("notouch", value);
         }
+        public bool DeBug
+        {
+            get => this[(gbol)"debug"];
+            set => this[(gbol)"debug"] = value;
+        }
+
         /// <summary>
         /// 读写自定义游戏设置(给mod准备的接口)
         /// </summary>
