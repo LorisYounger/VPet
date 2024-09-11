@@ -21,7 +21,7 @@ public class Photo
     public Photo(Line line)
     {
         Zip = line[(gstr)"zip"];
-        Path = line[(gstr)"zippath"];
+        Path = line[(gstr)"path"];
         if (Enum.TryParse<PhotoType>(line[(gstr)"type"], true, out var tp))
             Type = tp;
         Name = line[(gstr)"name"];
@@ -30,7 +30,7 @@ public class Photo
         if (tags != null)
             Tags = tags.GetInfos().ToList();
 
-        UnlockCondition = new Unlock(line);
+        UnlockAble = new UnlockCondition(line);
     }
     /// <summary>
     /// 图片所在ZIP
@@ -109,11 +109,11 @@ public class Photo
     /// <summary>
     /// 解锁条件
     /// </summary>
-    public class Unlock
+    public class UnlockCondition
     {
-        public Unlock() { }
+        public UnlockCondition() { }
 
-        public Unlock(Line line)
+        public UnlockCondition(Line line)
         {
             var sub = line.Find("llockstring");
             if (sub != null)
@@ -411,15 +411,15 @@ public class Photo
     /// <summary>
     /// 解锁条件
     /// </summary>
-    public Unlock UnlockCondition { get; set; }
+    public UnlockCondition UnlockAble { get; set; }
 
     /// <summary>
     /// 玩家数据
     /// </summary>
     public class Info
     {
-        private Sub sub;
-        public Info(Sub sub) { this.sub = sub; }
+        private ISub sub;
+        public Info(ISub sub) { this.sub = sub; }
         public DateTime UnlockTime
         {
             get => sub.Infos[(gdat)"time"];
@@ -443,6 +443,15 @@ public class Photo
     /// 是否解锁
     /// </summary>
     public bool IsUnlock => PlayerInfo != null;
+    /// <summary>
+    /// 解锁这张图片
+    /// </summary>
+    public void Unlock(IMainWindow imw)
+    {
+        ISub sub = imw.Set["betterbuy"][Name];
+        PlayerInfo = new Info(new Sub());
+        PlayerInfo.UnlockTime = DateTime.Now;
+    }
 
     /// <summary>
     /// 创建缩略图 (以最小的为准)

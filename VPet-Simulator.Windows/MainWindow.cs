@@ -2421,5 +2421,20 @@ namespace VPet_Simulator.Windows
                 });
             }
         }
+
+        public void CheckGalleryUnlock()
+        {
+            var ps = Photos.FindAll(x => !x.IsUnlock && !x.UnlockAble.SellBoth && x.UnlockAble.Check(GameSavesData));
+            if (ps.Count == 0) return;
+            StringBuilder sb = new StringBuilder();
+            foreach (Photo p in ps)
+            {
+                sb.Append(", ");
+                p.Unlock(this);
+                sb.Append(p.TranslateName);
+            }
+            Dispatcher.Invoke(() =>
+            NoticeBox.Show(string.Concat(sb.ToString().AsSpan(2), " ", "以上照片已解锁".Translate()), "新的照片已解锁".Translate()));
+        }
     }
 }
