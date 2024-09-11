@@ -437,6 +437,7 @@ namespace VPet_Simulator.Windows
                     winSetting?.Close();
                     winBetterBuy?.Close();
                     winWorkMenu?.Close();
+                    winGallery?.Close();
                     if (winMutiPlayer != null)
                     {
                         winMutiPlayer.lb.Leave();
@@ -486,6 +487,7 @@ namespace VPet_Simulator.Windows
                 winSetting?.Close();
                 winBetterBuy?.Close();
                 winWorkMenu?.Close();
+                winGallery?.Close();
                 if (winMutiPlayer != null)
                 {
                     winMutiPlayer.lb.Leave();

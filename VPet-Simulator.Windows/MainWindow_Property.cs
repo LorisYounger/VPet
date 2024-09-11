@@ -70,6 +70,7 @@ public partial class MainWindow
     public UIElement TalkBox;
     public winGameSetting winSetting { get; set; }
     public winBetterBuy winBetterBuy { get; set; }
+    public winGallery winGallery { get; set; }
 
     public winWorkMenu winWorkMenu { get; set; }
     //public ChatGPTClient CGPTClient;

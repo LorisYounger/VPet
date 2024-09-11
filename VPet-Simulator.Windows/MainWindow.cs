@@ -1873,7 +1873,21 @@ namespace VPet_Simulator.Windows
                   });
 
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
-                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
+                  if (Set.DeBug)
+                      Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "照片图库".Translate(), () =>
+                  {
+                      if (winGallery != null)
+                      {
+                          winGallery.Show();
+                          winGallery.Focus();
+                      }
+                      else
+                      {
+                          winGallery = new winGallery(this);
+                          winGallery.Show();
+                      }
+                  });
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
                   {
                       if (LocalizeCore.CurrentCulture == "zh-Hans")
@@ -1972,7 +1986,8 @@ namespace VPet_Simulator.Windows
                       Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
                   }));
                   m_menu.Items.Add(new MenuItem("反馈中心".Translate(), null, (x, y) => { new winReport(this).Show(); }));
-                  m_menu.Items.Add(new MenuItem("开发控制台".Translate(), null, (x, y) => { new winConsole(this).Show(); }));
+                  if (Set.DeBug)
+                      m_menu.Items.Add(new MenuItem("开发控制台".Translate(), null, (x, y) => { new winConsole(this).Show(); }));
 
                   m_menu.Items.Add(new MenuItem("设置面板".Translate(), null, (x, y) =>
                   {
