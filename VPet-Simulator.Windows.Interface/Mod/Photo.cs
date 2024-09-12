@@ -448,9 +448,16 @@ public class Photo
     /// </summary>
     public void Unlock(IMainWindow imw)
     {
-        ISub sub = imw.Set["betterbuy"][Name];
+        ISub sub = imw.Set["photo"][Name];
         PlayerInfo = new Info(new Sub());
         PlayerInfo.UnlockTime = DateTime.Now;
+    }
+    public void LoadUserInfo(IMainWindow imw)
+    {
+        if (imw.Set["photo"].Contains(Name))
+        {
+            PlayerInfo = new Info(imw.Set["betterbuy"][Name]);
+        }
     }
 
     /// <summary>
@@ -489,7 +496,7 @@ public class Photo
     /// </summary>
     /// <param name="originalImage">原图</param>
     /// <returns></returns>
-    private BitmapSource ConvertToGrayScale(BitmapSource originalImage)
+    public static BitmapSource ConvertToGrayScale(BitmapSource originalImage)
     {
         // 创建 WriteableBitmap
         WriteableBitmap writeableBitmap = new WriteableBitmap(originalImage);

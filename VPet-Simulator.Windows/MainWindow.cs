@@ -1787,6 +1787,7 @@ namespace VPet_Simulator.Windows
                       Task.Run(() => MessageBox.Show(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString()));
                   }
                   Foods.ForEach(item => item.LoadImageSource(this));
+                  Photos.ForEach(item => item.LoadUserInfo(this));
                   Main.TimeHandle += Handle_Music;
                   if (IsSteamUser)
                       Main.TimeHandle += Handle_Steam;
@@ -2434,7 +2435,7 @@ namespace VPet_Simulator.Windows
                 sb.Append(p.TranslateName);
             }
             Dispatcher.Invoke(() =>
-            NoticeBox.Show(string.Concat(sb.ToString().AsSpan(2), " ", "以上照片已解锁".Translate()), "新的照片已解锁".Translate()));
+            NoticeBox.Show(string.Concat(sb.ToString().AsSpan(2), "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate()));
         }
     }
 }

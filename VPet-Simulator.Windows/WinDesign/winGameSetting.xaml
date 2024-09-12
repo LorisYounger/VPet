@@ -463,7 +463,7 @@
                                 BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
                                 Checked="ConsoleBox_Checked" CheckedBackground="{DynamicResource Primary}"
                                 CheckedBorderBrush="{DynamicResource Primary}"
-                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str '启用开发者控制台'}"
+                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str '启用开发者控制台, 重启后生效'}"
                                 ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}" ToggleSize="14"
                                 Unchecked="ConsoleBox_Checked" />
                     </StackPanel>
