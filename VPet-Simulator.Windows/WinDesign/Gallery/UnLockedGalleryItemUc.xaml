@@ -18,7 +18,8 @@
             <Image  Source="{Binding Image, ElementName=this}" />
             <TextBlock Grid.Row="1"
                        Margin="0, 7, 0, 0"
-                       Text="{Binding Title, ElementName=this}" />
+                       Text="{Binding Title, ElementName=this}" 
+                       TextTrimming="CharacterEllipsis" />
             <CheckBox VerticalAlignment="Top"
                       HorizontalAlignment="Left"
                       Style="{DynamicResource ThemedCheckBoxStyle}"

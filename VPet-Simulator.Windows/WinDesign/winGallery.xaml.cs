@@ -68,10 +68,6 @@ public partial class winGallery : WindowX
         mw.winGallery = null;
     }
 
-    private void WindowX_Loaded(object sender, RoutedEventArgs e)
-    {
-        RefreshList();
-    }
     private void Button_Loaded(object sender, RoutedEventArgs e)
     {
         ((Button)sender).Content = "照片图库".Translate() + mw.PrefixSave;
@@ -79,12 +75,13 @@ public partial class winGallery : WindowX
 
     private void BtnSearch_Click(object sender, RoutedEventArgs e)
     {
-
+        RefreshList();
     }
 
     private void TbTitleSearch_Loaded(object sender, RoutedEventArgs e)
     {
         _searchTextBox = sender as TextBox;
+        RefreshList();
     }
 
     private void ToggleButtonGroupTags_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -93,6 +90,11 @@ public partial class winGallery : WindowX
     }
 
     private void ToggleButtonLockedOrUnlocked_CheckChanged(object sender, RoutedEventArgs e)
+    {
+        RefreshList();
+    }
+
+    private void CheckBoxFavorite_CheckChanged(object sender, RoutedEventArgs e)
     {
         RefreshList();
     }
@@ -106,11 +108,15 @@ public partial class winGallery : WindowX
 
         AutoUniformGridImages.Children.Clear();
 
+        var searchText = _searchTextBox.Text;
         var isUnlockedChecked = ToggleButtonUnlocked.IsChecked == true;
         var isLockedChecked = ToggleButtonLocked.IsChecked == true;
+        var isFavoriteChecked = CheckBoxFavorite.IsChecked == true;
 
         //获取锁定的图片
-        var lockphoto = mw.Photos.FindAll(x => x.IsUnlock == false);
+        var lockphoto = mw.Photos.FindAll(x => x.IsUnlock == false 
+            && (!isFavoriteChecked || x.IsStar)
+            && (string.IsNullOrWhiteSpace(searchText) || x.Name.Contains(searchText) || x.Description.Contains(searchText)));
         foreach (var photo in lockphoto)
         {
             var newItem = new LockedGalleryItemUc()
@@ -121,12 +127,15 @@ public partial class winGallery : WindowX
                 Title = photo.TranslateName,
                 UnlockAble = photo.UnlockAble.LockString,
                 UnlockMoney = 3.55, //如果不可用金钱解锁，传null
-                Image = photo.GetImage(mw) //方法不存在 Photo.ConvertToBlackWhite()
+                Image = photo.GetImage(mw) //Photo.ConvertToBlackWhite()方法不存在
             };
+            //newItem.Unlock += ... 点击解锁按钮时触发该事件
             AutoUniformGridImages.Children.Add(newItem);
         }
         //获取解锁的图片
-        var unlockphoto = mw.Photos.FindAll(x => x.IsUnlock == true);
+        var unlockphoto = mw.Photos.FindAll(x => x.IsUnlock == true
+            && (!isFavoriteChecked || x.IsStar)
+            && (string.IsNullOrWhiteSpace(searchText) || x.Name.Contains(searchText) || x.Description.Contains(searchText)));
         foreach (var photo in unlockphoto)
         {
             var newItem = new UnLockedGalleryItemUc()

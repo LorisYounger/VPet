@@ -18,8 +18,7 @@
             pu:WindowXCaption.Buttons="Close"
             Icon="/Res/Gallery.png"
             pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}"
-            Closing="Window_Closed"
-            Loaded="WindowX_Loaded">
+            Closing="Window_Closed">
     <Window.Resources>
         <Style x:Key="TagToggleButtonStyle"
                TargetType="ToggleButton"
@@ -98,7 +97,7 @@
                                  Grid.ColumnSpan="2"
                                  VerticalAlignment="Center"
                                  Padding="7,0"
-                                 pu:TextBoxHelper.Watermark="{ll:Str 搜索商品}"
+                                 pu:TextBoxHelper.Watermark="{ll:Str 搜索图片}"
                                  FontSize="14"
                                  Background="#33FFFFFF"
                                  Height="30"
@@ -134,19 +133,17 @@
         </Grid.ColumnDefinitions>
         <Border Background="{DynamicResource DARKPrimaryText}" />
         <StackPanel Margin="12, 10">
-            <TextBlock Text="{ll:Str 标签}"
+            <TextBlock Text="{ll:Str 筛选条件}"
                        FontSize="18"
-                       Margin="5"
+                       Margin="0, 5"
                        Foreground="{DynamicResource DARKPrimary}" />
+            <TextBlock Text="{ll:Str 标签}"/>
             <pu:ToggleButtonGroup x:Name="ToggleButtonGroupTags"
                                   Margin="5,0"
                                   ItemContainerStyle="{DynamicResource TagToggleButtonStyle}"
                                   SelectionChanged="ToggleButtonGroupTags_SelectionChanged">
             </pu:ToggleButtonGroup>
-            <TextBlock Text="{ll:Str 类型}"
-                       FontSize="18"
-                       Margin="5"
-                       Foreground="{DynamicResource DARKPrimary}" />
+            <TextBlock Text="{ll:Str 是否解锁}" />
             <StackPanel Orientation="Horizontal">
                 <ToggleButton x:Name="ToggleButtonUnlocked"
                               IsChecked="True"
@@ -161,6 +158,12 @@
                               Checked="ToggleButtonLockedOrUnlocked_CheckChanged"
                               Unchecked="ToggleButtonLockedOrUnlocked_CheckChanged" />
             </StackPanel>
+            <TextBlock Text="{ll:Str 收藏}" />
+            <CheckBox x:Name="CheckBoxFavorite"
+                      Style="{DynamicResource ThemedCheckBoxStyle}"
+                      Content="只看我收藏的" 
+                      Checked="CheckBoxFavorite_CheckChanged"
+                      Unchecked="CheckBoxFavorite_CheckChanged"/>
         </StackPanel>
         <WrapPanel x:Name="AutoUniformGridImages"
                    Grid.Column="1"

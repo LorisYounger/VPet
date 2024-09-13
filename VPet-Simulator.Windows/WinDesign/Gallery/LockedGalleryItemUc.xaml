@@ -19,7 +19,8 @@
             <Image  Source="{Binding Image, ElementName=this}" />
             <TextBlock Grid.Row="1"
                        Margin="0, 7, 0, 0"
-                       Text="{Binding Title, ElementName=this}" />
+                       Text="{Binding Title, ElementName=this}"
+                       TextTrimming="CharacterEllipsis" />
             <Border Background="#CCF3F4F5" />
             <StackPanel Margin="15, 0"
                         VerticalAlignment="Center">
@@ -31,10 +32,11 @@
                 <Button Margin="0, 7, 0, 0"
                         HorizontalAlignment="Center"
                         Visibility="{Binding UnlockMoney, Converter={x:Static pw:Converters.NullToCollapseConverter}, ElementName=this}"
-                        Style="{DynamicResource ThemedButtonStyle}">
+                        Style="{DynamicResource ThemedButtonStyle}"
+                        Click="Button_Click">
                     <TextBlock>
-                        <Run Text="解锁$"/>
-                        <Run Text="{Binding UnlockMoney, ElementName=this}"/>
+                        <Run Text="解锁"/>
+                        <Run Text="{Binding UnlockMoney, StringFormat='${0}', ElementName=this}"/>
                         <Run Text="" />
                     </TextBlock>
                 </Button>
