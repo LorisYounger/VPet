@@ -25,6 +25,7 @@ public partial class winGallery : WindowX
 {
     private TextBox _searchTextBox;
     MainWindow mw;
+    private object _updateLock = new object();
 
     public winGallery(MainWindow mw)
     {
@@ -89,14 +90,10 @@ public partial class winGallery : WindowX
         RefreshList();
     }
 
-    private void ToggleButtonLockedOrUnlocked_CheckChanged(object sender, RoutedEventArgs e)
+    private void ToggleButtonSearchParameters_CheckChanged(object sender, RoutedEventArgs e)
     {
         RefreshList();
-    }
 
-    private void CheckBoxFavorite_CheckChanged(object sender, RoutedEventArgs e)
-    {
-        RefreshList();
     }
 
     private void RefreshList()
@@ -106,49 +103,138 @@ public partial class winGallery : WindowX
             return;
         }
 
-        AutoUniformGridImages.Children.Clear();
-
-        var searchText = _searchTextBox.Text;
-        var isUnlockedChecked = ToggleButtonUnlocked.IsChecked == true;
-        var isLockedChecked = ToggleButtonLocked.IsChecked == true;
-        var isFavoriteChecked = CheckBoxFavorite.IsChecked == true;
-
-        //获取锁定的图片
-        var lockphoto = mw.Photos.FindAll(x => x.IsUnlock == false 
-            && (!isFavoriteChecked || x.IsStar)
-            && (string.IsNullOrWhiteSpace(searchText) || x.Name.Contains(searchText) || x.Description.Contains(searchText)));
-        foreach (var photo in lockphoto)
+        Dispatcher.BeginInvoke(() =>
         {
-            var newItem = new LockedGalleryItemUc()
+            lock (_updateLock)
             {
-                Height = 160,
-                Width = 185,
-                Margin = new Thickness(0, 0, 10, 10),
-                Title = photo.TranslateName,
-                UnlockAble = photo.UnlockAble.LockString,
-                UnlockMoney = 3.55, //如果不可用金钱解锁，传null
-                Image = photo.GetImage(mw) //Photo.ConvertToBlackWhite()方法不存在
-            };
-            //newItem.Unlock += ... 点击解锁按钮时触发该事件
-            AutoUniformGridImages.Children.Add(newItem);
-        }
-        //获取解锁的图片
-        var unlockphoto = mw.Photos.FindAll(x => x.IsUnlock == true
-            && (!isFavoriteChecked || x.IsStar)
-            && (string.IsNullOrWhiteSpace(searchText) || x.Name.Contains(searchText) || x.Description.Contains(searchText)));
-        foreach (var photo in unlockphoto)
+                AutoUniformGridImages.Children.Clear();
+
+                var searchText = _searchTextBox.Text;
+
+                //如果某个分类一个都没选中，那就等于全部选中
+
+                var isIllustrationChecked = ToggleButtonIllustration.IsChecked == true ? true : ToggleButtonThumbnail.IsChecked == false;
+                var isThumbnailChecked = ToggleButtonThumbnail.IsChecked == true ? true : ToggleButtonThumbnail.IsChecked == false;
+                //var isGIFChecked = ToggleButtonGIF.IsChecked == true;
+
+                var isLockedChecked = ToggleButtonLocked.IsChecked == true ? true : ToggleButtonUnlocked.IsChecked == false;
+                var isUnlockedChecked = ToggleButtonUnlocked.IsChecked == true ? true : ToggleButtonLocked.IsChecked == false;
+               
+                var isFavoriteChecked = CheckBoxFavorite.IsChecked == true;
+                var selectedTags = ToggleButtonGroupTags.SelectedItems.Cast<string>();
+
+                //获取锁定的图片
+                if (isLockedChecked)
+                {
+                    var lockphoto = mw.Photos.FindAll(p => p.IsUnlock == false
+                            && (!isFavoriteChecked || p.IsStar)
+                            && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
+                            && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
+                            && (!selectedTags.Any() || selectedTags.Any(st => p.Tags.Contains(st)))
+                            && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
+                    foreach (var photo in lockphoto)
+                    {
+                        var newItem = new LockedGalleryItemUc()
+                        {
+                            Height = 160,
+                            Width = 185,
+                            Tag = photo,
+                            Margin = new Thickness(0, 0, 10, 10),
+                            Title = photo.TranslateName,
+                            UnlockAble = photo.UnlockAble.LockString,
+                            UnlockMoney = 3.55, //如果不可用金钱解锁，传null
+                            Image = photo.GetImage(mw) //Photo.ConvertToBlackWhite()方法不存在
+                        };
+                        //newItem.Unlock += ... 点击解锁按钮时触发该事件
+                        AutoUniformGridImages.Children.Add(newItem);
+                    }
+                }
+                //获取解锁的图片
+                if (isUnlockedChecked)
+                {
+                    var unlockphoto = mw.Photos.FindAll(p => p.IsUnlock == true
+                        && (!isFavoriteChecked || p.IsStar)
+                        && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
+                        && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
+                        && (!selectedTags.Any() || selectedTags.Any(st => p.Tags.Contains(st)))
+                        && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
+                    foreach (var photo in unlockphoto)
+                    {
+                        var newItem = new UnLockedGalleryItemUc()
+                        {
+                            Height = 160,
+                            Width = 185,
+                            Tag = photo,
+                            Margin = new Thickness(0, 0, 10, 10),
+                            Title = photo.TranslateName,
+                            Description = photo.Description,
+                            IsStar = photo.IsStar,
+                            Image = photo.GetImage(mw)
+                        };
+                        newItem.Click += delegate
+                        {
+                            DisplayDetail(photo);
+                        };
+                        newItem.StarChanged += delegate
+                        {
+                            //TODO: 只读的？
+                            //photo.IsStar = newItem.IsStar; 
+                        };
+                        AutoUniformGridImages.Children.Add(newItem);
+                    }
+                }
+
+                BorderEmpty.Visibility = AutoUniformGridImages.Children.Count == 0
+                        ? Visibility.Visible
+                        : Visibility.Collapsed;
+            }
+        }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    private void DisplayDetail(Photo photo)
+    {
+        ImagePhotoDetail.Source = photo.GetImage(mw);
+        IsMaskVisible = true;
+        IsOverlayerVisible = true;
+    }
+
+    private void BorderOutDetail_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        IsMaskVisible = false;
+        IsOverlayerVisible = false;
+    }
+
+    private void ButtonSetDestop_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void ButtonSave_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void ButtonExportAll_Click(object sender, RoutedEventArgs e)
+    {
+        var selectedPhotos = new List<Photo>();
+        foreach (var item in AutoUniformGridImages.Children)
         {
-            var newItem = new UnLockedGalleryItemUc()
+            if (item is UnLockedGalleryItemUc unlockedItem
+                && unlockedItem.IsSelected)
             {
-                Height = 160,
-                Width = 185,
-                Margin = new Thickness(0, 0, 10, 10),
-                Title = photo.TranslateName,
-                Description = photo.Description,
-                Image = photo.GetImage(mw)
-            };
-            AutoUniformGridImages.Children.Add(newItem);
+                selectedPhotos.Add(unlockedItem.Tag as Photo);
+            }
         }
+        if (!selectedPhotos.Any())
+        {
+            Toast(
+                message: "当前没有选中任何项目！",
+                icon: MessageBoxIcon.Error
+            );
+            return;
+        }
+
+        //TODO：导出selectedPhotos
     }
 
 }

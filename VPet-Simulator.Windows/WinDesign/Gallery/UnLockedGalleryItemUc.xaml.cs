@@ -24,7 +24,25 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
         {
             InitializeComponent();
         }
-        
+
+        public event RoutedEventHandler Click
+        {
+            add { AddHandler(ClickEvent, value); }
+            remove { RemoveHandler(ClickEvent, value); }
+        }
+
+        public static readonly RoutedEvent ClickEvent =
+            EventManager.RegisterRoutedEvent("Click", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UnLockedGalleryItemUc));
+
+        public event RoutedEventHandler StarChanged
+        {
+            add { AddHandler(StarChangedEvent, value); }
+            remove { RemoveHandler(StarChangedEvent, value); }
+        }
+
+        public static readonly RoutedEvent StarChangedEvent =
+            EventManager.RegisterRoutedEvent("StarChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UnLockedGalleryItemUc));
+
         public ImageSource Image
         {
             get { return (ImageSource)GetValue(ImageProperty); }
@@ -43,8 +61,6 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register("Title", typeof(string), typeof(UnLockedGalleryItemUc));
 
-
-
         public string Description
         {
             get { return (string)GetValue(DescriptionProperty); }
@@ -54,6 +70,14 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
         public static readonly DependencyProperty DescriptionProperty =
             DependencyProperty.Register("Description", typeof(string), typeof(UnLockedGalleryItemUc));
 
+        public bool IsStar
+        {
+            get { return (bool)GetValue(IsStarProperty); }
+            set { SetValue(IsStarProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsStarProperty =
+            DependencyProperty.Register("IsStar", typeof(bool), typeof(UnLockedGalleryItemUc));
 
         public bool IsSelected
         {
@@ -64,5 +88,14 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
         public static readonly DependencyProperty IsSelectedProperty =
             DependencyProperty.Register("IsSelected", typeof(bool), typeof(UnLockedGalleryItemUc));
 
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(ClickEvent));
+        }
+
+        private void ToggleButtonStar_CheckChanged(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(StarChangedEvent));
+        }
     }
 }

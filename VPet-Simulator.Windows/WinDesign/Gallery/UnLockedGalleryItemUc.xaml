@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:VPet_Simulator.Windows.WinDesign.Gallery"
              xmlns:pw="https://opensource.panuon.com/wpf"
+             xmlns:pu="https://opensource.panuon.com/wpf-ui"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -15,20 +16,44 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Image  Source="{Binding Image, ElementName=this}" />
-            <TextBlock Grid.Row="1"
-                       Margin="0, 7, 0, 0"
-                       Text="{Binding Title, ElementName=this}" 
-                       TextTrimming="CharacterEllipsis" />
-            <CheckBox VerticalAlignment="Top"
-                      HorizontalAlignment="Left"
+            <Image Margin="0, 0, 0, 7"
+                   Source="{Binding Image, ElementName=this}" />
+            <CheckBox Grid.Row="1"
                       Style="{DynamicResource ThemedCheckBoxStyle}"
-                      IsChecked="{Binding IsSelected, ElementName=this, Mode=TwoWay}" />
-            <TextBlock Grid.RowSpan="2"
-                       VerticalAlignment="Center"
+                      IsChecked="{Binding IsSelected, ElementName=this, Mode=TwoWay}"
+                      ToolTip="{Binding Title, ElementName=this}" >
+                <TextBlock Text="{Binding Title, ElementName=this}"
+                           TextTrimming="CharacterEllipsis" />
+            </CheckBox>
+            <TextBlock VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        TextWrapping="Wrap"
-                       Text="{Binding Description, ElementName=this}" />
+                       Text="{Binding Description, ElementName=this}">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="#eee"
+                                      BlurRadius="5"
+                                      ShadowDepth="0"/>
+                </TextBlock.Effect>
+            </TextBlock>
+            <Border Background="Transparent" 
+                    MouseLeftButtonDown="Border_MouseLeftButtonDown"/>
+            <ToggleButton Style="{DynamicResource TextToggleButtonStyle}"
+                          FontFamily="pack://application:,,,/Res/#remixicon"
+                          pu:ToggleButtonHelper.CheckedContent="&#xee0b;"
+                          FontSize="22"
+                          Content="&#xee0a;"
+                          Foreground="HotPink"
+                          IsChecked="{Binding IsStar, ElementName=this, Mode=TwoWay}"
+                          VerticalAlignment="Top"
+                          HorizontalAlignment="Right"
+                          Checked="ToggleButtonStar_CheckChanged"
+                          Unchecked="ToggleButtonStar_CheckChanged">
+                <ToggleButton.Effect>
+                    <DropShadowEffect Color="#eee"
+                                      BlurRadius="5"
+                                      ShadowDepth="1" />
+                </ToggleButton.Effect>
+            </ToggleButton>
         </Grid>
     </Border>
 </UserControl>
