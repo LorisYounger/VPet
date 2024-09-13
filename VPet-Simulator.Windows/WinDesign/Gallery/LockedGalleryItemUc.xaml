@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="VPet_Simulator.Windows.WinDesign.Gallery.LockedGalleryItemUc"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:VPet_Simulator.Windows.WinDesign.Gallery"
+             xmlns:pw="https://opensource.panuon.com/wpf"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:Name="this">
+    <Border Background="White">
+
+        <Grid Margin="7">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Image  Source="{Binding Image, ElementName=this}" />
+            <TextBlock Grid.Row="1"
+                       Margin="0, 7, 0, 0"
+                       Text="{Binding Title, ElementName=this}" />
+            <Border Background="#CCF3F4F5" />
+            <StackPanel Margin="15, 0"
+                        VerticalAlignment="Center">
+                <TextBlock Text="解锁条件"
+                           FontWeight="Bold" />
+                <TextBlock Margin="0, 7, 0, 0"
+                           TextWrapping="Wrap"
+                           Text="{Binding UnlockAble, ElementName=this}" />
+                <Button Margin="0, 7, 0, 0"
+                        HorizontalAlignment="Center"
+                        Visibility="{Binding UnlockMoney, Converter={x:Static pw:Converters.NullToCollapseConverter}, ElementName=this}"
+                        Style="{DynamicResource ThemedButtonStyle}">
+                    <TextBlock>
+                        <Run Text="解锁$"/>
+                        <Run Text="{Binding UnlockMoney, ElementName=this}"/>
+                        <Run Text="" />
+                    </TextBlock>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

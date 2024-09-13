@@ -78,6 +78,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="mklink.bat" />
+		<None Remove="Res\Gallery.png" />
 		<None Remove="Res\img\error.png" />
 		<None Remove="Res\img\rank1.png" />
 		<None Remove="Res\img\rank2.png" />
@@ -132,6 +133,7 @@
 	<ItemGroup>
 		<Resource Include="Res\Font\OPPOSans B.ttf" />
 		<Resource Include="Res\Font\OPPOSans R.ttf" />
+		<Resource Include="Res\Gallery.png" />
 		<Resource Include="Res\img\error.png" />
 		<Resource Include="Res\img\rank2.png" />
 		<Resource Include="Res\img\rank1.png" />
@@ -153,6 +155,9 @@
 			<AutoGen>True</AutoGen>
 			<DesignTime>True</DesignTime>
 			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="WinDesign\Gallery\UnLockedGalleryItemUc.xaml.cs">
+		  <SubType>Code</SubType>
 		</Compile>
 	</ItemGroup>
 	<ItemGroup>

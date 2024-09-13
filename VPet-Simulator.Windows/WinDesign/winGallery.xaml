@@ -1,13 +1,170 @@
-﻿<Window x:Class="VPet_Simulator.Windows.winGallery"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VPet_Simulator.Windows"
-        mc:Ignorable="d"
-        Title="winGallery" Height="450" Width="800"
-        Closed="Window_Closed">
+﻿<pu:WindowX x:Class="VPet_Simulator.Windows.winGallery"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:pu="https://opensource.panuon.com/wpf-ui"
+            xmlns:local="clr-namespace:VPet_Simulator.Windows"
+            mc:Ignorable="d"
+            Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}"
+            Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}"
+            FontSize="14"
+            WindowStartupLocation="CenterScreen"
+            Background="{DynamicResource PrimaryLighter}"
+            pu:WindowXCaption.Height="45"
+            pu:WindowXCaption.Background="{DynamicResource DARKPrimary}"
+            pu:WindowXCaption.Foreground="#FFFFFF"
+            pu:WindowXCaption.Buttons="Close"
+            Icon="/Res/Gallery.png"
+            pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}"
+            Closing="Window_Closed"
+            Loaded="WindowX_Loaded">
+    <Window.Resources>
+        <Style x:Key="TagToggleButtonStyle"
+               TargetType="ToggleButton"
+               BasedOn="{StaticResource {x:Static pu:StyleKeys.ToggleButtonStyle}}">
+            <Setter Property="Margin"
+                    Value="0,0,3,3" />
+            <Setter Property="Padding"
+                    Value="5,3" />
+            <Setter Property="BorderBrush"
+                    Value="{DynamicResource DARKPrimaryDark}" />
+            <Setter Property="BorderThickness"
+                    Value="1" />
+            <Setter Property="Foreground"
+                    Value="{DynamicResource DARKPrimaryDark}" />
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="pu:ToggleButtonHelper.HoverBackground"
+                    Value="{DynamicResource DARKPrimaryTrans4}" />
+            <Setter Property="pu:ToggleButtonHelper.CheckedForeground"
+                    Value="{DynamicResource DARKPrimaryText}" />
+            <Setter Property="pu:ToggleButtonHelper.CheckedBackground"
+                    Value="{DynamicResource DARKPrimaryTrans}" />
+            <Setter Property="pu:ToggleButtonHelper.CornerRadius"
+                    Value="4" />
+        </Style>
+    </Window.Resources>
+    <pu:WindowXCaption.CloseButtonStyle>
+        <Style TargetType="Button"
+               BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
+            <Setter Property="Width"
+                    Value="28" />
+            <Setter Property="Height"
+                    Value="28" />
+            <Setter Property="Margin"
+                    Value="0,0,7,0" />
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="pu:ButtonHelper.CornerRadius"
+                    Value="14" />
+            <Setter Property="pu:ButtonHelper.HoverBackground"
+                    Value="White" />
+            <Setter Property="pu:ButtonHelper.ClickBackground"
+                    Value="{x:Null}" />
+            <Setter Property="pu:ButtonHelper.HoverForeground"
+                    Value="{DynamicResource DARKPrimary}" />
+        </Style>
+    </pu:WindowXCaption.CloseButtonStyle>
+    <pu:WindowXCaption.HeaderTemplate>
+        <DataTemplate>
+            <Grid Margin="10,0">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="ImageWHY"
+                           Width="28"
+                           Height="28"
+                           Source="/Res/Gallery.png"
+                           VerticalAlignment="Center"
+                           Margin="30,0,0,0" />
+                    <Button Style="{DynamicResource TextButtonStyle}"
+                            Foreground="{DynamicResource DARKPrimaryText}"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            pu:WindowX.IsDragMoveArea="False"
+                            Margin="10,0,0,0"
+                            Loaded="Button_Loaded" />
+                    <Grid Grid.Column="1"
+                          Margin="15,0,0,0"
+                          pu:WindowX.IsDragMoveArea="False"
+                          Width="200">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TbTitleSearch"
+                                 Grid.ColumnSpan="2"
+                                 VerticalAlignment="Center"
+                                 Padding="7,0"
+                                 pu:TextBoxHelper.Watermark="{ll:Str 搜索商品}"
+                                 FontSize="14"
+                                 Background="#33FFFFFF"
+                                 Height="30"
+                                 BorderThickness="0"
+                                 pu:TextBoxHelper.CornerRadius="5"
+                                 Loaded="TbTitleSearch_Loaded"
+                                 Foreground="{DynamicResource DARKPrimaryText}" />
+                        <Button Grid.Column="1"
+                                Margin="0,0,3,0"
+                                VerticalAlignment="Center"
+                                Height="28"
+                                Width="28"
+                                IsDefault="{Binding IsKeyboardFocusWithin, ElementName=TbTitleSearch}"
+                                BorderThickness="0"
+                                pu:ButtonHelper.CornerRadius="0,5,5,0"
+                                Background="Transparent"
+                                FontFamily="pack://application:,,,/Res/#remixicon"
+                                Content="&#xF0D1;"
+                                Padding="0"
+                                Foreground="{DynamicResource DARKPrimaryText}"
+                                FontSize="16"
+                                Cursor="Hand"
+                                Click="BtnSearch_Click" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </pu:WindowXCaption.HeaderTemplate>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Border Background="{DynamicResource DARKPrimaryText}" />
+        <StackPanel Margin="12, 10">
+            <TextBlock Text="{ll:Str 标签}"
+                       FontSize="18"
+                       Margin="5"
+                       Foreground="{DynamicResource DARKPrimary}" />
+            <pu:ToggleButtonGroup x:Name="ToggleButtonGroupTags"
+                                  Margin="5,0"
+                                  ItemContainerStyle="{DynamicResource TagToggleButtonStyle}"
+                                  SelectionChanged="ToggleButtonGroupTags_SelectionChanged">
+            </pu:ToggleButtonGroup>
+            <TextBlock Text="{ll:Str 类型}"
+                       FontSize="18"
+                       Margin="5"
+                       Foreground="{DynamicResource DARKPrimary}" />
+            <StackPanel Orientation="Horizontal">
+                <ToggleButton x:Name="ToggleButtonUnlocked"
+                              IsChecked="True"
+                              Content="{ll:Str 已解锁}"
+                              Style="{DynamicResource TagToggleButtonStyle}"
+                              Checked="ToggleButtonLockedOrUnlocked_CheckChanged"
+                              Unchecked="ToggleButtonLockedOrUnlocked_CheckChanged" />
+                <ToggleButton x:Name="ToggleButtonLocked"
+                              IsChecked="True"
+                              Content="{ll:Str 未解锁}"
+                              Style="{DynamicResource TagToggleButtonStyle}"
+                              Checked="ToggleButtonLockedOrUnlocked_CheckChanged"
+                              Unchecked="ToggleButtonLockedOrUnlocked_CheckChanged" />
+            </StackPanel>
+        </StackPanel>
+        <WrapPanel x:Name="AutoUniformGridImages"
+                   Grid.Column="1"
+                   Margin="10, 10, 0, 0"
+                   VerticalAlignment="Top" />
     </Grid>
-</Window>
+</pu:WindowX>

@@ -323,4 +323,13 @@
         <Setter Property="pu:ShadowHelper.Opacity" Value="0.7" />
         <Setter Property="pu:ShadowHelper.BlurRadius" Value="25" />
     </Style>
+
+    <Style x:Key="ThemedCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Static pu:StyleKeys.CheckBoxStyle}}">
+        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="pu:CheckBoxHelper.CornerRadius" Value="2"/>
+        <Setter Property="pu:CheckBoxHelper.CheckedBackground" Value="{DynamicResource DARKPrimary}"/>
+        <Setter Property="pu:CheckBoxHelper.CheckedGlyphBrush" Value="{DynamicResource DARKPrimaryText}"/>
+        <Setter Property="pu:CheckBoxHelper.CheckedBorderThickness" Value="0"/>
+    </Style>
 </ResourceDictionary>
