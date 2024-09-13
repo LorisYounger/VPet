@@ -535,7 +535,7 @@ public class Photo
     public BitmapImage GetImage(IMainWindow imw)
     {
         //解压zip
-        string zippath = imw.FileSources.FindSource(Zip);
+        string zippath = imw.FileSources.FindSource(Zip + ".zip");
         if (zippath == null)
         {
             return ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
@@ -548,14 +548,21 @@ public class Photo
             {
                 using (Stream stream = entry.Open())
                 {
-                    // 创建 BitmapImage
-                    BitmapImage bitmap = new BitmapImage();
-                    bitmap.BeginInit();
-                    bitmap.StreamSource = stream;
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad; // 立即加载
-                    bitmap.EndInit();
-                    bitmap.Freeze(); // 使 BitmapImage 可以在不同线程中使用
-                    return bitmap;
+                    // 将流内容复制到内存流中
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        stream.CopyTo(memoryStream);
+                        memoryStream.Position = 0; // 重置内存流的位置
+
+                        // 创建 BitmapImage
+                        BitmapImage bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.StreamSource = memoryStream; // 使用内存流
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad; // 立即加载
+                        bitmap.EndInit();
+                        bitmap.Freeze(); // 使 BitmapImage 可以在不同线程中使用
+                        return bitmap;
+                    }
                 }
             }
             else
