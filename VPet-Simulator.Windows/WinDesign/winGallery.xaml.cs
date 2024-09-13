@@ -142,8 +142,10 @@ public partial class winGallery : WindowX
                             Margin = new Thickness(0, 0, 10, 10),
                             Title = photo.TranslateName,
                             UnlockAble = photo.UnlockAble.LockString,
-                            UnlockMoney = 3.55, //如果不可用金钱解锁，传null
-                            Image = photo.GetImage(mw) //Photo.ConvertToBlackWhite()方法不存在
+                            Sellboth = photo.UnlockAble.SellBoth,
+                            UnlockMoney = 3.55, 
+                            Image = photo.GetImage(mw), //Photo.ConvertToBlackWhite()方法不存在
+                            ToolTip = photo.UnlockAble.LockString,
                         };
                         //newItem.Unlock += ... 点击解锁按钮时触发该事件
                         AutoUniformGridImages.Children.Add(newItem);
@@ -169,7 +171,8 @@ public partial class winGallery : WindowX
                             Title = photo.TranslateName,
                             Description = photo.Description,
                             IsStar = photo.IsStar,
-                            Image = photo.GetImage(mw)
+                            Image = photo.GetImage(mw),
+                            ToolTip = photo.Description,
                         };
                         newItem.Click += delegate
                         {
@@ -194,6 +197,8 @@ public partial class winGallery : WindowX
     private void DisplayDetail(Photo photo)
     {
         ImagePhotoDetail.Source = photo.GetImage(mw);
+        TextBlockPhotoDetailTitle.Text = photo.TranslateName;
+        TextBlockPhotoDetailDescription.Text = photo.Description;
         IsMaskVisible = true;
         IsOverlayerVisible = true;
     }

@@ -41,16 +41,24 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register("Title", typeof(string), typeof(LockedGalleryItemUc));
 
-        #region UnlockMoney
-        public double? UnlockMoney
+
+        public bool Sellboth
         {
-            get { return (double?)GetValue(UnlockMoneyProperty); }
+            get { return (bool)GetValue(SellbothProperty); }
+            set { SetValue(SellbothProperty, value); }
+        }
+
+        public static readonly DependencyProperty SellbothProperty =
+            DependencyProperty.Register("Sellboth", typeof(bool), typeof(LockedGalleryItemUc));
+
+        public double UnlockMoney
+        {
+            get { return (double)GetValue(UnlockMoneyProperty); }
             set { SetValue(UnlockMoneyProperty, value); }
         }
 
         public static readonly DependencyProperty UnlockMoneyProperty =
-            DependencyProperty.Register("UnlockMoney", typeof(double?), typeof(LockedGalleryItemUc));
-        #endregion
+            DependencyProperty.Register("UnlockMoney", typeof(double), typeof(LockedGalleryItemUc));
 
         public string UnlockAble
         {

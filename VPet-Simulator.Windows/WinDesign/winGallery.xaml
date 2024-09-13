@@ -4,6 +4,7 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:pw="https://opensource.panuon.com/wpf"
             xmlns:pu="https://opensource.panuon.com/wpf-ui"
             xmlns:local="clr-namespace:VPet_Simulator.Windows"
             mc:Ignorable="d"
@@ -128,8 +129,8 @@
     </pu:WindowXCaption.HeaderTemplate>
     <pu:WindowX.Overlayer>
         <Grid>
-            <Border Background="Transparent" 
-                    MouseLeftButtonDown="BorderOutDetail_MouseLeftButtonDown"/>
+            <Border Background="Transparent"
+                    MouseLeftButtonDown="BorderOutDetail_MouseLeftButtonDown" />
             <Grid Margin="100, 80">
                 <Border Background="White"
                         CornerRadius="15"
@@ -145,6 +146,8 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="40" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -160,7 +163,7 @@
                         <Button Margin="7,0,0,0"
                                 VerticalAlignment="Center"
                                 Content="设为桌面"
-                                Style="{DynamicResource ThemedButtonStyle}" 
+                                Style="{DynamicResource ThemedButtonStyle}"
                                 Click="ButtonSetDestop_Click" />
                         <Button Margin="7,0,0,0"
                                 VerticalAlignment="Center"
@@ -169,10 +172,17 @@
                                 Click="ButtonSave_Click" />
                     </StackPanel>
                     <Image x:Name="ImagePhotoDetail"
-                           Grid.Row="1" 
+                           Grid.Row="1"
                            Grid.ColumnSpan="3"
                            HorizontalAlignment="Center"
                            Margin="0,7,0,0" />
+                    <TextBlock x:Name="TextBlockPhotoDetailTitle"
+                               FontWeight="Bold"
+                               FontSize="{Binding FontSize, Converter={x:Static pw:Converters.DoublePlusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}"
+                               Grid.Row="2" />
+                    <ScrollViewer Grid.Row="3">
+                        <TextBlock x:Name="TextBlockPhotoDetailDescription" />
+                    </ScrollViewer>
                 </Grid>
             </Grid>
         </Grid>
@@ -180,7 +190,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
@@ -194,7 +204,7 @@
                        FontSize="18"
                        Margin="0, 5"
                        Foreground="{DynamicResource DARKPrimary}" />
-            <TextBlock Text="{ll:Str 标签}"/>
+            <TextBlock Text="{ll:Str 标签}" />
             <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                           VerticalScrollBarVisibility="Auto"
                           MaxHeight="300">
@@ -229,8 +239,8 @@
                               Checked="ToggleButtonSearchParameters_CheckChanged"
                               Unchecked="ToggleButtonSearchParameters_CheckChanged" />-->
             </StackPanel>
-            <TextBlock Text="{ll:Str 是否解锁}" 
-                       Margin="0, 3, 0, 0"/>
+            <TextBlock Text="{ll:Str 是否解锁}"
+                       Margin="0, 3, 0, 0" />
             <StackPanel Margin="0, 3, 0, 0"
                         Orientation="Horizontal">
                 <ToggleButton x:Name="ToggleButtonUnlocked"
@@ -251,7 +261,7 @@
                       Style="{DynamicResource ThemedCheckBoxStyle}"
                       Content="只看我收藏的"
                       Checked="ToggleButtonSearchParameters_CheckChanged"
-                      Unchecked="ToggleButtonSearchParameters_CheckChanged"/>
+                      Unchecked="ToggleButtonSearchParameters_CheckChanged" />
         </StackPanel>
         <WrapPanel x:Name="AutoUniformGridImages"
                    Grid.Column="1"
@@ -260,7 +270,7 @@
         <Border x:Name="BorderEmpty"
                 Grid.Column="1"
                 Visibility="Collapsed">
-            <TextBlock Text="这里什么都没有，修改搜索条件试试？" 
+            <TextBlock Text="这里什么都没有，修改搜索条件试试？"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center" />
         </Border>

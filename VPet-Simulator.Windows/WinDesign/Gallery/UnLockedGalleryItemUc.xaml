@@ -25,16 +25,6 @@
                 <TextBlock Text="{Binding Title, ElementName=this}"
                            TextTrimming="CharacterEllipsis" />
             </CheckBox>
-            <TextBlock VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       TextWrapping="Wrap"
-                       Text="{Binding Description, ElementName=this}">
-                <TextBlock.Effect>
-                    <DropShadowEffect Color="#eee"
-                                      BlurRadius="5"
-                                      ShadowDepth="0"/>
-                </TextBlock.Effect>
-            </TextBlock>
             <Border Background="Transparent" 
                     MouseLeftButtonDown="Border_MouseLeftButtonDown"/>
             <ToggleButton Style="{DynamicResource TextToggleButtonStyle}"

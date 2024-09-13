@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:VPet_Simulator.Windows.WinDesign.Gallery"
+             xmlns:pu="https://opensource.panuon.com/wpf-ui"
              xmlns:pw="https://opensource.panuon.com/wpf"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -16,31 +17,54 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Image  Source="{Binding Image, ElementName=this}" />
+            <Image Source="{Binding Image, ElementName=this}"
+                   Stretch="UniformToFill"/>
             <TextBlock Grid.Row="1"
-                       Margin="0, 7, 0, 0"
+                       Margin="0, 3, 0, 0"
                        Text="{Binding Title, ElementName=this}"
                        TextTrimming="CharacterEllipsis" />
-            <Border Background="#CCF3F4F5" />
-            <StackPanel Margin="15, 0"
-                        VerticalAlignment="Center">
+            <Border Background="#88F3F4F5" />
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <TextBlock Text="解锁条件"
                            FontWeight="Bold" />
-                <TextBlock Margin="0, 7, 0, 0"
-                           TextWrapping="Wrap"
-                           Text="{Binding UnlockAble, ElementName=this}" />
-                <Button Margin="0, 7, 0, 0"
+                <ScrollViewer Grid.Row="1"
+                              Margin="0, 3, 0, 0">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="{Binding UnlockAble, ElementName=this}" />
+                </ScrollViewer>
+                <Button Grid.Row="2"
+                        Margin="0, 3, 0, 0"
                         HorizontalAlignment="Center"
-                        Visibility="{Binding UnlockMoney, Converter={x:Static pw:Converters.NullToCollapseConverter}, ElementName=this}"
+                        Visibility="{Binding Sellboth, Converter={x:Static pw:Converters.TrueToCollapseConverter}, ElementName=this}"
                         Style="{DynamicResource ThemedButtonStyle}"
                         Click="Button_Click">
                     <TextBlock>
-                        <Run Text="解锁"/>
+                        <Run Text="或解锁"/>
                         <Run Text="{Binding UnlockMoney, StringFormat='${0}', ElementName=this}"/>
                         <Run Text="" />
                     </TextBlock>
                 </Button>
-            </StackPanel>
+                <Button Grid.Row="2"
+                        Margin="0, 7, 0, 0"
+                        Cursor="No"
+                        pu:ButtonHelper.HoverBackground="{x:Null}"
+                        pu:ButtonHelper.ClickBackground="{x:Null}"
+                        Background="#7e7e7e"
+                        HorizontalAlignment="Center"
+                        Visibility="{Binding Sellboth, Converter={x:Static pw:Converters.FalseToCollapseConverter}, ElementName=this}"
+                        Style="{DynamicResource ThemedButtonStyle}">
+                    <TextBlock>
+                        <Run Text="并解锁" />
+                        <Run Text="{Binding UnlockMoney, StringFormat='${0}', ElementName=this}" />
+                        <Run Text="" />
+                    </TextBlock>
+                </Button>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>
