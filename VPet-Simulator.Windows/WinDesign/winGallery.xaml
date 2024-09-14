@@ -1,126 +1,67 @@
 ﻿<pu:WindowX x:Class="VPet_Simulator.Windows.winGallery"
-            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-            xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-            xmlns:pw="https://opensource.panuon.com/wpf"
-            xmlns:pu="https://opensource.panuon.com/wpf-ui"
-            xmlns:local="clr-namespace:VPet_Simulator.Windows"
-            mc:Ignorable="d"
-            Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}"
-            Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}"
-            FontSize="14"
-            WindowStartupLocation="CenterScreen"
-            Background="{DynamicResource PrimaryLighter}"
-            pu:WindowXCaption.Height="45"
-            pu:WindowXCaption.Background="{DynamicResource DARKPrimary}"
-            pu:WindowXCaption.Foreground="#FFFFFF"
-            pu:WindowXCaption.Buttons="Close"
-            Icon="/Res/Gallery.png"
-            pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}"
-            Closing="Window_Closed">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:pw="https://opensource.panuon.com/wpf" xmlns:pu="https://opensource.panuon.com/wpf-ui"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 照片图库}"
+        Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}" Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}"
+        FontSize="14" WindowStartupLocation="CenterScreen" Background="{DynamicResource PrimaryLighter}"
+        pu:WindowXCaption.Height="45" pu:WindowXCaption.Background="{DynamicResource DARKPrimary}"
+        pu:WindowXCaption.Foreground="#FFFFFF" pu:WindowXCaption.Buttons="Close" Icon="/Res/Gallery.png"
+        pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}" Closing="Window_Closed">
     <Window.Resources>
-        <Style x:Key="TagToggleButtonStyle"
-               TargetType="ToggleButton"
-               BasedOn="{StaticResource {x:Static pu:StyleKeys.ToggleButtonStyle}}">
-            <Setter Property="Margin"
-                    Value="0,0,3,3" />
-            <Setter Property="Padding"
-                    Value="5,3" />
-            <Setter Property="BorderBrush"
-                    Value="{DynamicResource DARKPrimaryDark}" />
-            <Setter Property="BorderThickness"
-                    Value="1" />
-            <Setter Property="Foreground"
-                    Value="{DynamicResource DARKPrimaryDark}" />
-            <Setter Property="Background"
-                    Value="Transparent" />
-            <Setter Property="pu:ToggleButtonHelper.HoverBackground"
-                    Value="{DynamicResource DARKPrimaryTrans4}" />
-            <Setter Property="pu:ToggleButtonHelper.CheckedForeground"
-                    Value="{DynamicResource DARKPrimaryText}" />
-            <Setter Property="pu:ToggleButtonHelper.CheckedBackground"
-                    Value="{DynamicResource DARKPrimaryTrans}" />
-            <Setter Property="pu:ToggleButtonHelper.CornerRadius"
-                    Value="4" />
+        <Style x:Key="TagToggleButtonStyle" TargetType="ToggleButton"
+                BasedOn="{StaticResource {x:Static pu:StyleKeys.ToggleButtonStyle}}">
+            <Setter Property="Margin" Value="0,0,3,3" />
+            <Setter Property="Padding" Value="5,3" />
+            <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimaryDark}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDark}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="pu:ToggleButtonHelper.HoverBackground" Value="{DynamicResource DARKPrimaryTrans4}" />
+            <Setter Property="pu:ToggleButtonHelper.CheckedForeground" Value="{DynamicResource DARKPrimaryText}" />
+            <Setter Property="pu:ToggleButtonHelper.CheckedBackground" Value="{DynamicResource DARKPrimaryTrans}" />
+            <Setter Property="pu:ToggleButtonHelper.CornerRadius" Value="4" />
         </Style>
     </Window.Resources>
     <pu:WindowXCaption.CloseButtonStyle>
-        <Style TargetType="Button"
-               BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
-            <Setter Property="Width"
-                    Value="28" />
-            <Setter Property="Height"
-                    Value="28" />
-            <Setter Property="Margin"
-                    Value="0,0,7,0" />
-            <Setter Property="VerticalAlignment"
-                    Value="Center" />
-            <Setter Property="Background"
-                    Value="Transparent" />
-            <Setter Property="pu:ButtonHelper.CornerRadius"
-                    Value="14" />
-            <Setter Property="pu:ButtonHelper.HoverBackground"
-                    Value="White" />
-            <Setter Property="pu:ButtonHelper.ClickBackground"
-                    Value="{x:Null}" />
-            <Setter Property="pu:ButtonHelper.HoverForeground"
-                    Value="{DynamicResource DARKPrimary}" />
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Margin" Value="0,0,7,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="pu:ButtonHelper.CornerRadius" Value="14" />
+            <Setter Property="pu:ButtonHelper.HoverBackground" Value="White" />
+            <Setter Property="pu:ButtonHelper.ClickBackground" Value="{x:Null}" />
+            <Setter Property="pu:ButtonHelper.HoverForeground" Value="{DynamicResource DARKPrimary}" />
         </Style>
     </pu:WindowXCaption.CloseButtonStyle>
     <pu:WindowXCaption.HeaderTemplate>
         <DataTemplate>
             <Grid Margin="10,0">
                 <StackPanel Orientation="Horizontal">
-                    <Image x:Name="ImageWHY"
-                           Width="28"
-                           Height="28"
-                           Source="/Res/Gallery.png"
-                           VerticalAlignment="Center"
-                           Margin="30,0,0,0" />
-                    <Button Style="{DynamicResource TextButtonStyle}"
-                            Foreground="{DynamicResource DARKPrimaryText}"
-                            VerticalAlignment="Center"
-                            FontSize="20"
-                            pu:WindowX.IsDragMoveArea="False"
-                            Margin="10,0,0,0"
+                    <Image x:Name="ImageWHY" Width="28" Height="28" Source="/Res/Gallery.png" VerticalAlignment="Center"
+                            Margin="30,0,0,0" />
+                    <Button Style="{DynamicResource TextButtonStyle}" Foreground="{DynamicResource DARKPrimaryText}"
+                            VerticalAlignment="Center" FontSize="20" pu:WindowX.IsDragMoveArea="False" Margin="10,0,0,0"
                             Loaded="Button_Loaded" />
-                    <Grid Grid.Column="1"
-                          Margin="15,0,0,0"
-                          pu:WindowX.IsDragMoveArea="False"
-                          Width="200">
+                    <Grid Grid.Column="1" Margin="15,0,0,0" pu:WindowX.IsDragMoveArea="False" Width="200">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="TbTitleSearch"
-                                 Grid.ColumnSpan="2"
-                                 VerticalAlignment="Center"
-                                 Padding="7,0"
-                                 pu:TextBoxHelper.Watermark="{ll:Str 搜索图片}"
-                                 FontSize="14"
-                                 Background="#33FFFFFF"
-                                 Height="30"
-                                 BorderThickness="0"
-                                 pu:TextBoxHelper.CornerRadius="5"
-                                 Loaded="TbTitleSearch_Loaded"
-                                 Foreground="{DynamicResource DARKPrimaryText}" />
-                        <Button Grid.Column="1"
-                                Margin="0,0,3,0"
-                                VerticalAlignment="Center"
-                                Height="28"
-                                Width="28"
+                        <TextBox x:Name="TbTitleSearch" Grid.ColumnSpan="2" VerticalAlignment="Center" Padding="7,0"
+                                pu:TextBoxHelper.Watermark="{ll:Str 搜索图片}" FontSize="14" Background="#33FFFFFF"
+                                Height="30" BorderThickness="0" pu:TextBoxHelper.CornerRadius="5"
+                                Loaded="TbTitleSearch_Loaded" Foreground="{DynamicResource DARKPrimaryText}" />
+                        <Button Grid.Column="1" Margin="0,0,3,0" VerticalAlignment="Center" Height="28" Width="28"
                                 IsDefault="{Binding IsKeyboardFocusWithin, ElementName=TbTitleSearch}"
-                                BorderThickness="0"
-                                pu:ButtonHelper.CornerRadius="0,5,5,0"
-                                Background="Transparent"
-                                FontFamily="pack://application:,,,/Res/#remixicon"
-                                Content="&#xF0D1;"
-                                Padding="0"
-                                Foreground="{DynamicResource DARKPrimaryText}"
-                                FontSize="16"
-                                Cursor="Hand"
+                                BorderThickness="0" pu:ButtonHelper.CornerRadius="0,5,5,0" Background="Transparent"
+                                FontFamily="pack://application:,,,/Res/#remixicon" Content="&#xF0D1;" Padding="0"
+                                Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" Cursor="Hand"
                                 Click="BtnSearch_Click" />
                     </Grid>
                 </StackPanel>
@@ -129,17 +70,11 @@
     </pu:WindowXCaption.HeaderTemplate>
     <pu:WindowX.Overlayer>
         <Grid>
-            <Border Background="Transparent"
-                    MouseLeftButtonDown="BorderOutDetail_MouseLeftButtonDown" />
+            <Border Background="Transparent" MouseLeftButtonDown="BorderOutDetail_MouseLeftButtonDown" />
             <Grid Margin="100, 80">
-                <Border Background="White"
-                        CornerRadius="15"
-                        Grid.RowSpan="2"
-                        Grid.ColumnSpan="2">
+                <Border Background="White" CornerRadius="15" Grid.RowSpan="2" Grid.ColumnSpan="2">
                     <Border.Effect>
-                        <DropShadowEffect Color="#eaeaea"
-                                          BlurRadius="30"
-                                          ShadowDepth="5" />
+                        <DropShadowEffect Color="#eaeaea" BlurRadius="30" ShadowDepth="5" />
                     </Border.Effect>
                 </Border>
                 <Grid Margin="15">
@@ -154,32 +89,19 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{ll:Str 图片详情}"
-                               FontSize="18"
-                               Margin="0, 5"
-                               Foreground="{DynamicResource DARKPrimary}" />
-                    <StackPanel Grid.Column="2"
-                                Orientation="Horizontal">
-                        <Button Margin="7,0,0,0"
-                                VerticalAlignment="Center"
-                                Content="设为桌面"
-                                Style="{DynamicResource ThemedButtonStyle}"
-                                Click="ButtonSetDestop_Click" />
-                        <Button Margin="7,0,0,0"
-                                VerticalAlignment="Center"
-                                Content="保存"
-                                Style="{DynamicResource ThemedButtonStyle}"
-                                Click="ButtonSave_Click" />
+                    <TextBlock Text="{ll:Str 图片详情}" FontSize="18" Margin="0, 5"
+                            Foreground="{DynamicResource DARKPrimary}" />
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <Button Margin="7,0,0,0" VerticalAlignment="Center" Content="设为桌面"
+                                Style="{DynamicResource ThemedButtonStyle}" Click="ButtonSetDestop_Click" />
+                        <Button Margin="7,0,0,0" VerticalAlignment="Center" Content="保存"
+                                Style="{DynamicResource ThemedButtonStyle}" Click="ButtonSave_Click" />
                     </StackPanel>
-                    <Image x:Name="ImagePhotoDetail"
-                           Grid.Row="1"
-                           Grid.ColumnSpan="3"
-                           HorizontalAlignment="Center"
-                           Margin="0,7,0,0" />
-                    <TextBlock x:Name="TextBlockPhotoDetailTitle"
-                               FontWeight="Bold"
-                               FontSize="{Binding FontSize, Converter={x:Static pw:Converters.DoublePlusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}"
-                               Grid.Row="2" />
+                    <Image x:Name="ImagePhotoDetail" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Center"
+                            Margin="0,7,0,0" />
+                    <TextBlock x:Name="TextBlockPhotoDetailTitle" FontWeight="Bold"
+                            FontSize="{Binding FontSize, Converter={x:Static pw:Converters.DoublePlusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}"
+                            Grid.Row="2" />
                     <ScrollViewer Grid.Row="3">
                         <TextBlock x:Name="TextBlockPhotoDetailDescription" />
                     </ScrollViewer>
@@ -196,22 +118,46 @@
             <ColumnDefinition Width="200" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Border Grid.RowSpan="2"
-                Background="{DynamicResource DARKPrimaryText}" />
-        <StackPanel Grid.RowSpan="2"
-                    Margin="12, 10">
-            <TextBlock Text="{ll:Str 筛选条件}"
-                       FontSize="18"
-                       Margin="0, 5"
-                       Foreground="{DynamicResource DARKPrimary}" />
-            <TextBlock Text="{ll:Str 标签}" />
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                          VerticalScrollBarVisibility="Auto"
-                          MaxHeight="300">
-                <pu:ToggleButtonGroup x:Name="ToggleButtonGroupTags"
-                                      Margin="5,3,5,0"
-                                      ItemContainerStyle="{DynamicResource TagToggleButtonStyle}"
-                                      SelectionChanged="ToggleButtonGroupTags_SelectionChanged">
+        <Border Grid.RowSpan="2" Background="{DynamicResource DARKPrimaryText}" />
+        <StackPanel Grid.RowSpan="2" Margin="12, 10">
+            <TextBlock Text="{ll:Str 筛选条件}" FontSize="18" Margin="0, 5" Foreground="{DynamicResource DARKPrimary}" />
+
+            <TextBlock Text="{ll:Str 类型}" Margin="0, 3, 0, 0" />
+            <StackPanel Margin="0, 3, 0, 0" Orientation="Horizontal">
+                <ToggleButton x:Name="ToggleButtonIllustration" Content="{ll:Str 插图}"
+                        Style="{DynamicResource TagToggleButtonStyle}"
+                        Checked="ToggleButtonSearchParameters_CheckChanged"
+                        Unchecked="ToggleButtonSearchParameters_CheckChanged" />
+                <ToggleButton x:Name="ToggleButtonThumbnail" Content="{ll:Str 小图}"
+                        Style="{DynamicResource TagToggleButtonStyle}"
+                        Checked="ToggleButtonSearchParameters_CheckChanged"
+                        Unchecked="ToggleButtonSearchParameters_CheckChanged" />
+                <!--<ToggleButton x:Name="ToggleButtonGIF"
+                             Content="GIF"
+                             Style="{DynamicResource TagToggleButtonStyle}"
+                             Checked="ToggleButtonSearchParameters_CheckChanged"
+                             Unchecked="ToggleButtonSearchParameters_CheckChanged" />-->
+            </StackPanel>
+            <TextBlock Text="{ll:Str 是否解锁}" Margin="0, 3, 0, 0" />
+            <StackPanel Margin="0, 3, 0, 0" Orientation="Horizontal">
+                <ToggleButton x:Name="ToggleButtonUnlocked" Content="{ll:Str 已解锁}"
+                        Style="{DynamicResource TagToggleButtonStyle}"
+                        Checked="ToggleButtonSearchParameters_CheckChanged"
+                        Unchecked="ToggleButtonSearchParameters_CheckChanged" />
+                <ToggleButton x:Name="ToggleButtonLocked" Content="{ll:Str 未解锁}"
+                        Style="{DynamicResource TagToggleButtonStyle}"
+                        Checked="ToggleButtonSearchParameters_CheckChanged"
+                        Unchecked="ToggleButtonSearchParameters_CheckChanged" />
+            </StackPanel>
+            <TextBlock Margin="0, 3, 0, 0" Text="{ll:Str 收藏}" />
+            <CheckBox x:Name="CheckBoxFavorite" Margin="0, 3, 0, 0" Style="{DynamicResource ThemedCheckBoxStyle}"
+                    Content="只看我收藏的" Checked="ToggleButtonSearchParameters_CheckChanged"
+                    Unchecked="ToggleButtonSearchParameters_CheckChanged" />
+            <TextBlock Text="{ll:Str 标签}" Margin="0, 5, 0, 0" />
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <pu:ToggleButtonGroup x:Name="ToggleButtonGroupTags" Margin="5,3,5,0"
+                        ItemContainerStyle="{DynamicResource TagToggleButtonStyle}"
+                        SelectionChanged="ToggleButtonGroupTags_SelectionChanged">
                     <pu:ToggleButtonGroup.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />
@@ -219,73 +165,17 @@
                     </pu:ToggleButtonGroup.ItemsPanel>
                 </pu:ToggleButtonGroup>
             </ScrollViewer>
-            <TextBlock Text="{ll:Str 类型}"
-                       Margin="0, 3, 0, 0" />
-            <StackPanel Margin="0, 3, 0, 0"
-                        Orientation="Horizontal">
-                <ToggleButton x:Name="ToggleButtonIllustration"
-                              Content="{ll:Str 插图}"
-                              Style="{DynamicResource TagToggleButtonStyle}"
-                              Checked="ToggleButtonSearchParameters_CheckChanged"
-                              Unchecked="ToggleButtonSearchParameters_CheckChanged" />
-                <ToggleButton x:Name="ToggleButtonThumbnail"
-                              Content="{ll:Str 表情包}"
-                              Style="{DynamicResource TagToggleButtonStyle}"
-                              Checked="ToggleButtonSearchParameters_CheckChanged"
-                              Unchecked="ToggleButtonSearchParameters_CheckChanged" />
-                <!--<ToggleButton x:Name="ToggleButtonGIF"
-                              Content="GIF"
-                              Style="{DynamicResource TagToggleButtonStyle}"
-                              Checked="ToggleButtonSearchParameters_CheckChanged"
-                              Unchecked="ToggleButtonSearchParameters_CheckChanged" />-->
-            </StackPanel>
-            <TextBlock Text="{ll:Str 是否解锁}"
-                       Margin="0, 3, 0, 0" />
-            <StackPanel Margin="0, 3, 0, 0"
-                        Orientation="Horizontal">
-                <ToggleButton x:Name="ToggleButtonUnlocked"
-                              Content="{ll:Str 已解锁}"
-                              Style="{DynamicResource TagToggleButtonStyle}"
-                              Checked="ToggleButtonSearchParameters_CheckChanged"
-                              Unchecked="ToggleButtonSearchParameters_CheckChanged" />
-                <ToggleButton x:Name="ToggleButtonLocked"
-                              Content="{ll:Str 未解锁}"
-                              Style="{DynamicResource TagToggleButtonStyle}"
-                              Checked="ToggleButtonSearchParameters_CheckChanged"
-                              Unchecked="ToggleButtonSearchParameters_CheckChanged" />
-            </StackPanel>
-            <TextBlock Margin="0, 3, 0, 0"
-                       Text="{ll:Str 收藏}" />
-            <CheckBox x:Name="CheckBoxFavorite"
-                      Margin="0, 3, 0, 0"
-                      Style="{DynamicResource ThemedCheckBoxStyle}"
-                      Content="只看我收藏的"
-                      Checked="ToggleButtonSearchParameters_CheckChanged"
-                      Unchecked="ToggleButtonSearchParameters_CheckChanged" />
         </StackPanel>
-        <WrapPanel x:Name="AutoUniformGridImages"
-                   Grid.Column="1"
-                   Margin="10, 10, 0, 0"
-                   VerticalAlignment="Top" />
-        <Border x:Name="BorderEmpty"
-                Grid.Column="1"
-                Visibility="Collapsed">
-            <TextBlock Text="这里什么都没有，修改搜索条件试试？"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center" />
+        <WrapPanel x:Name="AutoUniformGridImages" Grid.Column="1" Margin="10, 10, 0, 0" VerticalAlignment="Top" x:FieldModifier="public" />
+        <Border x:Name="BorderEmpty" Grid.Column="1" Visibility="Collapsed">
+            <TextBlock Text="{ll:Str '这里什么都没有, 修改搜索条件试试?'}" VerticalAlignment="Center" HorizontalAlignment="Center" />
         </Border>
-        <Border Grid.Row="1"
-                Grid.Column="1"
-                Margin="7,0,0,0"
-                Height="40"
-                Background="#fff">
-            <StackPanel HorizontalAlignment="Right"
-                        Orientation="Horizontal">
-                <Button Margin="0,0,7,0"
-                        VerticalAlignment="Center"
-                        Content="导出选中项"
-                        Style="{DynamicResource ThemedButtonStyle}"
-                        Click="ButtonExportAll_Click" />
+        <Border Grid.Row="1" Grid.Column="1" Height="40" Background="#fff">
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <CheckBox x:Name="CheckBoxALL" Margin="7, 0, 7, 0" Style="{DynamicResource ThemedCheckBoxStyle}"
+                        Content="{ll:Str 全选}" />
+                <Button Margin="7,0,7,0" VerticalAlignment="Center" Content="{ll:Str 导出选中项}"
+                        Style="{DynamicResource ThemedButtonStyle}" Click="ButtonExportAll_Click" />
             </StackPanel>
         </Border>
     </Grid>

@@ -54,14 +54,12 @@ public partial class winGallery : WindowX
 
         //逻辑啥的可以空出来我写
 
-        //TODO：这里TagsTrans还是英文代码
-        var tags = mw.Photos.SelectMany(p => p.TagsTrans).Distinct();
-        foreach (var tag in tags)
-        {
-            ToggleButtonGroupTags.ItemsSource = tags;
-        }
-
-
+        //tag分类
+        var tags = mw.Photos.SelectMany(p => p.TagsTrans).GroupBy(item => item) // 按照每个元素进行分组
+            .Select(group => new { Item = group.Key, Count = group.Count() }) // 选择元素及其出现次数
+            .OrderByDescending(x => x.Count) // 按出现次数降序排序
+            .Select(x => x.Item); // 选择去重后的元素
+        ToggleButtonGroupTags.ItemsSource = tags;
     }
 
     private void Window_Closed(object sender, EventArgs e)
@@ -96,7 +94,7 @@ public partial class winGallery : WindowX
 
     }
 
-    private void RefreshList()
+    public void RefreshList()
     {
         if (!IsLoaded)
         {
@@ -119,7 +117,7 @@ public partial class winGallery : WindowX
 
                 var isLockedChecked = ToggleButtonLocked.IsChecked == true ? true : ToggleButtonUnlocked.IsChecked == false;
                 var isUnlockedChecked = ToggleButtonUnlocked.IsChecked == true ? true : ToggleButtonLocked.IsChecked == false;
-               
+
                 var isFavoriteChecked = CheckBoxFavorite.IsChecked == true;
                 var selectedTags = ToggleButtonGroupTags.SelectedItems.Cast<string>();
 
@@ -134,20 +132,7 @@ public partial class winGallery : WindowX
                             && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
                     foreach (var photo in lockphoto)
                     {
-                        var newItem = new LockedGalleryItemUc()
-                        {
-                            Height = 160,
-                            Width = 185,
-                            Tag = photo,
-                            Margin = new Thickness(0, 0, 10, 10),
-                            Title = photo.TranslateName,
-                            UnlockAble = photo.UnlockAble.LockString,
-                            Sellboth = photo.UnlockAble.SellBoth,
-                            UnlockMoney = 3.55, 
-                            Image = photo.GetImage(mw), //Photo.ConvertToBlackWhite()方法不存在
-                            ToolTip = photo.UnlockAble.LockString,
-                        };
-                        //newItem.Unlock += ... 点击解锁按钮时触发该事件
+                        var newItem = new LockedGalleryItemUc(photo, mw);
                         AutoUniformGridImages.Children.Add(newItem);
                     }
                 }
@@ -162,27 +147,7 @@ public partial class winGallery : WindowX
                         && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
                     foreach (var photo in unlockphoto)
                     {
-                        var newItem = new UnLockedGalleryItemUc()
-                        {
-                            Height = 160,
-                            Width = 185,
-                            Tag = photo,
-                            Margin = new Thickness(0, 0, 10, 10),
-                            Title = photo.TranslateName,
-                            Description = photo.Description,
-                            IsStar = photo.IsStar,
-                            Image = photo.GetImage(mw),
-                            ToolTip = photo.Description,
-                        };
-                        newItem.Click += delegate
-                        {
-                            DisplayDetail(photo);
-                        };
-                        newItem.StarChanged += delegate
-                        {
-                            //TODO: 只读的？
-                            //photo.IsStar = newItem.IsStar; 
-                        };
+                        var newItem = new UnLockedGalleryItemUc(photo, mw);
                         AutoUniformGridImages.Children.Add(newItem);
                     }
                 }
@@ -194,7 +159,7 @@ public partial class winGallery : WindowX
         }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
-    private void DisplayDetail(Photo photo)
+    public void DisplayDetail(Photo photo)
     {
         ImagePhotoDetail.Source = photo.GetImage(mw);
         TextBlockPhotoDetailTitle.Text = photo.TranslateName;

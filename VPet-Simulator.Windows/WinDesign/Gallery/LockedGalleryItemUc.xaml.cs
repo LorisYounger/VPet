@@ -1,6 +1,10 @@
-﻿using System.Windows;
+﻿using LinePutScript.Localization.WPF;
+using NAudio.Gui;
+using Panuon.WPF.UI;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows.WinDesign.Gallery
 {
@@ -9,69 +13,58 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
     /// </summary>
     public partial class LockedGalleryItemUc : UserControl
     {
-        public LockedGalleryItemUc()
+        Photo Photo;
+        MainWindow mw;
+        public LockedGalleryItemUc(Photo photo, MainWindow mw)
         {
             InitializeComponent();
+            Photo = photo;
+            this.mw = mw;
+            tbTitle.Text = photo.TranslateName;
+            UnlockMoney = photo.UnlockAble.SellPrice;
+
+            ToolTip = unlocktext.Text = photo.UnlockAble.CheckReason(mw.GameSavesData);
+
+            if (Photo.UnlockAble.SellPrice > 1)
+            {
+                if (Photo.UnlockAble.SellBoth)
+                {
+                    if (Photo.UnlockAble.Check(mw.GameSavesData))
+                    {
+                        btnCan.Visibility = Visibility.Visible;
+                    }
+                    else
+                        btnCannot.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    btnCan.Visibility = Visibility.Visible;
+                }
+            }
+
         }
 
-        public event RoutedEventHandler Unlock
-        {
-            add { AddHandler(UnlockEvent, value); }
-            remove { RemoveHandler(UnlockEvent, value); }
-        }
-
-        public static readonly RoutedEvent UnlockEvent =
-            EventManager.RegisterRoutedEvent("Unlock", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(LockedGalleryItemUc));
-
-        public ImageSource Image
-        {
-            get { return (ImageSource)GetValue(ImageProperty); }
-            set { SetValue(ImageProperty, value); }
-        }
-
-        public static readonly DependencyProperty ImageProperty =
-            DependencyProperty.Register("Image", typeof(ImageSource), typeof(LockedGalleryItemUc));
-
-        public string Title
-        {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
-        }
-
-        public static readonly DependencyProperty TitleProperty =
-            DependencyProperty.Register("Title", typeof(string), typeof(LockedGalleryItemUc));
-
-
-        public bool Sellboth
-        {
-            get { return (bool)GetValue(SellbothProperty); }
-            set { SetValue(SellbothProperty, value); }
-        }
-
-        public static readonly DependencyProperty SellbothProperty =
-            DependencyProperty.Register("Sellboth", typeof(bool), typeof(LockedGalleryItemUc));
-
-        public double UnlockMoney
-        {
-            get { return (double)GetValue(UnlockMoneyProperty); }
-            set { SetValue(UnlockMoneyProperty, value); }
-        }
-
-        public static readonly DependencyProperty UnlockMoneyProperty =
-            DependencyProperty.Register("UnlockMoney", typeof(double), typeof(LockedGalleryItemUc));
-
-        public string UnlockAble
-        {
-            get { return (string)GetValue(UnlockAbleProperty); }
-            set { SetValue(UnlockAbleProperty, value); }
-        }
-
-        public static readonly DependencyProperty UnlockAbleProperty =
-            DependencyProperty.Register("UnlockAble", typeof(string), typeof(LockedGalleryItemUc));
+        public double UnlockMoney { get; set; }
 
         private void Button_Click(object sender, RoutedEventArgs e)
+        {//花钱解锁
+            mw.GameSavesData.GameSave.Money -= Photo.UnlockAble.SellPrice;
+            Photo.Unlock(mw);
+            if (mw.winGallery != null)
+            {
+                var i = mw.winGallery.AutoUniformGridImages.Children.IndexOf(this);
+                mw.winGallery.AutoUniformGridImages.Children.Remove(this);
+                mw.winGallery.AutoUniformGridImages.Children.Insert(i, new UnLockedGalleryItemUc(Photo, mw));
+            }
+
+            NoticeBox.Show(string.Concat(Photo.TranslateName, "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate());
+        }
+
+        private void this_Loaded(object sender, RoutedEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(UnlockEvent));
+            displayimage.Source = Photo.ConvertToGrayScale(
+                Photo.ConvertToThumbnail(Photo.GetImage(mw),
+               (int)(bbd.ActualWidth * 2), (int)(bbd.ActualHeight * 2)));
         }
     }
 }

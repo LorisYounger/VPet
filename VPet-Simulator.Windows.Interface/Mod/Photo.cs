@@ -438,7 +438,11 @@ public class Photo
     /// <summary>
     /// 是否收藏
     /// </summary>
-    public bool IsStar => PlayerInfo?.Star ?? false;
+    public bool IsStar
+    {
+        get => PlayerInfo?.Star ?? false;
+        set { if (PlayerInfo != null) PlayerInfo.Star = value; }
+    }
     /// <summary>
     /// 是否解锁
     /// </summary>
@@ -470,20 +474,24 @@ public class Photo
     public static BitmapSource ConvertToThumbnail(BitmapImage originalImage, int width, int height)
     {
         // 创建一个 RenderTargetBitmap
-        RenderTargetBitmap renderBitmap = new RenderTargetBitmap(width, height, 96d, 96d, PixelFormats.Pbgra32);
+        if (originalImage.Width < width && originalImage.Height < height)
+        {
+            return originalImage;
+        }
+        // 计算缩放比例
+        double scaleX = (double)width / originalImage.PixelWidth;
+        double scaleY = (double)height / originalImage.PixelHeight;
+        double scale = Math.Min(scaleX, scaleY); // 选择较小的比例以保持纵横比
+
+        // 计算缩放后的尺寸
+        int scaledWidth = (int)(originalImage.PixelWidth * scale);
+        int scaledHeight = (int)(originalImage.PixelHeight * scale);
+
+        RenderTargetBitmap renderBitmap = new RenderTargetBitmap(scaledWidth, scaledHeight, 96d, 96d, PixelFormats.Pbgra32);
         DrawingVisual visual = new DrawingVisual();
 
         using (DrawingContext drawingContext = visual.RenderOpen())
         {
-            // 计算缩放比例
-            double scaleX = (double)width / originalImage.PixelWidth;
-            double scaleY = (double)height / originalImage.PixelHeight;
-            double scale = Math.Min(scaleX, scaleY); // 选择较小的比例以保持纵横比
-
-            // 计算缩放后的尺寸
-            double scaledWidth = originalImage.PixelWidth * scale;
-            double scaledHeight = originalImage.PixelHeight * scale;
-
             // 绘制图像
             drawingContext.DrawImage(originalImage, new Rect(0, 0, scaledWidth, scaledHeight));
         }

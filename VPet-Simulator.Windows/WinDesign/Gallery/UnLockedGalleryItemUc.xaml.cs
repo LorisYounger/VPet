@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LinePutScript.Localization.WPF;
+using NAudio.Gui;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows.WinDesign.Gallery
 {
@@ -20,64 +23,18 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
     /// </summary>
     public partial class UnLockedGalleryItemUc : UserControl
     {
-        public UnLockedGalleryItemUc()
+        Photo Photo;
+        MainWindow mw;
+        public UnLockedGalleryItemUc(Photo photo, MainWindow mw)
         {
             InitializeComponent();
+            Photo = photo;
+            this.mw = mw;
+
+            cbDesc.ToolTip = tbTitle.Text = photo.TranslateName;
+            ToolTip = photo.Description.Translate();
+            tbStar.IsChecked = photo.IsStar;
         }
-
-        public event RoutedEventHandler Click
-        {
-            add { AddHandler(ClickEvent, value); }
-            remove { RemoveHandler(ClickEvent, value); }
-        }
-
-        public static readonly RoutedEvent ClickEvent =
-            EventManager.RegisterRoutedEvent("Click", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UnLockedGalleryItemUc));
-
-        public event RoutedEventHandler StarChanged
-        {
-            add { AddHandler(StarChangedEvent, value); }
-            remove { RemoveHandler(StarChangedEvent, value); }
-        }
-
-        public static readonly RoutedEvent StarChangedEvent =
-            EventManager.RegisterRoutedEvent("StarChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UnLockedGalleryItemUc));
-
-        public ImageSource Image
-        {
-            get { return (ImageSource)GetValue(ImageProperty); }
-            set { SetValue(ImageProperty, value); }
-        }
-
-        public static readonly DependencyProperty ImageProperty =
-            DependencyProperty.Register("Image", typeof(ImageSource), typeof(UnLockedGalleryItemUc));
-
-        public string Title
-        {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
-        }
-
-        public static readonly DependencyProperty TitleProperty =
-            DependencyProperty.Register("Title", typeof(string), typeof(UnLockedGalleryItemUc));
-
-        public string Description
-        {
-            get { return (string)GetValue(DescriptionProperty); }
-            set { SetValue(DescriptionProperty, value); }
-        }
-
-        public static readonly DependencyProperty DescriptionProperty =
-            DependencyProperty.Register("Description", typeof(string), typeof(UnLockedGalleryItemUc));
-
-        public bool IsStar
-        {
-            get { return (bool)GetValue(IsStarProperty); }
-            set { SetValue(IsStarProperty, value); }
-        }
-
-        public static readonly DependencyProperty IsStarProperty =
-            DependencyProperty.Register("IsStar", typeof(bool), typeof(UnLockedGalleryItemUc));
 
         public bool IsSelected
         {
@@ -90,12 +47,19 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(ClickEvent));
+            mw.winGallery?.DisplayDetail(Photo);
         }
 
         private void ToggleButtonStar_CheckChanged(object sender, RoutedEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(StarChangedEvent));
+            Photo.IsStar = tbStar.IsChecked == true;
+        }
+
+        private void this_Loaded(object sender, RoutedEventArgs e)
+        {
+            displayimage.Source =
+                Photo.ConvertToThumbnail(Photo.GetImage(mw),
+               (int)(bbd.ActualWidth * 2), (int)(bbd.ActualHeight * 2));
         }
     }
 }
