@@ -25,8 +25,8 @@ public partial class winGallery : WindowX
 {
     private TextBox _searchTextBox;
     MainWindow mw;
-    private object _updateLock = new object();
-
+    private int _columns;
+    private int _rows;
     public winGallery(MainWindow mw)
     {
         InitializeComponent();
@@ -101,62 +101,74 @@ public partial class winGallery : WindowX
             return;
         }
 
-        Dispatcher.BeginInvoke(() =>
+
+        AutoUniformGridImages.Children.Clear();
+
+        var searchText = _searchTextBox.Text;
+
+        //如果某个分类一个都没选中，那就等于全部选中
+
+        var isIllustrationChecked = ToggleButtonIllustration.IsChecked == true ? true : ToggleButtonThumbnail.IsChecked == false;
+        var isThumbnailChecked = ToggleButtonThumbnail.IsChecked == true ? true : ToggleButtonThumbnail.IsChecked == false;
+        //var isGIFChecked = ToggleButtonGIF.IsChecked == true;
+
+        var isLockedChecked = ToggleButtonLocked.IsChecked == true ? true : ToggleButtonUnlocked.IsChecked == false;
+        var isUnlockedChecked = ToggleButtonUnlocked.IsChecked == true ? true : ToggleButtonLocked.IsChecked == false;
+
+        var isFavoriteChecked = CheckBoxFavorite.IsChecked == true;
+        var selectedTags = ToggleButtonGroupTags.SelectedItems.Cast<string>();
+
+        var photos = new List<Photo>();
+
+        //获取锁定的图片
+        if (isLockedChecked)
         {
-            lock (_updateLock)
+            var lockphoto = mw.Photos.FindAll(p => p.IsUnlock == false
+                    && (!isFavoriteChecked || p.IsStar)
+                    && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
+                    && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
+                    && (!selectedTags.Any() || selectedTags.Any(st => p.Tags.Contains(st)))
+                    && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
+            photos.AddRange(lockphoto);
+        }
+        //获取解锁的图片
+        if (isUnlockedChecked)
+        {
+            var unlockphoto = mw.Photos.FindAll(p => p.IsUnlock == true
+                && (!isFavoriteChecked || p.IsStar)
+                && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
+                && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
+                && (!selectedTags.Any() || selectedTags.Any(st => p.Tags.Contains(st)))
+                && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
+
+            photos.AddRange(unlockphoto);
+        }
+
+        var totalCount = photos.Count();
+        var pageSize = _rows * _columns;
+        pagination.MaxPage = (int)Math.Ceiling(totalCount * 1.0 / pageSize);
+        var currentPage = Math.Max(0, Math.Min(pagination.MaxPage, pagination.CurrentPage) - 1);
+        pagination.CurrentPage = currentPage + 1;
+
+        photos = photos.Skip(currentPage * pageSize).Take(pageSize).ToList();
+
+        foreach (var photo in photos)
+        {
+            if (photo.IsUnlock)
             {
-                AutoUniformGridImages.Children.Clear();
-
-                var searchText = _searchTextBox.Text;
-
-                //如果某个分类一个都没选中，那就等于全部选中
-
-                var isIllustrationChecked = ToggleButtonIllustration.IsChecked == true ? true : ToggleButtonThumbnail.IsChecked == false;
-                var isThumbnailChecked = ToggleButtonThumbnail.IsChecked == true ? true : ToggleButtonThumbnail.IsChecked == false;
-                //var isGIFChecked = ToggleButtonGIF.IsChecked == true;
-
-                var isLockedChecked = ToggleButtonLocked.IsChecked == true ? true : ToggleButtonUnlocked.IsChecked == false;
-                var isUnlockedChecked = ToggleButtonUnlocked.IsChecked == true ? true : ToggleButtonLocked.IsChecked == false;
-
-                var isFavoriteChecked = CheckBoxFavorite.IsChecked == true;
-                var selectedTags = ToggleButtonGroupTags.SelectedItems.Cast<string>();
-
-                //获取锁定的图片
-                if (isLockedChecked)
-                {
-                    var lockphoto = mw.Photos.FindAll(p => p.IsUnlock == false
-                            && (!isFavoriteChecked || p.IsStar)
-                            && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
-                            && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
-                            && (!selectedTags.Any() || selectedTags.Any(st => p.Tags.Contains(st)))
-                            && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
-                    foreach (var photo in lockphoto)
-                    {
-                        var newItem = new LockedGalleryItemUc(photo, mw);
-                        AutoUniformGridImages.Children.Add(newItem);
-                    }
-                }
-                //获取解锁的图片
-                if (isUnlockedChecked)
-                {
-                    var unlockphoto = mw.Photos.FindAll(p => p.IsUnlock == true
-                        && (!isFavoriteChecked || p.IsStar)
-                        && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
-                        && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
-                        && (!selectedTags.Any() || selectedTags.Any(st => p.Tags.Contains(st)))
-                        && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
-                    foreach (var photo in unlockphoto)
-                    {
-                        var newItem = new UnLockedGalleryItemUc(photo, mw);
-                        AutoUniformGridImages.Children.Add(newItem);
-                    }
-                }
-
-                BorderEmpty.Visibility = AutoUniformGridImages.Children.Count == 0
-                        ? Visibility.Visible
-                        : Visibility.Collapsed;
+                var newItem = new UnLockedGalleryItemUc(photo, mw);
+                AutoUniformGridImages.Children.Add(newItem);
             }
-        }, System.Windows.Threading.DispatcherPriority.Background);
+            else
+            {
+                var newItem = new LockedGalleryItemUc(photo, mw);
+                AutoUniformGridImages.Children.Add(newItem);
+            }
+        }
+
+        BorderEmpty.Visibility = AutoUniformGridImages.Children.Count == 0
+                ? Visibility.Visible
+                : Visibility.Collapsed;
     }
 
     public void DisplayDetail(Photo photo)
@@ -207,4 +219,31 @@ public partial class winGallery : WindowX
         //TODO：导出selectedPhotos
     }
 
+    private void Pagination_CurrentPageChanged(object sender, Panuon.WPF.SelectedValueChangedRoutedEventArgs<int> e)
+    {
+        RefreshList();
+    }
+
+    private void AutoUniformGridImages_Changed(object sender, RoutedEventArgs e)
+    {
+        var uniformGrid = e.OriginalSource as AutoUniformGrid;
+        var columns = uniformGrid.Columns;
+        var rows = uniformGrid.Rows;
+
+        var isAnyChanged = false;
+        if (columns != _columns)
+        {
+            _columns = columns;
+            isAnyChanged = true;
+        }
+        if (rows != _rows)
+        {
+            _rows = rows;
+            isAnyChanged = true;
+        }
+        if (isAnyChanged)
+        {
+            RefreshList();
+        }
+    }
 }
