@@ -5,11 +5,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pw="https://opensource.panuon.com/wpf" xmlns:pu="https://opensource.panuon.com/wpf-ui"
-        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 照片图库}"
-        Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}" Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 照片图库}" MinWidth="300"
+        MinHeight="300" Height="{ll:Dbe GalleryHeight_650, DefValue=650}" Width="{ll:Dbe Gallery_1050, DefValue=1050}"
         FontSize="14" WindowStartupLocation="CenterScreen" Background="{DynamicResource PrimaryLighter}"
         pu:WindowXCaption.Height="45" pu:WindowXCaption.Background="{DynamicResource DARKPrimary}"
-        pu:WindowXCaption.Foreground="#FFFFFF" pu:WindowXCaption.Buttons="Close" Icon="/Res/Gallery.png"
+        pu:WindowXCaption.Foreground="#FFFFFF" Icon="/Res/Gallery.png"
         pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}" Closing="Window_Closed">
     <Window.Resources>
         <Style x:Key="TagToggleButtonStyle" TargetType="ToggleButton"
@@ -166,7 +166,10 @@
                 </pu:ToggleButtonGroup>
             </ScrollViewer>
         </StackPanel>
-        <WrapPanel x:Name="AutoUniformGridImages" Grid.Column="1" Margin="10, 10, 0, 0" VerticalAlignment="Top" x:FieldModifier="public" />
+        <ScrollViewer Grid.Column="1" Margin="10, 10, 0, 0" VerticalAlignment="Top">
+            <WrapPanel x:Name="AutoUniformGridImages" x:FieldModifier="public" />
+        </ScrollViewer>
+
         <Border x:Name="BorderEmpty" Grid.Column="1" Visibility="Collapsed">
             <TextBlock Text="{ll:Str '这里什么都没有, 修改搜索条件试试?'}" VerticalAlignment="Center" HorizontalAlignment="Center" />
         </Border>
