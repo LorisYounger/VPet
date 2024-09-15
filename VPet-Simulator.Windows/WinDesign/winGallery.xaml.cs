@@ -179,6 +179,14 @@ public partial class winGallery : WindowX
         TextBlockPhotoDetailDescription.Text = photo.Description;
         IsMaskVisible = true;
         IsOverlayerVisible = true;
+        if (photo.Type == Photo.PhotoType.Illustration)
+        {
+            DisplayGrid.Margin = new Thickness(50, 40, 50, 40);
+        }
+        else
+        {
+            DisplayGrid.Margin = new Thickness(150, 120, 150, 120);
+        }
     }
 
     private void BorderOutDetail_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -199,7 +207,34 @@ public partial class winGallery : WindowX
 
     private void ButtonExportAll_Click(object sender, RoutedEventArgs e)
     {
-
+        var selectedPhotos = new List<Photo>();
+        foreach (var item in AutoUniformGridImages.Children)
+        {
+            if (item is UnLockedGalleryItemUc unlockedItem)
+            {
+                selectedPhotos.Add(unlockedItem.Photo);
+            }
+        }
+        if (!selectedPhotos.Any())
+        {
+            Toast(
+                message: "当前没有选中任何项目！".Translate(),
+                icon: MessageBoxIcon.Error
+            );
+            return;
+        }
+        OpenFolderDialog dialog = new OpenFolderDialog();
+        if (dialog.ShowDialog() == true)
+        {
+            //foreach (var photo in selectedPhotos)
+            //{
+            //    photo.SaveToFolder(dialog.SelectedPath);
+            //}
+            Toast(
+                message: "已导出选中的项目！".Translate(),
+                icon: MessageBoxIcon.Info
+            );
+        }
     }
 
     private void ButtonExportSele_Click(object sender, RoutedEventArgs e)

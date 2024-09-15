@@ -15,8 +15,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Image x:Name="displayimage" Stretch="UniformToFill" />
-            <TextBlock x:Name="tbTitle" Grid.Row="1" Margin="0, 3, 0, 0" 
-                    TextTrimming="CharacterEllipsis" />
+            <TextBlock x:Name="tbTitle" Grid.Row="1" Margin="0, 3, 0, 0" TextTrimming="CharacterEllipsis" />
             <Border x:Name="bbd" Background="#88F3F4F5" />
             <Grid Margin="10">
                 <Grid.RowDefinitions>
@@ -28,21 +27,24 @@
                 <ScrollViewer Grid.Row="1">
                     <TextBlock x:Name="unlocktext" TextWrapping="Wrap" />
                 </ScrollViewer>
-                <Button x:Name="btnCan" Grid.Row="3" HorizontalAlignment="Center" Style="{DynamicResource ThemedButtonStyle}" Click="Button_Click" Visibility="Collapsed"
+                <Button x:Name="btnCan" Grid.Row="3" HorizontalAlignment="Center"
+                        Style="{DynamicResource ThemedButtonStyle}" Click="Button_Click" Visibility="Collapsed"
                         Margin="0,7,0,0">
                     <TextBlock>
-                        <Run Text="花费" />
+                        <Run x:Name="rAnd" Text="并" /> 
+                        <Run Text="{ll:Str 花费}" />
                         <Run x:Name="clmoney" />
-                        <Run Text="解锁" />
+                        <Run Text="{ll:Str 解锁}" />
                     </TextBlock>
                 </Button>
                 <Button x:Name="btnCannot" Grid.Row="3" Cursor="No" pu:ButtonHelper.HoverBackground="{x:Null}"
                         pu:ButtonHelper.ClickBackground="{x:Null}" Background="#7e7e7e" HorizontalAlignment="Center"
                         Style="{DynamicResource ThemedButtonStyle}" Visibility="Collapsed" Margin="0,7,0,0">
                     <TextBlock>
-                         <Run Text="花费" />
+                         <Run Text="{ll:Str 并}" /> 
+                         <Run Text="{ll:Str 花费}" />
                               <Run x:Name="nlmoney" />
-                           <Run Text="解锁" />
+                           <Run Text="{ll:Str 解锁}" />
                     </TextBlock>
                 </Button>
             </Grid>

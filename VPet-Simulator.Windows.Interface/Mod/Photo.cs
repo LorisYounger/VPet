@@ -281,11 +281,11 @@ public class Photo
             }
             StringBuilder sb = new StringBuilder();
 
-            if (SellPrice > 0)
-                if (SellBoth)
-                    sb.AppendLine("花费${0} 并 满足以下条件:".Translate(SellPrice));
-                else
-                    sb.AppendLine("花费${0} 或 满足以下条件:".Translate(SellPrice));
+            //if (SellPrice > 0)
+            //    if (SellBoth)
+            //        sb.AppendLine("花费${0} 并 满足以下条件:".Translate(SellPrice));
+            //    else
+            //        sb.AppendLine("花费${0} 或 满足以下条件:".Translate(SellPrice));
 
             //基础条件
             if (Level > 0)

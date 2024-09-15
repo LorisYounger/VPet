@@ -99,7 +99,7 @@
     <pu:WindowX.Overlayer>
         <Grid HorizontalAlignment="Center">
             <Border Background="Transparent" MouseLeftButtonDown="BorderOutDetail_MouseLeftButtonDown" />
-            <Grid Margin="100, 80" >
+            <Grid x:Name="DisplayGrid" Margin="100, 80" >
                 <Border Background="White" CornerRadius="15" Grid.RowSpan="2" Grid.ColumnSpan="2">
                     <Border.Effect>
                         <DropShadowEffect Color="#eaeaea" BlurRadius="30" ShadowDepth="5" />
@@ -169,7 +169,7 @@
             <TextBlock Text="{ll:Str 是否解锁}" Margin="0, 3, 0, 0" />
             <StackPanel Margin="0, 3, 0, 0" Orientation="Horizontal">
                 <ToggleButton x:Name="ToggleButtonUnlocked" Content="{ll:Str 已解锁}"
-                        Style="{DynamicResource TagToggleButtonStyle}"
+                        Style="{DynamicResource TagToggleButtonStyle}" IsChecked="True"
                         Checked="ToggleButtonSearchParameters_CheckChanged"
                         Unchecked="ToggleButtonSearchParameters_CheckChanged" />
                 <ToggleButton x:Name="ToggleButtonLocked" Content="{ll:Str 未解锁}"

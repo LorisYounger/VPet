@@ -21,32 +21,45 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
             Photo = photo;
             this.mw = mw;
             tbTitle.Text = photo.TranslateName;
-         
 
-            ToolTip = unlocktext.Text = photo.UnlockAble.CheckReason(mw.GameSavesData);
+            string untxt = photo.UnlockAble.CheckReason(mw.GameSavesData);
+            unlocktext.Text = untxt;
 
-            if (Photo.UnlockAble.SellPrice > 1)
+
+            if (Photo.UnlockAble.SellPrice > 0)
             {
                 if (Photo.UnlockAble.SellBoth)
                 {
                     if (Photo.UnlockAble.Check(mw.GameSavesData))
                     {
                         btnCan.Visibility = Visibility.Visible;
-                        clmoney.Text = photo.UnlockAble.SellPrice.ToString("f0");
+                        rAnd.Text = "并".Translate();
+                        clmoney.Text = convertk(photo.UnlockAble.SellPrice);
                     }
                     else
                     {
                         btnCannot.Visibility = Visibility.Visible;
-                        nlmoney.Text = photo.UnlockAble.SellPrice.ToString("f0");
+                        nlmoney.Text = convertk(photo.UnlockAble.SellPrice);
                     }
+                    ToolTip = "花费${0} 并 满足以下条件:".Translate(photo.UnlockAble.SellPrice) + untxt;                    
                 }
                 else
                 {
                     btnCan.Visibility = Visibility.Visible;
-                    clmoney.Text = photo.UnlockAble.SellPrice.ToString("f0");
+                    clmoney.Text = convertk(photo.UnlockAble.SellPrice);
+                    ToolTip = "花费${0} 或 满足以下条件:".Translate(photo.UnlockAble.SellPrice) + untxt;
+                    rAnd.Text = "或".Translate();
                 }
             }
+            else
+                ToolTip = untxt;
 
+        }
+        private string convertk(double price)
+        {
+            if (price < 100000)
+                return price.ToString("N0");
+            return (price / 1000).ToString("N0") + "k";
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {//花钱解锁
@@ -63,7 +76,8 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
                 );
             }
             else
-                NoticeBox.Show(string.Concat(Photo.TranslateName, "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate());
+                NoticeBox.Show(string.Concat(Photo.TranslateName, "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate(),
+                    MessageBoxIcon.Info, true, 5000);
         }
 
         private void this_Loaded(object sender, RoutedEventArgs e)
