@@ -148,42 +148,49 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Border Grid.RowSpan="2" Background="{DynamicResource DARKPrimaryText}" />
-        <StackPanel Grid.RowSpan="2" Margin="12, 10">
-            <TextBlock Text="{ll:Str 筛选条件}" FontSize="18" Margin="0, 5" Foreground="{DynamicResource DARKPrimary}" />
+        <Grid Grid.RowSpan="2"
+              Margin="12, 10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <TextBlock Text="{ll:Str 筛选条件}" FontSize="18" Margin="0, 5" Foreground="{DynamicResource DARKPrimary}" />
 
-            <TextBlock Text="{ll:Str 类型}" Margin="0, 3, 0, 0" />
-            <StackPanel Margin="0, 3, 0, 0" Orientation="Horizontal">
-                <ToggleButton x:Name="ToggleButtonIllustration" Content="{ll:Str 插图}"
-                        Style="{DynamicResource TagToggleButtonStyle}"
-                        Checked="ToggleButtonSearchParameters_CheckChanged"
+                <TextBlock Text="{ll:Str 类型}" Margin="0, 3, 0, 0" />
+                <StackPanel Margin="0, 3, 0, 0" Orientation="Horizontal">
+                    <ToggleButton x:Name="ToggleButtonIllustration" Content="{ll:Str 插图}"
+                            Style="{DynamicResource TagToggleButtonStyle}"
+                            Checked="ToggleButtonSearchParameters_CheckChanged"
+                            Unchecked="ToggleButtonSearchParameters_CheckChanged" />
+                    <ToggleButton x:Name="ToggleButtonThumbnail" Content="{ll:Str 小图}"
+                            Style="{DynamicResource TagToggleButtonStyle}"
+                            Checked="ToggleButtonSearchParameters_CheckChanged"
+                            Unchecked="ToggleButtonSearchParameters_CheckChanged" />
+                    <!--<ToggleButton x:Name="ToggleButtonGIF"
+                                 Content="GIF"
+                                 Style="{DynamicResource TagToggleButtonStyle}"
+                                 Checked="ToggleButtonSearchParameters_CheckChanged"
+                                 Unchecked="ToggleButtonSearchParameters_CheckChanged" />-->
+                </StackPanel>
+                <TextBlock Text="{ll:Str 是否解锁}" Margin="0, 3, 0, 0" />
+                <StackPanel Margin="0, 3, 0, 0" Orientation="Horizontal">
+                    <ToggleButton x:Name="ToggleButtonUnlocked" Content="{ll:Str 已解锁}"
+                            Style="{DynamicResource TagToggleButtonStyle}" IsChecked="True"
+                            Checked="ToggleButtonSearchParameters_CheckChanged"
+                            Unchecked="ToggleButtonSearchParameters_CheckChanged" />
+                    <ToggleButton x:Name="ToggleButtonLocked" Content="{ll:Str 未解锁}"
+                            Style="{DynamicResource TagToggleButtonStyle}"
+                            Checked="ToggleButtonSearchParameters_CheckChanged"
+                            Unchecked="ToggleButtonSearchParameters_CheckChanged" />
+                </StackPanel>
+                <TextBlock Margin="0, 3, 0, 0" Text="{ll:Str 收藏}" />
+                <CheckBox x:Name="CheckBoxFavorite" Margin="0, 3, 0, 0" Style="{DynamicResource ThemedCheckBoxStyle}"
+                        Content="{ll:Str 只看我收藏的}" Checked="ToggleButtonSearchParameters_CheckChanged"
                         Unchecked="ToggleButtonSearchParameters_CheckChanged" />
-                <ToggleButton x:Name="ToggleButtonThumbnail" Content="{ll:Str 小图}"
-                        Style="{DynamicResource TagToggleButtonStyle}"
-                        Checked="ToggleButtonSearchParameters_CheckChanged"
-                        Unchecked="ToggleButtonSearchParameters_CheckChanged" />
-                <!--<ToggleButton x:Name="ToggleButtonGIF"
-                             Content="GIF"
-                             Style="{DynamicResource TagToggleButtonStyle}"
-                             Checked="ToggleButtonSearchParameters_CheckChanged"
-                             Unchecked="ToggleButtonSearchParameters_CheckChanged" />-->
+                <TextBlock Text="{ll:Str 标签}" Margin="0, 5, 0, 0" />
             </StackPanel>
-            <TextBlock Text="{ll:Str 是否解锁}" Margin="0, 3, 0, 0" />
-            <StackPanel Margin="0, 3, 0, 0" Orientation="Horizontal">
-                <ToggleButton x:Name="ToggleButtonUnlocked" Content="{ll:Str 已解锁}"
-                        Style="{DynamicResource TagToggleButtonStyle}" IsChecked="True"
-                        Checked="ToggleButtonSearchParameters_CheckChanged"
-                        Unchecked="ToggleButtonSearchParameters_CheckChanged" />
-                <ToggleButton x:Name="ToggleButtonLocked" Content="{ll:Str 未解锁}"
-                        Style="{DynamicResource TagToggleButtonStyle}"
-                        Checked="ToggleButtonSearchParameters_CheckChanged"
-                        Unchecked="ToggleButtonSearchParameters_CheckChanged" />
-            </StackPanel>
-            <TextBlock Margin="0, 3, 0, 0" Text="{ll:Str 收藏}" />
-            <CheckBox x:Name="CheckBoxFavorite" Margin="0, 3, 0, 0" Style="{DynamicResource ThemedCheckBoxStyle}"
-                    Content="{ll:Str 只看我收藏的}" Checked="ToggleButtonSearchParameters_CheckChanged"
-                    Unchecked="ToggleButtonSearchParameters_CheckChanged" />
-            <TextBlock Text="{ll:Str 标签}" Margin="0, 5, 0, 0" />
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <pu:ToggleButtonGroup x:Name="ToggleButtonGroupTags" Margin="5,3,5,0"
                         ItemContainerStyle="{DynamicResource TagToggleButtonStyle}"
                         SelectionChanged="ToggleButtonGroupTags_SelectionChanged">
@@ -194,7 +201,7 @@
                     </pu:ToggleButtonGroup.ItemsPanel>
                 </pu:ToggleButtonGroup>
             </ScrollViewer>
-        </StackPanel>
+        </Grid>
 
         <local:AutoUniformGrid x:Name="AutoUniformGridImages" x:FieldModifier="public" Grid.Column="1"
                 Margin="10, 10, 0, 0" ItemsMinWidth="195" ItemsMinHeight="170" Changed="AutoUniformGridImages_Changed" />
