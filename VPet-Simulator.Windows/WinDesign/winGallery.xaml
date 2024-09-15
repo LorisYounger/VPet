@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pw="https://opensource.panuon.com/wpf" xmlns:pu="https://opensource.panuon.com/wpf-ui"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 照片图库}" MinWidth="300"
-        MinHeight="300" Height="{ll:Dbe GalleryHeight_650, DefValue=650}" Width="{ll:Dbe Gallery_1050, DefValue=1050}"
+        MinHeight="300" Height="{ll:Dbe GalleryHeight_625, DefValue=625}" Width="{ll:Dbe Gallery_1000, DefValue=1000}"
         FontSize="14" WindowStartupLocation="CenterScreen" Background="{DynamicResource PrimaryLighter}"
         pu:WindowXCaption.Height="45" pu:WindowXCaption.Background="{DynamicResource DARKPrimary}"
         pu:WindowXCaption.Foreground="#FFFFFF" Icon="/Res/Gallery.png"
@@ -212,9 +212,11 @@
                                CurrentPageChanged="Pagination_CurrentPageChanged" />
                 <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
                     <CheckBox x:Name="CheckBoxALL" Margin="7, 0, 7, 0" Style="{DynamicResource ThemedCheckBoxStyle}"
-                            Content="{ll:Str 全选}" />
-                    <Button Margin="7,0,7,0" VerticalAlignment="Center" Content="{ll:Str 导出选中项}"
-                            Style="{DynamicResource ThemedButtonStyle}" Click="ButtonExportAll_Click" />
+                        Content="{ll:Str 全选}" Checked="CheckBoxALL_Checked" />
+                <Button Margin="7,0,7,0" VerticalAlignment="Center" Content="{ll:Str 导出选中项}"
+                        Style="{DynamicResource ThemedButtonStyle}" Click="ButtonExportSele_Click" />
+                <Button Margin="7,0,7,0" VerticalAlignment="Center" Content="{ll:Str 导出全部已解锁}"
+                        Style="{DynamicResource ThemedButtonStyle}" Click="ButtonExportAll_Click" />
                 </StackPanel>
             </Grid>
         </Border>

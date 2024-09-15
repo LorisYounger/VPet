@@ -32,7 +32,7 @@
                         Margin="0,7,0,0">
                     <TextBlock>
                         <Run Text="花费" />
-                        <Run Text="{Binding UnlockMoney, StringFormat='${0}', ElementName=this}" />
+                        <Run x:Name="clmoney" />
                         <Run Text="解锁" />
                     </TextBlock>
                 </Button>
@@ -41,7 +41,7 @@
                         Style="{DynamicResource ThemedButtonStyle}" Visibility="Collapsed" Margin="0,7,0,0">
                     <TextBlock>
                          <Run Text="花费" />
-                              <Run Text="{Binding UnlockMoney, StringFormat='${0}', ElementName=this}" />
+                              <Run x:Name="nlmoney" />
                            <Run Text="解锁" />
                     </TextBlock>
                 </Button>

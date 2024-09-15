@@ -1,4 +1,5 @@
 ﻿using LinePutScript.Localization.WPF;
+using Microsoft.Win32;
 using NAudio.Gui;
 using Panuon.WPF.UI;
 using System;
@@ -198,26 +199,42 @@ public partial class winGallery : WindowX
 
     private void ButtonExportAll_Click(object sender, RoutedEventArgs e)
     {
+
+    }
+
+    private void ButtonExportSele_Click(object sender, RoutedEventArgs e)
+    {
         var selectedPhotos = new List<Photo>();
         foreach (var item in AutoUniformGridImages.Children)
         {
             if (item is UnLockedGalleryItemUc unlockedItem
                 && unlockedItem.IsSelected)
             {
-                selectedPhotos.Add(unlockedItem.Tag as Photo);
+                selectedPhotos.Add(unlockedItem.Photo);
             }
         }
         if (!selectedPhotos.Any())
         {
             Toast(
-                message: "当前没有选中任何项目！",
+                message: "当前没有选中任何项目！".Translate(),
                 icon: MessageBoxIcon.Error
             );
             return;
         }
-
-        //TODO：导出selectedPhotos
+        OpenFolderDialog dialog = new OpenFolderDialog();
+        if (dialog.ShowDialog() == true)
+        {
+            //foreach (var photo in selectedPhotos)
+            //{
+            //    photo.SaveToFolder(dialog.SelectedPath);
+            //}
+            Toast(
+                message: "已导出选中的项目！".Translate(),
+                icon: MessageBoxIcon.Info
+            );
+        }
     }
+
 
     private void Pagination_CurrentPageChanged(object sender, Panuon.WPF.SelectedValueChangedRoutedEventArgs<int> e)
     {
@@ -244,6 +261,18 @@ public partial class winGallery : WindowX
         if (isAnyChanged)
         {
             RefreshList();
+        }
+    }
+    private void CheckBoxALL_Checked(object sender, RoutedEventArgs e)
+    {
+        bool isc = CheckBoxALL.IsChecked == true;
+        foreach (var item in AutoUniformGridImages.Children)
+        {
+            if (item is UnLockedGalleryItemUc unlockedItem)
+            {
+                unlockedItem.IsSelected = isc;
+            }
+
         }
     }
 }

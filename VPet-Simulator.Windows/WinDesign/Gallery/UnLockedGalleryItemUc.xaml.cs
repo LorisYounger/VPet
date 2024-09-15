@@ -23,7 +23,7 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
     /// </summary>
     public partial class UnLockedGalleryItemUc : UserControl
     {
-        Photo Photo;
+        public Photo Photo;
         MainWindow mw;
         public UnLockedGalleryItemUc(Photo photo, MainWindow mw)
         {

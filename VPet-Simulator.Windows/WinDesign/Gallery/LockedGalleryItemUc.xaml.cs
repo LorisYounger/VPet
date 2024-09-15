@@ -21,7 +21,7 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
             Photo = photo;
             this.mw = mw;
             tbTitle.Text = photo.TranslateName;
-            UnlockMoney = photo.UnlockAble.SellPrice;
+         
 
             ToolTip = unlocktext.Text = photo.UnlockAble.CheckReason(mw.GameSavesData);
 
@@ -32,20 +32,22 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
                     if (Photo.UnlockAble.Check(mw.GameSavesData))
                     {
                         btnCan.Visibility = Visibility.Visible;
+                        clmoney.Text = photo.UnlockAble.SellPrice.ToString("f0");
                     }
                     else
+                    {
                         btnCannot.Visibility = Visibility.Visible;
+                        nlmoney.Text = photo.UnlockAble.SellPrice.ToString("f0");
+                    }
                 }
                 else
                 {
                     btnCan.Visibility = Visibility.Visible;
+                    clmoney.Text = photo.UnlockAble.SellPrice.ToString("f0");
                 }
             }
 
         }
-
-        public double UnlockMoney { get; set; }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {//花钱解锁
             mw.GameSavesData.GameSave.Money -= Photo.UnlockAble.SellPrice;
@@ -55,9 +57,13 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
                 var i = mw.winGallery.AutoUniformGridImages.Children.IndexOf(this);
                 mw.winGallery.AutoUniformGridImages.Children.Remove(this);
                 mw.winGallery.AutoUniformGridImages.Children.Insert(i, new UnLockedGalleryItemUc(Photo, mw));
+                mw.winGallery.Toast(
+                message: "已解锁".Translate() + " " + Photo.TranslateName,
+                icon: MessageBoxIcon.Info
+                );
             }
-
-            NoticeBox.Show(string.Concat(Photo.TranslateName, "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate());
+            else
+                NoticeBox.Show(string.Concat(Photo.TranslateName, "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate());
         }
 
         private void this_Loaded(object sender, RoutedEventArgs e)
