@@ -593,7 +593,7 @@ public class Photo
         {
             filepath = filepath.Replace(c.ToString(), "");
         }
-        filepath = savedir + '\\' + filepath + Path.Split('.').Last();
+        filepath = savedir + '\\' + filepath + '.' + Path.Split('.').Last();
         return filepath;
     }
     /// <summary>

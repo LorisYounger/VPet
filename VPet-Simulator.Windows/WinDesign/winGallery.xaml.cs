@@ -268,7 +268,7 @@ public partial class winGallery : WindowX
                 selectedPhotos.Add(unlockedItem.Photo);
             }
         }
-        if (!selectedPhotos.Any())
+        if (selectedPhotos.Count == 0)
         {
             Toast(
                 message: "当前没有选中任何图片！".Translate(),
@@ -276,17 +276,39 @@ public partial class winGallery : WindowX
             );
             return;
         }
-        OpenFolderDialog dialog = new OpenFolderDialog();
-        if (dialog.ShowDialog() == true)
+        else if (selectedPhotos.Count == 1)
         {
-            foreach (var photo in selectedPhotos)
+            SaveFileDialog dialog = new SaveFileDialog();
+            nowphoto = selectedPhotos[0];
+            string ext = nowphoto.Path.Split('.').Last();
+            dialog.Filter = ext + "|*." + ext;
+            if (dialog.ShowDialog() == true)
             {
-                photo.SaveAs(mw, photo.FilePath(dialog.FolderName));
+                Task.Run(() =>
+                {
+                    nowphoto.SaveAs(mw, dialog.FileName);
+                    Dispatcher.Invoke(() =>
+                     Toast(
+                        message: "已保存图片！".Translate(),
+                        icon: MessageBoxIcon.Info
+                    ));
+                });
             }
-            Toast(
-                message: "已导出选中的图片！".Translate(),
-                icon: MessageBoxIcon.Info
-            );
+        }
+        else
+        {
+            OpenFolderDialog dialog = new OpenFolderDialog();
+            if (dialog.ShowDialog() == true)
+            {
+                foreach (var photo in selectedPhotos)
+                {
+                    photo.SaveAs(mw, photo.FilePath(dialog.FolderName));
+                }
+                Toast(
+                    message: "已导出选中的图片！".Translate(),
+                    icon: MessageBoxIcon.Info
+                );
+            }
         }
     }
 
