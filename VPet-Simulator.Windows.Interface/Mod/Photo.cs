@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+
 namespace VPet_Simulator.Windows.Interface;
 public class Photo
 {
@@ -579,6 +580,55 @@ public class Photo
             }
         }
     }
-
+    /// <summary>
+    /// 保存到文件夹时自动转换
+    /// </summary>
+    /// <param name="savedir">文件夹</param>
+    public string FilePath(string savedir)
+    {
+        var filepath = TranslateName;
+        // 不允许的符号列表
+        char[] illegalChars = { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
+        foreach (char c in illegalChars)
+        {
+            filepath = filepath.Replace(c.ToString(), "");
+        }
+        filepath = savedir + '\\' + filepath + Path.Split('.').Last();
+        return filepath;
+    }
+    /// <summary>
+    /// 图片另存为文件
+    /// </summary>
+    public void SaveAs(IMainWindow imw, string filepath)
+    {
+        //解压zip
+        string zippath = imw.FileSources.FindSource(Zip + ".zip");
+        if (zippath == null)
+        {
+            return;
+        }
+        using (ZipArchive archive = ZipFile.OpenRead(zippath))
+        {
+            // 找到指定的文件
+            ZipArchiveEntry entry = archive.GetEntry(Path);
+            if (entry != null)
+            {
+                // 打开源文件流
+                using (Stream sourceStream = entry.Open())
+                {
+                    // 创建目标文件流
+                    using (FileStream destinationStream = new FileStream(filepath, FileMode.Create, FileAccess.Write))
+                    {
+                        // 将源文件流复制到目标文件流
+                        sourceStream.CopyTo(destinationStream);
+                    }
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+    }
 }
 

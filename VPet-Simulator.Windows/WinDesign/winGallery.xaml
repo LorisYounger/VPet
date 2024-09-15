@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pw="https://opensource.panuon.com/wpf" xmlns:pu="https://opensource.panuon.com/wpf-ui"
-        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 照片图库}" MinWidth="300"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 照片图库}" MinWidth="450"
         MinHeight="300" Height="{ll:Dbe GalleryHeight_625, DefValue=625}" Width="{ll:Dbe Gallery_1000, DefValue=1000}"
         FontSize="14" WindowStartupLocation="CenterScreen" Background="{DynamicResource PrimaryLighter}"
         pu:WindowXCaption.Height="45" pu:WindowXCaption.Background="{DynamicResource DARKPrimary}"
@@ -26,34 +26,32 @@
             <Setter Property="pu:ToggleButtonHelper.CornerRadius" Value="4" />
         </Style>
     </Window.Resources>
-      <pu:WindowXCaption.MinimizeButtonStyle>
-      <Style TargetType="Button"
-             BasedOn="{StaticResource {x:Static pu:WindowXCaption.MinimizeButtonStyleKey}}">
-          <Setter Property="Width" Value="28" />
-          <Setter Property="Height" Value="28" />
-          <Setter Property="Margin" Value="0,0,7,0" />
-          <Setter Property="VerticalAlignment" Value="Center" />
-          <Setter Property="Background" Value="Transparent" />
-          <Setter Property="pu:ButtonHelper.CornerRadius" Value="14" />
-          <Setter Property="pu:ButtonHelper.HoverBackground" Value="White" />
-          <Setter Property="pu:ButtonHelper.ClickBackground" Value="{x:Null}" />
-          <Setter Property="pu:ButtonHelper.HoverForeground" Value="{DynamicResource DARKPrimary}" />
-      </Style>
-  </pu:WindowXCaption.MinimizeButtonStyle>
-  <pu:WindowXCaption.MaximizeButtonStyle>
-      <Style TargetType="Button"
-             BasedOn="{StaticResource {x:Static pu:WindowXCaption.MaximizeButtonStyleKey}}">
-          <Setter Property="Width" Value="28" />
-          <Setter Property="Height" Value="28" />
-          <Setter Property="Margin" Value="0,0,7,0" />
-          <Setter Property="VerticalAlignment" Value="Center" />
-          <Setter Property="Background" Value="Transparent" />
-          <Setter Property="pu:ButtonHelper.CornerRadius" Value="14" />
-          <Setter Property="pu:ButtonHelper.HoverBackground" Value="White" />
-          <Setter Property="pu:ButtonHelper.ClickBackground" Value="{x:Null}" />
-          <Setter Property="pu:ButtonHelper.HoverForeground" Value="{DynamicResource DARKPrimary}" />
-      </Style>
-  </pu:WindowXCaption.MaximizeButtonStyle>
+    <pu:WindowXCaption.MinimizeButtonStyle>
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.MinimizeButtonStyleKey}}">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Margin" Value="0,0,7,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="pu:ButtonHelper.CornerRadius" Value="14" />
+            <Setter Property="pu:ButtonHelper.HoverBackground" Value="White" />
+            <Setter Property="pu:ButtonHelper.ClickBackground" Value="{x:Null}" />
+            <Setter Property="pu:ButtonHelper.HoverForeground" Value="{DynamicResource DARKPrimary}" />
+        </Style>
+    </pu:WindowXCaption.MinimizeButtonStyle>
+    <pu:WindowXCaption.MaximizeButtonStyle>
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.MaximizeButtonStyleKey}}">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Margin" Value="0,0,7,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="pu:ButtonHelper.CornerRadius" Value="14" />
+            <Setter Property="pu:ButtonHelper.HoverBackground" Value="White" />
+            <Setter Property="pu:ButtonHelper.ClickBackground" Value="{x:Null}" />
+            <Setter Property="pu:ButtonHelper.HoverForeground" Value="{DynamicResource DARKPrimary}" />
+        </Style>
+    </pu:WindowXCaption.MaximizeButtonStyle>
     <pu:WindowXCaption.CloseButtonStyle>
         <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
             <Setter Property="Width" Value="28" />
@@ -76,7 +74,7 @@
                     <Button Style="{DynamicResource TextButtonStyle}" Foreground="{DynamicResource DARKPrimaryText}"
                             VerticalAlignment="Center" FontSize="20" pu:WindowX.IsDragMoveArea="False" Margin="10,0,0,0"
                             Loaded="Button_Loaded" />
-                    <Grid Grid.Column="1" Margin="15,0,0,0" pu:WindowX.IsDragMoveArea="False" Width="200">
+                    <Grid Grid.Column="1" Margin="100,0,0,0" pu:WindowX.IsDragMoveArea="False" Width="300">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
@@ -99,7 +97,7 @@
     <pu:WindowX.Overlayer>
         <Grid HorizontalAlignment="Center">
             <Border Background="Transparent" MouseLeftButtonDown="BorderOutDetail_MouseLeftButtonDown" />
-            <Grid x:Name="DisplayGrid" Margin="100, 80" >
+            <Grid x:Name="DisplayGrid" Margin="100, 80">
                 <Border Background="White" CornerRadius="15" Grid.RowSpan="2" Grid.ColumnSpan="2">
                     <Border.Effect>
                         <DropShadowEffect Color="#eaeaea" BlurRadius="30" ShadowDepth="5" />
@@ -120,10 +118,13 @@
                     <TextBlock Text="{ll:Str 图片详情}" FontSize="18" Margin="0, 5"
                             Foreground="{DynamicResource DARKPrimary}" />
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
-                        <Button Margin="7,0,0,0" VerticalAlignment="Center" Content="设为桌面"
-                                Style="{DynamicResource ThemedButtonStyle}" Click="ButtonSetDestop_Click" />
-                        <Button Margin="7,0,0,0" VerticalAlignment="Center" Content="保存"
+                        <Button Margin="7,0,0,0" VerticalAlignment="Center" Content="{ll:Str 复制到剪贴板}"
+                                Style="{DynamicResource ThemedButtonStyle}" Click="ButtonCopy_Click" />
+                        <Button Margin="7,0,0,0" VerticalAlignment="Center" Content="{ll:Str 保存}"
                                 Style="{DynamicResource ThemedButtonStyle}" Click="ButtonSave_Click" />
+                        <Button Margin="7,0,0,0" VerticalAlignment="Center" Content="&#xEB99;" Padding="0"
+                                FontFamily="/VPet-Simulator.Windows;component/Res/#remixicon" FontSize="28"
+                                Style="{DynamicResource ThemedButtonStyle}" Click="ButtonClose_Click" />
                     </StackPanel>
                     <Image x:Name="ImagePhotoDetail" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Center"
                             Margin="0,7,0,0" />
@@ -179,7 +180,7 @@
             </StackPanel>
             <TextBlock Margin="0, 3, 0, 0" Text="{ll:Str 收藏}" />
             <CheckBox x:Name="CheckBoxFavorite" Margin="0, 3, 0, 0" Style="{DynamicResource ThemedCheckBoxStyle}"
-                    Content="只看我收藏的" Checked="ToggleButtonSearchParameters_CheckChanged"
+                    Content="{ll:Str 只看我收藏的}" Checked="ToggleButtonSearchParameters_CheckChanged"
                     Unchecked="ToggleButtonSearchParameters_CheckChanged" />
             <TextBlock Text="{ll:Str 标签}" Margin="0, 5, 0, 0" />
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
@@ -194,10 +195,9 @@
                 </pu:ToggleButtonGroup>
             </ScrollViewer>
         </StackPanel>
-        
-        <local:AutoUniformGrid x:Name="AutoUniformGridImages" x:FieldModifier="public" Grid.Column="1" Margin="10, 10, 0, 0" 
-                               ItemsMinWidth="195" ItemsMinHeight="170"
-                               Changed="AutoUniformGridImages_Changed" />
+
+        <local:AutoUniformGrid x:Name="AutoUniformGridImages" x:FieldModifier="public" Grid.Column="1"
+                Margin="10, 10, 0, 0" ItemsMinWidth="195" ItemsMinHeight="170" Changed="AutoUniformGridImages_Changed" />
 
         <Border x:Name="BorderEmpty" Grid.Column="1" Visibility="Collapsed">
             <TextBlock Text="{ll:Str '这里什么都没有, 修改搜索条件试试?'}" VerticalAlignment="Center" HorizontalAlignment="Center" />
@@ -208,15 +208,16 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <pu:Pagination x:Name="pagination" HorizontalAlignment="Left" Style="{DynamicResource StandardPaginationStyle}"
-                               CurrentPageChanged="Pagination_CurrentPageChanged" />
+                <pu:Pagination x:Name="pagination" HorizontalAlignment="Left"
+                        Style="{DynamicResource StandardPaginationStyle}"
+                        CurrentPageChanged="Pagination_CurrentPageChanged" />
                 <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
                     <CheckBox x:Name="CheckBoxALL" Margin="7, 0, 7, 0" Style="{DynamicResource ThemedCheckBoxStyle}"
-                        Content="{ll:Str 全选}" Checked="CheckBoxALL_Checked" />
-                <Button Margin="7,0,7,0" VerticalAlignment="Center" Content="{ll:Str 导出选中项}"
-                        Style="{DynamicResource ThemedButtonStyle}" Click="ButtonExportSele_Click" />
-                <Button Margin="7,0,7,0" VerticalAlignment="Center" Content="{ll:Str 导出全部已解锁}"
-                        Style="{DynamicResource ThemedButtonStyle}" Click="ButtonExportAll_Click" />
+                            Content="{ll:Str 全选}" Checked="CheckBoxALL_Checked" />
+                    <Button Margin="7,0,7,0" VerticalAlignment="Center" Content="{ll:Str 导出选中项}"
+                            Style="{DynamicResource ThemedButtonStyle}" Click="ButtonExportSele_Click" />
+                    <Button Margin="7,0,7,0" VerticalAlignment="Center" Content="{ll:Str 导出全部已解锁}"
+                            Style="{DynamicResource ThemedButtonStyle}" Click="ButtonExportAll_Click" />
                 </StackPanel>
             </Grid>
         </Border>

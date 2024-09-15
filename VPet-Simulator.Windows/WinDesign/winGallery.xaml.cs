@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using VPet_Simulator.Windows.Interface;
 using VPet_Simulator.Windows.WinDesign.Gallery;
+using WpfAnimatedGif;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -36,22 +37,6 @@ public partial class winGallery : WindowX
         //每次打开的时候都检查下是否解锁, 并自动解锁
         //这个解锁条件可以塞到 保存前的检查里面
         mw.CheckGalleryUnlock();
-
-        //Note:这个是给不二一的示例: 不用可以删了
-
-        //补充策划案未写出的内容:
-
-        //玩家可以查看解锁和未解锁的图片
-
-        //图片获取: item.GetImage(mw) (全分辨率)
-        //图片获取: Photo.ConvertToThumbnail(item.GetImage(mw),宽,高) (缩略图,宽高以最小比例为准)
-        //转换成黑白(用于未解锁): Photo.ConvertToBlackWhite(item.GetImage(mw)) Photo.ConvertToGrayScale
-
-        //图片有标题和描述, 描述可以只在解锁后显示, 解锁前可以显示解锁条件
-        //解锁条件 item.UnlockAble.CheckReason(mw)
-
-        //未解锁的图片有部分支持花钱解锁,可能需要做上相关功能
-        //解锁的图片支持多选后导出
 
         //逻辑啥的可以空出来我写
 
@@ -171,10 +156,11 @@ public partial class winGallery : WindowX
                 ? Visibility.Visible
                 : Visibility.Collapsed;
     }
-
+    private Photo nowphoto;
     public void DisplayDetail(Photo photo)
     {
-        ImagePhotoDetail.Source = photo.GetImage(mw);
+        nowphoto = photo;
+
         TextBlockPhotoDetailTitle.Text = photo.TranslateName;
         TextBlockPhotoDetailDescription.Text = photo.Description;
         IsMaskVisible = true;
@@ -187,6 +173,12 @@ public partial class winGallery : WindowX
         {
             DisplayGrid.Margin = new Thickness(150, 120, 150, 120);
         }
+        if (photo.Path.ToLower().EndsWith(".gif"))
+        {
+            ImageBehavior.SetAnimatedSource(ImagePhotoDetail, photo.GetImage(mw));
+        }
+        else
+            ImagePhotoDetail.Source = photo.GetImage(mw);
     }
 
     private void BorderOutDetail_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -195,14 +187,39 @@ public partial class winGallery : WindowX
         IsOverlayerVisible = false;
     }
 
-    private void ButtonSetDestop_Click(object sender, RoutedEventArgs e)
+    private void ButtonClose_Click(object sender, RoutedEventArgs e)
     {
-
+        IsMaskVisible = false;
+        IsOverlayerVisible = false;
+    }
+    private void ButtonCopy_Click(object sender, RoutedEventArgs e)
+    {
+        if (nowphoto == null)
+            return;
+        Clipboard.SetImage(nowphoto.GetImage(mw));
+        Toast(message: "已复制图片！".Translate(),
+                     icon: MessageBoxIcon.Info);
     }
 
     private void ButtonSave_Click(object sender, RoutedEventArgs e)
     {
-
+        if (nowphoto == null)
+            return;
+        SaveFileDialog dialog = new SaveFileDialog();
+        string ext = nowphoto.Path.Split('.').Last();
+        dialog.Filter = ext + "|*." + ext;
+        if (dialog.ShowDialog() == true)
+        {
+            Task.Run(() =>
+                {
+                    nowphoto.SaveAs(mw, dialog.FileName);
+                    Dispatcher.Invoke(() =>
+                     Toast(
+                        message: "已保存图片！".Translate(),
+                        icon: MessageBoxIcon.Info
+                    ));
+                });
+        }
     }
 
     private void ButtonExportAll_Click(object sender, RoutedEventArgs e)
@@ -215,10 +232,10 @@ public partial class winGallery : WindowX
                 selectedPhotos.Add(unlockedItem.Photo);
             }
         }
-        if (!selectedPhotos.Any())
+        if (selectedPhotos.Count == 0)
         {
             Toast(
-                message: "当前没有选中任何项目！".Translate(),
+                message: "当前没有解锁任何图片！".Translate(),
                 icon: MessageBoxIcon.Error
             );
             return;
@@ -226,14 +243,17 @@ public partial class winGallery : WindowX
         OpenFolderDialog dialog = new OpenFolderDialog();
         if (dialog.ShowDialog() == true)
         {
-            //foreach (var photo in selectedPhotos)
-            //{
-            //    photo.SaveToFolder(dialog.SelectedPath);
-            //}
-            Toast(
-                message: "已导出选中的项目！".Translate(),
-                icon: MessageBoxIcon.Info
-            );
+            Task.Run(() =>
+            {
+                foreach (var photo in selectedPhotos)
+                {
+                    photo.SaveAs(mw, photo.FilePath(dialog.FolderName));
+                }
+                Dispatcher.Invoke(() => Toast(
+                          message: "已导出全部解锁的图片！".Translate(),
+                          icon: MessageBoxIcon.Info
+                      ));
+            });
         }
     }
 
@@ -251,7 +271,7 @@ public partial class winGallery : WindowX
         if (!selectedPhotos.Any())
         {
             Toast(
-                message: "当前没有选中任何项目！".Translate(),
+                message: "当前没有选中任何图片！".Translate(),
                 icon: MessageBoxIcon.Error
             );
             return;
@@ -259,12 +279,12 @@ public partial class winGallery : WindowX
         OpenFolderDialog dialog = new OpenFolderDialog();
         if (dialog.ShowDialog() == true)
         {
-            //foreach (var photo in selectedPhotos)
-            //{
-            //    photo.SaveToFolder(dialog.SelectedPath);
-            //}
+            foreach (var photo in selectedPhotos)
+            {
+                photo.SaveAs(mw, photo.FilePath(dialog.FolderName));
+            }
             Toast(
-                message: "已导出选中的项目！".Translate(),
+                message: "已导出选中的图片！".Translate(),
                 icon: MessageBoxIcon.Info
             );
         }
@@ -307,7 +327,7 @@ public partial class winGallery : WindowX
             {
                 unlockedItem.IsSelected = isc;
             }
-
         }
     }
+
 }

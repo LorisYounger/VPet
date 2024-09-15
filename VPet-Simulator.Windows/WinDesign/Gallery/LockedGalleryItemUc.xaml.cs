@@ -41,7 +41,7 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
                         btnCannot.Visibility = Visibility.Visible;
                         nlmoney.Text = convertk(photo.UnlockAble.SellPrice);
                     }
-                    ToolTip = "花费${0} 并 满足以下条件:".Translate(photo.UnlockAble.SellPrice) + untxt;                    
+                    ToolTip = "花费${0} 并 满足以下条件:".Translate(photo.UnlockAble.SellPrice) + untxt;
                 }
                 else
                 {
@@ -63,21 +63,22 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {//花钱解锁
+            if (mw.GameSavesData.GameSave.Money < Photo.UnlockAble.SellPrice)
+            {
+                mw.winGallery.Toast("金钱不足".Translate() + " " + convertk(Photo.UnlockAble.SellPrice),
+                    icon: MessageBoxIcon.Warning);
+                return;
+            }
+
             mw.GameSavesData.GameSave.Money -= Photo.UnlockAble.SellPrice;
             Photo.Unlock(mw);
-            if (mw.winGallery != null)
-            {
-                var i = mw.winGallery.AutoUniformGridImages.Children.IndexOf(this);
-                mw.winGallery.AutoUniformGridImages.Children.Remove(this);
-                mw.winGallery.AutoUniformGridImages.Children.Insert(i, new UnLockedGalleryItemUc(Photo, mw));
-                mw.winGallery.Toast(
-                message: "已解锁".Translate() + " " + Photo.TranslateName,
-                icon: MessageBoxIcon.Info
-                );
-            }
-            else
-                NoticeBox.Show(string.Concat(Photo.TranslateName, "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate(),
-                    MessageBoxIcon.Info, true, 5000);
+            var i = mw.winGallery.AutoUniformGridImages.Children.IndexOf(this);
+            mw.winGallery.AutoUniformGridImages.Children.Remove(this);
+            mw.winGallery.AutoUniformGridImages.Children.Insert(i, new UnLockedGalleryItemUc(Photo, mw));
+            mw.winGallery.Toast(
+            message: "已解锁".Translate() + " " + Photo.TranslateName,
+            icon: MessageBoxIcon.Info
+            );
         }
 
         private void this_Loaded(object sender, RoutedEventArgs e)
