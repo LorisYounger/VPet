@@ -178,12 +178,7 @@ public partial class winGallery : WindowX
         {
             DisplayGrid.Margin = new Thickness(150, 120, 150, 120);
         }
-        if (photo.Path.ToLower().EndsWith(".gif"))
-        {
-            ImageBehavior.SetAnimatedSource(ImagePhotoDetail, photo.GetGifImage(mw));
-        }
-        else
-            ImagePhotoDetail.Source = photo.GetImage(mw);
+        ImageBehavior.SetAnimatedSource(ImagePhotoDetail, photo.GetGifImage(mw));
     }
 
     private void BorderOutDetail_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
