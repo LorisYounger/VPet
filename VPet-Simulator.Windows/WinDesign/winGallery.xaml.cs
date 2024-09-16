@@ -167,7 +167,7 @@ public partial class winGallery : WindowX
         nowphoto = photo;
 
         TextBlockPhotoDetailTitle.Text = photo.TranslateName;
-        TextBlockPhotoDetailDescription.Text = photo.Description;
+        TextBlockPhotoDetailDescription.Text = "解锁时间".Translate() + ": " + photo.PlayerInfo.UnlockTime.ToString() + '\n' + photo.Description.Translate();
         IsMaskVisible = true;
         IsOverlayerVisible = true;
         if (photo.Type == Photo.PhotoType.Illustration)
@@ -180,7 +180,7 @@ public partial class winGallery : WindowX
         }
         if (photo.Path.ToLower().EndsWith(".gif"))
         {
-            ImageBehavior.SetAnimatedSource(ImagePhotoDetail, photo.GetImage(mw));
+            ImageBehavior.SetAnimatedSource(ImagePhotoDetail, photo.GetGifImage(mw));
         }
         else
             ImagePhotoDetail.Source = photo.GetImage(mw);

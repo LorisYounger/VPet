@@ -41,13 +41,13 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
                         btnCannot.Visibility = Visibility.Visible;
                         nlmoney.Text = convertk(photo.UnlockAble.SellPrice);
                     }
-                    ToolTip = "花费${0} 并 满足以下条件:".Translate(photo.UnlockAble.SellPrice) + untxt;
+                    ToolTip = "花费${0} 并 满足以下条件:".Translate(photo.UnlockAble.SellPrice) + '\n' + untxt;
                 }
                 else
                 {
                     btnCan.Visibility = Visibility.Visible;
                     clmoney.Text = convertk(photo.UnlockAble.SellPrice);
-                    ToolTip = "花费${0} 或 满足以下条件:".Translate(photo.UnlockAble.SellPrice) + untxt;
+                    ToolTip = "花费${0} 或 满足以下条件:".Translate(photo.UnlockAble.SellPrice) + '\n' + untxt;
                     rAnd.Text = "或".Translate();
                 }
             }

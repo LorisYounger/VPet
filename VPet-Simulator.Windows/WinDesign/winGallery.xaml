@@ -6,7 +6,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pw="https://opensource.panuon.com/wpf" xmlns:pu="https://opensource.panuon.com/wpf-ui"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d" Title="{ll:Str 照片图库}" MinWidth="450"
-        MinHeight="300" Height="{ll:Dbe GalleryHeight_625, DefValue=625}" Width="{ll:Dbe Gallery_1000, DefValue=1000}"
+        MinHeight="300" Height="{ll:Dbe GalleryHeight_625, DefValue=625}"
+        Width="{ll:Dbe GalleryWidth_1000, DefValue=1000}"
         FontSize="14" WindowStartupLocation="CenterScreen" Background="{DynamicResource PrimaryLighter}"
         pu:WindowXCaption.Height="45" pu:WindowXCaption.Background="{DynamicResource DARKPrimary}"
         pu:WindowXCaption.Foreground="#FFFFFF" Icon="/Res/Gallery.png"
@@ -74,7 +75,7 @@
                     <Button Style="{DynamicResource TextButtonStyle}" Foreground="{DynamicResource DARKPrimaryText}"
                             VerticalAlignment="Center" FontSize="22" pu:WindowX.IsDragMoveArea="False" Margin="10,0,0,0"
                             Loaded="Button_Loaded" />
-                    <Grid Grid.Column="1" Margin="100,0,0,0" pu:WindowX.IsDragMoveArea="False" Width="300">
+                    <Grid Grid.Column="1" Margin="40,0,0,0" pu:WindowX.IsDragMoveArea="False" Width="300">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
