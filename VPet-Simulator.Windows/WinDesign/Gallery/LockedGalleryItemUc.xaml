@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="VPet_Simulator.Windows.WinDesign.Gallery.LockedGalleryItemUc"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows.WinDesign.Gallery" Height="160" Width="185" Margin="0,0,10,10"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        xmlns:pu="https://opensource.panuon.com/wpf-ui" xmlns:pw="https://opensource.panuon.com/wpf" mc:Ignorable="d"
+        x:Name="this" Loaded="this_Loaded">
+    <Border Background="White">
+
+        <Grid Margin="7">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Image x:Name="displayimage" Stretch="UniformToFill" />
+            <TextBlock x:Name="tbTitle" Grid.Row="1" Margin="0, 3, 0, 0" TextTrimming="CharacterEllipsis" />
+            <Border x:Name="bbd" Background="#88F3F4F5" />
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{ll:Str 解锁条件}" FontWeight="Bold" />
+                <ScrollViewer Grid.Row="1">
+                    <TextBlock x:Name="unlocktext" TextWrapping="Wrap" />
+                </ScrollViewer>
+                <Button x:Name="btnCan" Grid.Row="3" HorizontalAlignment="Center"
+                        Style="{DynamicResource ThemedButtonStyle}" Click="Button_Click" Visibility="Collapsed"
+                        Margin="0,7,0,0">
+                    <TextBlock>
+                        <Run x:Name="rAnd" Text="并" /> 
+                        <Run Text="{ll:Str 花费}" />
+                        <Run x:Name="clmoney" />
+                        <Run Text="{ll:Str 解锁}" />
+                    </TextBlock>
+                </Button>
+                <Button x:Name="btnCannot" Grid.Row="3" Cursor="No" pu:ButtonHelper.HoverBackground="{x:Null}"
+                        pu:ButtonHelper.ClickBackground="{x:Null}" Background="#7e7e7e" HorizontalAlignment="Center"
+                        Style="{DynamicResource ThemedButtonStyle}" Visibility="Collapsed" Margin="0,7,0,0">
+                    <TextBlock>
+                         <Run Text="{ll:Str 并}" /> 
+                         <Run Text="{ll:Str 花费}" />
+                              <Run x:Name="nlmoney" />
+                           <Run Text="{ll:Str 解锁}" />
+                    </TextBlock>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

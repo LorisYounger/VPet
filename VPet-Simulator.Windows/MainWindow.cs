@@ -2435,7 +2435,8 @@ namespace VPet_Simulator.Windows
                 sb.Append(p.TranslateName);
             }
             Dispatcher.Invoke(() =>
-            NoticeBox.Show(string.Concat(sb.ToString().AsSpan(2), "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate()));
+            NoticeBox.Show(string.Concat(sb.ToString().AsSpan(2), "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate()
+            , Panuon.WPF.UI.MessageBoxIcon.Info, true, 5000));
         }
     }
 }

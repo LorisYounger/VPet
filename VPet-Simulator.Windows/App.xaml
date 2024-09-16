@@ -28,6 +28,25 @@
                         </pu:MessageBoxXSettings.WindowXStyle>
 
                     </pu:MessageBoxXSettings>
+
+                    <pu:ToastSettings x:Key="toastSettings">
+                        <pu:ToastSettings.LabelStyle>
+                            <Style TargetType="Label"
+                                   BasedOn="{StaticResource {x:Static pu:Toast.LabelStyleKey}}">
+                                <Setter Property="Padding"
+                                        Value="25,15" />
+                                <Setter Property="Background"
+                                        Value="{DynamicResource DARKPrimaryText}" />
+                                <Setter Property="Foreground"
+                                        Value="{DynamicResource DARKPrimary}" />
+                                <Setter Property="pu:LabelHelper.CornerRadius"
+                                        Value="5" />
+                                <Setter Property="pu:LabelHelper.ShadowColor"
+                                        Value="{DynamicResource ShadowColor}" />
+                            </Style>
+                        </pu:ToastSettings.LabelStyle>
+
+                    </pu:ToastSettings>
                 </ResourceDictionary>
                 <ResourceDictionary Source="/VPet-Simulator.Windows.Interface;component/ResourceStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>

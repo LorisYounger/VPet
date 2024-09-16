@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="VPet_Simulator.Windows.WinDesign.Gallery.UnLockedGalleryItemUc"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows.WinDesign.Gallery"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        xmlns:pw="https://opensource.panuon.com/wpf" xmlns:pu="https://opensource.panuon.com/wpf-ui" Height="160"
+        Width="185" Margin="0,0,10,10" mc:Ignorable="d" x:Name="this" Loaded="this_Loaded">
+    <Border Background="White">
+        <Grid Margin="7">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Image x:Name="displayimage" Margin="0, 0, 0, 7" />
+            <CheckBox x:Name="cbDesc" Grid.Row="1" Style="{DynamicResource ThemedCheckBoxStyle}"
+                    IsChecked="{Binding IsSelected, ElementName=this, Mode=TwoWay}">
+                <TextBlock x:Name="tbTitle" TextTrimming="CharacterEllipsis" />
+            </CheckBox>
+            <Border Background="Transparent" MouseLeftButtonDown="Border_MouseLeftButtonDown" x:Name="bbd"/>
+            <ToggleButton x:Name="tbStar" Style="{DynamicResource TextToggleButtonStyle}"
+                    FontFamily="pack://application:,,,/Res/#remixicon" Content="&#xee0b;" FontSize="22"
+                    pu:ToggleButtonHelper.CheckedContent="&#xee0a;" Foreground="HotPink"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right" Checked="ToggleButtonStar_CheckChanged"
+                    Unchecked="ToggleButtonStar_CheckChanged">
+                <ToggleButton.Effect>
+                    <DropShadowEffect Color="#aaa" BlurRadius="5" ShadowDepth="1" />
+                </ToggleButton.Effect>
+            </ToggleButton>
+        </Grid>
+    </Border>
+</UserControl>

@@ -349,7 +349,7 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-*.zip
+
 *.rar
 *_PDLC_*
 *_DLC_*

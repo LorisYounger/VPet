@@ -153,6 +153,11 @@ MOD プロデューサ:  https://github.com/LorisYounger/VPet.ModMaker
 * [このページ](https://github.com/LorisYounger/VPet)へのリンクを提供しなければなりません。
 * 私たちのファイルで**利益を得るべきではありません**。
 
+### 画像の著作権に関する声明と許可
+
+* プログラムに組み込まれている画像の著作権は上記と同じです。
+* Zipフォトギャラリーの商用利用は禁止します
+
 ## Vpet-Simulator.Windows のデプロイ方法
 
 1. ソースコードをダウンロードし、Visual Studio で `VPet.sln` を開く。

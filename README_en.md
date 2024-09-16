@@ -153,6 +153,11 @@ You **must** inform users of the source of our animation files, and provide a li
 * You **must** provide a link to [this page](https://github.com/LorisYounger/VPet).
 * **No** profit should be made with our files.
 
+### Image Copyright Notice and Authorization terms
+
+* Images built into the program are subject to the same copyright licensing as above
+* Zip Photo Gallery prohibits commercial use
+
 ## How to deploy Vpet-Simulator.Windows
 
 1. Download the source code, and open `VPet.sln` with Visual Studio.

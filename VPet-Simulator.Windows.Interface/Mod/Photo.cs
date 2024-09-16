@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+
 namespace VPet_Simulator.Windows.Interface;
 public class Photo
 {
@@ -281,11 +282,11 @@ public class Photo
             }
             StringBuilder sb = new StringBuilder();
 
-            if (SellPrice > 0)
-                if (SellBoth)
-                    sb.AppendLine("花费${0} 并 满足以下条件:".Translate(SellPrice));
-                else
-                    sb.AppendLine("花费${0} 或 满足以下条件:".Translate(SellPrice));
+            //if (SellPrice > 0)
+            //    if (SellBoth)
+            //        sb.AppendLine("花费${0} 并 满足以下条件:".Translate(SellPrice));
+            //    else
+            //        sb.AppendLine("花费${0} 或 满足以下条件:".Translate(SellPrice));
 
             //基础条件
             if (Level > 0)
@@ -313,7 +314,7 @@ public class Photo
                     sb.AppendLine("{0}要求: {1}".Translate(stat.Translate(), value));
             }
 
-            return sb.ToString();
+            return sb.ToString().Trim('\n');
         }
         /// <summary>
         /// 需求等级
@@ -438,7 +439,11 @@ public class Photo
     /// <summary>
     /// 是否收藏
     /// </summary>
-    public bool IsStar => PlayerInfo?.Star ?? false;
+    public bool IsStar
+    {
+        get => PlayerInfo?.Star ?? false;
+        set { if (PlayerInfo != null) PlayerInfo.Star = value; }
+    }
     /// <summary>
     /// 是否解锁
     /// </summary>
@@ -470,20 +475,24 @@ public class Photo
     public static BitmapSource ConvertToThumbnail(BitmapImage originalImage, int width, int height)
     {
         // 创建一个 RenderTargetBitmap
-        RenderTargetBitmap renderBitmap = new RenderTargetBitmap(width, height, 96d, 96d, PixelFormats.Pbgra32);
+        if (originalImage.Width < width && originalImage.Height < height)
+        {
+            return originalImage;
+        }
+        // 计算缩放比例
+        double scaleX = (double)width / originalImage.PixelWidth;
+        double scaleY = (double)height / originalImage.PixelHeight;
+        double scale = Math.Min(scaleX, scaleY); // 选择较小的比例以保持纵横比
+
+        // 计算缩放后的尺寸
+        int scaledWidth = (int)(originalImage.PixelWidth * scale);
+        int scaledHeight = (int)(originalImage.PixelHeight * scale);
+
+        RenderTargetBitmap renderBitmap = new RenderTargetBitmap(scaledWidth, scaledHeight, 96d, 96d, PixelFormats.Pbgra32);
         DrawingVisual visual = new DrawingVisual();
 
         using (DrawingContext drawingContext = visual.RenderOpen())
         {
-            // 计算缩放比例
-            double scaleX = (double)width / originalImage.PixelWidth;
-            double scaleY = (double)height / originalImage.PixelHeight;
-            double scale = Math.Min(scaleX, scaleY); // 选择较小的比例以保持纵横比
-
-            // 计算缩放后的尺寸
-            double scaledWidth = originalImage.PixelWidth * scale;
-            double scaledHeight = originalImage.PixelHeight * scale;
-
             // 绘制图像
             drawingContext.DrawImage(originalImage, new Rect(0, 0, scaledWidth, scaledHeight));
         }
@@ -535,7 +544,7 @@ public class Photo
     public BitmapImage GetImage(IMainWindow imw)
     {
         //解压zip
-        string zippath = imw.FileSources.FindSource(Zip);
+        string zippath = imw.FileSources.FindSource(Zip + ".zip");
         if (zippath == null)
         {
             return ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
@@ -548,14 +557,21 @@ public class Photo
             {
                 using (Stream stream = entry.Open())
                 {
-                    // 创建 BitmapImage
-                    BitmapImage bitmap = new BitmapImage();
-                    bitmap.BeginInit();
-                    bitmap.StreamSource = stream;
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad; // 立即加载
-                    bitmap.EndInit();
-                    bitmap.Freeze(); // 使 BitmapImage 可以在不同线程中使用
-                    return bitmap;
+                    // 将流内容复制到内存流中
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        stream.CopyTo(memoryStream);
+                        memoryStream.Position = 0; // 重置内存流的位置
+
+                        // 创建 BitmapImage
+                        BitmapImage bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.StreamSource = memoryStream; // 使用内存流
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad; // 立即加载
+                        bitmap.EndInit();
+                        bitmap.Freeze(); // 使 BitmapImage 可以在不同线程中使用
+                        return bitmap;
+                    }
                 }
             }
             else
@@ -564,6 +580,58 @@ public class Photo
             }
         }
     }
-
+    /// <summary>
+    /// 保存到文件夹时自动转换
+    /// </summary>
+    /// <param name="savedir">文件夹</param>
+    public string FilePath(string savedir) => savedir + '\\' + FilePath();
+    /// <summary>
+    /// 保存到文件夹时自动转换
+    /// </summary>
+    public string FilePath()
+    {
+        var filepath = TranslateName;
+        // 不允许的符号列表
+        char[] illegalChars = { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
+        foreach (char c in illegalChars)
+        {
+            filepath = filepath.Replace(c.ToString(), "");
+        }
+        return filepath.Replace(' ', '_') + '.' + Path.Split('.').Last();
+    }
+    /// <summary>
+    /// 图片另存为文件
+    /// </summary>
+    public void SaveAs(IMainWindow imw, string filepath)
+    {
+        //解压zip
+        string zippath = imw.FileSources.FindSource(Zip + ".zip");
+        if (zippath == null)
+        {
+            return;
+        }
+        using (ZipArchive archive = ZipFile.OpenRead(zippath))
+        {
+            // 找到指定的文件
+            ZipArchiveEntry entry = archive.GetEntry(Path);
+            if (entry != null)
+            {
+                // 打开源文件流
+                using (Stream sourceStream = entry.Open())
+                {
+                    // 创建目标文件流
+                    using (FileStream destinationStream = new FileStream(filepath, FileMode.Create, FileAccess.Write))
+                    {
+                        // 将源文件流复制到目标文件流
+                        sourceStream.CopyTo(destinationStream);
+                    }
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+    }
 }
 
