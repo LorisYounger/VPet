@@ -133,7 +133,7 @@
 
 以及提供社群翻譯與更多內容的工作坊作者
 
-## 動畫zz版權聲明與授權
+## 動畫版權聲明與授權
 
 在Github中，[桌寵動畫檔案](https://github.com/LorisYounger/VPet/tree/main/VPet-Simulator.Windows/mod/0000_core/pet/vup)之動畫版權歸[虛擬主播模擬器製作組](https://www.exlb.net/VUP-Simulator)所有，在使用本類別庫時，您可能會需要自行準備動畫檔，或遵循下列協定：</br>
 *註：本聲明只限於桌寵自帶的動畫，其餘經工作坊等方式額外加入的內容並不適用*
@@ -143,7 +143,7 @@
 * 需要向使用者告知動畫檔案的來源，並提供造訪[本頁面](https://github.com/LorisYounger/VPet)的連結
 * 當您完成上述要求後，可以免費使用動畫檔案
 
-### 商業用途授權（低於10萬）
+### 商業用途授權
 
 * 在使用者第一次使用時，需跳出視窗，並醒目向使用者告知動畫檔案的來源，並提供造訪[本頁面](https://github.com/LorisYounger/VPet)的連結
 * 在對應的頁面上（使用者能快速造訪的），向使用者告知動畫檔案的來源，並提供造訪[本頁面](https://github.com/LorisYounger/VPet)的連結
