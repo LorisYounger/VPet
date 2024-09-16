@@ -158,6 +158,11 @@ MOD制作器:  https://github.com/LorisYounger/VPet.ModMaker
 * 需要提供访问 [该页面](https://github.com/LorisYounger/VPet) 的链接
 * 分发动画文件时禁止任何付费/收费行为
 
+### 图片版权声明与授权
+
+* 程序内置图片 版权授权同上
+* Zip 照片图库禁止商用
+
 ## 桌面端部署方法
 
 1. 下载本项目, 通过VisualStudio打开 `VPet.sln` 文件

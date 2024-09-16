@@ -72,7 +72,7 @@
                     <Image x:Name="ImageWHY" Width="28" Height="28" Source="/Res/Gallery.png" VerticalAlignment="Center"
                             Margin="30,0,0,0" />
                     <Button Style="{DynamicResource TextButtonStyle}" Foreground="{DynamicResource DARKPrimaryText}"
-                            VerticalAlignment="Center" FontSize="20" pu:WindowX.IsDragMoveArea="False" Margin="10,0,0,0"
+                            VerticalAlignment="Center" FontSize="22" pu:WindowX.IsDragMoveArea="False" Margin="10,0,0,0"
                             Loaded="Button_Loaded" />
                     <Grid Grid.Column="1" Margin="100,0,0,0" pu:WindowX.IsDragMoveArea="False" Width="300">
                         <Grid.ColumnDefinitions>
@@ -90,6 +90,8 @@
                                 Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" Cursor="Hand"
                                 Click="BtnSearch_Click" />
                     </Grid>
+                    <Label Content="{ll:Str '注: 照片图库内容禁止商用'}" Background="{x:Null}" Margin="30,0,0,0"
+                            Foreground="{DynamicResource DARKPrimaryText}" VerticalAlignment="Center" FontSize="16" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
