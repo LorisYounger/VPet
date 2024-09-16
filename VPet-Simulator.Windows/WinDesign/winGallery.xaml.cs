@@ -117,7 +117,7 @@ public partial class winGallery : WindowX
                     && (!isFavoriteChecked || p.IsStar)
                     && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
                     && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
-                    && (!selectedTags.Any() || selectedTags.Any(st => p.Tags.Contains(st)))
+                    && (!selectedTags.Any() || selectedTags.All(st => p.TagsTrans.Contains(st)))
                     && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
             photos.AddRange(lockphoto);
         }
@@ -128,7 +128,7 @@ public partial class winGallery : WindowX
                 && (!isFavoriteChecked || p.IsStar)
                 && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
                 && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
-                && (!selectedTags.Any() || selectedTags.Any(st => p.Tags.Contains(st)))
+                && (!selectedTags.Any() || selectedTags.All(st => p.TagsTrans.Contains(st)))
                 && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
 
             photos.AddRange(unlockphoto);
