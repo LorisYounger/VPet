@@ -54,10 +54,10 @@ LinH#LinH:|
 解锁条件#Unlock conditions:|
 花费#Spend:|
 解锁#Unlock:|
-{0}要求: {1}#{0} Requirement: {1}:|
-等级突破要求: {0}#Level breakthrough requirement: {0}:|
-金钱要求: ${0}#Monetary requirement: ${0}:|
-等级要求: {0}#Level requirement: {0}:|
+{0}要求: {1}#{0}: {1}:|
+等级突破要求: {0}#Level breakthrough: {0}:|
+金钱要求: ${0}#Monetary: ${0}:|
+等级要求: {0}#Level: {0}:|
 购买DLC: 宅女后解锁#Unlock after Purchase DLC OTAKU:|
 Mid_Autumn_Festival#Mid Autumn Festival:|
 Dragon_Boat_Festival#Dragon Boat Festival:|
@@ -66,3 +66,8 @@ Spring_Festival#Spring Festival:|
 Christmas#Christmas:|
 Player_Birthday#Player Birthday:|
 解锁时间#Unlock time:|
+解锁日期: {0}#date: {0}:|
+解锁节日: {0}#festival: {0}:|
+解锁时间: {0}#time: {0}:|
+由程序锁定#Locked by program:|
+心情要求: {0}#Mood: {0}:|
