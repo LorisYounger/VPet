@@ -224,7 +224,7 @@ public class Photo
             if (Date != null)
             {
                 var date = new DateTime(now.Year, Date.Value.Month, Date.Value.Day);
-                if (CheckDate(date)) return false;
+                if (!CheckDate(date)) return false;
             }
             if (Time != null)
             {
@@ -239,23 +239,23 @@ public class Photo
                 switch (Holiday)
                 {
                     case HolidayType.Mid_Autumn_Festival:
-                        if (CheckDate(GetLunarDate(8, 15)))
+                        if (!CheckDate(GetLunarDate(8, 15)))
                             return false;
                         break;
                     case HolidayType.Dragon_Boat_Festival:
-                        if (CheckDate(GetLunarDate(5, 5)))
+                        if (!CheckDate(GetLunarDate(5, 5)))
                             return false;
                         break;
                     case HolidayType.New_Years_Day:
-                        if (CheckDate(new DateTime(now.Year, 1, 1)))
+                        if (!CheckDate(new DateTime(now.Year, 1, 1)))
                             return false;
                         break;
                     case HolidayType.Spring_Festival:
-                        if (CheckDate(GetLunarDate(8, 15)))
+                        if (!CheckDate(GetLunarDate(8, 15)))
                             return false;
                         break;
                     case HolidayType.Christmas:
-                        if (CheckDate(new DateTime(now.Year, 12, 15)))
+                        if (!CheckDate(new DateTime(now.Year, 12, 15)))
                             return false;
                         break;
                         //case HolidayType.Player_Birthday: //TODO: 玩家生日
@@ -300,7 +300,7 @@ public class Photo
             if (Feeling > 0)
                 sb.AppendLine("心情要求: {0}".Translate(Feeling));
             if (Date != null)
-                sb.AppendLine("解锁日期: {0}".Translate(Date.Value.ToString("yyyy-MM-dd")));
+                sb.AppendLine("解锁日期: {0}".Translate(Date.Value.ToString("MM-dd")));
             if (Time != null)
                 sb.AppendLine("解锁时间: {0}".Translate(Time.Value.ToString("HH:mm")));
             if (Holiday != HolidayType.None)
@@ -309,12 +309,12 @@ public class Photo
             //统计数据
             foreach (var (stat, value) in StatCheck)
             {
-                var statvalue = gamesave.Statistics.GetInt(stat, -1);
-                if (statvalue < value)
-                    sb.AppendLine("{0}要求: {1}".Translate(stat.Translate(), value));
+                sb.AppendLine("{0}要求: {1}".Translate(
+                   (stat.StartsWith("stat_") ? stat.Substring(5) : stat)
+                    .Translate(), value));
             }
 
-            return sb.ToString().Trim('\n');
+            return sb.ToString().Trim('\n', '\r');
         }
         /// <summary>
         /// 需求等级
@@ -327,7 +327,7 @@ public class Photo
         /// <summary>
         /// 需求金钱(数量/并非消耗)
         /// </summary>
-        public int Money { get; set; } = 0;
+        public int Money { get; set; } = int.MinValue;
         /// <summary>
         /// 需求好感度
         /// </summary>
@@ -453,16 +453,18 @@ public class Photo
     /// </summary>
     public void Unlock(IMainWindow imw)
     {
-        ISub sub = imw.Set["photo"][Name];
-        PlayerInfo = new Info(new Sub());
+        ISub sub = imw.GameSavesData["photo"][Name];
+        PlayerInfo = new Info(sub);
         PlayerInfo.UnlockTime = DateTime.Now;
     }
     public void LoadUserInfo(IMainWindow imw)
     {
-        if (imw.Set["photo"].Contains(Name))
+        if (imw.GameSavesData["photo"].Contains(Name))
         {
-            PlayerInfo = new Info(imw.Set["betterbuy"][Name]);
+            PlayerInfo = new Info(imw.GameSavesData["photo"][Name]);
         }
+        else
+            PlayerInfo = null;
     }
 
     /// <summary>
@@ -580,6 +582,50 @@ public class Photo
             }
         }
     }
+    /// <summary>
+    /// 获取适用于GIF的图片
+    /// </summary>
+    public BitmapImage GetGifImage(IMainWindow imw)
+    {
+        // 解压zip
+        string zippath = imw.FileSources.FindSource(Zip + ".zip");
+        if (zippath == null)
+        {
+            return ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
+        }
+
+        using (ZipArchive archive = ZipFile.OpenRead(zippath))
+        {
+            // 找到指定的文件
+            ZipArchiveEntry entry = archive.GetEntry(Path);
+            if (entry != null)
+            {
+                using (Stream stream = entry.Open())
+                {
+                    // 创建一个新的 MemoryStream
+                    var memstr = new MemoryStream();
+                    stream.CopyTo(memstr); // 将流内容复制到 MemoryStream
+
+                    // 创建 BitmapImage
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad; // 立即加载
+                    bitmap.StreamSource = memstr; // 设置流源
+                    bitmap.EndInit();
+                    bitmap.Freeze(); // 使 BitmapImage 可以在不同线程中使用
+
+                    return bitmap; // 返回 BitmapImage
+                }
+            }
+            else
+            {
+                return ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
+            }
+        }
+    }
+
+
+
     /// <summary>
     /// 保存到文件夹时自动转换
     /// </summary>
