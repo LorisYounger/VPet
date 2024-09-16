@@ -79,14 +79,18 @@ public partial class winGallery : WindowX
         RefreshList();
 
     }
-
+    bool process = false;
     public void RefreshList()
     {
         if (!IsLoaded)
         {
             return;
         }
-
+        if (process)
+        {
+            return;
+        }
+        process = true;
 
         AutoUniformGridImages.Children.Clear();
 
@@ -95,7 +99,7 @@ public partial class winGallery : WindowX
         //如果某个分类一个都没选中，那就等于全部选中
 
         var isIllustrationChecked = ToggleButtonIllustration.IsChecked == true ? true : ToggleButtonThumbnail.IsChecked == false;
-        var isThumbnailChecked = ToggleButtonThumbnail.IsChecked == true ? true : ToggleButtonThumbnail.IsChecked == false;
+        var isThumbnailChecked = ToggleButtonThumbnail.IsChecked == true ? true : ToggleButtonIllustration.IsChecked == false;
         //var isGIFChecked = ToggleButtonGIF.IsChecked == true;
 
         var isLockedChecked = ToggleButtonLocked.IsChecked == true ? true : ToggleButtonUnlocked.IsChecked == false;
@@ -155,6 +159,7 @@ public partial class winGallery : WindowX
         BorderEmpty.Visibility = AutoUniformGridImages.Children.Count == 0
                 ? Visibility.Visible
                 : Visibility.Collapsed;
+        process = false;
     }
     private Photo nowphoto;
     public void DisplayDetail(Photo photo)
@@ -207,6 +212,7 @@ public partial class winGallery : WindowX
             return;
         SaveFileDialog dialog = new SaveFileDialog();
         string ext = nowphoto.Path.Split('.').Last();
+        dialog.FileName = nowphoto.FilePath();
         dialog.Filter = ext + "|*." + ext;
         if (dialog.ShowDialog() == true)
         {
@@ -281,6 +287,7 @@ public partial class winGallery : WindowX
             SaveFileDialog dialog = new SaveFileDialog();
             nowphoto = selectedPhotos[0];
             string ext = nowphoto.Path.Split('.').Last();
+            dialog.FileName = nowphoto.FilePath();
             dialog.Filter = ext + "|*." + ext;
             if (dialog.ShowDialog() == true)
             {

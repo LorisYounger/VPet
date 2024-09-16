@@ -314,7 +314,7 @@ public class Photo
                     sb.AppendLine("{0}要求: {1}".Translate(stat.Translate(), value));
             }
 
-            return sb.ToString();
+            return sb.ToString().Trim('\n');
         }
         /// <summary>
         /// 需求等级
@@ -584,7 +584,11 @@ public class Photo
     /// 保存到文件夹时自动转换
     /// </summary>
     /// <param name="savedir">文件夹</param>
-    public string FilePath(string savedir)
+    public string FilePath(string savedir) => savedir + '\\' + FilePath();
+    /// <summary>
+    /// 保存到文件夹时自动转换
+    /// </summary>
+    public string FilePath()
     {
         var filepath = TranslateName;
         // 不允许的符号列表
@@ -593,8 +597,7 @@ public class Photo
         {
             filepath = filepath.Replace(c.ToString(), "");
         }
-        filepath = savedir + '\\' + filepath + '.' + Path.Split('.').Last();
-        return filepath;
+        return filepath.Replace(' ', '_') + '.' + Path.Split('.').Last();
     }
     /// <summary>
     /// 图片另存为文件
