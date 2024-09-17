@@ -148,7 +148,11 @@ public class Photo
                 Feeling = sub.GetInteger();
             sub = line.Find("ldate");
             if (sub != null)
-                Date = DateOnly.Parse(sub.Info);
+            {
+                var dt = sub.Info.Split('/', '-');
+                Date = new DateOnly(DateTime.Now.Year, int.Parse(dt[0]), int.Parse(dt[1]));
+            }
+
             sub = line.Find("ltime");
             if (sub != null)
                 Time = TimeOnly.Parse(sub.Info);
