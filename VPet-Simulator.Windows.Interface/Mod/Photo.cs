@@ -550,7 +550,11 @@ public class Photo
     public BitmapImage GetImage(IMainWindow imw)
     {
         //解压zip
-        string zippath = imw.FileSources.FindSource(Zip + ".zip");
+        string zippath = imw.FileSources.FindSource(Zip + ".zlps");
+        if (zippath == null)
+        {
+            zippath = imw.FileSources.FindSource(Zip + ".zip");
+        }
         if (zippath == null)
         {
             return ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
