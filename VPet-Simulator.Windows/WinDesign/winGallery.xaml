@@ -132,9 +132,13 @@
                             Margin="0,7,0,0" />
                     <Label x:Name="LablePhotoLoading" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch"
                             Margin="0,7,0,0" VerticalAlignment="Stretch" HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center" FontSize="20"
-                            Foreground="{DynamicResource DARKPrimaryText}" Content="Loading ..."
-                            Background="{DynamicResource DARKPrimaryLighter}" />
+                            VerticalContentAlignment="Center" FontSize="20" Content="Loading ..."
+                            Foreground="{DynamicResource DARKPrimaryText}"
+                            Background="{DynamicResource DARKPrimaryLighter}">
+                        <pu:LabelHelper.Icon>
+                            <pu:Spin Width="20" Height="20"  />
+                        </pu:LabelHelper.Icon> 
+                    </Label>
 
                     <TextBlock x:Name="TextBlockPhotoDetailTitle" FontWeight="Bold"
                             FontSize="{Binding FontSize, Converter={x:Static pw:Converters.DoublePlusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}"
