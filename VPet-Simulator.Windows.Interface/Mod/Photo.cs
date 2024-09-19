@@ -484,7 +484,9 @@ public class Photo
     public static BitmapSource ConvertToThumbnail(BitmapImage originalImage, int width, int height)
     {
         // 创建一个 RenderTargetBitmap
-        if (originalImage.Width < width && originalImage.Height < height)
+        if (originalImage.Width < width && originalImage.Height < height
+            || width == 0
+            || height == 0)
         {
             return originalImage;
         }
