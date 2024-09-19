@@ -139,8 +139,12 @@
                     <TextBlock x:Name="TextBlockPhotoDetailTitle" FontWeight="Bold"
                             FontSize="{Binding FontSize, Converter={x:Static pw:Converters.DoublePlusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}"
                             Grid.Row="2" />
-                    <ScrollViewer Grid.Row="3">
-                        <TextBlock x:Name="TextBlockPhotoDetailDescription" />
+                    <ScrollViewer Grid.Row="3"
+                                  Grid.ColumnSpan="3"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <TextBlock x:Name="TextBlockPhotoDetailDescription"
+                                   TextWrapping="Wrap"/>
                     </ScrollViewer>
                 </Grid>
             </Grid>
