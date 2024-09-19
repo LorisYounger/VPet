@@ -296,7 +296,10 @@ public class Photo
             if (Level > 0)
                 sb.AppendLine("等级要求: {0}".Translate(Level));
             if (LevelMax > 0)
-                sb.AppendLine("等级突破要求: {0}".Translate(LevelMax));
+                if (gamesave.GameSave.LevelMax == 0)//玩家不知道LevelMax, 用通俗易懂的方式解释下
+                    sb.AppendLine("等级要求: {0}".Translate(1000 + (LevelMax - 1) * 100));
+                else
+                    sb.AppendLine("等级突破要求: {0}".Translate(LevelMax));
             if (Money > 0)
                 sb.AppendLine("金钱要求: ${0}".Translate(Money));
             if (Likability > 0)
