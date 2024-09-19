@@ -599,7 +599,11 @@ public class Photo
     public BitmapImage GetGifImage(IMainWindow imw)
     {
         // 解压zip
-        string zippath = imw.FileSources.FindSource(Zip + ".zip");
+        string zippath = imw.FileSources.FindSource(Zip + ".zlps");
+        if (zippath == null)
+        {
+            zippath = imw.FileSources.FindSource(Zip + ".zip");
+        }
         if (zippath == null)
         {
             return ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
@@ -662,7 +666,11 @@ public class Photo
     public void SaveAs(IMainWindow imw, string filepath)
     {
         //解压zip
-        string zippath = imw.FileSources.FindSource(Zip + ".zip");
+        string zippath = imw.FileSources.FindSource(Zip + ".zlps");
+        if (zippath == null)
+        {
+            zippath = imw.FileSources.FindSource(Zip + ".zip");
+        }
         if (zippath == null)
         {
             return;

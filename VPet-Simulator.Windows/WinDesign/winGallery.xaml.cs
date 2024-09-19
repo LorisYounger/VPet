@@ -165,7 +165,7 @@ public partial class winGallery : WindowX
     public void DisplayDetail(Photo photo)
     {
         nowphoto = photo;
-
+        LablePhotoLoading.Visibility = Visibility.Visible;
         TextBlockPhotoDetailTitle.Text = photo.TranslateName;
         TextBlockPhotoDetailDescription.Text = "解锁时间".Translate() + ": " + photo.PlayerInfo.UnlockTime.ToString() + '\n' + photo.Description.Translate();
         IsMaskVisible = true;
@@ -178,7 +178,15 @@ public partial class winGallery : WindowX
         {
             DisplayGrid.Margin = new Thickness(150, 120, 150, 120);
         }
-        ImageBehavior.SetAnimatedSource(ImagePhotoDetail, photo.GetGifImage(mw));
+        Task.Run(() =>
+        {
+            var img = photo.GetGifImage(mw);
+            Dispatcher.Invoke(() =>
+            {
+                ImageBehavior.SetAnimatedSource(ImagePhotoDetail, img);
+                LablePhotoLoading.Visibility = Visibility.Collapsed;
+            });
+        });
     }
 
     private void BorderOutDetail_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
