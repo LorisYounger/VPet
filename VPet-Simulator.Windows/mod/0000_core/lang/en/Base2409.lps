@@ -55,7 +55,7 @@ LinH#LinH:|
 花费#Spend:|
 解锁#Unlock:|
 {0}要求: {1}#{0}: {1}:|
-等级突破要求: {0}#Level breakthrough: {0}:|
+等级突破要求: {0}#Level Breakthrough: {0}:|
 金钱要求: ${0}#Monetary: ${0}:|
 等级要求: {0}#Level: {0}:|
 购买DLC: 宅女后解锁#Unlock after Purchase DLC OTAKU:|
@@ -71,3 +71,4 @@ Player_Birthday#Player Birthday:|
 解锁时间: {0}#time: {0}:|
 由程序锁定#Locked by program:|
 心情要求: {0}#Mood: {0}:|
+好感度要求: {0}#Favorability: {0}:|
