@@ -180,7 +180,7 @@ public partial class winGallery : WindowX
         }
         Task.Run(() =>
         {
-            var img = photo.GetGifImage(mw);
+            var img = photo.GetImage(mw);
             Dispatcher.Invoke(() =>
             {
                 ImageBehavior.SetAnimatedSource(ImagePhotoDetail, img);
@@ -204,7 +204,7 @@ public partial class winGallery : WindowX
     {
         if (nowphoto == null)
             return;
-        Clipboard.SetImage(nowphoto.GetImage(mw));
+        nowphoto.CopyImageToClipboard(mw);
         Toast(message: "已复制图片！".Translate(),
                      icon: MessageBoxIcon.Info);
     }

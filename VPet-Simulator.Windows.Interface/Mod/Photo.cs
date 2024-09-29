@@ -12,6 +12,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Drawing;
+using VPet_Simulator.Core;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace VPet_Simulator.Windows.Interface;
@@ -605,7 +610,9 @@ public class Photo
     /// 获取适用于GIF的图片
     /// </summary>
     public BitmapImage GetGifImage(IMainWindow imw)
-    {
+    {   //不要看 GIF图片和普通图片读取代码差不多, 实际上一旦回收了MemoryStream, GIF图片控件加载就会出问题
+        //但是这个方法不回收MemoryStream, 占用内存更多, 为了节省内存, 普通图片用GetImage, GIF图片用这个
+
         // 解压zip
         string zippath = imw.FileSources.FindSource(Zip + ".zlps");
         if (zippath == null)
@@ -705,6 +712,62 @@ public class Photo
                 return;
             }
         }
+    }
+    /// <summary>
+    /// 复制图片到剪贴板
+    /// </summary>
+    public bool CopyImageToClipboard(IMainWindow imw)
+    {
+        // 解压zip
+        string zippath = imw.FileSources.FindSource(Zip + ".zlps");
+        if (zippath == null)
+        {
+            zippath = imw.FileSources.FindSource(Zip + ".zip");
+        }
+        if (zippath == null)
+        {
+            return false;
+        }
+        //先看看缓存里面有没有        
+        if (!Directory.Exists(System.IO.Path.Combine(GraphCore.CachePath, "photo")))
+        {
+            Directory.CreateDirectory(System.IO.Path.Combine(GraphCore.CachePath, "photo"));
+        }
+        string filepath = System.IO.Path.Combine(GraphCore.CachePath, "photo", $"pic_{Zip}_{Sub.GetHashCode(Path):x}.png");
+        if (!File.Exists(filepath))
+        {
+            using (ZipArchive archive = ZipFile.OpenRead(zippath))
+            {
+                // 找到指定的文件
+                ZipArchiveEntry entry = archive.GetEntry(Path);
+                if (entry != null)
+                {
+                    // 打开源文件流
+                    using (Stream sourceStream = entry.Open())
+                    {
+                        // 创建目标文件流
+                        using (FileStream destinationStream = new FileStream(filepath, FileMode.Create, FileAccess.Write))
+                        {
+                            // 将源文件流复制到目标文件流
+                            sourceStream.CopyTo(destinationStream);
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        // 创建一个 DataObject 并将文件路径添加到 DataObject 中
+        DataObject dataObject = new DataObject();
+        dataObject.SetFileDropList(new System.Collections.Specialized.StringCollection { filepath });
+
+        // 将 DataObject 设置为剪贴板内容
+        Clipboard.SetDataObject(dataObject);
+
+        return true;
     }
 }
 
