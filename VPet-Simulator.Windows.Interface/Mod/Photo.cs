@@ -218,10 +218,10 @@ public class Photo
                 return false;
             }
 
-            //先判断基础的
-            if (Level > save.GameSave.Level)
-                return false;
+            //先判断基础的           
             if (LevelMax > save.GameSave.LevelMax)
+                return false;
+            if (save.GameSave.LevelMax != 0 && Level > save.GameSave.Level)
                 return false;
             if (Money > save.GameSave.Money)
                 return false;
