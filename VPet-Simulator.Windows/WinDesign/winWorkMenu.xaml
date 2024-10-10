@@ -292,6 +292,7 @@
                                                 <RowDefinition Height="22" />
                                                 <RowDefinition Height="22" />
                                                 <RowDefinition Height="22" />
+                                                <RowDefinition Height="22" />
                                                 <RowDefinition />
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
@@ -319,15 +320,27 @@
                                             <TextBlock x:Name="rpnEndDate" Grid.Row="3" Grid.Column="2"
                                                     HorizontalAlignment="Right"
                                                     Foreground="{DynamicResource DARKPrimary}" Text="05/27" />
-                                            <TextBlock Grid.Row="4" Text="{ll:Str '描述'}" />
-                                            <ScrollViewer Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                                            <TextBlock Grid.Row="4" Text="{ll:Str '自动续费'}" />
+                                            <pu:Switch x:Name="rpnAutoRenew" Grid.Row="4" Background="Transparent"
+                                                    BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18"
+                                                    BoxWidth="35" Foreground="{DynamicResource DARKPrimary}"
+                                                    Content="{Binding IsChecked,  ElementName=PetHelperBox}"
+                                                    IsChecked="False" CheckedBackground="{DynamicResource Primary}"
+                                                    CheckedBorderBrush="{DynamicResource Primary}"
+                                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                                                    ToggleBrush="{DynamicResource PrimaryDark}"
+                                                    ToggleShadowColor="{x:Null}" ToggleSize="14" Grid.Column="2"
+                                                    HorizontalAlignment="Right" ContentPlacement="Left"
+                                                    Checked="rpnAutoRenew_Checked" Unchecked="rpnAutoRenew_Checked" />
+                                            <TextBlock Grid.Row="5" Text="{ll:Str '描述'}" />
+                                            <ScrollViewer Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
                                                     Margin="10,0,0,0">
                                                 <TextBlock x:Name="rpnDescribe"
                                                         Text="游玩《虚拟桌宠模拟器》，参加桌宠 ChatVPet 项目。任务目标，即刻拯救桌宠！"
                                                         TextWrapping="Wrap" />
                                             </ScrollViewer>
-                                            <TextBlock Grid.Row="5" Text="{ll:Str '办理费用'}" VerticalAlignment="Bottom" />
-                                            <TextBlock x:Name="rpnPrice" Grid.Row="5" Grid.Column="2"
+                                            <TextBlock Grid.Row="6" Text="{ll:Str '办理费用'}" VerticalAlignment="Bottom" />
+                                            <TextBlock x:Name="rpnPrice" Grid.Row="6" Grid.Column="2"
                                                     HorizontalAlignment="Right" VerticalAlignment="Center"
                                                     Foreground="{DynamicResource DARKPrimary}" Text="100000"
                                                     FontSize="26" />

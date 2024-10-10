@@ -76,6 +76,7 @@ public class ScheduleTask
             NowIndex = schedule[(gint)"now"];
             IsOn = schedule[(gbol)"ison"];
         }
+        
         imw.Main.WorkTimer.E_FinishWork += WorkTimer_E_FinishWork;
         RestTimer.Elapsed += RestTimer_Elapsed;
         if (IsOn)
@@ -115,6 +116,40 @@ public class ScheduleTask
         }
     }
 
+    public bool AutoRenew()
+    {
+        bool isrenew = false;
+        if (PackageWork != null && PackageWork.AutoRenew && !PackageWork.IsActive())
+        {
+            var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Work && x.Name == PackageWork.Name);
+            if (pw != null)
+            {
+                var np = new Package(pw, PackageWork.Level);
+                if (np.Price < mw.GameSavesData.GameSave.Money)
+                {
+                    PackageWork = np;
+                    mw.GameSavesData.GameSave.Money -= np.Price;
+                    isrenew = true;
+                }
+            }
+        }
+        if (PackageStudy != null && PackageStudy.AutoRenew && !PackageStudy.IsActive())
+        {
+            var ps = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Study && x.Name == PackageStudy.Name);
+            if (ps != null)
+            {
+                var np = new Package(ps, PackageStudy.Level);
+                if (np.Price < mw.GameSavesData.GameSave.Money)
+                {
+                    PackageStudy = np;
+                    mw.GameSavesData.GameSave.Money -= np.Price;
+                    isrenew = true;
+                }
+            }
+        }
+        return isrenew;
+    }
+
     private void RestTimer_Elapsed(object sender, ElapsedEventArgs e)
     {
         if (RestTime-- < 0)
@@ -142,6 +177,10 @@ public class ScheduleTask
             {
                 NowIndex = 0;
             }
+
+            //自动续费工作
+            AutoRenew();
+
             if (ScheduleItems[NowIndex] is WorkScheduleItem wsi)
             {
                 //判断能否工作
@@ -468,6 +507,10 @@ public class ScheduleTask
         /// 截止时间
         /// </summary>
         [Line] public DateTime EndTime { get; set; } = DateTime.MinValue;
+        /// <summary>
+        /// 是否自动续费
+        /// </summary>
+        [Line] public bool AutoRenew { get; set; } = false;
         /// <summary>
         /// 可用等级
         /// </summary>

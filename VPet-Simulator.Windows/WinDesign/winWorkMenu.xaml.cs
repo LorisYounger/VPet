@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
@@ -377,6 +376,7 @@ public partial class winWorkMenu : WindowX
             runSchedulePercentage.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimary);
         rpgbSchedule.Foreground = runSchedulePercentage.Foreground;
     }
+    private Package pack = null;
     private void rpnDisplay(Package package, Work.WorkType type)
     {
         if (package == null)
@@ -384,8 +384,15 @@ public partial class winWorkMenu : WindowX
             rpnDescribe.Text = rpnName.Text = "暂无签署套餐".Translate();
             rpnEndDate.Text = rpnPrice.Text = rpnCommissions.Text = "-";
             rpnEndDay.Text = "0";
+            pack = null;
+            rpnAutoRenew.IsEnabled = false;
+            rpnAutoRenew.IsChecked = false;
             return;
         }
+
+        AllowChange = false;
+        pack = package;
+        rpnAutoRenew.IsEnabled = true;
         rpnName.Text = package.NameTrans;
         if (Work.WorkType.Work == type)
         {
@@ -399,6 +406,7 @@ public partial class winWorkMenu : WindowX
         rpnPrice.Text = package.Price.ToString("N0");
         rpnEndDate.Text = package.EndTime.ToString("MM/dd");
         rpnLevelInNeed.Text = package.Level.ToString();
+        rpnAutoRenew.IsChecked = package.AutoRenew;
         var totalhour = (package.EndTime - DateTime.Now).TotalHours;
         if (totalhour <= 0)
             rpnEndDay.Text = "0";
@@ -406,7 +414,7 @@ public partial class winWorkMenu : WindowX
             rpnEndDay.Text = totalhour.ToString("f1");
         else
             rpnEndDay.Text = totalhour.ToString("f0");
-
+        AllowChange = true;
     }
 
 
@@ -649,6 +657,24 @@ public partial class winWorkMenu : WindowX
     {
         if (!AllowChange) return;
         nowselefullDisplay();
+    }
+
+    private void rpnAutoRenew_Checked(object sender, RoutedEventArgs e)
+    {
+        if (!AllowChange || pack == null) return;
+        pack.AutoRenew = rpnAutoRenew.IsChecked == true;
+        if (mw.ScheduleTask.AutoRenew())
+        {
+            rpnEndDate.Text = pack.EndTime.ToString("MM/dd");
+            var totalhour = (pack.EndTime - DateTime.Now).TotalHours;
+            if (totalhour <= 0)
+                rpnEndDay.Text = "0";
+            else if (totalhour <= 24)
+                rpnEndDay.Text = totalhour.ToString("f1");
+            else
+                rpnEndDay.Text = totalhour.ToString("f0");
+        }
+
     }
 }
 
