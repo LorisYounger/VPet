@@ -472,6 +472,7 @@ public partial class winWorkMenu : WindowX
     {
         if (nowselefull == null) return;
         Package package = new Package(nowselefull, (int)sliderTaskLevel.Value);
+        double refound = 0;
         if (package.Price > mw.Core.Save.Money)
         {
             MessageBoxX.Show("金钱不足".Translate(), "签署失败".Translate());
@@ -482,6 +483,18 @@ public partial class winWorkMenu : WindowX
             if (mw.ScheduleTask.PackageWork?.IsActive() == true
                 && MessageBoxX.Show("工作套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 return;
+            //计算价格,给剩下的退款
+            double lefttime = (mw.ScheduleTask.PackageWork.EndTime - DateTime.Now).TotalDays / 2;
+            if (lefttime > 0.5)
+            {
+                var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Work && x.Name == mw.ScheduleTask.PackageWork.Name);
+                var p = new Package(pw, mw.ScheduleTask.PackageWork.Level);
+                refound = p.Price * (pw.Duration - lefttime) / pw.Duration;
+                if (refound < 0 || refound > p.Price)
+                {
+                    refound = 0;
+                }
+            }
             mw.ScheduleTask.PackageWork = package;
             rpnDisplay(mw.ScheduleTask.PackageWork, nowselefull.WorkType);
         }
@@ -490,12 +503,25 @@ public partial class winWorkMenu : WindowX
             if (mw.ScheduleTask.PackageStudy?.IsActive() == true
                 && MessageBoxX.Show("学习套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 return;
+            //计算价格,给剩下的退款
+            double lefttime = (mw.ScheduleTask.PackageStudy.EndTime - DateTime.Now).TotalDays / 2;
+            if (lefttime > 0.5)
+            {
+                var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Study && x.Name == mw.ScheduleTask.PackageStudy.Name);
+                var p = new Package(pw, mw.ScheduleTask.PackageStudy.Level);
+                refound = p.Price * (pw.Duration - lefttime) / pw.Duration;
+                if (refound < 0 || refound > p.Price)
+                {
+                    refound = 0;
+                }
+            }
             mw.ScheduleTask.PackageStudy = package;
             rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull.WorkType);
         }
         tbtnCurrentPlan.IsChecked = true;
-        mw.Core.Save.Money -= package.Price;
-        MessageBoxX.Show("套餐 {0} 签署成功".Translate(package.NameTrans), "签署成功".Translate());
+        mw.Core.Save.Money -= package.Price + refound;
+        MessageBoxX.Show("套餐 {0} 签署成功".Translate(package.NameTrans) + (refound == 0 ? "" :
+          '\n' + "获得 {0:f1} 退款".Translate(refound)), "签署成功".Translate());
     }
 
     private void btn_addRest_Click(object sender, RoutedEventArgs e)
