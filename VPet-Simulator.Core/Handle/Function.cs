@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LinePutScript.Converter;
+using System;
 using System.Windows;
 using System.Windows.Media;
 
@@ -70,5 +71,12 @@ namespace VPet_Simulator.Core
         ///// <param name="Name">翻译内容</param>
         ///// <returns>翻译后的文本</returns>
         //public static string Translate(this LPS_D TranFile, string Name) => TranFile.GetString(Name, Name);
+
+        public class LPSConvertToLower : LPSConvert.ConvertFunction
+        {
+            public override string Convert(dynamic value) => value;
+
+            public override dynamic ConvertBack(string info) => info.ToLower();
+        }
     }
 }

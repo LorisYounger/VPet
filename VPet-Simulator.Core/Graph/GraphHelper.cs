@@ -99,7 +99,7 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 使用动画名称
             /// </summary>
-            [Line(ignoreCase: true)]
+            [Line(ignoreCase: true, converter: typeof(Function.LPSConvertToLower))]
             public string Graph { get; set; }
             /// <summary>
             /// 工作盈利/学习基本倍率
@@ -213,7 +213,7 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 使用动画名称
             /// </summary>
-            [Line(ignoreCase: true)]
+            [Line(ignoreCase: true, converter: typeof(Function.LPSConvertToLower))]
             public string Graph { get; set; }
             /// <summary>
             /// 定位类型
