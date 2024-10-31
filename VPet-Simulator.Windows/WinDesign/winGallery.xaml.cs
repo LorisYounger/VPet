@@ -180,7 +180,7 @@ public partial class winGallery : WindowX
         }
         Task.Run(() =>
         {
-            var img = photo.GetImage(mw);
+            var img = photo.GetGifImage(mw);
             Dispatcher.Invoke(() =>
             {
                 ImageBehavior.SetAnimatedSource(ImagePhotoDetail, img);
