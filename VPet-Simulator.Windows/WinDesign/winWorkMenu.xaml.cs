@@ -523,7 +523,7 @@ public partial class winWorkMenu : WindowX
             rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull.WorkType);
         }
         tbtnCurrentPlan.IsChecked = true;
-        mw.Core.Save.Money -= package.Price + refound;
+        mw.Core.Save.Money -= package.Price - refound;
         MessageBoxX.Show("套餐 {0} 签署成功".Translate(package.NameTrans) + (refound == 0 ? "" :
           '\n' + "获得 {0:f1} 退款".Translate(refound)), "签署成功".Translate());
     }
