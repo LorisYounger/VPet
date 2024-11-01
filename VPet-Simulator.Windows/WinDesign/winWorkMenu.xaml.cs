@@ -480,19 +480,21 @@ public partial class winWorkMenu : WindowX
         }
         if (nowselefull.WorkType == Work.WorkType.Work)
         {
-            if (mw.ScheduleTask.PackageWork?.IsActive() == true
-                && MessageBoxX.Show("工作套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-                return;
-            //计算价格,给剩下的退款
-            double lefttime = (mw.ScheduleTask.PackageWork.EndTime - DateTime.Now).TotalDays / 2;
-            if (lefttime > 0.5)
+            if (mw.ScheduleTask.PackageWork?.IsActive() == true)
             {
-                var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Work && x.Name == mw.ScheduleTask.PackageWork.Name);
-                var p = new Package(pw, mw.ScheduleTask.PackageWork.Level);
-                refound = p.Price * (pw.Duration - lefttime) / pw.Duration;
-                if (refound < 0 || refound > p.Price)
+                if (MessageBoxX.Show("工作套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                    return;
+                //计算价格,给剩下的退款
+                double lefttime = (mw.ScheduleTask.PackageWork.EndTime - DateTime.Now).TotalDays / 2;
+                if (lefttime > 0.5)
                 {
-                    refound = 0;
+                    var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Work && x.Name == mw.ScheduleTask.PackageWork.Name);
+                    var p = new Package(pw, mw.ScheduleTask.PackageWork.Level);
+                    refound = p.Price * (pw.Duration - lefttime) / pw.Duration;
+                    if (refound < 0 || refound > p.Price)
+                    {
+                        refound = 0;
+                    }
                 }
             }
             mw.ScheduleTask.PackageWork = package;
@@ -500,19 +502,21 @@ public partial class winWorkMenu : WindowX
         }
         else
         {
-            if (mw.ScheduleTask.PackageStudy?.IsActive() == true
-                && MessageBoxX.Show("学习套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-                return;
-            //计算价格,给剩下的退款
-            double lefttime = (mw.ScheduleTask.PackageStudy.EndTime - DateTime.Now).TotalDays / 2;
-            if (lefttime > 0.5)
+            if (mw.ScheduleTask.PackageStudy?.IsActive() == true)
             {
-                var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Study && x.Name == mw.ScheduleTask.PackageStudy.Name);
-                var p = new Package(pw, mw.ScheduleTask.PackageStudy.Level);
-                refound = p.Price * (pw.Duration - lefttime) / pw.Duration;
-                if (refound < 0 || refound > p.Price)
+                if (MessageBoxX.Show("学习套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                    return;
+                //计算价格,给剩下的退款
+                double lefttime = (mw.ScheduleTask.PackageStudy.EndTime - DateTime.Now).TotalDays / 2;
+                if (lefttime > 0.5)
                 {
-                    refound = 0;
+                    var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Study && x.Name == mw.ScheduleTask.PackageStudy.Name);
+                    var p = new Package(pw, mw.ScheduleTask.PackageStudy.Level);
+                    refound = p.Price * (pw.Duration - lefttime) / pw.Duration;
+                    if (refound < 0 || refound > p.Price)
+                    {
+                        refound = 0;
+                    }
                 }
             }
             mw.ScheduleTask.PackageStudy = package;
