@@ -27,6 +27,7 @@
 		<PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.7" />
 		<PackageReference Include="Panuon.WPF" Version="1.1.1" />
 		<PackageReference Include="Panuon.WPF.UI" Version="1.2.4.2" />
+		<PackageReference Include="SkiaSharp" Version="2.88.8" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Properties\Resources.Designer.cs">

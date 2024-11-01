@@ -1677,7 +1677,7 @@ namespace VPet_Simulator.Windows
             Main.LoadALL((c) =>
             {
                 Dispatcher.Invoke(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()
-                + $"{c} / {petloader.GraphCount}");
+                + $"\n  {c} / {petloader.GraphCount}");
             });
             Main.NoFunctionMOD = Set.CalFunState;
             await Dispatcher.InvokeAsync(() =>

@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -108,7 +109,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 最大同时加载数
         /// </summary>
-        public static int MaxLoadNumber = 100;
+        public static int MaxLoadNumber = 50;
 
         private async void startup(string path, FileInfo[] paths)
         {
@@ -128,36 +129,59 @@ namespace VPet_Simulator.Core
                     ((List<string>)GraphCore.CommConfig["Cache"]).Add(path);
                     int w = 0;
                     int h = 0;
-                    FileInfo firstImage = paths[0];
-                    var img = System.Drawing.Image.FromFile(firstImage.FullName);
-                    w = img.Width;
-                    h = img.Height;
-                    if (w > GraphCore.Resolution)
+                    // Load the first image
+                    using (var firstImage = SKBitmap.Decode(paths[0].FullName))
                     {
-                        w = GraphCore.Resolution;
-                        h = (int)(h * (GraphCore.Resolution / (double)img.Width));
-                    }
-                    if (paths.Length * w >= 60000)
-                    {//修复大长动画导致过长分辨率导致可能的报错
-                        w = 60000 / paths.Length;
-                        h = (int)(img.Height * (w / (double)img.Width));
+                        w = firstImage.Width;
+                        h = firstImage.Height;
+
+                        // Adjust width and height based on resolution
+                        if (w > GraphCore.Resolution)
+                        {
+                            w = GraphCore.Resolution;
+                            h = (int)(h * (GraphCore.Resolution / (double)firstImage.Width));
+                        }
+
+                        if (paths.Length * w >= 60000)
+                        {//修复大长动画导致过长分辨率导致可能的报错
+                            w = 60000 / paths.Length;
+                            h = (int)(firstImage.Height * (w / (double)firstImage.Width));
+                        }
                     }
 
-                    using (Bitmap joinedBitmap = new Bitmap(w * paths.Length, h))
-                    using (Graphics graph = Graphics.FromImage(joinedBitmap))
+                    // Create a new bitmap to draw on
+                    using (var combinedBitmap = new SKBitmap(w * paths.Length, h))
+                    using (var canvas = new SKCanvas(combinedBitmap))
                     {
-                        using (img)
-                            graph.DrawImage(img, 0, 0, w, h);
+                        // Draw the first image
+                        using (var firstImage = SKBitmap.Decode(paths[0].FullName))
+                        {
+                            canvas.DrawBitmap(firstImage, new SKRect(0, 0, w, h));
+                        }
+
+                        // Create an array to hold bitmaps for the remaining images
+                        SKBitmap[] bitmaps = new SKBitmap[paths.Length - 1];
+
+                        // Load and draw remaining images in parallel
                         Parallel.For(1, paths.Length, i =>
                         {
-                            using (var img = System.Drawing.Image.FromFile(paths[i].FullName))
-                            {
-                                lock (graph)
-                                    graph.DrawImage(img, w * i, 0, w, h);
-                            }
+                            var img = SKBitmap.Decode(paths[i].FullName);
+                            bitmaps[i - 1] = img; // Store the bitmap in the array
                         });
-                        if (!File.Exists(Path))
-                            joinedBitmap.Save(Path);
+
+                        // Now draw the bitmaps onto the combined canvas
+                        for (int i = 0; i < bitmaps.Length; i++)
+                        {
+                            canvas.DrawBitmap(bitmaps[i], new SKRect(w * (i + 1), 0, w * (i + 2), h));
+                        }
+
+                        // Save the combined image to the cache path
+                        using (var image = SKImage.FromBitmap(combinedBitmap))
+                        using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
+                        using (var stream = File.OpenWrite(Path))
+                        {
+                            data.SaveTo(stream);
+                        }
                     }
                 }
                 for (int i = 0; i < paths.Length; i++)
