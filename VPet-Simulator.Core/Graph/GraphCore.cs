@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
 
@@ -20,8 +22,10 @@ namespace VPet_Simulator.Core
         /// 桌宠图形渲染的分辨率,越高图形越清晰
         /// </summary>
         public int Resolution { get; set; } = 1000;
-        public GraphCore(int resolution)
+        public readonly Dispatcher Dispatcher;
+        public GraphCore(int resolution, Dispatcher dispatcher)
         {
+            Dispatcher = dispatcher;
             if (!Directory.Exists(CachePath))
                 Directory.CreateDirectory(CachePath);
             CommConfig["Cache"] = new List<string>();

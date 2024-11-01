@@ -74,8 +74,13 @@ namespace VPet_Simulator.Core
             SmartMoveTimer.Elapsed += SmartMoveTimer_Elapsed;
         }
         public List<string> ErrorMessage = new List<string>();
-        public async Task Load_2_WaitGraph()
+        /// <summary>
+        /// 支持在加载等待的时候显示等待计数器
+        /// </summary>
+        /// <param name="WaitCountAction">当前已等待图像个数</param>
+        public async Task Load_2_WaitGraph(Action<int> WaitCountAction = null)
         {
+            int count = 0;
             //新功能:等待所有图像加载完成再跑
             foreach (var igs in Core.Graph.GraphsList.Values)
             {
@@ -95,10 +100,16 @@ namespace VPet_Simulator.Core
                             else
                                 await Task.Delay(100);
                         }
+                        count++;
+                        WaitCountAction?.Invoke(count);
                     }
                 }
             }
         }
+        /// <summary>
+        /// 开始运行
+        /// </summary>
+        /// <param name="startUPGraph">开始运行初始动画</param>
         public void Load_4_Start(IGraph startUPGraph = null)
         {
             IGraph ig = startUPGraph ?? Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, Core.Save.Mode);
@@ -112,11 +123,23 @@ namespace VPet_Simulator.Core
                 });
             });
         }
-
+        /// <summary>
+        /// 等待图像加载和开始
+        /// </summary>
         public void Load_24_WaitAndStart()
         {
             Load_2_WaitGraph().Wait();
             Load_4_Start();
+        }
+        /// <summary>
+        /// 等待图像加载和开始
+        /// </summary>
+        /// <param name="WaitCountAction">当前已等待图像个数</param>
+        /// <param name="startUPGraph">开始运行初始动画</param>
+        public void Load_24_WaitAndStart(Action<int> WaitCountAction, IGraph startUPGraph = null)
+        {
+            Load_2_WaitGraph(WaitCountAction).Wait();
+            Load_4_Start(startUPGraph);
         }
 
         public Main(GameCore core)
@@ -131,13 +154,18 @@ namespace VPet_Simulator.Core
             if (!core.Controller.EnableFunction)
                 Core.Save.Mode = NoFunctionMOD;
         }
-        public void LoadALL()
+        /// <summary>
+        /// 加载所有步骤并开始
+        /// </summary>
+        /// <param name="WaitCountAction">当前已等待图像个数</param>
+        /// <param name="startUPGraph">开始运行初始动画</param>
+        public void LoadALL(Action<int> WaitCountAction = null, IGraph startUPGraph = null)
         {
             Load_0_BaseConsole();
             Load_2_TouchEvent();
-            Load_2_WaitGraph().Wait();
+            Load_2_WaitGraph(WaitCountAction).Wait();
             Load_3_BindingTimer();
-            Load_4_Start();
+            Load_4_Start(startUPGraph);
         }
 
         private void Labledisplaytimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

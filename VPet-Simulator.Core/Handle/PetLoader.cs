@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using static VPet_Simulator.Core.GraphCore;
 
 
@@ -15,13 +16,18 @@ namespace VPet_Simulator.Core
     public class PetLoader
     {
         /// <summary>
+        /// 动画数量
+        /// </summary>
+        public int GraphCount { get; private set; }
+        /// <summary>
         /// 宠物图像
         /// </summary>
-        public GraphCore Graph(int Resolution)
+        public GraphCore Graph(int Resolution, Dispatcher dispatcher)
         {
-            var g = new GraphCore(Resolution);
+            GraphCount = 0;
+            var g = new GraphCore(Resolution, dispatcher);
             foreach (var p in path)
-                LoadGraph(g, new DirectoryInfo(p), p);
+                GraphCount += LoadGraph(g, new DirectoryInfo(p), p);
             g.GraphConfig = Config;
             return g;
         }
@@ -66,8 +72,9 @@ namespace VPet_Simulator.Core
         /// <param name="graph">要加载的动画核心</param>
         /// <param name="di">当前历遍的目录</param>
         /// <param name="startuppath">起始目录</param>
-        public static void LoadGraph(GraphCore graph, DirectoryInfo di, string startuppath)
+        public static int LoadGraph(GraphCore graph, DirectoryInfo di, string startuppath)
         {
+            int GraphCount = 0;
             var list = di.EnumerateDirectories();
             if (File.Exists(di.FullName + @"\info.lps"))
             {
@@ -91,7 +98,7 @@ namespace VPet_Simulator.Core
                         }
                         else
                             func.Invoke(graph, di, line);
-
+                        GraphCount++;
                     }
                     else
                     {
@@ -104,17 +111,19 @@ namespace VPet_Simulator.Core
             {//开始自动生成
                 var paths = di.GetFiles();
                 if (paths.Length == 0)
-                    return;
+                    return GraphCount;
                 if (paths.Length == 1)
                     Picture.LoadGraph(graph, paths[0], new Line("picture", "", "", new Sub("startuppath", startuppath)));
                 else
                     PNGAnimation.LoadGraph(graph, di, new Line("pnganimation", "", "", new Sub("startuppath", startuppath)));
+                GraphCount++;
             }
             else
                 foreach (var p in list)
                 {
-                    LoadGraph(graph, p, startuppath);
+                    GraphCount += LoadGraph(graph, p, startuppath);
                 }
+            return GraphCount;
         }
     }
 }

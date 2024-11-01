@@ -70,9 +70,13 @@ namespace VPet_Simulator.Core
             if (!GraphCore.CommConfig.ContainsKey("PA_Setup"))
             {
                 GraphCore.CommConfig["PA_Setup"] = true;
-                GraphCore.CommUIElements["Image1.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
-                GraphCore.CommUIElements["Image2.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
-                GraphCore.CommUIElements["Image3.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 }; // 多整个, 防止动画闪烁
+                GraphCore.Dispatcher.Invoke(() =>
+                {
+
+                    GraphCore.CommUIElements["Image1.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
+                    GraphCore.CommUIElements["Image2.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 };
+                    GraphCore.CommUIElements["Image3.PNGAnimation"] = new System.Windows.Controls.Image() { Height = 500 }; // 多整个, 防止动画闪烁
+                });
             }
             Task.Run(() => startup(path, paths));
         }
@@ -104,7 +108,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 最大同时加载数
         /// </summary>
-        public static int MaxLoadNumber = 40;
+        public static int MaxLoadNumber = 100;
 
         private void startup(string path, FileInfo[] paths)
         {
@@ -266,7 +270,7 @@ namespace VPet_Simulator.Core
             }
             nowid = 0;
             var NEWControl = new TaskControl(EndAction);
-            Control = NEWControl;            
+            Control = NEWControl;
             parant.Dispatcher.Invoke(() =>
             {
                 if (parant.Tag == this)

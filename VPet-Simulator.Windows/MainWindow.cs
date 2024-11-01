@@ -1658,22 +1658,27 @@ namespace VPet_Simulator.Windows
 
 
             //await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
-            await Dispatcher.InvokeAsync(new Action(() =>
-            {
-                LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate();
+            await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()));
+            Core.Graph = petloader.Graph(Set.Resolution, Dispatcher);
+            //            {
+            //                return petloader.Graph(Set.Resolution);
+            //#if NewYear
+            //                //临时更新:新年进入动画, 
+            //                if (DateTime.Now < new DateTime(2024, 2, 19))
+            //                {
+            //                    Main = new Main(Core, startUPGraph: Core.Graph.FindGraph("newyear", AnimatType.Single, Core.Save.Mode));
+            //                }
+            //                else
+            //#endif
+            //                Main = new Main(Core);
+            //            }));
+            Main = await Dispatcher.InvokeAsync(() => new Main(Core));
 
-                Core.Graph = petloader.Graph(Set.Resolution);
-#if NewYear
-                //临时更新:新年进入动画, 
-                if (DateTime.Now < new DateTime(2024, 2, 19))
-                {
-                    Main = new Main(Core, startUPGraph: Core.Graph.FindGraph("newyear", AnimatType.Single, Core.Save.Mode));
-                }
-                else
-#endif
-                Main = new Main(Core);
-            }));
-            Main.LoadALL();
+            Main.LoadALL((c) =>
+            {
+                Dispatcher.Invoke(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()
+                + $"{c} / {petloader.GraphCount}");
+            });
             Main.NoFunctionMOD = Set.CalFunState;
             await Dispatcher.InvokeAsync(() =>
               {

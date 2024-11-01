@@ -305,7 +305,7 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate();
 
-            Core.Graph = petloader.Graph(mw.Set.Resolution);
+            Core.Graph = petloader.Graph(mw.Set.Resolution, Dispatcher);
             Main = new Main(Core);
             Main.MsgBar = new MessageBar(Main);
             Main.MsgBar.Visibility = Visibility.Collapsed;
