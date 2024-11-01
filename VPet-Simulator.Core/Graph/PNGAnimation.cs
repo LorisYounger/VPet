@@ -109,7 +109,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 最大同时加载数
         /// </summary>
-        public static int MaxLoadNumber = 50;
+        public static int MaxLoadNumber = 30;
 
         private async void startup(string path, FileInfo[] paths)
         {

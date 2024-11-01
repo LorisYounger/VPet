@@ -51,9 +51,9 @@ namespace VPet_Simulator.Windows
             }
 
 #if X64
-            PNGAnimation.MaxLoadNumber = 100;
-#else
             PNGAnimation.MaxLoadNumber = 50;
+#else
+            PNGAnimation.MaxLoadNumber = 30;
 #endif
             ExtensionValue.BaseDirectory = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName;
 
