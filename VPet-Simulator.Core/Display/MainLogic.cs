@@ -598,6 +598,10 @@ namespace VPet_Simulator.Core
         /// 任务开始时调用该参数
         /// </summary>
         public event Action<Work> Event_WorkStart;
+        internal void Event_WorkStartInvoke(Work work)
+        {
+            Event_WorkStart?.Invoke(work);
+        }
         /// <summary>
         /// 任务完成时调用该参数 (重定向至WorkTimer.E_FinishWork)
         /// </summary>

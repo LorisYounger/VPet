@@ -79,6 +79,9 @@ csharp_style_prefer_readonly_struct = true:suggestion
 csharp_space_around_binary_operators = before_and_after
 csharp_indent_labels = one_less_than_current
 
+# CA1707: 标识符不应包含下划线
+dotnet_diagnostic.CA1707.severity = none
+
 [*.vb]
 #### 命名样式 ####
 

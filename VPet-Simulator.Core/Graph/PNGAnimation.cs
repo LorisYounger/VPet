@@ -110,11 +110,11 @@ namespace VPet_Simulator.Core
         /// </summary>
         public static int MaxLoadNumber = 100;
 
-        private void startup(string path, FileInfo[] paths)
+        private async void startup(string path, FileInfo[] paths)
         {
             while (NowLoading > MaxLoadNumber)
             {
-                Thread.Sleep(100);
+                await Task.Delay(100);
             }
             Interlocked.Increment(ref NowLoading);
             try

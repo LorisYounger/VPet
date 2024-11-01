@@ -227,6 +227,7 @@ namespace VPet_Simulator.Core
 
             work.SetStyle(this);
             work.Display(m);
+            m.Event_WorkStartInvoke(work);
 
             PBLeft.Maximum = work.Time;
             DisplayUI();

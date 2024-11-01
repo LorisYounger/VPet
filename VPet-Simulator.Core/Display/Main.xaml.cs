@@ -77,10 +77,8 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 支持在加载等待的时候显示等待计数器
         /// </summary>
-        /// <param name="WaitCountAction">当前已等待图像个数</param>
-        public async Task Load_2_WaitGraph(Action<int> WaitCountAction = null)
+        public async Task Load_2_WaitGraph()
         {
-            int count = 0;
             //新功能:等待所有图像加载完成再跑
             foreach (var igs in Core.Graph.GraphsList.Values)
             {
@@ -100,11 +98,66 @@ namespace VPet_Simulator.Core
                             else
                                 await Task.Delay(100);
                         }
-                        count++;
-                        WaitCountAction?.Invoke(count);
                     }
                 }
             }
+        }
+        /// <summary>
+        /// 支持在加载等待的时候显示等待计数器
+        /// </summary>
+        /// <param name="WaitCountAction">当前已等待图像个数</param>
+        public async Task Load_2_WaitGraph(Action<int> WaitCountAction)
+        {
+            if (WaitCountAction == null)
+            {
+                await Load_2_WaitGraph();
+                return;
+            }
+            int count = 0;
+            DateTime start = DateTime.Now.AddSeconds(2);
+            // 新功能: 等待所有图像加载完成再跑
+            var tasks = new List<Task>();
+
+            foreach (var igs in Core.Graph.GraphsList.Values)
+            {
+                foreach (var ig2 in igs.Values)
+                {
+                    for (int i = 0; i < ig2.Count; i++)
+                    {
+                        IGraph ig3 = ig2[i];
+                        tasks.Add(Task.Run(async () =>
+                        {
+                            while (!ig3.IsReady)
+                            {
+                                if (ig3.IsFail)
+                                {
+                                    lock (ErrorMessage) // 确保线程安全
+                                    {
+                                        ErrorMessage.Add(ig3.FailMessage);
+                                        ig2.Remove(ig3);
+                                    }
+                                    break;
+                                }
+                                else
+                                {
+                                    await Task.Delay(100);
+                                }
+                            }
+                            Interlocked.Increment(ref count);
+                            if (start < DateTime.Now)
+                            {
+                                start = DateTime.Now.AddSeconds(2);
+                                WaitCountAction.Invoke(count);
+                            }
+                        }));
+                    }
+
+                }
+            }
+
+            // 等待所有任务完成
+            await Task.WhenAll(tasks);
+
         }
         /// <summary>
         /// 开始运行
