@@ -405,7 +405,7 @@ namespace VPet_Simulator.Windows
                         {
                             runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
                             runMODGameVerInfo.ToolTip = "MOD对应游戏版本比当前游戏版本低, 因为包含代码插件, 可能有严重的兼容性问题.\n请联系MOD作者更新MOD".Translate()
-                                + $"\nv{CoreMOD.INTtoVER(mod.GameVer)} < v{mw.Version}" ;
+                                + $"\nv{CoreMOD.INTtoVER(mod.GameVer)} < v{mw.Version}";
                         }
                         else
                             runMODGameVerInfo.ToolTip = "MOD对应游戏版本比当前游戏版本低, 但是游戏的兼容功能可能会生效, MOD可能可以正常使用.\n为确保最佳体验,请联系MOD作者更新MOD".Translate()
@@ -1642,6 +1642,8 @@ namespace VPet_Simulator.Windows
                 }
                 else
                     MessageBoxX.Show("当前游戏时间已经大于Steam服务器记录时间,无需修复".Translate());
+                if (mw.GameSavesData.GameSave.LikabilityMax < 100 + playtime)
+                    mw.GameSavesData.GameSave.LikabilityMax = 100 + playtime;
             }
             else
             {
@@ -1668,7 +1670,8 @@ namespace VPet_Simulator.Windows
                 //根据当前等级计算金钱
                 int newmoney = (200 * mw.GameSavesData.GameSave.Level - 100) * mw.GameSavesData.GameSave.LevelMax;
                 mw.GameSavesData.GameSave.Money = Math.Min(newmoney, ogs.GameSave.Money);
-
+                //好感度最大值(1h=+1)
+                mw.GameSavesData.GameSave.LikabilityMax += playtime;
                 //同步好感度
                 mw.GameSavesData.GameSave.Likability = ogs.GameSave.Likability;
 
