@@ -79,7 +79,7 @@ namespace VPet_Simulator.Windows
             {
                 mw.Core.Save.Money -= 1000;
                 mw.GameSavesData[(gbol)"self"] = false;
-                MessageBoxX.Show("{0}偷偷藏了1000块私房钱".Translate());
+                MessageBoxX.Show("{0}偷偷藏了1000块私房钱".Translate(mw.Core.Save.Name));
             }
 
             Show();
