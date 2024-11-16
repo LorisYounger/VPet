@@ -5,8 +5,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Foreground="{StaticResource PrimaryText}"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="https://opensource.panuon.com/wpf-ui" xmlns:local="clr-namespace:VPet_Simulator.Windows"
-        mc:Ignorable="d" Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}" Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}" FontSize="14"
-        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}"
+        Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}" FontSize="14" WindowStartupLocation="CenterScreen"
         Background="{DynamicResource PrimaryLighter}" pu:WindowXCaption.Height="45"
         pu:WindowXCaption.Background="{DynamicResource DARKPrimary}" pu:WindowXCaption.Foreground="#FFFFFF"
         pu:WindowXCaption.Buttons="Close" Icon="/Res/BetterBuy.png"
@@ -178,22 +178,22 @@
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal"
                                                             Width="{Binding ActualWidth, Converter={x:Static pu:Converters.DoubleDivideByConverter},ConverterParameter=2, ElementName=StkContainer}">
-                                                        <TextBlock Foreground="{DynamicResource DARKPrimaryText}" FontSize="12" Width="37"
-                                                                   Padding="0" VerticalAlignment="Center" Text="{Binding Key}" />
+                                                        <TextBlock Foreground="{DynamicResource DARKPrimaryText}"
+                                                                FontSize="12" Width="37" Padding="0"
+                                                                VerticalAlignment="Center" Text="{Binding Key}" />
                                                         <TextBlock Text="："
-                                                                   Foreground="{DynamicResource DARKPrimaryText}" FontSize="12" />
-                                                        <TextBlock Foreground="{DynamicResource DARKPrimaryText}" FontSize="12" Padding="0"
-                                                                   VerticalAlignment="Center" Text="{Binding Value}" />
+                                                                Foreground="{DynamicResource DARKPrimaryText}"
+                                                                FontSize="12" />
+                                                        <TextBlock Foreground="{DynamicResource DARKPrimaryText}"
+                                                                FontSize="12" Padding="0" VerticalAlignment="Center"
+                                                                Text="{Binding Value}" />
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                        <TextBlock TextWrapping="Wrap"
-                                                   Background="Transparent"
-                                                   FontSize="12"
-                                                   Padding="0"
-                                                   Foreground="{DynamicResource DARKPrimaryText}"
-                                                   Text="{Binding Description}" />
+                                        <TextBlock TextWrapping="Wrap" Background="Transparent" FontSize="12"
+                                                Padding="0" Foreground="{DynamicResource DARKPrimaryText}"
+                                                Text="{Binding Description}" />
                                     </StackPanel>
                                 </ScrollViewer>
                             </Grid>
@@ -320,17 +320,26 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Grid Grid.Row="1" >
+            <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <pu:Pagination x:Name="pagination" Style="{DynamicResource StandardPaginationStyle}"
-                               CurrentPageChanged="pagination_CurrentPageChanged" />
+                        CurrentPageChanged="pagination_CurrentPageChanged" />
                 <StackPanel Grid.Column="1" Margin="5,0,0,0" Orientation="Horizontal">
-                    <TextBox x:Name="TbPage" MinWidth="50" Style="{DynamicResource StandardTextBoxStyle}" 
-                         PreviewKeyDown="TbPage_PreviewKeyDown" />
-                    <TextBlock Margin="3,0,0,0" Text="{ll:Str 页}" VerticalAlignment="Center"/> 
+                    <TextBox x:Name="TbPage" MinWidth="50" Style="{DynamicResource StandardTextBoxStyle}"
+                            PreviewKeyDown="TbPage_PreviewKeyDown" />
+                    <TextBlock Margin="3,0,0,0" Text="{ll:Str 页}" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Column="3" Margin="5,0,0,0" Orientation="Horizontal">
+                    <TextBlock Margin="3" Text="{ll:Str 一次购买}" VerticalAlignment="Center" />
+                    <pu:NumberInput x:Name="nibuytimes" Value="1" Minimum="1" CornerRadius="5,5,5,5" BorderThickness="1.5"
+                            BorderBrush="{DynamicResource DARKPrimary}" MinWidth="50"
+                            ValueChanged="nibuytimes_ValueChanged" />
+                    <TextBlock Margin="3" Text="{ll:Str 个}" VerticalAlignment="Center" />
                 </StackPanel>
             </Grid>
         </Grid>

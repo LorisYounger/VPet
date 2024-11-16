@@ -40,6 +40,10 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
+
+            nibuytimes.Maximum = Math.Max(2, mw.Core.Save.StrengthMax / 100);
+            nibuytimes.Value = mw.GameSavesData["betterbuysetting"].GetInt("double", 1);
+
             showeatanm = true;//逃出
             if (_searchTextBox != null)
                 _searchTextBox.Text = "";
@@ -217,24 +221,27 @@ namespace VPet_Simulator.Windows
             //看是什么模式
             if (mw.Set.EnableFunction)
             {//$10以内的食物允许赊账
-                if (item.Price >= 10 && item.Price >= mw.Core.Save.Money)
-                {//买不起
-                    MessageBoxX.Show("您没有足够金钱来购买 {0}\n您需要 {1:f2} 金钱来购买\n您当前 {2:f2} 拥有金钱"
-                        .Translate(item.TranslateName, item.Price, mw.Core.Save.Money)
-                        , "金钱不足".Translate());
-                    return;
-                }
-                //看看是否超模
-                if (mw.HashCheck && item.IsOverLoad())
+                for (int i = 0; i < (int)nibuytimes.Value; i++)
                 {
-                    if (MessageBoxX.Show("当前食物/物品属性超模,是否继续使用?\n使用超模食物可能会导致游戏发生不可预料的错误\n使用超模食物不影响大部分成就解锁\n本物品推荐价格为{0:f0}"
-                        .Translate(item.RealPrice), "超模食物/物品使用提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-                    {
+                    if (item.Price >= 10 && item.Price >= mw.Core.Save.Money)
+                    {//买不起
+                        MessageBoxX.Show("您没有足够金钱来购买 {0}\n您需要 {1:f2} 金钱来购买\n您当前 {2:f2} 拥有金钱"
+                            .Translate(item.TranslateName, item.Price, mw.Core.Save.Money)
+                            , "金钱不足".Translate());
                         return;
                     }
-                    mw.HashCheck = false;
+                    //看看是否超模
+                    if (mw.HashCheck && item.IsOverLoad())
+                    {
+                        if (MessageBoxX.Show("当前食物/物品属性超模,是否继续使用?\n使用超模食物可能会导致游戏发生不可预料的错误\n使用超模食物不影响大部分成就解锁\n本物品推荐价格为{0:f0}"
+                            .Translate(item.RealPrice), "超模食物/物品使用提醒".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                        {
+                            return;
+                        }
+                        mw.HashCheck = false;
+                    }
+                    mw.TakeItem(item);
                 }
-                mw.TakeItem(item);
             }
 
             mw.DisplayFoodAnimation(item.GetGraph(), item.ImageSource);
@@ -402,6 +409,14 @@ namespace VPet_Simulator.Windows
             {
                 pagination.CurrentPage = Math.Max(0, Math.Min(pagination.MaxPage, page));
             }
+        }
+
+        private void nibuytimes_ValueChanged(object sender, SelectedValueChangedRoutedEventArgs<double?> e)
+        {
+            if (!AllowChange)
+                return;
+
+            mw.GameSavesData["betterbuysetting"][(gint)"double"] = (int)nibuytimes.Value;
         }
     }
 }
