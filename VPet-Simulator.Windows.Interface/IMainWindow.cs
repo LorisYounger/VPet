@@ -247,6 +247,12 @@ namespace VPet_Simulator.Windows.Interface
         /// 事件:吃东西
         /// </summary>
         event Action<Food> Event_TakeItem;
+
+        /// <summary>
+        /// 动态资源, 用于给插件MOD存储共享的数据
+        /// </summary>
+        Dictionary<string, object> DynamicResources { get; }
+
     }
 
 }

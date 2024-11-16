@@ -16,7 +16,7 @@ namespace VPet_Simulator.Windows;
 public partial class MainWindow
 {//主窗口部分数据
 
-  
+
     /// <summary>
     /// 版本号
     /// </summary>
@@ -81,6 +81,10 @@ public partial class MainWindow
     //public ChatGPTClient CGPTClient;
     public ImageResources ImageSources { get; set; } = new ImageResources();
     public Resources FileSources { get; set; } = new Resources();
+    /// <summary>
+    /// 动态资源, 用于给插件MOD存储共享的数据
+    /// </summary>
+    public Dictionary<string, object> DynamicResources { get; set; } = new Dictionary<string, object>();
 
     /// <summary>
     /// 所有三方插件
