@@ -2190,6 +2190,7 @@ namespace VPet_Simulator.Windows
                       var errstr = string.Join("\n------\n", Main.ErrorMessage);
                       if (errstr.Contains("0000_core"))
                       {
+                          MessageBoxX.Show("动画加载错误,请尝试以下解决方法修复问题:\n\t1. 删除游戏根目录`Cache`文件夹\n\t2. 删除游戏根目录`mod\\0000_core\\pet`文件夹,并在Steam验证游戏完整性".Translate(), "动画加载错误".Translate());
                           var winrep = new winReport(this, errstr);
                           winrep.tDescription.Text = "动画加载错误".Translate();
                           winrep.Show();
