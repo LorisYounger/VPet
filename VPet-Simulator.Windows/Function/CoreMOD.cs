@@ -308,6 +308,9 @@ namespace VPet_Simulator.Windows
                     case "plugin":
                         Tag.Add("plugin");
                         SuccessLoad = true;
+                        LpsDocument loadfile = new LpsDocument();
+                        if (File.Exists(di.FullName + @"\load.lps"))
+                            loadfile = new LpsDocument(File.ReadAllText(di.FullName + @"\load.lps"));
                         string authtype = "";
                         foreach (FileInfo tmpfi in di.EnumerateFiles("*.dll"))
                         {
@@ -316,16 +319,25 @@ namespace VPet_Simulator.Windows
                             {
                                 continue;
                             }
+                            string cputype = "x64";
 #else
-                                if (tmpfi.Name.Contains("x64"))
-                                {
-                                    continue;
-                                }
+                            if (tmpfi.Name.Contains("x64"))
+                            {
+                                continue;
+                            }
+                             string cputype = "x86";
 #endif
-#if !DEBUG5
+                            if (loadfile[tmpfi.Name][(gbol)"skip"])
+                                continue;
+
+                            string dllcpu = loadfile[tmpfi.Name].GetString("cpu", "anycpu").ToLower();
+                            if (dllcpu != "anycpu" && dllcpu != cputype)
+                            {
+                                continue;
+                            }
+
                             try
                             {
-#endif
                                 var path = tmpfi.Name;
                                 if (LoadPlug.ContainsKey(path))
                                 {
@@ -382,14 +394,14 @@ namespace VPet_Simulator.Windows
                                         mw.Plugins.Add((MainPlugin)Activator.CreateInstance(exportedType, mw));
                                     }
                                 }
-#if !DEBUG5
                             }
                             catch (Exception e)
                             {
+                                if (loadfile[tmpfi.Name][(gbol)"ignoreError"])
+                                    continue;
                                 ErrorMessage = e.Message;
                                 SuccessLoad = false;
                             }
-#endif
                         }
                         if (authtype != "FAIL")
                             Author += authtype;
