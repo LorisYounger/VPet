@@ -7,7 +7,7 @@
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Height="500" Width="500" VerticalAlignment="Top">
     <Border Background="{DynamicResource PrimaryLighter}" BorderBrush="{DynamicResource Primary}" BorderThickness="5"
             VerticalAlignment="Top" Margin="5" CornerRadius="5" Padding="5,5,5,3">
-        <Grid>
+        <Grid x:Name="MainGrid" x:FieldModifier="public">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*" />
                 <ColumnDefinition Width="5" />
@@ -18,14 +18,14 @@
                 <RowDefinition Height="2" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBox x:Name="tbTalk" Style="{DynamicResource StandardTextBoxStyle}" Height="Auto"
-                    pu:TextBoxHelper.Watermark="{ll:Str 和桌宠说}" FontSize="30" AcceptsReturn="True"
-                    TextWrapping="WrapWithOverflow" PreviewKeyDown="tbTalk_KeyDown" InputMethod.IsInputMethodEnabled="True" />
-            <Button pu:ButtonHelper.CornerRadius="4" Content="{ll:Str '发送'}" BorderThickness="2"
+            <TextBox x:FieldModifier="public" x:Name="tbTalk" Style="{DynamicResource StandardTextBoxStyle}"
+                    Height="Auto" pu:TextBoxHelper.Watermark="{ll:Str 和桌宠说}" FontSize="30" AcceptsReturn="True"
+                    TextWrapping="WrapWithOverflow" PreviewKeyDown="tbTalk_KeyDown"
+                    InputMethod.IsInputMethodEnabled="True" />
+            <Button x:Name="btnSend" pu:ButtonHelper.CornerRadius="4" Content="{ll:Str '发送'}" BorderThickness="2"
                     Background="{DynamicResource SecondaryLight}" Grid.Column="2"
-                    BorderBrush="{DynamicResource DARKPrimaryDarker}" FontSize="30"
-                    ToolTip="{ll:Str '按 Ctrl+Enter 发送'}"
-                    Click="Send_Click" />
+                    BorderBrush="{DynamicResource DARKPrimaryDarker}" FontSize="30" ToolTip="{ll:Str '按 Ctrl+Enter 发送'}"
+                    Click="Send_Click" x:FieldModifier="public" />
             <Grid x:Name="PublicGrid" Grid.Row="2" Grid.ColumnSpan="3" x:FieldModifier="public" />
         </Grid>
     </Border>
