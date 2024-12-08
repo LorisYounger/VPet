@@ -394,7 +394,7 @@ namespace VPet_Simulator.Windows
                 result = await leaderboard?.ReplaceScore(studymoneymax);
                 length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
-                    studyexpmaxrank = 1 - (result.Value.NewGlobalRank - 1) / length;
+                    studymoneymaxrank = 1 - (result.Value.NewGlobalRank - 1) / length;
                 else
                     studymoneymaxrank = 0;
             }

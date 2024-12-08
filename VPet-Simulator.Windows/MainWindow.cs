@@ -1909,6 +1909,7 @@ namespace VPet_Simulator.Windows
                   {
                       Main.ToolBar.Visibility = Visibility.Collapsed;
                       winSetting.Show();
+                      winSetting.Activate();
                   });
 
                   //this.Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.PNG")));
