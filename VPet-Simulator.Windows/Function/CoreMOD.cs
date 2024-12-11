@@ -20,7 +20,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 自动启用MOD名称
         /// </summary>
-        public static readonly string[] OnModDefList = new string[] { "Core", "PCat", "ModMaker" };
+        public static readonly string[] OnModDefList = new string[] { "Core", "PCat" };
 
         public static HashSet<string> LoadedDLL { get; } = new HashSet<string>()
         {

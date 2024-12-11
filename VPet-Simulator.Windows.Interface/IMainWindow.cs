@@ -253,6 +253,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         Dictionary<string, object> DynamicResources { get; }
 
+
     }
 
 }
