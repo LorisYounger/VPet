@@ -139,7 +139,7 @@ public partial class winWorkMenu : WindowX
             }
         }
         if (wDouble.Value == 1)
-            ShowWork(nowwork);
+            ShowWork((Work)nowwork.Clone());
         else
             ShowWork(nowwork.Double((int)wDouble.Value));
         AllowChange = true;
