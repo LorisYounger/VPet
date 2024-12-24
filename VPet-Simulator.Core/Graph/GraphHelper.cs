@@ -92,10 +92,19 @@ namespace VPet_Simulator.Core
             /// </summary>
             [Line(ignoreCase: true)]
             public string Name { get; set; }
+            public string nametrans = null;
             /// <summary>
             /// 工作名称 已翻译
             /// </summary>
-            public string NameTrans => Name.Translate();
+            public string NameTrans
+            {
+                get
+                {
+                    if (nametrans == null)
+                        nametrans = Name.Translate();
+                    return nametrans;
+                }
+            }
             /// <summary>
             /// 使用动画名称
             /// </summary>

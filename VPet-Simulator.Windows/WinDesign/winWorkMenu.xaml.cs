@@ -79,6 +79,8 @@ public partial class winWorkMenu : WindowX
         imgAgency.Source = mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_agency_job", "work_agency_job");
         tbtnAgencyTraning.IsChecked = false;
         rTaskType.Text = "抽成".Translate();
+        cbDIYName.IsChecked = mw.Set["workmenu"].GetBool("DIY_Enable");
+        tbDIYName.Text = mw.Set["workmenu"].GetString("DIY_TEXT" + LsbCategory.SelectedIndex);
         foreach (var v in mw.SchedulePackage.FindAll(x => x.WorkType == Work.WorkType.Work))
             combTaskType.Items.Add(v);
 
@@ -189,27 +191,33 @@ public partial class winWorkMenu : WindowX
             gdWork.Visibility = Visibility.Visible;
             gdSchedule.Visibility = Visibility.Collapsed;
 
+            tbDIYName.Text = mw.Set["workmenu"].GetString("DIY_TEXT" + LsbCategory.SelectedIndex);
+
             switch (LsbCategory.SelectedIndex)
             {
                 case 0:
                     detailTypes.ItemsSource = _workDetails;
                     btnStart.Content = "开始工作".Translate();
                     ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "工作".Translate() + "---");
+                    TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate("工作".Translate()));
                     break;
                 case 1:
                     detailTypes.ItemsSource = _studyDetails;
                     btnStart.Content = "开始学习".Translate();
                     ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "学习".Translate() + "---");
+                    TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate("学习".Translate()));
                     break;
                 case 2:
                     detailTypes.ItemsSource = _playDetails;
                     btnStart.Content = "开始玩耍".Translate();
                     ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "玩耍".Translate() + "---");
+                    TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate("玩耍".Translate()));
                     break;
                 case 3:
                     detailTypes.ItemsSource = _starDetails;
                     btnStart.Content = "开始活动".Translate();
                     ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "---");
+                    TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate(""));
                     break;
                 case 4:
                     gdWork.Visibility = Visibility.Collapsed;
@@ -290,6 +298,9 @@ public partial class winWorkMenu : WindowX
     {
         if (nowwork != null || nowworkdisplay != null)
         {
+            mw.Set["workmenu"].SetString("DIY_TEXT" + LsbCategory.SelectedIndex, tbDIYName.Text);
+            if (cbDIYName.IsChecked == true)
+                nowworkdisplay.nametrans = tbDIYName.Text;
             if (mw.Main.StartWork(nowworkdisplay))
                 Close();
         }
@@ -706,6 +717,14 @@ public partial class winWorkMenu : WindowX
         }
 
     }
+
+    private void cbDIYName_Checked(object sender, RoutedEventArgs e)
+    {
+        if (!AllowChange) return;
+
+        mw.Set["workmenu"].SetBool("DIY_Enable", cbDIYName.IsChecked == true);
+    }
+
 }
 
 

@@ -73,16 +73,23 @@
                     <Border Grid.Column="2" Background="White" CornerRadius="4" />
                     <Grid Grid.Column="2" Margin="15">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
+                        <CheckBox x:Name="cbDIYName" ToolTip="{ll:Str '自定义显示的名称,会在Steam好友列表显示\&#13;让桌宠和你一起干活,学习和玩耍'}"
+                                Checked="cbDIYName_Checked" Unchecked="cbDIYName_Checked">
+                            <TextBox x:Name="tbDIYName" FontSize="14" pu:IconHelper.Margin="5,0,0,0" Width="180" Height="22"
+                                    MaxLength="100" IsEnabled="{Binding IsChecked, ElementName=cbDIYName}"
+                                    pu:TextBoxHelper.Watermark="自定义{0}名称" Style="{DynamicResource StandardTextBoxStyle}" />
+                        </CheckBox>
                         <ToggleButton x:Name="tbtn_star" VerticalAlignment="Top" HorizontalAlignment="Right"
                                 Content="&#xF18B;" FontFamily="pack://application:,,,/Res/#remixicon"
                                 Style="{DynamicResource TextToggleButtonStyle}" FontSize="24" Margin="6"
                                 pu:ToggleButtonHelper.CheckedContent="&#xF186;" Click="tbtn_star_Click" Grid.Column="4"
-                                Grid.RowSpan="3" Grid.ColumnSpan="4" />
-                        <Grid>
+                                Grid.RowSpan="3" Grid.ColumnSpan="4" Grid.Row="1" />
+                        <Grid Grid.Row="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="15" />
@@ -135,10 +142,10 @@
                                     TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="wDouble_ValueChanged"
                                     LargeChange="1" Style="{DynamicResource StandardSliderStyle}" TickPlacement="Both" />
                         </Grid>
-                        <Button x:Name="btnAddAuto" Grid.Row="1" Content="{ll:Str 添加至日程表}" Padding="0"
+                        <Button x:Name="btnAddAuto" Grid.Row="2" Content="{ll:Str 添加至日程表}" Padding="0"
                                 Style="{DynamicResource ThemedButtonStyle}" Background="{DynamicResource PrimaryDarker}"
                                 Click="btnAddAuto_Click" Margin="5" Height="25" IsEnabled="False" />
-                        <Button x:Name="btnStart" Grid.Row="2" Height="30" Content="{ll:Str 开始工作}"
+                        <Button x:Name="btnStart" Grid.Row="3" Height="30" Content="{ll:Str 开始工作}"
                                 Style="{DynamicResource ThemedButtonStyle}" Background="{DynamicResource PrimaryDarker}"
                                 Click="btnStart_Click" FontSize="16" FontWeight="Bold" />
                     </Grid>
@@ -324,7 +331,6 @@
                                             <pu:Switch x:Name="rpnAutoRenew" Grid.Row="4" Background="Transparent"
                                                     BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18"
                                                     BoxWidth="35" Foreground="{DynamicResource DARKPrimary}"
-                                                    Content="{Binding IsChecked,  ElementName=PetHelperBox}"
                                                     IsChecked="False" CheckedBackground="{DynamicResource Primary}"
                                                     CheckedBorderBrush="{DynamicResource Primary}"
                                                     CheckedToggleBrush="{DynamicResource DARKPrimaryText}"

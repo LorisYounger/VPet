@@ -50,7 +50,7 @@
                     </StackPanel>
                     <pu:Switch x:Name="swAllowJoin"
                             FontSize="{Binding FontSize, Converter={x:Static pu:Converters.DoublePlusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}"
-                            BorderBrush="#AFAFAF" ToggleBrush="#AFAFAF" Padding="2,0,0,0" BoxHeight="13" BoxWidth="21"
+                            BorderBrush="#AFAFAF" ToggleBrush="#AFAFAF" Padding="2,0,0,0" BoxHeight="13" BoxWidth="21" 
                             Foreground="#AFAFAF" CheckedForeground="{DynamicResource PrimaryText}"
                             CheckedBackground="{DynamicResource PrimaryDarker}"
                             CheckedBorderBrush="{DynamicResource PrimaryDarker}" Content="{ll:Str 允许好友加入}"

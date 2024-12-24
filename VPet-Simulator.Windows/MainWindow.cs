@@ -976,7 +976,7 @@ namespace VPet_Simulator.Windows
                     switch (obj.State)
                     {
                         case Main.WorkingState.Work:
-                            SteamFriends.SetRichPresence("work", obj.NowWork.Name.Translate());
+                            SteamFriends.SetRichPresence("work", obj.NowWork.NameTrans);
                             SteamFriends.SetRichPresence("steam_display", "#Status_Work");
                             break;
                         case Main.WorkingState.Sleep:
