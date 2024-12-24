@@ -170,6 +170,11 @@ namespace VPet_Simulator.Core
                 freedrop = 0;
             else
                 freedrop = Math.Min(Math.Sqrt(freedrop) * TimePass / 4, Core.Save.FeelingMax / 800);
+            double sm25 = Core.Save.StrengthMax * 0.25;
+            double sm50 = Core.Save.StrengthMax * 0.5;
+            double sm60 = Core.Save.StrengthMax * 0.6;
+            double sm75 = Core.Save.StrengthMax * 0.75;
+
             switch (State)
             {
                 case WorkingState.Empty:
@@ -178,18 +183,18 @@ namespace VPet_Simulator.Core
                     //睡觉 缓慢恢复所有(除了心情,但是心情不会下降)
                     Core.Save.StrengthChange(TimePass * 2);
                     Core.Save.StrengthChangeFood(TimePass);
-                    if (Core.Save.StrengthFood <= 25)
+                    if (Core.Save.StrengthFood <= sm25)
                     {//低状态2倍恢复速度
                         Core.Save.StrengthChangeFood(TimePass);
                     }
-                    else if (Core.Save.StrengthFood >= 75)
+                    else if (Core.Save.StrengthFood >= sm75)
                         Core.Save.Health += TimePass * 2;
                     Core.Save.StrengthChangeDrink(TimePass);
-                    if (Core.Save.StrengthDrink >= 25)
+                    if (Core.Save.StrengthDrink >= sm25)
                     {
                         Core.Save.StrengthChangeDrink(TimePass);
                     }
-                    else if (Core.Save.StrengthDrink >= 75)
+                    else if (Core.Save.StrengthDrink >= sm75)
                         Core.Save.Health += TimePass * 2;
                     LastInteractionTime = DateTime.Now;
                     break;
@@ -201,8 +206,7 @@ namespace VPet_Simulator.Core
 
                     double efficiency = 0;
                     int addhealth = -2;
-                    double sm25 = Core.Save.StrengthMax * 0.25;
-                    double sm60 = Core.Save.StrengthMax * 0.6;
+
 
                     var nsfood = needfood * .3;
                     var nsdrink = needdrink * .3;
@@ -275,26 +279,26 @@ namespace VPet_Simulator.Core
                 default://默认
                     //饮食等乱七八糟的消耗
                     addhealth = -2;
-                    if (Core.Save.StrengthFood >= 50)
+                    if (Core.Save.StrengthFood >= sm50)
                     {
                         Core.Save.StrengthChangeFood(-TimePass);
                         Core.Save.StrengthChange(TimePass);
-                        if (Core.Save.StrengthFood >= 75)
+                        if (Core.Save.StrengthFood >= sm75)
                             addhealth += Function.Rnd.Next(1, 3);
                     }
-                    else if (Core.Save.StrengthFood <= 25)
+                    else if (Core.Save.StrengthFood <= sm25)
                     {
                         Core.Save.Health -= Function.Rnd.NextDouble() * TimePass;
                         addhealth -= 2;
                     }
-                    if (Core.Save.StrengthDrink >= 50)
+                    if (Core.Save.StrengthDrink >= sm50)
                     {
                         Core.Save.StrengthChangeDrink(-TimePass);
                         Core.Save.StrengthChange(TimePass);
-                        if (Core.Save.StrengthDrink >= 75)
+                        if (Core.Save.StrengthDrink >= sm75)
                             addhealth += Function.Rnd.Next(1, 3);
                     }
-                    else if (Core.Save.StrengthDrink <= 25)
+                    else if (Core.Save.StrengthDrink <= sm25)
                     {
                         Core.Save.Health -= Function.Rnd.NextDouble() * TimePass;
                         addhealth -= 2;
@@ -313,26 +317,26 @@ namespace VPet_Simulator.Core
             //}
             Core.Save.Exp += TimePass;
             //感受提升好感度
-            if (Core.Save.Feeling >= 75)
+            if (Core.Save.Feeling >= Core.Save.FeelingMax * 0.75)
             {
-                if (Core.Save.Feeling >= 90)
+                if (Core.Save.Feeling >= Core.Save.FeelingMax * 0.90)
                 {
                     Core.Save.Likability += TimePass;
                 }
                 Core.Save.Exp += TimePass * 2;
                 Core.Save.Health += TimePass;
             }
-            else if (Core.Save.Feeling <= 25)
+            else if (Core.Save.Feeling <= 25) //这个就不乘倍率了, 给上限高一些好处
             {
                 Core.Save.Likability -= TimePass;
                 Core.Save.Exp -= TimePass;
             }
-            if (Core.Save.StrengthDrink <= 25)
+            if (Core.Save.StrengthDrink <= sm25)
             {
                 Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
                 Core.Save.Exp -= TimePass;
             }
-            else if (Core.Save.StrengthDrink >= 75)
+            else if (Core.Save.StrengthDrink >= sm75)
                 Core.Save.Health += Function.Rnd.Next(0, 1) * TimePass;
 
             FunctionSpendHandle?.Invoke();
