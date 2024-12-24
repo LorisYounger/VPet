@@ -264,7 +264,7 @@ public class Photo
                             return false;
                         break;
                     case HolidayType.Christmas:
-                        if (!CheckDate(new DateTime(now.Year, 12, 15)))
+                        if (!CheckDate(new DateTime(now.Year, 12, 25)))
                             return false;
                         break;
                         //case HolidayType.Player_Birthday: //TODO: 玩家生日
