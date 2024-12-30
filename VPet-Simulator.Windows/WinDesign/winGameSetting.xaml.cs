@@ -1072,7 +1072,7 @@ namespace VPet_Simulator.Windows
                                 MessageBoxX.Show("当前多开已经加载".Translate());
                             }
                             else
-                                new MainWindow(savename).Show();
+                                new MainWindow(savename, mw).Show();
                             return;
                         }
                         foreach (var c in @"()#:|/\?*<>-")
@@ -1086,7 +1086,7 @@ namespace VPet_Simulator.Windows
                         lps["gameconfig"].SetString("petgraph", savename);
                         File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting-{savename}.lps", lps.ToString());
                         App.MutiSaves.Add(savename);
-                        new MainWindow(savename).Show();
+                        new MainWindow(savename, mw).Show();
                         LoadMutiUI();
                         return;
                     case MessageBoxResult.No:
@@ -1540,7 +1540,7 @@ namespace VPet_Simulator.Windows
                 MessageBoxX.Show("当前多开已经加载".Translate());
                 return;
             }
-            new MainWindow(str).Show();
+            new MainWindow(str, mw).Show();
         }
 
         private void btn_mutinew_click(object sender, RoutedEventArgs e)
@@ -1562,7 +1562,7 @@ namespace VPet_Simulator.Windows
             lps.SetInt("savetimes", 0);
             File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting-{savename}.lps", lps.ToString());
             App.MutiSaves.Add(savename);
-            new MainWindow(savename).Show();
+            new MainWindow(savename, mw).Show();
         }
 
         private void btn_mutidel_Click(object sender, RoutedEventArgs e)

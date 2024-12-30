@@ -50,6 +50,7 @@ namespace VPet_Simulator.Windows
                 PrefixSave = '-' + Args["prefix"].Info;
             }
 
+
 #if X64
             PNGAnimation.MaxLoadNumber = 50;
 #else
@@ -396,7 +397,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                new MainWindow(PrefixSave).Show();
+                new MainWindow(PrefixSave, this).Show();
             }
             Exit();
         }

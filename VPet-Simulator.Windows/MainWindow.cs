@@ -326,7 +326,7 @@ namespace VPet_Simulator.Windows
                         {
                             if (App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == win) == null)
                             {
-                                new MainWindow(win).Show();
+                                new MainWindow(win, this).Show();
                             }
                             menuItem.Items.Remove(s);
                         };
@@ -1400,7 +1400,8 @@ namespace VPet_Simulator.Windows
         /// 支持多开的启动方式
         /// </summary>
         /// <param name="prefixsave">存档前缀</param>
-        public MainWindow(string prefixsave)
+        /// <param name="basemw">基础窗口</param>
+        public MainWindow(string prefixsave, MainWindow basemw = null)
         {
             PrefixSave = prefixsave;
             if (prefixsave != string.Empty && !PrefixSave.StartsWith("-"))
@@ -1418,6 +1419,13 @@ namespace VPet_Simulator.Windows
             _hwnd = new WindowInteropHelper(this).EnsureHandle();
 
             GameInitialization();
+
+            if (basemw != null)
+            {
+                Set["workshop"] = basemw.Set["workshop"];
+                Set.Resolution = basemw.Set.Resolution;
+            }
+
 
             //加载所有MOD
             List<DirectoryInfo> Path = new List<DirectoryInfo>();

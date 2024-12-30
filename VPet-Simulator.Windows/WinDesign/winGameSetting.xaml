@@ -694,9 +694,11 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
+                                <RowDefinition Height="35" />
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 长按间隔}" />
                             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 桌宠名字}" />
+                            <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 主人生日}" />
                             <TextBox x:Name="TextBoxPetName" Grid.Row="1" Grid.Column="2" FontSize="16"
                                     Style="{DynamicResource StandardTextBoxStyle}"
                                     TextChanged="TextBoxPetName_TextChanged" />
