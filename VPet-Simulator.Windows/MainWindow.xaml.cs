@@ -339,6 +339,12 @@ namespace VPet_Simulator.Windows
         {
             if (winMutiPlayer != null)
                 return;
+            if (!friend.IsPlayingThisGame)
+            {
+                Main.Say("你的好友{0}邀请你玩游戏,快去回应ta吧".Translate(friend.Name));
+                return;
+            }
+
             Dispatcher.Invoke(() =>
             {
                 Button btn = new Button();

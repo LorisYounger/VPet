@@ -71,6 +71,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         lb = lbt.Value;
         lb.SetJoinable(true);
         lb.SetPublic();
+        lb.SetData("isvpets", "true");
         IsHost = true;
         swAllowJoin.IsEnabled = true;
         ShowLobbyInfo();
