@@ -87,5 +87,12 @@ namespace VPet_Simulator.Core
         {
             return Process.GetCurrentProcess().WorkingSet64 / 1024.0 / 1024.0;
         }
+        public static double MemoryAvailable()
+        {
+            using (PerformanceCounter pc = new PerformanceCounter("Memory", "Available Bytes"))
+            {
+                return pc.NextValue() / 1024.0 / 1024.0;
+            }
+        }
     }
 }

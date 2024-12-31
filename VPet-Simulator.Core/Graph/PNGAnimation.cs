@@ -106,11 +106,10 @@ namespace VPet_Simulator.Core
         /// 最大同时加载数
         /// </summary>
         public static int MaxLoadMemory = 2000;
-        public static int BaseMemory = 1000;
 
         private async void startup(string path, FileInfo[] paths)
         {
-            while (Function.MemoryUsage() > BaseMemory + MaxLoadMemory)
+            while (Function.MemoryUsage() > MaxLoadMemory)
             {
                 await Task.Delay(100);
             }

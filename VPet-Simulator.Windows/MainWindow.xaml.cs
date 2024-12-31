@@ -51,12 +51,15 @@ namespace VPet_Simulator.Windows
             }
 
 
-#if X64
-            PNGAnimation.MaxLoadMemory = 4000;
-#else
-            PNGAnimation.MaxLoadNumber = 2000;
+            PNGAnimation.MaxLoadMemory = (int)Function.MemoryAvailable() / 2;
+#if !X64
+            if(PNGAnimation.MaxLoadMemory > 3000)
+                PNGAnimation.MaxLoadMemory = 3000;
 #endif
-            PNGAnimation.BaseMemory = (int)Function.MemoryUsage();
+            if (PNGAnimation.MaxLoadMemory < 512)
+                PNGAnimation.MaxLoadMemory = 512;
+
+            PNGAnimation.MaxLoadMemory += (int)Function.MemoryUsage();
 
             ExtensionValue.BaseDirectory = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName;
 
