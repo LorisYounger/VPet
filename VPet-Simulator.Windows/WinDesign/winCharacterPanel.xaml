@@ -5,7 +5,7 @@
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" Foreground="{StaticResource PrimaryText}"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Title="面板"
+        xmlns:pu="https://opensource.panuon.com/wpf-ui" Title="面板"
         Width="{ll:Dbe CharacterPanelWidth_500, DefValue=500}" Height="{ll:Dbe CharacterPanelHeight_500, DefValue=500}"
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" mc:Ignorable="d"
         Closed="WindowX_Closed">
@@ -25,7 +25,8 @@
             pu:TabControlHelper.ItemsPadding="10,7"
             pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"
             pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}" Background="Transparent"
-            BorderThickness="0" Foreground="{DynamicResource PrimaryText}" SelectedIndex="0">
+            BorderThickness="0" Foreground="{DynamicResource PrimaryText}" SelectedIndex="0"
+            SelectionChanged="MainTab_SelectionChanged">
         <TabControl.ContentTemplate>
             <DataTemplate>
                 <Border Margin="0,5,0,5" Background="{DynamicResource DARKPrimaryText}" CornerRadius="15">
@@ -308,9 +309,10 @@
                         Margin="0,5,0,0" Visibility="Collapsed" />
             </Grid>
         </TabItem>
-        <TabItem Header="{ll:Str 生日祝福}">
+        <TabItem x:Name="tab_bday" Header="{ll:Str 生日祝福}">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
@@ -320,18 +322,63 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="{ll:Str 来自}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"
                             Margin="20,0,0,0" />
                     <ComboBox x:Name="cb_birthday" Margin="10,5,10,5" Grid.Column="1" FontSize="16"
-                            Style="{DynamicResource StandardComboBoxStyle}" />
+                            Style="{DynamicResource StandardComboBoxStyle}"
+                            SelectionChanged="cb_birthday_SelectionChanged" />
                     <TextBlock x:Name="btn_birthday" Text="{ll:Str 的生日祝福}" Grid.Column="2" FontSize="16"
                             FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,20,0" />
-                    <Button x:Name="btn_b_save" Grid.Column="3" pu:ButtonHelper.CornerRadius="4"
+                    <pu:Switch Grid.Column="3" Margin="10,0,0,0" Background="Transparent" x:Name="sw_forfriend"
+                            BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
+                            CheckedBackground="{DynamicResource Primary}" CheckedBorderBrush="{DynamicResource Primary}"
+                            CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str '自定义祝福'}"
+                            ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}" ToggleSize="14" />
+                    <Button x:Name="btn_b_save" Grid.Column="4" pu:ButtonHelper.CornerRadius="4"
                             Background="{DynamicResource SecondaryLight}" BorderBrush="{DynamicResource SecondaryDark}"
-                            BorderThickness="2" Content="{ll:Str 保存图片}" Grid.Row="1" Margin="10,5,10,5"
-                            IsEnabled="False" />
+                            BorderThickness="2" Content="{ll:Str 保存图片}" Grid.Row="1" Margin="5,2,5,2"
+                            Click="btn_b_save_Click" />
                 </Grid>
+                <Grid Grid.Row="1"
+                        Visibility="{Binding IsChecked,Converter={x:Static pu:Converters.FalseToCollapseConverter}, ElementName=sw_forfriend}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="tb_bdiy" Grid.Column="0" Margin="5,2" FontSize="16"
+                            Style="{DynamicResource StandardTextBoxStyle}" AcceptsReturn="True" Text="P猫 祝 P猫 生日快乐"
+                            pu:TextBoxHelper.Watermark="{ll:Str 填写自定义的祝福词吧}" />
+                    <pu:DateTimePicker x:Name="dtp_bdiy" FontSize="16" BorderBrush="{DynamicResource DARKPrimary}"
+                            pu:ShadowHelper.Opacity="0.5" BorderThickness="2" Height="30" Grid.Column="1"
+                            Background="{DynamicResource DARKPrimaryText}" Padding="7,0,15,0" CornerRadius="5"
+                            SelectedDateTimeChanged="dtp_bdiy_SelectedDateTimeChanged" />
+                    <Button x:Name="btn_b_headimage" Grid.Column="2" pu:ButtonHelper.CornerRadius="4"
+                            Background="{DynamicResource SecondaryLight}" BorderBrush="{DynamicResource SecondaryDark}"
+                            BorderThickness="2" Content="{ll:Str 选择头像图片}" Grid.Row="2" Margin="5,2,5,2"
+                            Click="btn_b_headimage_Click" />
+                </Grid>
+                <Border Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Viewbox x:Name="b_Output">
+                        <Grid Width="300" Height="200">
+                            <Image x:Name="img_b_head" Source="/Res/player.png" Width="62" Margin="74,130,0,0"
+                                    HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <Image x:Name="img_b_background" Stretch="UniformToFill" />
+                            <Label x:Name="lb_b_datetime" Content="Shot on VPet - 2023/8/14" HorizontalAlignment="Right"
+                                    VerticalAlignment="Top" Padding="2,1,2,1" Foreground="White" Background="#a000"
+                                    FontSize="10" />
+                            <Viewbox x:Name="vb_b_text" Margin="140,100,5,10">
+                                <Border x:Name="b_b_text" Background="#ddF9C08A" CornerRadius="5" Padding="3"
+                                        MaxWidth="300">
+                                    <TextBlock x:Name="tb_b_text" FontWeight="Bold" TextWrapping="WrapWithOverflow"
+                                            Text="{Binding Text,ElementName=tb_bdiy}"/>
+                                </Border>
+                            </Viewbox>
+                        </Grid>
+                    </Viewbox>
+                </Border>
             </Grid>
         </TabItem>
     </TabControl>

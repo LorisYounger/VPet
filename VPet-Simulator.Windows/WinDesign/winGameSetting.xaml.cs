@@ -1691,6 +1691,20 @@ namespace VPet_Simulator.Windows
             mw.Set.DeBug = ConsoleBox.IsChecked.Value;
         }
 
+        private void TextBoxHostName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.GameSavesData.GameSave.HostName = TextBoxHostName.Text;
+        }
+
+        private void TextBoxHostBDay_SelectedDateTimeChanged(object sender, Panuon.WPF.SelectedValueChangedRoutedEventArgs<DateTime?> e)
+        {
+            if (!AllowChange || TextBoxHostBDay.SelectedDateTime == null)
+                return;
+            mw.GameSavesData.SetDateTime("HostBDay", TextBoxHostBDay.SelectedDateTime.Value);
+        }
+
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
         {
             if (!AllowChange)

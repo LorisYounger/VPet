@@ -22,6 +22,7 @@ public class GameSave_VPet : IGameSave
     /// <summary>
     /// 主人称呼
     /// </summary>
+    [Line(name: "hostname")]
     public string HostName { get; set; } = "";
     /// <summary>
     /// 金钱

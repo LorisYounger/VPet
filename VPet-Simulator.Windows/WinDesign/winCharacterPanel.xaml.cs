@@ -5,6 +5,7 @@ using Panuon.WPF.UI;
 using Steamworks;
 using Steamworks.Data;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -15,7 +16,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
+using Color = System.Windows.Media.Color;
 
 namespace VPet_Simulator.Windows
 {
@@ -670,6 +673,130 @@ namespace VPet_Simulator.Windows
             }
         }
 
-      
+        bool load2 = false;
+        List<(string name, Core.PetLoader loader)> bdpetlist = null;
+        private async void MainTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (MainTab.SelectedIndex == 2 && load2 == false)
+            {
+                var petloader = mw.Pets.Find(x => x.Name == mw.Set.PetGraph);
+                petloader ??= mw.Pets[0];
+                var ordname = petloader.PetName.Translate();
+
+                bdpetlist = mw.Pets.FindAll(x => x.Config.Data.FindLine("bday") != null).Select(x => (x.PetName.Translate(), x)).ToList();
+
+                if (bdpetlist.Count == 0)
+                {
+                    tab_bday.IsEnabled = false;
+                    return;
+                }
+
+                int sidx = 0;
+                for (int i = 0; i < bdpetlist.Count; i++)
+                {
+                    if (bdpetlist[i].name == ordname)
+                    {
+                        if (petloader == bdpetlist[i].loader)
+                        {
+                            sidx = i;
+                            bdpetlist[i] = (mw.GameSavesData.GameSave.Name, bdpetlist[i].loader);
+                        }
+                        else
+                            bdpetlist[i] = (mw.GameSavesData.GameSave.Name + $"({bdpetlist[i].loader.Name.Translate()})", bdpetlist[i].loader);
+                    }
+                }
+                cb_birthday.ItemsSource = bdpetlist.Select(x => x.name);
+                lb_b_datetime.Content = "Shot on VPet - " + DateTime.Now.ToShortDateString();
+                if (mw.IsSteamUser)
+                {
+                    Steamworks.Data.Image? img = await SteamFriends.GetLargeAvatarAsync(SteamClient.SteamId);
+                    img_b_head.Source = winMutiPlayer.ConvertToImageSource(img.Value);
+                }
+                cb_birthday.SelectedIndex = sidx;
+                BDay_Load();
+                Width = 800;
+                Height = 675;
+                load2 = true;
+            }
+        }
+        public void BDay_Load()
+        {
+            var pl = bdpetlist[cb_birthday.SelectedIndex];
+            img_b_background.Source = mw.ImageSources.FindImage("bday_" + pl.loader.Name);
+            tb_bdiy.Text = "{0} 祝 {1} 生日快乐!".Translate(pl.name, mw.GameSavesData.GameSave.HostName);
+            ILine bdinfo = pl.loader.Config.Data.FindLine("bday");
+            img_b_head.Width = bdinfo[(gdbe)"w"];
+            img_b_head.Margin = new Thickness(bdinfo[(gdbe)"x"], bdinfo[(gdbe)"y"], 0, 0);
+            lb_b_datetime.VerticalAlignment = Enum.Parse<VerticalAlignment>(bdinfo[(gstr)"va"], true);
+            lb_b_datetime.HorizontalAlignment = Enum.Parse<HorizontalAlignment>(bdinfo[(gstr)"ha"], true);
+            b_b_text.Background = new SolidColorBrush(Function.HEXToColor('#' + bdinfo[(gstr)"tb"]));
+            tb_b_text.Foreground = new SolidColorBrush(Function.HEXToColor('#' + bdinfo[(gstr)"tf"]));
+            vb_b_text.Margin = new Thickness(bdinfo[(gdbe)"tleft"], bdinfo[(gdbe)"ttop"], bdinfo[(gdbe)"tright"], bdinfo[(gdbe)"tbottom"]);
+        }
+
+        private void cb_birthday_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (load2 == false)
+            {
+                return;
+            }
+            BDay_Load();
+        }
+
+        private void btn_b_headimage_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog()
+            {
+                Filter = "Image File|*.png;*.jpg;*.jpeg;",
+                Title = "选择头像图片".Translate()
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                img_b_head.Source = new BitmapImage(new Uri(openFileDialog.FileName));
+            }
+        }
+
+        private void btn_b_save_Click(object sender, RoutedEventArgs e)
+        {
+            if (load2 == false)
+            {
+                return;
+            }
+            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            {
+                FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "VPet_BDay.png"),
+                Filter = "PNG Image File|*.png"
+            };
+            if (saveFileDialog.ShowDialog() != true)
+                return;
+            RenderTargetBitmap image = new RenderTargetBitmap((int)b_Output.ActualWidth, (int)b_Output.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            image.Render(b_Output);
+            var path = saveFileDialog.FileName;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(image));
+                encoder.Save(ms);
+                File.WriteAllBytes(path, ms.ToArray());
+                if (mw.IsSteamUser && cb_AgreeUpload.IsChecked == true)
+                    SteamScreenshots.AddScreenshot(path, null, image.PixelWidth, image.PixelHeight);
+
+                var psi = new ProcessStartInfo
+                {
+                    FileName = path,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+            }
+        }
+
+        private void dtp_bdiy_SelectedDateTimeChanged(object sender, Panuon.WPF.SelectedValueChangedRoutedEventArgs<DateTime?> e)
+        {
+            if (load2 == false)
+            {
+                return;
+            }
+            lb_b_datetime.Content = "Shot on VPet - " + dtp_bdiy.SelectedDateTime?.ToShortDateString();
+        }
     }
 }

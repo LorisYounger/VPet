@@ -1599,7 +1599,6 @@ namespace VPet_Simulator.Windows
                     GameSavesData.GameSave.HostName = SteamClient.Name;
                 else
                     GameSavesData.GameSave.HostName = Environment.UserName;
-                GameSavesData.GameSave.HostName += "主人".Translate();
             }
 
             if (GameSavesData.Data.FindLine("HostBDay") == null)
@@ -2123,7 +2122,7 @@ namespace VPet_Simulator.Windows
                               button.Click += (x, y) =>
                               {
                                   var panelWindow = new winCharacterPanel(this);
-                                  panelWindow.MainTab.SelectedIndex = 2;
+                                  panelWindow.MainTab.SelectedIndex = 1;
                                   panelWindow.Show();
                                   Main.MsgBar.ForceClose();
                               };
