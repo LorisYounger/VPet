@@ -1,5 +1,6 @@
 ﻿using LinePutScript.Converter;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 
@@ -77,6 +78,14 @@ namespace VPet_Simulator.Core
             public override string Convert(dynamic value) => value;
 
             public override dynamic ConvertBack(string info) => info.ToLower();
+        }
+
+        /// <summary>
+        /// 获取内存使用情况(MB)
+        /// </summary>
+        public static double MemoryUsage()
+        {
+            return Process.GetCurrentProcess().WorkingSet64 / 1024.0 / 1024.0;
         }
     }
 }

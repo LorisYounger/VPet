@@ -47,10 +47,6 @@ namespace VPet_Simulator.Core
         /// </summary>
         public string Path;
         private GraphCore GraphCore;
-        /// <summary>
-        /// 反正一次性生成太多导致闪退
-        /// </summary>
-        public static int NowLoading = 0;
 
         public bool IsFail { get; set; } = false;
 
@@ -109,15 +105,15 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 最大同时加载数
         /// </summary>
-        public static int MaxLoadNumber = 30;
+        public static int MaxLoadMemory = 2000;
+        public static int BaseMemory = 1000;
 
         private async void startup(string path, FileInfo[] paths)
         {
-            while (NowLoading > MaxLoadNumber)
+            while (Function.MemoryUsage() > BaseMemory + MaxLoadMemory)
             {
                 await Task.Delay(100);
             }
-            Interlocked.Increment(ref NowLoading);
             try
             {
                 //新方法:加载大图片
@@ -197,10 +193,6 @@ namespace VPet_Simulator.Core
             {
                 IsFail = true;
                 FailMessage = $"--PNGAnimation--{GraphInfo}--\nPath: {path}\n{e.Message}";
-            }
-            finally
-            {
-                Interlocked.Decrement(ref NowLoading);
             }
         }
 
