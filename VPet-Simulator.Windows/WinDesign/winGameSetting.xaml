@@ -695,10 +695,12 @@
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
+                                <RowDefinition Height="35" />
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 长按间隔}" />
                             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 桌宠名字}" />
-                            <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 主人生日}" />
+                            <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 主人名字}" />
+                            <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{ll:Str 主人生日}" />
                             <TextBox x:Name="TextBoxPetName" Grid.Row="1" Grid.Column="2" FontSize="16"
                                     Style="{DynamicResource StandardTextBoxStyle}"
                                     TextChanged="TextBoxPetName_TextChanged" />
@@ -719,6 +721,12 @@
                                                                        Path=Value}}" />
                                 <!--  {Binding ElementName=PressLengthSlider,Path=Value,StringFormat={}{0:f2} 秒}  -->
                             </Grid>
+                            <TextBox x:Name="TextBoxHostName" Grid.Row="2" Grid.Column="2" FontSize="16"
+                                    Style="{DynamicResource StandardTextBoxStyle}" pu:ShadowHelper.BlurRadius="15" />
+                            <pu:DateTimePicker x:Name="TextBoxHostBDay" Grid.Row="3" Grid.Column="2" FontSize="16"
+                                    BorderBrush="{DynamicResource DARKPrimary}" pu:ShadowHelper.Opacity="0.5"
+                                    BorderThickness="2" Height="30" Background="{DynamicResource DARKPrimaryText}"
+                                    Padding="7,0,15,0" CornerRadius="5" />
                         </Grid>
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">

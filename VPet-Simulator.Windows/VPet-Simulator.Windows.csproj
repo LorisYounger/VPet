@@ -232,7 +232,7 @@
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Panuon.WPF" Version="1.1.2.2" />
-		<PackageReference Include="Panuon.WPF.UI" Version="1.2.4.8" />
+		<PackageReference Include="Panuon.WPF.UI" Version="1.2.4.9" />
 		<PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
 	</ItemGroup>
 	<ItemGroup>

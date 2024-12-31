@@ -47,19 +47,23 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        private void Statistics_StatisticChanged(Interface.Statistics sender, string name, SetObject value)
+        private void Statistics_StatisticChanged(Statistics sender, string name, SetObject value)
         {
             Dispatcher.Invoke(() =>
             {
-                var v = StatList.FirstOrDefault(x => x.StatId == name);
-                if (v != null)
+                try
                 {
-                    v.StatCount = value.GetDouble();
+                    var v = StatList.FirstOrDefault(x => x.StatId == name);
+                    if (v != null)
+                    {
+                        v.StatCount = value.GetDouble();
+                    }
+                    else
+                    {
+                        StatList.Add(new StatInfo(name, value.GetDouble()));
+                    }
                 }
-                else
-                {
-                    StatList.Add(new StatInfo(name, value.GetDouble()));
-                }
+                catch { }
             });
         }
 
@@ -117,85 +121,6 @@ namespace VPet_Simulator.Windows
             }
             public event PropertyChangedEventHandler PropertyChanged;
         }
-
-        private void PgbExperience_GeneratingPercentText(
-            object sender,
-            GeneratingPercentTextRoutedEventArgs e
-        )
-        {
-            e.Text = $"{e.Value * 10} / {100 * 10}";
-        }
-
-        private void PgbStrength_GeneratingPercentText(
-            object sender,
-            GeneratingPercentTextRoutedEventArgs e
-        )
-        {
-            e.Text = $"{e.Value} / 100";
-        }
-
-        private void PgbSpirit_GeneratingPercentText(
-            object sender,
-            GeneratingPercentTextRoutedEventArgs e
-        )
-        {
-            var progressBar = (ProgressBar)sender;
-            progressBar.Foreground = GetForeground(e.Value);
-            progressBar.BorderBrush = GetForeground(e.Value);
-            e.Text = $"{e.Value} / 100";
-        }
-
-        private void PgbHunger_GeneratingPercentText(
-            object sender,
-            GeneratingPercentTextRoutedEventArgs e
-        )
-        {
-            var progressBar = (ProgressBar)sender;
-            progressBar.Foreground = GetForeground(e.Value);
-            progressBar.BorderBrush = GetForeground(e.Value);
-            e.Text = $"{e.Value} / 100";
-        }
-
-        private void PgbThirsty_GeneratingPercentText(
-            object sender,
-            GeneratingPercentTextRoutedEventArgs e
-        )
-        {
-            var progressBar = (ProgressBar)sender;
-            progressBar.Foreground = GetForeground(e.Value);
-            progressBar.BorderBrush = GetForeground(e.Value);
-            e.Text = $"{e.Value} / 100";
-            if (e.Value <= 20)
-            {
-                txtHearth.Visibility = Visibility.Visible;
-                stkHearth.Visibility = Visibility.Visible;
-            }
-        }
-
-        private void PgbHearth_GeneratingPercentText(
-            object sender,
-            GeneratingPercentTextRoutedEventArgs e
-        )
-        {
-            e.Text = $"{e.Value} / 100";
-        }
-
-        private Brush GetForeground(double value)
-        {
-            if (value >= 80)
-            {
-                return FindResource("SuccessProgressBarForeground") as Brush;
-            }
-            else if (value >= 50)
-            {
-                return FindResource("WarningProgressBarForeground") as Brush;
-            }
-            else
-            {
-                return FindResource("DangerProgressBarForeground") as Brush;
-            }
-        }
-
         private void TextBox_Search_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (sender is not TextBox textBox)
@@ -547,7 +472,7 @@ namespace VPet_Simulator.Windows
                 var result = await leaderboard?.ReplaceScore((int)(autobuytimesph * 10000));
                 var length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
-                    autobuytimesphrank =  1 - (result.Value.NewGlobalRank - 1) / length;
+                    autobuytimesphrank = 1 - (result.Value.NewGlobalRank - 1) / length;
                 else
                     autobuytimesphrank = 0;
             }
@@ -744,5 +669,7 @@ namespace VPet_Simulator.Windows
                 return (px * 2.54 / 9600000).ToString("f1");
             }
         }
+
+      
     }
 }

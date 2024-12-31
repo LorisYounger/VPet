@@ -1592,6 +1592,22 @@ namespace VPet_Simulator.Windows
                     GameSavesData[(gdat)"birthday"] = DateTime.Now.Date;
             }
 
+            //补充数据信息
+            if (string.IsNullOrEmpty(GameSavesData.GameSave.HostName))
+            {
+                if (IsSteamUser)
+                    GameSavesData.GameSave.HostName = SteamClient.Name;
+                else
+                    GameSavesData.GameSave.HostName = Environment.UserName;
+                GameSavesData.GameSave.HostName += "主人".Translate();
+            }
+
+            if (GameSavesData.Data.FindLine("HostBDay") == null)
+            {
+                GameSavesData[(gdat)"HostBDay"] = GameSavesData[(gdat)"birthday"];
+            }
+
+
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
 
             if (GameSavesData.Statistics[(gdbe)"stat_bb_food"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_drink"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_drug"] < 0

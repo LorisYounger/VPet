@@ -90,6 +90,11 @@ namespace VPet_Simulator.Windows
             numBackupSaveMaxNum.Value = mw.Set.BackupSaveMaxNum;
             combCalFunState.SelectedIndex = (int)mw.Set.CalFunState;
             combCalFunState.IsEnabled = !mw.Set.EnableFunction;
+
+            TextBoxHostBDay.MaxDateTime = DateTime.Now;
+            TextBoxHostBDay.SelectedDateTime = mw.GameSavesData.GetDateTime("HostBDay", mw.GameSavesData[(gdat)"birthday"]);
+            TextBoxHostName.Text = mw.GameSavesData.GameSave.HostName;
+
             CalTimeInteraction();
 
             swAutoCal.IsChecked = !mw.Set["gameconfig"].GetBool("noAutoCal");
