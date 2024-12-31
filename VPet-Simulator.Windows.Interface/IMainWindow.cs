@@ -249,6 +249,11 @@ namespace VPet_Simulator.Windows.Interface
         event Action<Food> Event_TakeItem;
 
         /// <summary>
+        /// 事件:新的一天
+        /// </summary>
+        event Action Event_NewDay;
+
+        /// <summary>
         /// 动态资源, 用于给插件MOD存储共享的数据
         /// </summary>
         Dictionary<string, object> DynamicResources { get; }

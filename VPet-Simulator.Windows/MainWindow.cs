@@ -2107,7 +2107,7 @@ namespace VPet_Simulator.Windows
                   {//年度报告提醒
                       Task.Run(() =>
                       {
-                          Thread.Sleep(120000);
+                          Thread.Sleep(120000 * (1 + Function.Rnd.Next()));
                           Set["v"][(gint)"rank"] = DateTime.Now.Year;
                           var btn = Dispatcher.Invoke(() =>
                           {
@@ -2131,6 +2131,45 @@ namespace VPet_Simulator.Windows
                           Main.Say("哼哼~主人，我的考试成绩出炉了哦，快来和我一起看我的成绩单喵".Translate(), btn, "shining");
                       });
                   }
+                  //生日设置提醒
+                  if (GameSavesData.Data.FindLine("HostBDay") == null)
+                  {
+                      Task.Run(() =>
+                      {
+                          Thread.Sleep(100000 * (1 + Function.Rnd.Next()));
+                          Set["v"][(gint)"rank"] = DateTime.Now.Year;
+                          var btn = Dispatcher.Invoke(() =>
+                          {
+                              var button = new System.Windows.Controls.Button()
+                              {
+                                  Content = "设置".Translate(),
+                                  FontSize = 20,
+                                  HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+                                  Background = Function.ResourcesBrush(Function.BrushType.PrimaryDark),
+                                  Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
+                              };
+                              button.Click += (x, y) =>
+                              {
+                                  ShowSetting(2);
+                              };
+                              return button;
+                          });
+                          Main.Say("不要忘记设置生日时间哦 {0}，我会偷偷给你准备礼物的。".Translate(GameSavesData.GameSave.HostName), btn, "shining");
+                      });
+                  }
+                  else
+                  {
+                      var bdt = GameSavesData.GetDateTime("HostBDay");
+                      if (DateTime.Now.Month == bdt.Month && DateTime.Now.Day == bdt.Day)
+                      {
+                          Task.Run(() =>
+                          {
+                              Thread.Sleep(100000 * (1 + Function.Rnd.Next()));
+                              HostBDay();
+                          });
+                      }
+                  }
+
 #if BDAY
                   if (DateTime.Now < new DateTime(2024, 8, 22))
                   {
@@ -2187,11 +2226,20 @@ namespace VPet_Simulator.Windows
                       });
                   }
 #endif
+                  newday = DateTime.Now.Day;
+                  Main.TimeHandle += NewDayHandle;
+                  Event_NewDay += () =>
+                  {
+                      var bdt = GameSavesData.GetDateTime("HostBDay");
+                      if (DateTime.Now.Month == bdt.Month && DateTime.Now.Day == bdt.Day)
+                      {
+                          HostBDay();
+                      }
+                  };
 #if NewYear
                 //仅新年功能
                 if (DateTime.Now < new DateTime(2024, 2, 18))
-                {
-                    Main.TimeHandle += NewYearHandle;
+                {                   
                     Task.Run(() =>
                     {
                         Thread.Sleep(5000);
@@ -2302,22 +2350,46 @@ namespace VPet_Simulator.Windows
             }
         }
 
-
-#if NewYear
-        int newyearsay = 0;
-        private void NewYearHandle(Main main)
+        public void HostBDay()
         {
-            if (DateTime.Now.Hour == 0 && newyearsay != DateTime.Now.Day)
-            {//跨时间
-                NewYearSay();
+            var petloader = Pets.Find(x => x.Name == Set.PetGraph);
+            petloader ??= Pets[0];
+
+            string sbv = "Special_Birthday_Voice_" + petloader.Name;
+            string sbv_trans = sbv.Translate(GameSavesData.GameSave.HostName);
+            if (sbv == sbv_trans)
+            {
+                Main.Say("今天是{0}的生日！祝{0}生日快乐！".Translate(GameSavesData.GameSave.HostName), "bday");
+            }
+            else
+            {
+                Main.Say(sbv_trans, "bday");
+                Dispatcher.Invoke(() =>
+                {
+                    var panelWindow = new winCharacterPanel(this);
+                    panelWindow.MainTab.SelectedIndex = 2;
+                    panelWindow.Show();
+                });
             }
         }
+
+
+        int newday = 0;
+        private void NewDayHandle(Main main)
+        {
+            if (DateTime.Now.Hour == 0 && newday != DateTime.Now.Day)
+            {//跨时间
+                newday = DateTime.Now.Day;
+                Event_NewDay?.Invoke();
+            }
+        }
+        public event Action Event_NewDay;
+#if NewYear
         /// <summary>
         /// 新年说
         /// </summary>
         private void NewYearSay()
         {
-            newyearsay = DateTime.Now.Day;
             string sayny;
             switch (newyearsay)
             {
