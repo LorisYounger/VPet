@@ -24,7 +24,7 @@ namespace VPet_Simulator.Windows
             InitializeComponent();
             mw = mainw;
             Title = "反馈中心".Translate() + ' ' + mw.PrefixSave;
-            save = mw.Core.Save.ToLine().ToString() + mw.Set.ToString();
+            save = mw?.Core?.Save?.ToLine().ToString() + mw.Set?.ToString();
             if (errmsg != null)
             {
                 tType.SelectedIndex = 0;
@@ -125,17 +125,24 @@ namespace VPet_Simulator.Windows
         {
             if (tType.SelectedIndex == 5)
             {
-                StringBuilder sb = new StringBuilder();
-                foreach (var v in LocalizeCore.StoreTranslationList)
+                try
                 {
-                    sb.AppendLine(v.Replace("\n", @"\n").Replace("\r", @"\r"));
+                    StringBuilder sb = new StringBuilder();
+                    foreach (var v in LocalizeCore.StoreTranslationList)
+                    {
+                        sb.AppendLine(v.Replace("\n", @"\n").Replace("\r", @"\r"));
+                    }
+                    tContent.Text = sb.ToString();
+                    if (string.IsNullOrEmpty(tContent.Text))
+                    {
+                        tContent.Text = "没有需要提交的翻译的内容".Translate();
+                    }
+                    tUpload.IsChecked = false;
                 }
-                tContent.Text = sb.ToString();
-                if (string.IsNullOrEmpty(tContent.Text))
+                catch
                 {
-                    tContent.Text = "没有需要提交的翻译的内容".Translate();
+
                 }
-                tUpload.IsChecked = false;
             }
         }
 

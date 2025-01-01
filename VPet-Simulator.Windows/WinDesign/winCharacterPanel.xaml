@@ -348,7 +348,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="tb_bdiy" Grid.Column="0" Margin="5,2" FontSize="16"
+                    <TextBox x:Name="tb_bdiy" Grid.Column="0" Margin="10,2" FontSize="16"
                             Style="{DynamicResource StandardTextBoxStyle}" AcceptsReturn="True" Text="P猫 祝 P猫 生日快乐"
                             pu:TextBoxHelper.Watermark="{ll:Str 填写自定义的祝福词吧}" />
                     <pu:DateTimePicker x:Name="dtp_bdiy" FontSize="16" BorderBrush="{DynamicResource DARKPrimary}"
@@ -357,7 +357,7 @@
                             SelectedDateTimeChanged="dtp_bdiy_SelectedDateTimeChanged" />
                     <Button x:Name="btn_b_headimage" Grid.Column="2" pu:ButtonHelper.CornerRadius="4"
                             Background="{DynamicResource SecondaryLight}" BorderBrush="{DynamicResource SecondaryDark}"
-                            BorderThickness="2" Content="{ll:Str 选择头像图片}" Grid.Row="2" Margin="5,2,5,2"
+                            BorderThickness="2" Content="{ll:Str 选择头像图片}" Grid.Row="2" Margin="5,2"
                             Click="btn_b_headimage_Click" />
                 </Grid>
                 <Border Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
