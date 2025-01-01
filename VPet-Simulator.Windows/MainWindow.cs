@@ -342,16 +342,17 @@ namespace VPet_Simulator.Windows
                     Main.ToolBar.Visibility = Visibility.Collapsed;
                     RunDIY(sub.Info);
                 });
-            try
-            {
-                //加载游戏创意工坊插件
-                foreach (MainPlugin mp in Plugins)
+
+            //加载游戏创意工坊插件
+            foreach (MainPlugin mp in Plugins)
+                try
+                {
                     mp.LoadDIY();
-            }
-            catch (Exception e)
-            {
-                MessageBoxX.Show(e.ToString(), "由于插件引起的自定按钮加载错误".Translate());
-            }
+                }
+                catch (Exception e)
+                {
+                    MessageBoxX.Show(e.ToString(), "由于插件引起的自定按钮加载错误".Translate() + '-' + mp.PluginName);
+                }
         }
         /// <summary>
         /// 加载帮助器
@@ -1804,16 +1805,17 @@ namespace VPet_Simulator.Windows
                   Main.FunctionSpendHandle += lowStrength;
                   Main.WorkTimer.E_FinishWork += WorkTimer_E_FinishWork;
                   Main.ToolBar.MenuMODConfig.Items.Add(m);
-                  try
-                  {
-                      //加载游戏创意工坊插件
-                      foreach (MainPlugin mp in Plugins)
+
+                  //加载游戏创意工坊插件
+                  foreach (MainPlugin mp in Plugins)
+                      try
+                      {
                           mp.LoadPlugin();
-                  }
-                  catch (Exception e)
-                  {
-                      Task.Run(() => MessageBox.Show(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString()));
-                  }
+                      }
+                      catch (Exception e)
+                      {
+                          Task.Run(() => MessageBox.Show(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName));
+                      }
                   Foods.ForEach(item => item.LoadImageSource(this));
                   Photos.ForEach(item => item.LoadUserInfo(this));
                   Main.TimeHandle += Handle_Music;
