@@ -89,9 +89,16 @@ namespace VPet_Simulator.Core
         }
         public static double MemoryAvailable()
         {
-            using (PerformanceCounter pc = new PerformanceCounter("Memory", "Available Bytes"))
+            try
             {
-                return pc.NextValue() / 1024.0 / 1024.0;
+                using (PerformanceCounter pc = new PerformanceCounter("Memory", "Available Bytes"))
+                {
+                    return pc.NextValue() / 1024.0 / 1024.0;
+                }
+            }
+            catch
+            {
+                return 4000;
             }
         }
     }
