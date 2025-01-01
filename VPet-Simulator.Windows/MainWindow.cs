@@ -2107,7 +2107,7 @@ namespace VPet_Simulator.Windows
                   {//年度报告提醒
                       Task.Run(() =>
                       {
-                          Thread.Sleep(120000 * (1 + Function.Rnd.Next()));
+                          Thread.Sleep(Function.Rnd.Next(200000, 400000));
                           Set["v"][(gint)"rank"] = DateTime.Now.Year;
                           var btn = Dispatcher.Invoke(() =>
                           {
@@ -2136,7 +2136,7 @@ namespace VPet_Simulator.Windows
                   {
                       Task.Run(() =>
                       {
-                          //Thread.Sleep(100000 * (1 + Function.Rnd.Next()));
+                          Thread.Sleep(Function.Rnd.Next(100000, 200000));
                           Set["v"][(gint)"rank"] = DateTime.Now.Year;
                           var btn = Dispatcher.Invoke(() =>
                           {
@@ -2164,7 +2164,7 @@ namespace VPet_Simulator.Windows
                       {
                           Task.Run(() =>
                           {
-                              Thread.Sleep(100000 * (1 + Function.Rnd.Next()));
+                              Thread.Sleep(Function.Rnd.Next(100000, 200000));
                               HostBDay();
                           });
                       }
