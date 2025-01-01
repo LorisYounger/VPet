@@ -2359,7 +2359,7 @@ namespace VPet_Simulator.Windows
             string sbv_trans = sbv.Translate(GameSavesData.GameSave.HostName);
             if (sbv == sbv_trans)
             {
-                Main.Say("今天是{0}的生日！祝{0}生日快乐！".Translate(GameSavesData.GameSave.HostName), "bday");
+                Main.Say("今天是{0}的生日！祝{0}生日快乐！".Translate(GameSavesData.GameSave.HostName), "bday", true);
             }
             else
             {
