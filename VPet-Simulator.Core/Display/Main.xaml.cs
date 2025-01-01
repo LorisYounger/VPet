@@ -42,10 +42,6 @@ namespace VPet_Simulator.Core
         /// </summary>
         public event Action<Main> TimeUIHandle;
         /// <summary>
-        /// 游戏成功启动后会调用该方法
-        /// </summary>
-        public event Action StartedHandle;
-        /// <summary>
         /// 如果不开启功能模式,默认状态设置
         /// </summary>
         public IGameSave.ModeType NoFunctionMOD = IGameSave.ModeType.Happy;
@@ -179,7 +175,6 @@ namespace VPet_Simulator.Core
                     DisplayNomal();
                 });
             });
-            StartedHandle?.Invoke();
         }
 
 

@@ -2093,7 +2093,7 @@ namespace VPet_Simulator.Windows
                   }
                   if (!Set["SingleTips"].GetBool("helloworld"))
                   {
-                      Main.StartedHandle += () => Task.Run(() =>
+                      Task.Run(() =>
                       {
                           Thread.Sleep(2000);
                           Set["SingleTips"].SetBool("helloworld", true);
@@ -2105,7 +2105,7 @@ namespace VPet_Simulator.Windows
                   }
                   if (Set["v"][(gint)"rank"] != DateTime.Now.Year && GameSavesData.Statistics[(gint)"stat_total_time"] > 3600)
                   {//年度报告提醒
-                      Main.StartedHandle += () => Task.Run(() =>
+                      Task.Run(() =>
                       {
                           Thread.Sleep(120000 * (1 + Function.Rnd.Next()));
                           Set["v"][(gint)"rank"] = DateTime.Now.Year;
@@ -2134,35 +2134,35 @@ namespace VPet_Simulator.Windows
                   //生日设置提醒
                   if (GameSavesData.Data.FindLine("HostBDay") == null)
                   {
-                      Main.StartedHandle += () => Task.Run(() =>
-                        {
-                            Thread.Sleep(100000 * (1 + Function.Rnd.Next()));
-                            Set["v"][(gint)"rank"] = DateTime.Now.Year;
-                            var btn = Dispatcher.Invoke(() =>
-                            {
-                                var button = new System.Windows.Controls.Button()
-                                {
-                                    Content = "设置".Translate(),
-                                    FontSize = 20,
-                                    HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
-                                    Background = Function.ResourcesBrush(Function.BrushType.PrimaryDark),
-                                    Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
-                                };
-                                button.Click += (x, y) =>
-                                {
-                                    ShowSetting(2);
-                                };
-                                return button;
-                            });
-                            Main.Say("不要忘记设置生日时间哦 {0}，我会偷偷给你准备礼物的。".Translate(GameSavesData.GameSave.HostName), btn, "shining");
-                        });
+                      Task.Run(() =>
+                      {
+                          //Thread.Sleep(100000 * (1 + Function.Rnd.Next()));
+                          Set["v"][(gint)"rank"] = DateTime.Now.Year;
+                          var btn = Dispatcher.Invoke(() =>
+                          {
+                              var button = new System.Windows.Controls.Button()
+                              {
+                                  Content = "设置".Translate(),
+                                  FontSize = 20,
+                                  HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+                                  Background = Function.ResourcesBrush(Function.BrushType.PrimaryDark),
+                                  Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
+                              };
+                              button.Click += (x, y) =>
+                              {
+                                  ShowSetting(2);
+                              };
+                              return button;
+                          });
+                          Main.Say("不要忘记设置生日时间哦 {0}，我会偷偷给你准备礼物的。".Translate(GameSavesData.GameSave.HostName), btn, "shining");
+                      });
                   }
                   else
                   {
                       var bdt = GameSavesData.GetDateTime("HostBDay");
                       if (DateTime.Now.Month == bdt.Month && DateTime.Now.Day == bdt.Day)
                       {
-                          Main.StartedHandle += () => Task.Run(() =>
+                          Task.Run(() =>
                           {
                               Thread.Sleep(100000 * (1 + Function.Rnd.Next()));
                               HostBDay();
