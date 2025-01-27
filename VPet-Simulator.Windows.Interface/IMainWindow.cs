@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -258,7 +259,11 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         Dictionary<string, object> DynamicResources { get; }
 
-
+        /// <summary>
+        /// 生成授权码(仅用于LB相关服务验证)
+        /// </summary>
+        /// <returns></returns>
+        Task<int> GenerateAuthKey();
     }
 
 }

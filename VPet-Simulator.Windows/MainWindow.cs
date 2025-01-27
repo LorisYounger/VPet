@@ -5,6 +5,7 @@ using NAudio.CoreAudioApi;
 using Panuon.WPF.UI;
 using Panuon.WPF.UI.Configurations;
 using Steamworks;
+using Steamworks.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -30,6 +31,7 @@ using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Windows.Interface.ExtensionFunction;
 using static VPet_Simulator.Windows.Interface.Food;
 using Application = System.Windows.Application;
+using Color = System.Windows.Media.Color;
 using ContextMenu = System.Windows.Forms.ContextMenuStrip;
 using Image = System.Windows.Controls.Image;
 using Line = LinePutScript.Line;
@@ -2551,6 +2553,60 @@ namespace VPet_Simulator.Windows
             Dispatcher.Invoke(() =>
             NoticeBox.Show(string.Concat(sb.ToString().AsSpan(2), "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate()
             , Panuon.WPF.UI.MessageBoxIcon.Info, true, 5000));
+        }
+        static readonly DateTime StartDate = new(2023, 8, 14, 0, 0, 0, DateTimeKind.Utc);
+        static int authheycache;
+        static DateTime GetDateFromAuthKey(int authKey)
+        {
+            // 从验证键中解析出小时数
+            int hoursSince2020 = authKey / 10000;
+
+            // 计算日期和时间
+            DateTime date = StartDate.AddHours(hoursSince2020);
+
+            return date;
+        }
+        public async Task<int> GenerateAuthKey()
+        {
+            if(!IsSteamUser)
+                return 0;
+
+            bool genck = false;
+            long steamId = (long)SteamClient.SteamId.Value;
+        gencheck:
+            if (authheycache != 0)
+            {
+                DateTime dt = GetDateFromAuthKey(authheycache);
+                if (!(dt > DateTime.UtcNow.AddDays(1) || dt < DateTime.UtcNow.AddHours(-2)))
+                {
+                    return authheycache;
+                }
+            }
+            Leaderboard? leaderboard = await SteamUserStats.FindLeaderboardAsync("chatgpt_auth");
+            if (!leaderboard.HasValue)
+            {
+                return 0;
+            }
+            else
+            {
+                var lb = leaderboard.Value;
+                LeaderboardEntry[] key = await lb.GetScoresAroundUserAsync(0, 0);
+                if (key == null || key.Length == 0 || genck)
+                {
+                    int hoursSince2020 = (int)(DateTime.UtcNow - StartDate).TotalHours;
+                    int lastFourDigits = (int)(steamId % 10000);
+                    authheycache = hoursSince2020 * 10000 + lastFourDigits;
+                    await leaderboard?.ReplaceScore(authheycache);
+                    return authheycache;
+                }
+                else
+                {
+                    authheycache = key.First().Score;
+                    genck = true;
+                    goto gencheck;
+                }
+
+            }
         }
     }
 }

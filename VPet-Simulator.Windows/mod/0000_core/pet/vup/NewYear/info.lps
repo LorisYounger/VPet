@@ -1,0 +1,5 @@
+/// PNGAnimation#newyear:|path#Happy:|mode#Happy:|graph#StartUP:|
+/// PNGAnimation#newyear:|path#Nomal:|mode#Nomal:|graph#StartUP:|
+PNGAnimation#newyearidel:|path#IDELH:|mode#Happy:|graph#Idel:|animat#single:|
+PNGAnimation#newyearidel:|path#IDELN:|mode#Nomal:|graph#Idel:|animat#single:|
+PNGAnimation#newyearidel:|path#IDELPC:|mode#PoorCondition:|graph#Idel:|animat#single:|
