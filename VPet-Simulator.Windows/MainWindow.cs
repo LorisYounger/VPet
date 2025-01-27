@@ -844,18 +844,18 @@ namespace VPet_Simulator.Windows
             {
                 tmp.GameSave.Exp = 1000000;
                 tmp.Data[(gbol)"round"] = true;
-                Dispatcher.Invoke(() => MessageBoxX.Show("检测到经验值超过 9,223,372,036 导致算数溢出\n已经自动回正".Translate(), "数据溢出警告".Translate()));
+                Dispatcher.Invoke(() => NoticeBox.Show("检测到经验值超过 9,223,372,036 导致算数溢出\n已经自动回正".Translate(), "数据溢出警告".Translate()));
 
             }
             if (tmp.GameSave.Money < -1000000000)
             {
                 tmp.GameSave.Money = 100000;
-                Dispatcher.Invoke(() => MessageBoxX.Show("检测到金钱超过 9,223,372,036 导致算数溢出\n已经自动回正".Translate(), "数据溢出警告".Translate()));
+                Dispatcher.Invoke(() => NoticeBox.Show("检测到金钱超过 9,223,372,036 导致算数溢出\n已经自动回正".Translate(), "数据溢出警告".Translate()));
             }
 
             if (tmp.Data[(gbol)"round"])
             {//根据游玩时间补偿数据溢出
-                Dispatcher.Invoke(() => MessageBoxX.Show("您以前遭遇过数据溢出, 已根据游戏时长自动添加进当前数值".Translate(), "数据溢出恢复".Translate()));
+                Dispatcher.Invoke(() => NoticeBox.Show("您以前遭遇过数据溢出, 已根据游戏时长自动添加进当前数值".Translate(), "数据溢出恢复".Translate()));
                 var totalhour = (int)(tmp.Statistics[(gint)"stat_total_time"] / 3600);//总计游玩时间/小时
                 if (totalhour < 500)
                 {
@@ -1808,18 +1808,14 @@ namespace VPet_Simulator.Windows
 
                   //加载游戏创意工坊插件
                   foreach (MainPlugin mp in Plugins)
-#if !DEBUG
-                      try
+                      try //不要识图用!DEBUG去掉try, 在主线程也会导致错误显示不出来的
                       {
-#endif
-                      mp.LoadPlugin();
-#if !DEBUG
+                          mp.LoadPlugin();
                       }
                       catch (Exception e)
                       {
-                          Task.Run(() => MessageBox.Show(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName));
+                          NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName);
                       }
-#endif
                   Foods.ForEach(item => item.LoadImageSource(this));
                   Photos.ForEach(item => item.LoadUserInfo(this));
                   Main.TimeHandle += Handle_Music;
@@ -2280,18 +2276,14 @@ namespace VPet_Simulator.Windows
                   }
                   //加载游戏创意工坊插件
                   foreach (MainPlugin mp in Plugins)
-#if !DEBUG
-                      try
+                      try //不要识图用!DEBUG去掉try, 在主线程也会导致错误显示不出来的
                       {
-#endif
-                      mp.GameLoaded();
-#if !DEBUG
+                          mp.GameLoaded();
                       }
                       catch (Exception e)
                       {
-                          Task.Run(() => MessageBox.Show(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName));
+                          NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName);
                       }
-#endif
               });
 
 
@@ -2438,9 +2430,9 @@ namespace VPet_Simulator.Windows
                 case 4:
                     sayny = "难忘今宵~难忘今宵~\n不论天涯与海角，\n神州万里同怀抱。\n共祝愿祖国好~祖国好~\n告别今宵~告别今宵~\n无论新友与故交，\n明年春来再相邀。\n青山在~人未老~人未老~\n共祝愿祖国好~祖国好~".Translate();
                     break;
-                //case 5:
-                //    sayny = "初八初八，放生祈福，拜谷神，今天是假期最后一天了，和主人过年很开心哦，最后～主人～您还有许多事需要处理，现在还不能休息哦～".Translate();
-                //    break;
+                    //case 5:
+                    //    sayny = "初八初八，放生祈福，拜谷神，今天是假期最后一天了，和主人过年很开心哦，最后～主人～您还有许多事需要处理，现在还不能休息哦～".Translate();
+                    //    break;
             }
             Main.SayRnd(sayny);
         }

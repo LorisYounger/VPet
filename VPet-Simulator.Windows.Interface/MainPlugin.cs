@@ -17,8 +17,9 @@
         /// MOD插件初始化
         /// </summary>
         /// <param name="mainwin">主窗体</param>
-        /// 请不要加载游戏和玩家数据,仅用作初始化
+        /// 请不要加载游戏和玩家数据,仅用作初始化. 注意:此时没有UI线程
         /// 加载数据(CORE)/游戏(SAVE),请使用 LoadPlugin
+        /// 获取/设置加载完毕的数据,请使用 GameLoaded
         public MainPlugin(IMainWindow mainwin)
         {
             //此处主窗体玩家,Core等信息均为空,请不要加载游戏和玩家数据
