@@ -200,6 +200,10 @@ namespace VPet_Simulator.Core
             /// <returns>准备好的线程</returns>
             Task Run(System.Windows.Controls.Image img, Action EndAction = null);
         }
+        public void Dispose()
+        {
+            GraphCore = null;
+        }
     }
 
 

@@ -280,5 +280,10 @@ namespace VPet_Simulator.Core
                 Task.Run(() => Animations[0].Run(FoodGrid.Food, NEWControl));
             });
         }
+        public void Dispose()
+        {
+            Animations = null;
+            GraphCore = null;
+        }
     }
 }

@@ -74,6 +74,8 @@ namespace VPet_Simulator.Core
         /// <param name="startuppath">起始目录</param>
         public static int LoadGraph(GraphCore graph, DirectoryInfo di, string startuppath)
         {
+            if(!di.Exists)
+                return 0;
             int GraphCount = 0;
             var list = di.EnumerateDirectories();
             if (File.Exists(di.FullName + @"\info.lps"))

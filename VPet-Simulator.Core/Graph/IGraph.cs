@@ -7,7 +7,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// 动画显示接口
     /// </summary>
-    public interface IGraph : IEquatable<object>
+    public interface IGraph : IEquatable<object>, IDisposable
     {
         /// <summary>
         /// 从0开始运行该动画

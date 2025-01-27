@@ -359,5 +359,11 @@ namespace VPet_Simulator.Core
                 return new Task(() => Animations[0].Run(img, Control));
             });
         }
+
+        public void Dispose()
+        {
+            Animations = null;
+            GraphCore = null;
+        }
     }
 }

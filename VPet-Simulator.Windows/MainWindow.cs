@@ -345,7 +345,7 @@ namespace VPet_Simulator.Windows
 
             //加载游戏创意工坊插件
             foreach (MainPlugin mp in Plugins)
-                try
+                try//不要识图用!DEBUG去掉try, 不在主线程导致错误显示不出来的
                 {
                     mp.LoadDIY();
                 }
@@ -908,7 +908,7 @@ namespace VPet_Simulator.Windows
                 int allcount = App.MainWindows.Count * 2 / 3;
                 foreach (var item in App.MainWindows)
                 {
-                    if (item.GameSavesData == null)
+                    if (item.GameSavesData == null || item.Main == null)
                         continue;
                     str += item.GameSavesData.GameSave.Name + ",";
                     if (item.HashCheck)
@@ -1808,7 +1808,7 @@ namespace VPet_Simulator.Windows
 
                   //加载游戏创意工坊插件
                   foreach (MainPlugin mp in Plugins)
-                      try
+                      try//不要识图用!DEBUG去掉try, 不在主线程导致错误显示不出来的
                       {
                           mp.LoadPlugin();
                       }
@@ -2239,15 +2239,15 @@ namespace VPet_Simulator.Windows
                       }
                   };
 #if NewYear
-                //仅新年功能
-                if (DateTime.Now < new DateTime(2024, 2, 18))
-                {                   
-                    Task.Run(() =>
-                    {
-                        Thread.Sleep(5000);
-                        NewYearSay();
-                    });
-                }
+                  //仅新年功能
+                  if (DateTime.Now < new DateTime(2025, 2, 5))
+                  {
+                      Task.Run(() =>
+                      {
+                          Thread.Sleep(5000);
+                          NewYearSay();
+                      });
+                  }
 #endif
                   //MOD报错
                   foreach (CoreMOD cm in CoreMODs)
@@ -2393,34 +2393,34 @@ namespace VPet_Simulator.Windows
         private void NewYearSay()
         {
             string sayny;
-            switch (newyearsay)
+            switch (newday)
             {
                 default:
-                case 9:
+                case 28:
                     sayny = "除夕除夕，燃炮祭祖，贴春联，换窗花，主人来一起吃年夜饭！一起包饺砸！{0}祝主人新年快乐！饺子饺子饺饺子！".Translate(GameSavesData.GameSave.Name);
                     break;
-                case 10:
+                case 29:
                     sayny = "初一初一，开门炮仗，主人～恭喜发财，红包拿来～".Translate();
                     break;
-                case 11:
+                case 30:
                     sayny = "初二初二，回娘家去，左手一只鸡，右手一只鸭，一起回家吧主人～".Translate();
                     break;
-                case 12:
+                case 31:
                     sayny = "初三初三，晚起早睡，不待客，过年辛苦了主人，好好休息吧～".Translate();
                     break;
-                case 13:
+                case 1:
                     sayny = "初四初四，接五路，迎灶神，吃折箩，恭迎灶神爷！绝对不是肚子饿了！".Translate();
                     break;
-                case 14:
+                case 2:
                     sayny = "初五初五，赶五穷！拿扫帚把垃圾清扫出去！把脏东西都赶出去！今日宜，清屏工作。".Translate();
                     break;
-                case 15:
+                case 3:
                     sayny = "初六初六，送穷鬼，辞旧迎新，送走旧日贫穷困苦，迎接新一年！诶诶，别赶我啊。".Translate();
                     break;
-                case 16:
+                case 4:
                     sayny = "初七初七，登高出游，戴人胜，人胜是一种头饰,又叫彩胜,华胜,从晋朝开始有剪彩为花、剪彩戴在头发上哦。主人我好看吗～".Translate();
                     break;
-                case 17:
+                case 5:
                     sayny = "初八初八，放生祈福，拜谷神，今天是假期最后一天了，和主人过年很开心哦，最后～主人～您还有许多事需要处理，现在还不能休息哦～".Translate();
                     break;
             }

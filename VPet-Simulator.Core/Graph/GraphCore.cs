@@ -2,6 +2,7 @@
 using LinePutScript.Converter;
 using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// 图像显示核心
     /// </summary>
-    public class GraphCore
+    public class GraphCore : IDisposable
     {
         /// <summary>
         /// 桌宠图形渲染的分辨率,越高图形越清晰
@@ -178,6 +179,32 @@ namespace VPet_Simulator.Core
                 //}                
             }
             return new List<IGraph>();// FindGraph(GraphType.Default, mode);
+        }
+
+        public void Dispose()
+        {
+            GraphConfig = null;
+           if(GraphsList != null)
+                foreach (var outerDict in GraphsList.Values)
+                {
+                    foreach (var innerDict in outerDict.Values)
+                    {
+                        foreach (var graph in innerDict)
+                        {
+                            graph.Dispose();
+                        }
+                        innerDict.Clear(); 
+                    }
+                    outerDict.Clear();
+                }
+            GraphsList.Clear();
+            GraphsName.Clear();
+            CommUIElements.Clear();
+            CommConfig.Clear();
+            CommConfig = null;
+            CommUIElements = null;
+            GraphsName = null;
+            GraphsList = null;
         }
 
         public Config GraphConfig;
