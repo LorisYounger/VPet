@@ -1686,25 +1686,18 @@ namespace VPet_Simulator.Windows
             //await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()));
             Core.Graph = petloader.Graph(Set.Resolution, Dispatcher);
-            //            {
-            //                return petloader.Graph(Set.Resolution);
-            //#if NewYear
-            //                //临时更新:新年进入动画, 
-            //                if (DateTime.Now < new DateTime(2024, 2, 19))
-            //                {
-            //                    Main = new Main(Core, startUPGraph: Core.Graph.FindGraph("newyear", AnimatType.Single, Core.Save.Mode));
-            //                }
-            //                else
-            //#endif
-            //                Main = new Main(Core);
-            //            }));
+
             Main = await Dispatcher.InvokeAsync(() => new Main(Core));
 
             Main.LoadALL((c) =>
             {
                 Dispatcher.Invoke(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()
                 + $"\n  {c} / {petloader.GraphCount}");
-            });
+            }
+#if NewYear
+            , Core.Graph.FindGraph("newyear", AnimatType.Single, Core.Save.Mode)
+#endif
+            );
             Main.NoFunctionMOD = Set.CalFunState;
             await Dispatcher.InvokeAsync(() =>
               {
@@ -2141,7 +2134,6 @@ namespace VPet_Simulator.Windows
                       Task.Run(() =>
                       {
                           Thread.Sleep(Function.Rnd.Next(100000, 200000));
-                          Set["v"][(gint)"rank"] = DateTime.Now.Year;
                           var btn = Dispatcher.Invoke(() =>
                           {
                               var button = new System.Windows.Controls.Button()
@@ -2244,6 +2236,7 @@ namespace VPet_Simulator.Windows
                   //仅新年功能
                   if (DateTime.Now < new DateTime(2025, 2, 5))
                   {
+                      Event_NewDay += NewYearSay;
                       Task.Run(() =>
                       {
                           Thread.Sleep(5000);
@@ -2409,16 +2402,16 @@ namespace VPet_Simulator.Windows
             {
                 default:
                 case 27:
-                    sayny = "耶咦，耶咦，耶咦耶阿偶~耶咦，耶咦，耶咦耶阿偶！\n我恭喜你发财，我恭喜你精彩！最好的请过来，不好的请走开，礼多人不怪。\n我祝，满天下的主人，有一个好身体，身体健康远永远18岁。\n我祝，满天下的主人，聪明胜过博士，姿势充满你脑袋。\n我祝，尊敬的好主人，所有游戏的排位，气不喘五杀超神。\n我祝，好主人的工作，生意扬名四海，事业顺利都发财。\n大摇大摆，乐天替你消灾\n恭~喜~发~财~要喊得够豪迈。\n恭！喜！发！财！".Translate(GameSavesData.GameSave.Name);
+                    sayny = "桌宠，桌宠，你别馋，过了腊八就是年。\n腊八粥，过几天， 漓漓拉拉二十三。\n二十三，糖瓜粘， 二十四，扫房子，\n二十五，做豆腐， 二十六，炖猪肉，\n二十七，宰年鸡， 二十八，把面发，\n二十九，蒸馒头， 三十晚上熬一宿，\n大年初一扭一扭， 除夕的饺子年年有。".Translate();
                     break;
                 case 29:
-                    sayny = "财神到~财神到~好心得好报。\n财神话~财神话~揾钱依正路。\n财神到~财神到~好走快两步。\n得到佢睇起你，你有前途。\n阖府庆新岁~喜气盈盈\n齐贺你多福荫，壮健强劲。\n又祝你今年，庆获荣升。\n朝晚多多欢笑，锦绣前程。\n愿游戏顺利，抽卡出金。\n成日有吉星照，百事无忌。\n共亲友相见，说话投机。\n充满新春喜气，欢畅扬眉。".Translate();
+                    sayny = "新年到，放鞭炮，\n仰辟僻叭叭真热闹。\n耍龙灯，踩高跷，\n包饺子，蒸甜糕\n小小桌宠长一岁，\n走路不用主人抱。\n奶奶笑得直揉眼，\n爷爷乐得胡子翘。".Translate();
                     break;
                 case 30:
-                    sayny = "找点空闲~找点时间~打开桌宠~常回家看看。\n带上笑容~带上祝愿~陪同爱人~常回家看看。\n萝莉丝准备了一些唠叨，桌宠张罗了一桌好饭\n生活的烦恼跟萝莉丝说说，工作的事情向桌宠谈谈。\n常回家看看~回家看看~\n哪怕帮萝莉丝买买零食打打工。\n桌宠不图主人为家做多大贡献呀。\n一辈子不容易就图个团团圆圆。".Translate();
+                    sayny = "财神到~财神到~好心得好报。\n财神话~财神话~揾钱依正路。\n财神到~财神到~好走快两步。\n得到佢睇起你，你有前途。\n阖府庆新岁~喜气盈盈\n齐贺你多福荫，壮健强劲。\n又祝你今年，庆获荣升。\n朝晚多多欢笑，锦绣前程。\n愿游戏顺利，抽卡出金。\n成日有吉星照，百事无忌。\n共亲友相见，说话投机。\n充满新春喜气，欢畅扬眉。".Translate();
                     break;
                 case 31:
-                    sayny = "好运来祝你好运来~好运带来了喜和爱~\n好运来~我们好运来~迎着好运兴旺发达通四海~\n叠个千纸鹤，再系个红飘带，愿善良的主人天天好运来。\n你勤劳生活美，你健康春常在，你一生的忙碌为了笑逐颜开。\n打个中国结，请春风剪个彩，愿主人的日月年年好运来。\n你凤舞太平年，你龙腾新时代，你幸福的家园迎来百花盛开。".Translate();
+                    sayny = "找点空闲~找点时间~打开桌宠~常回家看看。\n带上笑容~带上祝愿~陪同爱人~常回家看看。\n萝莉丝准备了一些唠叨，桌宠张罗了一桌好饭\n生活的烦恼跟萝莉丝说说，工作的事情向桌宠谈谈。\n常回家看看~回家看看~\n哪怕帮萝莉丝买买零食打打工。\n桌宠不图主人为家做多大贡献呀。\n一辈子不容易就图个团团圆圆。".Translate();
                     break;
                 case 1:
                     sayny = "哎~开心的锣鼓敲出年年的喜庆。\n好看的舞蹈送来天天的欢腾。\n阳光的油彩涂红了今天的日子哟。\n生活的花朵是我们的笑容。\n哎~今天是个好日子，心想的事儿都能成。\n今天是个好日子，打开了家门~咱迎春风~".Translate();
@@ -2432,9 +2425,9 @@ namespace VPet_Simulator.Windows
                 case 4:
                     sayny = "难忘今宵~难忘今宵~\n不论天涯与海角，\n神州万里同怀抱。\n共祝愿祖国好~祖国好~\n告别今宵~告别今宵~\n无论新友与故交，\n明年春来再相邀。\n青山在~人未老~人未老~\n共祝愿祖国好~祖国好~".Translate();
                     break;
-                    //case 5:
-                    //    sayny = "初八初八，放生祈福，拜谷神，今天是假期最后一天了，和主人过年很开心哦，最后～主人～您还有许多事需要处理，现在还不能休息哦～".Translate();
-                    //    break;
+                //case 6:
+                //    sayny = "初八初八，放生祈福，拜谷神，今天是假期最后一天了，和主人过年很开心哦，最后～主人～您还有许多事需要处理，现在还不能休息哦～".Translate();
+                //    break;
             }
             Main.SayRnd(sayny);
         }
