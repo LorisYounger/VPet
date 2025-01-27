@@ -1808,14 +1808,18 @@ namespace VPet_Simulator.Windows
 
                   //加载游戏创意工坊插件
                   foreach (MainPlugin mp in Plugins)
-                      try//不要识图用!DEBUG去掉try, 不在主线程导致错误显示不出来的
+#if !DEBUG
+                      try
                       {
-                          mp.LoadPlugin();
+#endif
+                      mp.LoadPlugin();
+#if !DEBUG
                       }
                       catch (Exception e)
                       {
                           Task.Run(() => MessageBox.Show(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName));
                       }
+#endif
                   Foods.ForEach(item => item.LoadImageSource(this));
                   Photos.ForEach(item => item.LoadUserInfo(this));
                   Main.TimeHandle += Handle_Music;
@@ -2274,6 +2278,20 @@ namespace VPet_Simulator.Windows
 
                       Main.ErrorMessage.Clear();
                   }
+                  //加载游戏创意工坊插件
+                  foreach (MainPlugin mp in Plugins)
+#if !DEBUG
+                      try
+                      {
+#endif
+                      mp.GameLoaded();
+#if !DEBUG
+                      }
+                      catch (Exception e)
+                      {
+                          Task.Run(() => MessageBox.Show(this, "由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName));
+                      }
+#endif
               });
 
 
@@ -2396,33 +2414,33 @@ namespace VPet_Simulator.Windows
             switch (newday)
             {
                 default:
-                case 28:
-                    sayny = "除夕除夕，燃炮祭祖，贴春联，换窗花，主人来一起吃年夜饭！一起包饺砸！{0}祝主人新年快乐！饺子饺子饺饺子！".Translate(GameSavesData.GameSave.Name);
+                case 27:
+                    sayny = "耶咦，耶咦，耶咦耶阿偶~耶咦，耶咦，耶咦耶阿偶！\n我恭喜你发财，我恭喜你精彩！最好的请过来，不好的请走开，礼多人不怪。\n我祝，满天下的主人，有一个好身体，身体健康远永远18岁。\n我祝，满天下的主人，聪明胜过博士，姿势充满你脑袋。\n我祝，尊敬的好主人，所有游戏的排位，气不喘五杀超神。\n我祝，好主人的工作，生意扬名四海，事业顺利都发财。\n大摇大摆，乐天替你消灾\n恭~喜~发~财~要喊得够豪迈。\n恭！喜！发！财！".Translate(GameSavesData.GameSave.Name);
                     break;
                 case 29:
-                    sayny = "初一初一，开门炮仗，主人～恭喜发财，红包拿来～".Translate();
+                    sayny = "财神到~财神到~好心得好报。\n财神话~财神话~揾钱依正路。\n财神到~财神到~好走快两步。\n得到佢睇起你，你有前途。\n阖府庆新岁~喜气盈盈\n齐贺你多福荫，壮健强劲。\n又祝你今年，庆获荣升。\n朝晚多多欢笑，锦绣前程。\n愿游戏顺利，抽卡出金。\n成日有吉星照，百事无忌。\n共亲友相见，说话投机。\n充满新春喜气，欢畅扬眉。".Translate();
                     break;
                 case 30:
-                    sayny = "初二初二，回娘家去，左手一只鸡，右手一只鸭，一起回家吧主人～".Translate();
+                    sayny = "找点空闲~找点时间~打开桌宠~常回家看看。\n带上笑容~带上祝愿~陪同爱人~常回家看看。\n萝莉丝准备了一些唠叨，桌宠张罗了一桌好饭\n生活的烦恼跟萝莉丝说说，工作的事情向桌宠谈谈。\n常回家看看~回家看看~\n哪怕帮萝莉丝买买零食打打工。\n桌宠不图主人为家做多大贡献呀。\n一辈子不容易就图个团团圆圆。".Translate();
                     break;
                 case 31:
-                    sayny = "初三初三，晚起早睡，不待客，过年辛苦了主人，好好休息吧～".Translate();
+                    sayny = "好运来祝你好运来~好运带来了喜和爱~\n好运来~我们好运来~迎着好运兴旺发达通四海~\n叠个千纸鹤，再系个红飘带，愿善良的主人天天好运来。\n你勤劳生活美，你健康春常在，你一生的忙碌为了笑逐颜开。\n打个中国结，请春风剪个彩，愿主人的日月年年好运来。\n你凤舞太平年，你龙腾新时代，你幸福的家园迎来百花盛开。".Translate();
                     break;
                 case 1:
-                    sayny = "初四初四，接五路，迎灶神，吃折箩，恭迎灶神爷！绝对不是肚子饿了！".Translate();
+                    sayny = "哎~开心的锣鼓敲出年年的喜庆。\n好看的舞蹈送来天天的欢腾。\n阳光的油彩涂红了今天的日子哟。\n生活的花朵是我们的笑容。\n哎~今天是个好日子，心想的事儿都能成。\n今天是个好日子，打开了家门~咱迎春风~".Translate();
                     break;
                 case 2:
-                    sayny = "初五初五，赶五穷！拿扫帚把垃圾清扫出去！把脏东西都赶出去！今日宜，清屏工作。".Translate();
+                    sayny = "好运来~接著来~恭喜恭喜发大财。\n客人来~心花开~生意兴隆笑开怀。\n好运来~滚滚来~我把大红包打开。\n我的爱~让你带~歌舞疯狂跳起来。".Translate();
                     break;
                 case 3:
-                    sayny = "初六初六，送穷鬼，辞旧迎新，送走旧日贫穷困苦，迎接新一年！诶诶，别赶我啊。".Translate();
+                    sayny = "恭喜恭喜恭喜你呀~恭喜恭喜恭喜你~\n恭喜恭喜恭喜你呀~恭喜恭喜恭喜你~\n每条大街小巷，每个人的嘴里，见面第一句话，就是恭喜恭喜。\n恭喜恭喜恭喜你呀~恭喜恭喜恭喜你~\n冬天已到尽头，真是好的消息，温暖的春风，就要吹醒大地。\n恭喜恭喜恭喜你呀~恭喜恭喜恭喜你~".Translate();
                     break;
                 case 4:
-                    sayny = "初七初七，登高出游，戴人胜，人胜是一种头饰,又叫彩胜,华胜,从晋朝开始有剪彩为花、剪彩戴在头发上哦。主人我好看吗～".Translate();
+                    sayny = "难忘今宵~难忘今宵~\n不论天涯与海角，\n神州万里同怀抱。\n共祝愿祖国好~祖国好~\n告别今宵~告别今宵~\n无论新友与故交，\n明年春来再相邀。\n青山在~人未老~人未老~\n共祝愿祖国好~祖国好~".Translate();
                     break;
-                case 5:
-                    sayny = "初八初八，放生祈福，拜谷神，今天是假期最后一天了，和主人过年很开心哦，最后～主人～您还有许多事需要处理，现在还不能休息哦～".Translate();
-                    break;
+                //case 5:
+                //    sayny = "初八初八，放生祈福，拜谷神，今天是假期最后一天了，和主人过年很开心哦，最后～主人～您还有许多事需要处理，现在还不能休息哦～".Translate();
+                //    break;
             }
             Main.SayRnd(sayny);
         }

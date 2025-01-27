@@ -35,6 +35,10 @@
         /// 例:添加自己的Tick到 mw.Main.EventTimer
         /// 例:创建使用UI的桌面控件
         public virtual void LoadPlugin() { }
+        /// <summary>
+        /// 游戏加载完毕的状态. 可以实现对已加载内容的修改
+        /// </summary>
+        public virtual void GameLoaded() { }
 
         /// <summary>
         /// 游戏结束 (可以保存或清空等,不过保存有专门的Save())
