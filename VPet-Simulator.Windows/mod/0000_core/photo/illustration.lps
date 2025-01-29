@@ -28,12 +28,12 @@ photo:|zip#illustration:|path#28.png:|type#Illustration:|name#海边的萝莉丝
 photo:|zip#illustration:|path#29.png:|type#Illustration:|name#下了3天雨:|tags#CG,叶书文,风景:|desc#轻 功 水 上 漂！:|ls_stat_total_time#2500000:|
 photo:|zip#illustration:|path#30.png:|type#Illustration:|name#夏日海边:|tags#CG,叶书文,风景:|desc#大海，沙滩，烧烤，你和我:|ls_stat_total_time#3000000:|
 photo:|zip#illustration:|path#31.png:|type#Illustration:|name#下落萝莉丝:|tags#CG,叶书文,姿势:|desc#要接住我哦，主人~:|llevel#1:|llevelmax#2:|ls_stat_move_length#500000:|
-photo:|zip#illustration:|path#A.png:|type#Illustration:|name#LB社生日聚会:|tags#CG,OOZ,节日:|desc#制作组的大家一起过的生日聚会，萝莉丝吃的最多。:|ldate#04/30:|
-photo:|zip#illustration:|path#B.png:|type#Illustration:|name#萝莉丝的生日:|tags#CG,OOZ,节日:|desc#祝我生日快乐~:|ldate#08/14:|
-photo:|zip#illustration:|path#C.png:|type#Illustration:|name#万圣节的萝莉丝:|tags#CG,叶书文,节日:|desc#不给糖就捣蛋！谢谢主人~:|ldate#10/31:|
-photo:|zip#illustration:|path#D.png:|type#Illustration:|name#圣诞节的萝莉丝:|tags#CG,叶书文,节日:|desc#圣诞老萝莉丝（）:|lholiday#Christmas:|
-photo:|zip#illustration:|path#E.png:|type#Illustration:|name#中秋节的萝莉丝:|tags#CG,OOZ,节日:|desc#今人不见古时月,今月曾经照萝莉丝。:|lholiday#Mid_Autumn_Festival:|
-photo:|zip#illustration:|path#F.png:|type#Illustration:|name#2024新年萝莉丝:|tags#CG,OOZ,节日:|desc#祝主人新年快乐！饺子饺子饺饺子！:|lholiday#New_Years_Day:|
-photo:|zip#illustration:|path#G.png:|type#Illustration:|name#2025新年快乐:|tags#CG,OOZ,节日:|desc#萝莉丝祝您蛇行大运:|ldate#01/01:|
+photo:|zip#illustration:|path#A.png:|type#Illustration:|name#LB社生日聚会:|tags#CG,OOZ,节日:|desc#制作组的大家一起过的生日聚会，萝莉丝吃的最多。:|ldate#04/30:|DateOffset#7:|
+photo:|zip#illustration:|path#B.png:|type#Illustration:|name#萝莉丝的生日:|tags#CG,OOZ,节日:|desc#祝我生日快乐~:|ldate#08/14:|DateOffset#7:|
+photo:|zip#illustration:|path#C.png:|type#Illustration:|name#万圣节的萝莉丝:|tags#CG,叶书文,节日:|desc#不给糖就捣蛋！谢谢主人~:|ldate#10/31:|DateOffset#7:|
+photo:|zip#illustration:|path#D.png:|type#Illustration:|name#圣诞节的萝莉丝:|tags#CG,叶书文,节日:|desc#圣诞老萝莉丝（）:|lholiday#Christmas:|DateOffset#7:|
+photo:|zip#illustration:|path#E.png:|type#Illustration:|name#中秋节的萝莉丝:|tags#CG,OOZ,节日:|desc#今人不见古时月,今月曾经照萝莉丝。:|DateOffset#7:|lholiday#Mid_Autumn_Festival:|
+photo:|zip#illustration:|path#F.png:|type#Illustration:|name#2024新年萝莉丝:|tags#CG,OOZ,节日:|desc#祝主人新年快乐！饺子饺子饺饺子！:|lholiday#Spring_Festival:|DateOffset#7:|
+photo:|zip#illustration:|path#G.png:|type#Illustration:|name#2025新年快乐:|tags#CG,OOZ,节日:|desc#萝莉丝祝您蛇行大运:|ldate#01/01:|DateOffset#7:|
 photo:|zip#illustration:|path#H.png:|type#Illustration:|name#冬日:|tags#CG,叶书文,风景:|desc#冬天已到，注意保暖。:|lsellprice#1000:|ls_stat_bb_drug#10000:|
 photo:|zip#illustration:|path#I.png:|type#Illustration:|name#稻香:|tags#CG,叶书文,风景:|desc#还记得你说家是唯一的城堡，随着稻香河流继续奔跑～:|lsellprice#5000:|ls_stat_bb_meal#50000:|

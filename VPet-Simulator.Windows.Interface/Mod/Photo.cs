@@ -260,7 +260,7 @@ public class Photo
                             return false;
                         break;
                     case HolidayType.Spring_Festival:
-                        if (!CheckDate(GetLunarDate(8, 15)))
+                        if (!CheckDate(GetLunarDate(1, 1)))
                             return false;
                         break;
                     case HolidayType.Christmas:
