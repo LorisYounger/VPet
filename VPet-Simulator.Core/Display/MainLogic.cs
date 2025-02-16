@@ -637,6 +637,10 @@ namespace VPet_Simulator.Core
                         break;
                 }
             }
+            //按「等级限制」升序排列工作
+            ws = ws.OrderBy(w => w.LevelLimit).ToList();
+            ss = ss.OrderBy(w => w.LevelLimit).ToList();
+            ps = ps.OrderBy(w => w.LevelLimit).ToList();
         }
         /// <summary>
         /// 工作检测
