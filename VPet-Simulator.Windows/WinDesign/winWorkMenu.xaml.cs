@@ -244,6 +244,7 @@ public partial class winWorkMenu : WindowX
             {
                 btnStart.IsEnabled = false;
                 btnAddAuto.IsEnabled = false;
+                tbtn_star.IsChecked = false;
                 tbGain.Text = "??";
                 tbSpeed.Text = "??";
                 tbFood.Text = "??";
