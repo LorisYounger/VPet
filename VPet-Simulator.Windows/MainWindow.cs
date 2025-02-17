@@ -1904,7 +1904,7 @@ namespace VPet_Simulator.Windows
                   DisplayGrid.Child = Main;
                   Task.Run(async () =>
                   {
-                      while (Main.IsWorking)
+                      while (!Main.IsWorking)
                       {
                           Thread.Sleep(100);
                       }
