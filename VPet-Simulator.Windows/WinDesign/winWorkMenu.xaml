@@ -369,58 +369,58 @@
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <TextBlock Margin="7,7,0,0" Text="{ll:Str '日程安排'}" />
-                                        <ScrollViewer Grid.Row="1"
-                                                IsEnabled="{Binding IsChecked, ElementName=btnStartSchedule, Converter={x:Static pu:Converters.TrueToFalseConverter} }">
-                                            <StackPanel Margin="20,7,7,7">
-                                                <ItemsControl x:Name="icSchedule"
+                                        <ScrollViewer Grid.Row="1">
+                                            <Grid IsEnabled="{Binding IsChecked, ElementName=btnStartSchedule, Converter={x:Static pu:Converters.TrueToFalseConverter}}">
+                                                <StackPanel Margin="20,7,7,7">
+                                                    <ItemsControl x:Name="icSchedule"
                                                         ItemTemplateSelector="{StaticResource ScheduleItemTemplateSelector}">
-                                                    <ItemsControl.Resources>
-                                                        <DataTemplate x:Key="WorkScheduleItem">
-                                                            <StackPanel>
-                                                                <Button Margin="-20,-5,0,-5" HorizontalAlignment="Left"
+                                                        <ItemsControl.Resources>
+                                                            <DataTemplate x:Key="WorkScheduleItem">
+                                                                <StackPanel>
+                                                                    <Button Margin="-20,-5,0,-5" HorizontalAlignment="Left"
                                                                         Visibility="{Binding IsPreviousIsRest, Converter={x:Static pu:Converters.TrueToCollapseConverter}}"
                                                                         Style="{DynamicResource IconButtonStyle}"
                                                                         ToolTip="{ll:Str 添加休息}"
                                                                         Click="btn_addRest_Click">&#xea11;</Button>
-                                                                <Border Height="90" CornerRadius="5"
+                                                                    <Border Height="90" CornerRadius="5"
                                                                         Background="{DynamicResource DARKPrimaryTrans4}">
-                                                                    <Grid>
-                                                                        <Grid.ColumnDefinitions>
-                                                                            <ColumnDefinition Width="120" />
-                                                                            <ColumnDefinition />
-                                                                            <ColumnDefinition Width="Auto" />
-                                                                        </Grid.ColumnDefinitions>
-                                                                        <StackPanel Margin="-15,0,0,0"
+                                                                        <Grid>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="120" />
+                                                                                <ColumnDefinition />
+                                                                                <ColumnDefinition Width="Auto" />
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <StackPanel Margin="-15,0,0,0"
                                                                                 HorizontalAlignment="Left"
                                                                                 VerticalAlignment="Center">
-                                                                            <Button Margin="0,0,0,0" Padding="0"
+                                                                                <Button Margin="0,0,0,0" Padding="0"
                                                                                     Style="{DynamicResource IconButtonStyle}"
                                                                                     ToolTip="{ll:Str 上移}"
                                                                                     Click="btn_scheduleUp_Click">&#xea76;</Button>
-                                                                            <Button Margin="0,0,0,0" Padding="0"
+                                                                                <Button Margin="0,0,0,0" Padding="0"
                                                                                     Style="{DynamicResource IconButtonStyle}"
                                                                                     ToolTip="{ll:Str 下移}"
                                                                                     Click="btn_scheduleDown_Click">&#xea4c;</Button>
-                                                                        </StackPanel>
-                                                                        <Image Stretch="Uniform"
+                                                                            </StackPanel>
+                                                                            <Image Stretch="Uniform"
                                                                                 Source="{Binding Image}" Margin="5" />
-                                                                        <StackPanel Grid.Column="1"
+                                                                            <StackPanel Grid.Column="1"
                                                                                 VerticalAlignment="Center">
-                                                                            <TextBlock Text="{ll:Str '工作内容'}" />
-                                                                            <TextBlock FontSize="16">
+                                                                                <TextBlock Text="{ll:Str '工作内容'}" />
+                                                                                <TextBlock FontSize="16">
                                                                                 <Run Text="{Binding WorkName}"
                                                                                         Foreground="{DynamicResource DARKPrimaryDark}" /> 
                                                                                 <Run Text="{Binding WorkLevel}"
                                                                                         Foreground="{DynamicResource DARKPrimaryLight}" />
-                                                                            </TextBlock>
-                                                                            <TextBlock Text="{ll:Str '持续时间'}" />
-                                                                            <TextBlock FontSize="16"
+                                                                                </TextBlock>
+                                                                                <TextBlock Text="{ll:Str '持续时间'}" />
+                                                                                <TextBlock FontSize="16"
                                                                                     Foreground="{DynamicResource DARKPrimary}">
                                                                                  <Run Text="{Binding WorkTime}" />
                                                                                  <Run Text="{ll:Str '分钟'}" />
-                                                                            </TextBlock>
-                                                                        </StackPanel>
-                                                                        <Button Grid.Column="2"
+                                                                                </TextBlock>
+                                                                            </StackPanel>
+                                                                            <Button Grid.Column="2"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Center"
                                                                                 ToolTip="{ll:Str '删除'}"
@@ -428,7 +428,7 @@
                                                                                 Foreground="{DynamicResource DangerBrush}"
                                                                                 FontFamily="{StaticResource RemixIcon}"
                                                                                 Click="btn_removeSchedule_Click">&#xeb97;</Button>
-                                                                        <Button Grid.Column="2" Margin="0,0,0,10"
+                                                                            <Button Grid.Column="2" Margin="0,0,0,10"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Bottom"
                                                                                 ToolTip="{ll:Str '套餐等级不足'}"
@@ -439,7 +439,7 @@
                                                                                 Click="btn_removeSchedule_Click"
                                                                                 Foreground="{DynamicResource WarningBrush}"
                                                                                 FontFamily="{StaticResource RemixIcon}" />
-                                                                        <Button Grid.Column="2" Margin="0,10,0,0"
+                                                                            <Button Grid.Column="2" Margin="0,10,0,0"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Top"
                                                                                 ToolTip="{ll:Str '当前日程进度'}"
@@ -449,56 +449,56 @@
                                                                                 Visibility="{Binding IsNowVisibility}"
                                                                                 Foreground="{DynamicResource DARKPrimary}"
                                                                                 FontFamily="{StaticResource RemixIcon}" />
-                                                                    </Grid>
-                                                                </Border>
-                                                            </StackPanel>
-                                                        </DataTemplate>
-                                                        <DataTemplate x:Key="StudyScheduleItem">
-                                                            <StackPanel>
-                                                                <Button Margin="-20,-5,0,-5" HorizontalAlignment="Left"
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                            <DataTemplate x:Key="StudyScheduleItem">
+                                                                <StackPanel>
+                                                                    <Button Margin="-20,-5,0,-5" HorizontalAlignment="Left"
                                                                         Visibility="{Binding IsPreviousIsRest, Converter={x:Static pu:Converters.TrueToCollapseConverter}}"
                                                                         Style="{DynamicResource IconButtonStyle}"
                                                                         ToolTip="{ll:Str 添加休息}"
                                                                         Click="btn_addRest_Click">&#xea11;</Button>
-                                                                <Border Height="90" CornerRadius="5"
+                                                                    <Border Height="90" CornerRadius="5"
                                                                         Background="{DynamicResource DARKPrimaryTrans4}">
-                                                                    <Grid>
-                                                                        <Grid.ColumnDefinitions>
-                                                                            <ColumnDefinition Width="120" />
-                                                                            <ColumnDefinition />
-                                                                            <ColumnDefinition Width="Auto" />
-                                                                        </Grid.ColumnDefinitions>
-                                                                        <StackPanel Margin="-15,0,0,0"
+                                                                        <Grid>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="120" />
+                                                                                <ColumnDefinition />
+                                                                                <ColumnDefinition Width="Auto" />
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <StackPanel Margin="-15,0,0,0"
                                                                                 HorizontalAlignment="Left"
                                                                                 VerticalAlignment="Center">
-                                                                            <Button Margin="0,0,0,0" Padding="0"
+                                                                                <Button Margin="0,0,0,0" Padding="0"
                                                                                     Style="{DynamicResource IconButtonStyle}"
                                                                                     ToolTip="{ll:Str 上移}"
                                                                                     Click="btn_scheduleUp_Click">&#xea76;</Button>
-                                                                            <Button Margin="0,0,0,0" Padding="0"
+                                                                                <Button Margin="0,0,0,0" Padding="0"
                                                                                     Style="{DynamicResource IconButtonStyle}"
                                                                                     ToolTip="{ll:Str 下移}"
                                                                                     Click="btn_scheduleDown_Click">&#xea4c;</Button>
-                                                                        </StackPanel>
-                                                                        <Image Stretch="Uniform"
+                                                                            </StackPanel>
+                                                                            <Image Stretch="Uniform"
                                                                                 Source="{Binding Image}" Margin="5" />
-                                                                        <StackPanel Grid.Column="1"
+                                                                            <StackPanel Grid.Column="1"
                                                                                 VerticalAlignment="Center">
-                                                                            <TextBlock Text="{ll:Str '学习内容'}" />
-                                                                            <TextBlock FontSize="16">
+                                                                                <TextBlock Text="{ll:Str '学习内容'}" />
+                                                                                <TextBlock FontSize="16">
                                                                                 <Run Text="{Binding WorkName}"
                                                                                         Foreground="{DynamicResource DARKPrimaryDark}" /> 
                                                                                 <Run Text="{Binding WorkLevel}"
                                                                                         Foreground="{DynamicResource DARKPrimaryLight}" />
-                                                                            </TextBlock>
-                                                                            <TextBlock Text="{ll:Str '持续时间'}" />
-                                                                            <TextBlock FontSize="16"
+                                                                                </TextBlock>
+                                                                                <TextBlock Text="{ll:Str '持续时间'}" />
+                                                                                <TextBlock FontSize="16"
                                                                                     Foreground="{DynamicResource DARKPrimary}">
                                                                                  <Run Text="{Binding WorkTime}" />
                                                                                  <Run Text="{ll:Str '分钟'}" />
-                                                                            </TextBlock>
-                                                                        </StackPanel>
-                                                                        <Button Grid.Column="2"
+                                                                                </TextBlock>
+                                                                            </StackPanel>
+                                                                            <Button Grid.Column="2"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Center"
                                                                                 ToolTip="{ll:Str '删除'}"
@@ -506,7 +506,7 @@
                                                                                 Foreground="{DynamicResource DangerBrush}"
                                                                                 FontFamily="{StaticResource RemixIcon}"
                                                                                 Click="btn_removeSchedule_Click">&#xeb97;</Button>
-                                                                        <Button Grid.Column="2" Margin="0,0,0,10"
+                                                                            <Button Grid.Column="2" Margin="0,0,0,10"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Bottom"
                                                                                 ToolTip="{ll:Str '套餐等级不足'}"
@@ -517,7 +517,7 @@
                                                                                 Click="btn_removeSchedule_Click"
                                                                                 Foreground="{DynamicResource WarningBrush}"
                                                                                 FontFamily="{StaticResource RemixIcon}" />
-                                                                        <Button Grid.Column="2" Margin="0,10,0,0"
+                                                                            <Button Grid.Column="2" Margin="0,10,0,0"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Top"
                                                                                 ToolTip="{ll:Str '当前日程进度'}"
@@ -527,56 +527,56 @@
                                                                                 Visibility="{Binding IsNowVisibility}"
                                                                                 Foreground="{DynamicResource DARKPrimary}"
                                                                                 FontFamily="{StaticResource RemixIcon}" />
-                                                                    </Grid>
-                                                                </Border>
-                                                            </StackPanel>
-                                                        </DataTemplate>
-                                                        <DataTemplate x:Key="PlayScheduleItem">
-                                                            <StackPanel>
-                                                                <Button Margin="-20,-5,0,-5" HorizontalAlignment="Left"
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                            <DataTemplate x:Key="PlayScheduleItem">
+                                                                <StackPanel>
+                                                                    <Button Margin="-20,-5,0,-5" HorizontalAlignment="Left"
                                                                         Visibility="{Binding IsPreviousIsRest, Converter={x:Static pu:Converters.TrueToCollapseConverter}}"
                                                                         Style="{DynamicResource IconButtonStyle}"
                                                                         ToolTip="{ll:Str 添加休息}"
                                                                         Click="btn_addRest_Click">&#xea11;</Button>
-                                                                <Border Height="90" CornerRadius="5"
+                                                                    <Border Height="90" CornerRadius="5"
                                                                         Background="{DynamicResource DARKPrimaryTrans4}">
-                                                                    <Grid>
-                                                                        <Grid.ColumnDefinitions>
-                                                                            <ColumnDefinition Width="120" />
-                                                                            <ColumnDefinition />
-                                                                            <ColumnDefinition Width="Auto" />
-                                                                        </Grid.ColumnDefinitions>
-                                                                        <StackPanel Margin="-15,0,0,0"
+                                                                        <Grid>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="120" />
+                                                                                <ColumnDefinition />
+                                                                                <ColumnDefinition Width="Auto" />
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <StackPanel Margin="-15,0,0,0"
                                                                                 HorizontalAlignment="Left"
                                                                                 VerticalAlignment="Center">
-                                                                            <Button Margin="0,0,0,0" Padding="0"
+                                                                                <Button Margin="0,0,0,0" Padding="0"
                                                                                     Style="{DynamicResource IconButtonStyle}"
                                                                                     ToolTip="{ll:Str 上移}"
                                                                                     Click="btn_scheduleUp_Click">&#xea76;</Button>
-                                                                            <Button Margin="0,0,0,0" Padding="0"
+                                                                                <Button Margin="0,0,0,0" Padding="0"
                                                                                     Style="{DynamicResource IconButtonStyle}"
                                                                                     ToolTip="{ll:Str 下移}"
                                                                                     Click="btn_scheduleDown_Click">&#xea4c;</Button>
-                                                                        </StackPanel>
-                                                                        <Image Stretch="Uniform"
+                                                                            </StackPanel>
+                                                                            <Image Stretch="Uniform"
                                                                                 Source="{Binding Image}" Margin="5" />
-                                                                        <StackPanel Grid.Column="1"
+                                                                            <StackPanel Grid.Column="1"
                                                                                 VerticalAlignment="Center">
-                                                                            <TextBlock Text="{ll:Str '玩耍内容'}" />
-                                                                            <TextBlock FontSize="16">
+                                                                                <TextBlock Text="{ll:Str '玩耍内容'}" />
+                                                                                <TextBlock FontSize="16">
                                                                                 <Run Text="{Binding WorkName}"
                                                                                         Foreground="{DynamicResource DARKPrimaryDark}" /> 
                                                                                 <Run Text="{Binding WorkLevel}"
                                                                                         Foreground="{DynamicResource DARKPrimaryLight}" />
-                                                                            </TextBlock>
-                                                                            <TextBlock Text="{ll:Str '持续时间'}" />
-                                                                            <TextBlock FontSize="16"
+                                                                                </TextBlock>
+                                                                                <TextBlock Text="{ll:Str '持续时间'}" />
+                                                                                <TextBlock FontSize="16"
                                                                                     Foreground="{DynamicResource DARKPrimary}">
                                                                                  <Run Text="{Binding WorkTime}" />
                                                                                  <Run Text="{ll:Str '分钟'}" />
-                                                                            </TextBlock>
-                                                                        </StackPanel>
-                                                                        <Button Grid.Column="2"
+                                                                                </TextBlock>
+                                                                            </StackPanel>
+                                                                            <Button Grid.Column="2"
                                                                                 HorizontalAlignment="Right"
                                                                                 ToolTip="{ll:Str '删除'}"
                                                                                 VerticalAlignment="Center"
@@ -584,7 +584,7 @@
                                                                                 Foreground="{DynamicResource DangerBrush}"
                                                                                 FontFamily="{StaticResource RemixIcon}"
                                                                                 Click="btn_removeSchedule_Click">&#xeb97;</Button>
-                                                                        <Button Grid.Column="2" Margin="0,0,0,10"
+                                                                            <Button Grid.Column="2" Margin="0,0,0,10"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Bottom"
                                                                                 ToolTip="{ll:Str '套餐等级不足'}"
@@ -595,7 +595,7 @@
                                                                                 Click="btn_removeSchedule_Click"
                                                                                 Foreground="{DynamicResource WarningBrush}"
                                                                                 FontFamily="{StaticResource RemixIcon}" />
-                                                                        <Button Grid.Column="2" Margin="0,10,0,0"
+                                                                            <Button Grid.Column="2" Margin="0,10,0,0"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Top"
                                                                                 ToolTip="{ll:Str '当前日程进度'}"
@@ -606,23 +606,23 @@
                                                                                 Foreground="{DynamicResource DARKPrimary}"
                                                                                 FontFamily="{StaticResource RemixIcon}" />
 
-                                                                    </Grid>
-                                                                </Border>
-                                                            </StackPanel>
-                                                        </DataTemplate>
-                                                        <DataTemplate x:Key="RestScheduleItem">
-                                                            <Border Margin="0,7,0,7" Height="30" CornerRadius="5"
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                            <DataTemplate x:Key="RestScheduleItem">
+                                                                <Border Margin="0,7,0,7" Height="30" CornerRadius="5"
                                                                     Padding="0,3" Background="#F1F2F3">
-                                                                <Grid>
-                                                                    <Grid.ColumnDefinitions>
-                                                                        <ColumnDefinition />
-                                                                        <ColumnDefinition Width="Auto" />
-                                                                        <ColumnDefinition Width="Auto" />
-                                                                    </Grid.ColumnDefinitions>
-                                                                    <StackPanel Orientation="Horizontal" Margin="7,0">
-                                                                        <TextBlock VerticalAlignment="Center"
+                                                                    <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition />
+                                                                            <ColumnDefinition Width="Auto" />
+                                                                            <ColumnDefinition Width="Auto" />
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <StackPanel Orientation="Horizontal" Margin="7,0">
+                                                                            <TextBlock VerticalAlignment="Center"
                                                                                 Text="{ll:Str '休息'}" />
-                                                                        <pu:NumberInput Minimum="0" Interval="1"
+                                                                            <pu:NumberInput Minimum="0" Interval="1"
                                                                                 StepFactor="5"
                                                                                 IsSnapToIntervalEnabled="True"
                                                                                 Background="Transparent"
@@ -631,40 +631,41 @@
                                                                                 FontSize="16" Padding="0"
                                                                                 Value="{Binding RestTime, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                                                 ValueChanged="NumberInput_ValueChanged">
-                                                                            <pu:NumberInput.UpDownButtonStyle>
-                                                                                <Style TargetType="RepeatButton"
+                                                                                <pu:NumberInput.UpDownButtonStyle>
+                                                                                    <Style TargetType="RepeatButton"
                                                                                         BasedOn="{StaticResource {x:Static pu:NumberInput.UpDownButtonStyleKey}}">
-                                                                                    <Setter Property="FontSize"
+                                                                                        <Setter Property="FontSize"
                                                                                             Value="10" />
-                                                                                </Style>
-                                                                            </pu:NumberInput.UpDownButtonStyle>
-                                                                        </pu:NumberInput>
-                                                                        <TextBlock VerticalAlignment="Center"
+                                                                                    </Style>
+                                                                                </pu:NumberInput.UpDownButtonStyle>
+                                                                            </pu:NumberInput>
+                                                                            <TextBlock VerticalAlignment="Center"
                                                                                 Foreground="{DynamicResource DARKPrimary}"
                                                                                 FontSize="16" Text="{ll:Str '分钟'}" />
-                                                                    </StackPanel>
-                                                                    <Button Grid.Column="2" VerticalAlignment="Center"
+                                                                        </StackPanel>
+                                                                        <Button Grid.Column="2" VerticalAlignment="Center"
                                                                             ToolTip="{ll:Str '删除'}"
                                                                             Background="Transparent" FontSize="20"
                                                                             Foreground="{DynamicResource DangerBrush}"
                                                                             FontFamily="{StaticResource RemixIcon}"
                                                                             Click="btn_removeSchedule_Click">&#xeb97;</Button>
-                                                                    <Button Grid.Column="1" VerticalAlignment="Center"
+                                                                        <Button Grid.Column="1" VerticalAlignment="Center"
                                                                             ToolTip="{ll:Str '当前日程进度'}"
                                                                             Visibility="{Binding IsNowVisibility}"
                                                                             FontWeight="Bold" FontSize="20"
                                                                             Background="Transparent" Content="&#xEC42;"
                                                                             Foreground="{DynamicResource DARKPrimary}"
                                                                             FontFamily="{StaticResource RemixIcon}" />
-                                                                </Grid>
-                                                            </Border>
-                                                        </DataTemplate>
-                                                    </ItemsControl.Resources>
-                                                </ItemsControl>
-                                                <Button Margin="-20,-5,0,-5" HorizontalAlignment="Left"
+                                                                    </Grid>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.Resources>
+                                                    </ItemsControl>
+                                                    <Button Margin="-20,-5,0,-5" HorizontalAlignment="Left"
                                                         Style="{DynamicResource IconButtonStyle}" Content="&#xea11;"
                                                         ToolTip="{ll:Str 添加休息}" Click="btn_addRest_Click" />
-                                            </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
                                         </ScrollViewer>
                                     </Grid>
                                 </Grid>
