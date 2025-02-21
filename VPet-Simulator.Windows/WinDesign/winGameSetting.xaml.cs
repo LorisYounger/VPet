@@ -1669,11 +1669,11 @@ namespace VPet_Simulator.Windows
                         newmaxlevel++;
                     }
                     mw.GameSavesData.GameSave.LevelMax = Math.Min(newmaxlevel, ogs.GameSave.LevelMax);
-                    mw.GameSavesData.GameSave.Level = Math.Min(newlevel, ogs.GameSave.Level);
+                    mw.GameSavesData.GameSave.Level = Math.Min(newlevel + (ogs.GameSave.LevelMax - newmaxlevel) * 500, ogs.GameSave.Level);
                 }
                 //同步金钱
                 //根据当前等级计算金钱
-                int newmoney = (200 * mw.GameSavesData.GameSave.Level - 100) * mw.GameSavesData.GameSave.LevelMax;
+                int newmoney = (200 * mw.GameSavesData.GameSave.Level - 100) * mw.GameSavesData.GameSave.LevelMax + 1;
                 mw.GameSavesData.GameSave.Money = Math.Min(newmoney, ogs.GameSave.Money);
                 //好感度最大值(1h=+1)
                 mw.GameSavesData.GameSave.LikabilityMax += playtime;

@@ -348,8 +348,8 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public bool StartRecordLast
         {
-            get => !this["gameconfig"].GetBool("startboot");
-            set => this["gameconfig"].SetBool("startboot", !value);
+            get => !this["startrecordlast"].GetBool("enable");
+            set => this["startrecordlast"].SetBool("enable", !value);
         }
         /// <summary>
         /// 记录上次退出位置
@@ -361,7 +361,7 @@ namespace VPet_Simulator.Windows
                 var line = FindLine("startrecordlast");
                 if (line == null)
                     return new Point(100, 100);
-                return new Point(line.GetDouble("x", 0), line.GetDouble("y", 0));
+                return new Point(line.GetDouble("x", 100), line.GetDouble("y", 100));
             }
             set
             {
