@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -251,6 +252,47 @@ namespace VPet_Simulator.Core
             else
                 Dispatcher.Invoke(() => this.Visibility = Visibility.Collapsed);
         }
+
+        // 在 Visual Tree 中查找第一个指定类型的子元素的 helper function
+        private T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            if (parent == null) return null;
+
+            int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < childrenCount; i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T typedChild)
+                    return typedChild;
+
+                T result = FindVisualChild<T>(child);
+                if (result != null)
+                    return result;
+            }
+            return null;
+        }
+
+        public void UpdateMenuNumCols()
+        {
+            // 在 Visual Tree 里寻找首个 UniformGrid
+            UniformGrid uniformGrid = FindVisualChild<UniformGrid>(MainGrid);
+            if (uniformGrid == null) return;
+
+            // Count only direct visible children
+            uniformGrid.Columns = 0;
+            int gridChildren = VisualTreeHelper.GetChildrenCount(uniformGrid);
+            for (int i = 0; i < gridChildren; i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(uniformGrid, i);
+                if (child is UIElement { Visibility: Visibility.Visible })
+                    uniformGrid.Columns++;
+            }
+
+            // 保护机制，避免 menu bug
+            if (uniformGrid.Columns < 4)
+                uniformGrid.Columns = 5;
+        }
+
         /// <summary>
         /// ToolBar显示事件
         /// </summary>
@@ -263,6 +305,7 @@ namespace VPet_Simulator.Core
                 Panel.SetZIndex(this, m.UIGrid.Children.Count);
             }
             Visibility = Visibility.Visible;
+            Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(UpdateMenuNumCols));
             if (CloseTimer.Enabled)
                 onFocus = true;
             else
