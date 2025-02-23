@@ -449,6 +449,16 @@ namespace VPet_Simulator.Windows
             set => this["gameconfig"].SetBool("hide_from_task_control", value);
         }
 
+        public bool HideMenuDiy
+        {
+            get => this["gameconfig"].GetBool("hide_menu_diy");
+            set
+            {
+                this["gameconfig"].SetBool("hide_menu_diy", value);
+                mw.LoadDIY();  // 重新加载 MenuDIY，避免被持续隐藏
+            }
+        }
+
         public bool MoveAreaDefault
         {
             get

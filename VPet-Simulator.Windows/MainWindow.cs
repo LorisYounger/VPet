@@ -354,8 +354,9 @@ namespace VPet_Simulator.Windows
 
             Main.ToolBar.MenuDIY.Visibility = Visibility.Visible;
             // 如果 MenuDIY 没有子项，则隐藏「自定」按钮
-            if (Main.ToolBar.MenuDIY.Items.Count == 0 && true)
+            if (Main.ToolBar.MenuDIY.Items.Count == 0 && Set.HideMenuDiy)
                 Main.ToolBar.MenuDIY.Visibility = Visibility.Collapsed;
+            Main.ToolBar.UpdateMenuNumCols();
         }
         /// <summary>
         /// 加载帮助器
