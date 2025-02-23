@@ -272,6 +272,9 @@ namespace VPet_Simulator.Core
             return null;
         }
 
+        /// <summary>
+        /// 調節 ToolBar 排版（按照可见选项数量）
+        /// </summary>
         public void UpdateMenuNumCols()
         {
             // 在 Visual Tree 里寻找首个 UniformGrid
