@@ -91,10 +91,17 @@ namespace VPet_Simulator.Core
         {
             try
             {
-                using (PerformanceCounter pc = new PerformanceCounter("Memory", "Available Bytes"))
-                {
-                    return pc.NextValue() / 1024.0 / 1024.0;
-                }
+                var d = DateTime.Now;
+                var info = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024.0 / 1024.0 / 3 * 2;
+                return info;
+                //这个方法居然要7秒才能拿到内存数据
+
+                //using (PerformanceCounter pc = new PerformanceCounter("Memory", "Available Bytes"))
+                //{
+                //    var v = pc.NextValue() / 1024.0 / 1024.0;
+                //    //MessageBox.Show((DateTime.Now - d).TotalSeconds.ToString());
+                //    return v;
+                //}
             }
             catch
             {
