@@ -38,8 +38,12 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void SayRnd(string text, bool force = false, string desc = null)
         {
-            Say(text, Core.Graph.FindName(GraphType.Say), force, desc);
+            Say(text, SayRndFunction(text), force, desc);
         }
+        /// <summary>
+        /// 随机表情的方法, 修改这个方法可以使用指定类型的说话表情
+        /// </summary>
+        public Func<string, string> SayRndFunction;
         /// <summary>
         /// 说话
         /// </summary>

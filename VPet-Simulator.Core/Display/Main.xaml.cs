@@ -205,6 +205,7 @@ namespace VPet_Simulator.Core
             labeldisplaytimer.Elapsed += Labledisplaytimer_Elapsed;
 
             DisplayNomal = DisplayDefault;
+            SayRndFunction = new Func<string, string>((x) => Core.Graph.FindName(GraphType.Say));
 
             if (!core.Controller.EnableFunction)
                 Core.Save.Mode = NoFunctionMOD;
