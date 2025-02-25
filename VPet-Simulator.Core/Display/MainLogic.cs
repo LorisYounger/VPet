@@ -20,6 +20,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 处理说话内容
         /// </summary>
+        [Obsolete("Use SayProcess instead")]
         public event Action<string> OnSay;
         /// <summary>
         /// 上次交互时间
@@ -45,6 +46,38 @@ namespace VPet_Simulator.Core
         /// </summary>
         public Func<string, string> SayRndFunction;
         /// <summary>
+        /// 说话处理
+        /// </summary>
+        public List<Action<SayInfo>> SayProcess = new List<Action<SayInfo>>();
+        /// <summary>
+        /// 说话信息类
+        /// </summary>
+        public class SayInfo
+        {
+            /// <summary>
+            /// 说话内容
+            /// </summary>
+            public string Text;
+            /// <summary>
+            /// 图像名
+            /// </summary>
+            public string? GraphName;
+            /// <summary>
+            /// 说话的描述
+            /// </summary>
+            public string? Desc;
+            // 消息内容
+            public UIElement MsgContent;
+            /// <summary>
+            /// 是否强制显示图像
+            /// </summary>
+            public bool Force;
+            /// <summary>
+            /// 是否已经播放了语音
+            /// </summary>
+            public bool IsGenVoice;
+        }
+        /// <summary>
         /// 说话
         /// </summary>
         /// <param name="text">说话内容</param>
@@ -56,22 +89,32 @@ namespace VPet_Simulator.Core
             Task.Run(() =>
             {
                 OnSay?.Invoke(text);
-                if (force || !string.IsNullOrWhiteSpace(graphname) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
-                    Display(graphname, AnimatType.A_Start, () =>
+                var sayinfo = new SayInfo()
+                {
+                    Text = text,
+                    GraphName = graphname,
+                    Desc = desc,
+                    Force = force,
+                    MsgContent = null
+                };
+                SayProcess.ForEach(a => a.Invoke(sayinfo));
+
+                if (sayinfo.Force || !string.IsNullOrWhiteSpace(sayinfo.GraphName) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
+                    Display(sayinfo.GraphName, AnimatType.A_Start, () =>
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            MsgBar.Show(Core.Save.Name, text, graphname, (string.IsNullOrWhiteSpace(desc) ? null :
-                                new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = HorizontalAlignment.Right }));
+                            MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                                new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                         });
-                        DisplayBLoopingForce(graphname);
+                        DisplayBLoopingForce(sayinfo.GraphName);
                     });
                 else
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        MsgBar.Show(Core.Save.Name, text, graphname, msgcontent: (string.IsNullOrWhiteSpace(desc) ? null :
-                            new TextBlock() { Text = desc, FontSize = 20, ToolTip = desc, HorizontalAlignment = HorizontalAlignment.Right }));
+                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgcontent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                            new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                     });
                 }
             });
@@ -88,20 +131,31 @@ namespace VPet_Simulator.Core
             Task.Run(() =>
             {
                 OnSay?.Invoke(text);
-                if (force || !string.IsNullOrWhiteSpace(graphname) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
-                    Display(graphname, AnimatType.A_Start, () =>
+                var sayinfo = new SayInfo()
+                {
+                    Text = text,
+                    GraphName = graphname,
+                    Desc = null,
+                    Force = force,
+                    MsgContent = msgcontent
+                };
+                SayProcess.ForEach(a => a.Invoke(sayinfo));
+                if (sayinfo.Force || !string.IsNullOrWhiteSpace(sayinfo.GraphName) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
+                    Display(sayinfo.GraphName, AnimatType.A_Start, () =>
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            MsgBar.Show(Core.Save.Name, text, graphname, msgcontent);
+                            MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                                new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                         });
-                        DisplayBLoopingForce(graphname);
+                        DisplayBLoopingForce(sayinfo.GraphName);
                     });
                 else
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        MsgBar.Show(Core.Save.Name, text, msgcontent: msgcontent);
+                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgcontent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                            new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                     });
                 }
             });

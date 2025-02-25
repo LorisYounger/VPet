@@ -2051,7 +2051,7 @@ namespace VPet_Simulator.Windows
                   //成就和统计 
                   GameSavesData.Statistics[(gint)"stat_open_times"]++;
                   Main.MoveTimer.Elapsed += MoveTimer_Elapsed;
-                  Main.OnSay += Main_OnSay;
+                  Main.SayProcess.Add(Main_OnSay);
                   Main.Event_TouchHead += Main_Event_TouchHead;
                   Main.Event_TouchBody += Main_Event_TouchBody;
 
@@ -2425,9 +2425,9 @@ namespace VPet_Simulator.Windows
                 case 4:
                     sayny = "难忘今宵~难忘今宵~\n不论天涯与海角，\n神州万里同怀抱。\n共祝愿祖国好~祖国好~\n告别今宵~告别今宵~\n无论新友与故交，\n明年春来再相邀。\n青山在~人未老~人未老~\n共祝愿祖国好~祖国好~".Translate();
                     break;
-                //case 6:
-                //    sayny = "初八初八，放生祈福，拜谷神，今天是假期最后一天了，和主人过年很开心哦，最后～主人～您还有许多事需要处理，现在还不能休息哦～".Translate();
-                //    break;
+                    //case 6:
+                    //    sayny = "初八初八，放生祈福，拜谷神，今天是假期最后一天了，和主人过年很开心哦，最后～主人～您还有许多事需要处理，现在还不能休息哦～".Translate();
+                    //    break;
             }
             Main.SayRnd(sayny);
         }
@@ -2561,7 +2561,7 @@ namespace VPet_Simulator.Windows
         }
         public async Task<int> GenerateAuthKey()
         {
-            if(!IsSteamUser)
+            if (!IsSteamUser)
                 return 0;
 
             bool genck = false;
