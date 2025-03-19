@@ -21,6 +21,7 @@ using System.Windows.Interop;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphInfo;
+using static VPet_Simulator.Core.Main;
 using static VPet_Simulator.Windows.PerformanceDesktopTransparentWindow;
 using Line = LinePutScript.Line;
 
@@ -590,7 +591,7 @@ namespace VPet_Simulator.Windows
             GameSavesData.Statistics[(gint)"stat_touch_head"]++;
         }
 
-        private void Main_OnSay(string obj)
+        private void Main_OnSay(SayInfo obj)
         {
             GameSavesData.Statistics[(gint)"stat_say_times"]++;
         }

@@ -28,6 +28,7 @@ namespace VPet_Simulator.Windows
         /// 下次刷新时间
         /// </summary>
         public DateTime RelsTime;
+        private DateTime lastAddTime;
 
         MainWindow mw;
         public TalkSelect(MainWindow mw)
@@ -48,6 +49,7 @@ namespace VPet_Simulator.Windows
             {
                 //刷新选项
                 RelsTime = DateTime.Now.AddMinutes(10);//10分钟刷新一次, 每次聊天增加5分钟
+                lastAddTime = DateTime.Now;
                 textList.Clear();
                 textSaid.Clear();
                 //随机选取选项
@@ -83,16 +85,10 @@ namespace VPet_Simulator.Windows
                 btn_Send.IsEnabled = false;
             }
             double min = (RelsTime - DateTime.Now).TotalMinutes;
-            double prograss = 1 - min / 10;
-            if (prograss > 1)
-            {
-                prograss = 1;
-            }
-            else if (prograss < 0)
-            {
-                prograss = Math.Min(1, Math.Max(0, min % 10)) / 2;
-            }
-            PrograssUsed.Value = prograss;
+            double interval = (RelsTime - lastAddTime).TotalMinutes;
+            double progress = 1 - min / interval;
+            progress = Math.Min(1, Math.Max(0, progress));
+            PrograssUsed.Value = progress;
             PrograssUsed.ToolTip = "下次刷新剩余时间: {0:f1}分钟".Translate(min);
         }
 
@@ -134,6 +130,7 @@ namespace VPet_Simulator.Windows
 
             textSaid.Add(say.Choose);
             RelsTime = RelsTime.AddMinutes(5);
+            lastAddTime = DateTime.Now;
 
             mw.Main.SayRnd(say.ConverText(mw.Main), desc: say.FoodToDescription());
             if (say.ToTags.Count > 0)
