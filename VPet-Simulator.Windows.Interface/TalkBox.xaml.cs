@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Navigation;
+using Panuon.WPF;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.GraphInfo;
 
@@ -104,19 +105,18 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 防止生成速度过快 导致缺少内容
         /// </summary>
-        public string leftText;
+        public string currentText = "";
 
         /// <summary>
         /// 有新字符时调用
         /// </summary>
-        public void update(string text)
+        public void Update(string text)
         {
             Console.Write(text);
-            leftText += text;
-            if(updateEvent != null)
+            currentText += text;
+            if(updateEvent != null && endGenerateEvent != null)
             {
-                updateEvent?.Invoke(leftText);
-                leftText = "";
+                updateEvent?.Invoke(currentText);
             }
         }
 
@@ -139,18 +139,18 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 当所有内容都生成完毕时调用
         /// </summary>
-        public async void endGenerate()
+        public async void EndGenerate()
         {
             await WaitForNotNullAsync();
-            updateEvent?.Invoke(leftText);
+            updateEvent?.Invoke(currentText);
+            currentText = "";
             endGenerateEvent?.Invoke();
-            leftText = "";
         }
         /// <summary>
         /// 注册更新事件
         /// </summary>
         /// <param name="update">更新函数</param>
-        public void registerUpdate(Action<string> update)
+        public void RegisterUpdate(Action<string> update)
         {
             updateEvent += update;
         }
@@ -158,7 +158,7 @@ namespace VPet_Simulator.Windows.Interface
         /// 注册结束事件
         /// </summary>
         /// <param name="end">结束函数</param>
-        public void registerEnd(Action end)
+        public void RegisterEnd(Action end)
         {
             endGenerateEvent += end;
         }
@@ -172,7 +172,7 @@ namespace VPet_Simulator.Windows.Interface
             updateEvent = null;
             endGenerateEvent = null;
             var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.C_End, MainPlugin.MW.Core.Save.Mode);
-            Action Next = () => {MainPlugin.MW.Main.SayRnd(registerUpdate, registerEnd,true, desc); };
+            Action Next = () => {MainPlugin.MW.Main.SayRnd(RegisterUpdate, RegisterEnd,true, desc); };
             if (think.Count > 0)
             {
                 MainPlugin.MW.Main.Display(think[Function.Rnd.Next(think.Count)], Next);
@@ -181,7 +181,6 @@ namespace VPet_Simulator.Windows.Interface
             {
                 Next();
             }
-            
         }
         
         /// <summary>
