@@ -3,6 +3,7 @@ using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -120,6 +121,10 @@ namespace VPet_Simulator.Core
         /// <param name="force">强制显示图像</param>
         public void Say(Action<Action<String>> text, Action<Action> finish,string graphname = null, bool force = false, string desc = null)
         {
+            TempText.Clear();
+            finish(updateOnSay);
+            text(updateText);
+            
             Task.Run(() =>
             {
                 var sayinfo = new SayInfoWithStream()
@@ -154,6 +159,17 @@ namespace VPet_Simulator.Core
                 }
             });
             
+        }
+        /// 旧版本支持
+        StringBuilder TempText = new StringBuilder();
+        
+        public void updateText(string text)
+        {
+            TempText .Append(text);
+        }
+        public void updateOnSay()
+        {
+            OnSay?.Invoke(TempText.ToString());
         }
         
         /// <summary>
@@ -241,6 +257,7 @@ namespace VPet_Simulator.Core
                 }
             });
         }
+        
         int labeldisplaycount = 100;
         int labeldisplayhash = 0;
         Timer labeldisplaytimer = new Timer(10)
