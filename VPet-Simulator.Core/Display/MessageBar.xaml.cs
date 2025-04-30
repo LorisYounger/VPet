@@ -212,11 +212,11 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 增加显示新词
         /// </summary>
-        /// <param name="newWord">更新的词</param>
-        public void DealWithNewWord(string newWord)
+        /// <param name="word">当前的词</param>
+        public void DealWithNewWord(string word)
         {
-            timeleft += newWord.Length;
-            Dispatcher.Invoke(() => { TText.Text += newWord; });
+            timeleft = word.Length;
+            Dispatcher.Invoke(() => { TText.Text = word; });
         }
         /// <summary>
         /// 处理流式传输结束

@@ -121,7 +121,6 @@ namespace VPet_Simulator.Core
         /// <param name="force">强制显示图像</param>
         public void Say(Action<Action<String>> text, Action<Action> finish,string graphname = null, bool force = false, string desc = null)
         {
-            TempText.Clear();
             finish(updateOnSay);
             text(updateText);
             
@@ -160,16 +159,17 @@ namespace VPet_Simulator.Core
             });
             
         }
+
         /// 旧版本支持
-        StringBuilder TempText = new StringBuilder();
+        private string TempText;
         
         public void updateText(string text)
         {
-            TempText .Append(text);
+            TempText = text;
         }
         public void updateOnSay()
         {
-            OnSay?.Invoke(TempText.ToString());
+            OnSay?.Invoke(TempText);
         }
         
         /// <summary>
