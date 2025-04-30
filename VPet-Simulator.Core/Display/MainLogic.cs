@@ -42,6 +42,13 @@ namespace VPet_Simulator.Core
             Say(text, SayRndFunction(text), force, desc);
         }
         /// <summary>
+        /// 说话,使用随机表情
+        /// </summary>
+        public void SayRnd(Action<Action<string>> text, Action<Action> finish, bool force = false, string desc = null)
+        {
+            Say(text, finish, SayRndFunction(""), force, desc); // 根据现有内容 如果SayRndFunction被自定义 可能会出现问题
+        }
+        /// <summary>
         /// 随机表情的方法, 修改这个方法可以使用指定类型的说话表情
         /// </summary>
         public Func<string, string> SayRndFunction;
@@ -49,15 +56,16 @@ namespace VPet_Simulator.Core
         /// 说话处理
         /// </summary>
         public List<Action<SayInfo>> SayProcess = new List<Action<SayInfo>>();
+
         /// <summary>
-        /// 说话信息类
+        /// 增加父类 以便适应带有流式传输的说话
         /// </summary>
-        public class SayInfo
+        public abstract class SayInfo
         {
             /// <summary>
-            /// 说话内容
+            /// 具体类型 方便还原
             /// </summary>
-            public string Text;
+            required public Type SayType;
             /// <summary>
             /// 图像名
             /// </summary>
@@ -78,6 +86,77 @@ namespace VPet_Simulator.Core
             public bool IsGenVoice;
         }
         /// <summary>
+        /// 说话信息类 原本的SayInfo
+        /// </summary>
+        public class SayInfoWithOutStream : SayInfo
+        {
+            /// <summary>
+            /// 说话内容
+            /// </summary>
+            public string Text;
+        }
+        /// <summary>
+        /// 说话信息类 带有流式传输的SayInfo
+        /// </summary>
+        public class SayInfoWithStream : SayInfo
+        {
+            /// <summary>
+            /// 说话内容注册函数
+            /// </summary>
+            public Action<Action<string>> Text;
+            /// <summary>
+            /// 生成完成事件注册函数
+            /// </summary>
+            public Action<Action> Finish;
+        }
+
+        /// <summary>
+        /// 流式传输的说话
+        /// </summary>
+        /// <param name="text">对话更新的注册函数</param>
+        /// <param name="finish">结束的注册函数</param>
+        /// <param name="graphname">图像名</param>
+        /// <param name="desc">描述</param>
+        /// <param name="force">强制显示图像</param>
+        public void Say(Action<Action<String>> text, Action<Action> finish,string graphname = null, bool force = false, string desc = null)
+        {
+            Task.Run(() =>
+            {
+                var sayinfo = new SayInfoWithStream()
+                {
+                    SayType = typeof(SayInfoWithStream),
+                    Text = text,
+                    Finish = finish,
+                    GraphName = graphname,
+                    Desc = desc,
+                    Force = force,
+                    MsgContent = null,
+                };
+                SayProcess.ForEach(a => a.Invoke(sayinfo));
+            
+                if (sayinfo.Force || !string.IsNullOrWhiteSpace(sayinfo.GraphName) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
+                    Display(sayinfo.GraphName, AnimatType.A_Start, () =>
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.Finish, sayinfo.GraphName, sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                                new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
+                        });
+                        DisplayBLoopingForce(sayinfo.GraphName);
+                    });
+                else
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.Finish, sayinfo.GraphName, msgcontent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                            new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
+                    });
+                }
+            });
+            
+        }
+        
+        /// <summary>
         /// 说话
         /// </summary>
         /// <param name="text">说话内容</param>
@@ -89,8 +168,9 @@ namespace VPet_Simulator.Core
             Task.Run(() =>
             {
                 OnSay?.Invoke(text);
-                var sayinfo = new SayInfo()
+                var sayinfo = new SayInfoWithOutStream()
                 {
+                    SayType = typeof(SayInfo),
                     Text = text,
                     GraphName = graphname,
                     Desc = desc,
@@ -131,8 +211,9 @@ namespace VPet_Simulator.Core
             Task.Run(() =>
             {
                 OnSay?.Invoke(text);
-                var sayinfo = new SayInfo()
+                var sayinfo = new SayInfoWithOutStream()
                 {
+                    SayType = typeof(SayInfo),
                     Text = text,
                     GraphName = graphname,
                     Desc = null,

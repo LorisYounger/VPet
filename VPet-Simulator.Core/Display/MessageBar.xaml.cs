@@ -21,6 +21,17 @@ namespace VPet_Simulator.Core
         /// <param name="graphname">图像名</param>
         /// <param name="msgcontent">消息框内容</param>
         void Show(string name, string text, string graphname = null, UIElement msgcontent = null);
+        
+        
+        /// <summary>
+        /// 显示消息
+        /// </summary>
+        /// <param name="name">名字</param>
+        /// <param name="text">内容</param>
+        /// <param name="graphname">图像名</param>
+        /// <param name="msgcontent">消息框内容</param>
+        /// <param name="finish">生成完成时调用</param>
+        void Show(string name,  Action<Action<string>> text,  Action<Action> finish,string graphname = null, UIElement msgcontent = null);
         /// <summary>
         /// 强制关闭
         /// </summary>
@@ -162,6 +173,82 @@ namespace VPet_Simulator.Core
             {
                 MessageBoxContent.Children.Add(msgcontent);
             }
+        }
+
+        /// <summary>
+        /// 确认是否完成 防止多次调用
+        /// </summary>
+        private bool finished;
+        /// <summary>
+        /// 流式传输模式 显示文字
+        /// </summary>
+        public void Show(string name, Action<Action<string>> text, Action<Action> finish, string graphname = null,
+            UIElement msgcontent = null)
+        {
+            if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
+            {
+                Panel.SetZIndex(this, m.UIGrid.Children.Count - 1);
+            }
+
+            MessageBoxContent.Children.Clear();
+            TText.Text = "";
+            LName.Content = name;
+            ShowTimer.Stop();
+            EndTimer.Stop();
+            CloseTimer.Stop();
+            this.Visibility = Visibility.Visible;
+            Opacity = .8;
+            graphName = graphname;
+            if (msgcontent != null)
+            {
+                MessageBoxContent.Children.Add(msgcontent);
+            }
+
+            finished = false;
+            text(DealWithNewWord);
+            finish(DealWithStreamFinish);
+        }
+
+        /// <summary>
+        /// 增加显示新词
+        /// </summary>
+        /// <param name="newWord">更新的词</param>
+        public void DealWithNewWord(string newWord)
+        {
+            timeleft += newWord.Length;
+            Dispatcher.Invoke(() => { TText.Text += newWord; });
+        }
+        /// <summary>
+        /// 处理流式传输结束
+        /// </summary>
+        public void DealWithStreamFinish()
+        { 
+            if (finished)
+            {
+                return;
+            }
+            
+            finished = true;
+            if (m.PlayingVoice)
+            {
+                if (m.windowMediaPlayerAvailable)
+                {
+                    TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                    if (ts.TotalSeconds > 2)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    if (m.soundPlayer.IsLoadCompleted)
+                    {
+                        m.PlayingVoice = false;
+                        m.soundPlayer.PlaySync();
+                    }
+                }
+            }
+            EndTimer.Start();
         }
 
         public void Border_MouseEnter(object sender, MouseEventArgs e)
