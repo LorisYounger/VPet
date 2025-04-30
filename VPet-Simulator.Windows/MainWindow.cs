@@ -1604,10 +1604,10 @@ namespace VPet_Simulator.Windows
                     GameSavesData.GameSave.HostName = Environment.UserName;
             }
 
-            if (GameSavesData.Data.FindLine("HostBDay") == null)
-            {
-                GameSavesData[(gdat)"HostBDay"] = GameSavesData[(gdat)"birthday"];
-            }
+            //if (GameSavesData.Data.FindLine("HostBDay") == null)
+            //{
+            //    GameSavesData[(gdat)"HostBDay"] = GameSavesData[(gdat)"birthday"];
+            //}
 
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
