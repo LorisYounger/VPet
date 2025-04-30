@@ -66,6 +66,7 @@ namespace VPet_Simulator.Core
         {
             if (Dispatcher.Invoke(() => Opacity) <= 0.05)
             {
+                CloseTimer.Stop();
                 Dispatcher.Invoke(() =>
                 {
                     Opacity = 1;
