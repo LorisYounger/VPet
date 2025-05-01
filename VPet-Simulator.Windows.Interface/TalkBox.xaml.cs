@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Packaging;
 using System.Reflection;
@@ -9,7 +8,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Navigation;
-using Panuon.WPF;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.GraphInfo;
 
@@ -167,7 +165,7 @@ namespace VPet_Simulator.Windows.Interface
         /// 带有流式传输的对话
         /// </summary>
         /// <param name="desc"></param>
-        public async void DisplayThinkToSayRnd(string desc = null)
+        public void DisplayThinkToSayRnd(string desc = null)
         {
             updateEvent = null;
             endGenerateEvent = null;

@@ -3,7 +3,6 @@ using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -66,7 +65,7 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 具体类型 方便还原
             /// </summary>
-            required public Type SayType;
+            public required Type SayType;
             /// <summary>
             /// 图像名
             /// </summary>
@@ -75,7 +74,7 @@ namespace VPet_Simulator.Core
             /// 说话的描述
             /// </summary>
             public string? Desc;
-            // 消息内容
+            /// 消息内容
             public UIElement MsgContent;
             /// <summary>
             /// 是否强制显示图像
@@ -521,12 +520,12 @@ namespace VPet_Simulator.Core
             {
                 return;
             }
-            else if (before == after)
+            if (before == after)
             {
                 DisplayToNomal();
                 return;
             }
-            else if (before < after)
+            if (before < after)
             {
                 Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Down), AnimatType.Single, before),
                     () => PlaySwitchAnimat((IGameSave.ModeType)(((int)before) + 1), after));
