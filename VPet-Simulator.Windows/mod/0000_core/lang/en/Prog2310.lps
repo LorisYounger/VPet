@@ -5,7 +5,10 @@
 购买次数#Purchase:|
 统计#Statistics:|
 0_feel#Mood is 0:|
-0_sd_sf#Hungry and thirsty at the same time is 0:|
+0_f_sd#Times both mood and thirst are 0:|
+autogift#Number of automatic gift purchases:|
+bb_food#Total expenditure on special commodities:|
+0_sd_sf#Times both Hungry and thirsty are 0:|
 0_strengthdrink#Thirst 0:|
 0_strengthfood#Hunger is 0:|
 100_all#Number of full states:|
