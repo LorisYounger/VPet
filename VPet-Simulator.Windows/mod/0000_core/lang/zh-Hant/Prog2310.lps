@@ -4,6 +4,7 @@
 详情面板#詳情面板:|
 购买次数#購買次數:|
 统计#統計:|
+0_f_sd#心情與口渴值同時為0的次數:|
 0_feel#心情為0的次數:|
 0_sd_sf#飽食度與口渴值同時為0的次數:|
 0_strengthdrink#口渴值為0的次數:|
@@ -11,10 +12,12 @@
 100_all#狀態全滿的次數:|
 ill_nomoney#生病且同時沒錢的次數:|
 sleep_time#睡覺時間:|
-autobuy#自動購買的次數:|
+autobuy#自動購買餐飲次數:|
+autogift#自動購買禮物次數:|
 bb_drink#飲料總計花費:|
 bb_drug_exp#從藥品總計獲得經驗值:|
 bb_drug#藥品總計花費:|
+bb_food#特殊商品總計花費:|
 bb_functional#功能性物品總計花費:|
 bb_gift#禮物總計花費:|
 bb_gift_like#從禮物總計獲得好感度:|

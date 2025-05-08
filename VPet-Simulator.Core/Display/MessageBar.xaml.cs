@@ -1,6 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -75,6 +78,7 @@ namespace VPet_Simulator.Core
         {
             if (Dispatcher.Invoke(() => Opacity) <= 0.05)
             {
+                CloseTimer.Stop();
                 Dispatcher.Invoke(() =>
                 {
                     Opacity = 1;
@@ -90,16 +94,29 @@ namespace VPet_Simulator.Core
         }
 
         List<char> outputtext;
+        StringBuilder outputtextsample = new StringBuilder();
         private void ShowTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (outputtext.Count > 0)
             {
-                var str = outputtext[0];
-                outputtext.RemoveAt(0);
-                Dispatcher.Invoke(() => { TText.Text += str; });
+                // 处理2-3个字符，平衡效果和性能
+                int batchSize = Math.Min(2, outputtext.Count);
+                string textToAdd = string.Empty;
+
+                for (int i = 0; i < batchSize; i++)
+                {
+                    textToAdd += outputtext[0];
+                    outputtext.RemoveAt(0);
+                }
+                outputtextsample.Append(textToAdd);
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    TText.Text = outputtextsample.ToString();
+                }), System.Windows.Threading.DispatcherPriority.Background);
             }
             else
             {
+                // 其余代码保持不变
                 if (m.PlayingVoice)
                 {
                     if (m.windowMediaPlayerAvailable)
@@ -116,15 +133,20 @@ namespace VPet_Simulator.Core
                     }
                     else
                     {
-                        if (m.soundPlayer.IsLoadCompleted)
+                        Dispatcher.Invoke(() =>
                         {
-                            m.PlayingVoice = false;
-                            m.soundPlayer.PlaySync();
-                        }
+                            if (m.soundPlayer.IsLoadCompleted)
+                            {
+                                m.PlayingVoice = false;
+                                m.soundPlayer.PlaySync();
+                            }
+                        });
                     }
                 }
                 ShowTimer.Stop();
                 EndTimer.Start();
+                if ((m.DisplayType.Name == graphName || m.DisplayType.Type == GraphInfo.GraphType.Say) && m.DisplayType.Animat != GraphInfo.AnimatType.C_End)
+                    m.DisplayCEndtoNomal(m.DisplayType.Name);
             }
         }
         /// <summary>
@@ -134,16 +156,14 @@ namespace VPet_Simulator.Core
         private void EndTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (--timeleft <= 0)
-            {
-                if ((m.DisplayType.Name == graphName || m.DisplayType.Type == GraphInfo.GraphType.Say) && m.DisplayType.Animat != GraphInfo.AnimatType.C_End)
-                    m.DisplayCEndtoNomal(m.DisplayType.Name);
+            {                
                 EndTimer.Stop();
                 CloseTimer.Start();
             }
         }
 
         public Timer EndTimer = new Timer() { Interval = 200 };
-        public Timer ShowTimer = new Timer() { Interval = 50 };
+        public Timer ShowTimer = new Timer() { Interval = 100 };
         public Timer CloseTimer = new Timer() { Interval = 20 };
         int timeleft;
         string graphName;
@@ -161,6 +181,7 @@ namespace VPet_Simulator.Core
             MessageBoxContent.Children.Clear();
             TText.Text = "";
             outputtext = text.ToList();
+            outputtextsample.Clear();
             LName.Content = name;
             timeleft = text.Length + 5;
             ShowTimer.Start(); EndTimer.Stop(); CloseTimer.Stop();
