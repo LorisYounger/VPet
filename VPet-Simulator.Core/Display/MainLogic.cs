@@ -2,7 +2,11 @@
 using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Net.Mime;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -39,14 +43,19 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void SayRnd(string text, bool force = false, string desc = null)
         {
-            Say(text, SayRndFunction(text), force, desc);
+            Say(text, SayRndFunction(text), force, desc);// 根据现有内容 如果SayRndFunction被自定义 可能会出现问题
         }
         /// <summary>
-        /// 说话,使用随机表情
+        /// 带有stream的说话,使用随机表情
         /// </summary>
-        public void SayRnd(Action<Action<string>> text, Action<Action> finish, bool force = false, string desc = null)
+        /// <param name="sayInfoWithStream">SayInfoWithStream Class 用于提供stream基本信息 以及基本方法</param>
+        /// <param name="overwriteGraphName">是否使用SayRndFunction加提示词覆写图像名 方便调用</param>
+        /// <param name="graphNamePrompt">给予SayRndFunction的提示词</param>
+        public void SayRnd(SayInfoWithStream sayInfoWithStream, bool overwriteGraphName = true, string graphNamePrompt = "" )
         {
-            Say(text, finish, SayRndFunction(""), force, desc); // 根据现有内容 如果SayRndFunction被自定义 可能会出现问题
+            if (overwriteGraphName) //选择是否覆写GraphName 并且可以选择是否给予一定提示
+                sayInfoWithStream.GraphName = SayRndFunction(graphNamePrompt);
+            Say(sayInfoWithStream); 
         }
         /// <summary>
         /// 随机表情的方法, 修改这个方法可以使用指定类型的说话表情
@@ -62,10 +71,15 @@ namespace VPet_Simulator.Core
         /// </summary>
         public abstract class SayInfo
         {
+            public SayInfo(Type type)
+            {
+                SayType = type;
+            }
+
             /// <summary>
             /// 具体类型 方便还原
             /// </summary>
-            public required Type SayType;
+            public readonly Type SayType;
             /// <summary>
             /// 图像名
             /// </summary>
@@ -79,7 +93,7 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 是否强制显示图像
             /// </summary>
-            public bool Force;
+            public bool Force = true;
             /// <summary>
             /// 是否已经播放了语音
             /// </summary>
@@ -90,6 +104,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public class SayInfoWithOutStream : SayInfo
         {
+            public SayInfoWithOutStream(): base(typeof (SayInfoWithOutStream)) { }
             /// <summary>
             /// 说话内容
             /// </summary>
@@ -100,59 +115,104 @@ namespace VPet_Simulator.Core
         /// </summary>
         public class SayInfoWithStream : SayInfo
         {
+            public SayInfoWithStream(): base(typeof(SayInfoWithStream))
+            {
+                CurrentText = new StringBuilder();
+                FinishGen = false;
+            }
             /// <summary>
-            /// 说话内容注册函数
+            /// 说话内容event
             /// </summary>
-            public Action<Action<string>> Text;
+            public event Action<string> Text;
             /// <summary>
-            /// 生成完成事件注册函数
+            /// 全部说话内容event
             /// </summary>
-            public Action<Action> Finish;
-        }
+            public event Action<string> FullText;
+            /// <summary>
+            /// 生成完成event
+            /// </summary>
+            public event Action Finish;
+            /// <summary>
+            /// 生成完成event 带有文本
+            /// </summary>
+            public event Action<string> FinishWithText;
+            
+            /// <summary>
+            /// 当前对话内容
+            /// </summary>
+            public StringBuilder CurrentText;
+            
+            /// <summary>
+            /// 是否完成生成
+            /// </summary>
+            public bool FinishGen = false;
+            
+            /// <summary>
+            /// 将当前对话内容更新为指定文本
+            /// </summary>
+            /// <param name="text">要替换的文本</param>
+            public void UpdateAllText(string text)
+            {
+                CurrentText = new StringBuilder(text);
+                Text?.Invoke(text);
+                FullText?.Invoke(text);
+            }
+            
+            /// <summary>
+            /// 增加当前对话内容
+            /// </summary>
+            /// <param name="text">增加的内容</param>
+            public void UpdateText(string text)
+            {
+                CurrentText.Append(text);
+                Text?.Invoke(text);
+                FullText?.Invoke(CurrentText.ToString());
+            }
 
+            /// <summary>
+            /// 结束时调用
+            /// </summary>
+            public void FinishGenerate()
+            {
+                if (FinishGen)
+                    return;
+                FinishGen = true;
+                Finish?.Invoke();
+                FinishWithText?.Invoke(CurrentText.ToString());
+            }
+        }
         /// <summary>
         /// 流式传输的说话
         /// </summary>
-        /// <param name="text">对话更新的注册函数</param>
-        /// <param name="finish">结束的注册函数</param>
-        /// <param name="graphname">图像名</param>
-        /// <param name="desc">描述</param>
-        /// <param name="force">强制显示图像</param>
-        public void Say(Action<Action<String>> text, Action<Action> finish,string graphname = null, bool force = false, string desc = null)
+        /// <param name="sayInfoWithStream">对话更新的注册函数</param>
+        public void Say(SayInfoWithStream sayInfoWithStream)
         {
-            finish(updateOnSay);
-            text(updateText);
             
             Task.Run(() =>
             {
-                var sayinfo = new SayInfoWithStream()
+                sayInfoWithStream.FinishWithText += FinishGenerate;
+                
+                if(sayInfoWithStream.FinishGen)
                 {
-                    SayType = typeof(SayInfoWithStream),
-                    Text = text,
-                    Finish = finish,
-                    GraphName = graphname,
-                    Desc = desc,
-                    Force = force,
-                    MsgContent = null,
-                };
-                SayProcess.ForEach(a => a.Invoke(sayinfo));
-            
-                if (sayinfo.Force || !string.IsNullOrWhiteSpace(sayinfo.GraphName) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
-                    Display(sayinfo.GraphName, AnimatType.A_Start, () =>
+                    FinishGenerate(sayInfoWithStream.CurrentText.ToString());
+                }
+                
+                SayProcess.ForEach(a => a.Invoke(sayInfoWithStream));
+                
+                if (sayInfoWithStream.Force || !string.IsNullOrWhiteSpace(sayInfoWithStream.GraphName) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
+                    Display(sayInfoWithStream.GraphName, AnimatType.A_Start, () =>
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.Finish, sayinfo.GraphName, sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
-                                new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
+                            MsgBar.Show(Core.Save.Name, sayInfoWithStream);
                         });
-                        DisplayBLoopingForce(sayinfo.GraphName);
+                        DisplayBLoopingForce(sayInfoWithStream.GraphName);
                     });
                 else
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.Finish, sayinfo.GraphName, msgcontent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
-                            new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
+                        MsgBar.Show(Core.Save.Name, sayInfoWithStream);
                     });
                 }
             });
@@ -160,15 +220,9 @@ namespace VPet_Simulator.Core
         }
 
         /// 旧版本支持
-        private string TempText;
-        
-        public void updateText(string text)
+        public void FinishGenerate(string text)
         {
-            TempText = text;
-        }
-        public void updateOnSay()
-        {
-            OnSay?.Invoke(TempText);
+            OnSay?.Invoke(text);
         }
         
         /// <summary>
@@ -185,7 +239,6 @@ namespace VPet_Simulator.Core
                 OnSay?.Invoke(text);
                 var sayinfo = new SayInfoWithOutStream()
                 {
-                    SayType = typeof(SayInfo),
                     Text = text,
                     GraphName = graphname,
                     Desc = desc,
@@ -208,7 +261,7 @@ namespace VPet_Simulator.Core
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgcontent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgContent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
                             new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                     });
                 }
@@ -228,7 +281,6 @@ namespace VPet_Simulator.Core
                 OnSay?.Invoke(text);
                 var sayinfo = new SayInfoWithOutStream()
                 {
-                    SayType = typeof(SayInfo),
                     Text = text,
                     GraphName = graphname,
                     Desc = null,
@@ -250,7 +302,7 @@ namespace VPet_Simulator.Core
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgcontent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgContent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
                             new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                     });
                 }

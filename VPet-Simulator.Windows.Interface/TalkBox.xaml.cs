@@ -10,6 +10,7 @@ using System.Windows.Markup;
 using System.Windows.Navigation;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.GraphInfo;
+using static VPet_Simulator.Core.Main;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -92,85 +93,17 @@ namespace VPet_Simulator.Windows.Interface
                 Next();
             }
         }
-        /// <summary>
-        /// 可以订阅的事件 用来接收流式传输模式的数据
-        /// </summary>
-        public event Action<string> updateEvent;
-        /// <summary>
-        /// 用于判断流式传输是否截止
-        /// </summary>
-        public event Action endGenerateEvent;
-        /// <summary>
-        /// 防止生成速度过快 导致缺少内容
-        /// </summary>
-        public string currentText = "";
-
-        /// <summary>
-        /// 有新字符时调用
-        /// </summary>
-        public void Update(string text)
-        {
-            Console.Write(text);
-            currentText += text;
-            if(updateEvent != null && endGenerateEvent != null)
-            {
-                updateEvent?.Invoke(currentText);
-            }
-        }
-
-        /// <summary>
-        /// 等待updateEvent和endGenerateEvent初始化
-        /// </summary>
-        /// <param name="timeoutMs">超时时间</param>
-        private async Task WaitForNotNullAsync( int timeoutMs = 5000)
-        {
-            var sw = Stopwatch.StartNew();
-            while (updateEvent == null || endGenerateEvent == null)
-            {
-                if (sw.ElapsedMilliseconds > timeoutMs)
-                    Console.WriteLine("超时");
-
-                await Task.Delay(10); 
-            }
-        }
-        
-        /// <summary>
-        /// 当所有内容都生成完毕时调用
-        /// </summary>
-        public async void EndGenerate()
-        {
-            await WaitForNotNullAsync();
-            updateEvent?.Invoke(currentText);
-            currentText = "";
-            endGenerateEvent?.Invoke();
-        }
-        /// <summary>
-        /// 注册更新事件
-        /// </summary>
-        /// <param name="update">更新函数</param>
-        public void RegisterUpdate(Action<string> update)
-        {
-            updateEvent += update;
-        }
-        /// <summary>
-        /// 注册结束事件
-        /// </summary>
-        /// <param name="end">结束函数</param>
-        public void RegisterEnd(Action end)
-        {
-            endGenerateEvent += end;
-        }
         
         /// <summary>
         /// 带有流式传输的对话
         /// </summary>
+        /// <param name="sayInfoWithStream"></param>
         /// <param name="desc"></param>
-        public void DisplayThinkToSayRnd(string desc = null)
+        public void DisplayThinkToSayRnd(SayInfoWithStream sayInfoWithStream,string desc = null)
         {
-            updateEvent = null;
-            endGenerateEvent = null;
+            
             var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.C_End, MainPlugin.MW.Core.Save.Mode);
-            Action Next = () => {MainPlugin.MW.Main.SayRnd(RegisterUpdate, RegisterEnd,true, desc); };
+            Action Next = () => {MainPlugin.MW.Main.SayRnd(sayInfoWithStream,true, desc); };
             if (think.Count > 0)
             {
                 MainPlugin.MW.Main.Display(think[Function.Rnd.Next(think.Count)], Next);
