@@ -9,9 +9,11 @@ using System.Windows.Markup;
 using System.Windows.Navigation;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.GraphInfo;
+using static VPet_Simulator.Core.Main;
 
 namespace VPet_Simulator.Windows.Interface
 {
+    
     /// <summary>
     /// 聊天API接口/显示类
     /// </summary>
@@ -90,6 +92,32 @@ namespace VPet_Simulator.Windows.Interface
                 Next();
             }
         }
+        
+        /// <summary>
+        /// 使用sayInfo封装 允许stream与非stream
+        /// </summary>
+        /// <param name="sayInfo">使用sayInfo封装</param>
+        /// <param name="desc"></param>
+        public void DisplayThinkToSayRnd(SayInfo sayInfo)
+        {
+            if (sayInfo?.AllowOverWrite == true)
+            {
+                sayInfo.Force = true;
+                sayInfo.Desc = null;
+            }
+            
+            var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.C_End, MainPlugin.MW.Core.Save.Mode);
+            Action Next = () => {MainPlugin.MW.Main.SayRnd(sayInfo); };
+            if (think.Count > 0)
+            {
+                MainPlugin.MW.Main.Display(think[Function.Rnd.Next(think.Count)], Next);
+            }
+            else
+            {
+                Next();
+            }
+        }
+        
         /// <summary>
         /// 聊天设置
         /// </summary>

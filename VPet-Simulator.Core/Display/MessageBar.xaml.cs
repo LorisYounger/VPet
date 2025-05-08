@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Timer = System.Timers.Timer;
+using static VPet_Simulator.Core.Main;
 
 namespace VPet_Simulator.Core
 {
@@ -19,9 +20,19 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="name">名字</param>
         /// <param name="text">内容</param>
-        /// <param name="graphname">图像名</param>
-        /// <param name="msgcontent">消息框内容</param>
-        void Show(string name, string text, string graphname = null, UIElement msgcontent = null);
+        /// <param name="graphName">图像名</param>
+        /// <param name="msgContent">消息框内容</param>
+        void Show(string name, string text, string graphName = null, UIElement msgContent = null);
+        
+        
+        /// <summary>
+        /// 显示消息
+        /// </summary>
+        /// <param name="name">名字</param>
+        /// <param name="sayInfoWithStream">内容</param>
+        /// <param name="graphName">图像名</param>
+        /// <param name="msgContent">消息框内容</param>
+        void Show(string name, SayInfoWithStream sayInfoWithStream);
         /// <summary>
         /// 强制关闭
         /// </summary>
@@ -161,7 +172,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="name">名字</param>
         /// <param name="text">内容</param>
-        public void Show(string name, string text, string graphname = null, UIElement msgcontent = null)
+        public void Show(string name, string text, string graphName = null, UIElement msgContent = null)
         {
             if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
             {
@@ -176,11 +187,100 @@ namespace VPet_Simulator.Core
             ShowTimer.Start(); EndTimer.Stop(); CloseTimer.Stop();
             this.Visibility = Visibility.Visible;
             Opacity = .8;
-            graphName = graphname;
+            this.graphName = graphName;
+            if (msgContent != null)
+            {
+                MessageBoxContent.Children.Add(msgContent);
+            }
+        }
+
+        /// <summary>
+        /// 确认是否完成 防止多次调用
+        /// </summary>
+        private bool finished;
+        /// <summary>
+        /// 流式传输模式 显示文字
+        /// </summary>
+        public void Show(string name, SayInfoWithStream sayInfoWithStream)
+        {
+            if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
+            {
+                Panel.SetZIndex(this, m.UIGrid.Children.Count - 1);
+            }
+
+            MessageBoxContent.Children.Clear();
+            TText.Text = "";
+            LName.Content = name;
+            ShowTimer.Stop();
+            EndTimer.Stop();
+            CloseTimer.Stop();
+            this.Visibility = Visibility.Visible;
+            Opacity = .8;
+            graphName = sayInfoWithStream.GraphName;
+            finished = false;
+
+            var msgcontent = sayInfoWithStream.MsgContent ?? (string.IsNullOrWhiteSpace(sayInfoWithStream.Desc)
+                ? null
+                : new TextBlock()
+                {
+                    Text = sayInfoWithStream.Desc, FontSize = 20, ToolTip = sayInfoWithStream.Desc,
+                    HorizontalAlignment = HorizontalAlignment.Right
+                });
             if (msgcontent != null)
             {
                 MessageBoxContent.Children.Add(msgcontent);
             }
+
+            Dispatcher.Invoke(() => { TText.Text = sayInfoWithStream.CurrentText.ToString(); });
+
+            sayInfoWithStream.FullText += DealWithUpdate;
+            sayInfoWithStream.Finish += DealWithStreamFinish;
+            if(sayInfoWithStream.FinishGen)
+            {
+                DealWithStreamFinish();
+            }
+        }
+
+        /// <summary>
+        /// 增加显示新词
+        /// </summary>
+        /// <param name="word">当前的词</param>
+        public void DealWithUpdate(string word)
+        {
+            timeleft = word.Length;
+            Dispatcher.Invoke(() => { TText.Text = word; });
+        }
+        /// <summary>
+        /// 处理流式传输结束
+        /// </summary>
+        public void DealWithStreamFinish()
+        { 
+            if (finished)
+            {
+                return;
+            }
+            
+            finished = true;
+            if (m.PlayingVoice)
+            {
+                if (m.windowMediaPlayerAvailable)
+                {
+                    TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                    if (ts.TotalSeconds > 2)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    if (m.soundPlayer.IsLoadCompleted)
+                    {
+                        m.PlayingVoice = false;
+                        m.soundPlayer.PlaySync();
+                    }
+                }
+            }
+            EndTimer.Start();
         }
 
         public void Border_MouseEnter(object sender, MouseEventArgs e)
