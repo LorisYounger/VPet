@@ -43,16 +43,31 @@ namespace VPet_Simulator.Core
             Say(text, SayRndFunction(text), force, desc);// 根据现有内容 如果SayRndFunction被自定义 可能会出现问题
         }
         /// <summary>
-        /// 带有stream的说话,使用随机表情
+        /// 处理sayInfo,使用随机表情
         /// </summary>
-        /// <param name="sayInfoWithStream">SayInfoWithStream Class 用于提供stream基本信息 以及基本方法</param>
+        /// <!--不确定效率如何-->
+        /// <param name="sayInfo">SayInfoWithStream Class 用于提供stream基本信息 以及基本方法</param>
         /// <param name="overwriteGraphName">是否使用SayRndFunction加提示词覆写图像名 方便调用</param>
         /// <param name="graphNamePrompt">给予SayRndFunction的提示词</param>
-        public void SayRnd(SayInfoWithStream sayInfoWithStream, bool overwriteGraphName = true, string graphNamePrompt = "" )
+        public void SayRnd(SayInfo sayInfo)
         {
-            if (overwriteGraphName) //选择是否覆写GraphName 并且可以选择是否给予一定提示
-                sayInfoWithStream.GraphName = SayRndFunction(graphNamePrompt);
-            Say(sayInfoWithStream); 
+            if (sayInfo.AllowOverWrite) //选择是否覆写GraphName 并且可以选择是否给予一定提示
+            {
+                switch(sayInfo.SayTypeHashCode)
+                {
+                    case 0:
+                        var sayInfoWithStream = (SayInfoWithStream)sayInfo;
+                        sayInfoWithStream.GraphName = SayRndFunction(sayInfoWithStream.SayRndPrompt);
+                        Say(sayInfoWithStream); 
+                        break;
+                    case 1:
+                        var sayInfoWithOutStream = (SayInfoWithOutStream)sayInfo;
+                        sayInfoWithOutStream.GraphName = SayRndFunction(sayInfoWithOutStream.Text);
+                        Say(sayInfoWithOutStream.Text, sayInfoWithOutStream.GraphName, sayInfoWithOutStream.Force, desc: sayInfoWithOutStream.Desc);
+                        break;
+                }
+            }
+            //可以继续重构say
         }
         /// <summary>
         /// 随机表情的方法, 修改这个方法可以使用指定类型的说话表情
@@ -68,15 +83,37 @@ namespace VPet_Simulator.Core
         /// </summary>
         public abstract class SayInfo
         {
-            public SayInfo(Type type)
+            public SayInfo(Type type,bool allowOverWrite=true)
             {
                 SayType = type;
+                SayTypeHashCode = SayTypeHashMap[type];
+                this.AllowOverWrite = allowOverWrite;
             }
 
+            /* --------- 基本信息 -----------*/
             /// <summary>
             /// 具体类型 方便还原
             /// </summary>
             public readonly Type SayType;
+            /// <summary>
+            /// 用于快速判断类型
+            /// </summary>
+            public readonly int SayTypeHashCode;
+            /// <summary>
+            /// 类型的HashMap
+            /// </summary>
+            public static readonly Dictionary<Type,int> SayTypeHashMap = new()
+            {
+                {typeof(SayInfoWithStream), 0},
+                {typeof(SayInfoWithOutStream), 1}
+            };
+            /// <summary>
+            /// 是否允许覆盖
+            /// </summary>
+            public readonly bool AllowOverWrite;
+            
+            
+            /* --------- 消息信息 -----------*/
             /// <summary>
             /// 图像名
             /// </summary>
@@ -94,14 +131,18 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 是否已经播放了语音
             /// </summary>
-            public bool IsGenVoice;
+            public bool IsGenVoice =false;
         }
         /// <summary>
         /// 说话信息类 原本的SayInfo
         /// </summary>
         public class SayInfoWithOutStream : SayInfo
         {
-            public SayInfoWithOutStream(): base(typeof (SayInfoWithOutStream)) { }
+            public SayInfoWithOutStream(String text) : base(typeof(SayInfoWithOutStream))
+            {
+                Text = text;
+            }
+            public SayInfoWithOutStream() : base(typeof(SayInfoWithOutStream)) { }
             /// <summary>
             /// 说话内容
             /// </summary>
@@ -133,16 +174,18 @@ namespace VPet_Simulator.Core
             /// 生成完成event 带有文本
             /// </summary>
             public event Action<string> FinishWithText;
-            
             /// <summary>
             /// 当前对话内容
             /// </summary>
             public StringBuilder CurrentText;
-            
             /// <summary>
             /// 是否完成生成
             /// </summary>
             public bool FinishGen = false;
+            /// <summary>
+            /// 给予sayRndFunction的提示词
+            /// </summary>
+            public string SayRndPrompt = "";
             
             /// <summary>
             /// 将当前对话内容更新为指定文本

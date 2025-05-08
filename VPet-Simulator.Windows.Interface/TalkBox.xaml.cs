@@ -94,15 +94,20 @@ namespace VPet_Simulator.Windows.Interface
         }
         
         /// <summary>
-        /// 带有流式传输的对话
+        /// 使用sayInfo封装 允许stream与非stream
         /// </summary>
-        /// <param name="sayInfoWithStream"></param>
+        /// <param name="sayInfo">使用sayInfo封装</param>
         /// <param name="desc"></param>
-        public void DisplayThinkToSayRnd(SayInfoWithStream sayInfoWithStream,string desc = null)
+        public void DisplayThinkToSayRnd(SayInfo sayInfo)
         {
+            if (sayInfo?.AllowOverWrite == true)
+            {
+                sayInfo.Force = true;
+                sayInfo.Desc = null;
+            }
             
             var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.C_End, MainPlugin.MW.Core.Save.Mode);
-            Action Next = () => {MainPlugin.MW.Main.SayRnd(sayInfoWithStream,true, desc); };
+            Action Next = () => {MainPlugin.MW.Main.SayRnd(sayInfo); };
             if (think.Count > 0)
             {
                 MainPlugin.MW.Main.Display(think[Function.Rnd.Next(think.Count)], Next);
