@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using static System.Net.Mime.MediaTypeNames;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Core.WorkTimer;
@@ -45,29 +46,14 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 处理sayInfo,使用随机表情
         /// </summary>
-        /// <!--不确定效率如何-->
         /// <param name="sayInfo">SayInfoWithStream Class 用于提供stream基本信息 以及基本方法</param>
-        /// <param name="overwriteGraphName">是否使用SayRndFunction加提示词覆写图像名 方便调用</param>
-        /// <param name="graphNamePrompt">给予SayRndFunction的提示词</param>
-        public void SayRnd(SayInfo sayInfo)
+        public void SayRnd(SayInfoWithStream sayInfo)
         {
-            if (sayInfo.AllowOverWrite) //选择是否覆写GraphName 并且可以选择是否给予一定提示
+            Task.Run(() =>
             {
-                switch(sayInfo.SayTypeHashCode)
-                {
-                    case 0:
-                        var sayInfoWithStream = (SayInfoWithStream)sayInfo;
-                        sayInfoWithStream.GraphName = SayRndFunction(sayInfoWithStream.SayRndPrompt);
-                        Say(sayInfoWithStream); 
-                        break;
-                    case 1:
-                        var sayInfoWithOutStream = (SayInfoWithOutStream)sayInfo;
-                        sayInfoWithOutStream.GraphName = SayRndFunction(sayInfoWithOutStream.Text);
-                        Say(sayInfoWithOutStream.Text, sayInfoWithOutStream.GraphName, sayInfoWithOutStream.Force, desc: sayInfoWithOutStream.Desc);
-                        break;
-                }
-            }
-            //可以继续重构say
+
+
+            });
         }
         /// <summary>
         /// 随机表情的方法, 修改这个方法可以使用指定类型的说话表情
@@ -78,167 +64,24 @@ namespace VPet_Simulator.Core
         /// </summary>
         public List<Action<SayInfo>> SayProcess = new List<Action<SayInfo>>();
 
-        /// <summary>
-        /// 增加父类 以便适应带有流式传输的说话
-        /// </summary>
-        public abstract class SayInfo
-        {
-            public SayInfo(Type type,bool allowOverWrite=true)
-            {
-                SayType = type;
-                SayTypeHashCode = SayTypeHashMap[type];
-                this.AllowOverWrite = allowOverWrite;
-            }
 
-            /* --------- 基本信息 -----------*/
-            /// <summary>
-            /// 具体类型 方便还原
-            /// </summary>
-            public readonly Type SayType;
-            /// <summary>
-            /// 用于快速判断类型
-            /// </summary>
-            public readonly int SayTypeHashCode;
-            /// <summary>
-            /// 类型的HashMap
-            /// </summary>
-            public static readonly Dictionary<Type,int> SayTypeHashMap = new()
-            {
-                {typeof(SayInfoWithStream), 0},
-                {typeof(SayInfoWithOutStream), 1}
-            };
-            /// <summary>
-            /// 是否允许覆盖
-            /// </summary>
-            public readonly bool AllowOverWrite;
-            
-            
-            /* --------- 消息信息 -----------*/
-            /// <summary>
-            /// 图像名
-            /// </summary>
-            public string? GraphName;
-            /// <summary>
-            /// 说话的描述
-            /// </summary>
-            public string? Desc;
-            /// 消息内容
-            public UIElement MsgContent;
-            /// <summary>
-            /// 是否强制显示图像
-            /// </summary>
-            public bool Force = true;
-            /// <summary>
-            /// 是否已经播放了语音
-            /// </summary>
-            public bool IsGenVoice =false;
-        }
-        /// <summary>
-        /// 说话信息类 原本的SayInfo
-        /// </summary>
-        public class SayInfoWithOutStream : SayInfo
-        {
-            public SayInfoWithOutStream(String text) : base(typeof(SayInfoWithOutStream))
-            {
-                Text = text;
-            }
-            public SayInfoWithOutStream() : base(typeof(SayInfoWithOutStream)) { }
-            /// <summary>
-            /// 说话内容
-            /// </summary>
-            public string Text;
-        }
-        /// <summary>
-        /// 说话信息类 带有流式传输的SayInfo
-        /// </summary>
-        public class SayInfoWithStream : SayInfo
-        {
-            public SayInfoWithStream(): base(typeof(SayInfoWithStream))
-            {
-                CurrentText = new StringBuilder();
-                FinishGen = false;
-            }
-            /// <summary>
-            /// 说话内容event
-            /// </summary>
-            public event Action<string> Text;
-            /// <summary>
-            /// 全部说话内容event
-            /// </summary>
-            public event Action<string> FullText;
-            /// <summary>
-            /// 生成完成event
-            /// </summary>
-            public event Action Finish;
-            /// <summary>
-            /// 生成完成event 带有文本
-            /// </summary>
-            public event Action<string> FinishWithText;
-            /// <summary>
-            /// 当前对话内容
-            /// </summary>
-            public StringBuilder CurrentText;
-            /// <summary>
-            /// 是否完成生成
-            /// </summary>
-            public bool FinishGen = false;
-            /// <summary>
-            /// 给予sayRndFunction的提示词
-            /// </summary>
-            public string SayRndPrompt = "";
-            
-            /// <summary>
-            /// 将当前对话内容更新为指定文本
-            /// </summary>
-            /// <param name="text">要替换的文本</param>
-            public void UpdateAllText(string text)
-            {
-                CurrentText = new StringBuilder(text);
-                Text?.Invoke(text);
-                FullText?.Invoke(text);
-            }
-            
-            /// <summary>
-            /// 增加当前对话内容
-            /// </summary>
-            /// <param name="text">增加的内容</param>
-            public void UpdateText(string text)
-            {
-                CurrentText.Append(text);
-                Text?.Invoke(text);
-                FullText?.Invoke(CurrentText.ToString());
-            }
-
-            /// <summary>
-            /// 结束时调用
-            /// </summary>
-            public void FinishGenerate()
-            {
-                if (FinishGen)
-                    return;
-                FinishGen = true;
-                Finish?.Invoke();
-                FinishWithText?.Invoke(CurrentText.ToString());
-            }
-        }
         /// <summary>
         /// 流式传输的说话
         /// </summary>
         /// <param name="sayInfoWithStream">对话更新的注册函数</param>
         public void Say(SayInfoWithStream sayInfoWithStream)
         {
-            
             Task.Run(() =>
             {
-                sayInfoWithStream.FinishWithText += FinishGenerate;
-                
-                if(sayInfoWithStream.FinishGen)
+                sayInfoWithStream.Finish += (text) => OnSay?.Invoke(text);
+
+                if (sayInfoWithStream.FinishGen)
                 {
-                    FinishGenerate(sayInfoWithStream.CurrentText.ToString());
+                    OnSay?.Invoke(sayInfoWithStream.CurrentText.ToString());
                 }
-                
+
                 SayProcess.ForEach(a => a.Invoke(sayInfoWithStream));
-                
+
                 if (sayInfoWithStream.Force || !string.IsNullOrWhiteSpace(sayInfoWithStream.GraphName) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
                     Display(sayInfoWithStream.GraphName, AnimatType.A_Start, () =>
                     {
@@ -256,15 +99,8 @@ namespace VPet_Simulator.Core
                     });
                 }
             });
-            
         }
 
-        /// 旧版本支持
-        public void FinishGenerate(string text)
-        {
-            OnSay?.Invoke(text);
-        }
-        
         /// <summary>
         /// 说话
         /// </summary>
@@ -348,7 +184,7 @@ namespace VPet_Simulator.Core
                 }
             });
         }
-        
+
         int labeldisplaycount = 100;
         int labeldisplayhash = 0;
         Timer labeldisplaytimer = new Timer(10)
