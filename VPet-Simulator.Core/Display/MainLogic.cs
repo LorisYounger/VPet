@@ -73,7 +73,7 @@ namespace VPet_Simulator.Core
         {
             Task.Run(() =>
             {
-                sayInfoWithStream.Finish += (text) => OnSay?.Invoke(text);
+                sayInfoWithStream.Event_Finish += (text) => OnSay?.Invoke(text);
 
                 if (sayInfoWithStream.FinishGen)
                 {

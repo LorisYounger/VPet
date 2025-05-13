@@ -23,15 +23,13 @@ namespace VPet_Simulator.Core
         /// <param name="graphName">图像名</param>
         /// <param name="msgContent">消息框内容</param>
         void Show(string name, string text, string graphName = null, UIElement msgContent = null);
-        
-        
+
+
         /// <summary>
-        /// 显示消息
+        /// 显示流式消息
         /// </summary>
         /// <param name="name">名字</param>
         /// <param name="sayInfoWithStream">内容</param>
-        /// <param name="graphName">图像名</param>
-        /// <param name="msgContent">消息框内容</param>
         void Show(string name, SayInfoWithStream sayInfoWithStream);
         /// <summary>
         /// 强制关闭
@@ -156,7 +154,7 @@ namespace VPet_Simulator.Core
         private void EndTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (--timeleft <= 0)
-            {                
+            {
                 EndTimer.Stop();
                 CloseTimer.Start();
             }
@@ -223,7 +221,9 @@ namespace VPet_Simulator.Core
                 ? null
                 : new TextBlock()
                 {
-                    Text = sayInfoWithStream.Desc, FontSize = 20, ToolTip = sayInfoWithStream.Desc,
+                    Text = sayInfoWithStream.Desc,
+                    FontSize = 20,
+                    ToolTip = sayInfoWithStream.Desc,
                     HorizontalAlignment = HorizontalAlignment.Right
                 });
             if (msgcontent != null)
@@ -233,9 +233,9 @@ namespace VPet_Simulator.Core
 
             Dispatcher.Invoke(() => { TText.Text = sayInfoWithStream.CurrentText.ToString(); });
 
-            sayInfoWithStream.FullText += DealWithUpdate;
-            sayInfoWithStream.Finish += DealWithStreamFinish;
-            if(sayInfoWithStream.FinishGen)
+            sayInfoWithStream.Event_Update += DealWithUpdate;
+            sayInfoWithStream.Event_Finish += (_) => DealWithStreamFinish();
+            if (sayInfoWithStream.FinishGen)
             {
                 DealWithStreamFinish();
             }
@@ -244,22 +244,22 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 增加显示新词
         /// </summary>
-        /// <param name="word">当前的词</param>
-        public void DealWithUpdate(string word)
+        /// <param name="data">更新内容</param>
+        public void DealWithUpdate((string fullText, string changedText) data)
         {
-            timeleft = word.Length;
-            Dispatcher.Invoke(() => { TText.Text = word; });
+            timeleft = data.fullText.Length;
+            Dispatcher.Invoke(() => { TText.Text = data.fullText; });
         }
         /// <summary>
         /// 处理流式传输结束
         /// </summary>
         public void DealWithStreamFinish()
-        { 
+        {
             if (finished)
             {
                 return;
             }
-            
+
             finished = true;
             if (m.PlayingVoice)
             {

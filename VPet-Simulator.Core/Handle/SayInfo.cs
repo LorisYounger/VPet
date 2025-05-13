@@ -66,17 +66,13 @@ namespace VPet_Simulator.Core
             FinishGen = false;
         }
         /// <summary>
-        /// 说话内容
+        /// 说话内容更新事件
         /// </summary>
-        public event Action<string> Text;
-        /// <summary>
-        /// 全部说话内容
-        /// </summary>
-        public event Action<string> FullText;
+        public event Action<(string fullText, string changedText)> Event_Update;
         /// <summary>
         /// 生成完成事件, string为生成完成的全部文本
         /// </summary>
-        public event Action<string> Finish;
+        public event Action<string> Event_Finish;
         /// <summary>
         /// 当前对话内容
         /// </summary>
@@ -91,14 +87,13 @@ namespace VPet_Simulator.Core
         public string SayRndPrompt = "";
 
         /// <summary>
-        /// 将当前对话内容更新为指定文本
+        /// 将当前对话内容全部更新为指定文本
         /// </summary>
-        /// <param name="text">要替换的文本</param>
-        public void UpdateAllText(string text)
+        /// <param name="fullText">要替换的文本</param>
+        public void UpdateAllText(string fullText)
         {
-            CurrentText = new StringBuilder(text);
-            Text?.Invoke(text);
-            FullText?.Invoke(text);
+            CurrentText = new StringBuilder(fullText);
+            Event_Update?.Invoke((fullText, fullText));
         }
 
         /// <summary>
@@ -108,8 +103,7 @@ namespace VPet_Simulator.Core
         public void UpdateText(string text)
         {
             CurrentText.Append(text);
-            Text?.Invoke(text);
-            FullText?.Invoke(CurrentText.ToString());
+            Event_Update?.Invoke((CurrentText.ToString(), text));
         }
 
         /// <summary>
@@ -120,7 +114,7 @@ namespace VPet_Simulator.Core
             if (FinishGen)
                 return;
             FinishGen = true;
-            Finish?.Invoke(CurrentText.ToString());
+            Event_Finish?.Invoke(CurrentText.ToString());
         }
     }
 }
