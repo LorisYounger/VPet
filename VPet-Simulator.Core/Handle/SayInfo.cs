@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VPet_Simulator.Core
 {
@@ -16,8 +17,6 @@ namespace VPet_Simulator.Core
         {
 
         }
-
-
         /* --------- 消息信息 -----------*/
         /// <summary>
         /// 图像名
@@ -34,7 +33,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 是否强制显示图像
         /// </summary>
-        public bool Force = true;
+        public bool Force = false;
         /// <summary>
         /// 是否已经播放了语音
         /// </summary>
@@ -45,10 +44,38 @@ namespace VPet_Simulator.Core
     /// </summary>
     public class SayInfoWithOutStream : SayInfo
     {
-        public SayInfoWithOutStream(String text)
+        /// <summary>
+        /// 说话信息
+        /// </summary>
+        /// <param name="text">说话内容</param>
+        /// <param name="graphname">图像名</param>
+        /// <param name="desc">描述</param>
+        /// <param name="force">强制显示图像</param>
+        public SayInfoWithOutStream(string text, string graphname = null, bool force = false, string desc = null)
         {
             Text = text;
+            GraphName = graphname;
+            Force = force;
+            Desc = desc;
         }
+
+        /// <summary>
+        /// 说话信息类
+        /// </summary>
+        /// <param name="text">说话内容</param>
+        /// <param name="graphname">图像名</param>
+        /// <param name="msgcontent">消息内容</param>
+        /// <param name="force">强制显示图像</param>
+        public SayInfoWithOutStream(string text, UIElement msgcontent, string graphname = null, bool force = false)
+        {
+            Text = text;
+            GraphName = graphname;
+            MsgContent = msgcontent;
+            Force = force;
+        }
+        /// <summary>
+        /// 说话信息类
+        /// </summary>
         public SayInfoWithOutStream() { }
         /// <summary>
         /// 说话内容
@@ -60,11 +87,38 @@ namespace VPet_Simulator.Core
     /// </summary>
     public class SayInfoWithStream : SayInfo
     {
+        /// <summary>
+        /// 说话信息类
+        /// </summary>
         public SayInfoWithStream()
         {
-            CurrentText = new StringBuilder();
-            FinishGen = false;
         }
+        /// <summary>
+        /// 说话信息类
+        /// </summary>
+        /// <param name="graphname">图像名</param>
+        /// <param name="desc">描述</param>
+        /// <param name="force">强制显示图像</param>
+        public SayInfoWithStream(string graphname, bool force = false, string desc = null)
+        {
+            GraphName = graphname;
+            Force = force;
+            Desc = desc;
+        }
+
+        /// <summary>
+        /// 说话信息类
+        /// </summary>
+        /// <param name="graphname">图像名</param>
+        /// <param name="msgcontent">消息内容</param>
+        /// <param name="force">强制显示图像</param>
+        public SayInfoWithStream(UIElement msgcontent, string graphname = null, bool force = false)
+        {
+            GraphName = graphname;
+            MsgContent = msgcontent;
+            Force = force;
+        }
+
         /// <summary>
         /// 说话内容更新事件
         /// </summary>
@@ -76,7 +130,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 当前对话内容
         /// </summary>
-        public StringBuilder CurrentText;
+        public StringBuilder CurrentText = new StringBuilder();
         /// <summary>
         /// 是否完成生成
         /// </summary>
