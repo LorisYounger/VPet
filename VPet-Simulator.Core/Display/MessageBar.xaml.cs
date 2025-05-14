@@ -10,6 +10,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Timer = System.Timers.Timer;
 using static VPet_Simulator.Core.Main;
+using System.Security.Cryptography.Xml;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VPet_Simulator.Core
 {
@@ -181,7 +183,7 @@ namespace VPet_Simulator.Core
             outputtext = text.ToList();
             outputtextsample.Clear();
             LName.Content = name;
-            timeleft = text.Length + 5;
+            timeleft = Function.ComCheck(text) * 5 + 5;
             ShowTimer.Start(); EndTimer.Stop(); CloseTimer.Stop();
             this.Visibility = Visibility.Visible;
             Opacity = .8;
@@ -234,11 +236,10 @@ namespace VPet_Simulator.Core
             Dispatcher.Invoke(() => { TText.Text = sayInfoWithStream.CurrentText.ToString(); });
 
             sayInfoWithStream.Event_Update += DealWithUpdate;
-            sayInfoWithStream.Event_Finish += (_) => DealWithStreamFinish();
-            if (sayInfoWithStream.IsFinishGen)
-            {
-                DealWithStreamFinish();
-            }
+            if (sayInfoWithStream.IsFinishGen)            
+                DealWithStreamFinish(sayInfoWithStream.CurrentText.ToString());            
+            else
+                sayInfoWithStream.Event_Finish += DealWithStreamFinish;
         }
 
         /// <summary>
@@ -253,7 +254,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 处理流式传输结束
         /// </summary>
-        public void DealWithStreamFinish()
+        public void DealWithStreamFinish(string fullText)
         {
             if (finished)
             {
@@ -280,7 +281,10 @@ namespace VPet_Simulator.Core
                     }
                 }
             }
+            timeleft = Function.ComCheck(fullText) * 5 + 5;
             EndTimer.Start();
+            if ((m.DisplayType.Name == graphName || m.DisplayType.Type == GraphInfo.GraphType.Say) && m.DisplayType.Animat != GraphInfo.AnimatType.C_End)
+                m.DisplayCEndtoNomal(m.DisplayType.Name);
         }
 
         public void Border_MouseEnter(object sender, MouseEventArgs e)

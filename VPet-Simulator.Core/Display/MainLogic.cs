@@ -3,6 +3,7 @@ using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -49,10 +50,9 @@ namespace VPet_Simulator.Core
         /// <param name="sayInfo">SayInfoWithStream Class 用于提供stream基本信息 以及基本方法</param>
         public void SayRnd(SayInfoWithStream sayInfo)
         {
-            char[] com = { ' ', '，', '。', '！', '？', '；', '：', '\n', '.', ',', '!', '?', ';', ':' };
             Task.Run(() =>
             {
-                while (!sayInfo.IsFinishGen && sayInfo.CurrentText.ToString().Count(x => com.Contains(x)) > 4)
+                while (!sayInfo.IsFinishGen && Function.ComCheck(sayInfo.CurrentText.ToString()) < 4 && sayInfo.CurrentText.Length < 40)
                 {
                     Thread.Sleep(100);
                 }
