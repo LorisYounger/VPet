@@ -79,7 +79,9 @@
                 <TextBox x:Name="SayTextBox" Height="200" Margin="5,54,5,0" VerticalAlignment="Top"
                         VerticalContentAlignment="Top" pu:TextBoxHelper.Watermark="{ll:Str 在这里输入要说话的内容}"
                         AcceptsReturn="True" TextWrapping="Wrap" />
-                <Button VerticalAlignment="Bottom" Click="Say_Click" Content="{ll:Str 说话}" FontSize="24" />
+                <Button VerticalAlignment="Bottom" Click="Say_Click" Content="{ll:Str 说话}" FontSize="24"
+                        Margin="0,0,0,32" />
+                <Button VerticalAlignment="Bottom" Click="SaySteam_Click" Content="{ll:Str 流式说话测试}" FontSize="24" />
             </Grid>
         </TabItem>
         <TabItem Header="{ll:Str 距离查看器}">

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +9,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Timer = System.Timers.Timer;
+using static VPet_Simulator.Core.Main;
+using System.Security.Cryptography.Xml;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VPet_Simulator.Core
 {
@@ -19,9 +22,17 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="name">名字</param>
         /// <param name="text">内容</param>
-        /// <param name="graphname">图像名</param>
-        /// <param name="msgcontent">消息框内容</param>
-        void Show(string name, string text, string graphname = null, UIElement msgcontent = null);
+        /// <param name="graphName">图像名</param>
+        /// <param name="msgContent">消息框内容</param>
+        void Show(string name, string text, string graphName = null, UIElement msgContent = null);
+
+
+        /// <summary>
+        /// 显示流式消息
+        /// </summary>
+        /// <param name="name">名字</param>
+        /// <param name="sayInfoWithStream">内容</param>
+        void Show(string name, SayInfoWithStream sayInfoWithStream);
         /// <summary>
         /// 强制关闭
         /// </summary>
@@ -145,7 +156,7 @@ namespace VPet_Simulator.Core
         private void EndTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (--timeleft <= 0)
-            {                
+            {
                 EndTimer.Stop();
                 CloseTimer.Start();
             }
@@ -161,7 +172,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="name">名字</param>
         /// <param name="text">内容</param>
-        public void Show(string name, string text, string graphname = null, UIElement msgcontent = null)
+        public void Show(string name, string text, string graphName = null, UIElement msgContent = null)
         {
             if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
             {
@@ -172,15 +183,121 @@ namespace VPet_Simulator.Core
             outputtext = text.ToList();
             outputtextsample.Clear();
             LName.Content = name;
-            timeleft = text.Length + 5;
+            timeleft = Function.ComCheck(text) * 5 + 5;
             ShowTimer.Start(); EndTimer.Stop(); CloseTimer.Stop();
             this.Visibility = Visibility.Visible;
             Opacity = .8;
-            graphName = graphname;
+            this.graphName = graphName;
+            if (msgContent != null)
+            {
+                MessageBoxContent.Children.Add(msgContent);
+            }
+        }
+        private SayInfoWithStream oldsaystream;
+        /// <summary>
+        /// 流式传输模式 显示文字
+        /// </summary>
+        public void Show(string name, SayInfoWithStream sayInfoWithStream)
+        {
+            if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
+            {
+                Panel.SetZIndex(this, m.UIGrid.Children.Count - 1);
+            }
+
+            //解除之前说话绑定,取消之前的说话
+            if (oldsaystream != null)
+            {
+                oldsaystream.Event_Update -= DealWithUpdate;
+                oldsaystream.Event_Finish -= DealWithStreamFinish;
+            }
+            oldsaystream = sayInfoWithStream;
+
+            MessageBoxContent.Children.Clear();
+            TText.Text = "";
+            LName.Content = name;
+            ShowTimer.Stop();
+            EndTimer.Stop();
+            CloseTimer.Stop();
+            this.Visibility = Visibility.Visible;
+            Opacity = .8;
+            graphName = sayInfoWithStream.GraphName;
+
+            var msgcontent = sayInfoWithStream.MsgContent ?? (string.IsNullOrWhiteSpace(sayInfoWithStream.Desc)
+                ? null
+                : new TextBlock()
+                {
+                    Text = sayInfoWithStream.Desc,
+                    FontSize = 20,
+                    ToolTip = sayInfoWithStream.Desc,
+                    HorizontalAlignment = HorizontalAlignment.Right
+                });
             if (msgcontent != null)
             {
                 MessageBoxContent.Children.Add(msgcontent);
             }
+
+
+
+            Dispatcher.Invoke(() => { TText.Text = sayInfoWithStream.CurrentText.ToString(); });
+
+            sayInfoWithStream.Event_Update += DealWithUpdate;
+            if (sayInfoWithStream.IsFinishGen)
+                DealWithStreamFinish(sayInfoWithStream.CurrentText.ToString());
+            else
+                sayInfoWithStream.Event_Finish += DealWithStreamFinish;
+        }
+
+        /// <summary>
+        /// 增加显示新词
+        /// </summary>
+        /// <param name="data">更新内容</param>
+        public void DealWithUpdate((string fullText, string changedText) data)
+        {
+            timeleft = data.fullText.Length;
+            Dispatcher.Invoke(() => { TText.Text = data.fullText; });
+        }
+        /// <summary>
+        /// 处理流式传输结束
+        /// </summary>
+        public void DealWithStreamFinish(string fullText)
+        {
+            Task.Run(() =>
+            {
+                if (m.PlayingVoice)
+                {
+                    if (m.windowMediaPlayerAvailable)
+                    {
+                        TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                        while (ts.TotalSeconds > 2)
+                        {
+                            Thread.Sleep(100);
+                        }
+                    }
+                    else
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            if (m.soundPlayer.IsLoadCompleted)
+                            {
+                                m.PlayingVoice = false;
+                                m.soundPlayer.PlaySync();
+                            }
+                        });
+                    }
+                }
+                if (oldsaystream?.CurrentText.ToString() == fullText)
+                {
+                    oldsaystream.Event_Update -= DealWithUpdate;
+                    oldsaystream.Event_Finish -= DealWithStreamFinish;
+                    oldsaystream = null;
+                }
+
+                timeleft = Function.ComCheck(fullText) * 5 + 5;
+                EndTimer.Start();
+                if ((m.DisplayType.Name == graphName || m.DisplayType.Type == GraphInfo.GraphType.Say) && m.DisplayType.Animat != GraphInfo.AnimatType.C_End)
+                    m.DisplayCEndtoNomal(m.DisplayType.Name);
+
+            });
         }
 
         public void Border_MouseEnter(object sender, MouseEventArgs e)

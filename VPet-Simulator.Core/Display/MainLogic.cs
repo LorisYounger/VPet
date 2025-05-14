@@ -3,13 +3,15 @@ using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Xml;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Core.WorkTimer;
+using Timer = System.Timers.Timer;
 
 namespace VPet_Simulator.Core
 {
@@ -41,6 +43,24 @@ namespace VPet_Simulator.Core
         {
             Say(text, SayRndFunction(text), force, desc);
         }
+
+        /// <summary>
+        /// 处理sayInfo,使用随机表情
+        /// </summary>
+        /// <param name="sayInfo">SayInfoWithStream Class 用于提供stream基本信息 以及基本方法</param>
+        public void SayRnd(SayInfoWithStream sayInfo)
+        {
+            Task.Run(() =>
+            {
+                while (!sayInfo.IsFinishGen && Function.ComCheck(sayInfo.CurrentText.ToString()) < 4 && sayInfo.CurrentText.Length < 80)
+                {
+                    Thread.Sleep(100);
+                }
+                sayInfo.GraphName = SayRndFunction(sayInfo.CurrentText.ToString());
+                Say(sayInfo);
+            });
+        }
+
         /// <summary>
         /// 随机表情的方法, 修改这个方法可以使用指定类型的说话表情
         /// </summary>
@@ -49,54 +69,53 @@ namespace VPet_Simulator.Core
         /// 说话处理
         /// </summary>
         public List<Action<SayInfo>> SayProcess = new List<Action<SayInfo>>();
+
+
         /// <summary>
-        /// 说话信息类
+        /// 流式传输的说话
         /// </summary>
-        public class SayInfo
-        {
-            /// <summary>
-            /// 说话内容
-            /// </summary>
-            public string Text;
-            /// <summary>
-            /// 图像名
-            /// </summary>
-            public string? GraphName;
-            /// <summary>
-            /// 说话的描述
-            /// </summary>
-            public string? Desc;
-            // 消息内容
-            public UIElement MsgContent;
-            /// <summary>
-            /// 是否强制显示图像
-            /// </summary>
-            public bool Force;
-            /// <summary>
-            /// 是否已经播放了语音
-            /// </summary>
-            public bool IsGenVoice;
-        }
-        /// <summary>
-        /// 说话
-        /// </summary>
-        /// <param name="text">说话内容</param>
-        /// <param name="graphname">图像名</param>
-        /// <param name="desc">描述</param>
-        /// <param name="force">强制显示图像</param>
-        public void Say(string text, string graphname = null, bool force = false, string desc = null)
+        /// <param name="sayInfoWithStream">说话信息</param>
+        public void Say(SayInfoWithStream sayInfoWithStream)
         {
             Task.Run(() =>
             {
-                OnSay?.Invoke(text);
-                var sayinfo = new SayInfo()
+                sayInfoWithStream.Event_Finish += (text) => OnSay?.Invoke(text);
+
+                if (sayInfoWithStream.IsFinishGen)
                 {
-                    Text = text,
-                    GraphName = graphname,
-                    Desc = desc,
-                    Force = force,
-                    MsgContent = null
-                };
+                    OnSay?.Invoke(sayInfoWithStream.CurrentText.ToString());
+                }
+
+                SayProcess.ForEach(a => a.Invoke(sayInfoWithStream));
+
+                if (sayInfoWithStream.Force || !string.IsNullOrWhiteSpace(sayInfoWithStream.GraphName) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
+                    Display(sayInfoWithStream.GraphName, AnimatType.A_Start, () =>
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            MsgBar.Show(Core.Save.Name, sayInfoWithStream);
+                        });
+                        DisplayBLoopingForce(sayInfoWithStream.GraphName);
+                    });
+                else
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        MsgBar.Show(Core.Save.Name, sayInfoWithStream);
+                    });
+                }
+            });
+        }
+        /// <summary>
+        /// 普通说话
+        /// </summary>
+        /// <param name="sayinfo">说话信息</param>
+        public void Say(SayInfoWithOutStream sayinfo)
+        {
+            Task.Run(() =>
+            {
+                OnSay?.Invoke(sayinfo.Text);
+
                 SayProcess.ForEach(a => a.Invoke(sayinfo));
 
                 if (sayinfo.Force || !string.IsNullOrWhiteSpace(sayinfo.GraphName) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
@@ -113,7 +132,7 @@ namespace VPet_Simulator.Core
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgcontent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgContent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
                             new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                     });
                 }
@@ -124,42 +143,32 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="text">说话内容</param>
         /// <param name="graphname">图像名</param>
+        /// <param name="desc">描述</param>
+        /// <param name="force">强制显示图像</param>
+        public void Say(string text, string graphname = null, bool force = false, string desc = null) => Say(new SayInfoWithOutStream()
+        {
+            Text = text,
+            GraphName = graphname,
+            Desc = desc,
+            Force = force,
+            MsgContent = null
+        });
+        /// <summary>
+        /// 说话
+        /// </summary>
+        /// <param name="text">说话内容</param>
+        /// <param name="graphname">图像名</param>
         /// <param name="msgcontent">消息内容</param>
         /// <param name="force">强制显示图像</param>
-        public void Say(string text, UIElement msgcontent, string graphname = null, bool force = false)
+        public void Say(string text, UIElement msgcontent, string graphname = null, bool force = false) => Say(new SayInfoWithOutStream()
         {
-            Task.Run(() =>
-            {
-                OnSay?.Invoke(text);
-                var sayinfo = new SayInfo()
-                {
-                    Text = text,
-                    GraphName = graphname,
-                    Desc = null,
-                    Force = force,
-                    MsgContent = msgcontent
-                };
-                SayProcess.ForEach(a => a.Invoke(sayinfo));
-                if (sayinfo.Force || !string.IsNullOrWhiteSpace(sayinfo.GraphName) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
-                    Display(sayinfo.GraphName, AnimatType.A_Start, () =>
-                    {
-                        Dispatcher.Invoke(() =>
-                        {
-                            MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
-                                new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
-                        });
-                        DisplayBLoopingForce(sayinfo.GraphName);
-                    });
-                else
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgcontent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
-                            new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
-                    });
-                }
-            });
-        }
+            Text = text,
+            GraphName = graphname,
+            Desc = null,
+            Force = force,
+            MsgContent = msgcontent
+        });
+
         int labeldisplaycount = 100;
         int labeldisplayhash = 0;
         Timer labeldisplaytimer = new Timer(10)
@@ -423,12 +432,12 @@ namespace VPet_Simulator.Core
             {
                 return;
             }
-            else if (before == after)
+            if (before == after)
             {
                 DisplayToNomal();
                 return;
             }
-            else if (before < after)
+            if (before < after)
             {
                 Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Down), AnimatType.Single, before),
                     () => PlaySwitchAnimat((IGameSave.ModeType)(((int)before) + 1), after));

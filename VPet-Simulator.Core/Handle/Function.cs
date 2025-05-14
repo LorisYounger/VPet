@@ -1,6 +1,8 @@
 ﻿using LinePutScript.Converter;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
@@ -107,6 +109,18 @@ namespace VPet_Simulator.Core
             {
                 return 4000;
             }
+        }
+        /// <summary>
+        /// 用于区分句子数量的标点符号
+        /// </summary>
+        public static List<char> com { get; } = new List<char> { '，', '。', '！', '？', '；', '：', '\n', '.', ',', '!', '?', ';', ':' };
+        /// <summary>
+        /// 计算说话内容的句子数量
+        /// </summary>
+        /// <param name="text">句子</param>
+        public static int ComCheck(string text)
+        {
+            return text.Replace("\r","").Replace("\n\n", "\n").Count(com.Contains);
         }
     }
 }
