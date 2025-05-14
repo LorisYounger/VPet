@@ -52,7 +52,7 @@ namespace VPet_Simulator.Core
         {
             Task.Run(() =>
             {
-                while (!sayInfo.IsFinishGen && Function.ComCheck(sayInfo.CurrentText.ToString()) < 4 && sayInfo.CurrentText.Length < 40)
+                while (!sayInfo.IsFinishGen && Function.ComCheck(sayInfo.CurrentText.ToString()) < 4 && sayInfo.CurrentText.Length < 80)
                 {
                     Thread.Sleep(100);
                 }

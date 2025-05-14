@@ -193,11 +193,7 @@ namespace VPet_Simulator.Core
                 MessageBoxContent.Children.Add(msgContent);
             }
         }
-
-        /// <summary>
-        /// 确认是否完成 防止多次调用
-        /// </summary>
-        private bool finished;
+        private SayInfoWithStream oldsaystream;
         /// <summary>
         /// 流式传输模式 显示文字
         /// </summary>
@@ -208,6 +204,14 @@ namespace VPet_Simulator.Core
                 Panel.SetZIndex(this, m.UIGrid.Children.Count - 1);
             }
 
+            //解除之前说话绑定,取消之前的说话
+            if (oldsaystream != null)
+            {
+                oldsaystream.Event_Update -= DealWithUpdate;
+                oldsaystream.Event_Finish -= DealWithStreamFinish;
+            }
+            oldsaystream = sayInfoWithStream;
+
             MessageBoxContent.Children.Clear();
             TText.Text = "";
             LName.Content = name;
@@ -217,7 +221,6 @@ namespace VPet_Simulator.Core
             this.Visibility = Visibility.Visible;
             Opacity = .8;
             graphName = sayInfoWithStream.GraphName;
-            finished = false;
 
             var msgcontent = sayInfoWithStream.MsgContent ?? (string.IsNullOrWhiteSpace(sayInfoWithStream.Desc)
                 ? null
@@ -233,11 +236,13 @@ namespace VPet_Simulator.Core
                 MessageBoxContent.Children.Add(msgcontent);
             }
 
+
+
             Dispatcher.Invoke(() => { TText.Text = sayInfoWithStream.CurrentText.ToString(); });
 
             sayInfoWithStream.Event_Update += DealWithUpdate;
-            if (sayInfoWithStream.IsFinishGen)            
-                DealWithStreamFinish(sayInfoWithStream.CurrentText.ToString());            
+            if (sayInfoWithStream.IsFinishGen)
+                DealWithStreamFinish(sayInfoWithStream.CurrentText.ToString());
             else
                 sayInfoWithStream.Event_Finish += DealWithStreamFinish;
         }
@@ -256,35 +261,43 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void DealWithStreamFinish(string fullText)
         {
-            if (finished)
+            Task.Run(() =>
             {
-                return;
-            }
+                if (m.PlayingVoice)
+                {
+                    if (m.windowMediaPlayerAvailable)
+                    {
+                        TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                        while (ts.TotalSeconds > 2)
+                        {
+                            Thread.Sleep(100);
+                        }
+                    }
+                    else
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            if (m.soundPlayer.IsLoadCompleted)
+                            {
+                                m.PlayingVoice = false;
+                                m.soundPlayer.PlaySync();
+                            }
+                        });
+                    }
+                }
+                if (oldsaystream?.CurrentText.ToString() == fullText)
+                {
+                    oldsaystream.Event_Update -= DealWithUpdate;
+                    oldsaystream.Event_Finish -= DealWithStreamFinish;
+                    oldsaystream = null;
+                }
 
-            finished = true;
-            if (m.PlayingVoice)
-            {
-                if (m.windowMediaPlayerAvailable)
-                {
-                    TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
-                    if (ts.TotalSeconds > 2)
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    if (m.soundPlayer.IsLoadCompleted)
-                    {
-                        m.PlayingVoice = false;
-                        m.soundPlayer.PlaySync();
-                    }
-                }
-            }
-            timeleft = Function.ComCheck(fullText) * 5 + 5;
-            EndTimer.Start();
-            if ((m.DisplayType.Name == graphName || m.DisplayType.Type == GraphInfo.GraphType.Say) && m.DisplayType.Animat != GraphInfo.AnimatType.C_End)
-                m.DisplayCEndtoNomal(m.DisplayType.Name);
+                timeleft = Function.ComCheck(fullText) * 5 + 5;
+                EndTimer.Start();
+                if ((m.DisplayType.Name == graphName || m.DisplayType.Type == GraphInfo.GraphType.Say) && m.DisplayType.Animat != GraphInfo.AnimatType.C_End)
+                    m.DisplayCEndtoNomal(m.DisplayType.Name);
+
+            });
         }
 
         public void Border_MouseEnter(object sender, MouseEventArgs e)
