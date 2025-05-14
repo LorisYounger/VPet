@@ -134,11 +134,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 是否完成生成
         /// </summary>
-        public bool FinishGen = false;
-        /// <summary>
-        /// 给予sayRndFunction的提示词
-        /// </summary>
-        public string SayRndPrompt = "";
+        public bool IsFinishGen = false;       
 
         /// <summary>
         /// 将当前对话内容全部更新为指定文本
@@ -165,9 +161,9 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void FinishGenerate()
         {
-            if (FinishGen)
+            if (IsFinishGen)
                 return;
-            FinishGen = true;
+            IsFinishGen = true;
             Event_Finish?.Invoke(CurrentText.ToString());
         }
     }

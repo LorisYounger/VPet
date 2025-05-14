@@ -3,15 +3,14 @@ using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using static System.Net.Mime.MediaTypeNames;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Core.WorkTimer;
+using Timer = System.Timers.Timer;
 
 namespace VPet_Simulator.Core
 {
@@ -41,18 +40,24 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void SayRnd(string text, bool force = false, string desc = null)
         {
-            Say(text, SayRndFunction(text), force, desc);// 根据现有内容 如果SayRndFunction被自定义 可能会出现问题
+            Say(text, SayRndFunction(text), force, desc);
         }
+
         /// <summary>
         /// 处理sayInfo,使用随机表情
         /// </summary>
         /// <param name="sayInfo">SayInfoWithStream Class 用于提供stream基本信息 以及基本方法</param>
         public void SayRnd(SayInfoWithStream sayInfo)
         {
+            char[] com = { ' ', '，', '。', '！', '？', '；', '：', '\n', '.', ',', '!', '?', ';', ':' };
             Task.Run(() =>
             {
-                //TODO
-
+                while (!sayInfo.IsFinishGen && sayInfo.CurrentText.ToString().Count(x => com.Contains(x)) > 4)
+                {
+                    Thread.Sleep(100);
+                }
+                sayInfo.GraphName = SayRndFunction(sayInfo.CurrentText.ToString());
+                Say(sayInfo);
             });
         }
 
@@ -76,7 +81,7 @@ namespace VPet_Simulator.Core
             {
                 sayInfoWithStream.Event_Finish += (text) => OnSay?.Invoke(text);
 
-                if (sayInfoWithStream.FinishGen)
+                if (sayInfoWithStream.IsFinishGen)
                 {
                     OnSay?.Invoke(sayInfoWithStream.CurrentText.ToString());
                 }

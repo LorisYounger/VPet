@@ -235,7 +235,7 @@ namespace VPet_Simulator.Core
 
             sayInfoWithStream.Event_Update += DealWithUpdate;
             sayInfoWithStream.Event_Finish += (_) => DealWithStreamFinish();
-            if (sayInfoWithStream.FinishGen)
+            if (sayInfoWithStream.IsFinishGen)
             {
                 DealWithStreamFinish();
             }
