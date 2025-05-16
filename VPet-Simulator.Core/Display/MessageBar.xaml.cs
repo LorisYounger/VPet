@@ -164,7 +164,7 @@ namespace VPet_Simulator.Core
 
         public Timer EndTimer = new Timer() { Interval = 200 };
         public Timer ShowTimer = new Timer() { Interval = 100 };
-        public Timer CloseTimer = new Timer() { Interval = 20 };
+        public Timer CloseTimer = new Timer() { Interval = 50 };
         int timeleft;
         string graphName;
         /// <summary>
@@ -183,7 +183,7 @@ namespace VPet_Simulator.Core
             outputtext = text.ToList();
             outputtextsample.Clear();
             LName.Content = name;
-            timeleft = Function.ComCheck(text) * 5 + 5;
+            timeleft = Function.ComCheck(text) * 10 + 10;
             ShowTimer.Start(); EndTimer.Stop(); CloseTimer.Stop();
             this.Visibility = Visibility.Visible;
             Opacity = .8;
