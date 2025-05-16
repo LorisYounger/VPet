@@ -71,7 +71,7 @@ namespace VPet_Simulator.Windows
                 sb.Append("&content=" + HttpUtility.UrlEncode(tContent.Text));
                 sb.Append("&contact=" + HttpUtility.UrlEncode(tContact.Text));
                 sb.Append($"&steamid={Steamworks.SteamClient.SteamId.Value}");
-                sb.Append($"&ver={mw.version}");
+                sb.Append($"&ver={mw.version}&repver=2&lang={LocalizeCore.CurrentCulture}");
                 sb.Append("&save=");
                 sb.AppendLine(HttpUtility.UrlEncode(save));
 #pragma warning disable SYSLIB0014 // 类型或成员已过时
@@ -103,6 +103,10 @@ namespace VPet_Simulator.Windows
                 {
                     mw.Set.DiagnosisDayEnable = false;
                     MessageBoxX.Show("您今天的反馈次数已达上限,请明天再来反馈.\n或欢迎加入虚拟主播模拟器群430081239反馈问题".Translate(), "您今天的反馈次数已达上限".Translate(), MessageBoxButton.OK, MessageBoxIcon.Error);
+                }
+                else if (responseString.StartsWith("ReportMessage:"))
+                {
+                    MessageBoxX.Show(responseString.Substring(14), "感谢您的反馈和提交".Translate());
                 }
                 else
                 {

@@ -92,7 +92,7 @@ namespace VPet_Simulator.Windows
             if (string.IsNullOrWhiteSpace(CombSay.Text))
                 mw.Main.SayRnd(sayinfosteam);
             else
-                mw.Main.Say(SayTextBox.Text, CombSay.Text, true);
+                mw.Main.Say(sayinfosteam);
 
             // 将 SayTextBox.Text 按每段3-5个字切分到 str 里
             List<string> str = new List<string>();
