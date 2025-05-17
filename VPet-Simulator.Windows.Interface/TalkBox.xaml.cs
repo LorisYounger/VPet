@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO.Packaging;
 using System.Reflection;
+using System.Security.Cryptography.Xml;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -100,17 +102,23 @@ namespace VPet_Simulator.Windows.Interface
         public void DisplayThinkToSayRnd(SayInfoWithStream sayInfostream)
         {
             var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.C_End, MainPlugin.MW.Core.Save.Mode);
-            Action Next = () =>
-            {
-                MainPlugin.MW.Main.SayRnd(sayInfostream);
-            };
+            sayInfostream.Force = true;
             if (think.Count > 0)
             {
-                MainPlugin.MW.Main.Display(think[Function.Rnd.Next(think.Count)], Next);
+                Task.Run(() =>
+                {
+                    while (!sayInfostream.IsFinishGen && Function.ComCheck(sayInfostream.CurrentText.ToString()) < 4 && sayInfostream.CurrentText.Length < 80)
+                    {
+                        Thread.Sleep(50);
+                    }
+                    int a = Function.ComCheck(sayInfostream.CurrentText.ToString());
+                    int b = sayInfostream.CurrentText.Length;
+                    MainPlugin.MW.Main.Display(think[Function.Rnd.Next(think.Count)], () => MainPlugin.MW.Main.SayRnd(sayInfostream));
+                });
             }
             else
             {
-                Next();
+                MainPlugin.MW.Main.SayRnd(sayInfostream);
             }
         }
 
