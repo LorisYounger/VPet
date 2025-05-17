@@ -246,7 +246,10 @@ namespace VPet_Simulator.Core
             else
                 sayInfoWithStream.Event_Finish += DealWithStreamFinish;
         }
-
+        /// <summary>
+        /// 流式传输用的阻断文字显示用的计时器
+        /// </summary>
+        DateTime nextshow = DateTime.Now;
         /// <summary>
         /// 增加显示新词
         /// </summary>
@@ -254,7 +257,22 @@ namespace VPet_Simulator.Core
         public void DealWithUpdate((string fullText, string changedText) data)
         {
             timeleft = data.fullText.Length;
-            Dispatcher.Invoke(() => { TText.Text = data.fullText; });
+            Task.Run(() =>
+            {
+                int sleeptime = 0;
+                lock (oldsaystream)
+                    if (DateTime.Now < nextshow)
+                    {
+                        sleeptime = (int)(nextshow - DateTime.Now).TotalMilliseconds;
+                        nextshow = nextshow.AddMilliseconds(200);
+                    }
+                    else
+                        nextshow = DateTime.Now.AddMilliseconds(200);
+                if (sleeptime > 0) //处理前等待
+                    Thread.Sleep(sleeptime);
+                Dispatcher.Invoke(() => { TText.Text = data.fullText; });
+            });
+
         }
         /// <summary>
         /// 处理流式传输结束

@@ -55,11 +55,14 @@ namespace VPet_Simulator.Core
                 while (!sayInfo.IsFinishGen && Function.ComCheck(sayInfo.CurrentText.ToString()) < 4 && sayInfo.CurrentText.Length < 80)
                 {
                     Thread.Sleep(100);
-                }              
+                }
                 sayInfo.GraphName = SayRndFunction(sayInfo.CurrentText.ToString());
-                Say(sayInfo);
+                if (sayInfo.IsFinishGen)
+                    Say(sayInfo.ToNoneStream());
+                else
+                    Say(sayInfo);
             });
-        }        
+        }
         /// <summary>
         /// 随机表情的方法, 修改这个方法可以使用指定类型的说话表情
         /// </summary>

@@ -134,7 +134,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 是否完成生成
         /// </summary>
-        public bool IsFinishGen = false;       
+        public bool IsFinishGen = false;
 
         /// <summary>
         /// 将当前对话内容全部更新为指定文本
@@ -165,6 +165,23 @@ namespace VPet_Simulator.Core
                 return;
             IsFinishGen = true;
             Event_Finish?.Invoke(CurrentText.ToString());
+        }
+
+        /// <summary>
+        /// 讲当前对话内容转换为无流式传输的SayInfo (不等待)
+        /// 用途为: 流式传输生成速度太快了,直接完成了 干脆直接扔到无流式传输的SayInfo里
+        /// </summary>
+        /// <returns></returns>
+        public SayInfoWithOutStream ToNoneStream()
+        {
+            return new SayInfoWithOutStream()
+            {
+                GraphName = GraphName,
+                Force = Force,
+                Desc = Desc,
+                MsgContent = MsgContent,
+                Text = CurrentText.ToString()
+            };
         }
     }
 }
