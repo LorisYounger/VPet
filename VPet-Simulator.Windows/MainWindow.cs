@@ -351,6 +351,12 @@ namespace VPet_Simulator.Windows
                 {
                     MessageBoxX.Show(e.ToString(), "由于插件引起的自定按钮加载错误".Translate() + '-' + mp.PluginName);
                 }
+
+            Main.ToolBar.MenuDIY.Visibility = Visibility.Visible;
+            // 如果 MenuDIY 没有子项，则隐藏「自定」按钮
+            if (Main.ToolBar.MenuDIY.Items.Count == 0 && Set.HideMenuDiy)
+                Main.ToolBar.MenuDIY.Visibility = Visibility.Collapsed;
+            Main.ToolBar.UpdateMenuNumCols();
         }
         /// <summary>
         /// 加载帮助器
