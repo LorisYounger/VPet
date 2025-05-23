@@ -118,7 +118,8 @@ public partial class winGallery : WindowX
                     && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
                     && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
                     && (!selectedTags.Any() || selectedTags.All(st => p.TagsTrans.Contains(st)))
-                    && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
+                    && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)
+                        || p.TranslateName.Contains(searchText) || p.Description.Translate().Contains(searchText)));
             photos.AddRange(lockphoto);
         }
         //获取解锁的图片
@@ -129,7 +130,8 @@ public partial class winGallery : WindowX
                 && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
                 && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
                 && (!selectedTags.Any() || selectedTags.All(st => p.TagsTrans.Contains(st)))
-                && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)));
+                && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)
+                    || p.TranslateName.Contains(searchText) || p.Description.Translate().Contains(searchText)));
 
             photos.AddRange(unlockphoto);
         }
