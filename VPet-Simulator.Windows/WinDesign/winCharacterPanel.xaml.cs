@@ -710,7 +710,7 @@ namespace VPet_Simulator.Windows
                 if (mw.IsSteamUser)
                 {
                     Steamworks.Data.Image? img = await SteamFriends.GetLargeAvatarAsync(SteamClient.SteamId);
-                    img_b_head.Source = winMutiPlayer.ConvertToImageSource(img.Value);
+                    img_b_head.Source = winMutiPlayer.ConvertToImageSource(img);
                 }
                 cb_birthday.SelectedIndex = sidx;
                 BDay_Load();

@@ -163,7 +163,7 @@ namespace VPet_Simulator.Core
         }
 
         public Timer EndTimer = new Timer() { Interval = 200 };
-        public Timer ShowTimer = new Timer() { Interval = 100 };
+        public Timer ShowTimer = new Timer() { Interval = 150 };
         public Timer CloseTimer = new Timer() { Interval = 50 };
         int timeleft;
         string graphName;
@@ -183,7 +183,7 @@ namespace VPet_Simulator.Core
             outputtext = text.ToList();
             outputtextsample.Clear();
             LName.Content = name;
-            timeleft = Function.ComCheck(text) * 10 + 10;
+            timeleft = Function.ComCheck(text) * 10 + 20;
             ShowTimer.Start(); EndTimer.Stop(); CloseTimer.Stop();
             this.Visibility = Visibility.Visible;
             Opacity = .8;
@@ -264,10 +264,10 @@ namespace VPet_Simulator.Core
                     if (DateTime.Now < nextshow)
                     {
                         sleeptime = (int)(nextshow - DateTime.Now).TotalMilliseconds;
-                        nextshow = nextshow.AddMilliseconds(200);
+                        nextshow = nextshow.AddMilliseconds(150);
                     }
                     else
-                        nextshow = DateTime.Now.AddMilliseconds(200);
+                        nextshow = DateTime.Now.AddMilliseconds(150);
                 if (sleeptime > 0) //处理前等待
                     Thread.Sleep(sleeptime);
                 Dispatcher.Invoke(() => { TText.Text = data.fullText; });
@@ -311,7 +311,7 @@ namespace VPet_Simulator.Core
                     oldsaystream = null;
                 }
 
-                timeleft = Function.ComCheck(fullText) * 5 + 5;
+                timeleft = Function.ComCheck(fullText) * 5 + 10;
                 EndTimer.Start();
                 if ((m.DisplayType.Name == graphName || m.DisplayType.Type == GraphInfo.GraphType.Say) && m.DisplayType.Animat != GraphInfo.AnimatType.C_End)
                     m.DisplayCEndtoNomal(m.DisplayType.Name);

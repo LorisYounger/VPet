@@ -146,7 +146,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                 hostName.Text = lb.Owner.Name;
                 HostID = lb.Owner.Id.Value;
                 lbLid.Text = lb.Id.Value.ToString("x");
-                HostHead.ImageSource = ConvertToImageSource(img.Value);
+                HostHead.ImageSource = ConvertToImageSource(img);
             });
 
             SteamNetworking.AllowP2PPacketRelay(true);
