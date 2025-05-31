@@ -9,13 +9,13 @@
 /// food:|name#萝莉丝姜饼人:|type#Snack:|Exp#600:|StrengthFood#80:|Likability#2:|Health#2:|Feeling#50:|price#128.0:|graph#eat:|desc#萝莉丝姜饼人_giftintor:|
 
 
-/// food:|name#大肉粽:|type#Meal:|Exp#200:|Strength#40:|StrengthDrink#-5:|StrengthFood#160:|Likability#4:|Health#1:|Feeling#40:|price#85.0:|graph#eat:|desc#朴实无华的大肉粽，由板栗咸蛋黄和大块五花肉包成的粽子，一口咬下去鲜嫩多汁满满肉料，至福！:|
-/// food:|name#凉粽:|type#Meal:|Exp#250:|Strength#20:|StrengthDrink#-5:|StrengthFood#120:|Likability#2:|Health#1:|Feeling#30:|price#75.0:|graph#eat:|desc#也叫“灰水粽”，就是把小粽子，放冰箱冻凉了拿出来沾蜂蜜吃，是粽子家族中的甜品。:|
-/// food:|name#甜粽子:|type#Meal:|Exp#260:|Strength#60:|StrengthDrink#-25:|StrengthFood#140:|Likability#3:|Health#1:|Feeling#60:|price#87.0:|graph#eat:|desc#顾名思义，就是以甜食为主要馅料的粽子。甜食包括红枣、豆沙、莲蓉、桂花、花生、栗子等等。甜粽永不为奴！:|
-/// food:|name#咸粽子:|type#Meal:|Exp#280:|Strength#80:|StrengthDrink#-30:|StrengthFood#150:|Likability#3:|Health#1:|Feeling#50:|price#92.0:|graph#eat:|desc#咸粽，就是以咸食为主要馅料的粽子。咸食包括肉类、蛋类、菌类、海鲜类等等。为了咸粽！:|
-/// food:|name#粽叶糍粑:|type#Meal:|Exp#220:|Strength#65:|StrengthDrink#-10:|StrengthFood#130:|Likability#2:|Health#1:|Feeling#40:|price#74.5:|graph#eat:|desc#用芭蕉叶包起来的糯米糍粑，软软糯糯，老少皆宜，就算不是端午节，也经常有人做，是一道亲民的小吃。:|
+food:|name#大肉粽:|type#Meal:|Exp#200:|Strength#40:|StrengthDrink#-5:|StrengthFood#160:|Likability#4:|Health#1:|Feeling#40:|price#85.0:|graph#eat:|desc#朴实无华的大肉粽，由板栗咸蛋黄和大块五花肉包成的粽子，一口咬下去鲜嫩多汁满满肉料，至福！:|
+food:|name#凉粽:|type#Meal:|Exp#250:|Strength#20:|StrengthDrink#-5:|StrengthFood#120:|Likability#2:|Health#1:|Feeling#30:|price#75.0:|graph#eat:|desc#也叫“灰水粽”，就是把小粽子，放冰箱冻凉了拿出来沾蜂蜜吃，是粽子家族中的甜品。:|
+food:|name#甜粽子:|type#Meal:|Exp#260:|Strength#60:|StrengthDrink#-25:|StrengthFood#140:|Likability#3:|Health#1:|Feeling#60:|price#87.0:|graph#eat:|desc#顾名思义，就是以甜食为主要馅料的粽子。甜食包括红枣、豆沙、莲蓉、桂花、花生、栗子等等。甜粽永不为奴！:|
+food:|name#咸粽子:|type#Meal:|Exp#280:|Strength#80:|StrengthDrink#-30:|StrengthFood#150:|Likability#3:|Health#1:|Feeling#50:|price#92.0:|graph#eat:|desc#咸粽，就是以咸食为主要馅料的粽子。咸食包括肉类、蛋类、菌类、海鲜类等等。为了咸粽！:|
+food:|name#粽叶糍粑:|type#Meal:|Exp#220:|Strength#65:|StrengthDrink#-10:|StrengthFood#130:|Likability#2:|Health#1:|Feeling#40:|price#74.5:|graph#eat:|desc#用芭蕉叶包起来的糯米糍粑，软软糯糯，老少皆宜，就算不是端午节，也经常有人做，是一道亲民的小吃。:|
 
-food:|name#yearmantou:|type#Meal:|Exp#200:|Strength#100:|StrengthDrink#-5:|StrengthFood#200:|Likability#3:|Health#2:|Feeling#120:|price#96.0:|graph#eat:|desc#大的小的圆的方的长的短的扁的条的都是馒头，甜的咸的牛奶蔬菜杂粮原味都好吃！:|
-food:|name#yearchicken:|type#Meal:|Exp#100:|Strength#240:|StrengthDrink#-10:|StrengthFood#300:|Likability#2:|Health#1:|Feeling#100:|price#98.0:|graph#eat:|desc#南方必备年菜---鸡，当然不论炒鸡、白切鸡、卤鸡、烧鸡还是大盘鸡都算。同理可得，圣诞节烤鸡也是年菜。:|
-food:|name#yearfish:|type#Meal:|Exp#100:|Strength#160:|StrengthDrink#-10:|StrengthFood#180:|Likability#2:|Health#1:|Feeling#100:|price#72.5:|graph#eat:|desc#主人主人，你的红烧鱼确实很香，但还是太吃厨艺了，有没有更加简单又好吃的年菜推荐一下吗？:|
-food:|name#yearjiaozi:|type#Meal:|Exp#200:|Strength#100:|StrengthDrink#0:|StrengthFood#220:|Likability#3:|Health#2:|Feeling#120:|price#100.0:|graph#eat:|desc#《猪肉白菜馅可是经典》 /n《羊肉大葱馅也非常好吃》 /n《三鲜馅也是不错的选择》 /n《什么叫西红柿炒蛋馅？》:|
+/// food:|name#yearmantou:|type#Meal:|Exp#200:|Strength#100:|StrengthDrink#-5:|StrengthFood#200:|Likability#3:|Health#2:|Feeling#120:|price#96.0:|graph#eat:|desc#大的小的圆的方的长的短的扁的条的都是馒头，甜的咸的牛奶蔬菜杂粮原味都好吃！:|
+/// food:|name#yearchicken:|type#Meal:|Exp#100:|Strength#240:|StrengthDrink#-10:|StrengthFood#300:|Likability#2:|Health#1:|Feeling#100:|price#98.0:|graph#eat:|desc#南方必备年菜---鸡，当然不论炒鸡、白切鸡、卤鸡、烧鸡还是大盘鸡都算。同理可得，圣诞节烤鸡也是年菜。:|
+/// food:|name#yearfish:|type#Meal:|Exp#100:|Strength#160:|StrengthDrink#-10:|StrengthFood#180:|Likability#2:|Health#1:|Feeling#100:|price#72.5:|graph#eat:|desc#主人主人，你的红烧鱼确实很香，但还是太吃厨艺了，有没有更加简单又好吃的年菜推荐一下吗？:|
+/// food:|name#yearjiaozi:|type#Meal:|Exp#200:|Strength#100:|StrengthDrink#0:|StrengthFood#220:|Likability#3:|Health#2:|Feeling#120:|price#100.0:|graph#eat:|desc#《猪肉白菜馅可是经典》 /n《羊肉大葱馅也非常好吃》 /n《三鲜馅也是不错的选择》 /n《什么叫西红柿炒蛋馅？》:|
