@@ -121,7 +121,7 @@
             <MenuItem x:Name="MenuFeed" Padding="0" x:FieldModifier="public" Header="{ll:Str 投喂}" />
             <MenuItem x:Name="MenuPanel" Padding="0" Header="{ll:Str 面板}" MouseEnter="MenuPanel_MouseEnter"
                     MouseLeave="MenuPanel_MouseLeave" />
-            <MenuItem x:Name="MenuInteract" Width="99" Padding="0" Header="{ll:Str 互动}" x:FieldModifier="public">
+            <MenuItem x:Name="MenuInteract" Padding="0" Header="{ll:Str 互动}" x:FieldModifier="public">
                 <MenuItem Click="Sleep_Click" Header="{ll:Str 睡觉}" />
                 <MenuItem x:Name="MenuStudy" Header="{ll:Str 学习}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                         pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public" />

@@ -779,6 +779,16 @@
             </TabItem>
             <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 自定}">
                 <StackPanel>
+                    <pu:Switch x:Name="HideMenuDIY" Background="Transparent"
+                               BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
+                               Checked="HideMenuDIY_Checked" CheckedBackground="{DynamicResource Primary}"
+                               CheckedBorderBrush="{DynamicResource Primary}"
+                               CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                               Content="{ll:Str 自动隐藏「自定」按钮}"
+                               ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
+                               ToggleSize="14" ToolTip="{ll:Str '没有自定项目时, 自动从选单隐藏「自定」按钮'}"
+                               Unchecked="HideMenuDIY_Checked"
+                               Margin="0 0 0 20" />
                     <TextBlock Background="{x:Null}" TextWrapping="Wrap">
                         <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 自定义链接}" /><LineBreak />
                         <Run Text="{ll:Str '在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能'}" /><LineBreak />

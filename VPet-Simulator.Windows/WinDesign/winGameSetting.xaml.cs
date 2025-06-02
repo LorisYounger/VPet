@@ -85,6 +85,8 @@ namespace VPet_Simulator.Windows
             petboxbef = petboxid;
             PetIntor.Text = mw.Pets[petboxid].Intor.Translate();
 
+            HideMenuDIY.IsChecked = mw.Set.HideMenuDiy;
+
             TextBoxStartUpX.Text = mw.Set.StartRecordPoint.X.ToString();
             TextBoxStartUpY.Text = mw.Set.StartRecordPoint.Y.ToString();
             numBackupSaveMaxNum.Value = mw.Set.BackupSaveMaxNum;
@@ -1125,6 +1127,13 @@ namespace VPet_Simulator.Windows
             mw.Core.Save.Name = TextBoxPetName.Text;
             if (mw.IsSteamUser)
                 SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
+        }
+
+        private void HideMenuDIY_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.HideMenuDiy = HideMenuDIY.IsChecked == true;
         }
 
         private void DIY_ADD_Click(object sender, RoutedEventArgs e)
