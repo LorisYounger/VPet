@@ -115,13 +115,16 @@
                 </Grid>
             </Grid>
         </TabItem>
-        <TabItem Header="{ll:Str 未翻译文档}">
+        <TabItem Header="{ll:Str 其他辅助工具}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="10*" />
                 </Grid.RowDefinitions>
-                <Button Click="Output_No_Local" Content="{ll:Str 导出未翻译文档}" />
+                <StackPanel>
+                    <Button Click="Output_No_Local" Content="{ll:Str 导出未翻译文档}" />
+                    <Button Click="Output_Graph" Content="{ll:Str 导出动画详情}" />
+                </StackPanel>
                 <TextBox x:Name="LocalTextBox" Grid.Row="1" AcceptsReturn="True" IsReadOnly="True"
                         MouseDown="Local_SelectAll_Click" />
             </Grid>

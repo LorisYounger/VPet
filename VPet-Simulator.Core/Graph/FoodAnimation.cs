@@ -87,7 +87,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 图片资源
         /// </summary>
-        public string Path;
+        public string Path { get; set; }
         private GraphCore GraphCore;
         /// <summary>
         /// 单帧动画

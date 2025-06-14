@@ -214,6 +214,24 @@ namespace VPet_Simulator.Windows
             mw.Windows.Remove(this);
         }
 
+        private void Output_Graph(object sender, RoutedEventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var gfs in mw.Core.Graph.GraphsList.Values)
+            {
+                foreach (List<IGraph> gf in gfs.Values)
+                {
+                    foreach (IGraph g in gf)
+                    {
+                        sb.AppendLine(g.GraphInfo.ToString());
+                        sb.AppendLine("path: " + g.Path);
+                        sb.AppendLine($"PlayState:{g.Control?.PlayState} ready:{g.IsReady} loop:{g.IsLoop} fail:{g.IsFail} {g.FailMessage}");
+                    }
+                }
+            }
+            LocalTextBox.Text = sb.ToString();
+        }
+
 
         //private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{

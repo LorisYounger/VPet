@@ -77,6 +77,11 @@ namespace VPet_Simulator.Core
             void Run(Decorator parant, ImageSource image, Action EndAction = null);
         }
         /// <summary>
+        /// 动画文件路径, 可能是文件夹或文件
+        /// </summary>
+        string Path { get; }
+
+        /// <summary>
         /// 动画控制类
         /// </summary>
         public class TaskControl
