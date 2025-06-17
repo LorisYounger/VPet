@@ -1,6 +1,7 @@
 ﻿using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -112,6 +113,9 @@ namespace VPet_Simulator.Windows
         private void WindowX_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             mw.Topmost = !mw.Topmost;
+            //同步托盘图标菜单中「置于顶层」选项的选中状态
+            (mw.notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_TopMost", false).First() as
+                System.Windows.Forms.ToolStripMenuItem).Checked = mw.Topmost;
 
             if (mw.Topmost == true && mw.HitThrough == true)
                 mw.SetTransparentHitThrough();
