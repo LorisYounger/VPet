@@ -113,26 +113,39 @@ public partial class winGallery : WindowX
         //获取锁定的图片
         if (isLockedChecked)
         {
-            var lockphoto = mw.Photos.FindAll(p => p.IsUnlock == false
-                    && (!isFavoriteChecked || p.IsStar)
-                    && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
-                    && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
-                    && (!selectedTags.Any() || selectedTags.All(st => p.TagsTrans.Contains(st)))
-                    && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)
-                        || p.TranslateName.Contains(searchText) || p.Description.Translate().Contains(searchText)));
+            var lockphoto = mw.Photos.FindAll(p =>
+                p.IsUnlock == false
+                && (!isFavoriteChecked || p.IsStar)
+                && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
+                && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
+                && (!selectedTags.Any() || selectedTags.All(st => p.TagsTrans.Contains(st)))
+                && (
+                    string.IsNullOrWhiteSpace(searchText)
+                    || p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                    || p.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                    || p.TranslateName.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                    || p.Description.Translate().Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                )
+            );
             photos.AddRange(lockphoto);
         }
         //获取解锁的图片
         if (isUnlockedChecked)
         {
-            var unlockphoto = mw.Photos.FindAll(p => p.IsUnlock == true
+            var unlockphoto = mw.Photos.FindAll(p =>
+                p.IsUnlock == true
                 && (!isFavoriteChecked || p.IsStar)
                 && (isIllustrationChecked || p.Type != Photo.PhotoType.Illustration)
                 && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
                 && (!selectedTags.Any() || selectedTags.All(st => p.TagsTrans.Contains(st)))
-                && (string.IsNullOrWhiteSpace(searchText) || p.Name.Contains(searchText) || p.Description.Contains(searchText)
-                    || p.TranslateName.Contains(searchText) || p.Description.Translate().Contains(searchText)));
-
+                && (
+                    string.IsNullOrWhiteSpace(searchText)
+                    || p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                    || p.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                    || p.TranslateName.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                    || p.Description.Translate().Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                )
+            );
             photos.AddRange(unlockphoto);
         }
 
