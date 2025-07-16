@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-        xmlns:local="clr-namespace:VPet_Simulator.Core"
+        xmlns:local="clr-namespace:VPet_Simulator.Core" xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="https://opensource.panuon.com/wpf-ui" Width="500" Height="500" VerticalAlignment="Top"
         MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave" mc:Ignorable="d">
@@ -108,20 +108,23 @@
                         Foreground="{DynamicResource DARKPrimary}" Text="+1/t" />
             </Grid>
         </Border>
-        <Menu Width="500" VerticalAlignment="Bottom" pu:MenuHelper.SubmenuItemsHorizontalContentAlignment="Center"
+        <Menu x:Name="ToolBarMenu" Width="500" VerticalAlignment="Bottom" pu:MenuHelper.SubmenuItemsHorizontalContentAlignment="Center"
                 pu:MenuHelper.TopLevelItemsHorizontalContentAlignment="Center"
                 Style="{DynamicResource ToolBarMenuStyle}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" pu:DropDownHelper.Width="NaN"
                 pu:DropDownHelper.MaxHeight="500" Height="60">
+            <Menu.Tag>
+                <system:Int32>5</system:Int32>
+            </Menu.Tag>
             <Menu.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="5" />
+                    <UniformGrid Columns="{Binding Tag, ElementName=ToolBarMenu}" />
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
             <MenuItem x:Name="MenuFeed" Padding="0" x:FieldModifier="public" Header="{ll:Str 投喂}" />
             <MenuItem x:Name="MenuPanel" Padding="0" Header="{ll:Str 面板}" MouseEnter="MenuPanel_MouseEnter"
                     MouseLeave="MenuPanel_MouseLeave" />
-            <MenuItem x:Name="MenuInteract" Width="99" Padding="0" Header="{ll:Str 互动}" x:FieldModifier="public">
+            <MenuItem x:Name="MenuInteract" Padding="0" Header="{ll:Str 互动}" x:FieldModifier="public">
                 <MenuItem Click="Sleep_Click" Header="{ll:Str 睡觉}" />
                 <MenuItem x:Name="MenuStudy" Header="{ll:Str 学习}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                         pu:DropDownHelper.MaxHeight="100" x:FieldModifier="public" />

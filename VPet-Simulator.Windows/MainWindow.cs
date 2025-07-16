@@ -351,6 +351,7 @@ namespace VPet_Simulator.Windows
                 {
                     MessageBoxX.Show(e.ToString(), "由于插件引起的自定按钮加载错误".Translate() + '-' + mp.PluginName);
                 }
+            Main.ToolBar.LoadDIY();
         }
         /// <summary>
         /// 加载帮助器

@@ -39,6 +39,7 @@ namespace VPet_Simulator.Core
             closePanelTimer.Elapsed += ClosePanelTimer_Tick;
             m.TimeUIHandle += M_TimeUIHandle;
             //LoadWork();
+            LoadDIY();
         }
         public void LoadClean()
         {
@@ -135,7 +136,26 @@ namespace VPet_Simulator.Core
                 }
             }
         }
-
+        /// <summary>
+        /// 自动显示和隐藏DIY菜单
+        /// </summary>
+        public void LoadDIY()
+        {
+            if (MenuDIY.Items.Count > 0)
+            {
+                if (MenuDIY.Visibility == Visibility.Visible)
+                    return;
+                MenuDIY.Visibility = Visibility.Visible;
+                ToolBarMenu.Tag = 5;
+            }
+            else
+            {
+                if (MenuDIY.Visibility == Visibility.Collapsed)
+                    return;
+                MenuDIY.Visibility = Visibility.Collapsed;
+                ToolBarMenu.Tag = 4;
+            }
+        }
         private void MenuStudy_Click(object sender, RoutedEventArgs e)
         {
             StartWork(wstudy);
@@ -334,6 +354,7 @@ namespace VPet_Simulator.Core
                     break;
                 case MenuType.DIY:
                     MenuDIY.Items.Add(menuItem);
+                    LoadDIY();
                     break;
                 case MenuType.Setting:
                     MenuSetting.Items.Add(menuItem);
