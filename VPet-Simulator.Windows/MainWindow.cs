@@ -2017,6 +2017,7 @@ namespace VPet_Simulator.Windows
                   {
                       winSetting.Show();
                   }));
+                  m_menu.Items.Add(new MenuItem("重启桌宠".Translate(), null, (x, y) => Restart()));
                   m_menu.Items.Add(new MenuItem("退出桌宠".Translate(), null, (x, y) => Close()));
 
                   LoadDIY();
