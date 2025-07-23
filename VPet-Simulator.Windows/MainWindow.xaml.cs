@@ -50,7 +50,10 @@ namespace VPet_Simulator.Windows
             {
                 PrefixSave = '-' + Args["prefix"].Info;
             }
-
+            if (Args.ContainsLine("linux"))
+            {
+                AllowsTransparency = true;
+            }
 
             PNGAnimation.MaxLoadMemory = (int)Function.MemoryAvailable() / 2;
 #if !X64
