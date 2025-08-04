@@ -76,7 +76,7 @@ public class ScheduleTask
             NowIndex = schedule[(gint)"now"];
             IsOn = schedule[(gbol)"ison"];
         }
-        
+
         imw.Main.WorkTimer.E_FinishWork += WorkTimer_E_FinishWork;
         RestTimer.Elapsed += RestTimer_Elapsed;
         if (IsOn)
@@ -468,7 +468,7 @@ public class ScheduleTask
             {
                 if (string.IsNullOrEmpty(nametrans))
                 {
-                    nametrans = Name.Translate();
+                    nametrans = string.IsNullOrEmpty(Name) ? "" : Name.Translate();
                 }
                 return nametrans;
             }
@@ -488,7 +488,7 @@ public class ScheduleTask
             {
                 if (string.IsNullOrEmpty(describetrans))
                 {
-                    describetrans = Describe.Translate();
+                    describetrans = string.IsNullOrEmpty(Describe) ? "" : Describe.Translate();
                 }
                 return describetrans;
             }
