@@ -61,7 +61,7 @@ public class GameSave_VPet : IGameSave
                 islevelup = true;
                 value -= lun;
                 LikabilityMax += 10;
-                if (Level++ > 1000 + LevelMax * 100)
+                if (++Level > 1000 + LevelMax * 100)
                 {
                     LevelMax++;
                     islevelmaxup = true;
