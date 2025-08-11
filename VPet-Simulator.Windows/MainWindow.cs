@@ -26,6 +26,7 @@ using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Windows.Interface.Food;
+using static VPet_Simulator.Windows.Interface.Photo.UnlockCondition;
 using Application = System.Windows.Application;
 using Color = System.Windows.Media.Color;
 using ContextMenu = System.Windows.Forms.ContextMenuStrip;
@@ -1577,7 +1578,25 @@ namespace VPet_Simulator.Windows
                 Desc = "萝莉丝的专属生日蛋糕，由3桶牛奶+2份糖+1个鸡蛋+3份小麦合。制作而成。营养丰富，可使所有状态回满。只有在萝莉丝生日才能吃的到哦。"
             };
             food.LoadImageSource(this);
+            food.Star = true;
             food.Price = (int)Math.Max(0, food.RealPrice * .5);
+            Foods.Add(food);
+            //生日蛋糕默认为加满的
+            food = new Food()
+            {
+                Name = "生日蛋糕2",//2nd 惊喜生日蛋糕
+                Likability = Core.Save.Level / 10,
+                Exp = Core.Save.Level,
+                Feeling = Core.Save.FeelingMax / 20,
+                StrengthDrink = Core.Save.StrengthMax / 20,
+                StrengthFood = Core.Save.StrengthMax / 20,
+                Type = FoodType.Food,
+                isoverload = false,
+                Desc = "主人给萝莉丝制作的惊喜蛋糕，每次品尝都会随机回满一个状态或者获得一次收益，还有神秘惊喜奖励!\n具体配方是：取出 香草 草中的 香草籽 并立刻将 香草荚 研磨投入 热牛奶 中， 香草籽 需要在含有 糖分 的瞬间投入 蛋糊，且需添加 柠檬 的 皮 之气息。 巧克力甘纳许 需要使用 秋 季后的 可可豆 并在 温热 的状态下使用 鲜奶油 进行混合。添加 天然 鲸油（澄清黄油）， 香草荚 需要在不切割的情况下萃取出 风味 并 避免 接触 金属，黏度维持在 绸缎状 以上。需要制备后时长不超过 4小时 的 香缇奶油，在将其粉碎（打发）前使其维持 冷藏 状态并在 冰水浴 之下 打发。"
+            };
+            food.LoadImageSource(this);
+            food.Star = true;
+            food.Price = food.RealPrice;
             Foods.Add(food);
 
             //第一次启动日期
@@ -2165,58 +2184,59 @@ namespace VPet_Simulator.Windows
                   }
 
 #if BDAY
-                  if (DateTime.Now < new DateTime(2024, 8, 22))
+                  if (DateTime.Now < new DateTime(2025, 8, 22) && DateTime.Now >= new DateTime(2025, 8, 14))
                   {
                       food.Star = true;
                       Task.Run(() =>
                       {
                           Thread.Sleep(10000);
-                          var btn = Dispatcher.Invoke(() =>
-                          {
-                              var button = new System.Windows.Controls.Button()
-                              {
-                                  Content = "查看生日公告/视频".Translate(),
-                                  FontSize = 20,
-                                  HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
-                                  Background = Function.ResourcesBrush(Function.BrushType.PrimaryDark),
-                                  Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
-                              };
-                              button.Click += (x, y) =>
-                              {
-                                  if (LocalizeCore.CurrentCulture.StartsWith("zh"))
-                                      ExtensionFunction.StartURL("https://www.bilibili.com/opus/965218905364627474");
-                                  else
-                                      ExtensionFunction.StartURL("https://store.steampowered.com/news/app/1920960/view/4374769594847756449");
-                              };
-                              return button;
-                          });
+                          //var btn = Dispatcher.Invoke(() =>
+                          //{
+                          //    var button = new System.Windows.Controls.Button()
+                          //    {
+                          //        Content = "查看生日公告/视频".Translate(),
+                          //        FontSize = 20,
+                          //        HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+                          //        Background = Function.ResourcesBrush(Function.BrushType.PrimaryDark),
+                          //        Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
+                          //    };
+                          //    button.Click += (x, y) =>
+                          //    {
+                          //        if (LocalizeCore.CurrentCulture.StartsWith("zh"))
+                          //            ExtensionFunction.StartURL("https://www.bilibili.com/opus/965218905364627474");
+                          //        else
+                          //            ExtensionFunction.StartURL("https://store.steampowered.com/news/app/1920960/view/4374769594847756449");
+                          //    };
+                          //    return button;
+                          //});
                           string bdt;
                           switch (DateTime.Now.Day)
                           {
                               case 14:
-                                  bdt = "祝我生日快乐~♪祝我生日快乐~♪，主人猜猜今天是什么日子？我的生日！主人真聪明！我就知道主人一定会记得我的生日的！谢谢主人！快来和我一起过生日吧~主人给我买的蛋糕真香啊~首先是是吹蜡烛许愿，我看看我的愿望清单: 一台5090电脑，嗨神话:吗喽 数字豪华版，还有...";
+                                  bdt = "怎么啦主人，找我有什么事情吗？\n~诶今天是我的生日！？我都忘记啦！谢谢主人！在主人身边我平时就过的很幸福了喵~和主人不知不觉又过了一年呢，以后我们要永远在一起喵！";
                                   break;
                               case 15:
-                                  bdt = "昨天生日过得真开心啊！谢谢主人陪我！什么？冰箱里还有剩蛋糕？太可恶了！马上拿嘴巴去吃！";
+                                  bdt = "昨天过得怎么样主人？有好好开心的玩到喵？如果还不够尽兴也没关系！萝莉丝陪主人再嗨一次喵！";
                                   break;
                               case 16:
-                                  bdt = "嗯。。生日蛋糕真好吃啊。。还想吃。。什么？今天也可以当生日过？！谢谢主人！";
+                                  bdt = "什么？生日已经过去这么久了？该开始日程表了喵？？救命喵！萝莉丝还不想长大！";
                                   break;
                               case 17:
-                                  bdt = "虽然生日已经过去了好几天，但是生日那天的气氛一直影响到现在呢。我才不是又想吃生日蛋糕了呢！哼！";
+                                  bdt = "主人~人家出现了生日戒断反应了喵~要主人喂我吃蛋糕才能好~";
                                   break;
                               case 18:
-                                  bdt = "过生日什么的太幼稚辣。人家也老大不小了，怎么可以去学小孩子过生日呢。和体重没关系！我被蛋糕所伤，今日起，戒蛋糕！";
+                                  bdt = "人家已经长大了喵，不会过生日这种。。。这种小孩子才会。。才会喜欢的幼稚东西了喵呜呜呜。";
                                   break;
                               case 19:
-                                  bdt = "是突然发现一个哲学问题，只要我把每天都当生日，那我就可以每天都过生日了！这可是辩证唯物主义的大发现啊！";
+                                  bdt = "不用担心主人，我逐渐理解一切喵！只要和主人在一起！天天都是生日喵！";
                                   break;
                               default:
-                                  bdt = "转眼之间已经过去一周了呢。生日的感觉也在慢慢淡忘。主人，明年你还愿意陪我一起过生日吗？";
+                                  bdt = "过了这么久了，应该马上到三周年了吧猫！什么？！才过一星期喵！呜呜呜，主人大人~能不能预支一下下次的生日喵~";
                                   break;
 
                           }
-                          Main.Say(bdt.Translate(), btn, "self");
+                          //Main.Say(bdt.Translate(), btn, "self");
+                          Main.Say(bdt.Translate(), "self");
                       });
                   }
 #endif
@@ -2230,6 +2250,10 @@ namespace VPet_Simulator.Windows
                           HostBDay();
                       }
                   };
+
+                  //生日蛋糕的特殊功能
+                  Event_TakeItem += MainWindow_Event_TakeItem;
+
 #if NewYear
                   //仅新年功能
                   if (DateTime.Now < new DateTime(2025, 2, 5))
@@ -2292,6 +2316,80 @@ namespace VPet_Simulator.Windows
             //    }));
             //}
 
+        }
+
+        private void MainWindow_Event_TakeItem(Food obj)
+        {
+            switch (obj.Name)
+            {
+                case "生日蛋糕2":
+                    switch (Function.Rnd.Next(15))
+                    {
+                        case 1:
+                        case 2:
+                        case 3:
+                            Core.Save.Strength = Core.Save.StrengthMax;
+                            Main.LabelDisplayShow("{0}充满抛瓦!".Translate(Core.Save.Name), 3000);
+                            break;
+                        case 4:
+                        case 5:
+                            Core.Save.Feeling = Core.Save.FeelingMax;
+                            Main.LabelDisplayShow("{0}今天也是好心情!".Translate(Core.Save.Name), 3000);
+                            break;
+                        case 6:
+                        case 7:
+                            Core.Save.StrengthFood = Core.Save.StrengthMax;
+                            Main.LabelDisplayShow("{0}吃饱了!".Translate(Core.Save.Name), 3000);
+                            break;
+                        case 8:
+                        case 9:
+                            Core.Save.StrengthDrink = Core.Save.StrengthMax;
+                            Main.LabelDisplayShow("{0}加满水了!".Translate(Core.Save.Name), 3000);
+                            break;
+                        case 10:
+                            int get = (Function.Rnd.Next(Core.Save.LevelUpNeed() * (GameSavesData.GameSave.LevelMax + 1)) / 200 + 1) * 100;
+                            Core.Save.Exp += get;
+                            Main.LabelDisplayShow("{0}经验 +{1} 告辞".Translate(Core.Save.Name, get.ToString("N0")), 4000);
+                            break;
+                        case 11:
+                            get = (Function.Rnd.Next(Core.Save.LevelUpNeed() * (GameSavesData.GameSave.LevelMax + 1)) / 500 + 1) * 10;
+                            Core.Save.Exp += get;
+                            Main.LabelDisplayShow("{0}在马路边捡到{1}金钱".Translate(Core.Save.Name, get.ToString("N0")), 4000);
+                            break;
+                        case 12:
+                            if (Function.Rnd.Next(3) != 0)
+                            {//再随一次, 给好感度
+                                get = Function.Rnd.Next((int)Core.Save.LikabilityMax / 25) + 1;
+                                Core.Save.Likability += get;
+                                Main.LabelDisplayShow("{0}更喜欢{1}了".Translate(Core.Save.Name, Core.Save.HostName), 4000);
+                                break;
+                            }
+                            var photos = Photos.FindAll(x => x.IsUnlock == false && x.UnlockAble.Lock == false);
+                            if (photos.Count > 0)
+                            {
+                                var tempphoto = photos.FindAll(x => x.UnlockAble.Time != null || x.UnlockAble.Date != null || x.UnlockAble.Holiday != HolidayType.None);
+                                if (tempphoto.Count > 0)//优先解锁时间/日期/节日的照片
+                                    photos = tempphoto;
+                                else
+                                {
+                                    tempphoto = photos.FindAll(x => x.UnlockAble.SellBoth == false && (x.UnlockAble.Feeling > 10 || x.UnlockAble.Likability >= 10 || x.UnlockAble.Money >= 10));
+                                    if (tempphoto.Count > 0)//然后解锁好感度/金钱/饱腹/口渴的照片
+                                        photos = tempphoto;
+                                }
+
+                                var photo = photos[Function.Rnd.Next(photos.Count)];
+                                photo.Unlock(this);
+                                Main.LabelDisplayShow("{0}收到了新照片".Translate(Core.Save.Name) + '\n' + photo.Name, 4000);
+                            }
+                            else
+                                goto case 11;
+                            break;
+                        default:
+                            Main.LabelDisplayShow("{0}获得了谢谢惠顾".Translate(Core.Save.Name), 4000);
+                            break;
+                    }
+                    break;
+            }
         }
 
         TextBlock tlvplus;
