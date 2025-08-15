@@ -2190,25 +2190,25 @@ namespace VPet_Simulator.Windows
                       Task.Run(() =>
                       {
                           Thread.Sleep(10000);
-                          //var btn = Dispatcher.Invoke(() =>
-                          //{
-                          //    var button = new System.Windows.Controls.Button()
-                          //    {
-                          //        Content = "查看生日公告/视频".Translate(),
-                          //        FontSize = 20,
-                          //        HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
-                          //        Background = Function.ResourcesBrush(Function.BrushType.PrimaryDark),
-                          //        Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
-                          //    };
-                          //    button.Click += (x, y) =>
-                          //    {
-                          //        if (LocalizeCore.CurrentCulture.StartsWith("zh"))
-                          //            ExtensionFunction.StartURL("https://www.bilibili.com/opus/965218905364627474");
-                          //        else
-                          //            ExtensionFunction.StartURL("https://store.steampowered.com/news/app/1920960/view/4374769594847756449");
-                          //    };
-                          //    return button;
-                          //});
+                          var btn = Dispatcher.Invoke(() =>
+                          {
+                              var button = new System.Windows.Controls.Button()
+                              {
+                                  Content = "查看生日公告/视频".Translate(),
+                                  FontSize = 20,
+                                  HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+                                  Background = Function.ResourcesBrush(Function.BrushType.PrimaryDark),
+                                  Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText),
+                              };
+                              button.Click += (x, y) =>
+                              {
+                                  if (LocalizeCore.CurrentCulture.StartsWith("zh"))
+                                      ExtensionFunction.StartURL("https://www.bilibili.com/opus/1100685352151023623");
+                                  else
+                                      ExtensionFunction.StartURL("https://store.steampowered.com/news/app/1920960/view/528729123117336267");
+                              };
+                              return button;
+                          });
                           string bdt;
                           switch (DateTime.Now.Day)
                           {
@@ -2235,8 +2235,8 @@ namespace VPet_Simulator.Windows
                                   break;
 
                           }
-                          //Main.Say(bdt.Translate(), btn, "self");
-                          Main.Say(bdt.Translate(), "self");
+                          Main.Say(bdt.Translate(), btn, "self");
+                          //Main.Say(bdt.Translate(), "self");
                       });
                   }
 #endif

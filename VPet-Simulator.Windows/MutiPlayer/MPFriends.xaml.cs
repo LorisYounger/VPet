@@ -246,6 +246,30 @@ public partial class MPFriends : WindowX, IMPFriend
         }
     }
     public ulong FriendID => friend.Id;
+
+
+    // Stream Data
+    public bool IsMe => friend.IsMe;
+    public bool IsFriend => friend.IsFriend;
+    public bool IsBlocked => friend.IsBlocked;
+    public bool IsPlayingThisGame => friend.IsPlayingThisGame;
+    public bool IsOnline => friend.IsOnline;
+    public bool IsAway => friend.IsAway;
+    public bool IsBusy => friend.IsBusy;
+    public bool IsSnoozing => friend.IsSnoozing;
+    public int SteamLevel => friend.SteamLevel;
+    public ImageSource Avatar
+    {
+        get
+        {
+            // 这里假设 winMutiPlayer 有一个静态方法用于转换头像
+            // 如果有缓存可用则直接返回，否则同步获取
+            var avatarTask = friend.GetMediumAvatarAsync();
+            avatarTask.Wait();
+            var img = avatarTask.Result;
+            return winMutiPlayer.ConvertToImageSource(img);
+        }
+    }
     /// <summary>
     /// 喂食显示动画
     /// </summary>

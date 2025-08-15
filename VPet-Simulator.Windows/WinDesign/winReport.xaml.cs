@@ -73,7 +73,7 @@ namespace VPet_Simulator.Windows
                 sb.Append($"&steamid={Steamworks.SteamClient.SteamId.Value}");
                 sb.Append($"&ver={mw.version}&repver=2&lang={LocalizeCore.CurrentCulture}");
                 sb.Append("&save=");
-                sb.AppendLine(HttpUtility.UrlEncode(save));
+                sb.Append(HttpUtility.UrlEncode(save));
 #pragma warning disable SYSLIB0014 // 类型或成员已过时
                 var request = (HttpWebRequest)WebRequest.Create(_url);
 #pragma warning restore SYSLIB0014 // 类型或成员已过时
