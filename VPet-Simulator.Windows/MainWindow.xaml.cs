@@ -53,6 +53,7 @@ namespace VPet_Simulator.Windows
             if (Args.ContainsLine("linux"))
             {
                 AllowsTransparency = true;
+                WindowStyle = WindowStyle.None;
             }
 
             PNGAnimation.MaxLoadMemory = (int)Function.MemoryAvailable() / 2;
