@@ -263,6 +263,8 @@ namespace VPet_Simulator.Windows
 
                 if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
                     Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
+                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))//备份功能
+                    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves_BKP");
 
                 if (Core != null && Core.Save != null)
                 {
@@ -277,10 +279,21 @@ namespace VPet_Simulator.Windows
                         File.Delete(ds[0]);
                         ds.RemoveAt(0);
                     }
+
                     if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps"))
                         File.Delete(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps");
 
-                    File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps", GameSavesData.ToLPS().ToString());
+                    var saveslps = GameSavesData.ToLPS();
+                    var savesdata = saveslps.ToString();
+
+                    int hash = Math.Abs(saveslps.GetHashCode() % 255);
+                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{hash:X}.lps"))
+                        File.Delete(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{hash:X}.lps");
+
+                    //存档
+                    File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps", savesdata);
+                    //备份
+                    File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves_BKP\\Save{PrefixSave}_{hash:X}.lps", savesdata);
 
                     if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
                     {
