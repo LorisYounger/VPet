@@ -192,6 +192,14 @@
                             Checked="ToggleButtonSearchParameters_CheckChanged"
                             Unchecked="ToggleButtonSearchParameters_CheckChanged" />
                 </StackPanel>
+                <TextBlock Text="{ll:Str 排序方式}" Margin="0, 3, 0, 0" />
+                <ComboBox x:Name="OrderBox" Margin="0,3,0,2" FontSize="16"
+                        SelectionChanged="ToggleButtonSearchParameters_CheckChanged"
+                        Style="{DynamicResource StandardComboBoxStyle}">
+                    <ComboBoxItem IsSelected="True" Content="{ll:Str 默认}" />
+                    <ComboBoxItem Content="{ll:Str 名称}" />
+                    <ComboBoxItem Content="{ll:Str 解锁日期}" />
+                </ComboBox>
                 <TextBlock Margin="0, 3, 0, 0" Text="{ll:Str 收藏}" />
                 <CheckBox x:Name="CheckBoxFavorite" Margin="0, 3, 0, 0" Style="{DynamicResource ThemedCheckBoxStyle}"
                         Content="{ll:Str 只看我收藏的}" Checked="ToggleButtonSearchParameters_CheckChanged"

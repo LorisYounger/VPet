@@ -148,6 +148,17 @@ public partial class winGallery : WindowX
             );
             photos.AddRange(unlockphoto);
         }
+        switch (OrderBox.SelectedIndex)
+        {
+            default:
+                break;
+            case 1:
+                photos = photos.OrderBy(p => p.TranslateName).ToList();
+                break;
+            case 2:
+                photos = photos.OrderByDescending(p => p.PlayerInfo.UnlockTime).ToList();
+                break;
+        }
 
         var totalCount = photos.Count();
         var pageSize = _rows * _columns;
