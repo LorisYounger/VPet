@@ -1557,7 +1557,7 @@ namespace VPet_Simulator.Windows
                     MessageBoxX.Show("存档名不能包括特殊符号".Translate());
                     return;
                 }
-            if (App.MutiSaves.FirstOrDefault(x => x.ToLower() == savename.ToLower()) != null)
+            if (App.MutiSaves.FirstOrDefault(x => x.ToLowerInvariant() == savename.ToLowerInvariant()) != null)
             {
                 MessageBoxX.Show("存档名重复".Translate());
                 return;

@@ -23,7 +23,7 @@ namespace VPet_Simulator.Windows.Interface
                 return;
             //else if (!source.Info.Contains(":\\"))
             source.Info = modpath + '\\' + source.Info;
-            line.Name = line.Name.ToLower();
+            line.Name = line.Name.ToLowerInvariant();
             AddorReplaceLine(line);
         }
         /// <summary>
@@ -36,7 +36,7 @@ namespace VPet_Simulator.Windows.Interface
             if (source == null)
                 return;
             //else if (!source.Info.Contains(":\\"))
-            line.Name = line.Name.ToLower();
+            line.Name = line.Name.ToLowerInvariant();
             AddorReplaceLine(line);
         }
         /// <summary>
@@ -47,7 +47,7 @@ namespace VPet_Simulator.Windows.Interface
         {
             foreach (ILine line in lps)
             {
-                line.Name = line.Name.ToLower();
+                line.Name = line.Name.ToLowerInvariant();
                 AddSource(line);
             }
         }
@@ -70,7 +70,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="path">资源位置</param>
         public void AddSource(string name, string path)
         {
-            AddorReplaceLine(new Line(name.ToLower(), "", "", new Sub("source", path)));
+            AddorReplaceLine(new Line(name.ToLowerInvariant(), "", "", new Sub("source", path)));
         }
         /// <summary>
         /// 查找资源
@@ -80,7 +80,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <returns>返回资源位置,如果未找到,则退回nofind</returns>
         public string FindSource(string name, string nofind = null)
         {
-            ILine line = FindLine(name.ToLower());
+            ILine line = FindLine(name.ToLowerInvariant());
             if (line == null)
                 return nofind;
             return line.Find("source").Info;
@@ -93,7 +93,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <returns>返回资源位置,如果未找到,则退回nofind</returns>
         public Uri FindSourceUri(string name, string nofind = null)
         {
-            ILine line = FindLine(name.ToLower());
+            ILine line = FindLine(name.ToLowerInvariant());
             if (line == null)
                 if (nofind != null)
                     return new Uri(nofind);

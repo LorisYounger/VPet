@@ -44,7 +44,7 @@ public partial class MPFriends : WindowX, IMPFriend
     {
         if (CoreMOD.OnModDefList.Contains(ModName))
             return true;
-        return OnMod.Find(ModName.ToLower()) != null;
+        return OnMod.Find(ModName.ToLowerInvariant()) != null;
     }
     public bool NOTouch { get; set; } = false;
 

@@ -16,7 +16,7 @@ internal class MPMOD
         //加载其他放在文件夹的图片
         foreach (FileInfo fi in di.EnumerateFiles("*.png"))
         {
-            mw.ImageSources.AddSource(pre + fi.Name.ToLower().Substring(0, fi.Name.Length - 4), fi.FullName);
+            mw.ImageSources.AddSource(pre + fi.Name.ToLowerInvariant().Substring(0, fi.Name.Length - 4), fi.FullName);
         }
         //加载其他放在文件夹中文件夹的图片
         foreach (DirectoryInfo fordi in di.EnumerateDirectories())
@@ -27,7 +27,7 @@ internal class MPMOD
         foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
         {
             var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
-            if (fi.Name.ToLower().StartsWith("set_"))
+            if (fi.Name.ToLowerInvariant().StartsWith("set_"))
                 foreach (var line in tmp)
                     mw.ImageSources.ImageSetting.AddorReplaceLine(line);
             else
@@ -62,14 +62,14 @@ internal class MPMOD
 
         foreach (DirectoryInfo di in Path.EnumerateDirectories())
         {
-            switch (di.Name.ToLower())
+            switch (di.Name.ToLowerInvariant())
             {
                 case "pet":
                     //宠物模型                           
                     foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
                     {
                         LpsDocument lps = new LpsDocument(File.ReadAllText(fi.FullName));
-                        if (lps.First().Name.ToLower() == "pet")
+                        if (lps.First().Name.ToLowerInvariant() == "pet")
                         {
                             var name = lps.First().Info;
                             if (name == "默认虚拟桌宠")

@@ -12,7 +12,7 @@ public partial class App : Application
     {
         if (e.Args != null && e.Args.Count() > 0)
         {
-            switch (e.Args[0].ToLower())
+            switch (e.Args[0].ToLowerInvariant())
             {
                 case "removestarup":
                     var path =

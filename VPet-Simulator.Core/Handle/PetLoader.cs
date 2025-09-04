@@ -84,7 +84,7 @@ namespace VPet_Simulator.Core
                 LpsDocument lps = new LpsDocument(File.ReadAllText(di.FullName + @"\info.lps"));
                 foreach (ILine line in lps)
                 {
-                    if (IGraphConvert.TryGetValue(line.Name.ToLower(), out var func))
+                    if (IGraphConvert.TryGetValue(line.Name.ToLowerInvariant(), out var func))
                     {
                         line.Add(new Sub("startuppath", startuppath));
                         var str = line.GetString("path");
@@ -105,7 +105,7 @@ namespace VPet_Simulator.Core
                     else
                     {
                         if (!string.IsNullOrEmpty(line.Name))
-                            MessageBox.Show(LocalizeCore.Translate("未知的图像类型: ") + line.Name.ToLower());
+                            MessageBox.Show(LocalizeCore.Translate("未知的图像类型: ") + line.Name.ToLowerInvariant());
                     }
                 }
             }

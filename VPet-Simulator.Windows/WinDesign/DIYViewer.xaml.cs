@@ -80,7 +80,7 @@ namespace VPet_Simulator.Windows
                     case Key.Subtract:
                     case Key.Multiply:
                     case Key.Divide:
-                        TextContent.AppendText($"{{{e.Key.ToString().ToUpper()}}}");
+                        TextContent.AppendText($"{{{e.Key.ToString().ToUpperInvariant()}}}");
                         break;
                     case Key.Escape:
                         TextContent.AppendText("{ESC}");

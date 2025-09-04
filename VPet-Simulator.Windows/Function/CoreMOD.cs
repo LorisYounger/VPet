@@ -56,7 +56,7 @@ namespace VPet_Simulator.Windows
             //加载其他放在文件夹的图片
             foreach (FileInfo fi in di.EnumerateFiles("*.png"))
             {
-                mw.ImageSources.AddSource(pre + fi.Name.ToLower().Substring(0, fi.Name.Length - 4), fi.FullName);
+                mw.ImageSources.AddSource(pre + fi.Name.ToLowerInvariant().Substring(0, fi.Name.Length - 4), fi.FullName);
             }
             //加载其他放在文件夹中文件夹的图片
             foreach (DirectoryInfo fordi in di.EnumerateDirectories())
@@ -67,7 +67,7 @@ namespace VPet_Simulator.Windows
             foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
             {
                 var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
-                if (fi.Name.ToLower().StartsWith("set_"))
+                if (fi.Name.ToLowerInvariant().StartsWith("set_"))
                     foreach (var line in tmp)
                         mw.ImageSources.ImageSetting.AddorReplaceLine(line);
                 else
@@ -141,13 +141,13 @@ namespace VPet_Simulator.Windows
             {
                 Tag.Add("该模组已停用");
                 foreach (DirectoryInfo di in Path.EnumerateDirectories())
-                    Tag.Add(di.Name.ToLower());
+                    Tag.Add(di.Name.ToLowerInvariant());
                 return;
             }
 
             foreach (DirectoryInfo di in Path.EnumerateDirectories())
             {
-                switch (di.Name.ToLower())
+                switch (di.Name.ToLowerInvariant())
                 {
                     case "theme":
                         Tag.Add("theme");
@@ -170,13 +170,13 @@ namespace VPet_Simulator.Windows
                             {
                                 foreach (FileInfo tmpfi in tmpdi.EnumerateFiles("*.png"))
                                 {
-                                    tmp.Images.AddSource(tmpfi.Name.ToLower().Substring(0, tmpfi.Name.Length - 4), tmpfi.FullName);
+                                    tmp.Images.AddSource(tmpfi.Name.ToLowerInvariant().Substring(0, tmpfi.Name.Length - 4), tmpfi.FullName);
                                 }
                                 foreach (DirectoryInfo fordi in tmpdi.EnumerateDirectories())
                                 {
                                     foreach (FileInfo tmpfi in fordi.EnumerateFiles("*.png"))
                                     {
-                                        tmp.Images.AddSource(fordi.Name + '_' + tmpfi.Name.ToLower().Substring(0, tmpfi.Name.Length - 4), tmpfi.FullName);
+                                        tmp.Images.AddSource(fordi.Name + '_' + tmpfi.Name.ToLowerInvariant().Substring(0, tmpfi.Name.Length - 4), tmpfi.FullName);
                                     }
                                 }
                             }
@@ -187,7 +187,7 @@ namespace VPet_Simulator.Windows
                         foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
                         {
                             LpsDocument lps = new LpsDocument(File.ReadAllText(fi.FullName));
-                            if (lps.First().Name.ToLower() == "pet")
+                            if (lps.First().Name.ToLowerInvariant() == "pet")
                             {
                                 var name = lps.First().Info;
                                 if (name == "默认虚拟桌宠")
@@ -260,7 +260,7 @@ namespace VPet_Simulator.Windows
                             var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
                             foreach (ILine li in tmp)
                             {
-                                switch (li.Name.ToLower())
+                                switch (li.Name.ToLowerInvariant())
                                 {
                                     case "lowfoodtext":
                                         mw.LowFoodText.Add(LPSConvert.DeserializeObject<LowText>(li));
@@ -331,7 +331,7 @@ namespace VPet_Simulator.Windows
                             if (loadfile[tmpfi.Name][(gbol)"skip"])
                                 continue;
 
-                            string dllcpu = loadfile[tmpfi.Name].GetString("cpu", "anycpu").ToLower();
+                            string dllcpu = loadfile[tmpfi.Name].GetString("cpu", "anycpu").ToLowerInvariant();
                             if (dllcpu != "anycpu" && dllcpu != cputype)
                             {
                                 continue;
@@ -388,7 +388,7 @@ namespace VPet_Simulator.Windows
                                 {
                                     if (exportedType.BaseType == typeof(MainPlugin))
                                     {
-                                        var n = exportedType.FullName.ToLower();
+                                        var n = exportedType.FullName.ToLowerInvariant();
                                         if (!(n.Contains("modmaker") || n.Contains("dlc")))
                                             App.MODType.Add(exportedType.FullName);
                                         LoadPlug.Add(path, exportedType);
@@ -448,14 +448,14 @@ namespace VPet_Simulator.Windows
             var line = t.FindLine("onmod");
             if (line == null)
                 return false;
-            return line.Find(ModName.ToLower()) != null;
+            return line.Find(ModName.ToLowerInvariant()) != null;
         }
         internal static bool IsPassMOD(this Setting t, string ModName)
         {
             var line = t.FindLine("passmod");
             if (line == null)
                 return false;
-            return line.Find(ModName.ToLower()) != null;
+            return line.Find(ModName.ToLowerInvariant()) != null;
         }
         internal static bool IsMSGMOD(this Setting t, string ModName)
         {
@@ -469,19 +469,19 @@ namespace VPet_Simulator.Windows
         {
             if (string.IsNullOrWhiteSpace(ModName))
                 return;
-            t.FindorAddLine("onmod").AddorReplaceSub(new Sub(ModName.ToLower()));
+            t.FindorAddLine("onmod").AddorReplaceSub(new Sub(ModName.ToLowerInvariant()));
         }
         internal static void OnModRemove(this Setting t, string ModName)
         {
-            t.FindorAddLine("onmod").Remove(ModName.ToLower());
+            t.FindorAddLine("onmod").Remove(ModName.ToLowerInvariant());
         }
         internal static void PassMod(this Setting t, string ModName)
         {
-            t.FindorAddLine("passmod").AddorReplaceSub(new Sub(ModName.ToLower()));
+            t.FindorAddLine("passmod").AddorReplaceSub(new Sub(ModName.ToLowerInvariant()));
         }
         internal static void PassModRemove(this Setting t, string ModName)
         {
-            t.FindorAddLine("passmod").Remove(ModName.ToLower());
+            t.FindorAddLine("passmod").Remove(ModName.ToLowerInvariant());
         }
     }
 }

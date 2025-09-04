@@ -79,7 +79,7 @@ namespace VPet_Simulator.Core
         {
             public override string Convert(dynamic value) => value;
 
-            public override dynamic ConvertBack(string info) => info.ToLower();
+            public override dynamic ConvertBack(string info) => info.ToLowerInvariant();
         }
 
         /// <summary>

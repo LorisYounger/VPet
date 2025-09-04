@@ -53,7 +53,7 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
             {
                 var modModel = new ModModel(loader);
                 modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
-                modModel.IsPass = setting[PassModLineName].Contains(modModel.ID.ToLower());
+                modModel.IsPass = setting[PassModLineName].Contains(modModel.ID.ToLowerInvariant());
                 Mods.Add(modModel);
             }
             else
@@ -98,10 +98,10 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
         {
             if (mod.IsEnabled is false)
                 continue;
-            setting[ModLineName].Add(new Sub(mod.ID.ToLower()));
+            setting[ModLineName].Add(new Sub(mod.ID.ToLowerInvariant()));
             setting[MsgModLineName].Add(new Sub(mod.ID, "True"));
             if (mod.IsPass)
-                setting[PassModLineName].Add(new Sub(mod.ID.ToLower()));
+                setting[PassModLineName].Add(new Sub(mod.ID.ToLowerInvariant()));
         }
     }
     #endregion

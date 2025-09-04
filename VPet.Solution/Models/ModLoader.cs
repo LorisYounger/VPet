@@ -112,7 +112,7 @@ public class ModLoader
         foreach (var dir in Directory.EnumerateDirectories(path))
         {
             var dirName = Path.GetFileName(dir);
-            switch (dirName.ToLower())
+            switch (dirName.ToLowerInvariant())
             {
                 case "pet":
                     //宠物模型

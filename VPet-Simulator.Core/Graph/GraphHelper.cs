@@ -28,7 +28,7 @@ namespace VPet_Simulator.Core
                     List<string[]> gtv = new List<string[]>();
                     foreach (string v in Enum.GetNames(typeof(GraphType)))
                     {
-                        gtv.Add(v.ToLower().Split('_'));
+                        gtv.Add(v.ToLowerInvariant().Split('_'));
                     }
                     graphtypevalue = gtv.ToArray();
                 }
