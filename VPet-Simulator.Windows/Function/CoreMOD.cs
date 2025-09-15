@@ -400,7 +400,7 @@ namespace VPet_Simulator.Windows
                             {
                                 if (loadfile[tmpfi.Name][(gbol)"ignoreError"])
                                     continue;
-                                ErrorMessage = e.Message + "\n" + e.InnerException.Message ?? "";
+                                ErrorMessage = e.ToString();
                                 SuccessLoad = false;
                             }
                         }
