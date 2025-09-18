@@ -1014,7 +1014,10 @@ namespace VPet_Simulator.Windows
             if (StartUpBox.IsChecked == true)
                 if (MessageBoxX.Show("该游戏随着开机启动该程序\r如需卸载游戏\r请关闭该选项".Translate() + "\n------\n" + "我已确认,并在卸载游戏前会关闭该功能".Translate(), "开机启动重要消息".Translate(),
                     MessageBoxButton.YesNo, MessageBoxIcon.Warning) != MessageBoxResult.Yes)
+                {
+                    StartUpBox.IsChecked = false;
                     return;
+                }
             //else
             //{
             //    mf.Set["SingleTips"][(gint)"open"] = 1;
