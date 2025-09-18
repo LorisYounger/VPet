@@ -1340,6 +1340,15 @@ namespace VPet_Simulator.Windows
                     }
                     CBSaveReLoad.SelectedIndex = 0;
                 }
+                if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))
+                {
+                    foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves_BKP")
+                        .GetFiles($"Save{mw.PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime))
+                    {
+                        CBSaveReLoad.Items.Add(file.Name.Split('.').First());
+                    }
+                    CBSaveReLoad.SelectedIndex = 0;
+                }
             }
         }
 
@@ -1349,6 +1358,10 @@ namespace VPet_Simulator.Windows
             {
                 string txt = (string)CBSaveReLoad.SelectedItem;
                 string path = ExtensionValue.BaseDirectory + @"\Saves\" + txt + ".lps";
+                if (!File.Exists(path))
+                {
+                    path = ExtensionValue.BaseDirectory + @"\Saves_BKP\" + txt + ".lps";
+                }
                 if (File.Exists(path))
                 {
                     try

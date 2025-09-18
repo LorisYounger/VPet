@@ -287,8 +287,8 @@ namespace VPet_Simulator.Windows
                     var savesdata = saveslps.ToString();
 
                     int hash = Math.Abs(saveslps.GetHashCode() % 255);
-                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{hash:X}.lps"))
-                        File.Delete(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{hash:X}.lps");
+                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves_BKP\\Save{PrefixSave}_{hash:X}.lps"))
+                        File.Delete(ExtensionValue.BaseDirectory + $"\\Saves_BKP\\Save{PrefixSave}_{hash:X}.lps");
 
                     //存档
                     File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps", savesdata);
