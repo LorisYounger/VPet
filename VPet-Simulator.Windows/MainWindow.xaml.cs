@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Interop;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
@@ -406,7 +405,7 @@ namespace VPet_Simulator.Windows
             {
                 var psi = new ProcessStartInfo
                 {
-                    FileName = Path.ChangeExtension(System.Reflection.Assembly.GetExecutingAssembly().Location, "exe"),
+                    FileName = System.IO.Path.ChangeExtension(System.Reflection.Assembly.GetExecutingAssembly().Location, "exe"),
                     UseShellExecute = true
                 };
                 Process.Start(psi);
@@ -553,6 +552,32 @@ namespace VPet_Simulator.Windows
                         try
                         {
 #endif
+                        GameSave_v2 gs = new GameSave_v2(new LPS(File.ReadAllText(latestsave)));
+                        //看看有没有备份,和备份对比下
+                        if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))
+                        {
+                            var bks = new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves_BKP")
+                                .GetFiles($"Save{PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime).First();
+                            try
+                            {
+                                var gs2 = new GameSave_v2(new LPS(File.ReadAllText(bks.FullName)));
+                                if (!(gs2.GameSave.Level == gs.GameSave.Level &&
+                                    gs2.GameSave.Exp == gs.GameSave.Exp &&
+                                    gs2.GameSave.Money == gs.GameSave.Money))
+                                {
+                                    //和备份不一样,说明可能有问题, 提示用户
+                                    MessageBox.Show("检测到存档和备份不一致\n当前存档:{0} Lv{1} ${4:f0}\n备份存档:{2} Lv{3} ${5:f0}\n如需还原请在设置中加载备份还原存档"
+                                        .Translate(new FileInfo(latestsave).Name, gs.GameSave.Level, bks.Name, gs2.GameSave.Level, gs.GameSave.Money, gs2.GameSave.Money)
+                                        , "存档不一致提示".Translate());
+
+                                }
+                            }
+                            catch
+                            {
+                                //备份损坏了,那就不管了                           
+                            }
+                        }
+
                         if (SavesLoad(new LPS(File.ReadAllText(latestsave))))
                             return;
                         //MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
@@ -568,6 +593,24 @@ namespace VPet_Simulator.Windows
 
             }
             GameSavesData = new GameSave_v2(petname.Translate());
+            //看看有没有备份,和备份对比下 (新建游戏)
+            if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))
+            {
+                var bks = new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves_BKP")
+                    .GetFiles($"Save{PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime).First();
+                try
+                {
+                    var gs2 = new GameSave_v2(new LPS(File.ReadAllText(bks.FullName)));
+                    //和备份不一样,说明可能有问题, 提示用户
+                    MessageBox.Show("检测到存档和备份不一致\n当前存档:{0} Lv{1} ${4:f0}\n备份存档:{2} Lv{3} ${5:f0}\n如需还原请在设置中加载备份还原存档"
+                        .Translate("New Game", GameSavesData.GameSave.Level, bks.Name, gs2.GameSave.Level, GameSavesData.GameSave.Money, gs2.GameSave.Money)
+                        , "存档不一致提示".Translate());
+                }
+                catch
+                {
+                    //备份损坏了,那就不管了                           
+                }
+            }
             Core.Save = GameSavesData.GameSave;
             HashCheck = HashCheck;
             GameSavesData.GameSave.Event_LevelUp += LevelUP;
