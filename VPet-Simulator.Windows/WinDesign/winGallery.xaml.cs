@@ -259,14 +259,8 @@ public partial class winGallery : WindowX
 
     private void ButtonExportAll_Click(object sender, RoutedEventArgs e)
     {
-        var selectedPhotos = new List<Photo>();
-        foreach (var item in AutoUniformGridImages.Children)
-        {
-            if (item is UnLockedGalleryItemUc unlockedItem)
-            {
-                selectedPhotos.Add(unlockedItem.Photo);
-            }
-        }
+        var selectedPhotos = mw.Photos.FindAll(p =>
+                p.IsUnlock == true);
         if (selectedPhotos.Count == 0)
         {
             Toast(
