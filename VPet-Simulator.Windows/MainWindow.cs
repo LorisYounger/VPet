@@ -2336,6 +2336,13 @@ namespace VPet_Simulator.Windows
             switch (obj.Name)
             {
                 case "生日蛋糕2":
+                    //更新下生日蛋糕的属性和价格
+                    obj.Exp = Core.Save.Level;
+                    obj.Likability = Core.Save.LikabilityMax / 20;
+                    obj.StrengthDrink = Core.Save.StrengthMax / 20;
+                    obj.StrengthFood = Core.Save.StrengthMax / 20;
+                    obj.isoverload = false;
+                    obj.Price = (int)Math.Max(0, obj.RealPrice * .5);
                     switch (Function.Rnd.Next(15))
                     {
                         case 1:
