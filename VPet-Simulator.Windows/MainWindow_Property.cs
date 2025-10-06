@@ -20,7 +20,7 @@ public partial class MainWindow
     /// <summary>
     /// 版本号
     /// </summary>
-    public int version { get; } = 11055;
+    public int version { get; } = 11056;
     /// <summary>
     /// 版本号
     /// </summary>

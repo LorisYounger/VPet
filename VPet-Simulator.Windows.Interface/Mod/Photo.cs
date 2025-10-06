@@ -155,7 +155,14 @@ public class Photo
             if (sub != null)
             {
                 var dt = sub.Info.Split('/', '-');
-                Date = new DateOnly(DateTime.Now.Year, int.Parse(dt[0]), int.Parse(dt[1]));
+                try
+                {
+                    Date = new DateOnly(DateTime.Now.Year, int.Parse(dt[0]), int.Parse(dt[1]));
+                }
+                catch
+                {
+                    Date = new DateOnly(DateTime.Now.Year, 1, 1);
+                }
             }
 
             sub = line.Find("ltime");
