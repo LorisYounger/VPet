@@ -156,7 +156,7 @@ public partial class winGallery : WindowX
                 photos = photos.OrderBy(p => p.TranslateName).ToList();
                 break;
             case 2:
-                photos = photos.OrderByDescending(p => p.PlayerInfo.UnlockTime).ToList();
+                photos = photos.OrderByDescending(p => p.PlayerInfo?.UnlockTime ?? DateTime.MinValue).ToList();
                 break;
         }
 
