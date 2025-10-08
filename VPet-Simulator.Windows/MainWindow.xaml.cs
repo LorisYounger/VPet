@@ -597,10 +597,10 @@ namespace VPet_Simulator.Windows
             //看看有没有备份,和备份对比下 (新建游戏)
             if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))
             {
-                var bks = new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves_BKP")
-                    .GetFiles($"Save{PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime).First();
                 try
                 {
+                    var bks = new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves_BKP")
+                        .GetFiles($"Save{PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime).First();
                     var gs2 = new GameSave_v2(new LPS(File.ReadAllText(bks.FullName)));
                     //和备份不一样,说明可能有问题, 提示用户
                     MessageBox.Show("检测到存档和备份不一致\n当前存档:{0} Lv{1} ${4:f0}\n备份存档:{2} Lv{3} ${5:f0}\n如需还原请在设置中加载备份还原存档"
