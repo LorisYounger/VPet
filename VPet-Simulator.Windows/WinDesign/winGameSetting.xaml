@@ -75,6 +75,10 @@
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
+                                <RowDefinition Height="35" />
+                                <RowDefinition Height="35" />
+                                <RowDefinition Height="35" />
+                                <RowDefinition Height="35" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 快速切换}" />
@@ -246,6 +250,46 @@
                                     Content="{ll:Str '在任务切换器中隐藏窗口'}" ToggleBrush="{DynamicResource PrimaryDark}"
                                     ToggleShadowColor="{x:Null}" ToggleSize="14" ToolTip="{ll:Str '在Alt+Tab中隐藏'}"
                                     Unchecked="SwitchHideFromTaskControl_OnChecked" />
+                            <TextBlock Grid.Row="14" VerticalAlignment="Center" Text="{ll:Str 透明功能}" />
+                            <TextBlock Grid.Row="15" VerticalAlignment="Center" Text="{ll:Str 透明度}" />
+                            <Grid Grid.Row="14" Grid.Column="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <pu:Switch x:Name="SwitchOpacity" Background="Transparent"
+                                        BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
+                                        Checked="SwitchOpacity_Checked" CheckedBackground="{DynamicResource Primary}"
+                                        CheckedBorderBrush="{DynamicResource Primary}"
+                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                                        Content="{ll:Str '设置透明度'}" ToggleBrush="{DynamicResource PrimaryDark}"
+                                        ToggleShadowColor="{x:Null}" ToggleSize="14" ToolTip="{ll:Str '为桌宠整体启用透明度'}"
+                                        Unchecked="SwitchOpacity_Checked" />
+                                <pu:Switch x:Name="SwitchOpacityHitThrough" Grid.Column="2"
+                                        Background="Transparent" BorderBrush="{DynamicResource PrimaryDark}"
+                                        BoxHeight="18" BoxWidth="35"
+                                        CheckedBackground="{DynamicResource Primary}"
+                                        CheckedBorderBrush="{DynamicResource Primary}"
+                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                                        Content="{ll:Str '鼠标穿透透明度'}" ToggleBrush="{DynamicResource PrimaryDark}"
+                                        ToggleShadowColor="{x:Null}" ToggleSize="14" ToolTip="{ll:Str '仅在鼠标穿透时启用透明度功能'}"
+                                        Unchecked="SwitchOpacityHitThrough_Checked"
+                                        Checked="SwitchOpacityHitThrough_Checked" />
+                            </Grid>
+                            <Grid Grid.Row="15" Grid.RowSpan="1" Grid.Column="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="OpacitySlider" VerticalAlignment="Center" IsSnapToTickEnabled="True"
+                                        LargeChange=".1" Maximum="1" Minimum="0.05" SmallChange=".05" Style="{DynamicResource StandardSliderStyle}"
+                                        TickFrequency="0.05" Value="0.6"
+                                        PreviewMouseUp="OpacitySlider_PreviewMouseUp" />
+                                <TextBlock Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Center"
+                                        Background="{x:Null}" FontSize="18" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}"
+                                        Text="{Binding ElementName=OpacitySlider, Path=Value, StringFormat=p0}" />
+                                 </Grid>
                         </Grid>
                     </ScrollViewer>
                     <Button x:Name="ButtonRestartGraph" VerticalAlignment="Bottom"

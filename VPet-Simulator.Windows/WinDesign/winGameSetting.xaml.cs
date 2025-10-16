@@ -177,6 +177,10 @@ namespace VPet_Simulator.Windows
                 System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
             SliderResolution.Value = mw.Set.Resolution;
 
+            SwitchOpacityHitThrough.IsChecked = mw.Set.OpacityHitThrough;
+            SwitchOpacity.IsChecked = mw.Set.OpacityMain;
+            OpacitySlider.Value = mw.Set.Opacity;
+
 #if X64
             GameVerison.Content = "游戏版本".Translate() + $"v{mw.Version} x64";
 #else
@@ -1719,6 +1723,38 @@ namespace VPet_Simulator.Windows
             if (!AllowChange || TextBoxHostBDay.SelectedDateTime == null)
                 return;
             mw.GameSavesData.SetDateTime("HostBDay", TextBoxHostBDay.SelectedDateTime.Value);
+        }
+
+        private void SwitchOpacityHitThrough_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            mw.Set.OpacityHitThrough = SwitchOpacityHitThrough.IsChecked == true;
+        }
+
+        private void SwitchOpacity_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            if(SwitchOpacity.IsChecked == true)
+            {
+                mw.Set.OpacityHitThrough = true;
+                mw.Set.OpacityMain = true;
+                SwitchOpacityHitThrough.IsChecked = true;
+                mw.Opacity = mw.Set.Opacity;
+            }
+            else
+            {
+                mw.Set.OpacityMain = false;
+                mw.Opacity = 1;
+            }
+        }
+
+        private void OpacitySlider_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            mw.Set.Opacity = OpacitySlider.Value;
+            if (mw.Set.OpacityMain)
+                mw.Opacity = mw.Set.Opacity;
         }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)

@@ -737,14 +737,18 @@ namespace VPet_Simulator.Windows
                     Win32.User32.SetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE,
                         (IntPtr)(int)((long)Win32.User32.GetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) | (long)Win32.ExtendedWindowStyles.WS_EX_TRANSPARENT));
                     petHelper?.SetOpacity(false);
-                    Opacity = 0.6;
+                    if (Set.OpacityHitThrough)
+                        Opacity = Set.Opacity;
                 }
                 else
                 {
                     Win32.User32.SetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE,
                   (IntPtr)(int)((long)Win32.User32.GetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE) & ~(long)Win32.ExtendedWindowStyles.WS_EX_TRANSPARENT));
                     petHelper?.SetOpacity(true);
-                    Opacity = 1;
+                    if (Set.OpacityMain)
+                        Opacity = Set.Opacity;
+                    else
+                        Opacity = 1;
                 }
             }
         }

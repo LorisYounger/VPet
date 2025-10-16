@@ -501,6 +501,22 @@ namespace VPet_Simulator.Windows
             set => this[(gbol)"debug"] = value;
         }
 
+        public double Opacity
+        {
+            get => Math.Min(Math.Max(this["gameconfig"].GetDouble("opacity", 0.6), 0.05), 1);
+            set => this["gameconfig"].SetDouble("opacity", value);
+        }
+        public bool OpacityMain
+        {
+            get => this["gameconfig"].GetBool("opacitymain");
+            set => this["gameconfig"].SetBool("opacitymain", value);
+        }
+        public bool OpacityHitThrough
+        {
+            get => !this["gameconfig"].GetBool("opacityhitthrough");
+            set => this["gameconfig"].SetBool("opacityhitthrough", !value);
+        }
+
         /// <summary>
         /// 读写自定义游戏设置(给mod准备的接口)
         /// </summary>

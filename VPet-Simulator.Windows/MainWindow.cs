@@ -1337,6 +1337,8 @@ namespace VPet_Simulator.Windows
 
                 //MGrid.Height = 500 * Set.ZoomLevel;
                 MGrid.Width = 500 * Set.ZoomLevel;
+                if (Set.OpacityMain)
+                    this.Opacity = Set.Opacity;
 
                 double L = 0, T = 0;
                 if (Set.StartRecordLast)
