@@ -47,7 +47,20 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示默认情况, 默认为默认动画
         /// </summary>
-        public Action DisplayNomal;
+        public Action DisplayNomal { get; set; }
+        /// <summary>
+        /// 尝试触发移动
+        /// </summary>
+        public Func<bool> DisplayMove { get; set; }
+        /// <summary>
+        /// 显示待机情况 (只有符合条件的才会显示)
+        /// </summary>
+        public Func<bool> DisplayIdel { get; set; }
+        /// <summary>
+        /// 显示待机(模式1)情况
+        /// </summary>
+        public Action DisplayIdel_StateONE { get; set; }
+
         /// <summary>
         /// 显示默认动画
         /// </summary>
@@ -87,7 +100,7 @@ namespace VPet_Simulator.Core
         /// 尝试触发移动
         /// </summary>
         /// <returns></returns>
-        public bool DisplayMove()
+        public bool DisplayToMove()
         {
             var list = Core.Graph.GraphConfig.Moves.ToList();
             for (int i = Function.Rnd.Next(list.Count); 0 != list.Count; i = Function.Rnd.Next(list.Count))
@@ -184,7 +197,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示待机(模式1)情况
         /// </summary>
-        public void DisplayIdel_StateONE()
+        public void DisplayToIdel_StateONE()
         {
             looptimes = 0;
             CountNomal = 0;
@@ -193,7 +206,7 @@ namespace VPet_Simulator.Core
             if (list != null && list.Count > 0)
                 Display(list[Function.Rnd.Next(list.Count)], () => DisplayIdel_StateONEing(name));
             else
-                Display(GraphType.StateONE, AnimatType.A_Start, DisplayIdel_StateONEing);
+                DisplayIdel();
         }
         /// <summary>
         /// 显示待机(模式1)情况
@@ -244,7 +257,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示待机情况 (只有符合条件的才会显示)
         /// </summary>
-        public bool DisplayIdel()
+        public bool DisplayToIdel()
         {
             if (Core.Graph.GraphsName.TryGetValue(GraphType.Idel, out var gl))
             {

@@ -610,6 +610,14 @@ namespace VPet_Simulator.Core
             /// 其他状态,给开发者留个空位计算
             /// </summary>
             Empty,
+            /// <summary>
+            /// 贴在墙边 (左边)
+            /// </summary>
+            SideLeft,
+            /// <summary>
+            /// 贴在墙边 (右边)
+            /// </summary>
+            SideRight,
         }
         /// <summary>
         /// 获得工作列表分类
