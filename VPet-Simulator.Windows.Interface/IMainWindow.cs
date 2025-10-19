@@ -264,6 +264,14 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         /// <returns></returns>
         Task<int> GenerateAuthKey();
+
+        /// <summary>
+        /// 呼叫事件 Event_TakeItemHandle
+        /// </summary>
+        /// <param name="item">物品</param>
+        /// <param name="count">个数</param>
+        /// <param name="from">来源</param>
+        public void TakeItemHandle(Food item, int count, string from);
     }
 
 }

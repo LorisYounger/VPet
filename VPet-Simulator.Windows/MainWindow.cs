@@ -498,6 +498,7 @@ namespace VPet_Simulator.Windows
                         return;
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
+                    mw.TakeItemHandle(item, 1, "autofood");
                     TakeItem(item);
                     GameSavesData.Statistics[(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
@@ -509,6 +510,7 @@ namespace VPet_Simulator.Windows
                         return;
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
+                    mw.TakeItemHandle(item, 1, "autodrink");
                     TakeItem(item);
                     GameSavesData.Statistics[(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
@@ -529,6 +531,7 @@ namespace VPet_Simulator.Windows
                     }
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
+                    mw.TakeItemHandle(item, 1, "autofeel");
                     TakeItem(item);
                     GameSavesData.Statistics[(gint)"stat_autogift"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
@@ -651,9 +654,27 @@ namespace VPet_Simulator.Windows
 
         }
         /// <summary>
-        /// 事件:吃东西
+        /// 事件:使用东西 (所有使用东西都会触发)
         /// </summary>
         public event Action<Food> Event_TakeItem;
+        /// <summary>
+        /// 事件:使用东西 (仅 自动购买/更好买 调用) int: 个数 string: 来源
+        /// betterbuy: 更好买手动购买
+        /// auto*: 自动购买 (autofood/autodrink/autofeel) 因为饿了/渴了/心情不好
+        /// friend: 朋友赠送 (访客表)
+        /// *: 其他MOD调用
+        /// </summary>
+        public event Action<Food,int, string> Event_TakeItemHandle;
+        /// <summary>
+        /// 呼叫事件 Event_TakeItemHandle
+        /// </summary>
+        /// <param name="item">物品</param>
+        /// <param name="count">个数</param>
+        /// <param name="from">来源</param>
+        public void TakeItemHandle(Food item, int count, string from)
+        {
+            Event_TakeItemHandle?.Invoke(item, count, from);
+        }
         /// <summary>
         /// 使用/食用物品 (不包括显示动画)
         /// </summary>

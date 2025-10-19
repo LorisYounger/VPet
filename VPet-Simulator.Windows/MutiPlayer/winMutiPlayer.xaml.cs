@@ -404,6 +404,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                                         {//单次联机收礼物上限1000
                                             giveprice += item.Price;
                                             mw.Core.Save.Money += item.Price;
+                                            mw.TakeItemHandle(item, 1, "friend");
                                             mw.TakeItem(feed.Item);
                                         }
                                     }

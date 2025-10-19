@@ -112,4 +112,6 @@ public partial class MainWindow
     /// 所有可用套餐
     /// </summary>
     public List<PackageFull> SchedulePackage { get; set; } = new List<PackageFull>();
+
+    
 }
