@@ -71,6 +71,6 @@ public class ActivityLog
     /// </summary>
     public string ToString(Main m)
     {
-        return $"[{Time.ToShortTimeString()}] {IText.ConverText(("al_" + Type).Translate(Description.Split('|')),m)}";
+        return $"[{Time.ToShortTimeString()}] {string.Format(IText.ConverText(("al_" + Type).Translate(), m), Description.Split('|'))}";
     }
 }

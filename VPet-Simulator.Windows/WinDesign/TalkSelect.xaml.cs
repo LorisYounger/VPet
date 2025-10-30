@@ -132,7 +132,7 @@ namespace VPet_Simulator.Windows
             RelsTime = RelsTime.AddMinutes(5);
             lastAddTime = DateTime.Now;
 
-            mw.Main.SayRnd(say.ConverText(mw.Main), desc: say.FoodToDescription());
+            mw.Main.SayRnd(say.TranslateTextConvert(mw.Main), desc: say.FoodToDescription());
             if (say.ToTags.Count > 0)
             {
                 var list = mw.SelectTexts.FindAll(x => x.ContainsTag(say.ToTags)).ToList();

@@ -52,9 +52,9 @@ public class IText
     /// <summary>
     /// 将文本转换成实际值
     /// </summary>
-    public string ConverText(Main m) => ConverText(TranslateText, m);
+    public string TranslateTextConvert(Main m) => ConverText(TranslateText, m);
     /// <summary>
-    /// 将文本转换成实际值
+    /// 将文本转换成实际值 (注意: 会和 Trainslate({0}) 冲突), 先 Trainslate, 再 Convert 最后再 Format
     /// </summary>
     public static string ConverText(string text, Main m)
     {

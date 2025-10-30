@@ -6,5 +6,5 @@ al_take_autofeel#{name}買了禮物給自己 {0}x{1}:|
 al_take_friend#朋友給{name}買了 {0}x{1}:|
 al_take_betterbuy#{hostname}買了 {name}給{name} {0}x{1}:|
 al_work_start#{name} 開始 {0}:|
-al_work_end#{name} 結束 {0}, 共計用時 {2}:|
-photo_unlock#解鎖了照片 {0}:|
+al_work_end#{name} 結束 {0}, 共計用時 {2}分鐘:|
+al_photo_unlock#解鎖了照片 {0}:|

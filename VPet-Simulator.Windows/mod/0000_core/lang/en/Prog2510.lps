@@ -6,5 +6,5 @@ al_take_autofeel#{name} purchased a gift for themselves: {0} x {1}:|
 al_take_friend#A friend purchased {0} x {1} for {name}.:|
 al_take_betterbuy#{hostname} purchased {0} x {1} for {name}.:|
 al_work_start#{name} started {0}.:|
-al_work_end#{name} finished {0}. Total duration: {2}:|
-photo_unlock#Unlocked photo: {0}:|
+al_work_end#{name} finished {0}. Total duration: {2}min:|
+al_photo_unlock#Unlocked photo: {0}:|
