@@ -48,6 +48,7 @@ namespace VPet_Simulator.Windows
                 if (mw.IsSteamUser)
                     cb_AgreeUpload.IsEnabled = true;
             }
+            Task.Run(Load_Log);
         }
 
         private void Statistics_StatisticChanged(Statistics sender, string name, SetObject value)
@@ -718,6 +719,7 @@ namespace VPet_Simulator.Windows
                 Height = 675;
                 load2 = true;
             }
+
         }
         public void BDay_Load()
         {
@@ -797,6 +799,37 @@ namespace VPet_Simulator.Windows
                 return;
             }
             lb_b_datetime.Content = "Shot on VPet - " + dtp_bdiy.SelectedDateTime?.ToShortDateString();
+        }
+
+        private void Load_Log()
+        {
+            string text = "";
+            if (mw.Set.DeBug)
+                text = string.Join('\n', mw.ActivityLogs.Select(x => x.ToString(mw.Main)).ToList());
+            else
+                text = string.Join('\n', mw.ActivityLogs.Where(x => x.IsDebug == false).Select(x => x.ToString(mw.Main)).ToList());
+            Dispatcher.Invoke(() =>
+            {
+                tb_log.Text = text;
+            });
+            mw.ActivityLogs.CollectionChanged += ActivityLogs_CollectionChanged;
+        }
+
+        private void ActivityLogs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (ActivityLog log in e.NewItems)
+                    {
+                        if (mw.Set.DeBug || log.IsDebug == false)
+                        {
+                            tb_log.AppendText("\n" + log.ToString(mw.Main));
+                        }
+                    }
+                }
+            });
         }
     }
 }

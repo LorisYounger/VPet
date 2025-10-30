@@ -381,6 +381,10 @@
                 </Border>
             </Grid>
         </TabItem>
+        <TabItem Header="{ll:Str 活动日志}">
+            <TextBox x:Name="tb_log" AcceptsReturn="True" AcceptsTab="True" IsReadOnly="True"
+                    VerticalScrollBarVisibility="Visible" />
+        </TabItem>
     </TabControl>
 
 </pu:WindowX>

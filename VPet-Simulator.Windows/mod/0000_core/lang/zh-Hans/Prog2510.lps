@@ -1,0 +1,10 @@
+al_stream_invite_other#好友{0}邀请{hostname}玩游戏:|
+al_stream_invite_vpet#收到来自{0}的访客邀请:|
+al_take_autofood#{name}给自己购买了食物 {0}x{1}:|
+al_take_autodrink#{name}给自己购买了饮料 {0}x{1}:|
+al_take_autofeel#{name}给自己购买了礼物 {0}x{1}:|
+al_take_friend#朋友给{name}购买了 {0}x{1}:|
+al_take_betterbuy#{hostname}给{name}购买了 {0}x{1}:|
+al_work_start#{name} 开始 {0}:|
+al_work_end#{name} 结束 {0}, 共计用时 {2}:|
+photo_unlock#解锁了照片 {0}:|

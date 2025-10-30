@@ -1,0 +1,10 @@
+al_stream_invite_other#好友{0}邀請{hostname}玩遊戲:|
+al_stream_invite_vpet#收到來自{0}的訪客邀請:|
+al_take_autofood#{name}給自己買了食物 {0}x{1}:|
+al_take_autodrink#{name}買了飲料給自己 {0}x{1}:|
+al_take_autofeel#{name}買了禮物給自己 {0}x{1}:|
+al_take_friend#朋友給{name}買了 {0}x{1}:|
+al_take_betterbuy#{hostname}買了 {name}給{name} {0}x{1}:|
+al_work_start#{name} 開始 {0}:|
+al_work_end#{name} 結束 {0}, 共計用時 {2}:|
+photo_unlock#解鎖了照片 {0}:|

@@ -52,7 +52,7 @@ namespace VPet_Simulator.Core
             /// </summary>
             public double count;
             /// <summary>
-            /// 当前完成工作花费时间
+            /// 当前完成工作花费时间 (分钟)
             /// </summary>
             public double spendtime;
             /// <summary>

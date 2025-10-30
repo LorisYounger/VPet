@@ -498,7 +498,7 @@ namespace VPet_Simulator.Windows
                         return;
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
-                    mw.TakeItemHandle(item, 1, "autofood");
+                    TakeItemHandle(item, 1, "autofood");
                     TakeItem(item);
                     GameSavesData.Statistics[(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
@@ -510,7 +510,7 @@ namespace VPet_Simulator.Windows
                         return;
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
-                    mw.TakeItemHandle(item, 1, "autodrink");
+                    TakeItemHandle(item, 1, "autodrink");
                     TakeItem(item);
                     GameSavesData.Statistics[(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
@@ -531,7 +531,7 @@ namespace VPet_Simulator.Windows
                     }
                     var item = food[Function.Rnd.Next(food.Count)];
                     Core.Save.Money -= item.Price * 0.2;
-                    mw.TakeItemHandle(item, 1, "autofeel");
+                    TakeItemHandle(item, 1, "autofeel");
                     TakeItem(item);
                     GameSavesData.Statistics[(gint)"stat_autogift"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
@@ -664,7 +664,7 @@ namespace VPet_Simulator.Windows
         /// friend: 朋友赠送 (访客表)
         /// *: 其他MOD调用
         /// </summary>
-        public event Action<Food,int, string> Event_TakeItemHandle;
+        public event Action<Food, int, string> Event_TakeItemHandle;
         /// <summary>
         /// 呼叫事件 Event_TakeItemHandle
         /// </summary>
@@ -2289,6 +2289,11 @@ namespace VPet_Simulator.Windows
 
                   //生日蛋糕的特殊功能
                   Event_TakeItem += MainWindow_Event_TakeItem;
+                  //添加购买事件
+                  Event_TakeItemHandle += (item, count, from) => ActivityLogs.Add(new ActivityLog("take_" + from, item.TranslateName, count.ToString()));
+                  //添加工作事件
+                  Main.Event_WorkStart += (work) => ActivityLogs.Add(new ActivityLog("work_start", work.NameTrans));
+                  Main.Event_WorkEnd += (workinfo) => ActivityLogs.Add(new ActivityLog("work_end", workinfo.work.NameTrans, workinfo.Reason.ToString(), workinfo.spendtime.ToString("f0"), workinfo.count.ToString("f0")));
 
 #if NewYear
                   //仅新年功能
@@ -2682,6 +2687,7 @@ namespace VPet_Simulator.Windows
                 p.Unlock(this);
                 sb.Append(p.TranslateName);
             }
+            ActivityLogs.Add(new ActivityLog("photo_unlock", sb.ToString().AsSpan(2).ToString()));
             Dispatcher.Invoke(() =>
             NoticeBox.Show(string.Concat(sb.ToString().AsSpan(2), "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate()
             , Panuon.WPF.UI.MessageBoxIcon.Info, true, 5000));

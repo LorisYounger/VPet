@@ -1,6 +1,7 @@
 ﻿using LinePutScript.Dictionary;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -272,6 +273,10 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="count">个数</param>
         /// <param name="from">来源</param>
         public void TakeItemHandle(Food item, int count, string from);
-    }
 
+        /// <summary>
+        /// 活动日志 不会保存
+        /// </summary>
+        public ObservableCollection<ActivityLog> ActivityLogs { get; }
+    }
 }

@@ -221,7 +221,6 @@ namespace VPet_Simulator.Windows
             //看是什么模式
             if (mw.Set.EnableFunction)
             {//$10以内的食物允许赊账
-                mw.TakeItemHandle(item, (int)nibuytimes.Value, "betterbuy");
                 for (int i = 0; i < (int)nibuytimes.Value; i++)
                 {
                     if (item.Price >= 10 && item.Price >= mw.Core.Save.Money)
@@ -243,6 +242,7 @@ namespace VPet_Simulator.Windows
                     }
                     mw.TakeItem(item);
                 }
+                mw.TakeItemHandle(item, (int)nibuytimes.Value, "betterbuy");
             }
 
             mw.DisplayFoodAnimation(item.GetGraph(), item.ImageSource);

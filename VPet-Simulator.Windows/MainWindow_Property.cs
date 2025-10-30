@@ -3,6 +3,7 @@ using LinePutScript.Localization.WPF;
 using Steamworks;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -102,10 +103,10 @@ public partial class MainWindow
     /// 当前启用主题
     /// </summary>
     public Theme Theme = null;
+
     /// <summary>
     /// 日程表
     /// </summary>
-
     public ScheduleTask ScheduleTask { get; set; }
 
     /// <summary>
@@ -113,5 +114,8 @@ public partial class MainWindow
     /// </summary>
     public List<PackageFull> SchedulePackage { get; set; } = new List<PackageFull>();
 
-    
+    /// <summary>
+    /// 活动日志 不会保存
+    /// </summary>
+    public ObservableCollection<ActivityLog> ActivityLogs { get; set; } = new ObservableCollection<ActivityLog>();
 }

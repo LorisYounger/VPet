@@ -350,6 +350,7 @@ namespace VPet_Simulator.Windows
                 return;
             if (!friend.IsPlayingThisGame)
             {
+                ActivityLogs.Add(new ActivityLog("stream_invite_other", friend.Name));
                 Main.Say("你的好友{0}邀请你玩游戏,快去回应ta吧".Translate(friend.Name));
                 return;
             }
@@ -365,6 +366,7 @@ namespace VPet_Simulator.Windows
                     winMutiPlayer.Show();
                     Main.MsgBar.ForceClose();
                 };
+                ActivityLogs.Add(new ActivityLog("stream_invite_vpet", friend.Name));
                 Main.Say("收到来自{0}的访客邀请,是否加入?".Translate(friend.Name), msgcontent: btn);
             });
         }

@@ -1,0 +1,10 @@
+al_stream_invite_other#Friend {0} invited {hostname} to play a game.:|
+al_stream_invite_vpet#Received a guest invitation from {0}.:|
+al_take_autofood#{name} purchased food for themselves: {0} x {1}:|
+al_take_autodrink#{name} purchased drinks for themselves: {0} x {1}:|
+al_take_autofeel#{name} purchased a gift for themselves: {0} x {1}:|
+al_take_friend#A friend purchased {0} x {1} for {name}.:|
+al_take_betterbuy#{hostname} purchased {0} x {1} for {name}.:|
+al_work_start#{name} started {0}.:|
+al_work_end#{name} finished {0}. Total duration: {2}:|
+photo_unlock#Unlocked photo: {0}:|
