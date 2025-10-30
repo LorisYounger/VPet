@@ -8,3 +8,4 @@ al_take_betterbuy#{hostname}给{name}购买了 {0}x{1}:|
 al_work_start#{name} 开始 {0}:|
 al_work_end#{name} 结束 {0}, 共计用时 {2}分钟:|
 al_photo_unlock#解锁了照片 {0}:|
+i_schedulenote#在签署日程表对应工作/学习的机构后，可以自主在工作/学习面板选择要完成的工作/学习日程\n妥善安排时间并点击开始后，萝莉斯会在机构的提醒下自己按时完成对应的工作/学习:|

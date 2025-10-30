@@ -153,7 +153,7 @@
                 <Grid x:Name="gdSchedule">
                     <Label HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" Content="&#xEE59;"
                             FontFamily="pack://application:,,,/Res/#remixicon"
-                            Foreground="{DynamicResource PrimaryDarker}" FontSize="18" ToolTip="{ll:Str 'test'}" />
+                            Foreground="{DynamicResource PrimaryDarker}" FontSize="18" ToolTip="{ll:Str 'i_schedulenote'}" />
                     <TabControl pu:TabControlHelper.ItemsCornerRadius="4" pu:TabControlHelper.ItemsHeight="NaN"
                             pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
                             pu:TabControlHelper.ItemsPadding="10,7"
