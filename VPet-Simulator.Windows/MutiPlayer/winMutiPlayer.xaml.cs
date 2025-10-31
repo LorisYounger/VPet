@@ -127,7 +127,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
 
     public void ShowLobbyInfo()
     {
-        giveprice = -1000 + mw.Core.Save.Level * -10;
+        giveprice = -1000 - (100 * (mw.GameSavesData.GameSave.LevelMax + 1) + mw.GameSavesData.GameSave.Level) * 100;
         _ = Task.Run(async () =>
         {
             lb.SetMemberData("save", mw.GameSavesData.GameSave.ToLine().ToString());
@@ -399,9 +399,9 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                                         mw.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price), 6000);
                                         Log("{0}花费${3}给{1}买了{2}".Translate(byname, mw.GameSavesData.GameSave.Name, feed.Item.TranslateName, feed.Item.Price));
                                         //对于要修改数据的物品一定要再次检查,避免联机开挂毁存档
-                                        if (item.Price >= 10 && item.Price <= 1000 && item.Health >= 0 && item.Exp >= 0 && item.Likability >= 0 && giveprice < 0
+                                        if (item.Price >= 10 && item.Price <= (100 * (mw.GameSavesData.GameSave.LevelMax + 1) + mw.GameSavesData.GameSave.Level) * 10 && item.Health >= 0 && item.Exp >= 0 && item.Likability >= 0 && giveprice < 0
                                            && item.Strength >= 0 && item.StrengthDrink >= 0 && item.StrengthFood >= 0 && item.Feeling >= 0)
-                                        {//单次联机收礼物上限1000
+                                        {//单次联机收礼物上限 (100 * (精英化次数+1) + 等级)*10
                                             giveprice += item.Price;
                                             mw.Core.Save.Money += item.Price;
                                             mw.TakeItemHandle(item, 1, "friend");
