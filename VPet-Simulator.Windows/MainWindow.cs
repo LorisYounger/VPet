@@ -2294,6 +2294,13 @@ namespace VPet_Simulator.Windows
                   //添加工作事件
                   Main.Event_WorkStart += (work) => ActivityLogs.Add(new ActivityLog("work_start", work.NameTrans));
                   Main.Event_WorkEnd += (workinfo) => ActivityLogs.Add(new ActivityLog("work_end", workinfo.work.NameTrans, workinfo.Reason.ToString(), workinfo.spendtime.ToString("f0"), workinfo.count.ToString("f0")));
+                  Main.SayProcess.Add((sayinfo) =>
+                  {
+                      Task.Run(async () =>
+                      {
+                          ActivityLogs.Add(new ActivityLog("petsay", await sayinfo.GetSayText()));
+                      });
+                  });
 
 #if NewYear
                   //仅新年功能

@@ -58,7 +58,7 @@ namespace VPet_Simulator.Core
                 }
                 sayInfo.GraphName = SayRndFunction(sayInfo.CurrentText.ToString());
                 if (sayInfo.IsFinishGen)
-                    Say(sayInfo.ToNoneStream());
+                    Say(sayInfo.ToNoneStream().Result);
                 else
                     Say(sayInfo);
             });
@@ -68,7 +68,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public Func<string, string> SayRndFunction;
         /// <summary>
-        /// 说话处理
+        /// 说话处理 (请不要阻塞该处理)
         /// </summary>
         public List<Action<SayInfo>> SayProcess = new List<Action<SayInfo>>();
 

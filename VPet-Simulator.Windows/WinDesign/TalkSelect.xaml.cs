@@ -73,7 +73,7 @@ namespace VPet_Simulator.Windows
                 {
                     if (!textSaid.Contains(item.Choose))
                     {
-                        tbTalk.Items.Add(item.Choose.Translate());
+                        tbTalk.Items.Add(item.TranslateChoose);
                     }
                 }
                 btn_Send.IsEnabled = true;
@@ -101,6 +101,10 @@ namespace VPet_Simulator.Windows
             mw.Main.ToolBar.Visibility = Visibility.Collapsed;
             var say = textList[tbTalk.SelectedIndex];
             textList.RemoveAt(tbTalk.SelectedIndex);
+
+            //添加日志
+            mw.ActivityLogs.Add(new ActivityLog("hostsay",say.TranslateChoose));
+
             //聊天效果
             if (say.Exp != 0)
             {
@@ -128,6 +132,7 @@ namespace VPet_Simulator.Windows
             mw.Main.Core.Save.EatFood(say);
             mw.Main.Core.Save.Money += say.Money;
 
+            
             textSaid.Add(say.Choose);
             RelsTime = RelsTime.AddMinutes(5);
             lastAddTime = DateTime.Now;

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace VPet_Simulator.Core
 {
@@ -38,6 +37,10 @@ namespace VPet_Simulator.Core
         /// 是否已经播放了语音
         /// </summary>
         public bool IsGenVoice = false;
+        /// <summary>
+        /// 获得说话内容 (若是流式传输则会等待完成)
+        /// </summary>
+        public abstract Task<string> GetSayText();
     }
     /// <summary>
     /// 说话信息类 原本的SayInfo
@@ -81,6 +84,13 @@ namespace VPet_Simulator.Core
         /// 说话内容
         /// </summary>
         public string Text;
+        /// <summary>
+        /// 获得说话内容 接口实现, 就是 返回Text
+        /// </summary>
+        public override Task<string> GetSayText()
+        {
+            return Task.FromResult(Text);
+        }
     }
     /// <summary>
     /// 说话信息类 带有流式传输的SayInfo
@@ -168,12 +178,14 @@ namespace VPet_Simulator.Core
         }
 
         /// <summary>
-        /// 讲当前对话内容转换为无流式传输的SayInfo (不等待)
-        /// 用途为: 流式传输生成速度太快了,直接完成了 干脆直接扔到无流式传输的SayInfo里
+        /// 讲当前对话内容转换为无流式传输的SayInfo (等待至完成)
         /// </summary>
-        /// <returns></returns>
-        public SayInfoWithOutStream ToNoneStream()
+        public async Task<SayInfoWithOutStream> ToNoneStream()
         {
+            while (!IsFinishGen)
+            {
+                await Task.Delay(10);
+            }
             return new SayInfoWithOutStream()
             {
                 GraphName = GraphName,
@@ -182,6 +194,17 @@ namespace VPet_Simulator.Core
                 MsgContent = MsgContent,
                 Text = CurrentText.ToString()
             };
+        }
+        /// <summary>
+        /// 获得说话内容 (流式传输会等待完成)
+        /// </summary>
+        public override async Task<string> GetSayText()
+        {
+            while (!IsFinishGen)
+            {
+                await Task.Delay(10);
+            }
+            return CurrentText.ToString();
         }
     }
 }
