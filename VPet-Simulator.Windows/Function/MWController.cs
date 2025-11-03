@@ -1,5 +1,6 @@
-﻿using System.Drawing;
+using System.Drawing;
 using VPet_Simulator.Core;
+using VPet_Simulator.Core.Display;
 
 namespace VPet_Simulator.Windows
 {
@@ -9,11 +10,31 @@ namespace VPet_Simulator.Windows
     public class MWController : IController
     {
         readonly MainWindow mw;
+        private WindowManager _windowManager;
         public MWController(MainWindow mw)
         {
             this.mw = mw;
             _isPrimaryScreen = mw.Set.MoveAreaDefault;
             _screenBorder = mw.Set.MoveArea;
+            InitializeWindowManager();
+        }
+
+        private void InitializeWindowManager()
+        {
+            _windowManager = new WindowManager(mw.Core.Controller.WindowHandle);
+            mw.Core.MainDisplay.WindowShuttleCheckCallback = CheckWindowShuttle;
+        }
+
+        private bool CheckWindowShuttle(System.Windows.Rect rect)
+        {
+            WindowInfo targetWindow = _windowManager.CheckWindowEdge(rect);
+            if (targetWindow != null)
+            {
+                // 触发窗口穿梭
+                ShuttleToTargetPosition(targetWindow, rect);
+                return true;
+            }
+            return false;
         }
 
         private Rectangle _screenBorder;
@@ -144,5 +165,18 @@ namespace VPet_Simulator.Windows
 
         public int InteractionCycle => mw.Set.InteractionCycle;
 
+        public void ShuttleToTargetPosition(WindowInfo targetWindow, System.Windows.Rect petBounds)
+        {
+            var targetPosition = _windowManager.GetShuttleTargetPosition(targetWindow, petBounds);
+            mw.Core.MainDisplay.DisplayShuttleAnimation(targetPosition, () =>
+            {
+                // 穿梭完成后的操作，例如调整窗口位置
+                mw.Dispatcher.Invoke(() =>
+                {
+                    mw.Left = targetPosition.X;
+                    mw.Top = targetPosition.Y;
+                });
+            });
+        }
     }
 }

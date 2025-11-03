@@ -1,4 +1,4 @@
-﻿using LinePutScript.Localization.WPF;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
@@ -15,8 +15,15 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// Main.xaml 的交互逻辑
     /// </summary>
-    public partial class Main : ContentControlX, IDisposable
+    public partial class Main : MainDisplay
     {
+        /// <summary>
+        /// 主显示实例
+        /// </summary>
+
+        
+
+        
         /// <summary>
         /// 游戏核心
         /// </summary>
@@ -201,6 +208,7 @@ namespace VPet_Simulator.Core
         {
             InitializeComponent();
             Core = core;
+            Core.MainDisplay = this;
 
             labeldisplaytimer.Elapsed += Labledisplaytimer_Elapsed;
 
@@ -476,13 +484,14 @@ namespace VPet_Simulator.Core
 
         public void Dispose()
         {
+            base.Dispose();
             EventTimer.Dispose();
             MoveTimer.Dispose();
             MsgBar.Dispose();
             ToolBar.Dispose();
-            if (PetGrid.Child is IGraph g)
+            if (PetGrid.Child is IGraph g) 
                 g.Stop(true);
-            if (PetGrid2.Child is IGraph g2)
+            if (PetGrid2.Child is IGraph g2) 
                 g2.Stop(true);
         }
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -194,10 +194,7 @@ namespace VPet_Simulator.Windows
             WS_EX_WINDOWEDGE = 0x00000100L
         }
 
-        public static partial class User32
-        {
-            /// <summary>
-            /// 获得指定窗口的信息
+        public static partial class User32        {            /// <summary>            /// 枚举所有顶层窗口            /// </summary>            /// <param name="lpEnumFunc">回调函数</param>            /// <param name="lParam">用户定义的参数</param>            /// <returns>如果枚举成功返回true，否则返回false</returns>            [DllImport("user32.dll", CharSet = CharSet.Unicode)]            public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);            /// <summary>            /// 窗口枚举回调函数            /// </summary>            /// <param name="hWnd">窗口句柄</param>            /// <param name="lParam">用户定义的参数</param>            /// <returns>如果继续枚举返回true，否则返回false</returns>            public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);            /// <summary>            /// 获取窗口标题            /// </summary>            /// <param name="hWnd">窗口句柄</param>            /// <returns>窗口标题</returns>            [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]            public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);            /// <summary>            /// 获取窗口标题长度            /// </summary>            /// <param name="hWnd">窗口句柄</param>            /// <returns>窗口标题长度</returns>            [DllImport("user32.dll", SetLastError = true)]            public static extern int GetWindowTextLength(IntPtr hWnd);            /// <summary>            /// 获取窗口矩形            /// </summary>            /// <param name="hWnd">窗口句柄</param>            /// <param name="lpRect">窗口矩形</param>            /// <returns>如果成功返回true，否则返回false</returns>            [DllImport("user32.dll", SetLastError = true)]            public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);            /// <summary>            /// 矩形结构体            /// </summary>            [StructLayout(LayoutKind.Sequential)]            public struct RECT            {                public int Left;                public int Top;                public int Right;                public int Bottom;                /// <summary>                /// 转换为System.Drawing.Rectangle                /// </summary>                /// <returns>System.Drawing.Rectangle</returns>                public System.Drawing.Rectangle ToRectangle()                {                    return new System.Drawing.Rectangle(Left, Top, Right - Left, Bottom - Top);                }            }            /// <summary>            /// 判断窗口是否可见            /// </summary>            /// <param name="hWnd">窗口句柄</param>            /// <returns>如果窗口可见返回true，否则返回false</returns>            [DllImport("user32.dll", SetLastError = true)]            public static extern bool IsWindowVisible(IntPtr hWnd);            /// <summary>            /// 判断窗口是否最小化            /// </summary>            /// <param name="hWnd">窗口句柄</param>            /// <returns>如果窗口最小化返回true，否则返回false</returns>            [DllImport("user32.dll", SetLastError = true)]            public static extern bool IsIconic(IntPtr hWnd);            /// <summary>            /// 判断窗口是否最大化            /// </summary>            /// <param name="hWnd">窗口句柄</param>            /// <returns>如果窗口最大化返回true，否则返回false</returns>            [DllImport("user32.dll", SetLastError = true)]            public static extern bool IsZoomed(IntPtr hWnd);            /// <summary>            /// 获取窗口线程ID和进程ID            /// </summary>            /// <param name="hWnd">窗口句柄</param>            /// <param name="lpdwProcessId">进程ID</param>            /// <returns>窗口线程ID</returns>            [DllImport("user32.dll", SetLastError = true)]            public static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);            /// <summary>            /// 获取窗口类名            /// </summary>            /// <param name="hWnd">窗口句柄</param>            /// <param name="lpClassName">类名</param>            /// <param name="nMaxCount">最大长度</param>            /// <returns>类名长度</returns>            [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]            public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);            /// <summary>            /// 获得指定窗口的信息
             /// </summary>
             /// <param name="hWnd">指定窗口的句柄</param>
             /// <param name="nIndex">需要获得的信息的类型 请使用<see cref="GetWindowLongFields"/></param>
@@ -326,6 +323,99 @@ namespace VPet_Simulator.Windows
             [Obsolete("请使用 SetWindowLongPtr 解决 x86 和 x64 需要使用不同方法")]
             public static extern IntPtr SetWindowLongPtr_x64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
             public const string LibraryName = "user32";
+            
+            // 窗口位置和大小相关的结构体
+            [StructLayout(LayoutKind.Sequential)]
+            public struct POINT
+            {
+                public int x;
+                public int y;
+            }
+            
+            [StructLayout(LayoutKind.Sequential)]
+            public struct RECT
+            {
+                public int left;
+                public int top;
+                public int right;
+                public int bottom;
+            }
+            
+            // 窗口操作的常量
+            public const int GW_HWNDFIRST = 0;
+            public const int GW_HWNDLAST = 1;
+            public const int GW_HWNDNEXT = 2;
+            public const int GW_HWNDPREV = 3;
+            public const int GW_OWNER = 4;
+            public const int GW_CHILD = 5;
+            
+            public const int SWP_NOSIZE = 0x0001;
+            public const int SWP_NOMOVE = 0x0002;
+            public const int SWP_NOZORDER = 0x0004;
+            public const int SWP_NOREDRAW = 0x0008;
+            public const int SWP_NOACTIVATE = 0x0010;
+            public const int SWP_FRAMECHANGED = 0x0020;
+            public const int SWP_SHOWWINDOW = 0x0040;
+            public const int SWP_HIDEWINDOW = 0x0080;
+            public const int SWP_NOCOPYBITS = 0x0100;
+            public const int SWP_NOOWNERZORDER = 0x0200;
+            public const int SWP_NOSENDCHANGING = 0x0400;
+            
+            public static readonly IntPtr HWND_TOP = new IntPtr(0);
+            public static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
+            public static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+            public static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+            
+            // 窗口操作的函数
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern IntPtr GetWindow(IntPtr hWnd, int uCmd);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern int GetWindowTextLength(IntPtr hWnd);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern bool IsWindowVisible(IntPtr hWnd);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern bool IsIconic(IntPtr hWnd);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern bool IsZoomed(IntPtr hWnd);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern IntPtr WindowFromPoint(POINT Point);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern IntPtr GetParent(IntPtr hWnd);
+            
+            [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+            public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+            
+            public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
         }
 
         internal static class Properties

@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using System;
 using System.IO;
 using System.Linq;
@@ -169,6 +169,10 @@ namespace VPet_Simulator.Core
             /// 现在所有会动的东西都是MOVE
             /// </summary>
             Move,
+            /// <summary>
+            /// 窗口穿梭动画
+            /// </summary>
+            Shuttle,
             /// <summary>
             /// 呼吸 *
             /// </summary>

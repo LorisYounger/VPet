@@ -65,7 +65,8 @@
 		<AssemblyAttribute Include="System.Reflection.AssemblyTrademarkAttribute">
 			<_Parameter1>exLB.org</_Parameter1>
 		</AssemblyAttribute>
-	</ItemGroup>
+  </ItemGroup>
+
 	<ItemGroup>
 		<Compile Remove="GameAssets\**" />
 		<Compile Remove="mod\**" />
@@ -76,6 +77,12 @@
 		<Page Remove="GameAssets\**" />
 		<Page Remove="mod\**" />
 	</ItemGroup>
+  <!-- Re-include mod assets and copy them to output so Core mod is available at runtime -->
+  <ItemGroup>
+    <None Include="mod\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 	<ItemGroup>
 		<None Remove="mklink.bat" />
 		<None Remove="Res\Gallery.png" />

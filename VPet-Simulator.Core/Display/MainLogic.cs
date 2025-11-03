@@ -1,4 +1,4 @@
-﻿using LinePutScript.Localization.WPF;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
@@ -430,23 +430,23 @@ namespace VPet_Simulator.Core
         /// <param name="after">切换后状态</param>
         public void PlaySwitchAnimat(IGameSave.ModeType before, IGameSave.ModeType after)
         {
-            if (!(DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Switch_Down || DisplayType.Type == GraphType.Switch_Up))
+            if (!(Core.MainDisplay.DisplayType.Type == GraphType.Default || Core.MainDisplay.DisplayType.Type == GraphType.Switch_Down || Core.MainDisplay.DisplayType.Type == GraphType.Switch_Up))
             {
                 return;
             }
             if (before == after)
             {
-                DisplayToNomal();
+                Core.MainDisplay.DisplayToNomal();
                 return;
             }
             if (before < after)
             {
-                Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Down), AnimatType.Single, before),
+                Core.MainDisplay.Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Down), AnimatType.Single, before),
                     () => PlaySwitchAnimat((IGameSave.ModeType)(((int)before) + 1), after));
             }
             else
             {
-                Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Up), AnimatType.Single, before),
+                Core.MainDisplay.Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Up), AnimatType.Single, before),
                     () => PlaySwitchAnimat((IGameSave.ModeType)(((int)before) - 1), after));
             }
         }
@@ -459,7 +459,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public List<Func<bool>> RandomInteractionAction = new List<Func<bool>>();
 
-        public bool IsIdel => (DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Work) && !isPress;
+        public bool IsIdel => (Core.MainDisplay.DisplayType.Type == GraphType.Default || Core.MainDisplay.DisplayType.Type == GraphType.Work) && !isPress;
 
         /// <summary>
         /// 每隔指定时间自动触发计算 可以关闭EventTimer后手动计算
@@ -483,8 +483,8 @@ namespace VPet_Simulator.Core
             Dispatcher.Invoke(() => TimeUIHandle?.Invoke(this));
             if (IsIdel)
             {
-                int rnddisplay = Math.Max(20, Core.Controller.InteractionCycle - CountNomal);
-                if (DisplayType.Type == GraphType.Work)
+                int rnddisplay = Math.Max(20, Core.Controller.InteractionCycle - Core.MainDisplay.CountNomal);
+                if (Core.MainDisplay.DisplayType.Type == GraphType.Work)
                     rnddisplay = 2 * rnddisplay + 20;
                 switch (Function.Rnd.Next(rnddisplay))
                 {
@@ -492,19 +492,19 @@ namespace VPet_Simulator.Core
                     case 1:
                     case 2:
                         //显示移动
-                        DisplayMove();
+                        Core.MainDisplay.DisplayMove();
                         break;
                     case 3:
                     case 4:
                     case 5:
                         //显示待机
-                        DisplayIdel();
+                        Core.MainDisplay.DisplayIdel();
                         break;
                     case 6:
-                        DisplayIdel_StateONE();
+                        Core.MainDisplay.DisplayIdel_StateONE();
                         break;
                     case 7:
-                        DisplaySleep();
+                        Core.MainDisplay.DisplaySleep();
                         break;
                     case 8:
                     case 9:

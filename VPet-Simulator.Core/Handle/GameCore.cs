@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -25,6 +25,10 @@ namespace VPet_Simulator.Core
         /// 游戏数据
         /// </summary>
         public IGameSave Save;
+        /// <summary>
+        /// 主显示
+        /// </summary>
+        public Main MainDisplay { get; set; }
     }
     /// <summary>
     /// 触摸范围事件

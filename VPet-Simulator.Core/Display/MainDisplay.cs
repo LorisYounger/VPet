@@ -1,5 +1,6 @@
-﻿using LinePutScript.Converter;
+using LinePutScript.Converter;
 using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -12,8 +13,34 @@ using static VPet_Simulator.Core.GraphInfo;
 
 namespace VPet_Simulator.Core
 {
-    public partial class Main
+    public partial class MainDisplay : ContentControlX, IDisposable
     {
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        public void Dispose()
+        {
+            // 释放托管资源
+            EventTimer?.Dispose();
+            MoveTimer?.Dispose();
+            MsgBar?.Dispose();
+            ToolBar?.Dispose();
+            
+            // 停止当前播放的图形
+            if (PetGrid?.Child is IGraph graph) graph.Stop(true);
+            if (PetGrid2?.Child is IGraph graph2) graph2.Stop(true);
+            
+            // 释放非托管资源
+            GC.SuppressFinalize(this);
+        }
+        
+        /// <summary>
+        /// 析构函数
+        /// </summary>
+        ~MainDisplay()
+        {
+            Dispose();
+        }
         /// <summary>
         /// 当前动画类型
         /// </summary>
@@ -62,12 +89,44 @@ namespace VPet_Simulator.Core
         public Action DisplayIdel_StateONE { get; set; }
 
         /// <summary>
+        /// 窗口穿梭检查回调
+        /// </summary>
+        public Func<Rect, bool> WindowShuttleCheckCallback { get; set; }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public MainDisplay()
+        {
+            // 初始化窗口穿梭检查回调
+            WindowShuttleCheckCallback = (rect) => false;
+        }
+
+        /// <summary>
         /// 显示默认动画
         /// </summary>
         public void DisplayDefault()
         {
             CountNomal++;
             Display(GraphType.Default, AnimatType.Single, DisplayNomal);
+        }
+        /// <summary>
+        /// 显示移动动画
+        /// </summary>
+        public void DisplayMoveAnimation()
+        {
+            // 检查窗口穿梭
+            if (CheckWindowShuttle())
+            {
+                return;
+            }
+            
+            // 尝试显示移动动画
+            if (!DisplayMove())
+            {
+                // 如果没有可用的移动动画，则显示默认动画
+                DisplayDefault();
+            }
         }
         /// <summary>
         /// 显示结束动画
@@ -97,11 +156,87 @@ namespace VPet_Simulator.Core
         }
 
         /// <summary>
+        /// 检查并执行窗口穿梭
+        /// </summary>
+        /// <returns>是否执行了穿梭</returns>
+        private bool CheckWindowShuttle()
+        {
+            Rect petRect = GetPetBorderRect();
+            bool shouldShuttle = WindowShuttleCheckCallback?.Invoke(petRect) ?? false;
+            if (shouldShuttle)
+            {
+                // 调用MWController的ShuttleToTargetPosition方法执行穿梭
+                if (Core.Controller is VPet_Simulator.Windows.MWController mwController)
+                {
+                    mwController.ShuttleToTargetPosition(petRect);
+                }
+            }
+            return shouldShuttle;
+        }
+
+        /// <summary>
+        /// 获取宠物边框的屏幕坐标矩形
+        /// </summary>
+        /// <returns>宠物边框的屏幕坐标矩形</returns>
+        private Rect GetPetBorderRect()
+        {
+            return Dispatcher.Invoke(() =>
+            {
+                Point position = MainGrid.PointToScreen(new Point(0, 0));
+                return new Rect(position, new Size(MainGrid.ActualWidth, MainGrid.ActualHeight));
+            });
+        }
+
+        /// <summary>
+        /// 显示穿梭动画
+        /// </summary>
+        /// <param name="afterShuttleAction">穿梭后的动作</param>
+        public void DisplayShuttleAnimation(Action afterShuttleAction)
+        {
+            // 查找穿梭动画
+            var shuttleGraph = Core.Graph.FindGraph(GraphType.Shuttle, AnimatType.A_Start, Core.Save.Mode);
+            if (shuttleGraph != null)
+            {
+                // 显示穿梭开始动画
+                Display(shuttleGraph, () =>
+                {
+                    // 执行穿梭后的动作
+                    afterShuttleAction?.Invoke();
+                    
+                    // 显示穿梭结束动画
+                    var shuttleEndGraph = Core.Graph.FindGraph(GraphType.Shuttle, AnimatType.C_End, Core.Save.Mode);
+                    if (shuttleEndGraph != null)
+                    {
+                        Display(shuttleEndGraph, () =>
+                        {
+                            // 恢复正常显示
+                            DisplayToNomal();
+                        });
+                    }
+                    else
+                    {
+                        // 如果没有结束动画，直接恢复正常显示
+                        DisplayToNomal();
+                    }
+                });
+            }
+            else
+            {
+                // 如果没有穿梭动画，直接执行穿梭后的动作
+                afterShuttleAction?.Invoke();
+            }
+        }
+
+        /// <summary>
         /// 尝试触发移动
         /// </summary>
         /// <returns></returns>
         public bool DisplayToMove()
         {
+            // 先检查是否需要执行窗口穿梭
+            if (CheckWindowShuttle())
+                return true;
+
             var list = Core.Graph.GraphConfig.Moves.ToList();
             for (int i = Function.Rnd.Next(list.Count); 0 != list.Count; i = Function.Rnd.Next(list.Count))
             {
