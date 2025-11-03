@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Xml.Linq;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Windows.Interface.MPMessage;
 
@@ -190,10 +191,15 @@ namespace VPet_Simulator.Windows
             mf.DisplayFoodAnimation(item.GetGraph(), item.ImageSource);
 
             if (EnableFunction)
+            {
+                mf.wmp.Log("{0}花费${3}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName, item.Price));
                 mf.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName, item.Price), 6000);
+            }
             else
+            {
+                mf.wmp.Log("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName));
                 mf.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName), 6000);
-
+            }
             var msg = new MPMessage()
             {
                 To = mf.friend.Id.Value,
