@@ -77,7 +77,7 @@
         <TabItem Header="{ll:Str 消息日志}">
             <TextBox x:Name="tbLog" Margin="0" Padding="7" VerticalContentAlignment="Stretch" BorderThickness="0"
                     Background="Transparent" Foreground="{DynamicResource DARKPrimaryDarker}" IsReadOnly="True"
-                    TextWrapping="Wrap" HorizontalContentAlignment="Left" VerticalScrollBarVisibility="Visible" />
+                    pu:ScrollViewerHelper.MouseWheelUnit="5" TextWrapping="Wrap" HorizontalContentAlignment="Left" VerticalScrollBarVisibility="Visible" />
         </TabItem>
     </TabControl>
 </pu:WindowX>

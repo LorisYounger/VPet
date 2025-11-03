@@ -134,6 +134,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             lb.SetMemberData("onmod", mw.Set.FindLine("onmod")?.ToString() ?? "onmod");
             lb.SetMemberData("petgraph", mw.Set.PetGraph);
             lb.SetMemberData("notouch", mw.Set.MPNOTouch.ToString());
+            lb.SetMemberData("hash", mw.HashCheck.ToString());
 
             SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
             SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;

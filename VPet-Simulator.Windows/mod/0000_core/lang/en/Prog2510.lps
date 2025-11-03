@@ -9,5 +9,5 @@ al_work_start#{name} started {0}.:|
 al_work_end#{name} finished {0}. Total duration: {2}min:|
 al_photo_unlock#Unlocked photo: {0}:|
 i_schedulenote#After signing the schedule for the corresponding work/study institution, you can independently select the work/study schedule to complete in the work/study panel.\nAfter properly arranging the time and clicking start, Loris will complete the corresponding work/study on time under the reminder of the institution:|
-al_petsay#{name} says: {0}|
-al_hostsay#{hostname} says: {0}|
+al_petsay#{name} says: {0}:|
+al_hostsay#{hostname} says: {0}:|

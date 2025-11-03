@@ -19,6 +19,7 @@ using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Windows.Interface.MPMessage;
+using Image = System.Windows.Controls.Image;
 using Point = System.Windows.Point;
 using Size = System.Windows.Size;
 using ToolBar = VPet_Simulator.Core.ToolBar;
@@ -160,11 +161,44 @@ public partial class MPFriends : WindowX, IMPFriend
             }
             SetPetGraph = tmp;
 
+            tmp = lb.GetMemberData(friend, "hash");
+
             await GameLoad(Path);
+            int skipwait = 0;
+            while (string.IsNullOrEmpty(tmp) && skipwait >= 10)
+            {
+                Thread.Sleep(100);
+                tmp = lb.GetMemberData(friend, "hash");
+            }
+            Dispatcher.Invoke(() =>
+            {
+                if (tmp == "True")
+                {
+                    if (hashcheckimg == null)
+                    {
+                        hashcheckimg = new Image();
+                        hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash.png");
+                        hashcheckimg.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
+                        hashcheckimg.ToolTip = "是没有修改过存档/使用超模MOD的玩家专属标志".Translate();
+                        Grid.SetColumn(hashcheckimg, 4);
+                        Grid.SetRowSpan(hashcheckimg, 2);
+                        Main.ToolBar.gdPanel.Children.Add(hashcheckimg);
+                    }
+                }
+                else
+                {
+                    if (hashcheckimg != null)
+                    {
+                        Main.ToolBar.gdPanel.Children.Remove(hashcheckimg);
+                        hashcheckimg = null;
+                    }
+                }
+            });
 
             Main.Event_TouchHead += Main_Event_TouchHead;
             Main.Event_TouchBody += Main_Event_TouchBody;
             SteamMatchmaking.OnLobbyMemberDataChanged += SteamMatchmaking_OnLobbyMemberDataChanged;
+
         });
 
     }
@@ -855,4 +889,6 @@ public partial class MPFriends : WindowX, IMPFriend
         Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
         Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
     }
+    private System.Windows.Controls.Image hashcheckimg;
+
 }
