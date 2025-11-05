@@ -26,7 +26,7 @@ namespace VPet_Simulator.Windows.Interface
             {
                 if (transChoose == null)
                 {
-                    transChoose = LocalizeCore.Translate(Text);
+                    transChoose = LocalizeCore.Translate(Choose);
                 }
                 return transChoose;
             }
