@@ -452,7 +452,7 @@ public partial class winWorkMenu : WindowX
                 combTaskType.Items.Add(v);
             combTaskType.SelectedIndex = 0;
             //加载现有套餐
-            rpnDisplay(mw.ScheduleTask.PackageWork, nowselefull.WorkType);
+            rpnDisplay(mw.ScheduleTask.PackageWork, nowselefull?.WorkType ?? Work.WorkType.Work);
             tbtnCurrentPlan.IsChecked = mw.ScheduleTask.PackageWork?.IsActive() == true;
         }
         else if (sender == tbtnAgencyTraning)
@@ -466,7 +466,7 @@ public partial class winWorkMenu : WindowX
                 combTaskType.Items.Add(v);
             combTaskType.SelectedIndex = 0;
             //加载现有套餐
-            rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull.WorkType);
+            rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull?.WorkType ?? Work.WorkType.Study);
             tbtnCurrentPlan.IsChecked = mw.ScheduleTask.PackageStudy?.IsActive() == true;
         }
     }
