@@ -171,3 +171,5 @@ MOD制作器:  https://github.com/LorisYounger/VPet.ModMaker
 3. 点击启动, 如果一切正常则会报错 `缺少模组Core,无法启动桌宠`
 4. 以管理员身份运行 `mklink.bat`, 这会让mod文件链接到生成位置
 5. 再次点击启动即可正常运行
+
+Test: Adding a line for GitHub tutorial. (这是一个用于 GitHub 教程的测试行。)
