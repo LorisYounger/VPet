@@ -159,7 +159,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 获得当前系统音乐播放音量
         /// </summary>
-        float AudioPlayingVolume();
+        float AudioPlayingVolume(string deviceName);
         /// <summary>
         /// 关闭指示器,默认为true
         /// </summary>

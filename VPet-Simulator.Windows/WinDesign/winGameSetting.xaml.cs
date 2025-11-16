@@ -1,5 +1,6 @@
 ﻿using LinePutScript;
 using LinePutScript.Localization.WPF;
+using NAudio.CoreAudioApi;
 using NAudio.SoundFont;
 using Panuon.WPF.UI;
 using Steamworks;
@@ -170,6 +171,16 @@ namespace VPet_Simulator.Windows
             VoiceCatchSilder.Value = mw.Set.MusicCatch;
             VoiceMaxSilder.Value = mw.Set.MusicMax;
 
+			foreach (MMDevice dev in 
+                new MMDeviceEnumerator().EnumerateAudioEndPoints(
+			                DataFlow.Render,//输出设备
+			                DeviceState.Active//活跃设备
+                     )
+            ) {
+				VoiceDeviceCombo.Items.Add(dev.FriendlyName);
+			}
+            VoiceDeviceCombo.SelectedItem = mw.Set.MusicDevice;
+
             foreach (Sub sub in mw.Set["diy"])
                 StackDIY.Children.Add(new DIYViewer(sub));
 
@@ -326,7 +337,7 @@ namespace VPet_Simulator.Windows
         }
         private void Voicetimer_Tick(object sender, EventArgs e)
         {
-            var v = mw.AudioPlayingVolume();
+            var v = mw.AudioPlayingVolume(mw.Set.MusicDevice);
             RVoice.Text = v.ToString("p2");
             if (v > mw.Set.MusicCatch)
             {
@@ -1493,6 +1504,12 @@ namespace VPet_Simulator.Windows
                 return;
             mw.Set.MusicCatch = VoiceCatchSilder.Value;
             mw.Set.MusicMax = VoiceMaxSilder.Value;
+        }
+
+        private void VoiceDeviceCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+			if (!AllowChange)
+				return;
+			mw.Set.MusicDevice = VoiceDeviceCombo.SelectedItem.ToString();
         }
 
         private void cleancache_click(object sender, RoutedEventArgs e)

@@ -406,6 +406,13 @@ namespace VPet_Simulator.Windows
             set => this["gameconfig"].SetDouble("musicmax", value);
         }
         /// <summary>
+        /// 检测的音频设备
+        /// </summary>
+        public string MusicDevice {
+            get => this["gameconfig"].GetString("musicdevice");
+            set => this["gameconfig"].SetString("musicdevice", value);
+        }
+        /// <summary>
         /// 桌宠图形渲染的分辨率,越高图形越清晰
         /// </summary>
         public int Resolution

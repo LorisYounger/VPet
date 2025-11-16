@@ -786,37 +786,54 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="15" />
                                 <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="35" />
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 触发音量}"
                                     ToolTip="{ll:Str 当实时播放音量达到该值时运行音乐动作}" />
-                            <Slider x:Name="VoiceCatchSilder" Grid.Column="2" VerticalAlignment="Center"
+                            <Grid Grid.Row="0" Grid.Column="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="VoiceCatchSilder" Grid.Column="0" VerticalAlignment="Center"
                                     IsSnapToTickEnabled="True" LargeChange=".5" Maximum="1" Minimum="0.02"
                                     SmallChange=".02" Style="{DynamicResource StandardSliderStyle}" TickFrequency="0.01"
                                     ToolTip="{ll:Str 当实时播放音量达到该值时运行音乐动作}" ValueChanged="VoiceCatchSilder_ValueChanged"
                                     Value="0.3" />
-                            <TextBlock Grid.Column="3" Margin="15,0,0,0" VerticalAlignment="Center"
-                                    Background="{x:Null}" FontSize="18" FontWeight="Bold"
-                                    Foreground="{DynamicResource DARKPrimaryDarker}"
-                                    Text="{Binding ElementName=VoiceCatchSilder, Path=Value, StringFormat=p0}"
-                                    ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" />
+                                <TextBlock Grid.Column="3" Margin="15,0,0,0" VerticalAlignment="Center"
+                                        Background="{x:Null}" FontSize="18" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}"
+                                        Text="{Binding ElementName=VoiceCatchSilder, Path=Value, StringFormat=p0}"
+                                        ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" />
+                            </Grid>
                             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 高潮音量}"
                                     ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" />
-                            <Slider x:Name="VoiceMaxSilder" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"
+                            <Grid Grid.Row="1" Grid.Column="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="VoiceMaxSilder" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
                                     IsSnapToTickEnabled="True" LargeChange=".05" Maximum="1"
                                     Minimum="{Binding ElementName=VoiceCatchSilder, Path=Value}" SmallChange=".01"
                                     Style="{DynamicResource StandardSliderStyle}" TickFrequency="0.01"
                                     ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" ValueChanged="VoiceCatchSilder_ValueChanged"
                                     Value="0.75" />
-                            <TextBlock Grid.Row="1" Grid.Column="3" Margin="15,0,0,0" VerticalAlignment="Center"
-                                    Background="{x:Null}" FontSize="18" FontWeight="Bold"
-                                    Foreground="{DynamicResource DARKPrimaryDarker}"
-                                    Text="{Binding ElementName=VoiceMaxSilder, Path=Value, StringFormat=p0}"
-                                    ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" />
+                                <TextBlock Grid.Row="1" Grid.Column="3" Margin="15,0,0,0" VerticalAlignment="Center"
+                                        Background="{x:Null}" FontSize="18" FontWeight="Bold"
+                                        Foreground="{DynamicResource DARKPrimaryDarker}"
+                                        Text="{Binding ElementName=VoiceMaxSilder, Path=Value, StringFormat=p0}"
+                                        ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" />
+                            </Grid>
+                            <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 输出设备}"
+                                    ToolTip="{ll:Str 选择需要检测的声音输出设备}" />
+                            <ComboBox x:Name="VoiceDeviceCombo" Grid.Row="2" Grid.Column="2" FontSize="16"
+                                    SelectionChanged="VoiceDeviceCombo_SelectionChanged" SelectedIndex="3"
+                                    Style="{DynamicResource StandardComboBoxStyle}" />
                         </Grid>
                     </StackPanel>
                 </ScrollViewer>

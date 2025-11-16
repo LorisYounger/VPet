@@ -7,6 +7,7 @@ using Steamworks;
 using Steamworks.Data;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -1044,30 +1045,38 @@ namespace VPet_Simulator.Windows
             }
         }
         private bool? AudioPlayingVolumeOK = null;
-        /// <summary>
-        /// 获得当前系统音乐播放音量
-        /// </summary>
-        public float AudioPlayingVolume()
+        private string lastDeviceName;
+        private MMDevice cacheDevice;
+		/// <summary>
+		/// 获得当前系统音乐播放音量
+		/// </summary>
+		public float AudioPlayingVolume(string deviceName)
         {
+            bool isSame=deviceName==lastDeviceName;
+            if (!isSame) lastDeviceName = deviceName;
             if (AudioPlayingVolumeOK == null)
             {//第一调用检查是否支持
                 try
                 {//后续容错可能是偶发性
-                    using (var enumerator = new MMDeviceEnumerator())
-                    {
-                        if (enumerator.HasDefaultAudioEndpoint(DataFlow.Render, Role.Console))
-                        {
-                            var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
-                            AudioPlayingVolumeOK = true;
-                            return device.AudioMeterInformation.MasterPeakValue;
-                        }
-                        else
-                        {
-                            AudioPlayingVolumeOK = false;
-                            return -1;
-                        }
+					MMDevice device;
+                    if (isSame) {
+                        device = cacheDevice;
                     }
-                }
+                    else {
+                        using var enumerator = new MMDeviceEnumerator();
+                        device = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
+                                        .FirstOrDefault(d => d.FriendlyName == deviceName);
+                        cacheDevice = device;//节约性能，找到后就缓存下来，避免每次调用都要遍历寻找目标设备
+                    }
+					if (device != null) {
+						AudioPlayingVolumeOK = true;
+						return device.AudioMeterInformation.MasterPeakValue;
+					}
+					else {
+						AudioPlayingVolumeOK = false;
+						return -1;
+					}
+				}
                 catch
                 {
                     AudioPlayingVolumeOK = false;
@@ -1080,19 +1089,23 @@ namespace VPet_Simulator.Windows
             }
             try
             {//后续容错可能是偶发性
-                using (var enumerator = new MMDeviceEnumerator())
-                {
-                    if (enumerator.HasDefaultAudioEndpoint(DataFlow.Render, Role.Console))
-                    {
-                        var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
-                        return device.AudioMeterInformation.MasterPeakValue;
-                    }
-                    else
-                    {
-                        return -1;
-                    }
+                MMDevice device;
+                if (isSame) {
+                    device = cacheDevice;
                 }
-            }
+                else {
+                    using var enumerator = new MMDeviceEnumerator();
+                    device = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
+                                        .FirstOrDefault(d => d.FriendlyName == deviceName);
+					cacheDevice = device;
+				}
+				if (device != null) {
+					return device.AudioMeterInformation.MasterPeakValue;
+				}
+				else {
+					return -1;
+				}
+			}
             catch
             {
                 return -1;
@@ -1104,7 +1117,7 @@ namespace VPet_Simulator.Windows
         private void Handle_Music(Main obj)
         {
             if (MusicTimer.Enabled == false && Core.Graph.FindGraphs("music", AnimatType.B_Loop, Core.Save.Mode) != null &&
-                Main.IsIdel && AudioPlayingVolume() > Set.MusicCatch)
+                Main.IsIdel && AudioPlayingVolume(Set.MusicDevice) > Set.MusicCatch)
             {
                 catch_MusicVolSum = 0;
                 catch_MusicVolCount = 0;
@@ -1151,7 +1164,7 @@ namespace VPet_Simulator.Windows
         {
             if (!(Main.IsIdel || Main.DisplayType.Name == "music"))//不是音乐,被掐断
                 return;
-            catch_MusicVolSum += AudioPlayingVolume();
+            catch_MusicVolSum += AudioPlayingVolume(Set.MusicDevice);
             catch_MusicVolCount++;
             if (catch_MusicVolCount >= 10)
             {
