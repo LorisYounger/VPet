@@ -70,7 +70,7 @@ namespace VPet_Simulator.Windows
             {
                 if (mw.GameSavesData[(gbol)"self"])
                 {
-                    MessageBoxX.Show("更好买老顾客大优惠!桌宠的食物钱我来出!\n更好买提示您:$10以下的食物/药品等随便赊账".Translate());
+                    MessageBoxX.Show("更好买老顾客大优惠!桌宠的食物钱我来出!\n更好买提示您:$1000以下的食物/药品等随便赊账".Translate());
                 }
                 else
                 {
@@ -220,10 +220,10 @@ namespace VPet_Simulator.Windows
             var item = Button.DataContext as Food;
             //看是什么模式
             if (mw.Set.EnableFunction)
-            {//$10以内的食物允许赊账
+            {//$1000以内的食物允许赊账
                 for (int i = 0; i < (int)nibuytimes.Value; i++)
                 {
-                    if (item.Price >= 10 && item.Price >= mw.Core.Save.Money)
+                    if (item.Price >= 1000 && item.Price >= mw.Core.Save.Money)
                     {//买不起
                         MessageBoxX.Show("您没有足够金钱来购买 {0}\n您需要 {1:f2} 金钱来购买\n您当前 {2:f2} 拥有金钱"
                             .Translate(item.TranslateName, item.Price, mw.Core.Save.Money)
