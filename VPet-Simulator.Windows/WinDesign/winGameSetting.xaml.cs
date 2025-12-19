@@ -23,6 +23,7 @@ using System.Windows.Threading;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Windows.Win32;
+using Item = Steamworks.Ugc.Item;
 
 namespace VPet_Simulator.Windows
 {

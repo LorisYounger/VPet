@@ -10,9 +10,9 @@ using static LinePutScript.Converter.LPSConvert;
 
 namespace VPet_Simulator.Windows.Interface
 {
-    public class Food : NotifyPropertyChangedBase, IFood
+    public class Food : Item, IFood
     {
-
+        public override string ItemType => "Food";
         /// <summary>
         /// 食物类型
         /// </summary>
@@ -56,26 +56,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Line(type: ConvertType.ToEnum, ignoreCase: true)]
         public FoodType Type { get; set; } = FoodType.Food;
-        /// <summary>
-        /// 食物名字
-        /// </summary>
-        [Line(name: "name")]
-        public string Name { get; set; }
-        private string transname = null;
-        /// <summary>
-        /// 食物名字 (翻译)
-        /// </summary>
-        public string TranslateName
-        {
-            get
-            {
-                if (transname == null)
-                {
-                    transname = LocalizeCore.Translate(Name);
-                }
-                return transname;
-            }
-        }
+      
         [Line(ignoreCase: true)]
         public int Exp { get; set; }
         [Line(ignoreCase: true)]
@@ -90,17 +71,7 @@ namespace VPet_Simulator.Windows.Interface
         public double Health { get; set; }
         [Line(ignoreCase: true)]
         public double Likability { get; set; }
-        /// <summary>
-        /// 食物价格
-        /// </summary>
-        [Line(ignoreCase: true)]
-        public double Price { get; set; }
-        /// <summary>
-        /// 描述
-        /// </summary>
-        [Line(ignoreCase: true)]
-        public string Desc { get; set; }
-        private string descs = null;
+
         /// <summary>
         /// 描述(ToBetterBuy)
         /// </summary>
@@ -109,7 +80,7 @@ namespace VPet_Simulator.Windows.Interface
         {
             get
             {
-                return descs + '\n' + Desc.Translate();
+                return Data + '\n' + Desc.Translate();
             }
         }
 
@@ -132,10 +103,7 @@ namespace VPet_Simulator.Windows.Interface
             }
         }
 
-        /// <summary>
-        /// 显示的图片
-        /// </summary>
-        public BitmapImage ImageSource { get; set; }
+       
         /// <summary>
         /// 是否已收藏
         /// </summary>
@@ -178,22 +146,22 @@ namespace VPet_Simulator.Windows.Interface
             if (eattime <= now)
             {
                 if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)// || Type == FoodType.Limit)
-                    descs = "喜好度".Translate();
+                    Data = "喜好度".Translate();
                 else
-                    descs = "有效度".Translate();
-                descs += ":\t100%";
+                    Data = "有效度".Translate();
+                Data += ":\t100%";
             }
             else
             {
                 if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)// || Type == FoodType.Limit)
-                    descs = "喜好度".Translate();
+                    Data = "喜好度".Translate();
                 else
-                    descs = "有效度".Translate();
+                    Data = "有效度".Translate();
                 if (Type == FoodType.Gift)
-                    descs += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
+                    Data += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
                 else
-                    descs += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.02).ToString("p0");
-                descs += "\t\t" + "恢复".Translate() + ":\t" + (eattime).ToString("MM/dd HH");
+                    Data += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.02).ToString("p0");
+                Data += "\t\t" + "恢复".Translate() + ":\t" + (eattime).ToString("MM/dd HH");
             }
         }
         /// <summary>
