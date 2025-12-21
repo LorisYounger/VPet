@@ -126,7 +126,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 游戏相关数据
         /// </summary>
-        public LPS_D Data = new LPS_D();
+        public LPS Data = new LPS();
         /// <summary>
         /// 游戏存档
         /// </summary>
@@ -138,7 +138,7 @@ namespace VPet_Simulator.Windows.Interface
 
         public ILPS ToLPS()
         {
-            var lps = new LPS_D();
+            var lps = new LPS();
             lps.AddRange(Data);
             lps.AddLine(GameSave.ToLine());
             lps.Add(new Line("statistics", "", Statistics.ToSubs()));

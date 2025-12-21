@@ -221,6 +221,8 @@ namespace VPet_Simulator.Windows
         {
             //保存日程表
             ScheduleTask?.Save();
+            //保存物品栏
+            GameSavesData.Data
             try
             {
                 //保存插件
@@ -856,7 +858,7 @@ namespace VPet_Simulator.Windows
                 tmp = new GameSave_v2(lps, GameSavesData);
             else
             {
-                var data = new LPS_D();
+                var data = new LPS();
                 foreach (var item in Set.PetData_OLD)
                 {
                     if (item.Name.Contains("_"))
