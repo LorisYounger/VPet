@@ -1,0 +1,15 @@
+﻿<pu:WindowX x:Class="VPet_Simulator.Windows.winInventory"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:pu="https://opensource.panuon.com/wpf-ui"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        Title="{ll:Str 物品栏}"
+        Height="{ll:Dbe WorkMenuHeight_550, DefValue=550}" Style="{DynamicResource BaseWindowXStyle}"
+        Background="{DynamicResource PrimaryLighter}" Width="{ll:Dbe WorkMenuWidth_650, DefValue=650}"
+        ResizeMode="CanMinimize">
+    <Grid>
+        
+    </Grid>
+</pu:WindowX>

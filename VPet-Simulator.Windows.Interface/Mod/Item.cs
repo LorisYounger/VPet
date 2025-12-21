@@ -59,7 +59,8 @@ public class Item : NotifyPropertyChangedBase
         "Food",
         //道具 - 具有特殊功能的物品
         "Tool",
-        //玩具 - 
+        //玩具 - 可以播放动画的物品
+        "Toy",
     };
 
     /// <summary>
@@ -74,7 +75,7 @@ public class Item : NotifyPropertyChangedBase
     public string Desc { get; set; }
 
     /// <summary>
-    /// 显示的图片
+    /// 显示的图片 (图片在 {itemtypes}/{itemname}.png )
     /// </summary>
     public BitmapImage ImageSource { get; set; }
 
@@ -86,4 +87,11 @@ public class Item : NotifyPropertyChangedBase
     /// 其他数据, 用于给程序储存个性化数据用
     /// </summary>
     public string Data { get; set; } = "";
+    /// <summary>
+    /// 能否使用
+    /// </summary>
+    [Line(ignoreCase: true)]
+    public bool CanUse { get; set; } = true;
+
+    
 }

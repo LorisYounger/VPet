@@ -2014,6 +2014,16 @@ namespace VPet_Simulator.Windows
                   {
                       winBetterBuy.Show(Food.FoodType.Gift);
                   });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "物品栏".Translate(), () =>
+                  {
+                      if (winInventory != null && !winInventory.IsClosed)
+                          winInventory.Show();
+                      else
+                      {
+                          winInventory = new winInventory(this);
+                          winInventory.Show();
+                      }
+                  });
                   Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
                   Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
                   if (Set.MessageBarOutside)

@@ -278,5 +278,10 @@ namespace VPet_Simulator.Windows.Interface
         /// 活动日志 不会保存
         /// </summary>
         public ObservableCollection<ActivityLog> ActivityLogs { get; }
+
+        /// <summary>
+        /// 物品栏 桌宠有的物品
+        /// </summary>
+        public List<Item> Items { get; }
     }
 }

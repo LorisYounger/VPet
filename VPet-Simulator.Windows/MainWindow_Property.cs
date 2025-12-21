@@ -77,6 +77,7 @@ public partial class MainWindow
     public winGameSetting winSetting { get; set; }
     public winBetterBuy winBetterBuy { get; set; }
     public winGallery winGallery { get; set; }
+    public winInventory winInventory { get; set; }
 
     public winWorkMenu winWorkMenu { get; set; }
     //public ChatGPTClient CGPTClient;
@@ -108,6 +109,11 @@ public partial class MainWindow
     /// 日程表
     /// </summary>
     public ScheduleTask ScheduleTask { get; set; }
+
+    /// <summary>
+    /// 物品栏 桌宠有的物品
+    /// </summary>
+    public List<Item> Items { get; set; } = new List<Item>();
 
     /// <summary>
     /// 所有可用套餐
