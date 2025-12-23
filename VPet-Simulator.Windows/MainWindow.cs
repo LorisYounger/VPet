@@ -222,7 +222,7 @@ namespace VPet_Simulator.Windows
             //保存日程表
             ScheduleTask?.Save();
             //保存物品栏
-            GameSavesData.Data
+            //GameSavesData.Data
             try
             {
                 //保存插件
