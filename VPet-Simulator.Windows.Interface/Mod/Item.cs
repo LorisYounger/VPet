@@ -50,7 +50,7 @@ public class Item : NotifyPropertyChangedBase
     /// <summary>
     /// 使用该物品
     /// </summary>
-    public void Use()
+    public virtual void Use()
     {
         if (UseAction.ContainsKey(ItemType))
         {
@@ -66,7 +66,7 @@ public class Item : NotifyPropertyChangedBase
     /// 消耗该物品, 如果物品数量小于等于0时则销毁物品(从背包中移除) (不会主动调用)
     /// </summary>
     /// <param name="count">消耗数量</param>
-    public void Consume(IMainWindow imw, int count = 1)
+    public virtual void Consume(IMainWindow imw, int count = 1)
     {
         Count -= count;
         if (Count <= 0)
@@ -124,7 +124,7 @@ public class Item : NotifyPropertyChangedBase
     /// 物品价格
     /// </summary>
     [Line(ignoreCase: true)]
-    public double Price { get; set; }
+    public virtual double Price { get; set; }
     /// <summary>
     /// 描述
     /// </summary>
@@ -132,25 +132,25 @@ public class Item : NotifyPropertyChangedBase
     public string Desc { get; set; }
 
     /// <summary>
-    /// 显示的图片 (图片在 {itemtypes}/{itemname}.png )
+    /// 显示的图片 (图片默认在 {itemtypes}/{itemname}.png )
     /// </summary>
-    public BitmapImage ImageSource { get; set; }
+    public virtual BitmapImage ImageSource { get; set; }
 
     /// <summary>
     /// 物品个数
     /// </summary>
     [Line(ignoreCase: true)]
-    public int Count { get; set; } = 1;
+    public virtual int Count { get; set; } = 1;
     /// <summary>
     /// 其他数据, 用于给程序储存个性化数据用
     /// </summary>
     [Line(ignoreCase: true)]
-    public string Data { get; set; } = "";
+    public virtual string Data { get; set; } = "";
     /// <summary>
     /// 能否使用
     /// </summary>
     [Line(ignoreCase: true)]
-    public bool CanUse { get; set; } = true;
+    public virtual bool CanUse { get; set; } = true;
 
 
 }

@@ -30,7 +30,10 @@ public partial class MainWindow
     /// SteamID
     /// </summary>
     public ulong SteamID => IsSteamUser ? SteamClient.SteamId.Value : 0;
-
+    /// <summary>
+    /// SteamIDAccountId
+    /// </summary>
+    public uint SteamAuthorID => IsSteamUser ? SteamClient.SteamId.AccountId : 0;
     public List<LowText> LowFoodText { get; set; } = new List<LowText>();
 
     public List<LowText> LowDrinkText { get; set; } = new List<LowText>();
