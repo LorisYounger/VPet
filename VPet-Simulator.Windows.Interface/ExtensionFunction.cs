@@ -235,12 +235,31 @@ namespace VPet_Simulator.Windows.Interface
             save.Likability += food.Likability * buff;
         }
     }
+    /// <summary>
+    /// 扩展值
+    /// </summary>
     public static partial class ExtensionValue
     {
         /// <summary>
         /// 当前运行目录
         /// </summary>
         public static string BaseDirectory = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName;
+        /// <summary>
+        /// 获取MOD存储目录 (会自动创建/Steam云同步)
+        /// 但是还是建议以LPS形式存在Setting/Save里 不保证完整可靠性(可能会因为切换电脑等导致数据丢失)
+        /// </summary>
+        /// <param name="modName">MOD名字</param>
+        /// <returns>目录地址</returns>
+        public static string GetMODStorage(string modName)
+        {
+            var path = Path.Combine(BaseDirectory, "ModData");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            path = Path.Combine(path, modName);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
+        }
     }
 
 }
