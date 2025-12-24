@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Converter;
 using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using NAudio.CoreAudioApi;
@@ -11,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -222,7 +224,8 @@ namespace VPet_Simulator.Windows
             //保存日程表
             ScheduleTask?.Save();
             //保存物品栏
-            GameSavesData.Data
+            GameSavesData.Data.Assemblage.RemoveAll(x => x.Name == "item");
+            GameSavesData.Data.AddRange(Items.Select(x => LPSConvert.SerializeObjectToLine<Line>(x, "item")).ToList());
             try
             {
                 //保存插件
@@ -1867,6 +1870,11 @@ namespace VPet_Simulator.Windows
                       }
                   Foods.ForEach(item => item.LoadImageSource(this));
                   Photos.ForEach(item => item.LoadUserInfo(this));
+                  //物品栏加载
+                  foreach (Line line in GameSavesData.Data.FindAllLine("item"))
+                  {
+                      Items.Add(Item.CreateItem(line));
+                  }
                   Main.TimeHandle += Handle_Music;
                   if (IsSteamUser)
                       Main.TimeHandle += Handle_Steam;
