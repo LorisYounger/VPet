@@ -1,12 +1,12 @@
-food:|name#莲蓉蛋黄月饼:|type#Snack:|Exp#100:|Strength#40:|StrengthDrink#-3:|StrengthFood#80:|Likability#1:|Health#5:|Feeling#40:|price#26:|graph#eat:|desc#海上生明月，天涯共此时。无论近况如何，前途多难，计划如不如意，未来迷不迷茫，萝莉丝都为你做了莲蓉蛋黄月饼，快说谢谢萝莉丝。:|
-food:|name#五仁月饼:|type#Meal:|Exp#100:|Strength#80:|StrengthDrink#-6:|StrengthFood#160:|Likability#1:|Health#5:|Feeling#0:|price#38:|graph#eat:|desc#举头望明月，低头思故乡。无论身在何处，离家多远，家人在不在身边，心情好不好，萝莉丝都为你做了五仁月饼，快说谢谢萝莉丝。:|
-food:|name#巧克力花生月饼:|type#Functional:|Exp#400:|Strength#20:|StrengthDrink#0:|StrengthFood#40:|Likability#2:|Health#5:|Feeling#20:|price#62:|graph#eat:|desc#明月几时有，把酒问青天。无论考的如何，作业有多少，老师怎么说，家长怎么批评，萝莉丝都为你做了巧克力花生月饼，快说谢谢萝莉丝。:|
+/// food:|name#莲蓉蛋黄月饼:|type#Snack:|Exp#100:|Strength#40:|StrengthDrink#-3:|StrengthFood#80:|Likability#1:|Health#5:|Feeling#40:|price#26:|graph#eat:|desc#海上生明月，天涯共此时。无论近况如何，前途多难，计划如不如意，未来迷不迷茫，萝莉丝都为你做了莲蓉蛋黄月饼，快说谢谢萝莉丝。:|
+/// food:|name#五仁月饼:|type#Meal:|Exp#100:|Strength#80:|StrengthDrink#-6:|StrengthFood#160:|Likability#1:|Health#5:|Feeling#0:|price#38:|graph#eat:|desc#举头望明月，低头思故乡。无论身在何处，离家多远，家人在不在身边，心情好不好，萝莉丝都为你做了五仁月饼，快说谢谢萝莉丝。:|
+/// food:|name#巧克力花生月饼:|type#Functional:|Exp#400:|Strength#20:|StrengthDrink#0:|StrengthFood#40:|Likability#2:|Health#5:|Feeling#20:|price#62:|graph#eat:|desc#明月几时有，把酒问青天。无论考的如何，作业有多少，老师怎么说，家长怎么批评，萝莉丝都为你做了巧克力花生月饼，快说谢谢萝莉丝。:|
 
-/// food:|name#圣诞帽:|type#Gift:|Exp#200:|Likability#4:|Health#5:|Feeling#50:|price#45.0:|graph#gift:|desc#圣诞帽_giftintor:|
-/// food:|name#礼物盒子:|type#Gift:|Exp#1000:|Likability#5:|Feeling#100:|price#150.0:|graph#gift:|desc#礼物盒子_giftintor:|
-/// food:|name#糖果棒:|type#Snack:|Exp#200:|Strength#40:|StrengthFood#40:|Likability#2:|Feeling#40:|price#35:|graph#eat:|desc#糖果棒_giftintor:|
-/// food:|name#圣诞草莓奶茶:|type#Drink:|Exp#200:|StrengthDrink#80:|Likability#2:|Feeling#60:|price#35:|graph#drink:|desc#圣诞草莓奶茶_giftintor:|
-/// food:|name#萝莉丝姜饼人:|type#Snack:|Exp#600:|StrengthFood#80:|Likability#2:|Health#2:|Feeling#50:|price#128.0:|graph#eat:|desc#萝莉丝姜饼人_giftintor:|
+food:|name#圣诞帽:|type#Gift:|Exp#200:|Likability#4:|Health#5:|Feeling#50:|price#45.0:|graph#gift:|desc#圣诞帽_giftintor:|
+food:|name#礼物盒子:|type#Gift:|Exp#1000:|Likability#5:|Feeling#100:|price#150.0:|graph#gift:|desc#礼物盒子_giftintor:|
+food:|name#糖果棒:|type#Snack:|Exp#200:|Strength#40:|StrengthFood#40:|Likability#2:|Feeling#40:|price#35:|graph#eat:|desc#糖果棒_giftintor:|
+food:|name#圣诞草莓奶茶:|type#Drink:|Exp#200:|StrengthDrink#80:|Likability#2:|Feeling#60:|price#35:|graph#drink:|desc#圣诞草莓奶茶_giftintor:|
+food:|name#萝莉丝姜饼人:|type#Snack:|Exp#600:|StrengthFood#80:|Likability#2:|Health#2:|Feeling#50:|price#128.0:|graph#eat:|desc#萝莉丝姜饼人_giftintor:|
 
 
 /// food:|name#大肉粽:|type#Meal:|Exp#200:|Strength#40:|StrengthDrink#-5:|StrengthFood#160:|Likability#4:|Health#1:|Feeling#40:|price#85.0:|graph#eat:|desc#朴实无华的大肉粽，由板栗咸蛋黄和大块五花肉包成的粽子，一口咬下去鲜嫩多汁满满肉料，至福！:|
