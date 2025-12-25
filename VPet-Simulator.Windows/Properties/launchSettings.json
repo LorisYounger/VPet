@@ -2,6 +2,7 @@
   "profiles": {
     "VPet-Simulator.Windows": {
       "commandName": "Project",
+      "workingDirectory": "C:\\Users\\11831\\source\\repos\\VPet",
       "nativeDebugging": false
     }
   }

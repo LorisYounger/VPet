@@ -34,6 +34,7 @@
 		<Product>VPet-Simulator.Windows</Product>
 		<Copyright>Copyright © exLB.org 2022</Copyright>
 		<StartupObject>VPet_Simulator.Windows.App</StartupObject>
+		<BaseOutputPath>C:\Users\11831\source\repos\VPet\VPet-Simulator.Windows\bin\x64\Debug</BaseOutputPath>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
 		<PlatformTarget>x64</PlatformTarget>
