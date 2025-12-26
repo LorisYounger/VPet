@@ -24,6 +24,8 @@ namespace VPet_Simulator.Windows
         private TextBox _searchTextBox;
         private Run rTotalValue;
         private List<Item> _testItems;
+        private Item _detailItem;
+        private int _detailCount = 1;
 
         public winInventory(MainWindow mw)
         {
@@ -151,28 +153,24 @@ namespace VPet_Simulator.Windows
                 TbNone.Visibility = Visibility.Collapsed;
         }
 
-        private void BtnUse_Click(object sender, RoutedEventArgs e)
+        private void UseItem(Item item, int count)
         {
-            var button = sender as Button;
-            var item = button.DataContext as Item;
-
             if (item == null) return;
+            if (count <= 0) count = 1;
+            count = Math.Min(Math.Max(1, item.Count), count);
 
             // 使用物品逻辑
             // 假设现在只是减少数量，实际效果逻辑取决于插件
             // TODO: 如果有插件处理程序，则调用它
-            
-            item.Count--;
+
+            item.Count -= count;
             if (item.Count <= 0)
             {
                 // TODO: 存档有物品后改为 mw.Items.Remove(item);
                 _testItems?.Remove(item);
             }
-            // 如果数量归零，刷新列表
-            if (item.Count <= 0)
-            {
-                UpdateList();
-            }
+            // Count 没有通知，直接刷新
+            UpdateList();
         }
 
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
@@ -202,8 +200,130 @@ namespace VPet_Simulator.Windows
         private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             IcCommodity.ItemsSource = null;
+            HideDetail();
             Hide();
             e.Cancel = true;
+        }
+
+        private void BtnHoverUse_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            var btn = sender as Button;
+            var item = btn?.DataContext as Item;
+            if (item == null)
+                return;
+            DisplayDetail(item);
+        }
+
+        private void CellRoot_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var bdr = sender as Border;
+            var item = bdr?.DataContext as Item;
+            if (item == null)
+                return;
+            DisplayDetail(item);
+        }
+
+        private void DisplayDetail(Item item)
+        {
+            _detailItem = item;
+            _detailCount = 1;
+
+            TextItemName.Text = item.TranslateName;
+            ImageItemDetail.Source = item.ImageSource;
+            TextItemPrice.Text = $"$ {item.Price:f2}";
+
+            if (item is Food food)
+            {
+                PanelPrefer.Visibility = Visibility.Visible;
+
+                var percent = "100%";
+                if (!string.IsNullOrWhiteSpace(food.Data))
+                {
+                    var idx = food.Data.LastIndexOf('\t');
+                    if (idx >= 0 && idx + 1 < food.Data.Length)
+                        percent = food.Data[(idx + 1)..].Trim();
+                }
+                TextItemPreferPercent.Text = percent;
+                TextItemDesc.Text = food.Description;
+            }
+            else
+            {
+                PanelPrefer.Visibility = Visibility.Collapsed;
+                TextItemPreferPercent.Text = "";
+                TextItemDesc.Text = item.Desc ?? "";
+            }
+
+            TbDetailCount.Text = _detailCount.ToString();
+            IsMaskVisible = true;
+            IsOverlayerVisible = true;
+        }
+
+        private void HideDetail()
+        {
+            IsMaskVisible = false;
+            IsOverlayerVisible = false;
+        }
+
+        private void BorderOutDetail_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            HideDetail();
+        }
+
+        private void ButtonCloseDetail_Click(object sender, RoutedEventArgs e)
+        {
+            HideDetail();
+        }
+
+        private void RbtnDetailDecrease_Click(object sender, RoutedEventArgs e)
+        {
+            if (_detailItem == null)
+                return;
+            _detailCount = Math.Max(1, _detailCount - 1);
+            TbDetailCount.Text = _detailCount.ToString();
+        }
+
+        private void RbtnDetailIncrease_Click(object sender, RoutedEventArgs e)
+        {
+            if (_detailItem == null)
+                return;
+            _detailCount = Math.Min(Math.Max(1, _detailItem.Count), _detailCount + 1);
+            TbDetailCount.Text = _detailCount.ToString();
+        }
+
+        private void TbDetailCount_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ApplyDetailCountFromText();
+                e.Handled = true;
+            }
+        }
+
+        private void TbDetailCount_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ApplyDetailCountFromText();
+        }
+
+        private void ApplyDetailCountFromText()
+        {
+            if (_detailItem == null)
+                return;
+            if (!int.TryParse(TbDetailCount.Text?.Trim(), out var v))
+                v = _detailCount;
+            v = Math.Max(1, v);
+            v = Math.Min(Math.Max(1, _detailItem.Count), v);
+            _detailCount = v;
+            TbDetailCount.Text = _detailCount.ToString();
+        }
+
+        private void BtnDetailUse_Click(object sender, RoutedEventArgs e)
+        {
+            if (_detailItem == null)
+                return;
+            ApplyDetailCountFromText();
+            UseItem(_detailItem, _detailCount);
+            HideDetail();
         }
     }
 }
