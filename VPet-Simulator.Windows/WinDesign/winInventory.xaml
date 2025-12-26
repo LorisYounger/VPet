@@ -6,10 +6,310 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         Title="{ll:Str 物品栏}"
-        Height="{ll:Dbe WorkMenuHeight_550, DefValue=550}" Style="{DynamicResource BaseWindowXStyle}"
-        Background="{DynamicResource PrimaryLighter}" Width="{ll:Dbe WorkMenuWidth_650, DefValue=650}"
-        ResizeMode="CanMinimize">
-    <Grid>
-        
+        Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}"
+        Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}"
+        FontSize="14" WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource PrimaryLighter}" pu:WindowXCaption.Height="45"
+        pu:WindowXCaption.Background="{DynamicResource DARKPrimary}" pu:WindowXCaption.Foreground="#FFFFFF"
+        pu:WindowXCaption.Buttons="Close"
+        pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}" Closing="WindowX_Closing">
+    <pu:WindowXCaption.CloseButtonStyle>
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Margin" Value="0,0,7,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="pu:ButtonHelper.CornerRadius" Value="14" />
+            <Setter Property="pu:ButtonHelper.HoverBackground" Value="White" />
+            <Setter Property="pu:ButtonHelper.ClickBackground" Value="{x:Null}" />
+            <Setter Property="pu:ButtonHelper.HoverForeground" Value="{DynamicResource DARKPrimary}" />
+        </Style>
+    </pu:WindowXCaption.CloseButtonStyle>
+    <pu:WindowXCaption.HeaderTemplate>
+        <DataTemplate>
+            <Grid Margin="10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{ll:Str 物品栏}" Foreground="{DynamicResource DARKPrimaryText}"
+                            VerticalAlignment="Center" FontSize="20" Margin="10,0,0,0" />
+                    <Grid Grid.Column="1" Margin="15,0,0,0" pu:WindowX.IsDragMoveArea="False" Width="200">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TbTitleSearch" Grid.ColumnSpan="2" VerticalAlignment="Center" Padding="7,0"
+                                pu:TextBoxHelper.Watermark="{ll:Str 搜索物品}" FontSize="14" Background="#33FFFFFF"
+                                Height="30" BorderThickness="0" pu:TextBoxHelper.CornerRadius="5"
+                                Loaded="TbTitleSearch_Loaded" Foreground="{DynamicResource DARKPrimaryText}" />
+                        <Button Grid.Column="1" Margin="0,0,3,0" VerticalAlignment="Center" Height="28" Width="28"
+                                IsDefault="{Binding IsKeyboardFocusWithin, ElementName=TbTitleSearch}"
+                                BorderThickness="0" pu:ButtonHelper.CornerRadius="0,5,5,0" Background="Transparent"
+                                FontFamily="pack://application:,,,/Res/#remixicon" Content="&#xF0D1;" Padding="0"
+                                Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" Cursor="Hand"
+                                Click="BtnSearch_Click" />
+                    </Grid>
+                </StackPanel>
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="20,0,10,0"
+                        Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" FontWeight="Bold">
+                    <Run Text="{ll:Str 总价值}" />: $ <Run x:Name="rTotalValue" Loaded="rTotalValue_Loaded" Text="" />
+                </TextBlock>
+            </Grid>
+        </DataTemplate>
+    </pu:WindowXCaption.HeaderTemplate>
+
+    <!-- 物品详情遮罩层：套用更好买最终确认版（无遮罩悬浮、但打开详情有遮罩） -->
+    <pu:WindowX.Overlayer>
+        <Grid>
+            <!-- 详情打开时：需要遮罩/拦截背景点击，并支持点空白关闭 -->
+            <Border Background="Transparent" MouseLeftButtonDown="BorderOutDetail_MouseLeftButtonDown" />
+            <Grid x:Name="ItemDetailGrid" Margin="120, 90">
+                <Border Background="White" CornerRadius="15">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#eaeaea" BlurRadius="30" ShadowDepth="5" />
+                    </Border.Effect>
+                </Border>
+                <Grid Margin="18">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="{ll:Str 物品详情}" FontSize="18" Margin="0,5"
+                            Foreground="{DynamicResource DARKPrimary}" />
+                    <Button Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Content="&#xEB99;" Padding="0" Width="36" Height="36"
+                            FontFamily="/VPet-Simulator.Windows;component/Res/#remixicon" FontSize="28"
+                            Style="{DynamicResource ThemedButtonStyle}" Click="ButtonCloseDetail_Click" />
+
+                    <!-- 左侧：图片 -->
+                    <Border Grid.Row="1" CornerRadius="10" Background="{DynamicResource SecondaryTrans4}">
+                        <Image x:Name="ImageItemDetail" Stretch="Uniform" />
+                    </Border>
+
+                    <!-- 右侧：文本信息 -->
+                    <Grid Grid.Row="1" Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="TextItemName" FontSize="20" FontWeight="Bold"
+                                Foreground="{DynamicResource DARKPrimary}" TextTrimming="CharacterEllipsis" />
+
+                        <StackPanel x:Name="PanelPrefer" Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
+                            <TextBlock Text="{ll:Str 喜好度}" VerticalAlignment="Center" />
+                            <TextBlock x:Name="TextItemPreferPercent" Margin="10,0,0,0"
+                                    VerticalAlignment="Center" Foreground="{DynamicResource Primary}"
+                                    FontWeight="SemiBold" FontSize="16" />
+                        </StackPanel>
+
+                        <ScrollViewer Grid.Row="2" Margin="0,10,0,0" HorizontalScrollBarVisibility="Disabled"
+                                VerticalScrollBarVisibility="Auto">
+                            <!-- ScrollViewer 会导致子元素按“无限宽”测量，从而 Wrap 失效；这里强制按可视宽度约束 -->
+                            <TextBlock x:Name="TextItemDesc" TextWrapping="Wrap"
+                                    Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ScrollViewer}}" />
+                        </ScrollViewer>
+
+                        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock Text="{ll:Str 价格}" VerticalAlignment="Center" />
+                            <TextBlock x:Name="TextItemPrice" Margin="10,0,0,0"
+                                    VerticalAlignment="Center" Foreground="{DynamicResource Primary}"
+                                    FontWeight="SemiBold" FontSize="16" />
+                        </StackPanel>
+
+                        <!-- 数量：减/输入/加 -->
+                        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,10,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{ll:Str 数量}" VerticalAlignment="Center" />
+                            <Border Margin="10,0,0,0" CornerRadius="6" Background="{DynamicResource SecondaryTrans4}">
+                                <StackPanel Orientation="Horizontal">
+                                    <RepeatButton VerticalAlignment="Center" Content="-" Width="32" Height="32"
+                                            Style="{DynamicResource IconInvertedForegroundRepeatButtonStyle}"
+                                            Click="RbtnDetailDecrease_Click" />
+                                    <TextBox x:Name="TbDetailCount" Width="60" Height="32" VerticalContentAlignment="Center"
+                                            HorizontalContentAlignment="Center" BorderThickness="0" Background="#CDFFFFFF"
+                                            PreviewKeyDown="TbDetailCount_PreviewKeyDown"
+                                            LostFocus="TbDetailCount_LostFocus" />
+                                    <RepeatButton VerticalAlignment="Center" Content="+" Width="32" Height="32"
+                                            Style="{DynamicResource IconInvertedForegroundRepeatButtonStyle}"
+                                            Click="RbtnDetailIncrease_Click" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <Button Grid.Row="5" x:Name="BtnDetailUse" Margin="0,14,0,0" Padding="16,8"
+                                HorizontalAlignment="Left" Cursor="Hand"
+                                Style="{DynamicResource ThemedButtonStyle}" Content="{ll:Str 使用}"
+                                Background="{DynamicResource Primary}" Foreground="White"
+                                Click="BtnDetailUse_Click" />
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </pu:WindowX.Overlayer>
+
+    <Window.Resources>
+        <!-- 网格格子：图标 + 标题 + 数量 + 悬浮“使用”(不加遮罩层) -->
+        <DataTemplate x:Key="InventoryGridCellTemplate">
+            <Grid Width="100" Height="100">
+                <Border x:Name="CellRoot" Cursor="Hand"
+                        CornerRadius="6" Background="{DynamicResource SecondaryTrans4}"
+                        BorderBrush="{DynamicResource DARKPrimaryTrans4}" BorderThickness="1"
+                        MouseLeftButtonUp="CellRoot_MouseLeftButtonUp">
+                    <Grid>
+                        <Border CornerRadius="4" Margin="6,15,6,0" Background="{DynamicResource SecondaryTrans}">
+                            <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
+                        </Border>
+
+                        <Border VerticalAlignment="Top" Height="22" CornerRadius="6,6,0,0"
+                                Background="#66000000">
+                            <TextBlock Margin="6,0" VerticalAlignment="Center"
+                                    Foreground="{DynamicResource DARKPrimaryText}"
+                                    FontSize="14" TextTrimming="CharacterEllipsis"
+                                    Text="{Binding TranslateName}" />
+                        </Border>
+
+                        <Border VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                                CornerRadius="6" Background="#66000000">
+                            <TextBlock Margin="6,3" VerticalAlignment="Center"
+                                    Foreground="white" FontSize="16"
+                                    Text="{Binding Count, StringFormat=x{0}}" />
+                        </Border>
+
+                        <!-- Hover：仅显示按钮，不叠加整块遮罩 -->
+                        <Button x:Name="BtnCellUse" Cursor="Hand" Padding="12,6" Content="{ll:Str 使用}"
+                                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="8"
+                                Style="{DynamicResource ThemedButtonStyle}"
+                                Background="{DynamicResource Primary}" Foreground="White"
+                                IsEnabled="{Binding CanUse}"
+                                Visibility="Collapsed"
+                                Click="BtnHoverUse_Click" />
+                    </Grid>
+                </Border>
+            </Grid>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="CellRoot" Property="IsMouseOver" Value="True">
+                    <Setter TargetName="BtnCellUse" Property="Visibility" Value="Visible" />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid Margin="12,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!-- 分类 Tab -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{ll:Str 物品分类}" FontSize="18" Margin="5,6,10,6"
+                    Foreground="{DynamicResource DARKPrimary}" VerticalAlignment="Center" />
+            <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+                <ListBox x:Name="LsbCategory" Background="Transparent" BorderThickness="0" SelectedIndex="0"
+                        pu:ListBoxHelper.ItemsPadding="15,8" pu:ListBoxHelper.ItemsCornerRadius="6"
+                        pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"
+                        pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
+                        SelectionChanged="LsbSortRule_SelectionChanged">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBoxItem Content="{ll:Str 全部}" />
+                    <ListBoxItem Content="{ll:Str 收藏}" />
+                    <ListBoxItem Content="{ll:Str 正餐}" />
+                    <ListBoxItem Content="{ll:Str 零食}" />
+                    <ListBoxItem Content="{ll:Str 饮料}" />
+                    <ListBoxItem Content="{ll:Str 功能性}" />
+                    <ListBoxItem Content="{ll:Str 药品}" />
+                    <ListBoxItem Content="{ll:Str 礼品}" />
+                </ListBox>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- 排序 Tab -->
+        <Border Grid.Row="1" Margin="0,6,0,10" CornerRadius="6" Background="{DynamicResource SecondaryTrans4}">
+            <Grid Margin="8,6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{ll:Str 排序方式}" FontSize="16" Margin="5,0,10,0"
+                        Foreground="{DynamicResource DARKPrimary}" VerticalAlignment="Center" />
+                <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+                    <ListBox x:Name="LsbSortRule" Background="Transparent" BorderThickness="0"
+                            pu:ListBoxHelper.ItemsPadding="10,6" pu:ListBoxHelper.ItemsCornerRadius="6"
+                            pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"
+                            pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
+                            SelectedIndex="0" SelectionChanged="LsbSortRule_SelectionChanged">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBoxItem Content="{ll:Str 按数量}" />
+                        <ListBoxItem Content="{ll:Str 按价格}" />
+                    </ListBox>
+                </ScrollViewer>
+                <ListBox x:Name="LsbSortAsc" Grid.Column="2" Background="Transparent" BorderThickness="0"
+                        pu:ListBoxHelper.ItemsPadding="10,6" pu:ListBoxHelper.ItemsCornerRadius="6"
+                        pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"
+                        pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
+                        SelectedIndex="0" SelectionChanged="LsbSortRule_SelectionChanged">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBoxItem Content="{ll:Str 升序}" />
+                    <ListBoxItem Content="{ll:Str 降序}" />
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <!-- 网格背包 -->
+        <Grid Grid.Row="2">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Visible"
+                    pu:ScrollBarHelper.ThumbBackground="#33FFFFFF"
+                    pu:ScrollBarHelper.HoverThumbBackground="#55FFFFFF">
+                <ItemsControl x:Name="IcCommodity">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <local:AutoUniformGrid VerticalAlignment="Top" ItemsMinWidth="120" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl Margin="0,0,10,10" Content="{Binding}"
+                                    ContentTemplate="{StaticResource InventoryGridCellTemplate}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <TextBlock x:Name="TbNone" Text="{ll:Str 暂无物品}" Visibility="Collapsed"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       FontSize="20" Foreground="{DynamicResource PrimaryText}" />
+        </Grid>
     </Grid>
 </pu:WindowX>

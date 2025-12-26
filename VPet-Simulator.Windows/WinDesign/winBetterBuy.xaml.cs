@@ -355,6 +355,8 @@ namespace VPet_Simulator.Windows
             rMoney = sender as Run;
             rMoney.Text = mw.Core.Save.Money.ToString("f2");
         }
+
+ 
         private Switch _puswitchautobuy;
         private void Switch_Loaded_1(object sender, RoutedEventArgs e)
         {
@@ -419,5 +421,7 @@ namespace VPet_Simulator.Windows
 
             mw.GameSavesData["betterbuysetting"][(gint)"double"] = (int)nibuytimes.Value;
         }
+
+ 
     }
 }
