@@ -171,10 +171,10 @@ namespace VPet_Simulator.Core
             {
                 ig.Run(PetGrid, () =>
                 {
-                    IsWorking = true;
                     DisplayNomal();
                 });
             });
+            IsWorking = true;
         }
 
 
