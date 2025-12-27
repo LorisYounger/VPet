@@ -1970,7 +1970,14 @@ namespace VPet_Simulator.Windows
                       {
                           Thread.Sleep(100);
                       }
-                      await Dispatcher.InvokeAsync(() => LoadingText.Visibility = Visibility.Collapsed);
+                      await Dispatcher.InvokeAsync(async () =>
+                      {
+                          while (LoadingText.Visibility != Visibility.Collapsed)
+                          {
+                              LoadingText.Visibility = Visibility.Collapsed;
+                              await Task.Delay(100);
+                          }
+                      });
                   });
 
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
