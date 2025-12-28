@@ -3,13 +3,14 @@ using LinePutScript.Localization.WPF;
 using Panuon.WPF;
 using Panuon.WPF.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Threading;
 using VPet_Simulator.Windows.Interface;
 
@@ -23,25 +24,33 @@ namespace VPet_Simulator.Windows
         MainWindow mw;
         private TextBox _searchTextBox;
         private Run rTotalValue;
-        private List<Item> _testItems;
         private Item _detailItem;
         private int _detailCount = 1;
 
+        /// <summary>
+        /// 构造函数，初始化物品栏窗口
+        /// </summary>
+        /// <param name="mw">主窗口实例</param>
         public winInventory(MainWindow mw)
         {
             InitializeComponent();
             this.mw = mw;
             Loaded += winInventory_Loaded;
-
-            // 临时测试物品（存档还没有物品时使用）
-            _testItems = BuildTestItems();
+            mw.Items.Add(mw.Foods[0].Clone());
         }
 
+        /// <summary>
+        /// 显示物品栏窗口
+        /// </summary>
         public void ShowWindow()
         {
             Show();
-            // 首次打开时控件可能还未加载完，延迟刷新避免“打开不加载、切换后才加载”
+            // 首次打开时控件可能还未加载完，延迟刷新避免"打开不加载、切换后才加载"
             Dispatcher.BeginInvoke(new Action(UpdateList), DispatcherPriority.Loaded);
+            foreach (string itemType in Item.ItemTypes)
+            {
+                LsbCategory.Items.Add(new ListBoxItem() { Content = ("Item_" + itemType).Translate() });
+            }
         }
 
         private void winInventory_Loaded(object sender, RoutedEventArgs e)
@@ -49,162 +58,132 @@ namespace VPet_Simulator.Windows
             UpdateList();
         }
 
-        private List<Item> GetAllItems()
-        {
-            // TODO: 存档有物品后，取消下面注释，改为读取 mw.Items
-            // return mw?.Items?.ToList() ?? new List<Item>();
-            return _testItems ?? new List<Item>();
-        }
-
-        private List<Item> BuildTestItems()
-        {
-            var items = new List<Item>();
-            // 食物：用于测试“更好买同款分类/收藏”
-            for (int i = 0; i < 2; i++)
-            {
-                items.Add(new Food() { Name = "TestMeal" + i, Type = Food.FoodType.Meal, Price = 15 + i, Count = 3 + i, Desc = "测试正餐", StrengthFood = 20, Likability = 1 });
-                items.Add(new Food() { Name = "TestSnack" + i, Type = Food.FoodType.Snack, Price = 8 + i, Count = 5 + i, Desc = "测试零食", StrengthFood = 10, Feeling = 1 });
-                items.Add(new Food() { Name = "TestDrink" + i, Type = Food.FoodType.Drink, Price = 6 + i, Count = 4 + i, Desc = "测试饮料", StrengthDrink = 15 });
-                items.Add(new Food() { Name = "TestFunc" + i, Type = Food.FoodType.Functional, Price = 30 + i, Count = 1 + i, Desc = "测试功能性", Strength = 5, Exp = 2 });
-                items.Add(new Food() { Name = "TestDrug" + i, Type = Food.FoodType.Drug, Price = 40 + i, Count = 2, Desc = "测试药品", Health = 5 });
-                items.Add(new Food() { Name = "TestGift" + i, Type = Food.FoodType.Gift, Price = 100 + i * 10, Count = 1, Desc = "测试礼品", Likability = 5, Feeling = 3 });
-            }
-
-            // 其他物品：只会出现在“全部”里（因为分类与更好买保持一致）
-            for (int i = 0; i < 6; i++)
-            {
-                items.Add(new Item()
-                {
-                    Name = "TestTool" + i,
-                    Price = 30 + i,
-                    Count = 2 + (i % 3),
-                    ItemType = "Tool",
-                    Desc = "这是一些测试道具"
-                });
-            }
-            for (int i = 0; i < 8; i++)
-            {
-                items.Add(new Item()
-                {
-                    Name = "TestItem" + i,
-                    Price = 20 + i,
-                    Count = 5,
-                    ItemType = "Item",
-                    Desc = "这是一些测试物品"
-                });
-            }
-            return items;
-        }
-
+        /// <summary>
+        /// 更新物品列表
+        /// </summary>
+        /// <remarks>
+        /// 根据搜索条件、分类、排序规则更新显示的物品列表，并计算总价值
+        /// </remarks>
         private void UpdateList()
         {
             if (mw == null) return;
 
-            // 全部物品（用于顶部“总价值”统计）
-            var allItems = GetAllItems();
+            // 全部物品（用于顶部"总价值"统计）
+            IEnumerable<Item> items = mw.Items.Where(x => x.Visibility);
 
             // 搜索
             if (_searchTextBox != null && !string.IsNullOrWhiteSpace(_searchTextBox.Text))
             {
-                allItems = allItems.Where(x => x.TranslateName.Contains(_searchTextBox.Text)).ToList();
+                items = items.Where(x => x.TranslateName.Contains(_searchTextBox.Text));
             }
 
-            // 分类（与更好买保持一致）
+            //收藏
+            if (_puswitch?.IsChecked == true)
+            {
+                items = items.Where(x => x.Star == true);
+            }
+
+            // 分类
             // 0: 全部（显示所有物品）
-            // 1: 收藏（只显示收藏食物）
-            // 2..7: 正餐/零食/饮料/功能性/药品/礼品（只显示对应类型的食物）
-            List<Item> items;
-            if (LsbCategory.SelectedIndex == 0)
+            if (LsbCategory.SelectedIndex != 0)
             {
-                items = allItems.ToList();
-            }
-            else if (LsbCategory.SelectedIndex == (int)Food.FoodType.Star)
-            {
-                items = allItems.OfType<Food>().Where(x => x.Star).Cast<Item>().ToList();
-            }
-            else
-            {
-                var type = (Food.FoodType)LsbCategory.SelectedIndex;
-                items = allItems.OfType<Food>().Where(x => x.Type == type).Cast<Item>().ToList();
+                items = items.Where(x => x.ItemType == Item.ItemTypes[LsbCategory.SelectedIndex]);
             }
 
             // 排序
             bool asc = LsbSortAsc.SelectedIndex == 0;
             switch (LsbSortRule.SelectedIndex)
             {
-                case 0: // 按数量
-                    items = asc ? items.OrderBy(x => x.Count).ToList() : items.OrderByDescending(x => x.Count).ToList();
+                default:
                     break;
-                case 1: // 按价格
-                    items = asc ? items.OrderBy(x => x.Price).ToList() : items.OrderByDescending(x => x.Price).ToList();
+                case 1: // 按名称
+                    items = asc ? items.OrderBy(x => x.Name) : items.OrderByDescending(x => x.Name);
+                    break;
+                case 2: // 按数量
+                    items = asc ? items.OrderBy(x => x.Count) : items.OrderByDescending(x => x.Count);
+                    break;
+                case 3: // 按价格
+                    items = asc ? items.OrderBy(x => x.Price) : items.OrderByDescending(x => x.Price);
                     break;
             }
 
             IcCommodity.ItemsSource = items;
 
             // 计算总价值（始终统计全部物品，不受分类影响）
-            double totalValue = GetAllItems().Sum(x => x.Price * x.Count);
+            double totalValue = mw.Items.Sum(x => x.Price * x.Count);
             if (rTotalValue != null)
                 rTotalValue.Text = totalValue.ToString("f2");
-            
-            if (items.Count == 0)
+
+            if (!items.Any())
                 TbNone.Visibility = Visibility.Visible;
             else
                 TbNone.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// 使用物品
+        /// </summary>
         private void UseItem(Item item, int count)
         {
             if (item == null) return;
-            if (count <= 0) count = 1;
-            count = Math.Min(Math.Max(1, item.Count), count);
-
-            // 使用物品逻辑
-            // 假设现在只是减少数量，实际效果逻辑取决于插件
-            // TODO: 如果有插件处理程序，则调用它
-
-            item.Count -= count;
-            if (item.Count <= 0)
-            {
-                // TODO: 存档有物品后改为 mw.Items.Remove(item);
-                _testItems?.Remove(item);
-            }
-            // Count 没有通知，直接刷新
+            while (count-- > 0)
+                item.Use();
+            // 没有通知，直接刷新
             UpdateList();
         }
 
+        /// <summary>
+        /// 搜索按钮点击事件处理
+        /// </summary>
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
             UpdateList();
         }
 
+        /// <summary>
+        /// 标题搜索框加载完成事件处理
+        /// </summary>
         private void TbTitleSearch_Loaded(object sender, RoutedEventArgs e)
         {
             _searchTextBox = sender as TextBox;
         }
 
+        /// <summary>
+        /// 总价值文本加载完成事件处理
+        /// </summary>
         private void rTotalValue_Loaded(object sender, RoutedEventArgs e)
         {
             rTotalValue = sender as Run;
-            var totalValue = GetAllItems().Sum(x => x.Price * x.Count);
+            var totalValue = mw.Items.Sum(x => x.Price * x.Count);
             rTotalValue.Text = totalValue.ToString("f2");
         }
 
 
+        /// <summary>
+        /// 排序规则选择改变事件处理
+        /// </summary>
         private void LsbSortRule_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
                 UpdateList();
         }
 
-        private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            IcCommodity.ItemsSource = null;
-            HideDetail();
-            Hide();
-            e.Cancel = true;
-        }
+        ///// <summary>
+        ///// 窗口关闭事件处理
+        ///// </summary>
+        //private void WindowX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        //{
+        //    IcCommodity.ItemsSource = null;
+        //    HideDetail();
+        //    Hide();
+        //    e.Cancel = true;
+        //}
 
+        /// <summary>
+        /// 鼠标悬停时使用按钮点击事件处理
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
         private void BtnHoverUse_Click(object sender, RoutedEventArgs e)
         {
             e.Handled = true;
@@ -215,6 +194,9 @@ namespace VPet_Simulator.Windows
             DisplayDetail(item);
         }
 
+        /// <summary>
+        /// 物品格子单击事件处理
+        /// </summary>
         private void CellRoot_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var bdr = sender as Border;
@@ -224,6 +206,10 @@ namespace VPet_Simulator.Windows
             DisplayDetail(item);
         }
 
+        /// <summary>
+        /// 显示物品详情界面
+        /// </summary>
+        /// <param name="item">要显示的物品</param>
         private void DisplayDetail(Item item)
         {
             _detailItem = item;
@@ -259,22 +245,43 @@ namespace VPet_Simulator.Windows
             IsOverlayerVisible = true;
         }
 
+        /// <summary>
+        /// 隐藏物品详情界面
+        /// </summary>
         private void HideDetail()
         {
             IsMaskVisible = false;
             IsOverlayerVisible = false;
         }
 
+        /// <summary>
+        /// 详情界面外部区域点击事件处理
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
+        /// <remarks>
+        /// 点击详情界面外部区域时关闭详情界面
+        /// </remarks>
         private void BorderOutDetail_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             HideDetail();
         }
 
+        /// <summary>
+        /// 关闭详情按钮点击事件处理
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
         private void ButtonCloseDetail_Click(object sender, RoutedEventArgs e)
         {
             HideDetail();
         }
 
+        /// <summary>
+        /// 详情界面减少数量按钮点击事件处理
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
         private void RbtnDetailDecrease_Click(object sender, RoutedEventArgs e)
         {
             if (_detailItem == null)
@@ -283,6 +290,11 @@ namespace VPet_Simulator.Windows
             TbDetailCount.Text = _detailCount.ToString();
         }
 
+        /// <summary>
+        /// 详情界面增加数量按钮点击事件处理
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
         private void RbtnDetailIncrease_Click(object sender, RoutedEventArgs e)
         {
             if (_detailItem == null)
@@ -291,6 +303,14 @@ namespace VPet_Simulator.Windows
             TbDetailCount.Text = _detailCount.ToString();
         }
 
+        /// <summary>
+        /// 详情界面数量文本框按键事件处理
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
+        /// <remarks>
+        /// 当按下回车键时应用输入的数量
+        /// </remarks>
         private void TbDetailCount_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -300,11 +320,22 @@ namespace VPet_Simulator.Windows
             }
         }
 
+        /// <summary>
+        /// 详情界面数量文本框失去焦点事件处理
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
         private void TbDetailCount_LostFocus(object sender, RoutedEventArgs e)
         {
             ApplyDetailCountFromText();
         }
 
+        /// <summary>
+        /// 从文本框应用数量设置
+        /// </summary>
+        /// <remarks>
+        /// 验证并限制输入的数量值在有效范围内（1到物品拥有数量）
+        /// </remarks>
         private void ApplyDetailCountFromText()
         {
             if (_detailItem == null)
@@ -317,6 +348,11 @@ namespace VPet_Simulator.Windows
             TbDetailCount.Text = _detailCount.ToString();
         }
 
+        /// <summary>
+        /// 详情界面使用按钮点击事件处理
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
         private void BtnDetailUse_Click(object sender, RoutedEventArgs e)
         {
             if (_detailItem == null)
@@ -325,5 +361,12 @@ namespace VPet_Simulator.Windows
             UseItem(_detailItem, _detailCount);
             HideDetail();
         }
+
+        private CheckBox _puswitch;
+        private void Switch_Loaded(object sender, RoutedEventArgs e)
+        {
+            _puswitch = sender as CheckBox;
+        }
+
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using VPet_Simulator.Core;
 
@@ -46,7 +47,11 @@ public class Item : NotifyPropertyChangedBase
     /// 对应类型物品的使用方法
     /// </summary>
     public static Dictionary<string, List<Action<Item>>> UseAction = new();
-
+    /// <summary>
+    /// 物品图片 (图片默认在 {itemtypes}/{Image or itemname}.png )
+    /// </summary>
+    [Line(ignoreCase: true)]
+    public virtual string Image { get; set; } = null;
     /// <summary>
     /// 使用该物品
     /// </summary>
@@ -151,6 +156,21 @@ public class Item : NotifyPropertyChangedBase
     /// </summary>
     [Line(ignoreCase: true)]
     public virtual bool CanUse { get; set; } = true;
-
-
+    /// <summary>
+    /// 是否收藏了物品
+    /// </summary>
+    [Line(ignoreCase: true)]
+    public virtual bool Star { get; set; } = false;
+    /// <summary>
+    /// 能否在背包中显示
+    /// </summary>
+    [Line(ignoreCase: true)]
+    public virtual bool Visibility { get; set; } = true;
+    /// <summary>
+    /// 加载物品图片
+    /// </summary>
+    public virtual void LoadSource(IMainWindow imw)
+    {
+        ImageSource = imw.ImageSources.FindImage(ItemType + "_" + (Image ?? Name), "food");
+    }
 }

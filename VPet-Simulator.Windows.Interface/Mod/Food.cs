@@ -107,12 +107,8 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 是否已收藏
         /// </summary>
-        public bool Star { get; set; }
-        /// <summary>
-        /// 物品图片
-        /// </summary>
-        [Line(ignoreCase: true)]
-        public string Image;
+        public override bool Star { get; set; }
+       
         public bool? isoverload = null;
         /// <summary>
         /// 当前物品推荐价格
@@ -186,6 +182,13 @@ namespace VPet_Simulator.Windows.Interface
                 }
             else
                 return Graph;
+        }
+        /// <summary>
+        /// 克隆食物对象
+        /// </summary>
+        public Food Clone()
+        {
+            return (Food)MemberwiseClone();
         }
     }
 }

@@ -223,9 +223,9 @@ namespace VPet_Simulator.Windows
         {
             //保存日程表
             ScheduleTask?.Save();
-            ////保存物品栏
-            //GameSavesData.Data.Assemblage.RemoveAll(x => x.Name == "item");
-            //GameSavesData.Data.AddRange(Items.Select(x => LPSConvert.SerializeObjectToLine<Line>(x, "item")).ToList());
+            //保存物品栏
+
+            GameSavesData.Data.AddRange(Items.Select(x => LPSConvert.SerializeObjectToLine<Line>(x, "item")).ToList());
             try
             {
                 //保存插件
@@ -1871,9 +1871,10 @@ namespace VPet_Simulator.Windows
                   Foods.ForEach(item => item.LoadImageSource(this));
                   Photos.ForEach(item => item.LoadUserInfo(this));
                   //物品栏加载
-                  foreach (Line line in GameSavesData.Data.FindAllLine("item"))
+                  foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("Item")))
                   {
-                      Items.Add(Item.CreateItem(line));
+                      Items.Add(Item.CreateItem(line.Value));
+                      GameSavesData.Data.Assemblage.Remove(line.Key);
                   }
                   Main.TimeHandle += Handle_Music;
                   if (IsSteamUser)
@@ -1975,7 +1976,7 @@ namespace VPet_Simulator.Windows
                           while (LoadingText.Visibility != Visibility.Collapsed)
                           {
                               LoadingText.Visibility = Visibility.Collapsed;
-                              await Task.Delay(100);
+                              await Task.Delay(1000);
                           }
                       });
                   });
