@@ -9,8 +9,7 @@
         Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}" FontSize="14" WindowStartupLocation="CenterScreen"
         Background="{DynamicResource PrimaryLighter}" pu:WindowXCaption.Height="45"
         pu:WindowXCaption.Background="{DynamicResource DARKPrimary}" pu:WindowXCaption.Foreground="#FFFFFF"
-        pu:WindowXCaption.Buttons="Close" pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}"
-       >
+        pu:WindowXCaption.Buttons="Close" pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}">
     <pu:WindowXCaption.CloseButtonStyle>
         <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
             <Setter Property="Width" Value="28" />
@@ -91,7 +90,12 @@
                             Padding="0" Width="36" Height="36"
                             FontFamily="/VPet-Simulator.Windows;component/Res/#remixicon" FontSize="28"
                             Style="{DynamicResource ThemedButtonStyle}" Click="ButtonCloseDetail_Click" />
-
+                    <ToggleButton x:Name="TbtnStar" Grid.ColumnSpan="3" Margin="0,2,45,0" HorizontalAlignment="Right"
+                            VerticalAlignment="Top" Width="30" Height="30" Padding="0" FontSize="22"
+                            Foreground="#FFB300" Background="Transparent" ToolTip="{ll:Str 收藏物品}"
+                            pu:ToggleButtonHelper.CornerRadius="5" pu:ToggleButtonHelper.CheckedContent="&#xF186;"
+                            pu:IconHelper.Margin="0" FontFamily="/VPet-Simulator.Windows;component/Res/#remixicon"
+                            Content="&#xF18B;" Checked="TbtnStar_Checked" Unchecked="TbtnStar_Checked" />
                     <!-- 左侧：图片 -->
                     <Border Grid.Row="1" CornerRadius="10" Background="{DynamicResource SecondaryTrans4}">
                         <Image x:Name="ImageItemDetail" Stretch="Uniform" />
@@ -111,12 +115,6 @@
                         <TextBlock x:Name="TextItemName" FontSize="20" FontWeight="Bold"
                                 Foreground="{DynamicResource DARKPrimary}" TextTrimming="CharacterEllipsis" />
 
-                        <StackPanel x:Name="PanelPrefer" Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
-                            <TextBlock Text="{ll:Str 喜好度}" VerticalAlignment="Center" />
-                            <TextBlock x:Name="TextItemPreferPercent" Margin="10,0,0,0" VerticalAlignment="Center"
-                                    Foreground="{DynamicResource Primary}" FontWeight="SemiBold" FontSize="16" />
-                        </StackPanel>
-
                         <ScrollViewer Grid.Row="2" Margin="0,10,0,0" HorizontalScrollBarVisibility="Disabled"
                                 VerticalScrollBarVisibility="Auto">
                             <!-- ScrollViewer 会导致子元素按“无限宽”测量，从而 Wrap 失效；这里强制按可视宽度约束 -->
@@ -133,23 +131,27 @@
                         <!-- 数量：减/输入/加 -->
                         <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,10,0,0" VerticalAlignment="Center">
                             <TextBlock Text="{ll:Str 数量}" VerticalAlignment="Center" />
-                            <Border Margin="10,0,0,0" CornerRadius="6" Background="{DynamicResource SecondaryTrans4}">
+                            <Border Margin="10,0,0,0" CornerRadius="6" Background="{DynamicResource Secondary}">
                                 <StackPanel Orientation="Horizontal">
-                                    <RepeatButton VerticalAlignment="Center" Content="-" Width="32" Height="32"
+                                    <RepeatButton VerticalAlignment="Center" Content="-" Width="28" Height="32"
                                             Style="{DynamicResource IconInvertedForegroundRepeatButtonStyle}"
                                             Click="RbtnDetailDecrease_Click" />
-                                    <TextBox x:Name="TbDetailCount" Width="60" Height="32"
+                                    <TextBox x:Name="TbDetailCount" Width="40" Height="32" pu:TextBoxHelper.InputLimit="Digit"
                                             VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                             BorderThickness="0" Background="#CDFFFFFF"
                                             PreviewKeyDown="TbDetailCount_PreviewKeyDown"
                                             LostFocus="TbDetailCount_LostFocus" />
-                                    <RepeatButton VerticalAlignment="Center" Content="+" Width="32" Height="32"
+                                    <RepeatButton VerticalAlignment="Center" Content="+" Width="28" Height="32"
                                             Style="{DynamicResource IconInvertedForegroundRepeatButtonStyle}"
                                             Click="RbtnDetailIncrease_Click" />
                                 </StackPanel>
                             </Border>
+                            <TextBlock Grid.Column="1" VerticalAlignment="Bottom" FontSize="16">
+                                <Run Text=" / " />
+                                <Run Text="100" x:Name="runMax" />
+                            </TextBlock>
                         </StackPanel>
-
+                     
                         <Button Grid.Row="5" x:Name="BtnDetailUse" Margin="0,14,0,0" Padding="16,8"
                                 HorizontalAlignment="Left" Cursor="Hand" Style="{DynamicResource ThemedButtonStyle}"
                                 Content="{ll:Str 使用}" Background="{DynamicResource Primary}" Foreground="White"
@@ -168,7 +170,7 @@
                         BorderBrush="{DynamicResource DARKPrimaryTrans4}" BorderThickness="1"
                         MouseLeftButtonUp="CellRoot_MouseLeftButtonUp">
                     <Grid>
-                        <Border CornerRadius="4" Margin="6,15,6,0" Background="{DynamicResource SecondaryTrans}">
+                        <Border CornerRadius="4" Margin="6,15,6,0">
                             <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
                         </Border>
 
@@ -179,23 +181,30 @@
                         </Border>
 
                         <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" CornerRadius="6"
-                                Background="#66000000">
+                                Background="#66000000"
+                                Visibility="{Binding IsSingle, Converter={x:Static pu:Converters.TrueToCollapseConverter}}">
                             <TextBlock Margin="6,3" VerticalAlignment="Center" Foreground="white" FontSize="16"
                                     Text="{Binding Count, StringFormat=x{0}}" />
                         </Border>
 
                         <!-- Hover：仅显示按钮，不叠加整块遮罩 -->
-                        <Button x:Name="BtnCellUse" Cursor="Hand" Padding="12,6" Content="{ll:Str 使用}"
-                                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="8"
-                                Style="{DynamicResource ThemedButtonStyle}" Background="{DynamicResource Primary}"
-                                Foreground="White" IsEnabled="{Binding CanUse}" Visibility="Collapsed"
-                                Click="BtnHoverUse_Click" />
+                        <Grid x:Name="grdCellbtn" Visibility="Collapsed">
+                            <Button x:Name="BtnCellUse" Cursor="Hand" Padding="3,1" Content="{ll:Str 使用}"
+                                    Visibility="{Binding CanUse, Converter={x:Static pu:Converters.FalseToCollapseConverter}}"
+                                    HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="8,8,8,36" Height="24"
+                                    Style="{DynamicResource ThemedButtonStyle}" Background="{DynamicResource Primary}"
+                                    Foreground="White" Click="BtnHoverUse_Click" />
+                            <Button x:Name="BtnCellView" Cursor="Hand" Padding="3,1" Content="{ll:Str 详细}"
+                                    HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="24" Margin="8"
+                                    Style="{DynamicResource ThemedButtonStyle}" Background="{DynamicResource Primary}"
+                                    Foreground="White" Click="BtnHoverView_Click" />
+                        </Grid>
                     </Grid>
                 </Border>
             </Grid>
             <DataTemplate.Triggers>
                 <Trigger SourceName="CellRoot" Property="IsMouseOver" Value="True">
-                    <Setter TargetName="BtnCellUse" Property="Visibility" Value="Visible" />
+                    <Setter TargetName="grdCellbtn" Property="Visibility" Value="Visible" />
                 </Trigger>
             </DataTemplate.Triggers>
         </DataTemplate>
@@ -261,12 +270,13 @@
                     </ListBox>
                 </ScrollViewer>
                 <CheckBox Content="{ll:Str 收藏}" Grid.Column="3" FontSize="14" Margin="10,0,5,0" Height="20"
-                        VerticalAlignment="Center" HorizontalAlignment="Left" 
+                        VerticalAlignment="Center" HorizontalAlignment="Left"
                         pu:CheckBoxHelper.NullBorderBrush="{DynamicResource Primary}"
                         pu:CheckBoxHelper.CheckedBorderBrush="{DynamicResource Primary}"
                         Background="{DynamicResource PrimaryLighter}" pu:CheckBoxHelper.CheckedShadowColor="{x:Null}"
-                        pu:CheckBoxHelper.HoverBorderBrush="{DynamicResource DARKPrimaryText}" pu:WindowX.IsDragMoveArea="False"
-                        Loaded="Switch_Loaded" />
+                        pu:CheckBoxHelper.HoverBorderBrush="{DynamicResource DARKPrimaryText}"
+                        pu:WindowX.IsDragMoveArea="False" Loaded="Switch_Loaded" Checked="CheckBox_Checked"
+                        Unchecked="CheckBox_Checked" />
                 <ListBox x:Name="LsbSortAsc" Grid.Column="2" Background="Transparent" BorderThickness="0"
                         pu:ListBoxHelper.ItemsPadding="10,6" pu:ListBoxHelper.ItemsCornerRadius="6"
                         pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"

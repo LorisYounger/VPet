@@ -36,21 +36,22 @@ namespace VPet_Simulator.Windows
             InitializeComponent();
             this.mw = mw;
             Loaded += winInventory_Loaded;
-            mw.Items.Add(mw.Foods[0].Clone());
+            for (int i = 1; i < Item.ItemTypes.Count; i++)
+            {
+                LsbCategory.Items.Add(new ListBoxItem() { Content = ("Item_" + Item.ItemTypes[i]).Translate() });
+            }
+            //mw.ItemsAdd(mw.Foods[2].Clone());
         }
 
         /// <summary>
         /// 显示物品栏窗口
         /// </summary>
-        public void ShowWindow()
+        public new void Show()
         {
-            Show();
+            base.Show();
             // 首次打开时控件可能还未加载完，延迟刷新避免"打开不加载、切换后才加载"
             Dispatcher.BeginInvoke(new Action(UpdateList), DispatcherPriority.Loaded);
-            foreach (string itemType in Item.ItemTypes)
-            {
-                LsbCategory.Items.Add(new ListBoxItem() { Content = ("Item_" + itemType).Translate() });
-            }
+
         }
 
         private void winInventory_Loaded(object sender, RoutedEventArgs e)
@@ -123,7 +124,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 使用物品
         /// </summary>
-        private void UseItem(Item item, int count)
+        private void UseItem(Item item, int count = 1)
         {
             if (item == null) return;
             while (count-- > 0)
@@ -179,12 +180,16 @@ namespace VPet_Simulator.Windows
         //    e.Cancel = true;
         //}
 
-        /// <summary>
-        /// 鼠标悬停时使用按钮点击事件处理
-        /// </summary>
-        /// <param name="sender">事件发送者</param>
-        /// <param name="e">事件参数</param>
         private void BtnHoverUse_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            var btn = sender as Button;
+            var item = btn?.DataContext as Item;
+            if (item == null)
+                return;
+            UseItem(item);
+        }
+        private void BtnHoverView_Click(object sender, RoutedEventArgs e)
         {
             e.Handled = true;
             var btn = sender as Button;
@@ -218,29 +223,12 @@ namespace VPet_Simulator.Windows
             TextItemName.Text = item.TranslateName;
             ImageItemDetail.Source = item.ImageSource;
             TextItemPrice.Text = $"$ {item.Price:f2}";
+            TextItemDesc.Text = item.Description ?? "";
 
-            if (item is Food food)
-            {
-                PanelPrefer.Visibility = Visibility.Visible;
-
-                var percent = "100%";
-                if (!string.IsNullOrWhiteSpace(food.Data))
-                {
-                    var idx = food.Data.LastIndexOf('\t');
-                    if (idx >= 0 && idx + 1 < food.Data.Length)
-                        percent = food.Data[(idx + 1)..].Trim();
-                }
-                TextItemPreferPercent.Text = percent;
-                TextItemDesc.Text = food.Description;
-            }
-            else
-            {
-                PanelPrefer.Visibility = Visibility.Collapsed;
-                TextItemPreferPercent.Text = "";
-                TextItemDesc.Text = item.Desc ?? "";
-            }
+            runMax.Text = item.Count.ToString();
 
             TbDetailCount.Text = _detailCount.ToString();
+            TbtnStar.IsChecked = item.Star;
             IsMaskVisible = true;
             IsOverlayerVisible = true;
         }
@@ -368,5 +356,16 @@ namespace VPet_Simulator.Windows
             _puswitch = sender as CheckBox;
         }
 
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+                UpdateList();
+        }
+
+        private void TbtnStar_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_detailItem != null)
+                _detailItem.Star = TbtnStar.IsChecked == true;
+        }
     }
 }
