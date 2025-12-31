@@ -223,9 +223,15 @@ namespace VPet_Simulator.Windows
         {
             //保存日程表
             ScheduleTask?.Save();
-            //保存物品栏
 
-            GameSavesData.Data.AddRange(Items.Select(x => LPSConvert.SerializeObjectToLine<Line>(x, "item")).ToList());
+            //保存物品栏
+            foreach (var v in GameSavesData.Data.Assemblage.Keys.Where(x => x.StartsWith("item")))
+                GameSavesData.Data.Remove(v);
+            for (int i = 0; i < Items.Count; i++)
+            {
+                GameSavesData.Data.Add(LPSConvert.SerializeObjectToLine<Line>(Items[i], "item" + i.ToString()));
+            }
+
             try
             {
                 //保存插件
@@ -1870,12 +1876,165 @@ namespace VPet_Simulator.Windows
                       }
                   Foods.ForEach(item => item.LoadImageSource(this));
                   Photos.ForEach(item => item.LoadUserInfo(this));
+
                   //物品栏加载
-                  foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("Item")))
+                  foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("item")))
                   {
-                      Items.Add(Item.CreateItem(line.Value));
-                      GameSavesData.Data.Assemblage.Remove(line.Key);
+                      var itm = Item.CreateItem(line.Value);
+                      itm.LoadSource(this);
+                      ItemsAdd(itm);
                   }
+
+                  //添加基本物品项目
+                  if (!Items.Any(x => x.Name == "L徽章"))
+                  {
+                      var itm = new Item()
+                      {
+                          Name = "L徽章",
+                          Desc = "我有异议! 证物档案 - L徽章 - 出示!\n请勿在法庭当证据出示\n使用后萝莉丝会开始吹泡泡".Translate(),
+                          ItemType = "Item",
+                          Price = 100,
+                          IsSingle = true,
+                          CanUse = false,
+                      };
+                      itm.LoadSource(this);
+                      ItemsAdd(itm);
+                  }
+                  if (!Items.Any(x => x.Name == "逗猫棒"))
+                  {
+                      var itm = new Item()
+                      {
+                          Name = "逗猫棒",
+                          Desc = "钓竿式逗猫棒. 一般挂的是鼠鼠,毛球,W等。这款挂的是珠颈斑鸠呢。\n谁说逗猫棒就不能逗人?\n使用后会开始逗萝莉丝".Translate(),
+                          ItemType = "Toy",
+                          Price = 100,
+                          IsSingle = true,
+                          Data = "meow",
+                      };
+                      itm.LoadSource(this);
+                      ItemsAdd(itm);
+                  }
+                  if (!Items.Any(x => x.Name == "泡泡枪"))
+                  {
+                      var itm = new Item()
+                      {
+                          Name = "泡泡枪",
+                          Desc = "粉白色带蝴蝶结装饰的泡泡枪, 没见到加肥皂水的地方, 莫非是高科技?\n对小朋友来说有点幼稚，但是对萝莉丝来说刚刚好\n使用后萝莉丝会开始吹泡泡".Translate(),
+                          ItemType = "Toy",
+                          Price = 100,
+                          IsSingle = true,
+                          Data = "bubbles",
+                      };
+                      itm.LoadSource(this);
+                      ItemsAdd(itm);
+                  }
+                  if (!Items.Any(x => x.Name == "球拍"))
+                  {
+                      var itm = new Item()
+                      {
+                          Name = "球拍",
+                          Desc = "老板牌的最新款碳纤维球拍. 内置辅助动力, 让您可以轻松用出\"零式发球\"\"天衣无缝\"等球技\n你刚刚说了，网球?\n使用后萝莉丝会开始打网球".Translate(),
+                          ItemType = "Toy",
+                          Price = 100,
+                          IsSingle = true,
+                          Data = "tennis",
+                      };
+                      itm.LoadSource(this);
+                      ItemsAdd(itm);
+                  }
+                  if (!Items.Any(x => x.Name == "指南针"))
+                  {
+                      var itm = new Item()
+                      {
+                          Name = "指南针",
+                          Desc = "指?针, 指针已经扭曲了, 实在看不懂在指哪边, 而且时不时还会乱晃, 有点吓人\n我亲爱的达瓦里氏,这玩意怎么在乱晃啊".Translate(),
+                          ItemType = "Tool",
+                          Price = 100,
+                          IsSingle = true,
+                      };
+                      itm.LoadSource(this);
+                      ItemsAdd(itm);
+                  }
+                  //每日礼盒
+                  everydaygift();
+
+
+                  //物品初始使用方法
+                  Item.UseAction.Add("Food", [(Item) =>
+                  {//食物: 默认直接吃掉
+                      if(Item is Food food)
+                      {
+                          TakeItem(food);
+                          DisplayFoodAnimation(food.GetGraph(), food.ImageSource);
+                          Item.Consume(this);
+                          return true;
+                      }
+                      return false;
+                  }]);
+                  Item.UseAction.Add("Toy", [(Item) =>
+                  {//玩具: 默认播放玩耍动画
+                       var graph = Core.Graph.FindGraph(Item.Data, AnimatType.A_Start, GameSavesData.GameSave.Mode);
+                          if (graph == null)
+                          {
+                             graph = Core.Graph.FindGraph(Item.Data, AnimatType.Single, GameSavesData.GameSave.Mode);
+                              if(graph != null)
+                                {
+                                    Main.Display(graph, Main.DisplayToNomal);
+                                }
+                                else
+                                {
+                                    Main.SayRnd("这个玩具好像不能玩耍呢".Translate());
+                                }
+                          return true;
+                          }
+                        Main.Display(Item.Data, AnimatType.A_Start, Main.DisplayBLoopingToNomal(8));
+                        return true;
+                  }]);
+                  Item.UseAction.Add("Mail", [
+                      //排在前面的方法优先级更高
+                  (Item) => {
+                      switch (Item.Name)
+                      {
+                          case "每日礼包": //每日随机礼盒: 打开后获得随机3个物品 每天获得一个
+                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
+                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
+                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
+                              Item.Consume(this);
+                              return true;
+                      }
+                      return false;
+                  },
+                   (Item) =>
+                  {//邮件: 打开后获得物品
+                     var lps = new LpsDocument(Item.Data);
+                      List<string> itemnames = new List<string>();
+                      foreach(var line in lps)
+                      {
+                          var itm = Item.CreateItem(line);
+                          itm.LoadSource(this);
+                          ItemsAdd(itm);
+                          itemnames.Add(itm.TranslateName);
+                      }
+                      if(itemnames.Count != 0)
+                      {
+                          Main.SayRnd("你打开了{0},获得了物品".Translate(Item.Name) +"\n" + string.Join(',',itemnames));
+                      }
+                      Item.Consume(this);
+                     return true;
+                  }]);
+                  Item.UseAction.Add("Tool", [(Item) =>
+                  {//工具: 每个工具有自己的使用方法
+                     switch (Item.Name)
+                      {
+                          case "指南针":
+                               Main.DisplayMove();
+                              return true;
+                      }
+                      return false;
+                  }]);
+
+
+
                   Main.TimeHandle += Handle_Music;
                   if (IsSteamUser)
                       Main.TimeHandle += Handle_Steam;
@@ -2316,6 +2475,7 @@ namespace VPet_Simulator.Windows
                           HostBDay();
                       }
                   };
+                  Event_NewDay += everydaygift;
 
                   //生日蛋糕的特殊功能
                   Event_TakeItem += MainWindow_Event_TakeItem;
@@ -2331,6 +2491,14 @@ namespace VPet_Simulator.Windows
                           ActivityLogs.Add(new ActivityLog("petsay", await sayinfo.GetSayText()));
                       });
                   });
+                  if (DateTime.Now.DayOfYear == 1)
+                  {
+                      Task.Run(() =>
+                      {
+                          Thread.Sleep(5000);
+                          Main.SayRnd("25年都跨过去了, 还有什么是跨不过的呢? {0}这一年辛苦了! 新年请多多指教!".Translate(GameSavesData.GameSave.HostName));
+                      });
+                  }
 
 #if NewYear
                   //仅新年功能
@@ -2394,6 +2562,24 @@ namespace VPet_Simulator.Windows
             //    }));
             //}
 
+        }
+
+        private void everydaygift()
+        {
+            if (Set["dailydata"][(gint)"everydaygift"] == DateTime.Now.DayOfYear)
+            {
+                return;
+            }
+            Set["dailydata"][(gint)"everydaygift"] = DateTime.Now.DayOfYear;
+            var itm = new Item
+            {
+                Name = "每日礼包",
+                Desc = "物品系统附赠的每日礼包, 打开后会获得3个随机物品. 教程还送礼物, 萝莉丝真大方.".Translate(),
+                ItemType = "Mail",
+                Price = 15,
+            };
+            Dispatcher.Invoke(() => itm.LoadSource(this));
+            ItemsAdd(itm);
         }
 
         private void MainWindow_Event_TakeItem(Food obj)
@@ -2562,6 +2748,7 @@ namespace VPet_Simulator.Windows
         }
 
 
+
         int newday = 0;
         private void NewDayHandle(Main main)
         {
@@ -2571,6 +2758,9 @@ namespace VPet_Simulator.Windows
                 Event_NewDay?.Invoke();
             }
         }
+        /// <summary>
+        /// 事件:新的一天
+        /// </summary>
         public event Action Event_NewDay;
 #if NewYear
         /// <summary>
@@ -2781,6 +2971,22 @@ namespace VPet_Simulator.Windows
                     goto gencheck;
                 }
 
+            }
+        }
+        /// <summary>
+        /// 添加物品到物品栏 (自动合并)
+        /// </summary>
+        /// <param name="item">物品</param>
+        public void ItemsAdd(Item item)
+        {
+            var sameitem = Items.Find(x => x.Name == item.Name);
+            if (sameitem != null)
+            {
+                sameitem.Count += item.Count;
+            }
+            else
+            {
+                Items.Add(item);
             }
         }
     }

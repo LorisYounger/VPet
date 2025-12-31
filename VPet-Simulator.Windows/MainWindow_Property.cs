@@ -21,7 +21,7 @@ public partial class MainWindow
     /// <summary>
     /// 版本号
     /// </summary>
-    public int version { get; } = 11058;
+    public int version { get; } = 11060;
     /// <summary>
     /// 版本号
     /// </summary>
@@ -117,6 +117,8 @@ public partial class MainWindow
     /// 物品栏 桌宠有的物品
     /// </summary>
     public List<Item> Items { get; set; } = new List<Item>();
+
+    
 
     /// <summary>
     /// 所有可用套餐

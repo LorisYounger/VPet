@@ -76,7 +76,7 @@ namespace VPet_Simulator.Windows.Interface
         /// 描述(ToBetterBuy)
         /// </summary>
 
-        public string Description
+        public override string Description
         {
             get
             {

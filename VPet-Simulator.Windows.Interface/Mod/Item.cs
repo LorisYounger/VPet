@@ -44,9 +44,9 @@ public class Item : NotifyPropertyChangedBase
         { "Food", (line) => { return LPSConvert.DeserializeObject<Food>(line); } },
     };
     /// <summary>
-    /// 对应类型物品的使用方法
+    /// 对应类型物品的使用方法 (物品/是否使用完成)
     /// </summary>
-    public static Dictionary<string, List<Action<Item>>> UseAction = new();
+    public static Dictionary<string, List<Func<Item, bool>>> UseAction = new();
     /// <summary>
     /// 物品图片 (图片默认在 {itemtypes}/{Image or itemname}.png )
     /// </summary>
@@ -61,7 +61,8 @@ public class Item : NotifyPropertyChangedBase
         {
             foreach (var action in UseAction[ItemType])
             {
-                action(this);
+                if (action(this))
+                    return;
             }
             return;
         }
@@ -87,6 +88,7 @@ public class Item : NotifyPropertyChangedBase
     [Line(name: "name")]
     public string Name { get; set; }
     private string transname = null;
+    private string transdesc = null;
     /// <summary>
     /// 物品名字 (翻译)
     /// </summary>
@@ -107,22 +109,38 @@ public class Item : NotifyPropertyChangedBase
     /// </summary>
     [Line(name: "itemtype")]
     public virtual string ItemType { get; set; } = "Item";
+    /// <summary>
+    /// 描述 (翻译后)
+    /// </summary>
 
+    public virtual string Description
+    {
+        get
+        {
+            if (transdesc == null)
+            {
+                transdesc = LocalizeCore.Translate(Desc);
+            }
+            return transdesc;
+        }
+    }
 
     /// <summary>
     /// 支持自定义的物品类型列表 (记得进行翻译 eg: Item_Item => 物品)
     /// </summary>
 
-    public static List<String> ItemTypes = new List<string>()
+    public static List<string> ItemTypes = new List<string>()
     {
         //物品 - 默认分类
         "Item",
-        //食物 - 可以吃的食物
+        //食物 - 可以吃的食物 (也可以指代物品)
         "Food",
         //道具 - 具有特殊功能的物品
         "Tool",
         //玩具 - 可以播放动画的物品
         "Toy",
+        //邮件 - 打开后可以获得物品的信件
+        "Mail",
     };
 
     /// <summary>
@@ -161,6 +179,12 @@ public class Item : NotifyPropertyChangedBase
     /// </summary>
     [Line(ignoreCase: true)]
     public virtual bool Star { get; set; } = false;
+    /// <summary>
+    /// 是否为单个物品 (不可堆叠)
+    /// </summary>
+    [Line(ignoreCase: true)]
+    public virtual bool IsSingle { get; set; } = false;
+
     /// <summary>
     /// 能否在背包中显示
     /// </summary>

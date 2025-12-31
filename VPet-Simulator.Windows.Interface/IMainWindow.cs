@@ -287,5 +287,11 @@ namespace VPet_Simulator.Windows.Interface
         /// 物品栏 桌宠有的物品
         /// </summary>
         public List<Item> Items { get; }
+
+        /// <summary>
+        /// 添加物品到物品栏 (自动合并)
+        /// </summary>
+        /// <param name="item">物品</param>
+        public void ItemsAdd(Item item);
     }
 }
