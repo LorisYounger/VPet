@@ -1885,75 +1885,78 @@ namespace VPet_Simulator.Windows
                       ItemsAdd(itm);
                   }
 
-                  //添加基本物品项目
-                  if (!Items.Any(x => x.Name == "L徽章"))
+                  //添加基本物品项目 (根据名称添加)
+                  if (Set.PetGraph == "vup")
                   {
-                      var itm = new Item()
+                      if (!Items.Any(x => x.Name == "L徽章"))
                       {
-                          Name = "L徽章",
-                          Desc = "我有异议! 证物档案 - L徽章 - 出示!\n请勿在法庭当证据出示".Translate(),
-                          ItemType = "Item",
-                          Price = 100,
-                          IsSingle = true,
-                          CanUse = false,
-                      };
-                      itm.LoadSource(this);
-                      ItemsAdd(itm);
-                  }
-                  if (!Items.Any(x => x.Name == "逗猫棒"))
-                  {
-                      var itm = new Item()
+                          var itm = new Item()
+                          {
+                              Name = "L徽章",
+                              Desc = "我有异议! 证物档案 - L徽章 - 出示!\n请勿在法庭当证据出示".Translate(),
+                              ItemType = "Item",
+                              Price = 100,
+                              IsSingle = true,
+                              CanUse = false,
+                          };
+                          itm.LoadSource(this);
+                          ItemsAdd(itm);
+                      }
+                      if (!Items.Any(x => x.Name == "逗猫棒"))
                       {
-                          Name = "逗猫棒",
-                          Desc = "钓竿式逗猫棒. 一般挂的是鼠鼠,毛球,W等。这款挂的是珠颈斑鸠呢。\n谁说逗猫棒就不能逗人?".Translate(),
-                          ItemType = "Toy",
-                          Price = 100,
-                          IsSingle = true,
-                          Data = "meow",
-                      };
-                      itm.LoadSource(this);
-                      ItemsAdd(itm);
-                  }
-                  if (!Items.Any(x => x.Name == "泡泡枪"))
-                  {
-                      var itm = new Item()
+                          var itm = new Item()
+                          {
+                              Name = "逗猫棒",
+                              Desc = "钓竿式逗猫棒. 一般挂的是鼠鼠,毛球,W等。这款挂的是珠颈斑鸠呢。\n谁说逗猫棒就不能逗人?".Translate(),
+                              ItemType = "Toy",
+                              Price = 100,
+                              IsSingle = true,
+                              Data = "meow",
+                          };
+                          itm.LoadSource(this);
+                          ItemsAdd(itm);
+                      }
+                      if (!Items.Any(x => x.Name == "泡泡枪"))
                       {
-                          Name = "泡泡枪",
-                          Desc = "粉白色带蝴蝶结装饰的泡泡枪, 没见到加肥皂水的地方, 莫非是高科技?\n对小朋友来说有点幼稚，但是对萝莉丝来说刚刚好".Translate(),
-                          ItemType = "Toy",
-                          Price = 100,
-                          IsSingle = true,
-                          Data = "bubbles",
-                      };
-                      itm.LoadSource(this);
-                      ItemsAdd(itm);
-                  }
-                  if (!Items.Any(x => x.Name == "球拍"))
-                  {
-                      var itm = new Item()
+                          var itm = new Item()
+                          {
+                              Name = "泡泡枪",
+                              Desc = "粉白色带蝴蝶结装饰的泡泡枪, 没见到加肥皂水的地方, 莫非是高科技?\n对小朋友来说有点幼稚，但是对萝莉丝来说刚刚好".Translate(),
+                              ItemType = "Toy",
+                              Price = 100,
+                              IsSingle = true,
+                              Data = "bubbles",
+                          };
+                          itm.LoadSource(this);
+                          ItemsAdd(itm);
+                      }
+                      if (!Items.Any(x => x.Name == "球拍"))
                       {
-                          Name = "球拍",
-                          Desc = "老板牌的最新款碳纤维球拍. 内置辅助动力, 让您可以轻松用出\"零式发球\"\"天衣无缝\"等球技\n你刚刚说了，网球?".Translate(),
-                          ItemType = "Toy",
-                          Price = 100,
-                          IsSingle = true,
-                          Data = "tennis",
-                      };
-                      itm.LoadSource(this);
-                      ItemsAdd(itm);
-                  }
-                  if (!Items.Any(x => x.Name == "指南针"))
-                  {
-                      var itm = new Item()
+                          var itm = new Item()
+                          {
+                              Name = "球拍",
+                              Desc = "老板牌的最新款碳纤维球拍. 内置辅助动力, 让您可以轻松用出\"零式发球\"\"天衣无缝\"等球技\n你刚刚说了，网球?".Translate(),
+                              ItemType = "Toy",
+                              Price = 100,
+                              IsSingle = true,
+                              Data = "tennis",
+                          };
+                          itm.LoadSource(this);
+                          ItemsAdd(itm);
+                      }
+                      if (!Items.Any(x => x.Name == "指南针"))
                       {
-                          Name = "指南针",
-                          Desc = "指?针, 指针已经扭曲了, 实在看不懂在指哪边, 而且时不时还会乱晃, 有点吓人\n我亲爱的达瓦里氏,这玩意怎么在乱晃啊".Translate(),
-                          ItemType = "Tool",
-                          Price = 100,
-                          IsSingle = true,
-                      };
-                      itm.LoadSource(this);
-                      ItemsAdd(itm);
+                          var itm = new Item()
+                          {
+                              Name = "指南针",
+                              Desc = "指?针, 指针已经扭曲了, 实在看不懂在指哪边, 而且时不时还会乱晃, 有点吓人\n我亲爱的达瓦里氏,这玩意怎么在乱晃啊".Translate(),
+                              ItemType = "Tool",
+                              Price = 100,
+                              IsSingle = true,
+                          };
+                          itm.LoadSource(this);
+                          ItemsAdd(itm);
+                      }
                   }
                   //每日礼盒
                   everydaygift();
