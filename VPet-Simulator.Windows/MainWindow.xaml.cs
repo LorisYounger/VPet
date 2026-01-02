@@ -324,6 +324,83 @@ namespace VPet_Simulator.Windows
                     SteamMatchmaking.OnLobbyInvite += SteamMatchmaking_OnLobbyInvite;
                     SteamFriends.OnGameLobbyJoinRequested += SteamFriends_OnGameLobbyJoinRequested;
                 }
+
+
+                //物品初始使用方法
+                Item.UseAction.Add("Food", [(Item) =>
+                  {//食物: 默认直接吃掉
+                      if(Item is Food food)
+                      {
+                          TakeItem(food);
+                          DisplayFoodAnimation(food.GetGraph(), food.ImageSource);
+                          Item.Consume(this);
+                          return true;
+                      }
+                      return false;
+                  }]);
+                Item.UseAction.Add("Toy", [(Item) =>
+                  {//玩具: 默认播放玩耍动画
+                       var graph = Core.Graph.FindGraph(Item.Data, AnimatType.A_Start, GameSavesData.GameSave.Mode);
+                          if (graph == null)
+                          {
+                             graph = Core.Graph.FindGraph(Item.Data, AnimatType.Single, GameSavesData.GameSave.Mode);
+                              if(graph != null)
+                                {
+                                    Main.Display(graph, Main.DisplayToNomal);
+                                }
+                                else
+                                {
+                                    Main.SayRnd("这个玩具好像不能玩耍呢".Translate());
+                                }
+                          return true;
+                          }
+                        Main.Display(Item.Data, AnimatType.A_Start, Main.DisplayBLoopingToNomal(8));
+                        return true;
+                  }]);
+                Item.UseAction.Add("Mail", [
+                //排在前面的方法优先级更高
+                (Item) => {
+                      switch (Item.Name)
+                      {
+                          case "每日礼包": //每日随机礼盒: 打开后获得随机3个物品 每天获得一个
+                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
+                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
+                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
+                              Item.Consume(this);
+                              return true;
+                      }
+                      return false;
+                  },
+                   (Item) =>
+                  {//邮件: 打开后获得物品
+                     var lps = new LpsDocument(Item.Data);
+                      List<string> itemnames = new List<string>();
+                      foreach(var line in lps)
+                      {
+                          var itm = Item.CreateItem(line);
+                          itm.LoadSource(this);
+                          ItemsAdd(itm);
+                          itemnames.Add(itm.TranslateName);
+                      }
+                      if(itemnames.Count != 0)
+                      {
+                          Main.SayRnd("你打开了{0},获得了物品".Translate(Item.Name) +"\n" + string.Join(',',itemnames));
+                      }
+                      Item.Consume(this);
+                     return true;
+                  }]);
+                Item.UseAction.Add("Tool", [(Item) =>
+                  {//工具: 每个工具有自己的使用方法
+                     switch (Item.Name)
+                      {
+                          case "指南针":
+                               Main.DisplayMove();
+                              return true;
+                      }
+                      return false;
+                  }]);
+
+
             });
         }
 

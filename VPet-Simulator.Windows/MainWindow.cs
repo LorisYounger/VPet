@@ -1891,7 +1891,7 @@ namespace VPet_Simulator.Windows
                       var itm = new Item()
                       {
                           Name = "L徽章",
-                          Desc = "我有异议! 证物档案 - L徽章 - 出示!\n请勿在法庭当证据出示\n使用后萝莉丝会开始吹泡泡".Translate(),
+                          Desc = "我有异议! 证物档案 - L徽章 - 出示!\n请勿在法庭当证据出示".Translate(),
                           ItemType = "Item",
                           Price = 100,
                           IsSingle = true,
@@ -1905,7 +1905,7 @@ namespace VPet_Simulator.Windows
                       var itm = new Item()
                       {
                           Name = "逗猫棒",
-                          Desc = "钓竿式逗猫棒. 一般挂的是鼠鼠,毛球,W等。这款挂的是珠颈斑鸠呢。\n谁说逗猫棒就不能逗人?\n使用后会开始逗萝莉丝".Translate(),
+                          Desc = "钓竿式逗猫棒. 一般挂的是鼠鼠,毛球,W等。这款挂的是珠颈斑鸠呢。\n谁说逗猫棒就不能逗人?".Translate(),
                           ItemType = "Toy",
                           Price = 100,
                           IsSingle = true,
@@ -1919,7 +1919,7 @@ namespace VPet_Simulator.Windows
                       var itm = new Item()
                       {
                           Name = "泡泡枪",
-                          Desc = "粉白色带蝴蝶结装饰的泡泡枪, 没见到加肥皂水的地方, 莫非是高科技?\n对小朋友来说有点幼稚，但是对萝莉丝来说刚刚好\n使用后萝莉丝会开始吹泡泡".Translate(),
+                          Desc = "粉白色带蝴蝶结装饰的泡泡枪, 没见到加肥皂水的地方, 莫非是高科技?\n对小朋友来说有点幼稚，但是对萝莉丝来说刚刚好".Translate(),
                           ItemType = "Toy",
                           Price = 100,
                           IsSingle = true,
@@ -1933,7 +1933,7 @@ namespace VPet_Simulator.Windows
                       var itm = new Item()
                       {
                           Name = "球拍",
-                          Desc = "老板牌的最新款碳纤维球拍. 内置辅助动力, 让您可以轻松用出\"零式发球\"\"天衣无缝\"等球技\n你刚刚说了，网球?\n使用后萝莉丝会开始打网球".Translate(),
+                          Desc = "老板牌的最新款碳纤维球拍. 内置辅助动力, 让您可以轻松用出\"零式发球\"\"天衣无缝\"等球技\n你刚刚说了，网球?".Translate(),
                           ItemType = "Toy",
                           Price = 100,
                           IsSingle = true,
@@ -1957,81 +1957,6 @@ namespace VPet_Simulator.Windows
                   }
                   //每日礼盒
                   everydaygift();
-
-
-                  //物品初始使用方法
-                  Item.UseAction.Add("Food", [(Item) =>
-                  {//食物: 默认直接吃掉
-                      if(Item is Food food)
-                      {
-                          TakeItem(food);
-                          DisplayFoodAnimation(food.GetGraph(), food.ImageSource);
-                          Item.Consume(this);
-                          return true;
-                      }
-                      return false;
-                  }]);
-                  Item.UseAction.Add("Toy", [(Item) =>
-                  {//玩具: 默认播放玩耍动画
-                       var graph = Core.Graph.FindGraph(Item.Data, AnimatType.A_Start, GameSavesData.GameSave.Mode);
-                          if (graph == null)
-                          {
-                             graph = Core.Graph.FindGraph(Item.Data, AnimatType.Single, GameSavesData.GameSave.Mode);
-                              if(graph != null)
-                                {
-                                    Main.Display(graph, Main.DisplayToNomal);
-                                }
-                                else
-                                {
-                                    Main.SayRnd("这个玩具好像不能玩耍呢".Translate());
-                                }
-                          return true;
-                          }
-                        Main.Display(Item.Data, AnimatType.A_Start, Main.DisplayBLoopingToNomal(8));
-                        return true;
-                  }]);
-                  Item.UseAction.Add("Mail", [
-                      //排在前面的方法优先级更高
-                  (Item) => {
-                      switch (Item.Name)
-                      {
-                          case "每日礼包": //每日随机礼盒: 打开后获得随机3个物品 每天获得一个
-                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
-                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
-                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
-                              Item.Consume(this);
-                              return true;
-                      }
-                      return false;
-                  },
-                   (Item) =>
-                  {//邮件: 打开后获得物品
-                     var lps = new LpsDocument(Item.Data);
-                      List<string> itemnames = new List<string>();
-                      foreach(var line in lps)
-                      {
-                          var itm = Item.CreateItem(line);
-                          itm.LoadSource(this);
-                          ItemsAdd(itm);
-                          itemnames.Add(itm.TranslateName);
-                      }
-                      if(itemnames.Count != 0)
-                      {
-                          Main.SayRnd("你打开了{0},获得了物品".Translate(Item.Name) +"\n" + string.Join(',',itemnames));
-                      }
-                      Item.Consume(this);
-                     return true;
-                  }]);
-                  Item.UseAction.Add("Tool", [(Item) =>
-                  {//工具: 每个工具有自己的使用方法
-                     switch (Item.Name)
-                      {
-                          case "指南针":
-                               Main.DisplayMove();
-                              return true;
-                      }
-                      return false;
-                  }]);
 
 
 
@@ -2191,7 +2116,6 @@ namespace VPet_Simulator.Windows
                   {
                       winBetterBuy.Show(Food.FoodType.Gift);
                   });
-#if DEBUG
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Feed, "背包".Translate(), () =>
                   {
                       if (winInventory != null && !winInventory.IsClosed)
@@ -2202,7 +2126,6 @@ namespace VPet_Simulator.Windows
                           winInventory.Show();
                       }
                   });
-#endif
                   Main.SetMoveMode(Set.AllowMove, Set.SmartMove, Set.SmartMoveInterval * 1000);
                   Main.SetLogicInterval((int)(Set.LogicInterval * 1000));
                   if (Set.MessageBarOutside)
