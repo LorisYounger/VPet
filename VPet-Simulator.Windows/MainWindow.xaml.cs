@@ -332,6 +332,7 @@ namespace VPet_Simulator.Windows
                       if(Item is Food food)
                       {
                           TakeItem(food);
+                          TakeItemHandle(food, 1, "item");
                           DisplayFoodAnimation(food.GetGraph(), food.ImageSource);
                           Item.Consume(this);
                           return true;
@@ -354,7 +355,7 @@ namespace VPet_Simulator.Windows
                                 }
                           return true;
                           }
-                        Main.Display(Item.Data, AnimatType.A_Start, Main.DisplayBLoopingToNomal(8));
+                        Main.Display(Item.Data, AnimatType.A_Start, Main.DisplayBLoopingToNomal(Core.Graph.GraphConfig.GetDuration(graph.GraphInfo.Name)));
                         return true;
                   }]);
                 Item.UseAction.Add("Mail", [
