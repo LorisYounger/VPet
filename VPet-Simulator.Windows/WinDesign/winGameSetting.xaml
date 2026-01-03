@@ -262,7 +262,7 @@
                                         Checked="SwitchOpacity_Checked" CheckedBackground="{DynamicResource Primary}"
                                         CheckedBorderBrush="{DynamicResource Primary}"
                                         CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                        Content="{ll:Str '设置透明度'}" ToggleBrush="{DynamicResource PrimaryDark}"
+                                        Content="{ll:Str '常态透明度'}" ToggleBrush="{DynamicResource PrimaryDark}"
                                         ToggleShadowColor="{x:Null}" ToggleSize="14" ToolTip="{ll:Str '为桌宠整体启用透明度'}"
                                         Unchecked="SwitchOpacity_Checked" />
                                 <pu:Switch x:Name="SwitchOpacityHitThrough" Grid.Column="2"

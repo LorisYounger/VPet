@@ -12,7 +12,7 @@
 解锁日期#Unlock Date:|
 检测到存档和备份不一致\n当前存档:{0} Lv{1} ${4:f0}\n备份存档:{2} Lv{3} ${5:f0}\n如需还原请在设置中加载备份还原存档#Detected discrepancy between save and backup.\nCurrent Save: {0} Lv{1} ${4:f0}\nBackup Save: {2} Lv{3} ${5:f0}\nTo restore, please load the backup from settings.:|
 透明功能#Transparency Feature:|
-设置透明度#Set Transparency:|
+常态透明度#Normal Transparency:|
 为桌宠整体启用透明度#Enable Transparency for Entire Desktop Pet:|
 鼠标穿透透明度#Mouse-Penetration Transparency:|
 仅在鼠标穿透时启用透明度功能#Enable Transparency Only When Mouse-Penetrating:|
