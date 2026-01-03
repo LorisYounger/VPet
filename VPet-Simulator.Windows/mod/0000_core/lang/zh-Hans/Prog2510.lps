@@ -11,3 +11,4 @@ al_photo_unlock#解锁了照片 {0}:|
 i_schedulenote#在签署日程表对应工作/学习的机构后，可以自主在工作/学习面板选择要完成的工作/学习日程\n妥善安排时间并点击开始后，萝莉斯会在机构的提醒下自己按时完成对应的工作/学习:|
 al_petsay#{name}说: {0}:|
 al_hostsay#{hostname}说: {0}:|
+al_take_item#{hostname}给{name}使用了 {0}:|

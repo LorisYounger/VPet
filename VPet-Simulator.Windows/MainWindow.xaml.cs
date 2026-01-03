@@ -342,7 +342,8 @@ namespace VPet_Simulator.Windows
                 Item.UseAction.Add("Toy", [(Item) =>
                   {//玩具: 默认播放玩耍动画
                        var graph = Core.Graph.FindGraph(Item.Data, AnimatType.A_Start, GameSavesData.GameSave.Mode);
-                          if (graph == null)
+                       ActivityLogs.Add(new ActivityLog("al_take_item", Item.TranslateName));
+                      if (graph == null)
                           {
                              graph = Core.Graph.FindGraph(Item.Data, AnimatType.Single, GameSavesData.GameSave.Mode);
                               if(graph != null)
@@ -355,6 +356,7 @@ namespace VPet_Simulator.Windows
                                 }
                           return true;
                           }
+
                         Main.Display(Item.Data, AnimatType.A_Start, Main.DisplayBLoopingToNomal(Core.Graph.GraphConfig.GetDuration(graph.GraphInfo.Name)));
                         return true;
                   }]);
