@@ -508,7 +508,7 @@ namespace VPet_Simulator.Windows
                     if (food.Count == 0)
                         return;
                     var item = food[Function.Rnd.Next(food.Count)];
-                    Core.Save.Money -= item.Price * 0.2;
+                    Core.Save.Money -= item.Price * 1.2;
                     TakeItemHandle(item, 1, "autofood");
                     TakeItem(item);
                     GameSavesData.Statistics[(gint)"stat_autobuy"]++;
@@ -520,7 +520,7 @@ namespace VPet_Simulator.Windows
                     if (food.Count == 0)
                         return;
                     var item = food[Function.Rnd.Next(food.Count)];
-                    Core.Save.Money -= item.Price * 0.2;
+                    Core.Save.Money -= item.Price * 1.2;
                     TakeItemHandle(item, 1, "autodrink");
                     TakeItem(item);
                     GameSavesData.Statistics[(gint)"stat_autobuy"]++;
@@ -541,7 +541,7 @@ namespace VPet_Simulator.Windows
                             return;
                     }
                     var item = food[Function.Rnd.Next(food.Count)];
-                    Core.Save.Money -= item.Price * 0.2;
+                    Core.Save.Money -= item.Price * 1.2;
                     TakeItemHandle(item, 1, "autofeel");
                     TakeItem(item);
                     GameSavesData.Statistics[(gint)"stat_autogift"]++;
@@ -715,7 +715,6 @@ namespace VPet_Simulator.Windows
             item.LoadEatTimeSource(this);
             item.NotifyOfPropertyChange("Description");
 
-            Core.Save.Money -= item.Price;
             ////吃完东西记得计算下状态
             //Core.Save.Mode = Core.Save.CalMode();
             //统计

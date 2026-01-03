@@ -240,6 +240,7 @@ namespace VPet_Simulator.Windows
                         }
                         mw.HashCheck = false;
                     }
+                    mw.Core.Save.Money -= item.Price;
                     mw.TakeItem(item);
                 }
                 mw.TakeItemHandle(item, (int)nibuytimes.Value, "betterbuy");
