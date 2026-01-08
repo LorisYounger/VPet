@@ -25,11 +25,11 @@ public class Item : NotifyPropertyChangedBase
     /// </summary>
     /// <param name="data">物品数据</param>
     /// <returns>物品</returns>
-    public static Item CreateItem(ILine data)
+    public static Item CreateItem(IMainWindow imw, ILine data)
     {
         if (Creators.ContainsKey(data[(gstr)"itemtype"]))
         {
-            return Creators[data[(gstr)"itemtype"]](data);
+            return Creators[data[(gstr)"itemtype"]](imw, data);
         }
         else
         {
@@ -39,14 +39,14 @@ public class Item : NotifyPropertyChangedBase
     /// <summary>
     /// 创建物品方法集合, 在这里添加自定义物品类型的创建方法 在LoadPlugin之后,GameLoaded之前. 请不要添加阻塞内容
     /// </summary>
-    public static Dictionary<string, Func<ILine, Item>> Creators = new()
+    public static Dictionary<string, Func<IMainWindow, ILine, Item>> Creators = new()
     {
-        { "Food", (line) => { return LPSConvert.DeserializeObject<Food>(line); } },
+        { "Food", (_,line) => { return LPSConvert.DeserializeObject<Food>(line); } },
     };
     /// <summary>
     /// 对应类型物品的使用方法 (物品/是否使用完成)
     /// </summary>
-    public static Dictionary<string, List<Func<Item, bool>>> UseAction = new();
+    public static Dictionary<string, List<Func<IMainWindow, Item, bool>>> UseAction = new();
     /// <summary>
     /// 物品图片 (图片默认在 {itemtypes}/{Image or itemname}.png )
     /// </summary>
@@ -55,13 +55,13 @@ public class Item : NotifyPropertyChangedBase
     /// <summary>
     /// 使用该物品
     /// </summary>
-    public virtual void Use()
+    public virtual void Use(IMainWindow imw)
     {
         if (UseAction.ContainsKey(ItemType))
         {
             foreach (var action in UseAction[ItemType])
             {
-                if (action(this))
+                if (action(imw, this))
                     return;
             }
             return;

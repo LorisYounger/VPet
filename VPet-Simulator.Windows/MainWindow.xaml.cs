@@ -327,62 +327,66 @@ namespace VPet_Simulator.Windows
 
 
                 //物品初始使用方法
-                Item.UseAction.Add("Food", [(Item) =>
+                Item.UseAction.Add("Food", [(imw,Item) =>
                   {//食物: 默认直接吃掉
                       if(Item is Food food)
                       {
-                          TakeItem(food);
-                          TakeItemHandle(food, 1, "item");
-                          DisplayFoodAnimation(food.GetGraph(), food.ImageSource);
-                          Item.Consume(this);
+                          imw.TakeItem(food);
+                          imw.TakeItemHandle(food, 1, "item");
+                          imw.DisplayFoodAnimation(food.GetGraph(), food.ImageSource);
+                          Item.Consume(imw);
                           return true;
                       }
                       return false;
                   }]);
-                Item.UseAction.Add("Toy", [(Item) =>
+                Item.UseAction.Add("Toy", [(imw,Item) =>
                   {//玩具: 默认播放玩耍动画
-                       var graph = Core.Graph.FindGraph(Item.Data, AnimatType.A_Start, GameSavesData.GameSave.Mode);
-                       ActivityLogs.Add(new ActivityLog("al_take_item", Item.TranslateName));
+                       var graph = imw.Core.Graph.FindGraph(Item.Data, AnimatType.A_Start, imw.GameSavesData.GameSave.Mode);
+                       imw.ActivityLogs.Add(new ActivityLog("al_take_item", Item.TranslateName));
                       if (graph == null)
                           {
-                             graph = Core.Graph.FindGraph(Item.Data, AnimatType.Single, GameSavesData.GameSave.Mode);
+                             graph = imw.Core.Graph.FindGraph(Item.Data, AnimatType.Single, imw.GameSavesData.GameSave.Mode);
                               if(graph != null)
                                 {
-                                    Main.Display(graph, Main.DisplayToNomal);
+                                    imw.Main.Display(graph, Main.DisplayToNomal);
                                 }
                                 else
                                 {
-                                    Main.SayRnd("这个玩具好像不能玩耍呢".Translate());
+                                    imw.Main.SayRnd("这个玩具好像不能玩耍呢".Translate());
                                 }
                           return true;
                           }
 
-                        Main.Display(Item.Data, AnimatType.A_Start, Main.DisplayBLoopingToNomal(Core.Graph.GraphConfig.GetDuration(graph.GraphInfo.Name)));
+                        imw.Main.Display(Item.Data, AnimatType.A_Start, imw.Main.DisplayBLoopingToNomal(imw.Core.Graph.GraphConfig.GetDuration(graph.GraphInfo.Name)));
                         return true;
                   }]);
                 Item.UseAction.Add("Mail", [
                 //排在前面的方法优先级更高
-                (Item) => {
+                (imw,Item) => {
                       switch (Item.Name)
                       {
                           case "每日礼包": //每日随机礼盒: 打开后获得随机3个物品 每天获得一个
-                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
-                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
-                              this.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
-                              Item.Consume(this);
+                              var moneylimit = (100 * (imw.GameSavesData.GameSave.LevelMax + 1) + imw.GameSavesData.GameSave.Level +1) * 100;
+                              var chosenfood = imw.Foods.FindAll(x=>x.Price > 10 && x.Price < moneylimit);
+                              if(chosenfood.Count == 0)
+                                    return false;
+                              imw.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
+                              imw.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
+                              imw.ItemsAdd(Foods[Function.Rnd.Next(Foods.Count)].Clone());
+                              Item.Consume(imw);
                               return true;
                       }
                       return false;
                   },
-                   (Item) =>
+                   (imw,Item) =>
                   {//邮件: 打开后获得物品
                      var lps = new LpsDocument(Item.Data);
                       List<string> itemnames = new List<string>();
                       foreach(var line in lps)
                       {
-                          var itm = Item.CreateItem(line);
+                          var itm = Item.CreateItem(imw,line);
                           itm.LoadSource(this);
-                          ItemsAdd(itm);
+                          imw.ItemsAdd(itm);
                           itemnames.Add(itm.TranslateName);
                       }
                       if(itemnames.Count != 0)
@@ -392,12 +396,12 @@ namespace VPet_Simulator.Windows
                       Item.Consume(this);
                      return true;
                   }]);
-                Item.UseAction.Add("Tool", [(Item) =>
+                Item.UseAction.Add("Tool", [(imw,Item) =>
                   {//工具: 每个工具有自己的使用方法
                      switch (Item.Name)
                       {
                           case "指南针":
-                               Main.DisplayMove();
+                               imw.Main.DisplayMove();
                               return true;
                       }
                       return false;

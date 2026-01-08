@@ -1879,7 +1879,7 @@ namespace VPet_Simulator.Windows
                   //物品栏加载
                   foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("item")))
                   {
-                      var itm = Item.CreateItem(line.Value);
+                      var itm = Item.CreateItem(this, line.Value);
                       itm.LoadSource(this);
                       ItemsAdd(itm);
                   }
