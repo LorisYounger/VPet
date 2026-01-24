@@ -174,6 +174,7 @@ namespace VPet_Simulator.Core
                     DisplayNomal();
                 });
             });
+
             IsWorking = true;
         }
 
@@ -209,11 +210,20 @@ namespace VPet_Simulator.Core
             DisplayIdel = DisplayToIdel;
             DisplayIdel_StateONE = DisplayToIdel_StateONE;
 
+            //检查下是否有SideLoad
+            if (Core.Graph.FindName(GraphType.SideHide_Left_Main) != null && Core.Graph.FindName(GraphType.SideHide_Right_Main) != null)
+            {
+                Event_MoveEnd += MoveSideHideCheck;
+            }
+
             SayRndFunction = new Func<string, string>((x) => Core.Graph.FindName(GraphType.Say));
 
             if (!core.Controller.EnableFunction)
                 Core.Save.Mode = NoFunctionMOD;
         }
+
+
+
         /// <summary>
         /// 加载所有步骤并开始
         /// </summary>
@@ -343,22 +353,23 @@ namespace VPet_Simulator.Core
             }
             Core.Controller.MoveWindows(MoveTimerPoint.X, MoveTimerPoint.Y);
 
-            //if (Core.Controller.GetWindowsDistanceLeft() < -500)
-            //{
-            //    MessageBox.Show("当前动画移动设计错误: 已到达边界 左侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceLeft()), "MOD移动设计错误".Translate());
-            //}
-            //else if (Core.Controller.GetWindowsDistanceRight() < -500)
-            //{
-            //    MessageBox.Show("当前动画移动设计错误: 已到达边界 右侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceRight()), "MOD移动设计错误".Translate());
-            //}
-            //else if (Core.Controller.GetWindowsDistanceUp() < -500)
-            //{
-            //    MessageBox.Show("当前动画移动设计错误: 已到达边界 上侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceUp()), "MOD移动设计错误".Translate());
-            //}
-            //else if (Core.Controller.GetWindowsDistanceDown() < -500)
-            //{
-            //    MessageBox.Show("当前动画移动设计错误: 已到达边界 下侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceDown()), "MOD移动设计错误".Translate());
-            //}
+            var z500 = -500 * Core.Controller.ZoomRatio;
+            if (Core.Controller.GetWindowsDistanceLeft() < z500)
+            {
+                Console.WriteLine("当前动画移动设计错误: 已到达边界 左侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceLeft()));
+            }
+            else if (Core.Controller.GetWindowsDistanceRight() < z500)
+            {
+                Console.WriteLine("当前动画移动设计错误: 已到达边界 右侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceRight()));
+            }
+            else if (Core.Controller.GetWindowsDistanceUp() < z500)
+            {
+                Console.WriteLine("当前动画移动设计错误: 已到达边界 上侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceUp()));
+            }
+            else if (Core.Controller.GetWindowsDistanceDown() < z500)
+            {
+                Console.WriteLine("当前动画移动设计错误: 已到达边界 下侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceDown()));
+            }
             MoveTimer.Start();
         }
         /// <summary>
@@ -569,6 +580,32 @@ namespace VPet_Simulator.Core
                             DisplayTouchBody();
                         LastInteractionTime = DateTime.Now;
                     }
+            }
+        }
+
+        private void MainGrid_MouseEnter(object sender, MouseEventArgs e)
+        {
+            //如果是在侧边模式, 播放鼠标进入动画
+            if (DisplayType.Type == GraphType.SideHide_Left_Main)
+            {
+                Display(GraphType.SideHide_Left_Rise, AnimatType.A_Start, DisplayBLoopingForce);
+            }
+            else if (DisplayType.Type == GraphType.SideHide_Right_Main)
+            {
+                Display(GraphType.SideHide_Right_Rise, AnimatType.A_Start, DisplayBLoopingForce);
+            }
+        }
+
+        private void MainGrid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            //如果是在侧边模式, 播放鼠标离开动画
+            if (DisplayType.Type == GraphType.SideHide_Left_Rise)
+            {
+                Display(GraphType.SideHide_Left_Rise, AnimatType.C_End, () => Display(GraphType.SideHide_Left_Main, AnimatType.B_Loop, DisplayBLoopingForce));
+            }
+            else if (DisplayType.Type == GraphType.SideHide_Right_Rise)
+            {
+                Display(GraphType.SideHide_Right_Rise, AnimatType.C_End, () => Display(GraphType.SideHide_Right_Main, AnimatType.B_Loop, DisplayBLoopingForce));
             }
         }
     }

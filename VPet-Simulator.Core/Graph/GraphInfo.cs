@@ -229,6 +229,22 @@ namespace VPet_Simulator.Core
             /// 饥饿
             /// </summary>
             Switch_Hunger,
+            /// <summary>
+            /// 躲藏(侧面)
+            /// </summary>
+            SideHide_Left_Main,
+            /// <summary>
+            /// 躲藏(侧面)显示
+            /// </summary>
+            SideHide_Left_Rise,
+            /// <summary>
+            /// 躲藏(侧面)
+            /// </summary>
+            SideHide_Right_Main,
+            /// <summary>
+            /// 躲藏(侧面)显示
+            /// </summary>
+            SideHide_Right_Rise,
         }
         /// <summary>
         /// 动作: 动画的动作 Start Loop End

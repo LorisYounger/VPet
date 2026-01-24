@@ -128,7 +128,7 @@ namespace VPet_Simulator.Windows
         {
             if (item == null) return;
             while (count-- > 0)
-                item.Use();
+                item.Use(mw);
             // 没有通知，直接刷新
             UpdateList();
         }

@@ -458,7 +458,9 @@ namespace VPet_Simulator.Core
         /// 想要随机显示的接口 (return:是否成功)
         /// </summary>
         public List<Func<bool>> RandomInteractionAction = new List<Func<bool>>();
-
+        /// <summary>
+        /// 判断是否是闲置状态
+        /// </summary>
         public bool IsIdel => (DisplayType.Type == GraphType.Default || DisplayType.Type == GraphType.Work) && !isPress;
 
         /// <summary>
@@ -481,6 +483,7 @@ namespace VPet_Simulator.Core
 
             //UIHandle
             Dispatcher.Invoke(() => TimeUIHandle?.Invoke(this));
+
             if (IsIdel)
             {
                 int rnddisplay = Math.Max(20, Core.Controller.InteractionCycle - CountNomal);
@@ -527,6 +530,23 @@ namespace VPet_Simulator.Core
                 }
             }
         }
+        private void MoveSideHideCheck(GraphHelper.Move move)
+        {
+            //判断是否靠边,如果靠边就进入侧边隐藏模式
+            if (Core.Controller.GetWindowsDistanceLeft() < -50 * Core.Controller.ZoomRatio)
+            {
+                Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
+                Display(GraphType.SideHide_Left_Main, AnimatType.A_Start, DisplayBLoopingForce);
+                return;
+            }
+            else if (Core.Controller.GetWindowsDistanceRight() < -50 * Core.Controller.ZoomRatio)
+            {
+                Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio, 0);
+                Display(GraphType.SideHide_Right_Main, AnimatType.A_Start, DisplayBLoopingForce);
+                return;
+            }
+        }
+
         /// <summary>
         /// 定点移动位置向量
         /// </summary>
@@ -610,14 +630,6 @@ namespace VPet_Simulator.Core
             /// 其他状态,给开发者留个空位计算
             /// </summary>
             Empty,
-            /// <summary>
-            /// 贴在墙边 (左边)
-            /// </summary>
-            SideLeft,
-            /// <summary>
-            /// 贴在墙边 (右边)
-            /// </summary>
-            SideRight,
         }
         /// <summary>
         /// 获得工作列表分类
@@ -696,6 +708,22 @@ namespace VPet_Simulator.Core
             {
                 WorkTimer.E_FinishWork -= value;
             }
+        }
+        /// <summary>
+        /// 移动开始前(未播放动画)调用该参数
+        /// </summary>
+        public event Action<Move> Event_MoveStart;
+        /// <summary>
+        /// 移动结束后(播放完动画)调用该参数
+        /// </summary>
+        public event Action<Move> Event_MoveEnd;
+        internal void Event_MoveStartInvoke(Move move)
+        {
+            Event_MoveStart?.Invoke(move);
+        }
+        internal void Event_MoveEndInvoke(Move move)
+        {
+            Event_MoveEnd?.Invoke(move);
         }
     }
 }

@@ -465,6 +465,7 @@ namespace VPet_Simulator.Core
             /// </summary>
             public void Display(Main m)
             {
+                m.Event_MoveStartInvoke(this);
                 walklength = 0;
                 m.CountNomal = 0;
                 m.Display(Graph, AnimatType.A_Start, () =>
@@ -538,7 +539,8 @@ namespace VPet_Simulator.Core
                     m.Core.Controller.ResetPosition();
                 m.Core.Controller.RePostionActive = !m.Core.Controller.CheckPosition();
                 m.MoveTimer.Enabled = false;
-                m.Display(Graph, AnimatType.C_End, m.DisplayToNomal);
+
+                m.Display(Graph, AnimatType.C_End, () => { m.Event_MoveEndInvoke(this); m.DisplayToNomal(); });
             }
         }
 

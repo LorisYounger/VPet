@@ -6,7 +6,7 @@
     <Viewbox>
         <Grid x:Name="MainGrid" Width="500" MouseLeftButtonDown="MainGrid_MouseLeftButtonDown" x:FieldModifier="public"
                 MouseLeftButtonUp="MainGrid_MouseLeftButtonUp" MouseRightButtonDown="MainGrid_MouseRightButtonDown"
-                MouseMove="MainGrid_MouseWave">
+                MouseMove="MainGrid_MouseWave" MouseEnter="MainGrid_MouseEnter" MouseLeave="MainGrid_MouseLeave">
             <MediaElement x:Name="VoicePlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" x:FieldModifier="public" />
             <Grid x:Name="UIGrid_Back" x:FieldModifier="public" VerticalAlignment="Top" Width="500" />
             <Border x:Name="PetGrid" Height="500" VerticalAlignment="Top" Width="500" x:FieldModifier="public" />
