@@ -2424,7 +2424,19 @@ namespace VPet_Simulator.Windows
                           Main.SayRnd("25年都跨过去了, 还有什么是跨不过的呢? {0}这一年辛苦了! 新年请多多指教!".Translate(GameSavesData.GameSave.HostName));
                       });
                   }
-
+                  //修复因为26年元旦bug导致HashCheck失效的问题
+                  //简单来讲就是给所有有 2026跨年 这个照片的用户恢复一次HashCheck, 就当福利了(, 因为有这个照片的基本上都在bug周期里
+                  //请看到这个代码的人不要外传, 避免滥用
+                  var photo25 = Photos.Find(x => x.Name == "2026跨年");
+                  if (photo25?.IsUnlock == true)
+                  {
+                      GameSave_v2 ogs = GameSavesData;
+                      GameSavesData = new GameSave_v2(ogs.GameSave.Name);
+                      GameSavesData.Data = ogs.Data;
+                      GameSavesData.GameSave = ogs.GameSave;
+                      GameSavesData.Statistics = ogs.Statistics;
+                      HashCheck = true;
+                  }
 #if NewYear
                   //仅新年功能
                   if (DateTime.Now < new DateTime(2025, 2, 5))

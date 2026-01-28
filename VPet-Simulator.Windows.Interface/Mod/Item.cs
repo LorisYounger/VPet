@@ -180,7 +180,7 @@ public class Item : NotifyPropertyChangedBase
     [Line(ignoreCase: true)]
     public virtual bool Star { get; set; } = false;
     /// <summary>
-    /// 是否为单个物品 (不可堆叠)
+    /// 是否为单个物品 (不可堆叠) (同时使用不会被消耗) (注: 无论这里标注消不消耗, 最终的消耗逻辑都需要在 Use 方法中自行实现)
     /// </summary>
     [Line(ignoreCase: true)]
     public virtual bool IsSingle { get; set; } = false;

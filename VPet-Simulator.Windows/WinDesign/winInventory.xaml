@@ -98,7 +98,14 @@
                             Content="&#xF18B;" Checked="TbtnStar_Checked" Unchecked="TbtnStar_Checked" />
                     <!-- 左侧：图片 -->
                     <Border Grid.Row="1" CornerRadius="10" Background="{DynamicResource SecondaryTrans4}">
-                        <Image x:Name="ImageItemDetail" Stretch="Uniform" />
+                        <Grid>                           
+                            <Image x:Name="ImageItemDetail" Stretch="Uniform" />
+                            <Border x:Name="BorderIsSingle" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="8" Background="#2000"
+                                    ToolTip="{ll:Str 该物品不会因为使用而消耗}" CornerRadius="16">
+                                <TextBlock VerticalAlignment="Center" Foreground="#AFFF"
+                                        FontFamily="pack://application:,,,/Res/#remixicon" FontSize="32" Text="&#xEB81;" />
+                            </Border>
+                        </Grid>                      
                     </Border>
 
                     <!-- 右侧：文本信息 -->
@@ -123,23 +130,24 @@
                         </ScrollViewer>
 
                         <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0">
-                            <TextBlock Text="{ll:Str 价格}" VerticalAlignment="Center" />
+                            <TextBlock Text="{ll:Str 价值}" VerticalAlignment="Center" />
                             <TextBlock x:Name="TextItemPrice" Margin="10,0,0,0" VerticalAlignment="Center"
                                     Foreground="{DynamicResource Primary}" FontWeight="SemiBold" FontSize="16" />
                         </StackPanel>
 
                         <!-- 数量：减/输入/加 -->
-                        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,10,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="{ll:Str 数量}" VerticalAlignment="Center" />
+                        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,10,0,0" VerticalAlignment="Center"
+                                x:Name="spUseEnter">
+                            <TextBlock Text="{ll:Str 数量}" VerticalAlignment="Center"/>
                             <Border Margin="10,0,0,0" CornerRadius="6" Background="{DynamicResource Secondary}">
                                 <StackPanel Orientation="Horizontal">
                                     <RepeatButton VerticalAlignment="Center" Content="-" Width="28" Height="32"
                                             Style="{DynamicResource IconInvertedForegroundRepeatButtonStyle}"
                                             Click="RbtnDetailDecrease_Click" />
-                                    <TextBox x:Name="TbDetailCount" Width="40" Height="32" pu:TextBoxHelper.InputLimit="Digit"
-                                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                                            BorderThickness="0" Background="#CDFFFFFF"
-                                            PreviewKeyDown="TbDetailCount_PreviewKeyDown"
+                                    <TextBox x:Name="TbDetailCount" Width="40" Height="32"
+                                            pu:TextBoxHelper.InputLimit="Digit" VerticalContentAlignment="Center"
+                                            HorizontalContentAlignment="Center" BorderThickness="0"
+                                            Background="#CDFFFFFF" PreviewKeyDown="TbDetailCount_PreviewKeyDown"
                                             LostFocus="TbDetailCount_LostFocus" />
                                     <RepeatButton VerticalAlignment="Center" Content="+" Width="28" Height="32"
                                             Style="{DynamicResource IconInvertedForegroundRepeatButtonStyle}"
@@ -151,7 +159,7 @@
                                 <Run Text="100" x:Name="runMax" />
                             </TextBlock>
                         </StackPanel>
-                     
+
                         <Button Grid.Row="5" x:Name="BtnDetailUse" Margin="0,14,0,0" Padding="16,8"
                                 HorizontalAlignment="Left" Cursor="Hand" Style="{DynamicResource ThemedButtonStyle}"
                                 Content="{ll:Str 使用}" Background="{DynamicResource Primary}" Foreground="White"
@@ -179,14 +187,20 @@
                                     Foreground="{DynamicResource DARKPrimaryText}" FontSize="14"
                                     TextTrimming="CharacterEllipsis" Text="{Binding TranslateName}" />
                         </Border>
-
+                        
+                        <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="4" Background="#2000"
+                                ToolTip="{ll:Str 该物品不会因为使用而消耗}" CornerRadius="8"
+                                Visibility="{Binding IsSingle, Converter={x:Static pu:Converters.FalseToCollapseConverter}}">
+                            <TextBlock VerticalAlignment="Center" Foreground="#AFFF"
+                                    FontFamily="pack://application:,,,/Res/#remixicon" FontSize="16" Text="&#xEB81;" />
+                        </Border>
                         <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" CornerRadius="6"
                                 Background="#66000000"
                                 Visibility="{Binding IsSingle, Converter={x:Static pu:Converters.TrueToCollapseConverter}}">
                             <TextBlock Margin="6,3" VerticalAlignment="Center" Foreground="white" FontSize="16"
                                     Text="{Binding Count, StringFormat=x{0}}" />
                         </Border>
-
+                        
                         <!-- Hover：仅显示按钮，不叠加整块遮罩 -->
                         <Grid x:Name="grdCellbtn" Visibility="Collapsed">
                             <Button x:Name="BtnCellUse" Cursor="Hand" Padding="3,1" Content="{ll:Str 使用}"
@@ -266,7 +280,7 @@
                         <ListBoxItem Content="{ll:Str 默认}" />
                         <ListBoxItem Content="{ll:Str 名称}" />
                         <ListBoxItem Content="{ll:Str 数量}" />
-                        <ListBoxItem Content="{ll:Str 价格}" />
+                        <ListBoxItem Content="{ll:Str 价值}" />
                     </ListBox>
                 </ScrollViewer>
                 <CheckBox Content="{ll:Str 收藏}" Grid.Column="3" FontSize="14" Margin="10,0,5,0" Height="20"

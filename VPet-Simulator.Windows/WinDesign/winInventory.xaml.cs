@@ -231,6 +231,17 @@ namespace VPet_Simulator.Windows
             TbtnStar.IsChecked = item.Star;
             IsMaskVisible = true;
             IsOverlayerVisible = true;
+
+            if (item.IsSingle)
+            {
+                spUseEnter.Visibility = Visibility.Collapsed;
+                BorderIsSingle.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                spUseEnter.Visibility = Visibility.Visible;
+                BorderIsSingle.Visibility = Visibility.Collapsed;
+            }
         }
 
         /// <summary>
