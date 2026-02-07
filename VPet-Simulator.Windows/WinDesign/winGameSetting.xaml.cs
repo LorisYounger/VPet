@@ -1639,7 +1639,7 @@ namespace VPet_Simulator.Windows
             int playtime;
             try
             {
-                string _url = "https://aiopen.exlb.net:5810/VPet/GetPlayTime?steamid=" + SteamClient.SteamId.Value;
+                string _url = "https://aiopen.exlb.net/VPet/GetPlayTime?steamid=" + SteamClient.SteamId.Value;
 #pragma warning disable SYSLIB0014 // 类型或成员已过时
                 var request = (HttpWebRequest)WebRequest.Create(_url);
 #pragma warning restore SYSLIB0014 // 类型或成员已过时

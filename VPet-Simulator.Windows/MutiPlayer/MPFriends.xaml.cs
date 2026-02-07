@@ -62,7 +62,6 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             InitializeComponent();
 
-            MGrid.Height = 500 * mw.Set.ZoomLevel;
             MGrid.Width = 500 * mw.Set.ZoomLevel;
             double L = 0, T = 0;
             if (mw.Set.StartRecordLast)
@@ -886,8 +885,8 @@ public partial class MPFriends : WindowX, IMPFriend
     {
         Main?.CleanState();
         Main?.DisplayToNomal();
-        Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-        Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+        Left = (SystemParameters.PrimaryScreenWidth - ActualWidth) / 2;
+        Top = (SystemParameters.PrimaryScreenHeight - ActualHeight) / 2;
     }
     private System.Windows.Controls.Image hashcheckimg;
 
