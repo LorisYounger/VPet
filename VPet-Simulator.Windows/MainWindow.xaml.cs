@@ -435,7 +435,7 @@ namespace VPet_Simulator.Windows
             if (!friend.IsPlayingThisGame)
             {
                 ActivityLogs.Add(new ActivityLog("stream_invite_other", friend.Name));
-                Main.Say("你的好友{0}邀请你玩游戏,快去回应ta吧".Translate(friend.Name));
+                Main.Say("你的好友{0}邀请你玩游戏,快去回应ta吧".Translate(friend.Name),desc:"SID:" + friend.Id.Value);
                 return;
             }
 
