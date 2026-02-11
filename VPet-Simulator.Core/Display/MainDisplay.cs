@@ -368,10 +368,15 @@ namespace VPet_Simulator.Core
                 case -1:
                     rasetype = int.MinValue;
                     Core.Controller.RePostionActive = !Core.Controller.CheckPosition();
-                    if (string.IsNullOrEmpty(name))
-                        Display(GraphType.Raised_Static, AnimatType.C_End, DisplayToNomal);
-                    else
-                        Display(name, AnimatType.C_End, GraphType.Raised_Static, DisplayToNomal);
+                    //判断侧边隐藏
+                    if(!MoveSideHideCheck())
+                    {
+                        if (string.IsNullOrEmpty(name))
+                            Display(GraphType.Raised_Static, AnimatType.C_End, DisplayToNomal);
+                        else
+                            Display(name, AnimatType.C_End, GraphType.Raised_Static, DisplayToNomal);
+                    }
+                   
                     return;
                 case 0:
                 case 1:

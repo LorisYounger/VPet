@@ -204,17 +204,14 @@ namespace VPet_Simulator.Core
             Core = core;
 
             labeldisplaytimer.Elapsed += Labledisplaytimer_Elapsed;
+            Event_MoveEnd += (_) => MoveSideHideCheck();
 
             DisplayNomal = DisplayDefault;
             DisplayMove = DisplayToMove;
             DisplayIdel = DisplayToIdel;
             DisplayIdel_StateONE = DisplayToIdel_StateONE;
 
-            //检查下是否有SideLoad
-            if (Core.Graph.FindName(GraphType.SideHide_Left_Main) != null && Core.Graph.FindName(GraphType.SideHide_Right_Main) != null)
-            {
-                Event_MoveEnd += MoveSideHideCheck;
-            }
+
 
             SayRndFunction = new Func<string, string>((x) => Core.Graph.FindName(GraphType.Say));
 
@@ -586,13 +583,14 @@ namespace VPet_Simulator.Core
         private void MainGrid_MouseEnter(object sender, MouseEventArgs e)
         {
             //如果是在侧边模式, 播放鼠标进入动画
-            if (DisplayType.Type == GraphType.SideHide_Left_Main)
+            string gfname;
+            if (DisplayType.Type == GraphType.SideHide_Left_Main && (gfname = Core.Graph.FindName(GraphType.SideHide_Left_Rise)) != null)
             {
-                Display(GraphType.SideHide_Left_Rise, AnimatType.A_Start, DisplayBLoopingForce);
+                Display(gfname, AnimatType.A_Start, DisplayBLoopingForce);
             }
-            else if (DisplayType.Type == GraphType.SideHide_Right_Main)
+            else if (DisplayType.Type == GraphType.SideHide_Right_Main && (gfname = Core.Graph.FindName(GraphType.SideHide_Right_Rise)) != null)
             {
-                Display(GraphType.SideHide_Right_Rise, AnimatType.A_Start, DisplayBLoopingForce);
+                Display(gfname, AnimatType.A_Start, DisplayBLoopingForce);
             }
         }
 

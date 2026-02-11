@@ -530,21 +530,41 @@ namespace VPet_Simulator.Core
                 }
             }
         }
-        private void MoveSideHideCheck(GraphHelper.Move move)
+        /// <summary>
+        /// 边缘检查和回正检测, 如果有靠边就进入侧边隐藏模式, 没有就回正
+        /// </summary>
+        /// <returns>是否成功进入侧边隐藏模式</returns>
+        private bool MoveSideHideCheck()
         {
             //判断是否靠边,如果靠边就进入侧边隐藏模式
             if (Core.Controller.GetWindowsDistanceLeft() < -50 * Core.Controller.ZoomRatio)
             {
-                Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
-                Display(GraphType.SideHide_Left_Main, AnimatType.A_Start, DisplayBLoopingForce);
-                return;
+                //检查下是否有SideLoad
+                if (Core.Graph.FindName(GraphType.SideHide_Left_Main) != null)
+                {
+                    Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
+                    Display(GraphType.SideHide_Left_Main, AnimatType.A_Start, DisplayBLoopingForce);
+                    return true;
+                }
+                else
+                {//没有就回正
+                    Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
+                }
             }
             else if (Core.Controller.GetWindowsDistanceRight() < -50 * Core.Controller.ZoomRatio)
             {
-                Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio, 0);
-                Display(GraphType.SideHide_Right_Main, AnimatType.A_Start, DisplayBLoopingForce);
-                return;
+                if (Core.Graph.FindName(GraphType.SideHide_Right_Main) != null)
+                {
+                    Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio, 0);
+                    Display(GraphType.SideHide_Right_Main, AnimatType.A_Start, DisplayBLoopingForce);
+                    return true;
+                }
+                else
+                {
+                    Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio, 0);
+                }
             }
+            return false;
         }
 
         /// <summary>
