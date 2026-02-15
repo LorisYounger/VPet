@@ -18,6 +18,10 @@ public interface IMPWindows
     /// </summary>
     IEnumerable<IMPFriend> Friends { get; }
     /// <summary>
+    /// 将自己转换成好友对象,方便批量处理
+    /// </summary>
+    IMPFriend SelftoIMPFriend();
+    /// <summary>
     /// 主持人SteamID
     /// </summary>
     ulong HostID { get; }

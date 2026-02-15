@@ -16,6 +16,7 @@ using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Windows.Interface.MPMessage;
+using static VPet_Simulator.Windows.Win32;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -550,9 +551,9 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                 }
         }
         mw.Main.Display("pinch", AnimatType.A_Start, (graphname) =>
-           mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
-           mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
-           mw.Main.DisplayCEndtoNomal(graphname))));
+        mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+        mw.Main.Display(graphname, AnimatType.B_Loop, (graphname) =>
+        mw.Main.DisplayCEndtoNomal(graphname))));
     }
 
     private void swAllowTouch_Checked(object sender, RoutedEventArgs e)
@@ -567,5 +568,159 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         if (mw == null) return;
         lb.SetMemberData("notouch", "true");
         mw.Set.MPNOTouch = true;
+    }
+
+    public IMPFriend SelftoIMPFriend()
+    {
+        return new SelfFriends(mw, lb);
+    }
+    /// <summary>
+    /// 把自己伪装好友,方便处理数据
+    /// </summary>
+    public class SelfFriends : IMPFriend
+    {
+        MainWindow mw;
+        Lobby lb;
+        Friend friend;
+        winMutiPlayer wmp => mw.winMutiPlayer;
+
+        public SelfFriends(MainWindow mw, Lobby lb)
+        {
+            this.mw = mw;
+            this.lb = lb;
+            friend = lb.Members.First(x => x.Id == SteamClient.SteamId);
+        }
+
+        public ulong LobbyID => lb.Id;
+
+        public ulong FriendID => friend.Id;
+
+
+        // Stream Data
+        public bool IsMe => friend.IsMe;
+        public bool IsFriend => friend.IsFriend;
+        public bool IsBlocked => friend.IsBlocked;
+        public bool IsPlayingThisGame => friend.IsPlayingThisGame;
+        public bool IsOnline => friend.IsOnline;
+        public bool IsAway => friend.IsAway;
+        public bool IsBusy => friend.IsBusy;
+        public bool IsSnoozing => friend.IsSnoozing;
+        public int SteamLevel => friend.SteamLevel;
+
+
+        public string Name => friend.Name;
+
+
+
+        public ImageSource Avatar
+        {
+            get
+            {
+                var avatarTask = friend.GetMediumAvatarAsync();
+                avatarTask.Wait();
+                var img = avatarTask.Result;
+                return ConvertToImageSource(img);
+            }
+        }
+
+        public GameCore Core => mw.Core;
+
+        public ImageResources ImageSources => mw.ImageSources;
+
+        public string SetPetGraph => mw.Set.PetGraph;
+
+        public Main Main => mw.Main;
+
+        public bool NOTouch => mw.Set.MPNOTouch;
+
+
+
+
+        /// <summary>
+        /// 智能化显示后续过度动画
+        /// </summary>
+        public void DisplayAuto(GraphInfo gi)
+        {
+            switch (gi.Animat)
+            {
+                case AnimatType.A_Start:
+                    gi.Animat = AnimatType.B_Loop;
+                    var img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+                    if (img.Count != 0)
+                    {
+                        Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
+                    }
+                    else
+                    {
+                        Main.DisplayToNomal();
+                    }
+                    break;
+                case AnimatType.B_Loop:
+                    img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+                    if (img.Count != 0)
+                    {
+                        Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
+                    }
+                    else
+                    {
+                        Main.DisplayToNomal();
+                    }
+                    break;
+                case AnimatType.C_End:
+                case AnimatType.Single:
+                    Main.DisplayToNomal();
+                    break;
+            }
+        }
+        /// <summary>
+        /// 根据好友数据显示动画
+        /// </summary>
+        public bool DisplayGraph(GraphInfo gi)
+        {
+            if (InConvenience())
+                return false;
+            if (gi.Type == Main.DisplayType.Type && gi.Animat == Main.DisplayType.Animat)
+            {
+                if (gi.Type != GraphType.Common)
+                    return false;
+            }
+            var img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+            if (img.Count != 0)
+            {
+                Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
+                return true;
+            }
+            return false;
+        }
+
+        public void DisplayMessage(Chat msg)
+        {
+            switch (msg.ChatType)
+            {
+                case Chat.Type.Private:
+                    Main.Say("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
+                    wmp.Log("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
+                    break;
+                case Chat.Type.Internal:
+                    Main.Say("{0} 对 {2} 说: {1}".Translate(msg.SendName, msg.Content, msg.ToName));
+                    wmp.Log("{0} 对 {2} 说: {1}".Translate(msg.SendName, msg.Content, msg.ToName));
+                    break;
+                case Chat.Type.Public:
+                    Main.Say("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
+                    wmp.Log("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 显示吃东西(夹层)动画
+        /// </summary>
+        /// <param name="graphName">夹层动画名</param>
+        /// <param name="imageSource">被夹在中间的图片</param>
+        public void DisplayFoodAnimation(string graphName, ImageSource imageSource)
+        {
+            mw.DisplayFoodAnimation(graphName, imageSource);
+        }
+        public bool InConvenience() => IMPFriend.InConvenience(Main);
     }
 }

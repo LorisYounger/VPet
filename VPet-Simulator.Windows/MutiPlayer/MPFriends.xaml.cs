@@ -48,7 +48,7 @@ public partial class MPFriends : WindowX, IMPFriend
         return OnMod.Find(ModName.ToLowerInvariant()) != null;
     }
     public bool NOTouch { get; set; } = false;
-
+    public new string Name => friend.Name;
 
     public MPFriends(winMutiPlayer wmp, MainWindow mw, Lobby lb, Friend friend)
     {
