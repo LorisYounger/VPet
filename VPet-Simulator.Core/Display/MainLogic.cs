@@ -1,4 +1,5 @@
-﻿using LinePutScript.Localization.WPF;
+﻿using LinePutScript;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
@@ -542,7 +543,7 @@ namespace VPet_Simulator.Core
                 //检查下是否有SideLoad
                 if (Core.Graph.FindName(GraphType.SideHide_Left_Main) != null)
                 {
-                    Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
+                    Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - Core.Graph.GraphConfig.Data["side"][(gdbe)"left"], 0);
                     Display(GraphType.SideHide_Left_Main, AnimatType.A_Start, DisplayBLoopingForce);
                     return true;
                 }
@@ -555,7 +556,7 @@ namespace VPet_Simulator.Core
             {
                 if (Core.Graph.FindName(GraphType.SideHide_Right_Main) != null)
                 {
-                    Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio, 0);
+                    Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 500 - Core.Graph.GraphConfig.Data["side"][(gdbe)"right"], 0);
                     Display(GraphType.SideHide_Right_Main, AnimatType.A_Start, DisplayBLoopingForce);
                     return true;
                 }

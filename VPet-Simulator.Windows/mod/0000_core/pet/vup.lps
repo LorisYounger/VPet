@@ -38,3 +38,5 @@ move:|graph#crawl.right:|TriggerRight#200:|TriggerType#32:|CheckRight#100:|Check
 duration:|state#10:|squat#20:|boring#20:|sleep#20:|
 
 bday:|x#184:|y#12:|w#60:|tb#DDFFFFFF:|tf#FF94753D:|ttop#160:|tleft#29:|tright#29:|tbottom#10:|va#top:|ha#Left:|
+
+side:|left#219:|right#281:|

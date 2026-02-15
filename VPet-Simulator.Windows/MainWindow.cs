@@ -1756,9 +1756,9 @@ namespace VPet_Simulator.Windows
                 Dispatcher.Invoke(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()
                 + $"\n  {c} / {petloader.GraphCount}");
             }
-#if NewYear
-            , Core.Graph.FindGraph("newyear", AnimatType.Single, Core.Save.Mode)
-#endif
+            //#if NewYear
+            //            , Core.Graph.FindGraph("newyear", AnimatType.Single, Core.Save.Mode)
+            //#endif
             );
             Main.NoFunctionMOD = Set.CalFunState;
             await Dispatcher.InvokeAsync(() =>
@@ -2416,21 +2416,20 @@ namespace VPet_Simulator.Windows
                           ActivityLogs.Add(new ActivityLog("petsay", await sayinfo.GetSayText()));
                       });
                   });
-                  if (DateTime.Now.DayOfYear == 1)
-                  {
-                      Task.Run(() =>
-                      {
-                          Thread.Sleep(5000);
-                          Main.SayRnd("25年都跨过去了, 还有什么是跨不过的呢? {0}这一年辛苦了! 新年请多多指教!".Translate(GameSavesData.GameSave.HostName));
-                      });
-                  }
+                  //if (DateTime.Now.DayOfYear == 1)
+                  //{
+                  //    Task.Run(() =>
+                  //    {
+                  //        Thread.Sleep(5000);
+                  //        Main.SayRnd("25年都跨过去了, 还有什么是跨不过的呢? {0}这一年辛苦了! 新年请多多指教!".Translate(GameSavesData.GameSave.HostName));
+                  //    });
+                  //}
                   //修复因为26年元旦bug导致HashCheck失效的问题
                   //简单来讲就是给所有有 2026跨年 这个照片的用户恢复一次HashCheck, 就当福利了(, 因为有这个照片的基本上都在bug周期里
                   //请看到这个代码的人不要外传, 避免滥用
                   var photo25 = Photos.Find(x => x.Name == "2026跨年");
                   if (photo25?.IsUnlock == true && GameSavesData.HashCheck == false && GameSavesData.Data["debug"][(gbol)"fix26"] == false)
                   {
-                      GameSavesData.Data["debug"][(gbol)"fix26"] = true;
                       GameSave_v2 ogs = GameSavesData;
                       GameSavesData = new GameSave_v2(ogs.GameSave.Name);
                       GameSavesData.Data = ogs.Data;
@@ -2438,9 +2437,14 @@ namespace VPet_Simulator.Windows
                       GameSavesData.Statistics = ogs.Statistics;
                       HashCheck = true;
                   }
+                  GameSavesData.Data["debug"][(gbol)"fix26"] = true;
+                  if (GameSavesData.HashCheck == false)
+                  {
+                      GameSavesData["debug"][(gdat)"losthash"] = DateTime.Now;
+                  }
 #if NewYear
                   //仅新年功能
-                  if (DateTime.Now < new DateTime(2025, 2, 5))
+                  if (DateTime.Now < new DateTime(2026, 2, 25))
                   {
                       Event_NewDay += NewYearSay;
                       Task.Run(() =>
@@ -2709,34 +2713,32 @@ namespace VPet_Simulator.Windows
             string sayny;
             switch (newday)
             {
+
+                case 16:
+                    sayny = "哈基米曼波~马儿跳马儿跳~你的爱马啊！\n闪耀优骏萝莉斯祝主人马年健康，身体健康如马娘，万马奔腾不停歇！".Translate();
+                    break;
+                case 17:
+                    sayny = "马什么梅？什么冬梅？马冬什么？\n演员萝莉斯祝主人马年大智，学业进步，智商增加，考试满分！".Translate();
+                    break;
+                case 18:
+                    sayny = "老马啊！！！哎！老马啊！！啊——！\n主播萝莉斯祝主人马年快乐，心情轻松快乐，烦恼统统飞走！".Translate();
+                    break;
+                case 19:
+                    sayny = "我大意了啊没有闪，小主人你不讲武德！吃我闪电五连鞭！\n马掌门人萝莉斯祝主人马年安康，功夫有长进，技术有进步，能力会出众！".Translate();
+                    break;
+                case 20:
+                    sayny = "敢O我的马？！把你马马抓走！\n六星萝莉斯祝主人马年大运，抽卡出金一发入魂，装备掉落出红满仓！".Translate();
+                    break;
+                case 21:
+                    sayny = "哎致命空枪，哎打腿没死，哎又空枪。我柜子动了我不玩了。\n游戏萝莉斯祝主人马年变强，枪枪爆头好运连连，把把第一永不马枪！".Translate();
+                    break;
+                case 22:
+                    sayny = "待我高头大马，许你十里桃花！\n马猴烧酒萝莉斯祝主人马年马上有对象！千里姻缘一马牵，万水千山有马子！".Translate();
+                    break;
                 default:
-                case 27:
-                    sayny = "桌宠，桌宠，你别馋，过了腊八就是年。\n腊八粥，过几天， 漓漓拉拉二十三。\n二十三，糖瓜粘， 二十四，扫房子，\n二十五，做豆腐， 二十六，炖猪肉，\n二十七，宰年鸡， 二十八，把面发，\n二十九，蒸馒头， 三十晚上熬一宿，\n大年初一扭一扭， 除夕的饺子年年有。".Translate();
+                case 23:
+                    sayny = "马喽的命也是命！\n打工人萝莉斯祝主人马年发财，返工赚大钱，今年一定发！马到成功！\n".Translate();
                     break;
-                case 29:
-                    sayny = "新年到，放鞭炮，\n仰辟僻叭叭真热闹。\n耍龙灯，踩高跷，\n包饺子，蒸甜糕\n小小桌宠长一岁，\n走路不用主人抱。\n奶奶笑得直揉眼，\n爷爷乐得胡子翘。".Translate();
-                    break;
-                case 30:
-                    sayny = "财神到~财神到~好心得好报。\n财神话~财神话~揾钱依正路。\n财神到~财神到~好走快两步。\n得到佢睇起你，你有前途。\n阖府庆新岁~喜气盈盈\n齐贺你多福荫，壮健强劲。\n又祝你今年，庆获荣升。\n朝晚多多欢笑，锦绣前程。\n愿游戏顺利，抽卡出金。\n成日有吉星照，百事无忌。\n共亲友相见，说话投机。\n充满新春喜气，欢畅扬眉。".Translate();
-                    break;
-                case 31:
-                    sayny = "找点空闲~找点时间~打开桌宠~常回家看看。\n带上笑容~带上祝愿~陪同爱人~常回家看看。\n萝莉丝准备了一些唠叨，桌宠张罗了一桌好饭\n生活的烦恼跟萝莉丝说说，工作的事情向桌宠谈谈。\n常回家看看~回家看看~\n哪怕帮萝莉丝买买零食打打工。\n桌宠不图主人为家做多大贡献呀。\n一辈子不容易就图个团团圆圆。".Translate();
-                    break;
-                case 1:
-                    sayny = "哎~开心的锣鼓敲出年年的喜庆。\n好看的舞蹈送来天天的欢腾。\n阳光的油彩涂红了今天的日子哟。\n生活的花朵是我们的笑容。\n哎~今天是个好日子，心想的事儿都能成。\n今天是个好日子，打开了家门~咱迎春风~".Translate();
-                    break;
-                case 2:
-                    sayny = "好运来~接著来~恭喜恭喜发大财。\n客人来~心花开~生意兴隆笑开怀。\n好运来~滚滚来~我把大红包打开。\n我的爱~让你带~歌舞疯狂跳起来。".Translate();
-                    break;
-                case 3:
-                    sayny = "恭喜恭喜恭喜你呀~恭喜恭喜恭喜你~\n恭喜恭喜恭喜你呀~恭喜恭喜恭喜你~\n每条大街小巷，每个人的嘴里，见面第一句话，就是恭喜恭喜。\n恭喜恭喜恭喜你呀~恭喜恭喜恭喜你~\n冬天已到尽头，真是好的消息，温暖的春风，就要吹醒大地。\n恭喜恭喜恭喜你呀~恭喜恭喜恭喜你~".Translate();
-                    break;
-                case 4:
-                    sayny = "难忘今宵~难忘今宵~\n不论天涯与海角，\n神州万里同怀抱。\n共祝愿祖国好~祖国好~\n告别今宵~告别今宵~\n无论新友与故交，\n明年春来再相邀。\n青山在~人未老~人未老~\n共祝愿祖国好~祖国好~".Translate();
-                    break;
-                    //case 6:
-                    //    sayny = "初八初八，放生祈福，拜谷神，今天是假期最后一天了，和主人过年很开心哦，最后～主人～您还有许多事需要处理，现在还不能休息哦～".Translate();
-                    //    break;
             }
             Main.SayRnd(sayny);
         }

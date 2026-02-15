@@ -261,6 +261,23 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void Load_2_TouchEvent()
         {
+            //让侧挂回正
+            Core.TouchEvent.Add(new TouchArea(new Point(0, 0), new Size(500, 500), () =>
+            {
+                if (DisplayType.Type == GraphType.SideHide_Left_Main || DisplayType.Type == GraphType.SideHide_Left_Rise )
+                {
+                    Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
+                    DisplayCEndtoNomal(Core.Graph.FindName(GraphType.SideHide_Left_Main));
+                    return true;
+                }
+                if (DisplayType.Type == GraphType.SideHide_Right_Main || DisplayType.Type == GraphType.SideHide_Right_Rise)
+                {
+                    Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio, 0);
+                    DisplayCEndtoNomal(Core.Graph.FindName(GraphType.SideHide_Right_Main));
+                    return true;
+                }
+                return false;
+            }));
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, () => { DisplayTouchHead(); return true; }));
             Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchBodyLocate, Core.Graph.GraphConfig.TouchBodySize, () => { DisplayTouchBody(); return true; }));
             for (int i = 0; i < 4; i++)
