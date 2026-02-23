@@ -517,6 +517,12 @@ namespace VPet_Simulator.Windows
             set => this["gameconfig"].SetBool("opacityhitthrough", !value);
         }
 
+        public int GameScreenIndex
+        {
+            get => this["gameconfig"].GetInt("gamescreenindex", 0);
+            set => this["gameconfig"].SetInt("gamescreenindex", value);
+        }
+
         /// <summary>
         /// 读写自定义游戏设置(给mod准备的接口)
         /// </summary>

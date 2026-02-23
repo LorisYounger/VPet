@@ -28,6 +28,11 @@
         /// 获取桌宠距离下方的位置
         /// </summary>
         double GetWindowsDistanceDown();
+        /// <summary>
+        /// 获取桌宠所在屏幕是否为活动屏幕
+        /// </summary>
+        /// <returns></returns>
+        bool IfInActiveScreen();
         ///// <summary>
         ///// 窗体宽度
         ///// </summary>
