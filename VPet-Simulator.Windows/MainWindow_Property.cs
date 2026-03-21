@@ -1,4 +1,4 @@
-﻿using LinePutScript.Dictionary;
+﻿﻿﻿using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using Steamworks;
 using System;
@@ -86,6 +86,7 @@ public partial class MainWindow
     //public ChatGPTClient CGPTClient;
     public ImageResources ImageSources { get; set; } = new ImageResources();
     public Resources FileSources { get; set; } = new Resources();
+    public MODManager ModManager { get; private set; }
     /// <summary>
     /// 动态资源, 用于给插件MOD存储共享的数据
     /// </summary>
@@ -129,4 +130,5 @@ public partial class MainWindow
     /// 活动日志 不会保存
     /// </summary>
     public ObservableCollection<ActivityLog> ActivityLogs { get; set; } = new ObservableCollection<ActivityLog>();
+
 }
