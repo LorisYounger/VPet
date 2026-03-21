@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+﻿﻿﻿﻿using LinePutScript;
 using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
@@ -205,6 +205,87 @@ namespace VPet_Simulator.Windows
 
 
                 Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading Translate")).Wait();
+
+                // 添加MOD列表功能
+                List<ModInfo> GetModList()
+                {
+                    List<ModInfo> modList = new List<ModInfo>();
+                    var modDir = new DirectoryInfo(ModPath);
+                    
+                    if (modDir.Exists)
+                    {
+                        foreach (var dir in modDir.EnumerateDirectories())
+                        {
+                            var modInfo = new ModInfo(dir);
+                            // 检查此MOD是否已被加载
+                            modInfo.IsLoaded = CoreMODs.Any(coreMod => coreMod.Name == modInfo.Name);
+                            modList.Add(modInfo);
+                        }
+                    }
+                    
+                    return modList;
+                }
+
+                // 添加显示MOD列表的方法
+                async void ShowModList()
+                {
+                    var modList = await mainWindow.ModManager.ListModAsync();
+                    
+                    if (modList.Count == 0)
+                    {
+                        MessageBoxX.Show("没有找到任何MOD", "MOD列表");
+                        return;
+                    }
+                    
+                    // 创建一个格式化的MOD列表字符串
+                    var modListString = "MOD列表 (总数: " + modList.Count + ")\n\n";
+                    
+                    foreach (var mod in modList)
+                    {
+                        string status = mod.IsLoaded ? "[已加载]" : "[未加载]";
+                        string tags = mod.Tag.Count > 0 ? " (" + string.Join(", ", mod.Tag) + ")" : "";
+                        modListString += $"{status} {mod.Name}\n";
+                        modListString += $"  作者: {mod.Author}\n";
+                        modListString += $"  版本: {mod.Ver} (游戏版本: {mod.GameVer})\n";
+                        modListString += $"  路径: {mod.Path}{tags}\n";
+                        modListString += $"  简介: {mod.Intro}\n\n";
+                    }
+                    
+                   // 使用Panuon.WPF.UI的MessageBoxX显示MOD列表
+                    var scrollViewer = new ScrollViewer();
+                    var textBlock = new System.Windows.Controls.TextBlock();
+                    textBlock.Text = modListString;
+                    textBlock.TextWrapping = System.Windows.TextWrapping.Wrap;
+                    textBlock.Margin = new Thickness(10);
+                    scrollViewer.Content = textBlock;
+                    scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                    scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+                    scrollViewer.MaxHeight = 500;
+                    scrollViewer.MaxWidth = 800;
+                    
+                    var stackPanel = new StackPanel();
+                    stackPanel.Children.Add(scrollViewer);
+                    
+                    MessageBoxX.Show(stackPanel, "MOD 列表", MessageBoxButton.OK, MessageBoxXButtonOptions.AnimateShow);                }
+                // 添加菜单项到工具栏（如果尚未添加）
+                Dispatcher.Invoke(() =>
+                {
+                    var menuItem = new MenuItem()
+                    {
+                        Header = "MOD管理".Translate(),
+                        HorizontalContentAlignment = HorizontalAlignment.Center
+                    };
+                    menuItem.Click += (_, _) => ShowModList();
+                    
+                    // 查找或创建MOD管理菜单
+                    var modMenu = Main.ToolBar.MenuInteract.Items.OfType<MenuItem>()
+                        .FirstOrDefault(m => m.Header.ToString() == "MOD管理".Translate());
+                    
+                    if (modMenu == null)
+                    {
+                        Main.ToolBar.MenuInteract.Items.Add(menuItem);
+                    }
+                });
                 //加载语言
                 LocalizeCore.StoreTranslation = true;
                 if (Set.Language == "null")
@@ -409,6 +490,9 @@ namespace VPet_Simulator.Windows
 
 
             });
+            
+            // 初始化MODManager
+            this.ModManager = new MODManager(this);
         }
 
         private void SteamFriends_OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
@@ -750,6 +834,9 @@ namespace VPet_Simulator.Windows
                 //关闭所有插件
                 foreach (MainPlugin mp in Plugins)
                     mp.EndGame();
+                
+                // 释放 MODManager 资源
+                ModManager?.Dispose();
             }
             catch { }
             Save();
@@ -855,6 +942,29 @@ namespace VPet_Simulator.Windows
         public void ShowInputBox(string title, string text, string defaulttext, Action<string> ENDAction, bool AllowMutiLine = false, bool TextCenter = true, bool CanHide = false)
         {
             winInputBox.Show(this, title, text, defaulttext, ENDAction, AllowMutiLine, TextCenter, CanHide);
+        }
+
+        /// <summary>
+        /// 获取MOD列表
+        /// </summary>
+        /// <returns>MOD信息列表</returns>
+        public List<ModInfo> ListMod()
+        {
+            List<ModInfo> modList = new List<ModInfo>();
+            var modDir = new DirectoryInfo(ModPath);
+            
+            if (modDir.Exists)
+            {
+                foreach (var dir in modDir.EnumerateDirectories())
+                {
+                    var modInfo = new ModInfo(dir);
+                    // 检查此MOD是否已被加载
+                    modInfo.IsLoaded = CoreMODs.Any(coreMod => coreMod.Name == modInfo.Name);
+                    modList.Add(modInfo);
+                }
+            }
+            
+            return modList;
         }
     }
 }
