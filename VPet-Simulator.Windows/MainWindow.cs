@@ -1337,6 +1337,10 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public void GameInitialization()
         {
+            Console.SetOut(new ConsoleRedirectWriter(ActivityLogs));
+
+            Console.WriteLine($"VPet Simulator {version}");
+
             App.MainWindows.Add(this);
             try
             {
