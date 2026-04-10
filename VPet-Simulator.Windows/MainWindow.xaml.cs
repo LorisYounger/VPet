@@ -229,7 +229,7 @@ namespace VPet_Simulator.Windows
                 // 添加显示MOD列表的方法
                 async void ShowModList()
                 {
-                    var modList = await mainWindow.ModManager.ListModAsync();
+                    var modList = await ModManager.ListModAsync();
                     
                     if (modList.Count == 0)
                     {
@@ -265,8 +265,7 @@ namespace VPet_Simulator.Windows
                     
                     var stackPanel = new StackPanel();
                     stackPanel.Children.Add(scrollViewer);
-                    
-                    MessageBoxX.Show(stackPanel, "MOD 列表", MessageBoxButton.OK, MessageBoxXButtonOptions.AnimateShow);                }
+                               }
                 // 添加菜单项到工具栏（如果尚未添加）
                 Dispatcher.Invoke(() =>
                 {

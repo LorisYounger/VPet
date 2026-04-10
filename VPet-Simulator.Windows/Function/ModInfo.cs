@@ -72,7 +72,7 @@ namespace VPet_Simulator.Windows
             
             try
             {
-                var infoFile = Path.Combine(directory.FullName, "info.lps");
+                var infoFile =System.IO.Path.Combine(directory.FullName, "info.lps");
                 if (File.Exists(infoFile))
                 {
                     var modlps = new LPS(File.ReadAllText(infoFile));

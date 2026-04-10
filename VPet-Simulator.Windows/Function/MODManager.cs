@@ -240,7 +240,6 @@ namespace VPet_Simulator.Windows
                     var stackPanel = new StackPanel();
                     stackPanel.Children.Add(scrollViewer);
                     
-                    MessageBoxX.Show(stackPanel, "MOD 列表", MessageBoxButton.OK, MessageBoxXButtonOptions.AnimateShow);
                 }
                 catch (Exception ex)
                 {
