@@ -202,5 +202,6 @@ namespace VPet_Simulator.Windows
 
         public int InteractionCycle => mw.Set.InteractionCycle;
 
+        public bool AutoChangeWindow => mw.Set.AutoChangeWindow;
     }
 }

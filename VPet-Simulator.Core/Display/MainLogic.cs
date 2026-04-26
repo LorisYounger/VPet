@@ -537,6 +537,10 @@ namespace VPet_Simulator.Core
         /// <returns>是否成功进入侧边隐藏模式</returns>
         private bool MoveSideHideCheck()
         {
+            if(Core.Controller.IfInActivateScreen() == false && Core.Controller.AutoChangeWindow)
+            {
+                Core.Controller.SetNowScreenActivate();
+            }
             //判断是否靠边,如果靠边就进入侧边隐藏模式
             if (Core.Controller.GetWindowsDistanceLeft() < -50 * Core.Controller.ZoomRatio && (Core.Controller.IfInActivateScreen() || Core.Controller.GetWindowsDistanceLeft() > -110 * Core.Controller.ZoomRatio))
             {
