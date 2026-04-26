@@ -110,7 +110,7 @@ namespace VPet_Simulator.Windows
 
         public int InteractionCycle => mw.Set.InteractionCycle;
 
-        public bool IfInActiveScreen()
+        public bool IfInActivateScreen()
         {
             try
             {
@@ -143,5 +143,9 @@ namespace VPet_Simulator.Windows
             });
         }
 
+        public void SetNowScreenActivate()
+        {
+            
+        }
     }
 }

@@ -94,7 +94,7 @@ namespace VPet_Simulator.Windows
             });
         }
 
-        public bool IfInActiveScreen()
+        public bool IfInActivateScreen()
         {
             try
             {
@@ -122,6 +122,31 @@ namespace VPet_Simulator.Windows
                 catch(Exception)
                 {
                     return true;
+                }
+            });
+        }
+
+        public void SetNowScreenActivate()
+        {
+            mw.Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    var screen = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(mw).Handle);
+                    var screens = System.Windows.Forms.Screen.AllScreens;
+                    for (int i = 0; i < screens.Length; i++)
+                    {
+                        if (screens[i].DeviceName == screen.DeviceName)
+                        {
+                            mw.Set.GameScreenIndex = i;
+                            ScreenBorder = new Rectangle(screens[i].Bounds.X, screens[i].Bounds.Y, screens[i].Bounds.Width, screens[i].Bounds.Height);
+                            break;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    mw.Set.GameScreenIndex = 0;
                 }
             });
         }
