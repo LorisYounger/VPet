@@ -819,14 +819,18 @@ namespace VPet_Simulator.Windows
             try
             {
                 var screens = System.Windows.Forms.Screen.AllScreens;
+                bool matchedScreen = false;
                 for (int i = 0; i < screens.Length; i++)
                 {
                     if (screens[i].DeviceName == currentScreen.DeviceName)
                     {
                         mw.Set.GameScreenIndex = i;
+                        matchedScreen = true;
                         break;
                     }
                 }
+                if (!matchedScreen)
+                    mw.Set.GameScreenIndex = 0;
             }
             catch
             {
