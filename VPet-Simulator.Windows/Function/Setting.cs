@@ -302,6 +302,16 @@ namespace VPet_Simulator.Windows
                 this["gameconfig"].SetBool("nofunction", !value);
             }
         }
+        bool autochangewindow;
+        public bool AutoChangeWindow
+        {
+            get => autochangewindow;
+            set
+            {
+                autochangewindow = value;
+                this["gameconfig"].SetBool("autochangewindow", value);
+            }
+        }
         /// <summary>
         /// 智能移动周期 (秒)
         /// </summary>
@@ -515,6 +525,12 @@ namespace VPet_Simulator.Windows
         {
             get => !this["gameconfig"].GetBool("opacityhitthrough");
             set => this["gameconfig"].SetBool("opacityhitthrough", !value);
+        }
+
+        public int GameScreenIndex
+        {
+            get => this["gameconfig"].GetInt("gamescreenindex", 0);
+            set => this["gameconfig"].SetInt("gamescreenindex", value);
         }
 
         /// <summary>

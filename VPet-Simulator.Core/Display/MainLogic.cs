@@ -537,8 +537,12 @@ namespace VPet_Simulator.Core
         /// <returns>是否成功进入侧边隐藏模式</returns>
         private bool MoveSideHideCheck()
         {
+            if(Core.Controller.AutoChangeWindow && Core.Controller.IfInActivateScreen() == false)
+            {
+                Core.Controller.SetNowScreenActivate();
+            }
             //判断是否靠边,如果靠边就进入侧边隐藏模式
-            if (Core.Controller.GetWindowsDistanceLeft() < -50 * Core.Controller.ZoomRatio)
+            if (Core.Controller.GetWindowsDistanceLeft() < -50 * Core.Controller.ZoomRatio && (Core.Controller.IfInActivateScreen() || Core.Controller.GetWindowsDistanceLeft() > -110 * Core.Controller.ZoomRatio))
             {
                 //检查下是否有SideLoad
                 if (Core.Graph.FindName(GraphType.SideHide_Left_Main) != null)
@@ -552,7 +556,7 @@ namespace VPet_Simulator.Core
                     Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
                 }
             }
-            else if (Core.Controller.GetWindowsDistanceRight() < -50 * Core.Controller.ZoomRatio)
+            else if (Core.Controller.GetWindowsDistanceRight() < -50 * Core.Controller.ZoomRatio && (Core.Controller.IfInActivateScreen() || Core.Controller.GetWindowsDistanceRight() > -110 * Core.Controller.ZoomRatio))
             {
                 if (Core.Graph.FindName(GraphType.SideHide_Right_Main) != null)
                 {

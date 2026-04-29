@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows
@@ -93,6 +94,63 @@ namespace VPet_Simulator.Windows
             });
         }
 
+        public bool IfInActivateScreen()
+        {
+            try
+            {
+                if (mw.Dispatcher.HasShutdownStarted || mw.Dispatcher.HasShutdownFinished) return false;
+            }catch { }
+            return mw.Dispatcher.Invoke(() =>
+            {
+
+                try
+                {
+                    var screen = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(mw).Handle);
+                    var screens = System.Windows.Forms.Screen.AllScreens;
+                    for (int i = 0; i < screens.Length; i++)
+                    {
+                        if (screens[i].DeviceName == screen.DeviceName)
+                        {
+                            if(i == mw.Set.GameScreenIndex)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+                catch(Exception)
+                {
+                    return true;
+                }
+            });
+        }
+
+        public void SetNowScreenActivate()
+        {
+            mw.Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    var screen = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(mw).Handle);
+                    var screens = System.Windows.Forms.Screen.AllScreens;
+                    for (int i = 0; i < screens.Length; i++)
+                    {
+                        if (screens[i].DeviceName == screen.DeviceName)
+                        {
+                            mw.Set.GameScreenIndex = i;
+                            ScreenBorder = new Rectangle(screens[i].Bounds.X, screens[i].Bounds.Y, screens[i].Bounds.Width, screens[i].Bounds.Height);
+                            break;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    mw.Set.GameScreenIndex = 0;
+                }
+            });
+        }
+
         public void ShowSetting()
         {
             mw.Topmost = false;
@@ -144,5 +202,6 @@ namespace VPet_Simulator.Windows
 
         public int InteractionCycle => mw.Set.InteractionCycle;
 
+        public bool AutoChangeWindow => mw.Set.AutoChangeWindow;
     }
 }

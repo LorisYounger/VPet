@@ -1,4 +1,5 @@
-﻿using VPet_Simulator.Core;
+﻿using System;
+using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows
 {
@@ -109,5 +110,44 @@ namespace VPet_Simulator.Windows
 
         public int InteractionCycle => mw.Set.InteractionCycle;
 
+        public bool AutoChangeWindow => mw.Set.AutoChangeWindow;
+
+        public bool IfInActivateScreen()
+        {
+            try
+            {
+                if (mp.Dispatcher.HasShutdownStarted || mp.Dispatcher.HasShutdownFinished) return false;
+            }
+            catch { }
+            return mp.Dispatcher.Invoke(() =>
+            {
+
+                try
+                {
+                    var screen = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(mp).Handle);
+                    var screens = System.Windows.Forms.Screen.AllScreens;
+                    for (int i = 0; i < screens.Length; i++)
+                    {
+                        if (screens[i].DeviceName == screen.DeviceName)
+                        {
+                            if (i == mw.Set.GameScreenIndex)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+                catch (Exception)
+                {
+                    return true;
+                }
+            });
+        }
+
+        public void SetNowScreenActivate()
+        {
+            
+        }
     }
 }
