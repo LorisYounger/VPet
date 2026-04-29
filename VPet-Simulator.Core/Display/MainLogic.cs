@@ -537,7 +537,7 @@ namespace VPet_Simulator.Core
         /// <returns>是否成功进入侧边隐藏模式</returns>
         private bool MoveSideHideCheck()
         {
-            if(Core.Controller.IfInActivateScreen() == false && Core.Controller.AutoChangeWindow)
+            if(Core.Controller.AutoChangeWindow && Core.Controller.IfInActivateScreen() == false)
             {
                 Core.Controller.SetNowScreenActivate();
             }
