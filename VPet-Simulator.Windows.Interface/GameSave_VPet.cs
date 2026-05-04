@@ -27,8 +27,9 @@ public class GameSave_VPet : IGameSave
     /// <summary>
     /// 金钱
     /// </summary>
+    public double Money { get => money; set => money = Math.Max(-100_000_000, value); }
     [Line(Type = LPSConvert.ConvertType.ToFloat, Name = "money")]
-    public double Money { get; set; }
+    protected double money { get; set; }
 
 
     double exp { get; set; }
@@ -317,7 +318,7 @@ public class GameSave_VPet : IGameSave
     /// <param name="food">食物类</param>
     public void EatFood(IFood food)
     {
-        Exp += food.Exp;
+        Exp += food.Exp * ExpRate;
         var tmp = food.Strength / 2;
         StrengthChange(tmp);
         StoreStrength += tmp;
@@ -344,6 +345,8 @@ public class GameSave_VPet : IGameSave
     /// 经验值加成 TODO
     /// </summary>
     public double ExpBonus { get; set; } = 1;
+
+    public double ExpRate => Money < 0 ? 0 : 1;
 
     /// <summary>
     /// 计算宠物当前状态

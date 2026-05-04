@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 
 namespace VPet_Simulator.Core
 {
@@ -27,6 +27,10 @@ namespace VPet_Simulator.Core
         /// 经验值加成
         /// </summary>
         double ExpBonus { get; }
+        /// <summary>
+        /// 经验获取倍率 (0~1), 金钱为负时为0, 否则为1
+        /// </summary>
+        double ExpRate { get; }
         /// <summary>
         /// 等级
         /// </summary>

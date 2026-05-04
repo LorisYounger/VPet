@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Converter;
 using System;
 using static VPet_Simulator.Core.IGameSave;
@@ -20,8 +20,9 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 金钱
         /// </summary>
+        public double Money { get => money; set => money = Math.Max(-100_000_000, value); }
         [Line(Type = LPSConvert.ConvertType.ToFloat, Name = "money")]
-        public double Money { get; set; }
+        protected double money { get; set; }
         /// <summary>
         /// 经验值
         /// </summary>
@@ -229,7 +230,7 @@ namespace VPet_Simulator.Core
         /// <param name="food">食物类</param>
         public void EatFood(IFood food)
         {
-            Exp += food.Exp;
+            Exp += food.Exp * ExpRate;
             var tmp = food.Strength / 2;
             StrengthChange(tmp);
             StoreStrength += tmp;
@@ -254,6 +255,8 @@ namespace VPet_Simulator.Core
         public double FeelingMax => 100;
 
         public double ExpBonus => 1;
+
+        public double ExpRate => Money < 0 ? 0 : 1;
 
         /// <summary>
         /// 计算宠物当前状态

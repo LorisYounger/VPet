@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Converter;
 using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
@@ -893,7 +893,7 @@ namespace VPet_Simulator.Windows
             }
             if (tmp.GameSave.Money < -1000000000)
             {
-                tmp.GameSave.Money = 100000;
+                tmp.GameSave.Money = 0;
                 Dispatcher.Invoke(() => NoticeBox.Show("检测到金钱超过 9,223,372,036 导致算数溢出\n已经自动回正".Translate(), "数据溢出警告".Translate()));
             }
 

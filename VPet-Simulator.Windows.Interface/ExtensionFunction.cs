@@ -1,4 +1,4 @@
-﻿using LinePutScript.Localization.WPF;
+using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -220,7 +220,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="buff">默认1倍</param>
         public static void EatFood(this IGameSave save, IFood food, double buff)
         {
-            save.Exp += food.Exp * buff;
+            save.Exp += food.Exp * buff * save.ExpRate;
             var tmp = food.Strength / 2 * buff;
             save.StrengthChange(tmp);
             save.StoreStrength += tmp;
