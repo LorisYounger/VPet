@@ -2528,6 +2528,21 @@ namespace VPet_Simulator.Windows
             ItemsAdd(itm);
         }
 
+
+        private void like520()
+        {
+            var date = DateTime.Now.Day + DateTime.Now.Month * 100;
+            var thisy77 = GetLunarDate(7, 7);
+            if (date == 520 || date == 521 || date == 214 || date == (thisy77.Day + thisy77.Month * 100))
+            {
+                Task.Run(() =>
+                {
+                    Thread.Sleep(52000);
+                    Main.Display("like520", AnimatType.Single, Main.DisplayNomal);
+                });
+            }
+        }
+
         private void MainWindow_Event_TakeItem(Food obj)
         {
             switch (obj.Name)

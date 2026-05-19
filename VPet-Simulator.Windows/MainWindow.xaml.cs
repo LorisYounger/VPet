@@ -406,8 +406,13 @@ namespace VPet_Simulator.Windows
                       }
                       return false;
                   }]);
-
-
+                if (GameSavesData.GameSave.Likability < 520)
+                    Core.Graph.GraphsName[GraphType.Idel].Remove("like520");
+                else if (Core.Graph.FindGraph("like520", AnimatType.Single, IGameSave.ModeType.Happy) != null)
+                {
+                    Event_NewDay += like520;
+                    like520();
+                }
             });
         }
 
