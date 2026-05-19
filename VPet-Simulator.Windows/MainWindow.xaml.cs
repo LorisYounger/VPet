@@ -366,7 +366,7 @@ namespace VPet_Simulator.Windows
                       switch (Item.Name)
                       {
                           case "每日礼包": //每日随机礼盒: 打开后获得随机3个物品 每天获得一个
-                              var moneylimit = (100 * (imw.GameSavesData.GameSave.LevelMax + 1) + imw.GameSavesData.GameSave.Level +1) * 100;
+                              var moneylimit = Math.Min(20000, (50 * (imw.GameSavesData.GameSave.LevelMax + 1) + imw.GameSavesData.GameSave.Level +1) * 50);
                               var chosenfood = imw.Foods.FindAll(x=>x.Price > 10 && x.Price < moneylimit);
                               if(chosenfood.Count == 0)
                                     return false;
@@ -435,7 +435,7 @@ namespace VPet_Simulator.Windows
             if (!friend.IsPlayingThisGame)
             {
                 ActivityLogs.Add(new ActivityLog("stream_invite_other", friend.Name));
-                Main.Say("你的好友{0}邀请你玩游戏,快去回应ta吧".Translate(friend.Name),desc:"SID:" + friend.Id.Value);
+                Main.Say("你的好友{0}邀请你玩游戏,快去回应ta吧".Translate(friend.Name), desc: "SID:" + friend.Id.Value);
                 return;
             }
 
