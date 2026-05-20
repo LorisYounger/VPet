@@ -210,8 +210,8 @@ namespace VPet_Simulator.Core
             DisplayMove = DisplayToMove;
             DisplayIdel = DisplayToIdel;
             DisplayIdel_StateONE = DisplayToIdel_StateONE;
-
-
+            DisplayTouchBody = DisplayToTouchBody;
+            DisplayTouchHead = DisplayToTouchHead;
 
             SayRndFunction = new Func<string, string>((x) => Core.Graph.FindName(GraphType.Say));
 
@@ -264,7 +264,7 @@ namespace VPet_Simulator.Core
             //让侧挂回正
             Core.TouchEvent.Add(new TouchArea(new Point(0, 0), new Size(500, 500), () =>
             {
-                if (DisplayType.Type == GraphType.SideHide_Left_Main || DisplayType.Type == GraphType.SideHide_Left_Rise )
+                if (DisplayType.Type == GraphType.SideHide_Left_Main || DisplayType.Type == GraphType.SideHide_Left_Rise)
                 {
                     Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
                     DisplayCEndtoNomal(Core.Graph.FindName(GraphType.SideHide_Left_Main));

@@ -1086,7 +1086,7 @@
                         <Hyperlink Click="Using_Click" Foreground="{DynamicResource PrimaryText}">
                             <Run Text="{ll:Str 查看引用名单}" />
                         </Hyperlink><LineBreak /><LineBreak />
-                        <Hyperlink Click=" Steam_Click">
+                        <Hyperlink Click="Steam_Click">
                             <Run Text="{ll:Str 访问Steam页面}" />
                         </Hyperlink>
                         <Hyperlink Click="Github_Click">
