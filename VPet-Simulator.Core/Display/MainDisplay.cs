@@ -1,5 +1,6 @@
 ﻿using LinePutScript.Converter;
 using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -367,7 +368,7 @@ namespace VPet_Simulator.Core
                     break;
                 case -1:
                     rasetype = int.MinValue;
-                    Core.Controller.RePostionActive = !Core.Controller.CheckPosition();
+                    Core.Controller.RePositionActive = !Core.Controller.CheckPosition();
                     //判断侧边隐藏
                     if(!MoveSideHideCheck())
                     {

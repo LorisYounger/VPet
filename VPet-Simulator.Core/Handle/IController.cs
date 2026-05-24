@@ -80,7 +80,7 @@
         /// <summary>
         /// 是否启用边缘重新定位
         /// </summary>
-        bool RePostionActive { get; set; }
+        bool RePositionActive { get; set; }
 
         /// <summary>
         /// 是否自动切换活动屏幕

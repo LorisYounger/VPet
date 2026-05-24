@@ -305,11 +305,11 @@ namespace VPet_Simulator.Windows
         bool autochangewindow;
         public bool AutoChangeWindow
         {
-            get => autochangewindow;
+            get => !autochangewindow;
             set
             {
-                autochangewindow = value;
-                this["gameconfig"].SetBool("autochangewindow", value);
+                autochangewindow = !value;
+                this["gameconfig"].SetBool("autochangewindow", !value);
             }
         }
         /// <summary>
