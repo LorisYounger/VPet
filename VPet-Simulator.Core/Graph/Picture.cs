@@ -53,7 +53,8 @@ namespace VPet_Simulator.Core
             int length = info.GetInt("length");
             if (length == 0)
             {
-                if (!int.TryParse(path.Name.Split('.').Reverse().ToArray()[1].Split('_').Last(), out length))
+                var nameParts = path.Name.Split('.');
+                if (nameParts.Length > 1 && !int.TryParse(nameParts[nameParts.Length - 2].Split('_').Last(), out length))
                     length = 1000;
             }
             bool isLoop = info[(gbol)"loop"];

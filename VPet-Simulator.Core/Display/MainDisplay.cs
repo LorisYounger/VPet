@@ -61,7 +61,14 @@ namespace VPet_Simulator.Core
         /// 显示待机(模式1)情况
         /// </summary>
         public Action DisplayIdel_StateONE { get; set; }
-
+        /// <summary>
+        /// 显示摸头情况
+        /// </summary>
+        public Action DisplayTouchHead { get; set; }
+        /// <summary>
+        /// 显示摸身体情况
+        /// </summary>
+        public Action DisplayTouchBody { get; set; }
         /// <summary>
         /// 显示默认动画
         /// </summary>
@@ -126,7 +133,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示摸头情况
         /// </summary>
-        public void DisplayTouchHead()
+        public void DisplayToTouchHead()
         {
             CountNomal = 0;
             if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < Core.Save.FeelingMax)
@@ -164,7 +171,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示摸身体情况
         /// </summary>
-        public void DisplayTouchBody()
+        public void DisplayToTouchBody()
         {
             CountNomal = 0;
             if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < Core.Save.FeelingMax)

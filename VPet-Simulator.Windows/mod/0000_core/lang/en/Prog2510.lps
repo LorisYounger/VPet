@@ -12,3 +12,4 @@ i_schedulenote#After signing the schedule for the corresponding work/study insti
 al_petsay#{name} says: {0}:|
 al_hostsay#{hostname} says: {0}:|
 al_take_item#{hostname} used {0} on {name}.:|
+al_console#console: {0}:|
