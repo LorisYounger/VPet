@@ -100,7 +100,7 @@ namespace VPet_Simulator.Windows
             || GetWindowsDistanceRight() < -0.25 * mp.ActualWidth && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth
         );
 
-        public bool RePostionActive { get; set; } = true;
+        public bool RePositionActive { get; set; } = true;
 
         public double ZoomRatio => mw.Set.ZoomLevel;
 

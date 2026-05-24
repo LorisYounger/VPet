@@ -1,5 +1,10 @@
-﻿using System;
+﻿using Panuon.WPF.UI;
+using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Interop;
 using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows
@@ -44,6 +49,7 @@ namespace VPet_Simulator.Windows
                 IsPrimaryScreen = false;
             }
         }
+
         public void ResetScreenBorder()
         {
             IsPrimaryScreen = true;
@@ -99,14 +105,17 @@ namespace VPet_Simulator.Windows
             try
             {
                 if (mw.Dispatcher.HasShutdownStarted || mw.Dispatcher.HasShutdownFinished) return false;
-            }catch { }
+                if (mw.winSetting != null && mw.winSetting.Visibility == Visibility.Visible) return false;
+            }
+            catch { }
             return mw.Dispatcher.Invoke(() =>
             {
 
                 try
                 {
-                    var screen = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(mw).Handle);
-                    var screens = System.Windows.Forms.Screen.AllScreens;
+                    var window = Window.GetWindow(mw.Main);
+                    var screen = Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(mw).Handle);
+                    var screens = Screen.AllScreens;
                     for (int i = 0; i < screens.Length; i++)
                     {
                         if (screens[i].DeviceName == screen.DeviceName)
@@ -128,25 +137,48 @@ namespace VPet_Simulator.Windows
 
         public void SetNowScreenActivate()
         {
+            if (!mw.IsLoaded) return;
+            if (mw.winSetting != null && mw.winSetting.Visibility == Visibility.Visible) return;
             mw.Dispatcher.Invoke(() =>
             {
-                try
+                var helper = new WindowInteropHelper(mw);
+                var currentScreen = Screen.FromHandle(helper.Handle);
+                var hwndSource = HwndSource.FromHwnd(helper.Handle);
+                var _rect = new Rect();
+
+                Rectangle logicalBounds;
+
+                if (hwndSource?.CompositionTarget != null)
                 {
-                    var screen = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(mw).Handle);
-                    var screens = System.Windows.Forms.Screen.AllScreens;
-                    for (int i = 0; i < screens.Length; i++)
-                    {
-                        if (screens[i].DeviceName == screen.DeviceName)
-                        {
-                            mw.Set.GameScreenIndex = i;
-                            ScreenBorder = new Rectangle(screens[i].Bounds.X, screens[i].Bounds.Y, screens[i].Bounds.Width, screens[i].Bounds.Height);
-                            break;
-                        }
-                    }
+                    var dpi = hwndSource.CompositionTarget.TransformToDevice;
+
+                    logicalBounds = new Rectangle(
+                        (int)(currentScreen.Bounds.X / dpi.M11),
+                        (int)(currentScreen.Bounds.Y / dpi.M22),
+                        (int)(currentScreen.Bounds.Width / dpi.M11),
+                        (int)(currentScreen.Bounds.Height / dpi.M22)
+                    );
                 }
-                catch (Exception)
+                else
                 {
-                    mw.Set.GameScreenIndex = 0;
+                    logicalBounds = new Rectangle(
+                        currentScreen.Bounds.X,
+                        currentScreen.Bounds.Y,
+                        currentScreen.Bounds.Width,
+                        currentScreen.Bounds.Height
+                    );
+                }
+
+                ScreenBorder = logicalBounds;
+
+                var screens = Screen.AllScreens;
+                for (int i = 0; i < screens.Length; i++)
+                {
+                    if (screens[i].DeviceName == currentScreen.DeviceName)
+                    {
+                        mw.Set.GameScreenIndex = i;
+                        break;
+                    }
                 }
             });
         }
@@ -192,7 +224,7 @@ namespace VPet_Simulator.Windows
             || GetWindowsDistanceRight() < -0.25 * mw.ActualWidth && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth
         );
 
-        public bool RePostionActive { get; set; } = true;
+        public bool RePositionActive { get; set; } = true;
 
         public double ZoomRatio => mw.Set.ZoomLevel;
 

@@ -67,6 +67,7 @@ namespace VPet_Simulator.Windows
             InteractionSlider.Value = mw.Set.InteractionCycle;
             MoveEventBox.IsChecked = mw.Set.AllowMove;
             SmartMoveEventBox.IsChecked = mw.Set.SmartMove;
+            AutoChangeWindowEvent.IsChecked = mw.Set.AutoChangeWindow;
             PressLengthSlider.Value = mw.Set.PressLength / 1000.0;
             SwitchMsgOut.IsChecked = mw.Set.MessageBarOutside;
             SwitchHideFromTaskControl.IsChecked = mw.Set.HideFromTaskControl;
@@ -772,9 +773,14 @@ namespace VPet_Simulator.Windows
         public void UpdateMoveAreaText()
         {
             var mwCtrl = mw.Core.Controller as MWController;
-            if (mwCtrl.IsPrimaryScreen)
+            if (mwCtrl.IsPrimaryScreen && !mwCtrl.AutoChangeWindow)
             {
                 textMoveArea.Text = "主屏幕".Translate();
+                return;
+            }
+            else if (mwCtrl.AutoChangeWindow)
+            {
+                textMoveArea.Text = "自动选择窗口".Translate();
                 return;
             }
             var rect = mwCtrl.ScreenBorder;
@@ -790,53 +796,8 @@ namespace VPet_Simulator.Windows
 
         private void BtnSetMoveArea_DetectScreen_Click(object sender, RoutedEventArgs e)
         {
-            var windowInteropHelper = new System.Windows.Interop.WindowInteropHelper(mw);
-            var currentScreen = System.Windows.Forms.Screen.FromHandle(windowInteropHelper.Handle);
             var mwCtrl = mw.Core.Controller as MWController;
-
-            // 获取窗口的 DPI 信息
-            var hwndSource = System.Windows.Interop.HwndSource.FromHwnd(windowInteropHelper.Handle);
-            if (hwndSource != null && hwndSource.CompositionTarget != null)
-            {
-                var dpiScale = hwndSource.CompositionTarget.TransformToDevice;
-
-                // 使用 DPI 缩放调整当前屏幕的边界，然后将其转换为整数坐标的矩形
-                var dpiAdjustedBounds = new System.Drawing.Rectangle(
-                    (int)(currentScreen.Bounds.X / dpiScale.M11),
-                    (int)(currentScreen.Bounds.Y / dpiScale.M22),
-                    (int)(currentScreen.Bounds.Width / dpiScale.M11),
-                    (int)(currentScreen.Bounds.Height / dpiScale.M22));
-                if (mwCtrl != null)
-                    mwCtrl.ScreenBorder = dpiAdjustedBounds;
-            }
-            else
-            {
-                if (mwCtrl != null)
-                    // 如果无法获取 DPI 信息，回退到未调整的边界
-                    mwCtrl.ScreenBorder = currentScreen.Bounds;
-            }
-
-            try
-            {
-                var screens = System.Windows.Forms.Screen.AllScreens;
-                bool matchedScreen = false;
-                for (int i = 0; i < screens.Length; i++)
-                {
-                    if (screens[i].DeviceName == currentScreen.DeviceName)
-                    {
-                        mw.Set.GameScreenIndex = i;
-                        matchedScreen = true;
-                        break;
-                    }
-                }
-                if (!matchedScreen)
-                    mw.Set.GameScreenIndex = 0;
-            }
-            catch
-            {
-                mw.Set.GameScreenIndex = 0;
-            }
-
+            mwCtrl.SetNowScreenActivate();
             UpdateMoveAreaText();
         }
 
@@ -1778,6 +1739,21 @@ namespace VPet_Simulator.Windows
             mw.Set.Opacity = OpacitySlider.Value;
             if (mw.Set.OpacityMain)
                 mw.Opacity = mw.Set.Opacity;
+        }
+
+        private void AutoChangeWindowEvent_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            if(AutoChangeWindowEvent.IsChecked == true)
+            {
+                mw.Set.AutoChangeWindow = true;
+            }
+            else
+            {
+                mw.Set.AutoChangeWindow = false;
+            }
+            UpdateMoveAreaText();
         }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
