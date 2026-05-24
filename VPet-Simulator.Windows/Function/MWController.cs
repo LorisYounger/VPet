@@ -2,7 +2,6 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using VPet_Simulator.Core;
