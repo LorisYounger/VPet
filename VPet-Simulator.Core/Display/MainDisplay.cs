@@ -1,6 +1,5 @@
 ﻿using LinePutScript.Converter;
 using LinePutScript.Localization.WPF;
-using Panuon.WPF.UI;
 using System;
 using System.Diagnostics;
 using System.Linq;
