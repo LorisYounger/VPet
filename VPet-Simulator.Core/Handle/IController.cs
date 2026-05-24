@@ -32,11 +32,11 @@
         /// 获取桌宠所在屏幕是否为活动屏幕
         /// </summary>
         /// <returns></returns>
-        bool IfInActivateScreen();
+        bool IfInActivateScreen() => true;
         /// <summary>
         /// 将当前屏幕设置为活动屏幕（如果桌宠在多个屏幕上则以主要屏幕为准）
         /// </summary>
-        void SetNowScreenActivate();
+        void SetNowScreenActivate() { }
         ///// <summary>
         ///// 窗体宽度
         ///// </summary>
@@ -85,6 +85,6 @@
         /// <summary>
         /// 是否自动切换活动屏幕
         /// </summary>
-        bool AutoChangeWindow { get; }
+        bool AutoChangeWindow => false;
     }
 }
