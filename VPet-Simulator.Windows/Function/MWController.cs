@@ -109,11 +109,14 @@ namespace VPet_Simulator.Windows
                 if (mw.winBetterBuy != null && mw.winBetterBuy.Visibility == Visibility.Visible) return false;
                 if (mw.winWorkMenu != null && mw.winWorkMenu.Visibility == Visibility.Visible) return false;
                 if (mw.winMutiPlayer != null && mw.winMutiPlayer.Visibility == Visibility.Visible) return false;
+                for (int i = 0; i < mw.Windows.Count; i++)
+                {
+                    if (mw.Windows[i] != null && mw.Windows[i].Visibility == Visibility.Visible) return false;
+                }
             }
             catch { }
             return mw.Dispatcher.Invoke(() =>
             {
-
                 try
                 {
                     var screen = Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(mw).Handle);

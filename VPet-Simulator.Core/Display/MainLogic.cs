@@ -553,7 +553,7 @@ namespace VPet_Simulator.Core
                     Display(GraphType.SideHide_Left_Main, AnimatType.A_Start, DisplayBLoopingForce);
                     return true;
                 }
-                else
+                else if (Core.Controller.RePositionActive)
                 {//没有就回正
                     Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
                 }
@@ -568,7 +568,7 @@ namespace VPet_Simulator.Core
                     Display(GraphType.SideHide_Right_Main, AnimatType.A_Start, DisplayBLoopingForce);
                     return true;
                 }
-                else
+                else if (Core.Controller.RePositionActive)
                 {
                     Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio, 0);
                 }
