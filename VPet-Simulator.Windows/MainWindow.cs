@@ -2503,8 +2503,8 @@ namespace VPet_Simulator.Windows
                       Event_NewDay += like520;
                       like520();
                   }
-
-                  ActivityLogs.CollectionChanged += ActivityLogs_WriteFile;
+                  if (Set.DeBug)
+                      ActivityLogs.CollectionChanged += ActivityLogs_WriteFile;
               });
 
 
