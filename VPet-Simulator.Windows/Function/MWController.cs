@@ -142,7 +142,6 @@ namespace VPet_Simulator.Windows
                 var helper = new WindowInteropHelper(mw);
                 var currentScreen = Screen.FromHandle(helper.Handle);
                 var hwndSource = HwndSource.FromHwnd(helper.Handle);
-                var _rect = new Rect();
 
                 Rectangle logicalBounds;
 
