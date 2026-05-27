@@ -303,15 +303,10 @@ namespace VPet_Simulator.Windows
                 this["gameconfig"].SetBool("nofunction", !value);
             }
         }
-        bool autochangewindow;
         public bool AutoChangeWindow
         {
-            get => !autochangewindow;
-            set
-            {
-                autochangewindow = !value;
-                this["gameconfig"].SetBool("autochangewindow", !value);
-            }
+            get => !this["gameconfig"].GetBool("autochangewindow");
+            set => this["gameconfig"].SetBool("autochangewindow", !value);
         }
         /// <summary>
         /// 智能移动周期 (秒)
