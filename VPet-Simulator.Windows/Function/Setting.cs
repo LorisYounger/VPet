@@ -38,7 +38,6 @@ namespace VPet_Simulator.Windows
             enablefunction = !this["gameconfig"].GetBool("nofunction");
             autobuy = this["gameconfig"].GetBool("autobuy");
             autogift = this["gameconfig"].GetBool("autogift");
-            autochangewindow = !this["gameconfig"].GetBool("autochangewindow");
             this.mw = mw;
         }
 
