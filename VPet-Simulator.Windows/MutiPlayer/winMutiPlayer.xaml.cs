@@ -59,6 +59,18 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         }
         lb = lbt.Value;
         ShowLobbyInfo();
+        _ = Task.Run(() =>
+        {
+            if (int.TryParse(mw.GetVPetRoom("SteamRoomGetFixID", lobbyid: lb.Id.Value), out int FixID))
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    lbLFix.Text = 'V' + FixID.ToString();
+                    btnRels.Visibility = Visibility.Collapsed;
+                    panFixID.Visibility = Visibility.Visible;
+                });
+            }
+        });
     }
     public async void CreateLobby()
     {
@@ -210,15 +222,6 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             }
             mw.MutiPlayerStart(this);
             Log("已成功连接到访客表".Translate());
-
-            if (int.TryParse(mw.GetVPetRoom("SteamRoomGetFixID", lobbyid: lb.Id.Value), out int FixID))
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    lbLFix.Text = 'V' + FixID.ToString();
-                    panFixID.Visibility = Visibility.Visible;
-                });
-            }
 
             LoopP2PPacket();
         });
