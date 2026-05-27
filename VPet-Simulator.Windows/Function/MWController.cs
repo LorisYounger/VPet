@@ -112,7 +112,6 @@ namespace VPet_Simulator.Windows
 
                 try
                 {
-                    var window = Window.GetWindow(mw.Main);
                     var screen = Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(mw).Handle);
                     var screens = Screen.AllScreens;
                     for (int i = 0; i < screens.Length; i++)
