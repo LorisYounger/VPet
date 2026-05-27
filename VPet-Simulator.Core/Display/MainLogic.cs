@@ -548,8 +548,8 @@ namespace VPet_Simulator.Core
                 if (Core.Graph.FindName(GraphType.SideHide_Left_Main) != null)
                 {
                     Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - Core.Graph.GraphConfig.Data["side"][(gdbe)"left"], 0);
-                    if (Core.Controller.GetWindowsDistanceDown() < 0) Core.Controller.MoveWindows(0, Core.Controller.GetWindowsDistanceDown() - 1000 * Core.Controller.ZoomRatio);
-                    else if (Core.Controller.GetWindowsDistanceUp() < 0) Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp());
+                    if (Core.Controller.GetWindowsDistanceDown() < 0) Core.Controller.MoveWindows(0, Core.Controller.GetWindowsDistanceDown() / Core.Controller.ZoomRatio - 1000);
+                    else if (Core.Controller.GetWindowsDistanceUp() < 0) Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
                     Display(GraphType.SideHide_Left_Main, AnimatType.A_Start, DisplayBLoopingForce);
                     return true;
                 }
