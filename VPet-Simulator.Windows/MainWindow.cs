@@ -2493,6 +2493,18 @@ namespace VPet_Simulator.Windows
                       {
                           NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName);
                       }
+
+                  //这里写的都是共通的功能, 如果限定第一个MW使用的功能, 请前往
+
+                  if (GameSavesData.GameSave.Likability < 520)
+                      Core.Graph.GraphsName[GraphType.Idel].Remove("like520");
+                  else if (Core.Graph.FindGraph("like520", AnimatType.Single, IGameSave.ModeType.Happy) != null)
+                  {
+                      Event_NewDay += like520;
+                      like520();
+                  }
+
+                  ActivityLogs.CollectionChanged += ActivityLogs_WriteFile;
               });
 
 
@@ -2508,6 +2520,31 @@ namespace VPet_Simulator.Windows
             //    }));
             //}
 
+        }
+        public static object LogsLock = new object();
+        private void ActivityLogs_WriteFile(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                List<string> sb = new List<string>();
+                foreach (ActivityLog log in e.NewItems)
+                {
+                    sb.Add(log.ToString(Main));
+                }
+                string logPath = ExtensionValue.BaseDirectory + $"\\Logs{PrefixSave}.txt";
+                lock (LogsLock)
+                {
+                    if (File.Exists(logPath) && new FileInfo(logPath).Length > 1024 * 1024)
+                    {
+                        var allLines = File.ReadAllLines(logPath);
+                        if (allLines.Length > 2000)
+                        {
+                            File.WriteAllLines(logPath, allLines.Skip(allLines.Length - 2000));
+                        }
+                    }
+                    File.AppendAllLines(logPath, sb);
+                }
+            }
         }
 
         private void everydaygift()

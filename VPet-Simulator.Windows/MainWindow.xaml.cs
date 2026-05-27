@@ -339,6 +339,8 @@ namespace VPet_Simulator.Windows
                 }
 
 
+                //这里写的都是限定第一个MW使用的功能, 如果写共通, 请前往
+
                 //物品初始使用方法
                 Item.UseAction.Add("Food", [(imw,Item) =>
                   {//食物: 默认直接吃掉
@@ -419,13 +421,6 @@ namespace VPet_Simulator.Windows
                       }
                       return false;
                   }]);
-                if (GameSavesData.GameSave.Likability < 520)
-                    Core.Graph.GraphsName[GraphType.Idel].Remove("like520");
-                else if (Core.Graph.FindGraph("like520", AnimatType.Single, IGameSave.ModeType.Happy) != null)
-                {
-                    Event_NewDay += like520;
-                    like520();
-                }
             });
         }
 
