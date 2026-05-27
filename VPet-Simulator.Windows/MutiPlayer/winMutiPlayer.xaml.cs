@@ -53,7 +53,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         var lbt = (await SteamMatchmaking.JoinLobbyAsync((SteamId)lobbyid));
         if (!lbt.HasValue || lbt.Value.Owner.Id.Value == 0)
         {
-            MessageBoxX.Show("加入/创建访客表失败，请检查网络连接或重启游戏".Translate());
+            MessageBoxX.Show("加入访客表失败，可能是房间已关闭".Translate());
             Close();
             return;
         }
@@ -65,7 +65,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         var lbt = (await SteamMatchmaking.CreateLobbyAsync());
         if (!lbt.HasValue)
         {
-            MessageBoxX.Show("加入/创建访客表失败，请检查网络连接或重启游戏".Translate());
+            MessageBoxX.Show("创建访客表失败，请检查网络连接或重启游戏".Translate());
             Close();
             return;
         }
@@ -76,6 +76,17 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         IsHost = true;
         swAllowJoin.IsEnabled = true;
         ShowLobbyInfo();
+        _ = Task.Run(() =>
+        {
+            if (int.TryParse(mw.GetVPetRoom("SteamRoomSet", lobbyid: lb.Id.Value), out int FixID))
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    lbLFix.Text = 'V' + FixID.ToString();
+                    panFixID.Visibility = Visibility.Visible;
+                });
+            }
+        });
     }
     public static ImageSource ConvertToImageSource(Steamworks.Data.Image? img)
     {
@@ -199,6 +210,16 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             }
             mw.MutiPlayerStart(this);
             Log("已成功连接到访客表".Translate());
+
+            if (int.TryParse(mw.GetVPetRoom("SteamRoomGetFixID", lobbyid: lb.Id.Value), out int FixID))
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    lbLFix.Text = 'V' + FixID.ToString();
+                    panFixID.Visibility = Visibility.Visible;
+                });
+            }
+
             LoopP2PPacket();
         });
     }
@@ -722,5 +743,32 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             mw.DisplayFoodAnimation(graphName, imageSource);
         }
         public bool InConvenience() => IMPFriend.InConvenience(Main);
+    }
+
+    private void btnRels_Click(object sender, RoutedEventArgs e)
+    {
+        btnRels.IsEnabled = false;
+        Task.Run(() =>
+        {
+            if (!int.TryParse(mw.GetVPetRoom("SteamRoomReset", lobbyid: lb.Id.Value), out int FixID))
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    lbLFix.Text = "ERROR";
+                    btnRels.IsEnabled = true;
+                });
+                return;
+            }
+            Dispatcher.Invoke(() =>
+            {
+                lbLFix.Text = 'V' + FixID.ToString();
+
+            });
+            Thread.Sleep(3000);
+            Dispatcher.Invoke(() =>
+            {
+                btnRels.IsEnabled = true;
+            });
+        });
     }
 }

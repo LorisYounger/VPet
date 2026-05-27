@@ -551,7 +551,7 @@ namespace VPet_Simulator.Core
                 {//没有就回正
                     Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
                 }
-            }
+            }   
             else if (Core.Controller.GetWindowsDistanceRight() < -50 * Core.Controller.ZoomRatio)
             {
                 if (Core.Graph.FindName(GraphType.SideHide_Right_Main) != null)

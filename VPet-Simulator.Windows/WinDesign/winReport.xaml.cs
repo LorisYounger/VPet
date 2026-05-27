@@ -74,26 +74,14 @@ namespace VPet_Simulator.Windows
                 sb.Append($"&ver={mw.version}&repver=2&lang={LocalizeCore.CurrentCulture}");
                 sb.Append("&save=");
                 sb.Append(HttpUtility.UrlEncode(save));
-#pragma warning disable SYSLIB0014 // 类型或成员已过时
-                var request = (HttpWebRequest)WebRequest.Create(_url);
-#pragma warning restore SYSLIB0014 // 类型或成员已过时
-                request.Method = "POST";
-                request.ContentType = "application/x-www-form-urlencoded";//ContentType
+
+                using System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
                 byte[] byteData = Encoding.UTF8.GetBytes(sb.ToString());
-                int length = byteData.Length;
-                request.ContentLength = length;
-                using (Stream writer = request.GetRequestStream())
-                {
-                    writer.Write(byteData, 0, length);
-                    writer.Close();
-                    writer.Dispose();
-                }
-                string responseString;
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
-                    response.Dispose();
-                }
+                using System.Net.Http.ByteArrayContent content = new System.Net.Http.ByteArrayContent(byteData);
+                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded");
+                System.Net.Http.HttpResponseMessage httpResponse = client.PostAsync(_url, content).Result;
+                string responseString = httpResponse.Content.ReadAsStringAsync().Result;
+
                 if (responseString == "Report Error Success")
                 {
                     MessageBoxX.Show("您的反馈已提交成功,感谢您的反馈与提交\nVOS将会尽快处理您的反馈并做的更好".Translate(), "感谢您的反馈和提交".Translate());
@@ -117,7 +105,6 @@ namespace VPet_Simulator.Windows
             {
                 MessageBoxX.Show("反馈上传失败,可能是网络或其他问题导致无法上传\n欢迎加入虚拟主播模拟器群430081239手动反馈问题\n".Translate() + exp.ToString(), "反馈提交失败,遇到错误".Translate(), MessageBoxButton.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void MainGrid_SizeChanged(object sender, SizeChangedEventArgs e)

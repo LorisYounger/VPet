@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d"
         xmlns:pu="https://opensource.panuon.com/wpf-ui" Foreground="{StaticResource PrimaryText}"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-        Title="{ll:Str 访客表}" MinHeight="400" Height="{ll:Dbe MutiPlayerHeight_400, DefValue=400}" Width="{ll:Dbe MutiPlayerWidth_660, DefValue=660}" Closed="Window_Closed"
+        Title="{ll:Str 访客表}" MinHeight="400" Height="{ll:Dbe MutiPlayerHeight_400, DefValue=400}"
+        Width="{ll:Dbe MutiPlayerWidth_660, DefValue=660}" Closed="Window_Closed"
         Style="{DynamicResource BaseWindowXStyle}" Background="{DynamicResource PrimaryLighter}"
         FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}" MaxHeight="400"
         ResizeMode="CanMinimize" Closing="Window_Closing">
@@ -42,15 +43,31 @@
                     </TextBlock>
                     <StackPanel Orientation="Horizontal" Opacity="0.7">
                         <TextBlock VerticalAlignment="Center"
-                                FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}">ID: </TextBlock> 
+                                FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}">ID:</TextBlock>
                         <TextBox x:Name="lbLid" VerticalAlignment="Center"
                                 Background="{DynamicResource SecondaryTrans4}" BorderThickness="0"
                                 FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}"
                                 Margin="5,0,0,0" />
                     </StackPanel>
+                    <StackPanel x:Name="panFixID" Orientation="Horizontal" Opacity="0.7" Visibility="Collapsed"
+                            ToolTip="{ll:Str '可以通过固定ID让其他人始终能够加入到你的房间'}">
+                        <TextBlock VerticalAlignment="Center" Text="{ll:Str 固定ID}"
+                                FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}" />
+                        <TextBlock VerticalAlignment="Center" Text=":"
+                                FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}" />
+                        <TextBox x:Name="lbLFix" VerticalAlignment="Center"
+                                Background="{DynamicResource SecondaryTrans4}" BorderThickness="0"
+                                FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}"
+                                Margin="5,0,0,0" />
+                        <Button x:Name="btnRels" Content="&#xF064;" Margin="5,0,0,0" Padding="1"
+                                FontFamily="pack://application:,,,/Res/#remixicon" ToolTip="{ll:Str 刷新固定ID}"
+                                Style="{DynamicResource ThemedButtonStyle}"
+                                FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}"
+                                Click="btnRels_Click" />
+                    </StackPanel>
                     <pu:Switch x:Name="swAllowJoin"
                             FontSize="{Binding FontSize, Converter={x:Static pu:Converters.DoublePlusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}"
-                            BorderBrush="#AFAFAF" ToggleBrush="#AFAFAF" Padding="2,0,0,0" BoxHeight="13" BoxWidth="21" 
+                            BorderBrush="#AFAFAF" ToggleBrush="#AFAFAF" Padding="2,0,0,0" BoxHeight="13" BoxWidth="21"
                             Foreground="#AFAFAF" CheckedForeground="{DynamicResource PrimaryText}"
                             CheckedBackground="{DynamicResource PrimaryDarker}"
                             CheckedBorderBrush="{DynamicResource PrimaryDarker}" Content="{ll:Str 允许好友加入}"
@@ -77,7 +94,8 @@
         <TabItem Header="{ll:Str 消息日志}">
             <TextBox x:Name="tbLog" Margin="0" Padding="7" VerticalContentAlignment="Stretch" BorderThickness="0"
                     Background="Transparent" Foreground="{DynamicResource DARKPrimaryDarker}" IsReadOnly="True"
-                    pu:ScrollViewerHelper.MouseWheelUnit="5" TextWrapping="Wrap" HorizontalContentAlignment="Left" VerticalScrollBarVisibility="Visible" />
+                    pu:ScrollViewerHelper.MouseWheelUnit="5" TextWrapping="Wrap" HorizontalContentAlignment="Left"
+                    VerticalScrollBarVisibility="Visible" />
         </TabItem>
     </TabControl>
 </pu:WindowX>
