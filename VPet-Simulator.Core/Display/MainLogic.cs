@@ -537,6 +537,10 @@ namespace VPet_Simulator.Core
         /// <returns>是否成功进入侧边隐藏模式</returns>
         private bool MoveSideHideCheck()
         {
+            if (Core.Controller.IfInActivateScreen() == false && Core.Controller.AutoChangeWindow == true)
+            {
+                Core.Controller.SetNowScreenActivate();
+            }
             //判断是否靠边,如果靠边就进入侧边隐藏模式
             if (Core.Controller.GetWindowsDistanceLeft() < -50 * Core.Controller.ZoomRatio)
             {
@@ -544,6 +548,8 @@ namespace VPet_Simulator.Core
                 if (Core.Graph.FindName(GraphType.SideHide_Left_Main) != null)
                 {
                     Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - Core.Graph.GraphConfig.Data["side"][(gdbe)"left"], 0);
+                    if (Core.Controller.GetWindowsDistanceDown() < 0) Core.Controller.MoveWindows(0, Core.Controller.GetWindowsDistanceDown() / Core.Controller.ZoomRatio - 100);
+                    else if (Core.Controller.GetWindowsDistanceUp() < 0) Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
                     Display(GraphType.SideHide_Left_Main, AnimatType.A_Start, DisplayBLoopingForce);
                     return true;
                 }
@@ -557,6 +563,8 @@ namespace VPet_Simulator.Core
                 if (Core.Graph.FindName(GraphType.SideHide_Right_Main) != null)
                 {
                     Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 500 - Core.Graph.GraphConfig.Data["side"][(gdbe)"right"], 0);
+                    if (Core.Controller.GetWindowsDistanceDown() < 0) Core.Controller.MoveWindows(0, Core.Controller.GetWindowsDistanceDown() / Core.Controller.ZoomRatio - 100);
+                    else if (Core.Controller.GetWindowsDistanceUp() < 0) Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
                     Display(GraphType.SideHide_Right_Main, AnimatType.A_Start, DisplayBLoopingForce);
                     return true;
                 }

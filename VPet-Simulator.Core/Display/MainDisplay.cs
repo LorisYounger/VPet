@@ -374,7 +374,7 @@ namespace VPet_Simulator.Core
                     break;
                 case -1:
                     rasetype = int.MinValue;
-                    Core.Controller.RePostionActive = !Core.Controller.CheckPosition();
+                    Core.Controller.RePositionActive = !Core.Controller.CheckPosition();
                     //判断侧边隐藏
                     if(!MoveSideHideCheck())
                     {

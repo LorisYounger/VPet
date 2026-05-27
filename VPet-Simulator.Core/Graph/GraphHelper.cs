@@ -535,9 +535,9 @@ namespace VPet_Simulator.Core
 
             private void StopMoving(Main m)
             {
-                if (m.Core.Controller.RePostionActive)
+                if (m.Core.Controller.RePositionActive)
                     m.Core.Controller.ResetPosition();
-                m.Core.Controller.RePostionActive = !m.Core.Controller.CheckPosition();
+                m.Core.Controller.RePositionActive = !m.Core.Controller.CheckPosition();
                 m.MoveTimer.Enabled = false;
 
                 m.Display(Graph, AnimatType.C_End, () => { m.Event_MoveEndInvoke(this); m.DisplayToNomal(); });
