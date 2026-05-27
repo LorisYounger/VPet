@@ -108,6 +108,7 @@ namespace VPet_Simulator.Windows
                 if (mw.winSetting != null && mw.winSetting.Visibility == Visibility.Visible) return false;
                 if (mw.winBetterBuy != null && mw.winBetterBuy.Visibility == Visibility.Visible) return false;
                 if (mw.winWorkMenu != null && mw.winWorkMenu.Visibility == Visibility.Visible) return false;
+                if (mw.winMutiPlayer != null && mw.winMutiPlayer.Visibility == Visibility.Visible) return false;
             }
             catch { }
             return mw.Dispatcher.Invoke(() =>
@@ -142,6 +143,7 @@ namespace VPet_Simulator.Windows
             if (mw.winSetting != null && mw.winSetting.Visibility == Visibility.Visible) return;
             if (mw.winBetterBuy != null && mw.winBetterBuy.Visibility == Visibility.Visible) return;
             if (mw.winWorkMenu != null && mw.winWorkMenu.Visibility == Visibility.Visible) return;
+            if (mw.winMutiPlayer != null && mw.winMutiPlayer.Visibility == Visibility.Visible) return;
             mw.Dispatcher.Invoke(() =>
             {
                 var helper = new WindowInteropHelper(mw);
