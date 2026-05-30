@@ -293,7 +293,7 @@ namespace VPet_Simulator.Core
         public GameSave(string name)
         {
             Name = name;
-            Money = 100;
+            Money = 1000;
             Exp = 0;
             Strength = 100;
             StrengthFood = 100;
