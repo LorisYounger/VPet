@@ -385,9 +385,9 @@ namespace VPet_Simulator.Windows
                               var chosenfood = imw.Foods.FindAll(x=>x.Price > 10 && x.Price < moneylimit);
                               if(chosenfood.Count == 0)
                                     return false;
-                              imw.ItemsAdd(chosenfood[Function.Rnd.Next(Foods.Count)].Clone());
-                              imw.ItemsAdd(chosenfood[Function.Rnd.Next(Foods.Count)].Clone());
-                              imw.ItemsAdd(chosenfood[Function.Rnd.Next(Foods.Count)].Clone());
+                              imw.ItemsAdd(chosenfood[Function.Rnd.Next(chosenfood.Count)].Clone());
+                              imw.ItemsAdd(chosenfood[Function.Rnd.Next(chosenfood.Count)].Clone());
+                              imw.ItemsAdd(chosenfood[Function.Rnd.Next(chosenfood.Count)].Clone());
                               Item.Consume(imw);
                               return true;
                       }
