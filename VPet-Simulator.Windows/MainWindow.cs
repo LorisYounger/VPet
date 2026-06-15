@@ -21,6 +21,7 @@ using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using VPet_Simulator.Core;
@@ -2841,7 +2842,10 @@ namespace VPet_Simulator.Windows
         }
         private void DisplayPinch_loop()
         {
-            if (Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
+            // 检测鼠标按钮状态: 即使鼠标在窗口外也能检测到释放
+            bool mouseStillPressed = Mouse.LeftButton == MouseButtonState.Pressed;
+
+            if (mouseStillPressed && Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
             {
                 if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < Core.Save.FeelingMax)
                 {
@@ -2854,6 +2858,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
+                Main.isPress = false;  // 确保在任何情况下释放
                 Main.DisplayCEndtoNomal("pinch");
             }
         }

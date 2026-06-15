@@ -237,7 +237,12 @@ namespace VPet_Simulator.Core
                 switch (Control.Type)
                 {
                     case TaskControl.ControlType.Stop:
-                        Control.EndAction?.Invoke();
+
+                        if (Control.EndAction != null)
+                        {
+                            This.Dispatcher.BeginInvoke(Control.EndAction);
+                        }
+
                         return;
                     case TaskControl.ControlType.Status_Stoped:
                         return;
@@ -259,7 +264,12 @@ namespace VPet_Simulator.Core
                             else
                             {
                                 Control.Type = TaskControl.ControlType.Status_Stoped;
-                                Control.EndAction?.Invoke(); //运行结束动画时事件                                
+
+                                if (Control.EndAction != null)
+                                {
+                                    This.Dispatcher.BeginInvoke(Control.EndAction);
+                                }
+
                                 return;
                             }
                         //要下一步
