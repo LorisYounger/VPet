@@ -2934,29 +2934,30 @@ namespace VPet_Simulator.Windows
 
             bool genck = false;
             long steamId = (long)SteamClient.SteamId.Value;
-        gencheck:
-            if (authheycache != 0)
+
+            while (true)
             {
-                DateTime dt = GetDateFromAuthKey(authheycache);
-                if (!(dt > DateTime.UtcNow.AddDays(1) || dt < DateTime.UtcNow.AddHours(-2)))
+                if (authheycache != 0)
                 {
-                    return authheycache;
+                    DateTime dt = GetDateFromAuthKey(authheycache);
+                    if (!(dt > DateTime.UtcNow.AddDays(1) || dt < DateTime.UtcNow.AddHours(-2)))
+                    {
+                        return authheycache;
+                    }
                 }
-            }
-            Leaderboard? leaderboard = await SteamUserStats.FindLeaderboardAsync("chatgpt_auth");
-            if (!leaderboard.HasValue)
-            {
-                return 0;
-            }
-            else
-            {
+
+                Leaderboard? leaderboard = await SteamUserStats.FindLeaderboardAsync("chatgpt_auth");
+                if (!leaderboard.HasValue)
+                {
+                    return 0;
+                }
+
                 var lb = leaderboard.Value;
                 LeaderboardEntry[] key = await lb.GetScoresAroundUserAsync(0, 0);
                 if (key == null || key.Length == 0 || genck)
                 {
-                    int hoursSince2020 = (int)(DateTime.UtcNow - StartDate).TotalHours;
-                    int lastFourDigits = (int)(steamId % 10000);
-                    authheycache = hoursSince2020 * 10000 + lastFourDigits;
+                    int hoursSince2020 = (int)(DateTime.UtcNow - StartDate).TotalHours;                  
+                    authheycache = hoursSince2020 * 10000 + Function.Rnd.Next(10000);
                     await leaderboard?.ReplaceScore(authheycache);
                     return authheycache;
                 }
@@ -2964,9 +2965,7 @@ namespace VPet_Simulator.Windows
                 {
                     authheycache = key.First().Score;
                     genck = true;
-                    goto gencheck;
                 }
-
             }
         }
         /// <summary>
