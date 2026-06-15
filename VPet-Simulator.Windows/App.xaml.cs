@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Interop;
 using VPet_Simulator.Windows.Interface;
@@ -16,6 +17,8 @@ namespace VPet_Simulator.Windows
     {
         public App() : base()
         {
+            Environment.CurrentDirectory =
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
 #if !DEBUG
             base.DispatcherUnhandledException += (s, e) => { e.Handled = true; UnhandledException(e.Exception, false); };
             AppDomain.CurrentDomain.UnhandledException += (s, e) => { UnhandledException((e.ExceptionObject as Exception), true); };
