@@ -559,7 +559,6 @@ public partial class MPFriends : WindowX, IMPFriend
         msg.SetContent(Interact.TouchPinch);
         wmp.SendMessageALL(msg);
 
-        // 检测鼠标按钮状态: 即使鼠标在窗口外也能检测到释放
         bool mouseStillPressed = Mouse.LeftButton == MouseButtonState.Pressed;
 
         if (mouseStillPressed && Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
@@ -568,7 +567,7 @@ public partial class MPFriends : WindowX, IMPFriend
         }
         else
         {
-            Main.isPress = false;  // 确保在任何情况下释放
+            Main.isPress = false;
             Main.DisplayCEndtoNomal("pinch");
         }
     }

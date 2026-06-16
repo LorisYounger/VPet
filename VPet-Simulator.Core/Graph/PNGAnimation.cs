@@ -285,7 +285,10 @@ namespace VPet_Simulator.Core
         {
             if (!IsReady)
             {
-                EndAction?.Invoke();
+                if (EndAction != null)
+                {
+                    parant.Dispatcher.BeginInvoke(EndAction);
+                }
                 return;
             }
             if (Control?.PlayState == true)
@@ -347,7 +350,10 @@ namespace VPet_Simulator.Core
         {
             if (!IsReady)
             {
-                EndAction?.Invoke();
+                if (EndAction != null)
+                {
+                    img.Dispatcher.BeginInvoke(EndAction);
+                }
                 return Task.CompletedTask;
             }
             if (Control?.PlayState == true)
