@@ -1720,7 +1720,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            if(SwitchOpacity.IsChecked == true)
+            if (SwitchOpacity.IsChecked == true)
             {
                 mw.Set.OpacityHitThrough = true;
                 mw.Set.OpacityMain = true;
@@ -1745,7 +1745,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            if(AutoChangeWindowEvent.IsChecked == true)
+            if (AutoChangeWindowEvent.IsChecked == true)
             {
                 mw.Set.AutoChangeWindow = true;
             }
@@ -1754,6 +1754,11 @@ namespace VPet_Simulator.Windows
                 mw.Set.AutoChangeWindow = false;
             }
             UpdateMoveAreaText();
+        }
+
+        private void BC_Click(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() => ExtensionFunction.StartURL($"https://bettercontribution.exlb.net/login#steamid={mw.SteamID}&auth={mw.GenerateAuthKey().Result}&lang={LocalizeCore.CurrentCulture}"));
         }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)

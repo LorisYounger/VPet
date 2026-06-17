@@ -897,7 +897,7 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public string GetVPetRoom(string action, int fixID = 0, ulong lobbyid = 0)
         {
-            string RequestURL = $"https://report.exlb.net/VPET/{action}?hoststeamid={SteamID}&fixid={fixID}&lobbyid={lobbyid}&checkkey={GenerateAuthKey()}";
+            string RequestURL = $"https://report.exlb.net/VPET/{action}?hoststeamid={SteamID}&fixid={fixID}&lobbyid={lobbyid}&checkkey={GenerateAuthKey().Result}";
             using System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
             try
             {
