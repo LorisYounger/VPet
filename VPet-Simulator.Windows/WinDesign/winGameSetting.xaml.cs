@@ -1758,7 +1758,7 @@ namespace VPet_Simulator.Windows
 
         private void BC_Click(object sender, RoutedEventArgs e)
         {
-            Task.Run(() => ExtensionFunction.StartURL($"https://bettercontribution.exlb.net/login#steamid={mw.SteamID}&auth={mw.GenerateAuthKey().Result}&lang={LocalizeCore.CurrentCulture}"));
+            Task.Run(() => ExtensionFunction.StartURL($"https://bettercontribution.exlb.net/shop#steamid={mw.SteamID}&checkkey={mw.GenerateAuthKey().Result}&lang={LocalizeCore.CurrentCulture}"));
         }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
