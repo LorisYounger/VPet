@@ -300,7 +300,7 @@ public partial class winWorkMenu : WindowX
         if (nowwork != null || nowworkdisplay != null)
         {
             mw.Set["workmenu"].SetString("DIY_TEXT" + LsbCategory.SelectedIndex, tbDIYName.Text);
-            if (cbDIYName.IsChecked == true)
+            if (cbDIYName.IsChecked == true && !string.IsNullOrWhiteSpace(tbDIYName.Text))
                 nowworkdisplay.nametrans = tbDIYName.Text;
             if (mw.Main.StartWork(nowworkdisplay))
                 Close();
@@ -315,6 +315,9 @@ public partial class winWorkMenu : WindowX
         AllowChange = false;
         _starDetails.Clear();
         mw.WorkStarMenu.Items.Clear();
+        mw.Main.ToolBar.MenuStudy.Items.Clear();
+        mw.Main.ToolBar.MenuWork.Items.Clear();
+        mw.Main.ToolBar.MenuPlay.Items.Clear();
         //更新星标
         foreach (var v in mw.WorkStar())
         {
@@ -325,7 +328,24 @@ public partial class winWorkMenu : WindowX
             };
             mi.Click += (s, e) => mw.Main.ToolBar.StartWork(v.Double(mw.Set["workmenu"].GetInt("double_" + v.Name, 1)));
             mw.WorkStarMenu.Items.Add(mi);
-        }
+            mi = new MenuItem()
+            {
+                Header = v.NameTrans
+            };
+            mi.Click += (s, e) => mw.Main.ToolBar.StartWork(v.Double(mw.Set["workmenu"].GetInt("double_" + v.Name, 1)));
+            switch (v.Type)
+            {
+                case Work.WorkType.Work:
+                    mw.Main.ToolBar.MenuWork.Items.Add(mi);
+                    break;
+                case Work.WorkType.Study:
+                    mw.Main.ToolBar.MenuStudy.Items.Add(mi);
+                    break;
+                case Work.WorkType.Play:
+                    mw.Main.ToolBar.MenuPlay.Items.Add(mi);
+                    break;
+            }
+        }       
         if (detailTypes.ItemsSource == _starDetails)
         {
             detailTypes_SelectionChanged(null, null);
