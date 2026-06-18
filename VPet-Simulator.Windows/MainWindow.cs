@@ -1783,10 +1783,16 @@ namespace VPet_Simulator.Windows
                   }
                   else
                   {
-                      Main.ToolBar.MenuWork.Click += (x, y) =>
+                      Main.ToolBar.MenuWork.MouseDoubleClick += (x, y) =>
                       {
                           Main.ToolBar.Visibility = Visibility.Collapsed;
                           ShowWorkMenu(Work.WorkType.Work);
+                      };
+                      Main.ToolBar.MenuWork.Click += (x, y) =>
+                      {
+                          Main.ToolBar.Visibility = Visibility.Collapsed;
+                          if (Main.ToolBar.MenuWork.Items.Count == 0)
+                              ShowWorkMenu(Work.WorkType.Work);
                       };
                   }
                   if (ss.Count == 0)
@@ -1795,10 +1801,15 @@ namespace VPet_Simulator.Windows
                   }
                   else
                   {
-                      Main.ToolBar.MenuStudy.Click += (x, y) =>
+                      Main.ToolBar.MenuStudy.MouseDoubleClick += (x, y) =>
                       {
                           Main.ToolBar.Visibility = Visibility.Collapsed;
                           ShowWorkMenu(Work.WorkType.Study);
+                      };
+                      Main.ToolBar.MenuStudy.Click += (x, y) =>
+                      {
+                          Main.ToolBar.Visibility = Visibility.Collapsed;
+                          if (Main.ToolBar.MenuStudy.Items.Count == 0) ShowWorkMenu(Work.WorkType.Study);
                       };
                   }
                   if (ps.Count == 0)
@@ -1807,10 +1818,15 @@ namespace VPet_Simulator.Windows
                   }
                   else
                   {
-                      Main.ToolBar.MenuPlay.Click += (x, y) =>
+                      Main.ToolBar.MenuPlay.MouseDoubleClick += (x, y) =>
                       {
                           Main.ToolBar.Visibility = Visibility.Collapsed;
                           ShowWorkMenu(Work.WorkType.Play);
+                      };
+                      Main.ToolBar.MenuPlay.Click += (x, y) =>
+                      {
+                          Main.ToolBar.Visibility = Visibility.Collapsed;
+                          if (Main.ToolBar.MenuPlay.Items.Count == 0) ShowWorkMenu(Work.WorkType.Play);
                       };
                   }
                   WorkStarMenu = new System.Windows.Controls.MenuItem()
@@ -2956,7 +2972,7 @@ namespace VPet_Simulator.Windows
                 LeaderboardEntry[] key = await lb.GetScoresAroundUserAsync(0, 0);
                 if (key == null || key.Length == 0 || genck)
                 {
-                    int hoursSince2020 = (int)(DateTime.UtcNow - StartDate).TotalHours;                  
+                    int hoursSince2020 = (int)(DateTime.UtcNow - StartDate).TotalHours;
                     authheycache = hoursSince2020 * 10000 + Function.Rnd.Next(10000);
                     await leaderboard?.ReplaceScore(authheycache);
                     return authheycache;
