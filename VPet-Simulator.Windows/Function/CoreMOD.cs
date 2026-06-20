@@ -368,9 +368,9 @@ namespace VPet_Simulator.Windows
                                             authtype = "[认证]".Translate();
                                     }
                                     else if (!(certificate.Issuer.Contains("Microsoft Corporation") ||
-                                        certificate.Issuer.Contains(".NET Foundation Projects")) ||
+                                        certificate.Issuer.Contains(".NET Foundation Projects") ||
                                         certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US" ||
-                                        certificate.Issuer == "CN=Certum Extended Validation Code Signing 2021 CA, O=Asseco Data Systems S.A., C=PL"
+                                        certificate.Issuer == "CN=Certum Extended Validation Code Signing 2021 CA, O=Asseco Data Systems S.A., C=PL")
                                         && !IsPassMOD(mw))
                                     {//不是通过模组,不加载
                                         SuccessLoad = false;
@@ -405,6 +405,7 @@ namespace VPet_Simulator.Windows
                             {
                                 if (loadfile[tmpfi.Name][(gbol)"ignoreError"])
                                     continue;
+                                Console.WriteLine($"{Name}:Load DLL {tmpfi.FullName} failed: {e.Message}");
                                 ErrorMessage = e.ToString();
                                 SuccessLoad = false;
                             }
@@ -418,6 +419,7 @@ namespace VPet_Simulator.Windows
             }
             catch (Exception e)
             {
+                Console.WriteLine("{Name}:Error {e.Message}");
                 ErrorMessage = e.Message;
                 Tag.Add("该模组已损坏");
                 SuccessLoad = false;
