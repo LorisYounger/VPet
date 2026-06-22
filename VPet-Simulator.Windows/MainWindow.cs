@@ -2094,11 +2094,11 @@ namespace VPet_Simulator.Windows
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
                   {
                       if (LocalizeCore.CurrentCulture == "zh-Hans")
-                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
+                          ExtensionFunction.StartURL("https://wiki.exlb.net/vpet/tutorial");
                       else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
+                          ExtensionFunction.StartURL("https://wiki.exlb.net/zh-hant/vpet/tutorial");
                       else
-                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
+                          ExtensionFunction.StartURL("https://wiki.exlb.net/en/vpet/tutorial");
                   });
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "反馈中心".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winReport(this).Show(); });
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "设置面板".Translate(), () =>

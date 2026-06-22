@@ -1106,7 +1106,7 @@
                         <LineBreak />
                         <Run FontSize="12" FontStyle="Italic" Text="{ll:Str '由于游戏暂未开发完毕,该名单并非完整名单.将在正式版完成前修改'}" /><LineBreak /><LineBreak />
                          <Hyperlink Click="BC_Click">
-                             <Run Text="{ll:Str '前往 更好买:贡献兑换'}" />
+                             <Run x:Name="run_BC" Text="" />
                          </Hyperlink>
                     </TextBlock>
                 </Grid>
