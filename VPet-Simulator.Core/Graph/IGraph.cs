@@ -63,6 +63,26 @@ namespace VPet_Simulator.Core
         {
             Control.Type = TaskControl.ControlType.Continue;
         }
+
+        /// <summary>
+        /// 动画文件路径, 可能是文件夹或文件
+        /// </summary>
+        string Path { get; }
+        /// <summary>
+        /// 上次使用时间戳, 用于判断是否需要释放资源
+        /// </summary>
+        long LastUseTimeTicks => 0;
+
+        /// <summary>
+        /// 修改最后使用时间为当前时间，以便在清理空闲缓存时判断是否需要清理
+        /// </summary>
+        void Touch() { }
+        /// <summary>
+        /// 清理空闲缓存, 如果该动画长时间未使用, 则释放资源
+        /// </summary>
+        /// <param name="nowTicks">当前时间</param>
+        void CleanupIdleCache(long nowTicks) { }
+
         /// <summary>
         /// 指示该ImageRun支持
         /// </summary>
@@ -76,10 +96,6 @@ namespace VPet_Simulator.Core
             /// <param name="image">额外图片</param>
             void Run(Decorator parant, ImageSource image, Action EndAction = null);
         }
-        /// <summary>
-        /// 动画文件路径, 可能是文件夹或文件
-        /// </summary>
-        string Path { get; }
 
         /// <summary>
         /// 动画控制类

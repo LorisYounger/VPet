@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
@@ -23,7 +24,13 @@ namespace VPet_Simulator.Core
         /// 桌宠图形渲染的分辨率,越高图形越清晰
         /// </summary>
         public int Resolution { get; set; } = 1000;
+        /// <summary>
+        /// 动画缓存空闲超时时间,超过该时间未使用的动画将被释放,单位 Ticks
+        /// </summary>
+        public long IdleCacheTimeout = TimeSpan.FromMinutes(2).Ticks;
+
         public readonly Dispatcher Dispatcher;
+        public readonly Timer CleanTimer;
         public GraphCore(int resolution, Dispatcher dispatcher)
         {
             Dispatcher = dispatcher;
@@ -31,6 +38,16 @@ namespace VPet_Simulator.Core
                 Directory.CreateDirectory(CachePath);
             CommConfig["Cache"] = new List<string>();
             Resolution = resolution;
+            CleanTimer = new Timer((_) =>
+            {
+                if (GraphsALL == null)
+                    return;
+                long cleanTicks = DateTime.Now.Ticks - IdleCacheTimeout;
+                for (int i = 0; i < GraphsALL.Count; i++)
+                {
+                    GraphsALL[i].CleanupIdleCache(cleanTicks);
+                }
+            }, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
         }
 
         public static string CachePath = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName + @"\cache";
@@ -43,6 +60,10 @@ namespace VPet_Simulator.Core
         /// 图像字典 动画名字->状态+动作->动画
         /// </summary>
         public Dictionary<string, Dictionary<AnimatType, List<IGraph>>> GraphsList = new Dictionary<string, Dictionary<AnimatType, List<IGraph>>>();
+        /// <summary>
+        /// 所有图像列表, 用于释放资源
+        /// </summary>
+        public List<IGraph> GraphsALL = new List<IGraph>();
         /// <summary>
         /// 通用UI资源
         /// </summary>
@@ -77,6 +98,7 @@ namespace VPet_Simulator.Core
                 d3.Add(graph.GraphInfo.Animat, l3);
             }
             l3.Add(graph);
+            GraphsALL.Add(graph);
         }
 
         /// <summary>
@@ -183,24 +205,19 @@ namespace VPet_Simulator.Core
 
         public void Dispose()
         {
+            CleanTimer.Dispose();
             GraphConfig = null;
-           if(GraphsList != null)
-                foreach (var outerDict in GraphsList.Values)
+            if (GraphsALL != null)
+                foreach (var graph in GraphsALL)
                 {
-                    foreach (var innerDict in outerDict.Values)
-                    {
-                        foreach (var graph in innerDict)
-                        {
-                            graph.Dispose();
-                        }
-                        innerDict.Clear(); 
-                    }
-                    outerDict.Clear();
+                    graph.Dispose();
                 }
+            GraphsALL.Clear();
             GraphsList.Clear();
             GraphsName.Clear();
             CommUIElements.Clear();
             CommConfig.Clear();
+            GraphsALL = null;
             CommConfig = null;
             CommUIElements = null;
             GraphsName = null;

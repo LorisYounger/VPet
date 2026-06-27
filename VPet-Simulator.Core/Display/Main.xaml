@@ -9,8 +9,8 @@
                 MouseMove="MainGrid_MouseWave" MouseEnter="MainGrid_MouseEnter" MouseLeave="MainGrid_MouseLeave">
             <MediaElement x:Name="VoicePlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" x:FieldModifier="public" />
             <Grid x:Name="UIGrid_Back" x:FieldModifier="public" VerticalAlignment="Top" Width="500" />
-            <Border x:Name="PetGrid" Height="500" VerticalAlignment="Top" Width="500" x:FieldModifier="public" />
-            <Border x:Name="PetGrid2" Height="500" VerticalAlignment="Top" Width="500" x:FieldModifier="public"
+            <Decorator x:Name="PetGrid" Height="500" VerticalAlignment="Top" Width="500" x:FieldModifier="public" />
+            <Decorator x:Name="PetGrid2" Height="500" VerticalAlignment="Top" Width="500" x:FieldModifier="public"
                     Visibility="Collapsed" />
             <Grid x:Name="UIGrid" x:FieldModifier="public" VerticalAlignment="Top" Width="500" />
             <Label x:Name="LabelDisplay" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"
