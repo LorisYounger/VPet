@@ -295,7 +295,7 @@ namespace VPet_Simulator.Windows
                         {
                             if (winMutiPlayer == null)
                             {
-                                winInputBox.Show(this, "请输入访客表ID/固定ID".Translate(), "加入访客表".Translate(), "1860000", (id) =>
+                                winInputBox.Show(this, "请输入访客表ID/固定ID".Translate(), "加入访客表".Translate(), "1860000",async (id) =>
                                 {
                                     if (ulong.TryParse(id, NumberStyles.HexNumber, null, out ulong lid))
                                     {
@@ -304,7 +304,7 @@ namespace VPet_Simulator.Windows
                                     }
                                     else if ((id.StartsWith('V') || id.StartsWith('v')) && int.TryParse(id[1..], out int fixedid))
                                     {
-                                        if (ulong.TryParse(GetVPetRoom("SteamRoomGetLobbyID", fixID: fixedid), out lid) && lid > 1860000)
+                                        if (ulong.TryParse(await GetVPetRoom("SteamRoomGetLobbyID", fixID: fixedid), out lid) && lid > 1860000)
                                         {
                                             winMutiPlayer = new winMutiPlayer(this, lid);
                                             winMutiPlayer.Show();
@@ -895,9 +895,10 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 从VPET服务器获取访客表相关信息的接口
         /// </summary>
-        public string GetVPetRoom(string action, int fixID = 0, ulong lobbyid = 0)
+        public async Task<string> GetVPetRoom(string action, int fixID = 0, ulong lobbyid = 0)
         {
-            string RequestURL = $"https://report.exlb.net/VPET/{action}?hoststeamid={SteamID}&fixid={fixID}&lobbyid={lobbyid}&checkkey={GenerateAuthKey().Result}";
+            var checkkey = await GenerateAuthKey();
+            string RequestURL = $"https://report.exlb.net/VPET/{action}?hoststeamid={SteamID}&fixid={fixID}&lobbyid={lobbyid}&checkkey={checkkey}";
             using System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
             try
             {

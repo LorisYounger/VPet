@@ -2962,19 +2962,26 @@ namespace VPet_Simulator.Windows
                     }
                 }
 
-                Leaderboard? leaderboard = await SteamUserStats.FindLeaderboardAsync("chatgpt_auth");
+                // 加 ConfigureAwait(false)
+                Leaderboard? leaderboard = await SteamUserStats
+                    .FindLeaderboardAsync("chatgpt_auth")
+                    .ConfigureAwait(false);
+
                 if (!leaderboard.HasValue)
-                {
                     return 0;
-                }
 
                 var lb = leaderboard.Value;
-                LeaderboardEntry[] key = await lb.GetScoresAroundUserAsync(0, 0);
+
+                // 加 ConfigureAwait(false)
+                LeaderboardEntry[] key = await lb
+                    .GetScoresAroundUserAsync(0, 0)
+                    .ConfigureAwait(false);
+
                 if (key == null || key.Length == 0 || genck)
                 {
                     int hoursSince2020 = (int)(DateTime.UtcNow - StartDate).TotalHours;
                     authheycache = hoursSince2020 * 10000 + Function.Rnd.Next(10000);
-                    await leaderboard?.ReplaceScore(authheycache);
+                    await lb.ReplaceScore(authheycache).ConfigureAwait(false);
                     return authheycache;
                 }
                 else

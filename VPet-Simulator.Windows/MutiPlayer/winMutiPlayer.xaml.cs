@@ -59,9 +59,9 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         }
         lb = lbt.Value;
         ShowLobbyInfo();
-        _ = Task.Run(() =>
+        _ = Task.Run(async () =>
         {
-            if (int.TryParse(mw.GetVPetRoom("SteamRoomGetFixID", lobbyid: lb.Id.Value), out int FixID))
+            if (int.TryParse(await mw.GetVPetRoom("SteamRoomGetFixID", lobbyid: lb.Id.Value), out int FixID))
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -88,9 +88,9 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         IsHost = true;
         swAllowJoin.IsEnabled = true;
         ShowLobbyInfo();
-        _ = Task.Run(() =>
+        _ = Task.Run(async () =>
         {
-            if (int.TryParse(mw.GetVPetRoom("SteamRoomSet", lobbyid: lb.Id.Value), out int FixID))
+            if (int.TryParse(await mw.GetVPetRoom("SteamRoomSet", lobbyid: lb.Id.Value), out int FixID))
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -751,9 +751,9 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     private void btnRels_Click(object sender, RoutedEventArgs e)
     {
         btnRels.IsEnabled = false;
-        Task.Run(() =>
+        Task.Run(async () =>
         {
-            if (!int.TryParse(mw.GetVPetRoom("SteamRoomReset", lobbyid: lb.Id.Value), out int FixID))
+            if (!int.TryParse(await mw.GetVPetRoom("SteamRoomReset", lobbyid: lb.Id.Value), out int FixID))
             {
                 Dispatcher.Invoke(() =>
                 {
