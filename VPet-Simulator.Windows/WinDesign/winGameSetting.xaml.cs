@@ -201,42 +201,6 @@ namespace VPet_Simulator.Windows
                 runActivate.Text = "尚未激活 您可能需要启动Steam或去Steam上免费领个".Translate();
                 btn_fixdata.Visibility = Visibility.Collapsed;
             }
-            //CGPT
-            if (mw.TalkAPI.Count > 0)
-            {
-                foreach (var v in mw.TalkAPI)
-                    cbChatAPISelect.Items.Add(v.APIName.Translate());
-                if (mw.TalkAPIIndex != -1)
-                    cbChatAPISelect.SelectedIndex = mw.TalkAPIIndex;
-            }
-            else
-            {
-                cbChatAPISelect.Items.Add("暂无聊天API, 您可以通过订阅MOD添加".Translate());
-                cbChatAPISelect.SelectedIndex = 0;
-                cbChatAPISelect.IsEnabled = false;
-            }
-            switch (mw.Set["CGPT"][(gstr)"type"])
-            {
-                //case "API":
-                //    RBCGPTUseAPI.IsChecked = true;
-                //    BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
-                //    break;
-                case "DIY":
-                    RBCGPTDIY.IsChecked = true;
-                    BtnCGPTReSet.Content = "打开 {0} 设置".Translate(mw.TalkBoxCurr?.APIName ?? "Steam Workshop");
-                    break;
-                case "LB":
-                    RBCGPTUseLB.IsChecked = true;
-                    BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
-                    //if (!mf.IsSteamUser)
-                    //    BtnCGPTReSet.IsEnabled = false;
-                    break;
-                case "OFF":
-                default:
-                    RBCGPTClose.IsChecked = true;
-                    BtnCGPTReSet.Content = "聊天框已关闭".Translate();
-                    break;
-            }
             runabVer.Text = $"v{mw.Version} ({mw.version})";
 
             //mod列表
@@ -258,7 +222,6 @@ namespace VPet_Simulator.Windows
 
             ListMenuItems.Add(listmenuswith("自动保存频率", 1, CBAutoSave));
             ListMenuItems.Add(listmenuswith("从备份中还原", 1, numBackupSaveMaxNum));
-            ListMenuItems.Add(listmenuswith("聊天设置", 1, RBCGPTUseLB));
             ListMenuItems.Add(listmenuswith("游戏操作", 1, btn_cleancache));
             ListMenuItems.Add(listmenuswith("桌宠多开", 1, btn_mutidel));
 
@@ -312,7 +275,7 @@ namespace VPet_Simulator.Windows
             var lbi = new ListBoxItem() { Content = content.Translate() };
             lbi.PreviewMouseLeftButtonDown += (_, _) =>
             {
-                if (page >= 0 && page <= 6)
+                if (page >= 0 && page < MainTab.Items.Count)
                     MainTab.SelectedIndex = page;
                 if (page == 2)
                 {
@@ -1134,91 +1097,6 @@ namespace VPet_Simulator.Windows
             mw.LoadDIY();
         }
 
-
-        private void ChatGPT_Reset_Click(object sender, RoutedEventArgs e)
-        {
-            switch (mw.Set["CGPT"][(gstr)"type"])
-            {
-                //case "API":
-                //    new winCGPTSetting(mf).ShowDialog();
-                //    break;
-                case "DIY":
-                    if (mw.TalkBoxCurr != null)
-                        mw.TalkBoxCurr.Setting();
-                    else
-                        ExtensionFunction.StartURL("https://steamcommunity.com/app/1920960/workshop/");
-                    break;
-                case "LB":
-                    //Task.Run(() =>
-                    //{
-                    //    if (((TalkBox)mf.TalkBox).ChatGPT_Reset())
-                    //    {
-                    //        ((TalkBox)mf.TalkBox).btn_startup.Visibility = Visibility.Visible;
-                    //        MessageBoxX.Show("桌宠重置成功".Translate());
-                    //    }
-                    //});
-                    //((TalkSelect)mf.TalkBox).RelsTime
-                    break;
-                case "OFF":
-                default:
-                    break;
-            }
-        }
-
-        private void CGPType_Checked(object sender, RoutedEventArgs e)
-        {
-            if (!AllowChange)
-                return;
-            if (RBCGPTUseLB.IsChecked == true)
-            {
-                mw.Set["CGPT"][(gstr)"type"] = "LB";
-            }
-            else if (RBCGPTDIY.IsChecked == true)
-            {
-                mw.Set["CGPT"][(gstr)"type"] = "DIY";
-            }
-            //else if (RBCGPTUseAPI.IsChecked == true)
-            //{
-            //    mf.Set["CGPT"][(gstr)"type"] = "API";
-            //}
-            else
-            {
-                mw.Set["CGPT"][(gstr)"type"] = "OFF";
-            }
-
-
-            switch (mw.Set["CGPT"][(gstr)"type"])
-            {
-                //case "API":
-                //    BtnCGPTReSet.IsEnabled = true;
-                //    BtnCGPTReSet.Content = "打开 ChatGPT API 设置".Translate();
-                //    if (mf.TalkBox != null)
-                //        mf.Main.ToolBar.MainGrid.Children.Remove(mf.TalkBox);
-                //    mf.TalkBox = new TalkBoxAPI(mf);
-                //    mf.Main.ToolBar.MainGrid.Children.Add(mf.TalkBox);
-                //    break;
-                case "DIY":
-                    BtnCGPTReSet.IsEnabled = true;
-                    mw.RemoveTalkBox();
-                    BtnCGPTReSet.Content = "打开 {0} 设置".Translate(mw.TalkBoxCurr?.APIName ?? "Steam Workshop");
-                    mw.LoadTalkDIY();
-                    break;
-                case "LB":
-                    mw.RemoveTalkBox();
-                    BtnCGPTReSet.IsEnabled = true;
-                    BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
-                    mw.TalkBox = new TalkSelect(mw);
-                    mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
-                    break;
-                case "OFF":
-                default:
-                    mw.RemoveTalkBox();
-                    BtnCGPTReSet.IsEnabled = false;
-                    BtnCGPTReSet.Content = "聊天框已关闭".Translate();
-                    break;
-            }
-        }
-
         private void ButtonSetting_MouseDown(object sender, MouseButtonEventArgs e)
         {
             foreach (var mainplug in mw.Plugins)
@@ -1526,18 +1404,6 @@ namespace VPet_Simulator.Windows
                 mw.HashCheck = true;
                 MessageBoxX.Show("重置成功".Translate());
             }
-        }
-
-        private void cbChatAPISelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (!AllowChange)
-                return;
-            mw.TalkAPIIndex = cbChatAPISelect.SelectedIndex;
-            mw.Set["CGPT"][(gstr)"DIY"] = mw.TalkBoxCurr?.APIName ?? "";
-            if (RBCGPTDIY.IsChecked == true)
-                mw.LoadTalkDIY();
-            BtnCGPTReSet.Content = "打开 {0} 设置".Translate(mw.TalkBoxCurr?.APIName ?? "Steam Workshop");
-
         }
 
         private void btn_muti_open_click(object sender, RoutedEventArgs e)

@@ -376,66 +376,6 @@
 
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 聊天设置}" /><LineBreak />
-                            <Run Text="{ll:Str 聊天框等相关设置}" />
-                        </TextBlock>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="15" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="35" />
-                            </Grid.RowDefinitions>
-                            <TextBlock x:Name="tbMode" Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 使用模式}" />
-                            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 相关功能}" />
-                            <Grid Grid.Column="2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <!--<RadioButton x:Name="RBCGPTUseAPI" Grid.Column="1" Checked="CGPType_Checked"
-                                        Content="{ll:Str '使用从ChatGPT\&#13;申请的的API'}" GroupName="cgpttype"
-                                        Style="{DynamicResource StandardRadioButtonStyle}"
-                                        ToolTip="{ll:Str 需要去OpenAI官网申请}" />-->
-                                <RadioButton x:Name="RBCGPTUseLB" Checked="CGPType_Checked"
-                                        Content="{ll:Str '使用桌宠选项式\&#13;聊天功能'}" GroupName="cgpttype" IsChecked="True"
-                                        Style="{DynamicResource StandardRadioButtonStyle}"
-                                        ToolTip="{ll:Str 支持MOD与创意工坊添加聊天内容}" />
-                                <RadioButton x:Name="RBCGPTClose" Grid.Column="1" Checked="CGPType_Checked"
-                                        Content="{ll:Str '关闭聊天框'}" GroupName="cgpttype"
-                                        Style="{DynamicResource StandardRadioButtonStyle}" />
-                                <RadioButton x:Name="RBCGPTDIY" Grid.Row="1" Checked="CGPType_Checked"
-                                        GroupName="cgpttype" Style="{DynamicResource StandardRadioButtonStyle}"
-                                        Grid.ColumnSpan="2">
-                                    <Grid Width="{Binding ActualWidth,ElementName=RBCGPTDIY}">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition />
-                                            <ColumnDefinition Width="40" />
-                                        </Grid.ColumnDefinitions>
-                                        <Label Content="{ll:Str '自定义聊天接口'}" Background="{x:Null}" />
-                                        <ComboBox x:Name="cbChatAPISelect"
-                                                Style="{DynamicResource StandardComboBoxStyle}" Grid.Column="0"
-                                                Grid.Row="1" SelectionChanged="cbChatAPISelect_SelectionChanged" />
-                                    </Grid>
-                                </RadioButton>
-                            </Grid>
-                            <Button x:Name="BtnCGPTReSet" Grid.Row="1" Grid.Column="2" Margin="4" Padding="1"
-                                    pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
-                                    Click="ChatGPT_Reset_Click" Content="{ll:Str 初始化桌宠聊天程序}" />
-                        </Grid>
-                        <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                Background="{x:Null}" TextWrapping="Wrap">
                             <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 游戏操作}" />
                         </TextBlock>
                         <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"

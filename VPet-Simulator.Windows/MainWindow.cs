@@ -454,10 +454,29 @@ namespace VPet_Simulator.Windows
 
         public void ShowSetting(int page = -1)
         {
-            if (page >= 0 && page <= 6)
+            if (page >= 0 && winSetting != null && page < winSetting.MainTab.Items.Count)
                 winSetting.MainTab.SelectedIndex = page;
             winSetting.Show();
         }
+
+        public void ShowExtraSetting(int page = 0)
+        {
+            Main.ToolBar.Visibility = Visibility.Collapsed;
+            if (winExtraSetting == null)
+            {
+                winExtraSetting = new winExtraSetting(this, page)
+                {
+                    Owner = this
+                };
+            }
+            else
+            {
+                winExtraSetting.SelectPage(page);
+            }
+            winExtraSetting.Show();
+            winExtraSetting.Activate();
+        }
+
         public void ShowWorkMenu(Work.WorkType type)
         {
             if (winWorkMenu == null)
@@ -1154,6 +1173,11 @@ namespace VPet_Simulator.Windows
             }
             else
             {
+                if (Main.ShouldKeepAutoDisplay(new GraphInfo("music", GraphType.Common, AnimatType.B_Loop, Core.Save.Mode)))
+                {
+                    Main.Display(Core.Graph.FindGraph("music", AnimatType.B_Loop, Core.Save.Mode), Display_Music);
+                    return;
+                }
                 Main.Display("music", AnimatType.C_End, Main.DisplayToNomal);
             }
         }
@@ -1180,7 +1204,15 @@ namespace VPet_Simulator.Windows
                 {
                     CurrMusicType = null;
                     if (Main.DisplayType.Name == "music")
+                    {
+                        if (Main.ShouldKeepAutoDisplay(new GraphInfo("music", GraphType.Common, AnimatType.B_Loop, Core.Save.Mode)))
+                        {
+                            Main.Display(Core.Graph.FindGraph("music", AnimatType.B_Loop, Core.Save.Mode), Display_Music);
+                            MusicTimer.Start();
+                            return;
+                        }
                         Main.Display("music", AnimatType.C_End, Main.DisplayToNomal);
+                    }
                 }
             }
             else
@@ -1290,6 +1322,13 @@ namespace VPet_Simulator.Windows
         {
             if (TalkBox != null)
             {
+                if (TalkBox is LlmTalkBox llmTalkBox)
+                {
+                    if (Main != null && ReferenceEquals(Main.SayDisplayIntercept?.Target, llmTalkBox))
+                        Main.SayDisplayIntercept = null;
+                    llmTalkBox.CloseBubble();
+                    llmTalkBox.DisposeServices();
+                }
                 Main.ToolBar.MainGrid.Children.Remove(TalkBox);
                 TalkBox = null;
             }
@@ -1306,6 +1345,15 @@ namespace VPet_Simulator.Windows
             if (TalkAPIIndex == -1)
                 return;
             Main.ToolBar.MainGrid.Children.Add(TalkAPI[TalkAPIIndex].This);
+        }
+
+        public void LoadTalkLlm()
+        {
+            RemoveTalkBox();
+            var llmTalkBox = new LlmTalkBox(this);
+            TalkBox = llmTalkBox;
+            Main.ToolBar.MainGrid.Children.Add(TalkBox);
+            Main.SayDisplayIntercept = llmTalkBox.TryShowPetSay;
         }
         /// <summary>
         /// 超模工作检查
@@ -2011,10 +2059,9 @@ namespace VPet_Simulator.Windows
                           TalkAPIIndex = TalkAPI.FindIndex(x => x.APIName == Set["CGPT"][(gstr)"DIY"]);
                           LoadTalkDIY();
                           break;
-                      //case "API":
-                      //    TalkBox = new TalkBoxAPI(this);
-                      //    Main.ToolBar.MainGrid.Children.Add(TalkBox);
-                      //    break;
+                      case "API":
+                          LoadTalkLlm();
+                          break;
                       case "LB":
                           //if (IsSteamUser)
                           //{
@@ -2029,6 +2076,17 @@ namespace VPet_Simulator.Windows
                   //窗口部件
                   winSetting = new winGameSetting(this);
                   winBetterBuy = new winBetterBuy(this);
+
+                  Main.RightClickOpening += () =>
+                  {
+                      if (TalkBox is LlmTalkBox llmTalkBox)
+                      {
+                          Main.ToolBar.Show();
+                          llmTalkBox.ShowInput();
+                          return true;
+                      }
+                      return false;
+                  };
 
                   Main.DefaultClickAction = () =>
                   {
@@ -2107,6 +2165,9 @@ namespace VPet_Simulator.Windows
                       winSetting.Show();
                       winSetting.Activate();
                   });
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "额外附加设置".Translate(), () => ShowExtraSetting());
+                  LlmActionTriggerService?.Dispose();
+                  LlmActionTriggerService = new LlmActionTriggerService(this);
 
                   //this.Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.PNG")));
 
@@ -2705,28 +2766,42 @@ namespace VPet_Simulator.Windows
         /// <param name="imageSource">被夹在中间的图片</param>
         public void DisplayFoodAnimation(string graphName, ImageSource imageSource)
         {
+            DisplayFoodAnimation(graphName, imageSource, null);
+        }
+
+        public void DisplayFoodAnimation(string graphName, ImageSource imageSource, Food food)
+        {
             if (showeatanm)
             {//显示动画
                 showeatanm = false;
+                if (food != null)
+                    LlmActionTriggerService?.NotifyFoodInteractionStart(food, graphName);
                 Main.Display(graphName, imageSource, () =>
                 {
                     showeatanm = true;
-                    if (Core.Controller.EnableFunction)
+                    void CompleteFoodAnimation()
                     {
-                        var newmod = Core.Save.CalMode();
-                        if (Core.Save.Mode != newmod)
+                        if (Core.Controller.EnableFunction)
                         {
-                            //魔改下参数以免不播放切换动画
-                            Main.DisplayType.Type = GraphType.Default;
-                            //切换显示动画
-                            Main.PlaySwitchAnimat(Core.Save.Mode, newmod);
-                            Core.Save.Mode = newmod;
+                            var newmod = Core.Save.CalMode();
+                            if (Core.Save.Mode != newmod)
+                            {
+                                //魔改下参数以免不播放切换动画
+                                Main.DisplayType.Type = GraphType.Default;
+                                //切换显示动画
+                                Main.PlaySwitchAnimat(Core.Save.Mode, newmod);
+                                Core.Save.Mode = newmod;
+                            }
+                            else
+                                Main.DisplayToNomal();
                         }
                         else
                             Main.DisplayToNomal();
                     }
-                    else
-                        Main.DisplayToNomal();
+
+                    if (food != null && LlmActionTriggerService?.TryRespondToFoodInteraction(food, graphName, CompleteFoodAnimation) == true)
+                        return;
+                    CompleteFoodAnimation();
                 });
             }
             else

@@ -72,6 +72,10 @@ namespace VPet_Simulator.Core
         /// 说话处理 (请不要阻塞该处理)
         /// </summary>
         public List<Action<SayInfo>> SayProcess = new List<Action<SayInfo>>();
+        /// <summary>
+        /// 说话显示拦截, 返回 true 表示外部已处理显示
+        /// </summary>
+        public Func<SayInfo, bool> SayDisplayIntercept;
 
 
         /// <summary>
@@ -90,6 +94,14 @@ namespace VPet_Simulator.Core
                 }
 
                 SayProcess.ForEach(a => a.Invoke(sayInfoWithStream));
+                try
+                {
+                    if (SayDisplayIntercept?.Invoke(sayInfoWithStream) == true)
+                        return;
+                }
+                catch
+                {
+                }
 
                 if (sayInfoWithStream.Force || !string.IsNullOrWhiteSpace(sayInfoWithStream.GraphName) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
                     Display(sayInfoWithStream.GraphName, AnimatType.A_Start, () =>
@@ -120,6 +132,14 @@ namespace VPet_Simulator.Core
                 OnSay?.Invoke(sayinfo.Text);
 
                 SayProcess.ForEach(a => a.Invoke(sayinfo));
+                try
+                {
+                    if (SayDisplayIntercept?.Invoke(sayinfo) == true)
+                        return;
+                }
+                catch
+                {
+                }
 
                 if (sayinfo.Force || !string.IsNullOrWhiteSpace(sayinfo.GraphName) && DisplayType.Type == GraphType.Default)//这里不使用idle是因为idle包括学习等
                     Display(sayinfo.GraphName, AnimatType.A_Start, () =>
@@ -442,13 +462,21 @@ namespace VPet_Simulator.Core
             }
             if (before < after)
             {
-                Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Down), AnimatType.Single, before),
+                string graphName = Core.Graph.FindName(GraphType.Switch_Down);
+                Action playAction = () => Display(Core.Graph.FindGraph(graphName, AnimatType.Single, before),
                     () => PlaySwitchAnimat((IGameSave.ModeType)(((int)before) + 1), after));
+                if (TryInterceptAutoDisplay(new GraphInfo(graphName, GraphType.Switch_Down, AnimatType.Single, before), playAction))
+                    return;
+                playAction();
             }
             else
             {
-                Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Up), AnimatType.Single, before),
+                string graphName = Core.Graph.FindName(GraphType.Switch_Up);
+                Action playAction = () => Display(Core.Graph.FindGraph(graphName, AnimatType.Single, before),
                     () => PlaySwitchAnimat((IGameSave.ModeType)(((int)before) - 1), after));
+                if (TryInterceptAutoDisplay(new GraphInfo(graphName, GraphType.Switch_Up, AnimatType.Single, before), playAction))
+                    return;
+                playAction();
             }
         }
         /// <summary>
@@ -545,12 +573,16 @@ namespace VPet_Simulator.Core
             if (Core.Controller.GetWindowsDistanceLeft() < -50 * Core.Controller.ZoomRatio)
             {
                 //检查下是否有SideLoad
-                if (Core.Graph.FindName(GraphType.SideHide_Left_Main) != null)
+                string graphName = Core.Graph.FindName(GraphType.SideHide_Left_Main);
+                if (graphName != null)
                 {
                     Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - Core.Graph.GraphConfig.Data["side"][(gdbe)"left"], 0);
                     if (Core.Controller.GetWindowsDistanceDown() < 0) Core.Controller.MoveWindows(0, Core.Controller.GetWindowsDistanceDown() / Core.Controller.ZoomRatio - 100);
                     else if (Core.Controller.GetWindowsDistanceUp() < 0) Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
-                    Display(GraphType.SideHide_Left_Main, AnimatType.A_Start, DisplayBLoopingForce);
+                    Action playAction = () => Display(graphName, AnimatType.A_Start, DisplayBLoopingForce);
+                    if (TryInterceptAutoDisplay(new GraphInfo(graphName, GraphType.SideHide_Left_Main, AnimatType.A_Start, Core.Save.Mode), playAction))
+                        return true;
+                    playAction();
                     return true;
                 }
                 else if (Core.Controller.RePositionActive)
@@ -560,12 +592,16 @@ namespace VPet_Simulator.Core
             }   
             else if (Core.Controller.GetWindowsDistanceRight() < -50 * Core.Controller.ZoomRatio)
             {
-                if (Core.Graph.FindName(GraphType.SideHide_Right_Main) != null)
+                string graphName = Core.Graph.FindName(GraphType.SideHide_Right_Main);
+                if (graphName != null)
                 {
                     Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 500 - Core.Graph.GraphConfig.Data["side"][(gdbe)"right"], 0);
                     if (Core.Controller.GetWindowsDistanceDown() < 0) Core.Controller.MoveWindows(0, Core.Controller.GetWindowsDistanceDown() / Core.Controller.ZoomRatio - 100);
                     else if (Core.Controller.GetWindowsDistanceUp() < 0) Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
-                    Display(GraphType.SideHide_Right_Main, AnimatType.A_Start, DisplayBLoopingForce);
+                    Action playAction = () => Display(graphName, AnimatType.A_Start, DisplayBLoopingForce);
+                    if (TryInterceptAutoDisplay(new GraphInfo(graphName, GraphType.SideHide_Right_Main, AnimatType.A_Start, Core.Save.Mode), playAction))
+                        return true;
+                    playAction();
                     return true;
                 }
                 else if (Core.Controller.RePositionActive)

@@ -246,7 +246,7 @@ namespace VPet_Simulator.Windows
                 mw.TakeItemHandle(item, (int)nibuytimes.Value, "betterbuy");
             }
 
-            mw.DisplayFoodAnimation(item.GetGraph(), item.ImageSource);
+            mw.DisplayFoodAnimation(item.GetGraph(), item.ImageSource, item);
 
             if (!_puswitch.IsChecked.Value)
             {

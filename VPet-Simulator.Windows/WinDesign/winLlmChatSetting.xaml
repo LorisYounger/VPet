@@ -1,0 +1,96 @@
+<pu:WindowX x:Class="VPet_Simulator.Windows.winLlmChatSetting"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
+        Title="{ll:Str 大模型 API 聊天设置}" Width="520" Height="640"
+        Foreground="{StaticResource PrimaryText}" FontSize="15"
+        Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterOwner"
+        mc:Ignorable="d">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Margin="0,0,0,8" TextWrapping="Wrap"
+                        Text="{ll:Str 'API Key 会保存到本地设置文件中，仅适合在自己的电脑上使用。'}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="38" />
+                        <RowDefinition Height="38" />
+                        <RowDefinition Height="38" />
+                        <RowDefinition Height="38" />
+                        <RowDefinition Height="120" />
+                        <RowDefinition Height="38" />
+                        <RowDefinition Height="38" />
+                        <RowDefinition Height="38" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock VerticalAlignment="Center" Text="{ll:Str 供应商}" />
+                    <ComboBox x:Name="cbProvider" Grid.Column="1" Margin="4" SelectionChanged="cbProvider_SelectionChanged"
+                            Style="{DynamicResource StandardComboBoxStyle}">
+                        <ComboBoxItem Content="Ollama" Tag="Ollama" />
+                        <ComboBoxItem Content="DeepSeek" Tag="DeepSeek" />
+                    </ComboBox>
+
+                    <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 接口地址}" />
+                    <TextBox x:Name="tbBaseUrl" Grid.Row="1" Grid.Column="1" Margin="4"
+                            Style="{DynamicResource StandardTextBoxStyle}" />
+
+                    <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 模型}" />
+                    <TextBox x:Name="tbModel" Grid.Row="2" Grid.Column="1" Margin="4"
+                            Style="{DynamicResource StandardTextBoxStyle}" />
+
+                    <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="API Key" />
+                    <PasswordBox x:Name="pbApiKey" Grid.Row="3" Grid.Column="1" Margin="4" />
+
+                    <TextBlock Grid.Row="4" VerticalAlignment="Top" Margin="0,8,0,0" Text="{ll:Str 系统提示词}" />
+                    <TextBox x:Name="tbSystemPrompt" Grid.Row="4" Grid.Column="1" Margin="4"
+                            AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                            Style="{DynamicResource StandardTextBoxStyle}" />
+
+                    <TextBlock Grid.Row="5" VerticalAlignment="Center" Text="{ll:Str 温度}" />
+                    <pu:NumberInput x:Name="numTemperature" Grid.Row="5" Grid.Column="1" Margin="4"
+                            Minimum="0" Maximum="2" Value="0.8" Interval="0.1" />
+
+                    <TextBlock Grid.Row="6" VerticalAlignment="Center" Text="{ll:Str 最大输出}" />
+                    <pu:NumberInput x:Name="numMaxTokens" Grid.Row="6" Grid.Column="1" Margin="4"
+                            Minimum="1" Maximum="200000" Value="1024" Interval="128" />
+
+                    <Grid Grid.Row="7" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="90" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="{ll:Str 历史轮数}" />
+                        <pu:NumberInput x:Name="numHistoryTurns" Grid.Column="1" Margin="4"
+                                Minimum="0" Maximum="50" Value="8" Interval="1" />
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="10,0,0,0" Text="{ll:Str 超时秒数}" />
+                        <pu:NumberInput x:Name="numTimeoutSeconds" Grid.Column="3" Margin="4"
+                                Minimum="5" Maximum="600" Value="60" Interval="5" />
+                    </Grid>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Width="88" Height="30" Margin="4,0" Content="{ll:Str 恢复默认}" Click="BtnDefault_Click"
+                    pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}" />
+            <Button Width="88" Height="30" Margin="4,0" Content="{ll:Str 取消}" Click="BtnCancel_Click"
+                    pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}" />
+            <Button Width="88" Height="30" Margin="4,0" Content="{ll:Str 保存}" Click="BtnSave_Click"
+                    pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource PrimaryDarker}"
+                    Foreground="{DynamicResource DARKPrimaryText}" />
+        </StackPanel>
+    </Grid>
+</pu:WindowX>

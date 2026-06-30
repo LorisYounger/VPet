@@ -470,7 +470,7 @@ namespace VPet_Simulator.Core
                 m.CountNomal = 0;
                 m.Display(Graph, AnimatType.A_Start, () =>
                 {
-                    if (m.MoveTimerSmartMove)
+                    if (m.MoveTimerSmartMove || m.ForceCurrentMoveWindowMotion)
                     {
                         switch (LocateType)
                         {
@@ -539,6 +539,7 @@ namespace VPet_Simulator.Core
                     m.Core.Controller.ResetPosition();
                 m.Core.Controller.RePositionActive = !m.Core.Controller.CheckPosition();
                 m.MoveTimer.Enabled = false;
+                m.ForceCurrentMoveWindowMotion = false;
 
                 m.Display(Graph, AnimatType.C_End, () => { m.Event_MoveEndInvoke(this); m.DisplayToNomal(); });
             }

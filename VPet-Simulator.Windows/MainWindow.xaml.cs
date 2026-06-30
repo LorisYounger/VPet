@@ -348,7 +348,10 @@ namespace VPet_Simulator.Windows
                       {
                           imw.TakeItem(food);
                           imw.TakeItemHandle(food, 1, "item");
-                          imw.DisplayFoodAnimation(food.GetGraph(), food.ImageSource);
+                          if (imw is MainWindow mainWindow)
+                              mainWindow.DisplayFoodAnimation(food.GetGraph(), food.ImageSource, food);
+                          else
+                              imw.DisplayFoodAnimation(food.GetGraph(), food.ImageSource);
                           Item.Consume(imw);
                           return true;
                       }
@@ -568,11 +571,14 @@ namespace VPet_Simulator.Windows
                         w.Close();
                         Windows.Remove(w);
                     }
+                    LlmActionTriggerService?.Dispose();
+                    LlmActionTriggerService = null;
                     Main?.Dispose();
                     AutoSaveTimer?.Stop();
                     MusicTimer?.Stop();
                     petHelper?.Close();
                     winSetting?.Close();
+                    winExtraSetting?.Close();
                     winBetterBuy?.Close();
                     winWorkMenu?.Close();
                     winGallery?.Close();
@@ -618,11 +624,14 @@ namespace VPet_Simulator.Windows
                 {
                     Windows[0].Close();
                 }
+                LlmActionTriggerService?.Dispose();
+                LlmActionTriggerService = null;
                 Main?.Dispose();
                 AutoSaveTimer?.Stop();
                 MusicTimer?.Stop();
                 petHelper?.Close();
                 winSetting?.Close();
+                winExtraSetting?.Close();
                 winBetterBuy?.Close();
                 winWorkMenu?.Close();
                 winGallery?.Close();

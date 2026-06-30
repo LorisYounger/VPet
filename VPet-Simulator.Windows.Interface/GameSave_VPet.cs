@@ -383,7 +383,7 @@ public class GameSave_VPet : IGameSave
     public GameSave_VPet(string name)
     {
         Name = name;
-        Money = 100;
+        Money = 999999999;
         Exp = 0;
         Strength = 100;
         StrengthFood = 100;

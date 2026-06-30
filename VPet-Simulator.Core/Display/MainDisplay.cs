@@ -53,6 +53,18 @@ namespace VPet_Simulator.Core
         /// </summary>
         public Func<bool> DisplayMove { get; set; }
         /// <summary>
+        /// 自动动作播放前拦截. 返回 true 表示外部已接管本次动作.
+        /// </summary>
+        public Func<GraphInfo, Action, bool> AutoDisplayIntercept { get; set; }
+        /// <summary>
+        /// 自动动作是否需要继续保持. 返回 true 表示本轮先继续循环, 暂不进入结束/切换.
+        /// </summary>
+        public Func<GraphInfo, bool> AutoDisplayKeepAlive { get; set; }
+        /// <summary>
+        /// 手动互动完成时的播放拦截. 返回 true 表示外部已接管本次结束动作.
+        /// </summary>
+        public Func<GraphInfo, string, Action, bool> ManualDisplayCompleteIntercept { get; set; }
+        /// <summary>
         /// 显示待机情况 (只有符合条件的才会显示)
         /// </summary>
         public Func<bool> DisplayIdel { get; set; }
@@ -115,6 +127,11 @@ namespace VPet_Simulator.Core
                 var move = list[i];
                 if (move.Triggered(this))
                 {
+                    if (TryInterceptAutoDisplay(new GraphInfo(move.Graph, GraphType.Move, AnimatType.A_Start, Core.Save.Mode),
+                        () => move.Display(this)))
+                    {
+                        return true;
+                    }
                     move.Display(this);
                     return true;
                 }
@@ -125,6 +142,54 @@ namespace VPet_Simulator.Core
             }
             return false;
         }
+
+        public bool TryInterceptAutoDisplay(GraphInfo info, Action playAction)
+        {
+            return AutoDisplayIntercept?.Invoke(info, playAction) == true;
+        }
+
+        public bool ShouldKeepAutoDisplay(GraphInfo info)
+        {
+            return AutoDisplayKeepAlive?.Invoke(info) == true;
+        }
+
+        public bool TryInterceptManualDisplayComplete(GraphInfo info, string interactionType, Action playAction)
+        {
+            return ManualDisplayCompleteIntercept?.Invoke(info, interactionType, playAction) == true;
+        }
+
+        private Action WrapAutoDisplayEndAction(IGraph graph, Action endAction)
+        {
+            if (graph?.GraphInfo == null || graph.GraphInfo.Animat == AnimatType.C_End)
+                return endAction;
+            return () =>
+            {
+                if (ShouldKeepAutoDisplay(graph.GraphInfo))
+                {
+                    var loopGraph = FindKeepAliveLoopGraph(graph.GraphInfo);
+                    if (loopGraph != null)
+                    {
+                        Display(loopGraph, endAction);
+                        return;
+                    }
+                    if (graph.GraphInfo.Animat == AnimatType.Single)
+                    {
+                        Display(graph, endAction);
+                        return;
+                    }
+                }
+                endAction?.Invoke();
+            };
+        }
+
+        private IGraph FindKeepAliveLoopGraph(GraphInfo info)
+        {
+            var loops = Core.Graph.FindGraphs(info.Name, AnimatType.B_Loop, Core.Save.Mode);
+            if (loops == null || loops.Count == 0)
+                return null;
+            return loops.FirstOrDefault(x => x.GraphInfo.Type == info.Type) ?? loops.FirstOrDefault();
+        }
+
         /// <summary>
         /// 当发生摸头时触发改方法
         /// </summary>
@@ -160,9 +225,20 @@ namespace VPet_Simulator.Core
             }
             Event_TouchHead?.Invoke();
             Display(GraphType.Touch_Head, AnimatType.A_Start, (graphname) =>
-               Display(graphname, AnimatType.B_Loop, (graphname) =>
-               DisplayCEndtoNomal(graphname)));
+               Display(graphname, AnimatType.B_Loop, DisplayTouchHeadManualComplete));
         }
+
+        private void DisplayTouchHeadManualComplete(string graphname)
+        {
+            var info = new GraphInfo(graphname, GraphType.Touch_Head, AnimatType.B_Loop, Core.Save.Mode);
+            if (TryInterceptManualDisplayComplete(info, "touch_head", () => DisplayCEndtoNomal(graphname)))
+            {
+                Display(graphname, AnimatType.B_Loop, DisplayTouchHeadManualComplete);
+                return;
+            }
+            DisplayCEndtoNomal(graphname);
+        }
+
         /// <summary>
         /// 当发生摸身体时触发改方法
         /// </summary>
@@ -198,9 +274,20 @@ namespace VPet_Simulator.Core
             }
             Event_TouchBody?.Invoke();
             Display(GraphType.Touch_Body, AnimatType.A_Start, (graphname) =>
-             Display(graphname, AnimatType.B_Loop, (graphname) =>
-             DisplayCEndtoNomal(graphname)));
+             Display(graphname, AnimatType.B_Loop, DisplayTouchBodyManualComplete));
         }
+
+        private void DisplayTouchBodyManualComplete(string graphname)
+        {
+            var info = new GraphInfo(graphname, GraphType.Touch_Body, AnimatType.B_Loop, Core.Save.Mode);
+            if (TryInterceptManualDisplayComplete(info, "touch_body", () => DisplayCEndtoNomal(graphname)))
+            {
+                Display(graphname, AnimatType.B_Loop, DisplayTouchBodyManualComplete);
+                return;
+            }
+            DisplayCEndtoNomal(graphname);
+        }
+
         /// <summary>
         /// 显示待机(模式1)情况
         /// </summary>
@@ -211,7 +298,13 @@ namespace VPet_Simulator.Core
             var name = Core.Graph.FindName(GraphType.StateONE);
             var list = Core.Graph.FindGraphs(name, AnimatType.A_Start, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == GraphType.StateONE);
             if (list != null && list.Count > 0)
-                Display(list[Function.Rnd.Next(list.Count)], () => DisplayIdel_StateONEing(name));
+            {
+                var graph = list[Function.Rnd.Next(list.Count)];
+                Action playAction = () => Display(graph, () => DisplayIdel_StateONEing(name));
+                if (TryInterceptAutoDisplay(graph.GraphInfo, playAction))
+                    return;
+                playAction();
+            }
             else
                 DisplayIdel();
         }
@@ -220,6 +313,11 @@ namespace VPet_Simulator.Core
         /// </summary>
         private void DisplayIdel_StateONEing(string graphname)
         {
+            if (ShouldKeepAutoDisplay(new GraphInfo(graphname, GraphType.StateONE, AnimatType.B_Loop, Core.Save.Mode)))
+            {
+                Display(graphname, AnimatType.B_Loop, GraphType.StateONE, DisplayIdel_StateONEing);
+                return;
+            }
             if (Function.Rnd.Next(++looptimes) > Core.Graph.GraphConfig.GetDuration(graphname))
                 switch (Function.Rnd.Next(2 + CountNomal))
                 {
@@ -249,6 +347,11 @@ namespace VPet_Simulator.Core
         /// </summary>
         private void DisplayIdel_StateTWOing(string graphname)
         {
+            if (ShouldKeepAutoDisplay(new GraphInfo(graphname, GraphType.StateTWO, AnimatType.B_Loop, Core.Save.Mode)))
+            {
+                Display(graphname, AnimatType.B_Loop, GraphType.StateTWO, DisplayIdel_StateTWOing);
+                return;
+            }
             if (Function.Rnd.Next(++looptimes) > Core.Graph.GraphConfig.GetDuration(graphname))
             {
                 looptimes = 0;
@@ -277,8 +380,12 @@ namespace VPet_Simulator.Core
                     {
                         looptimes = 0;
                         CountNomal = 0;
-                        Display(ig[Function.Rnd.Next(ig.Count)], () =>
-                        DisplayBLoopingToNomal(idelname, Core.Graph.GraphConfig.GetDuration(idelname)));
+                        var graph = ig[Function.Rnd.Next(ig.Count)];
+                        Action playAction = () => Display(graph, () =>
+                            DisplayBLoopingToNomal(idelname, Core.Graph.GraphConfig.GetDuration(idelname)));
+                        if (TryInterceptAutoDisplay(graph.GraphInfo, playAction))
+                            return true;
+                        playAction();
                         return true;
                     }
                     else
@@ -288,7 +395,11 @@ namespace VPet_Simulator.Core
                         {
                             looptimes = 0;
                             CountNomal = 0;
-                            Display(ig[Function.Rnd.Next(ig.Count)], DisplayToNomal);
+                            var graph = ig[Function.Rnd.Next(ig.Count)];
+                            Action playAction = () => Display(graph, DisplayToNomal);
+                            if (TryInterceptAutoDisplay(graph.GraphInfo, playAction))
+                                return true;
+                            playAction();
                             return true;
                         }
                         list.RemoveAt(i);
@@ -308,6 +419,14 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void DisplayBLoopingToNomal(string graphname, int loopLength)
         {
+            var keepInfo = DisplayType.Name == graphname
+                ? new GraphInfo(graphname, DisplayType.Type, AnimatType.B_Loop, Core.Save.Mode)
+                : new GraphInfo(graphname, GraphType.Idel, AnimatType.B_Loop, Core.Save.Mode);
+            if (ShouldKeepAutoDisplay(keepInfo))
+            {
+                Display(graphname, AnimatType.B_Loop, DisplayBLoopingToNomal(loopLength));
+                return;
+            }
             if (Function.Rnd.Next(++looptimes) > loopLength)
                 DisplayCEndtoNomal(graphname);
             else
@@ -328,7 +447,19 @@ namespace VPet_Simulator.Core
                 Display(GraphType.Sleep, AnimatType.A_Start, DisplayBLoopingForce);
             }
             else
-                Display(GraphType.Sleep, AnimatType.A_Start, (x) => DisplayBLoopingToNomal(x, Core.Graph.GraphConfig.GetDuration(x)));
+            {
+                string sleepName = Core.Graph.FindName(GraphType.Sleep);
+                if (!string.IsNullOrWhiteSpace(sleepName)
+                    && TryInterceptAutoDisplay(new GraphInfo(sleepName, GraphType.Sleep, AnimatType.A_Start, Core.Save.Mode),
+                        () => Display(sleepName, AnimatType.A_Start, (x) => DisplayBLoopingToNomal(x, Core.Graph.GraphConfig.GetDuration(x)))))
+                {
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(sleepName))
+                    Display(GraphType.Sleep, AnimatType.A_Start, (x) => DisplayBLoopingToNomal(x, Core.Graph.GraphConfig.GetDuration(x)));
+                else
+                    Display(sleepName, AnimatType.A_Start, (x) => DisplayBLoopingToNomal(x, Core.Graph.GraphConfig.GetDuration(x)));
+            }
         }
         /// <summary>
         /// 显示B循环 (强制)
@@ -378,10 +509,21 @@ namespace VPet_Simulator.Core
                     //判断侧边隐藏
                     if(!MoveSideHideCheck())
                     {
+                        var endInfo = new GraphInfo(name ?? Core.Graph.FindName(GraphType.Raised_Static),
+                            GraphType.Raised_Static, AnimatType.B_Loop, Core.Save.Mode);
+                        Action afterDropAction = () =>
+                        {
+                            if (TryInterceptManualDisplayComplete(endInfo, "raised_drop", DisplayToNomal))
+                                return;
+                            DisplayToNomal();
+                        };
                         if (string.IsNullOrEmpty(name))
-                            Display(GraphType.Raised_Static, AnimatType.C_End, DisplayToNomal);
-                        else
-                            Display(name, AnimatType.C_End, GraphType.Raised_Static, DisplayToNomal);
+                        {
+                            Display(GraphType.Raised_Static, AnimatType.C_End, afterDropAction);
+                            return;
+                        }
+                        Display(name, AnimatType.C_End, GraphType.Raised_Static, afterDropAction);
+                        return;
                     }
                    
                     return;
@@ -539,6 +681,7 @@ namespace VPet_Simulator.Core
             //{
             //    Dispatcher.Invoke(() => Say(graph.GraphType.ToString()));
             //}
+            EndAction = WrapAutoDisplayEndAction(graph, EndAction);
             DisplayType = graph.GraphInfo;
             GraphDisplayHandler?.Invoke(graph.GraphInfo);
             var PetGridTag = Dispatcher.Invoke(() => PetGrid.Tag);

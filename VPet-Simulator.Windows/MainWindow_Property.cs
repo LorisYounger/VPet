@@ -77,7 +77,9 @@ public partial class MainWindow
     public List<Window> Windows { get; set; } = new List<Window>();
     public Main Main { get; set; }
     public UIElement TalkBox;
+    internal LlmActionTriggerService LlmActionTriggerService { get; set; }
     public winGameSetting winSetting { get; set; }
+    public winExtraSetting winExtraSetting { get; set; }
     public winBetterBuy winBetterBuy { get; set; }
     public winGallery winGallery { get; set; }
     public winInventory winInventory { get; set; }

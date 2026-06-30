@@ -1,0 +1,550 @@
+<pu:WindowX x:Class="VPet_Simulator.Windows.winExtraSetting"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI"
+        Title="{ll:Str 额外附加设置}" Width="920" Height="660"
+        Foreground="{StaticResource PrimaryText}" FontSize="16"
+        Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterOwner"
+        Closed="WindowX_Closed" mc:Ignorable="d">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="170" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="ListMenu" Margin="0,10,5,10" BorderThickness="0"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                SelectionChanged="ListMenu_SelectionChanged"
+                pu:ListBoxHelper.ItemsPadding="15,8"
+                pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"
+                pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}" />
+        <GridSplitter Margin="0,15" Background="LightGray">
+            <GridSplitter.Template>
+                <ControlTemplate TargetType="GridSplitter">
+                    <Border Background="Transparent">
+                        <Rectangle Margin="2,0" Width="1" Fill="{TemplateBinding Background}" />
+                    </Border>
+                </ControlTemplate>
+            </GridSplitter.Template>
+        </GridSplitter>
+
+        <Grid Grid.Column="1" Margin="10,12,12,12">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TabControl x:Name="MainTab" Background="Transparent" BorderThickness="0"
+                    SelectionChanged="MainTab_SelectionChanged">
+                <TabControl.Resources>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Height" Value="0" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="BorderThickness" Value="0" />
+                    </Style>
+                </TabControl.Resources>
+
+                <TabItem Header="{ll:Str 金手指}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,0,8,0">
+                            <TextBlock HorizontalAlignment="Left" Background="{x:Null}" TextWrapping="Wrap">
+                                <Run FontSize="20" FontWeight="Bold" Text="{ll:Str 金手指}" /><LineBreak />
+                                <Run Text="{ll:Str '修改当前存档常用数据, 手动保存后会写入存档'}" />
+                            </TextBlock>
+                            <Grid Margin="0,12,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 金币}" />
+                                <pu:NumberInput x:Name="numCheatMoney" Grid.Row="0" Grid.Column="2" Margin="4,2"
+                                        Minimum="0" Maximum="1000000000" Interval="1000" CornerRadius="4"
+                                        BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5"
+                                        Value="0" ValueChanged="CheatNumber_ValueChanged" />
+                                <TextBlock Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" Text="{ll:Str 经验}" />
+                                <pu:NumberInput x:Name="numCheatExp" Grid.Row="0" Grid.Column="5" Margin="4,2"
+                                        Minimum="0" Maximum="100000000" Interval="100" CornerRadius="4"
+                                        BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5"
+                                        Value="0" ValueChanged="CheatNumber_ValueChanged" />
+
+                                <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 等级上限段}" />
+                                <pu:NumberInput x:Name="numCheatLevelMax" Grid.Row="1" Grid.Column="2" Margin="4,2"
+                                        Minimum="0" Maximum="100" Interval="1" CornerRadius="4"
+                                        BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5"
+                                        Value="0" ValueChanged="CheatNumber_ValueChanged" />
+                                <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Text="{ll:Str 体力}" />
+                                <pu:NumberInput x:Name="numCheatStrength" Grid.Row="1" Grid.Column="5" Margin="4,2"
+                                        Minimum="0" Maximum="100000" Interval="10" CornerRadius="4"
+                                        BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5"
+                                        Value="0" ValueChanged="CheatNumber_ValueChanged" />
+
+                                <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 饱腹}" />
+                                <pu:NumberInput x:Name="numCheatStrengthFood" Grid.Row="2" Grid.Column="2" Margin="4,2"
+                                        Minimum="0" Maximum="100000" Interval="10" CornerRadius="4"
+                                        BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5"
+                                        Value="0" ValueChanged="CheatNumber_ValueChanged" />
+                                <TextBlock Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" Text="{ll:Str 口渴}" />
+                                <pu:NumberInput x:Name="numCheatStrengthDrink" Grid.Row="2" Grid.Column="5" Margin="4,2"
+                                        Minimum="0" Maximum="100000" Interval="10" CornerRadius="4"
+                                        BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5"
+                                        Value="0" ValueChanged="CheatNumber_ValueChanged" />
+
+                                <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{ll:Str 心情}" />
+                                <pu:NumberInput x:Name="numCheatFeeling" Grid.Row="3" Grid.Column="2" Margin="4,2"
+                                        Minimum="0" Maximum="100000" Interval="10" CornerRadius="4"
+                                        BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5"
+                                        Value="0" ValueChanged="CheatNumber_ValueChanged" />
+                                <TextBlock Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" Text="{ll:Str 健康}" />
+                                <pu:NumberInput x:Name="numCheatHealth" Grid.Row="3" Grid.Column="5" Margin="4,2"
+                                        Minimum="0" Maximum="100" Interval="5" CornerRadius="4"
+                                        BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5"
+                                        Value="0" ValueChanged="CheatNumber_ValueChanged" />
+
+                                <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="{ll:Str 好感}" />
+                                <pu:NumberInput x:Name="numCheatLikability" Grid.Row="4" Grid.Column="2" Margin="4,2"
+                                        Minimum="0" Maximum="100000" Interval="10" CornerRadius="4"
+                                        BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5"
+                                        Value="0" ValueChanged="CheatNumber_ValueChanged" />
+                                <TextBlock Grid.Row="4" Grid.Column="3" VerticalAlignment="Center" Text="{ll:Str 好感上限}" />
+                                <pu:NumberInput x:Name="numCheatLikabilityMax" Grid.Row="4" Grid.Column="5" Margin="4,2"
+                                        Minimum="0" Maximum="100000" Interval="10" CornerRadius="4"
+                                        BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5"
+                                        Value="0" ValueChanged="CheatNumber_ValueChanged" />
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="{ll:Str 大语言模型}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,0,8,0">
+                            <TextBlock HorizontalAlignment="Left" Background="{x:Null}" TextWrapping="Wrap">
+                                <Run FontSize="20" FontWeight="Bold" Text="{ll:Str 大语言模型}" /><LineBreak />
+                                <Run Text="{ll:Str '配置和启用桌宠大模型 API 聊天'}" />
+                            </TextBlock>
+
+                            <Grid Margin="0,12,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="125" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="190" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" VerticalAlignment="Top" Margin="0,4,0,0" Text="{ll:Str 聊天模式}" />
+                                <StackPanel Grid.Row="0" Grid.Column="1" Margin="4,0,0,8">
+                                    <RadioButton x:Name="RBCGPTUseLB" Margin="0,0,0,5" Checked="CGPType_Checked"
+                                            Content="{ll:Str '使用桌宠选项式聊天功能'}" GroupName="cgpttype"
+                                            Style="{DynamicResource StandardRadioButtonStyle}" />
+                                    <RadioButton x:Name="RBCGPTUseAPI" Margin="0,0,0,5" Checked="CGPType_Checked"
+                                            Content="{ll:Str '使用大模型 API 聊天'}" GroupName="cgpttype"
+                                            Style="{DynamicResource StandardRadioButtonStyle}" />
+                                    <RadioButton x:Name="RBCGPTClose" Margin="0,0,0,5" Checked="CGPType_Checked"
+                                            Content="{ll:Str '关闭聊天框'}" GroupName="cgpttype"
+                                            Style="{DynamicResource StandardRadioButtonStyle}" />
+                                    <RadioButton x:Name="RBCGPTDIY" Checked="CGPType_Checked"
+                                            GroupName="cgpttype" Style="{DynamicResource StandardRadioButtonStyle}">
+                                        <StackPanel>
+                                            <TextBlock Text="{ll:Str '自定义聊天接口'}" />
+                                            <ComboBox x:Name="cbChatAPISelect" Margin="0,4,0,0"
+                                                    Style="{DynamicResource StandardComboBoxStyle}"
+                                                    SelectionChanged="cbChatAPISelect_SelectionChanged" />
+                                        </StackPanel>
+                                    </RadioButton>
+                                </StackPanel>
+
+                                <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 供应商}" />
+                                <ComboBox x:Name="cbLlmProvider" Grid.Row="1" Grid.Column="1" Margin="4"
+                                        SelectionChanged="cbLlmProvider_SelectionChanged"
+                                        Style="{DynamicResource StandardComboBoxStyle}">
+                                    <ComboBoxItem Content="Ollama" Tag="Ollama" />
+                                    <ComboBoxItem Content="DeepSeek" Tag="DeepSeek" />
+                                    <ComboBoxItem Content="MiMo" Tag="MiMo" />
+                                </ComboBox>
+
+                                <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 接口地址}" />
+                                <TextBox x:Name="tbLlmBaseUrl" Grid.Row="2" Grid.Column="1" Margin="4"
+                                        Style="{DynamicResource StandardTextBoxStyle}" />
+
+                                <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{ll:Str 模型}" />
+                                <ComboBox x:Name="cbLlmModel" Grid.Row="3" Grid.Column="1" Margin="4"
+                                        IsEditable="True" Style="{DynamicResource StandardComboBoxStyle}" />
+
+                                <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="API Key" />
+                                <PasswordBox x:Name="pbLlmApiKey" Grid.Row="4" Grid.Column="1" Margin="4" />
+
+                                <TextBlock Grid.Row="5" VerticalAlignment="Top" Margin="0,8,0,0" Text="{ll:Str 系统提示词}" />
+                                <TextBox x:Name="tbLlmSystemPrompt" Grid.Row="5" Grid.Column="1" Margin="4"
+                                        MinHeight="175" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                        Style="{DynamicResource StandardTextBoxStyle}" />
+
+                                <TextBlock Grid.Row="6" VerticalAlignment="Center" Text="{ll:Str 温度}" />
+                                <pu:NumberInput x:Name="numLlmTemperature" Grid.Row="6" Grid.Column="1" Margin="4"
+                                        Minimum="0" Maximum="2" Value="0.8" Interval="0.1" />
+
+                                <TextBlock Grid.Row="7" VerticalAlignment="Center" Text="{ll:Str 最大输出}" />
+                                <pu:NumberInput x:Name="numLlmMaxTokens" Grid.Row="7" Grid.Column="1" Margin="4"
+                                        Minimum="1" Maximum="200000" Value="1024" Interval="128" />
+
+                                <Grid Grid.Row="8" Grid.ColumnSpan="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="125" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="90" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{ll:Str 历史轮数}" />
+                                    <pu:NumberInput x:Name="numLlmHistoryTurns" Grid.Column="1" Margin="4"
+                                            Minimum="0" Maximum="50" Value="8" Interval="1" />
+                                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="10,0,0,0" Text="{ll:Str 超时秒数}" />
+                                    <pu:NumberInput x:Name="numLlmTimeoutSeconds" Grid.Column="3" Margin="4"
+                                            Minimum="5" Maximum="600" Value="60" Interval="5" />
+                                </Grid>
+
+                                <TextBlock Grid.Row="9" VerticalAlignment="Center" Text="{ll:Str 气泡收起}" />
+                                <StackPanel Grid.Row="9" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <CheckBox x:Name="cbLlmBubbleAutoClose" Margin="4,0,16,0"
+                                            Content="{ll:Str '回复后自动收起气泡和输入框'}" />
+                                    <pu:NumberInput x:Name="numLlmBubbleAutoCloseSeconds" Width="90" Margin="4,2"
+                                            Minimum="3" Maximum="120" Value="12" Interval="1" />
+                                    <TextBlock Margin="6,0" VerticalAlignment="Center" Text="{ll:Str 秒}" />
+                                </StackPanel>
+
+                                <Grid x:Name="gridOllamaOptions" Grid.Row="10" Grid.ColumnSpan="2" Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="125" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="38" />
+                                        <RowDefinition Height="38" />
+                                        <RowDefinition Height="38" />
+                                        <RowDefinition Height="38" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str Ollama}" />
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <CheckBox x:Name="cbOllamaPreloadBeforeSend" Margin="4,0,16,0"
+                                                Content="{ll:Str '发送前自动装载'}" />
+                                        <CheckBox x:Name="cbOllamaThink" Content="{ll:Str '启用思考'}" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 保持分钟}" />
+                                    <pu:NumberInput x:Name="numOllamaKeepAliveMinutes" Grid.Row="1" Grid.Column="1" Margin="4"
+                                            Minimum="-1" Maximum="10080" Value="5" Interval="1" />
+                                    <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 上下文长度}" />
+                                    <pu:NumberInput x:Name="numOllamaContextLength" Grid.Row="2" Grid.Column="1" Margin="4"
+                                            Minimum="0" Maximum="200000" Value="0" Interval="1024" />
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Margin="4,0" VerticalAlignment="Center"
+                                            TextWrapping="Wrap" Text="{ll:Str '-1 分钟表示不主动卸载模型; 上下文长度 0 表示使用模型默认值; 思考内容只显示思考中提示。'}" />
+                                </Grid>
+
+                                <StackPanel Grid.Row="11" Grid.Column="1" Margin="4,12,0,0" Orientation="Horizontal">
+                                    <Button x:Name="BtnPreloadOllama" Width="100" Height="30" Margin="0,0,8,0"
+                                            Click="BtnPreloadOllama_Click" Content="{ll:Str 预载模型}"
+                                            pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}" />
+                                    <Button x:Name="BtnUnloadOllama" Width="100" Height="30" Margin="0,0,8,0"
+                                            Click="BtnUnloadOllama_Click" Content="{ll:Str 卸载模型}"
+                                            pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}" />
+                                    <TextBlock x:Name="tbLlmConfigSummary" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="{ll:Str 动作联动}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,0,8,0" MaxWidth="920" HorizontalAlignment="Left">
+                            <TextBlock HorizontalAlignment="Left" Background="{x:Null}" TextWrapping="Wrap">
+                                <Run FontSize="20" FontWeight="Bold" Text="{ll:Str 动作联动}" /><LineBreak />
+                                <Run Text="{ll:Str '勾选动作后, 可让系统自动动作或手动动作触发大模型回复'}" />
+                            </TextBlock>
+
+                            <Grid Margin="0,12,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="34" />
+                                    <RowDefinition Height="34" />
+                                    <RowDefinition Height="34" />
+                                    <RowDefinition Height="34" />
+                                    <RowDefinition Height="34" />
+                                    <RowDefinition Height="34" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 总开关}" />
+                                <CheckBox x:Name="cbActionLinkEnabled" Grid.Row="0" Grid.Column="1" Margin="4"
+                                        VerticalAlignment="Center" Content="{ll:Str '启用动作联动'}" />
+                                <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 触发来源}" />
+                                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <CheckBox x:Name="cbActionLinkAutoEnabled" Margin="4,0,16,0"
+                                            Content="{ll:Str '系统自动动作'}" />
+                                    <CheckBox x:Name="cbActionLinkManualEnabled"
+                                            Content="{ll:Str '手动/外部动作'}" />
+                                </StackPanel>
+                                <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 忙时策略}" />
+                                <CheckBox x:Name="cbActionLinkSkipBusy" Grid.Row="2" Grid.Column="1" Margin="4"
+                                        VerticalAlignment="Center" Content="{ll:Str '大模型回复中时跳过新动作'}" />
+                                <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{ll:Str 移动出声}" />
+                                <CheckBox x:Name="cbActionLinkMoveChatter" Grid.Row="3" Grid.Column="1" Margin="4"
+                                        VerticalAlignment="Center" Content="{ll:Str '移动时偶尔让大模型轻声互动'}" />
+                                <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="{ll:Str 随机间隔}" />
+                                <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <pu:NumberInput x:Name="numActionLinkMoveMinSeconds" Width="80" Margin="4,2"
+                                            Minimum="5" Maximum="3600" Value="35" Interval="5" />
+                                    <TextBlock Margin="6,0" VerticalAlignment="Center" Text="{ll:Str 到}" />
+                                    <pu:NumberInput x:Name="numActionLinkMoveMaxSeconds" Width="80" Margin="4,2"
+                                            Minimum="5" Maximum="3600" Value="95" Interval="5" />
+                                    <TextBlock Margin="6,0" VerticalAlignment="Center" Text="{ll:Str 秒}" />
+                                </StackPanel>
+                                <TextBlock Grid.Row="5" VerticalAlignment="Center" Text="{ll:Str 调试日志}" />
+                                <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <CheckBox x:Name="cbActionLinkDebugLog" Margin="4,0,12,0"
+                                            VerticalAlignment="Center" Content="{ll:Str '写入动作联动调试日志'}" />
+                                    <TextBlock VerticalAlignment="Center" Opacity="0.66"
+                                            Text="{ll:Str '文件: 程序目录/llm-action-link-debug.log'}" />
+                                </StackPanel>
+                                <TextBlock Grid.Row="6" Grid.ColumnSpan="2" Margin="0,6,0,0" TextWrapping="Wrap"
+                                        Text="{ll:Str '系统自动动作会先等待大模型首段回复或 TTS 音频准备好, 再同步播放动作和回复。手动/外部动作不会延迟原动作。'}" />
+                            </Grid>
+
+                            <DockPanel Margin="0,14,0,6">
+                                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" FontWeight="Bold"
+                                        Text="{ll:Str 动作列表}" />
+                                <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" TextWrapping="Wrap"
+                                        Text="{ll:Str '默认呼吸 / 说话 / 开机 / 关机为系统保留项, 不会触发。'}" />
+                            </DockPanel>
+
+                            <Border BorderBrush="{DynamicResource SecondaryDark}" BorderThickness="1" CornerRadius="4"
+                                    MaxWidth="880" HorizontalAlignment="Left">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="34" />
+                                        <RowDefinition Height="390" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Background="{DynamicResource SecondaryLight}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="52" />
+                                            <ColumnDefinition Width="145" />
+                                            <ColumnDefinition Width="245" />
+                                            <ColumnDefinition Width="170" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Margin="8,0" VerticalAlignment="Center" Text="{ll:Str 启用}" />
+                                        <TextBlock Grid.Column="1" Margin="8,0" VerticalAlignment="Center" Text="{ll:Str 类型}" />
+                                        <TextBlock Grid.Column="2" Margin="8,0" VerticalAlignment="Center" Text="{ll:Str 名称}" />
+                                        <TextBlock Grid.Column="3" Margin="8,0" VerticalAlignment="Center" Text="{ll:Str 阶段}" />
+                                        <TextBlock Grid.Column="4" Margin="8,0" VerticalAlignment="Center" Text="{ll:Str 状态}" />
+                                    </Grid>
+                                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                                            HorizontalScrollBarVisibility="Disabled">
+                                        <ItemsControl x:Name="icActionLinkActions" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="{ll:Str 语音合成}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,0,8,0">
+                            <TextBlock HorizontalAlignment="Left" Background="{x:Null}" TextWrapping="Wrap">
+                                <Run FontSize="20" FontWeight="Bold" Text="{ll:Str 语音合成}" /><LineBreak />
+                                <Run Text="{ll:Str '使用小米 MiMo 为大模型回复生成语音'}" />
+                            </TextBlock>
+                            <Grid Margin="0,12,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="120" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 启用}" />
+                                <CheckBox x:Name="cbMimoTtsEnabled" Grid.Row="0" Grid.Column="1" Margin="4"
+                                        VerticalAlignment="Center" Content="{ll:Str '启用大模型回复语音合成'}" />
+                                <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="API Key" />
+                                <PasswordBox x:Name="pbMimoApiKeyTts" Grid.Row="1" Grid.Column="1" Margin="4" />
+                                <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 接口地址}" />
+                                <TextBox x:Name="tbMimoBaseUrl" Grid.Row="2" Grid.Column="1" Margin="4"
+                                        Style="{DynamicResource StandardTextBoxStyle}" />
+                                <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{ll:Str 模型}" />
+                                <TextBox x:Name="tbMimoTtsModel" Grid.Row="3" Grid.Column="1" Margin="4"
+                                        Style="{DynamicResource StandardTextBoxStyle}" />
+                                <TextBlock Grid.Row="4" VerticalAlignment="Top" Margin="0,8,0,0" Text="{ll:Str 风格提示}" />
+                                <TextBox x:Name="tbMimoTtsStylePrompt" Grid.Row="4" Grid.Column="1" Margin="4"
+                                        AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                        Style="{DynamicResource StandardTextBoxStyle}" />
+                                <TextBlock Grid.Row="5" VerticalAlignment="Center" Text="{ll:Str 音色}" />
+                                <ComboBox x:Name="cbMimoTtsVoice" Grid.Row="5" Grid.Column="1" Margin="4"
+                                        IsEditable="True" Style="{DynamicResource StandardComboBoxStyle}">
+                                    <ComboBoxItem Content="冰糖" />
+                                    <ComboBoxItem Content="茉莉" />
+                                    <ComboBoxItem Content="苏打" />
+                                    <ComboBoxItem Content="白桦" />
+                                    <ComboBoxItem Content="Mia" />
+                                    <ComboBoxItem Content="Chloe" />
+                                    <ComboBoxItem Content="Milo" />
+                                    <ComboBoxItem Content="Dean" />
+                                    <ComboBoxItem Content="mimo_default" />
+                                </ComboBox>
+                                <TextBlock Grid.Row="6" VerticalAlignment="Center" Text="{ll:Str 分段播放}" />
+                                <CheckBox x:Name="cbMimoTtsSegmentEnabled" Grid.Row="6" Grid.Column="1" Margin="4"
+                                        VerticalAlignment="Center" Content="{ll:Str '按句/长度分段合成并顺序播放'}" />
+                                <Grid Grid.Row="7" Grid.ColumnSpan="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{ll:Str 最大句数}" />
+                                    <pu:NumberInput x:Name="numMimoTtsMaxSentences" Grid.Column="1" Margin="4"
+                                            Minimum="1" Maximum="10" Value="2" Interval="1" />
+                                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="10,0,0,0" Text="{ll:Str 字符阈值}" />
+                                    <pu:NumberInput x:Name="numMimoTtsSoftMaxChars" Grid.Column="3" Margin="4"
+                                            Minimum="20" Maximum="1000" Value="80" Interval="10" />
+                                </Grid>
+                                <StackPanel Grid.Row="8" Grid.Column="1" Margin="4,8,0,0">
+                                    <CheckBox x:Name="cbMimoTtsCutAtComma" Margin="0,0,0,8"
+                                            Content="{ll:Str '达到字符阈值后允许在下一个逗号截断'}" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="BtnTestMimoTts" Width="110" Height="30" Margin="0,0,8,0"
+                                                Click="BtnTestMimoTts_Click" Content="{ll:Str 测试合成}"
+                                                pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}" />
+                                        <TextBlock VerticalAlignment="Center" TextWrapping="Wrap"
+                                                Text="{ll:Str 'API Key 会明文保存到本机设置文件。'}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="{ll:Str 语音输入}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,0,8,0">
+                            <TextBlock HorizontalAlignment="Left" Background="{x:Null}" TextWrapping="Wrap">
+                                <Run FontSize="20" FontWeight="Bold" Text="{ll:Str 语音输入}" /><LineBreak />
+                                <Run Text="{ll:Str '使用小米 MiMo 把语音识别为大模型聊天输入'}" />
+                            </TextBlock>
+                            <Grid Margin="0,12,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="38" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 启用}" />
+                                <CheckBox x:Name="cbMimoAsrEnabled" Grid.Row="0" Grid.Column="1" Margin="4"
+                                        VerticalAlignment="Center" Content="{ll:Str '启用按住说话语音输入'}" />
+                                <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="API Key" />
+                                <PasswordBox x:Name="pbMimoApiKeyAsr" Grid.Row="1" Grid.Column="1" Margin="4" />
+                                <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{ll:Str 模型}" />
+                                <TextBox x:Name="tbMimoAsrModel" Grid.Row="2" Grid.Column="1" Margin="4"
+                                        Style="{DynamicResource StandardTextBoxStyle}" />
+                                <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{ll:Str 输入麦克风}" />
+                                <ComboBox x:Name="cbMimoAsrInputDevice" Grid.Row="3" Grid.Column="1" Margin="4"
+                                        Style="{DynamicResource StandardComboBoxStyle}" />
+                                <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="{ll:Str 语言}" />
+                                <ComboBox x:Name="cbMimoAsrLanguage" Grid.Row="4" Grid.Column="1" Margin="4"
+                                        Style="{DynamicResource StandardComboBoxStyle}">
+                                    <ComboBoxItem Content="auto" Tag="auto" />
+                                    <ComboBoxItem Content="zh" Tag="zh" />
+                                    <ComboBoxItem Content="en" Tag="en" />
+                                </ComboBox>
+                                <TextBlock Grid.Row="5" VerticalAlignment="Center" Text="{ll:Str 识别后}" />
+                                <ComboBox x:Name="cbMimoAsrSubmitMode" Grid.Row="5" Grid.Column="1" Margin="4"
+                                        Style="{DynamicResource StandardComboBoxStyle}">
+                                    <ComboBoxItem Content="{ll:Str 填入输入框}" Tag="FillInput" />
+                                    <ComboBoxItem Content="{ll:Str 自动发送}" Tag="AutoSend" />
+                                </ComboBox>
+                                <StackPanel Grid.Row="6" Grid.Column="1" Margin="4,8,0,0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock VerticalAlignment="Center" Text="{ll:Str 按住快捷键}" />
+                                        <TextBox x:Name="tbMimoPushToTalkHotkey" Grid.Column="1" Margin="4,0,0,0"
+                                                PreviewKeyDown="tbMimoPushToTalkHotkey_PreviewKeyDown"
+                                                Style="{DynamicResource StandardTextBoxStyle}" />
+                                    </Grid>
+                                    <StackPanel Margin="0,12,0,0" Orientation="Horizontal">
+                                        <Button x:Name="BtnTestMimoAsr" Width="130" Height="30" Margin="0,0,8,0"
+                                                PreviewMouseLeftButtonDown="BtnTestMimoAsr_PreviewMouseLeftButtonDown"
+                                                PreviewMouseLeftButtonUp="BtnTestMimoAsr_PreviewMouseLeftButtonUp"
+                                                MouseLeave="BtnTestMimoAsr_MouseLeave"
+                                                Content="{ll:Str 按住测试录音}"
+                                                pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}" />
+                                        <Button x:Name="BtnPlayMimoAsrCache" Width="90" Height="30" Margin="0,0,8,0"
+                                                Click="BtnPlayMimoAsrCache_Click" Content="{ll:Str 播放录音}"
+                                                IsEnabled="False"
+                                                pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}" />
+                                        <Button x:Name="BtnRecognizeMimoAsrCache" Width="90" Height="30" Margin="0,0,8,0"
+                                                Click="BtnRecognizeMimoAsrCache_Click" Content="{ll:Str 识别录音}"
+                                                IsEnabled="False"
+                                                pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}" />
+                                        <TextBlock x:Name="tbMimoAsrStatus" VerticalAlignment="Center" TextWrapping="Wrap"
+                                                Text="{ll:Str '松开后缓存录音, 可先播放确认。'}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+                <Button Width="88" Height="30" Margin="4,0" Content="{ll:Str 保存}" Click="BtnSave_Click"
+                        pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource PrimaryDarker}"
+                        Foreground="{DynamicResource DARKPrimaryText}" />
+                <Button Width="88" Height="30" Margin="4,0" Content="{ll:Str 关闭}" Click="BtnClose_Click"
+                        pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</pu:WindowX>

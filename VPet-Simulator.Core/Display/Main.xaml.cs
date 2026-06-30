@@ -353,6 +353,7 @@ namespace VPet_Simulator.Core
             VoicePlayer.Clock = null;
         }
         public bool MoveTimerSmartMove = false;
+        public bool ForceCurrentMoveWindowMotion = false;
         private void SmartMoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             MoveTimerSmartMove = false;
@@ -360,7 +361,7 @@ namespace VPet_Simulator.Core
 
         private void MoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (DisplayType.Type != GraphType.Move || !MoveTimerSmartMove)
+            if (DisplayType.Type != GraphType.Move || !(MoveTimerSmartMove || ForceCurrentMoveWindowMotion))
             {
                 MoveTimer.Stop();
                 return;
@@ -488,8 +489,15 @@ namespace VPet_Simulator.Core
                 rasetype = 0;
         }
 
+        public event Func<bool> RightClickOpening;
+
         private void MainGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (RightClickOpening?.Invoke() == true)
+            {
+                e.Handled = true;
+                return;
+            }
             if (ToolBar.Visibility == Visibility.Visible)
             {
                 ToolBar.CloseTimer.Enabled = false;
