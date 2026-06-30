@@ -33,7 +33,7 @@ namespace VPet_Simulator.Windows
     public partial class MainWindow : WindowX
     {
         internal System.Windows.Forms.NotifyIcon notifyIcon;
-        public PetHelper petHelper;
+        public PetHelper? petHelper;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
 
         public MainWindow()
@@ -66,14 +66,14 @@ namespace VPet_Simulator.Windows
 
             PNGAnimation.MaxLoadMemory += (int)Function.MemoryUsage();
 
-            ExtensionValue.BaseDirectory = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName;
+            ExtensionValue.BaseDirectory = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly()!.Location)!.DirectoryName!;
 
 
             LocalizeCore.StoreTranslation = true;
             LocalizeCore.TranslateFunc = (str) =>
             {
                 var destr = Sub.TextDeReplace(str);
-                if (destr != str && LocalizeCore.CurrentLPS != null && LocalizeCore.CurrentLPS.Assemblage.TryGetValue(destr, out ILine line))
+                if (destr != str && LocalizeCore.CurrentLPS != null && LocalizeCore.CurrentLPS.Assemblage.TryGetValue(destr, out ILine? line))
                 {
                     return line.GetString();
                 }
@@ -178,11 +178,11 @@ namespace VPet_Simulator.Windows
                             }
                         }
                         if (workshop.Count != 0)
-                            Set["workshop"] = workshop;
+                            Set!["workshop"] = workshop;
                     }
                     else
                     {
-                        var workshop = Set["workshop"];
+                        var workshop = Set!["workshop"];
                         foreach (Sub ws in workshop)
                         {
                             Path.Add(new DirectoryInfo(ws.Name));
@@ -197,7 +197,7 @@ namespace VPet_Simulator.Windows
                 if (!NOCancel)
                 {
                     source.Cancel();
-                    var workshop = Set["workshop"];
+                    var workshop = Set!["workshop"];
                     foreach (Sub ws in workshop)
                     {
                         Path.Add(new DirectoryInfo(ws.Name));
@@ -208,12 +208,12 @@ namespace VPet_Simulator.Windows
                 Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading Translate")).Wait();
                 //加载语言
                 LocalizeCore.StoreTranslation = true;
-                if (Set.Language == "null")
+                if (Set!.Language == "null")
                 {
                     LocalizeCore.LoadDefaultCulture();
                     if (LocalizeCore.CurrentCulture == "null")
                         LocalizeCore.CurrentCulture = "en";
-                    Set.Language = LocalizeCore.CurrentCulture;
+                    Set!.Language = LocalizeCore.CurrentCulture;
                 }
                 else
                     LocalizeCore.LoadCulture(Set.Language);
@@ -249,7 +249,7 @@ namespace VPet_Simulator.Windows
                     //COD Check
                     if (!Set["v"][(gbol)"CODC"])
                     {
-                        var di = new DirectoryInfo(ExtensionValue.BaseDirectory).Parent;
+                        var di = new DirectoryInfo(ExtensionValue.BaseDirectory!).Parent!;
                         if (di.Exists && di.GetDirectories("*Call of Duty*").Length != 0)
                         {
                             Dispatcher.Invoke(() => NoticeBox.Show("检测到游戏库中包含使命召唤,建议不要在运行COD时运行桌宠\n根据社区反馈, COD可能会误报桌宠为作弊软件".Translate(),
@@ -264,7 +264,7 @@ namespace VPet_Simulator.Windows
                             Header = "访客表".Translate(),
                             HorizontalContentAlignment = HorizontalAlignment.Center
                         };
-                        Main.ToolBar.MenuInteract.Items.Add(menuItem);
+                        Main!.ToolBar!.MenuInteract.Items.Add(menuItem);
 
                         var menuCreate = new MenuItem()
                         {
@@ -356,14 +356,14 @@ namespace VPet_Simulator.Windows
                   }]);
                 Item.UseAction.Add("Toy", [(imw,Item) =>
                   {//玩具: 默认播放玩耍动画
-                       var graph = imw.Core.Graph.FindGraph(Item.Data, AnimatType.A_Start, imw.GameSavesData.GameSave.Mode);
+                       var graph = imw.Core.Graph!.FindGraph(Item.Data, AnimatType.A_Start, imw.GameSavesData.GameSave.Mode);
                        imw.ActivityLogs.Add(new ActivityLog("al_take_item", Item.TranslateName));
                       if (graph == null)
                           {
-                             graph = imw.Core.Graph.FindGraph(Item.Data, AnimatType.Single, imw.GameSavesData.GameSave.Mode);
+                             graph = imw.Core.Graph!.FindGraph(Item.Data, AnimatType.Single, imw.GameSavesData.GameSave.Mode);
                               if(graph != null)
                                 {
-                                    imw.Main.Display(graph, Main.DisplayToNomal);
+                                    imw.Main.Display(graph, Main!.DisplayToNomal);
                                 }
                                 else
                                 {
@@ -372,7 +372,7 @@ namespace VPet_Simulator.Windows
                           return true;
                           }
 
-                        imw.Main.Display(Item.Data, AnimatType.A_Start, imw.Main.DisplayBLoopingToNomal(imw.Core.Graph.GraphConfig.GetDuration(graph.GraphInfo.Name)));
+                        imw.Main.Display(Item.Data, AnimatType.A_Start, imw.Main.DisplayBLoopingToNomal(imw.Core.Graph!.GraphConfig.GetDuration(graph.GraphInfo.Name)));
                         return true;
                   }]);
                 Item.UseAction.Add("Mail", [
@@ -400,13 +400,15 @@ namespace VPet_Simulator.Windows
                       foreach(var line in lps)
                       {
                           var itm = Item.CreateItem(imw,line);
+                          if(itm == null)
+                              continue;
                           itm.LoadSource(this);
                           imw.ItemsAdd(itm);
                           itemnames.Add(itm.TranslateName);
                       }
                       if(itemnames.Count != 0)
                       {
-                          Main.SayRnd("你打开了{0},获得了物品".Translate(Item.Name) +"\n" + string.Join(',',itemnames));
+                          Main!.SayRnd("你打开了{0},获得了物品".Translate(Item.Name) +"\n" + string.Join(',',itemnames));
                       }
                       Item.Consume(this);
                      return true;
@@ -458,7 +460,7 @@ namespace VPet_Simulator.Windows
                 btn.Click += (_, _) =>
                 {
                     Set["banuser"][(gbol)friend.Id.Value.ToString()] = true;
-                    Main.MsgBar.ForceClose();
+                    Main.MsgBar?.ForceClose();
                 };
                 var stackpanal = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
                 stackpanal.Children.Add(tb);
@@ -478,7 +480,7 @@ namespace VPet_Simulator.Windows
                     {
                         winMutiPlayer = new winMutiPlayer(this, lobby.Id);
                         winMutiPlayer.Show();
-                        Main.MsgBar.ForceClose();
+                        Main.MsgBar?.ForceClose();
                     }
                     else
                     {
@@ -512,7 +514,7 @@ namespace VPet_Simulator.Windows
             base.Close();
         }
 
-        private void Restart_Closed(object sender, EventArgs e)
+        private void Restart_Closed(object? sender, EventArgs? e)
         {
             CloseConfirm = false;
             try
@@ -551,7 +553,7 @@ namespace VPet_Simulator.Windows
                 {
                     if (Core != null && Core.Graph != null)
                     {
-                        foreach (var igs in Core.Graph.GraphsList.Values)
+                        foreach (var igs in Core.Graph!.GraphsList.Values)
                         {
                             foreach (var ig2 in igs.Values)
                             {
@@ -603,7 +605,7 @@ namespace VPet_Simulator.Windows
             {
                 if (Core != null && Core.Graph != null)
                 {
-                    foreach (var igs in Core.Graph.GraphsList.Values)
+                    foreach (var igs in Core.Graph!.GraphsList.Values)
                     {
                         foreach (var ig2 in igs.Values)
                         {
@@ -743,42 +745,42 @@ namespace VPet_Simulator.Windows
         {
             if (obj.work.Type == GraphHelper.Work.WorkType.Work)
             {
-                GameSavesData.Statistics[(gint)"stat_single_profit_money"] = (int)obj.count;
+                GameSavesData.Statistics![(gint)"stat_single_profit_money"] = (int)obj.count;
             }
             else
             {
-                GameSavesData.Statistics[(gint)"stat_single_profit_exp"] = (int)obj.count;
+                GameSavesData.Statistics![(gint)"stat_single_profit_exp"] = (int)obj.count;
             }
         }
 
         private void Main_Event_TouchBody()
         {
-            GameSavesData.Statistics[(gint)"stat_touch_body"]++;
+            GameSavesData.Statistics![(gint)"stat_touch_body"]++;
         }
 
         private void Main_Event_TouchHead()
         {
-            GameSavesData.Statistics[(gint)"stat_touch_head"]++;
+            GameSavesData.Statistics![(gint)"stat_touch_head"]++;
         }
 
         private void Main_OnSay(SayInfo obj)
         {
-            GameSavesData.Statistics[(gint)"stat_say_times"]++;
+            GameSavesData.Statistics![(gint)"stat_say_times"]++;
         }
 
-        private void MoveTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void MoveTimer_Elapsed(object? sender, ElapsedEventArgs? e)
         {
-            GameSavesData.Statistics[(gint)"stat_move_length"] += (int)(Math.Abs(Main.MoveTimerPoint.X) + Math.Abs(Main.MoveTimerPoint.Y));
+            GameSavesData.Statistics![(gint)"stat_move_length"] += (int)(Math.Abs(Main.MoveTimerPoint.X) + Math.Abs(Main.MoveTimerPoint.Y));
         }
 
-        private void AutoSaveTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void AutoSaveTimer_Elapsed(object? sender, ElapsedEventArgs? e)
         {
             CheckGalleryUnlock();
             Save();
         }
 
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void Window_Closed(object? sender, EventArgs? e)
         {
             CloseConfirm = false;
             try
@@ -853,7 +855,7 @@ namespace VPet_Simulator.Windows
                 //uint extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
                 //SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
                 HitThrough = !HitThrough;
-                (notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_HitThrough", false).First() as System.Windows.Forms.ToolStripMenuItem).Checked = HitThrough;
+                (notifyIcon.ContextMenuStrip!.Items.Find("NotifyIcon_HitThrough", false)!.First() as System.Windows.Forms.ToolStripMenuItem)!.Checked = HitThrough;
                 if (HitThrough)
                 {
                     Win32.User32.SetWindowLongPtr(_hwnd, Win32.GetWindowLongFields.GWL_EXSTYLE,

@@ -167,10 +167,10 @@ namespace VPet_Simulator.Core
         /// <param name="GraphName">动画名字</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
-        public List<IGraph>? FindGraphs(string? GraphName, AnimatType animat, IGameSave.ModeType mode)
+        public List<IGraph> FindGraphs(string? GraphName, AnimatType animat, IGameSave.ModeType mode)
         {
             if (GraphName == null)
-                return null;
+                return new List<IGraph>();
             if (GraphsList.TryGetValue(GraphName, out var d3) && d3.TryGetValue(animat, out var gl))
             {
                 var list = gl.FindAll(x => x.GraphInfo.ModeType == mode);

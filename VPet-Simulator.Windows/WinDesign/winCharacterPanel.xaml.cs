@@ -35,7 +35,11 @@ namespace VPet_Simulator.Windows
             InitializeComponent();
             Title = "面板".Translate() + ' ' + mw.PrefixSave;
             mw.Windows.Add(this);
-            foreach (var v in mw.GameSavesData.Statistics.Data)
+            if(mw.GameSavesData.Statistics == null)
+            {
+                mw.GameSavesData.Statistics = new Statistics();
+            }
+            foreach (var v in mw.GameSavesData!.Statistics.Data)
             {
                 StatList.Add(new StatInfo(v.Key, v.Value.GetDouble()));
             }
@@ -123,7 +127,7 @@ namespace VPet_Simulator.Windows
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
-            public event PropertyChangedEventHandler PropertyChanged;
+            public event PropertyChangedEventHandler? PropertyChanged;
         }
         private void TextBox_Search_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -675,7 +679,7 @@ namespace VPet_Simulator.Windows
         }
 
         bool load2 = false;
-        List<(string name, Core.PetLoader loader)> bdpetlist = null;
+        List<(string name, Core.PetLoader loader)>? bdpetlist = null;
         private async void MainTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (MainTab.SelectedIndex == 2 && load2 == false)
@@ -726,11 +730,11 @@ namespace VPet_Simulator.Windows
             var pl = bdpetlist[cb_birthday.SelectedIndex];
             img_b_background.Source = mw.ImageSources.FindImage("bday_" + pl.loader.Name);
             tb_bdiy.Text = "{0} 祝 {1} 生日快乐!".Translate(pl.name, mw.GameSavesData.GameSave.HostName);
-            ILine bdinfo = pl.loader.Config.Data.FindLine("bday");
+            ILine bdinfo = pl.loader!.Config!.Data!.FindLine("bday")!;
             img_b_head.Width = bdinfo[(gdbe)"w"];
             img_b_head.Margin = new Thickness(bdinfo[(gdbe)"x"], bdinfo[(gdbe)"y"], 0, 0);
-            lb_b_datetime.VerticalAlignment = Enum.Parse<VerticalAlignment>(bdinfo[(gstr)"va"], true);
-            lb_b_datetime.HorizontalAlignment = Enum.Parse<HorizontalAlignment>(bdinfo[(gstr)"ha"], true);
+            lb_b_datetime.VerticalAlignment = Enum.Parse<VerticalAlignment>(bdinfo[(gstr)"va"]!, true);
+            lb_b_datetime.HorizontalAlignment = Enum.Parse<HorizontalAlignment>(bdinfo[(gstr)"ha"]!, true);
             b_b_text.Background = new SolidColorBrush(Function.HEXToColor('#' + bdinfo[(gstr)"tb"]));
             tb_b_text.Foreground = new SolidColorBrush(Function.HEXToColor('#' + bdinfo[(gstr)"tf"]));
             vb_b_text.Margin = new Thickness(bdinfo[(gdbe)"tleft"], bdinfo[(gdbe)"ttop"], bdinfo[(gdbe)"tright"], bdinfo[(gdbe)"tbottom"]);
@@ -815,7 +819,7 @@ namespace VPet_Simulator.Windows
             mw.ActivityLogs.CollectionChanged += ActivityLogs_CollectionChanged;
         }
 
-        private void ActivityLogs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void ActivityLogs_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs? e)
         {
             Dispatcher.Invoke(() =>
             {

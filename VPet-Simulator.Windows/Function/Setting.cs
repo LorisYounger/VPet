@@ -583,14 +583,14 @@ namespace VPet_Simulator.Windows
         {
             var petloader = mw.Pets.Find(x => x.Name == PetGraph);
             petloader ??= mw.Pets[0];
-            bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
+            bool ischangename = mw.Core.Save!.Name == petloader.PetName.Translate();
             LocalizeCore.LoadCulture(language);
             Language = LocalizeCore.CurrentCulture;
             if (ischangename)
             {
-                mw.Core.Save.Name = petloader.PetName.Translate();
+                mw.Core.Save!.Name = petloader.PetName.Translate();
                 if (mw.IsSteamUser)
-                    SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
+                    SteamFriends.SetRichPresence("username", mw.Core.Save!.Name);
             }
         }
 

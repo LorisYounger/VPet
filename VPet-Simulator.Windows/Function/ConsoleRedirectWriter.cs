@@ -33,7 +33,7 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        public override void Write(string value)
+        public override void Write(string? value)
         {
             if (string.IsNullOrEmpty(value))
                 return;
@@ -44,7 +44,7 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
             if (!string.IsNullOrEmpty(value))
             {

@@ -45,7 +45,7 @@ public class ScheduleTask
                 }
                 else
                 {
-                    Work work = mw.Core.Graph.GraphConfig.Works.Find(w => w.Name == sub[0]);
+                    Work work = mw.Core.Graph!.GraphConfig.Works.Find(w => w.Name == sub[0]);
                     if (work != null)
                     {
                         int dbl = int.Parse(sub[1]);

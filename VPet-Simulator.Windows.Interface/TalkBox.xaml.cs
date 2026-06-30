@@ -29,8 +29,8 @@ namespace VPet_Simulator.Windows.Interface
         {
             var baseUri = "/VPet-Simulator.Windows.Interface;component/talkbox.xaml";
             var resourceLocater = new Uri(baseUri, UriKind.Relative);
-            var exprCa = (PackagePart)typeof(Application).GetMethod("GetResourceOrContentPart", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { resourceLocater });
-            var stream = exprCa.GetStream();
+            var exprCa = (PackagePart?)typeof(Application)?.GetMethod("GetResourceOrContentPart", BindingFlags.NonPublic | BindingFlags.Static)?.Invoke(null, new object[] { resourceLocater });
+            var stream = exprCa?.GetStream();
             var uri = new Uri((Uri)typeof(BaseUriHelper).GetProperty("PackAppBaseUri", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null, null), resourceLocater);
             var parserContext = new ParserContext
             {
@@ -59,7 +59,8 @@ namespace VPet_Simulator.Windows.Interface
             }
             var cont = tbTalk.Text;
             tbTalk.Text = "";
-            MainPlugin.MW.Main.ToolBar.Visibility = Visibility.Collapsed;
+            if(MainPlugin.MW.Main.ToolBar !=　null)
+                MainPlugin.MW.Main.ToolBar!.Visibility = Visibility.Collapsed;
 
             Task.Run(() => Responded(cont));
         }
@@ -71,9 +72,9 @@ namespace VPet_Simulator.Windows.Interface
             if (MainPlugin.MW.Main.DisplayType.Name == "think")
                 return;
 
-            var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.B_Loop, MainPlugin.MW.Core.Save.Mode);
-            var think2 = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.A_Start, MainPlugin.MW.Core.Save.Mode);
-            if (think.Count > 0 && think2.Count > 0)
+            var think = MainPlugin.MW.Core.Graph!.FindGraphs("think", AnimatType.B_Loop, MainPlugin.MW.Core.Save!.Mode);
+            var think2 = MainPlugin.MW.Core.Graph!.FindGraphs("think", AnimatType.A_Start, MainPlugin.MW.Core.Save!.Mode);
+            if (think?.Count > 0 && think2?.Count > 0)
             {
                 MainPlugin.MW.Main.Display("think", AnimatType.A_Start, MainPlugin.MW.Main.DisplayBLoopingForce);
             }
@@ -81,9 +82,9 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 显示思考结束并说话
         /// </summary>
-        public void DisplayThinkToSayRnd(string text, string desc = null)
+        public void DisplayThinkToSayRnd(string text, string? desc = null)
         {
-            var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.C_End, MainPlugin.MW.Core.Save.Mode);
+            var think = MainPlugin.MW.Core.Graph!.FindGraphs("think", AnimatType.C_End, MainPlugin.MW.Core.Save!.Mode) ?? [];
             Action Next = () => { MainPlugin.MW.Main.SayRnd(text, true, desc); };
             if (think.Count > 0)
             {
@@ -101,9 +102,9 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="sayInfostream">说话信息</param>
         public void DisplayThinkToSayRnd(SayInfoWithStream sayInfostream)
         {
-            var think = MainPlugin.MW.Core.Graph.FindGraphs("think", AnimatType.C_End, MainPlugin.MW.Core.Save.Mode);
+            var think = MainPlugin.MW.Core.Graph!.FindGraphs("think", AnimatType.C_End, MainPlugin.MW.Core.Save!.Mode);
             sayInfostream.Force = true;
-            if (think.Count > 0)
+            if (think?.Count > 0)
             {
                 Task.Run(() =>
                 {
@@ -133,16 +134,16 @@ namespace VPet_Simulator.Windows.Interface
             {
                 Send_Click(sender, e);
                 e.Handled = true;
-                MainPlugin.MW.Main.ToolBar.Visibility = Visibility.Collapsed;
+                MainPlugin.MW.Main.ToolBar!.Visibility = Visibility.Collapsed;
                 return;
             }
             if (tbTalk.Text.Length > 0)
             {
-                MainPlugin.MW.Main.ToolBar.CloseTimer.Stop();
+                MainPlugin.MW.Main.ToolBar!.CloseTimer.Stop();
             }
             else
             {
-                MainPlugin.MW.Main.ToolBar.CloseTimer.Start();
+                MainPlugin.MW.Main.ToolBar!.CloseTimer.Start();
             }
         }
         public UIElement This => this;

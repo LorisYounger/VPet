@@ -87,22 +87,22 @@ public partial class MPFriends : WindowX, IMPFriend
             Task.Run(() =>
             {
                 double dist;
-                if ((dist = Core.Controller.GetWindowsDistanceLeft()) < 0)
+                if ((dist = Core.Controller!.GetWindowsDistanceLeft()) < 0)
                 {
                     Thread.Sleep(100);
                     Dispatcher.Invoke(() => Left -= dist);
                 }
-                if ((dist = Core.Controller.GetWindowsDistanceRight()) < 0)
+                if ((dist = Core.Controller!.GetWindowsDistanceRight()) < 0)
                 {
                     Thread.Sleep(100);
                     Dispatcher.Invoke(() => Left += dist);
                 }
-                if ((dist = Core.Controller.GetWindowsDistanceUp()) < 0)
+                if ((dist = Core.Controller!.GetWindowsDistanceUp()) < 0)
                 {
                     Thread.Sleep(100);
                     Dispatcher.Invoke(() => Top -= dist);
                 }
-                if ((dist = Core.Controller.GetWindowsDistanceDown()) < 0)
+                if ((dist = Core.Controller!.GetWindowsDistanceDown()) < 0)
                 {
                     Thread.Sleep(100);
                     Dispatcher.Invoke(() => Top += dist);
@@ -181,20 +181,20 @@ public partial class MPFriends : WindowX, IMPFriend
                         hashcheckimg.ToolTip = "是没有修改过存档/使用超模MOD的玩家专属标志".Translate();
                         Grid.SetColumn(hashcheckimg, 4);
                         Grid.SetRowSpan(hashcheckimg, 2);
-                        Main.ToolBar.gdPanel.Children.Add(hashcheckimg);
+                        Main!.ToolBar!.gdPanel.Children.Add(hashcheckimg);
                     }
                 }
                 else
                 {
                     if (hashcheckimg != null)
                     {
-                        Main.ToolBar.gdPanel.Children.Remove(hashcheckimg);
+                        Main!.ToolBar!.gdPanel.Children.Remove(hashcheckimg);
                         hashcheckimg = null;
                     }
                 }
             });
 
-            Main.Event_TouchHead += Main_Event_TouchHead;
+            Main!.Event_TouchHead += Main_Event_TouchHead;
             Main.Event_TouchBody += Main_Event_TouchBody;
             SteamMatchmaking.OnLobbyMemberDataChanged += SteamMatchmaking_OnLobbyMemberDataChanged;
 
@@ -212,7 +212,7 @@ public partial class MPFriends : WindowX, IMPFriend
                 if (!string.IsNullOrEmpty(tmp))
                 {
                     Core.Save = GameSave_VPet.Load(new Line(tmp));
-                    Main.ToolBar.M_TimeUIHandle(Main);
+                    Main!.ToolBar!.M_TimeUIHandle(Main);
                     Main.ToolBar.tfun.Visibility = Visibility.Collapsed;
                 }
                 if (lb.GetMemberData(friend, "notouch") == "true")
@@ -229,24 +229,24 @@ public partial class MPFriends : WindowX, IMPFriend
     private void NoTouchTrue()
     {
         NOTouch = true;
-        Main.ToolBar.MenuInteract.IsEnabled = false;
+        Main!.ToolBar!.MenuInteract.IsEnabled = false;
     }
     private void NoTouchFalse()
     {
         NOTouch = false;
-        Main.ToolBar.MenuInteract.IsEnabled = true;
+        Main!.ToolBar!.MenuInteract.IsEnabled = true;
     }
 
     private void Main_Event_TouchHead()
     {
-        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name), 3000);
+        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save!.Name), 3000);
         var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
         msg.SetContent(Interact.TouchHead);
         wmp.SendMessageALL(msg);
     }
     private void Main_Event_TouchBody()
     {
-        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save.Name), 3000);
+        Main.LabelDisplayShow("{0}在摸{1}的头".Translate(SteamClient.Name, Core.Save!.Name), 3000);
         var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
         msg.SetContent(Interact.TouchBody);
         wmp.SendMessageALL(msg);
@@ -370,15 +370,15 @@ public partial class MPFriends : WindowX, IMPFriend
             Main.ToolBar = new Core.ToolBar(Main);
             Main.ToolBar.Visibility = Visibility.Collapsed;
             Main.UIGrid.Children.Add(Main.ToolBar);
-            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, () => { DisplayTouchHead(); return true; }));
-            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchBodyLocate, Core.Graph.GraphConfig.TouchBodySize, () => { DisplayTouchBody(); return true; }));
+            Core.TouchEvent.Add(new TouchArea(Core.Graph!.GraphConfig.TouchHeadLocate, Core.Graph!.GraphConfig.TouchHeadSize, () => { DisplayTouchHead(); return true; }));
+            Core.TouchEvent.Add(new TouchArea(Core.Graph!.GraphConfig.TouchBodyLocate, Core.Graph!.GraphConfig.TouchBodySize, () => { DisplayTouchBody(); return true; }));
             for (int i = 0; i < 4; i++)
             {
                 IGameSave.ModeType m = (IGameSave.ModeType)i;
-                Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate[i], Core.Graph.GraphConfig.TouchRaisedSize[i],
+                Core.TouchEvent.Add(new TouchArea(Core.Graph!.GraphConfig.TouchRaisedLocate[i], Core.Graph!.GraphConfig.TouchRaisedSize[i],
                     () =>
                     {
-                        if (Core.Save.Mode == m)
+                        if (Core.Save!.Mode == m)
                         {
                             Main.DisplayRaised();
                             return true;
@@ -456,15 +456,15 @@ public partial class MPFriends : WindowX, IMPFriend
             //Main.WorkCheck = mf.WorkCheck;
 
             //添加捏脸动画(若有)
-            if (Core.Graph.GraphConfig.Data.ContainsLine("pinch"))
+            if (Core.Graph!.GraphConfig.Data.ContainsLine("pinch"))
             {
-                var pin = Core.Graph.GraphConfig.Data["pinch"];
+                var pin = Core.Graph!.GraphConfig.Data["pinch"];
                 Main.Core.TouchEvent.Insert(0, new TouchArea(
                     new Point(pin[(gdbe)"px"], pin[(gdbe)"py"]), new Size(pin[(gdbe)"sw"], pin[(gdbe)"sh"])
                     , DisplayPinch, true));
             }
-            Title = "{0}的{1}".Translate(friend.Name, Core.Save.Name);
-            LoadingText.Content = "{0}的{1}".Translate(friend.Name, Core.Save.Name);
+            Title = "{0}的{1}".Translate(friend.Name, Core.Save!.Name);
+            LoadingText.Content = "{0}的{1}".Translate(friend.Name, Core.Save!.Name);
             LoadingText.Background = Function.ResourcesBrush(Function.BrushType.DARKPrimaryTransA);
             LoadingText.VerticalAlignment = VerticalAlignment.Top;
 
@@ -526,12 +526,12 @@ public partial class MPFriends : WindowX, IMPFriend
     public bool DisplayPinch()
     {
         if (NOTouch) return false;
-        if (Core.Graph.FindGraphs("pinch", AnimatType.A_Start, Core.Save.Mode) == null)
+        if (Core.Graph!.FindGraphs("pinch", AnimatType.A_Start, Core.Save!.Mode) == null)
         {
             return false;
         }
         Main.CountNomal = 0;
-        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save.Name), 3000);
+        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save!.Name), 3000);
         if (Main.DisplayType.Name == "pinch")
         {
             if (Main.DisplayType.Animat == AnimatType.A_Start)
@@ -554,7 +554,7 @@ public partial class MPFriends : WindowX, IMPFriend
     }
     private void DisplayPinch_loop()
     {
-        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save.Name), 3000);
+        Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(SteamClient.Name, Core.Save!.Name), 3000);
         var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
         msg.SetContent(Interact.TouchPinch);
         wmp.SendMessageALL(msg);
@@ -660,10 +660,10 @@ public partial class MPFriends : WindowX, IMPFriend
             {
                 case Interact.TouchHead:
                 case Interact.TouchBody:
-                    Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 3000);
+                    Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save!.Name), 3000);
                     break;
                 case Interact.TouchPinch:
-                    Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save.Name));
+                    Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save!.Name));
                     break;
             }
             return;
@@ -672,15 +672,15 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             case Interact.TouchHead:
                 DisplayNOCALTouchHead();
-                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 3000);
+                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save!.Name), 3000);
                 break;
             case Interact.TouchBody:
                 DisplayNOCALTouchBody();
-                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save.Name), 3000);
+                Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, Core.Save!.Name), 3000);
                 break;
             case Interact.TouchPinch:
                 DisplayNOCALTouchPinch();
-                Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save.Name), 3000);
+                Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, Core.Save!.Name), 3000);
                 break;
         }
     }
@@ -716,7 +716,7 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             case AnimatType.A_Start:
                 gi.Animat = AnimatType.B_Loop;
-                var img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+                var img = Core.Graph!.FindGraphs(gi.Name, gi.Animat, Core.Save!.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
                 if (img.Count != 0)
                 {
                     Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
@@ -727,7 +727,7 @@ public partial class MPFriends : WindowX, IMPFriend
                 }
                 break;
             case AnimatType.B_Loop:
-                img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+                img = Core.Graph!.FindGraphs(gi.Name, gi.Animat, Core.Save!.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
                 if (img.Count != 0)
                 {
                     Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
@@ -759,7 +759,7 @@ public partial class MPFriends : WindowX, IMPFriend
             if (gi.Type != GraphType.Common)
                 return false;
         }
-        var img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+        var img = Core.Graph!.FindGraphs(gi.Name, gi.Animat, Core.Save!.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
         if (img.Count != 0)
         {
             Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
@@ -790,7 +790,7 @@ public partial class MPFriends : WindowX, IMPFriend
     {
         if (Core != null && Core.Graph != null)
         {
-            foreach (var igs in Core.Graph.GraphsList.Values)
+            foreach (var igs in Core.Graph!.GraphsList.Values)
             {
                 foreach (var ig2 in igs.Values)
                 {
@@ -812,16 +812,16 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             Send_Click(sender, e);
             e.Handled = true;
-            Main.ToolBar.Visibility = Visibility.Collapsed;
+            Main!.ToolBar!.Visibility = Visibility.Collapsed;
             return;
         }
         if (tbTalk.Text.Length > 0)
         {
-            Main.ToolBar.CloseTimer.Stop();
+            Main!.ToolBar!.CloseTimer.Stop();
         }
         else
         {
-            Main.ToolBar.CloseTimer.Start();
+            Main!.ToolBar!.CloseTimer.Start();
         }
     }
     private void Send_Click(object sender, RoutedEventArgs e)
@@ -832,7 +832,7 @@ public partial class MPFriends : WindowX, IMPFriend
         }
         var cont = tbTalk.Text;
         tbTalk.Text = "";
-        Main.ToolBar.Visibility = Visibility.Collapsed;
+        Main!.ToolBar!.Visibility = Visibility.Collapsed;
         int talktype = cbTalk.SelectedIndex;
 
         Task.Run(() =>
@@ -888,6 +888,6 @@ public partial class MPFriends : WindowX, IMPFriend
         Left = (SystemParameters.PrimaryScreenWidth - ActualWidth) / 2;
         Top = (SystemParameters.PrimaryScreenHeight - ActualHeight) / 2;
     }
-    private System.Windows.Controls.Image hashcheckimg;
+    private System.Windows.Controls.Image? hashcheckimg;
 
 }

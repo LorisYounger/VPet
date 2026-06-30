@@ -84,12 +84,12 @@ public partial class winWorkMenu : WindowX
         foreach (var v in mw.SchedulePackage.FindAll(x => x.WorkType == Work.WorkType.Work))
             combTaskType.Items.Add(v);
 
-        if (mw.Core.Save.Level >= 15)
+        if (mw.Core.Save!.Level >= 15)
             blockTask.Visibility = Visibility.Collapsed;
         rpnDisplay(mw.ScheduleTask.PackageWork, Work.WorkType.Work);
-        sliderTaskLevel.Maximum = mw.Core.Save.Level / 5 * 5;
-        if (mw.Core.Save.Level > 200)
-            sliderTaskLevel.TickFrequency = mw.Core.Save.Level / 100 * 5;
+        sliderTaskLevel.Maximum = mw.Core.Save!.Level / 5 * 5;
+        if (mw.Core.Save!.Level > 200)
+            sliderTaskLevel.TickFrequency = mw.Core.Save!.Level / 100 * 5;
         else
             sliderTaskLevel.TickFrequency = 5;
         tbtnCurrentPlan.IsChecked = mw.ScheduleTask.PackageWork?.IsActive() == true;
@@ -269,14 +269,14 @@ public partial class winWorkMenu : WindowX
                     break;
                 case 2:
                     nowwork = (ps[detailTypes.SelectedIndex]);
-                    btnAddAuto.IsEnabled = mw.Core.Save.Level >= 15;
+                    btnAddAuto.IsEnabled = mw.Core.Save!.Level >= 15;
                     break;
                 case 3:
                     if (!AllowChange) return;
                     var works = mw.WorkStar();
                     if (works.Count <= detailTypes.SelectedIndex) return;
                     nowwork = (works[detailTypes.SelectedIndex]);
-                    btnAddAuto.IsEnabled = mw.Core.Save.Level >= 15;
+                    btnAddAuto.IsEnabled = mw.Core.Save!.Level >= 15;
                     break;
                 case 4:
                     return;
@@ -456,9 +456,9 @@ public partial class winWorkMenu : WindowX
         {
             return;
         }
-        sliderTaskLevel.Maximum = mw.Core.Save.Level / 5 * 5;
-        if (mw.Core.Save.Level > 200)
-            sliderTaskLevel.TickFrequency = mw.Core.Save.Level / 100 * 5;
+        sliderTaskLevel.Maximum = mw.Core.Save!.Level / 5 * 5;
+        if (mw.Core.Save!.Level > 200)
+            sliderTaskLevel.TickFrequency = mw.Core.Save!.Level / 100 * 5;
         else
             sliderTaskLevel.TickFrequency = 5;
         if (sender == tbtnAgencyJob)
@@ -505,7 +505,7 @@ public partial class winWorkMenu : WindowX
         if (nowselefull == null) return;
         Package package = new Package(nowselefull, (int)sliderTaskLevel.Value);
         double refound = 0;
-        if (package.Price > mw.Core.Save.Money)
+        if (package.Price > mw.Core.Save!.Money)
         {
             MessageBoxX.Show("金钱不足".Translate(), "签署失败".Translate());
             return;
@@ -555,7 +555,7 @@ public partial class winWorkMenu : WindowX
             rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull.WorkType);
         }
         tbtnCurrentPlan.IsChecked = true;
-        mw.Core.Save.Money -= package.Price - refound;
+        mw.Core.Save!.Money -= package.Price - refound;
         MessageBoxX.Show("套餐 {0} 签署成功".Translate(package.NameTrans) + (refound == 0 ? "" :
           '\n' + "获得 {0:f1} 退款".Translate(refound)), "签署成功".Translate());
     }
@@ -678,7 +678,7 @@ public partial class winWorkMenu : WindowX
                     mw.ScheduleTask.AddStudy(nowwork, (int)wDouble.Value);
                     break;
                 case Work.WorkType.Play:
-                    if (mw.Core.Save.Level < 15)
+                    if (mw.Core.Save!.Level < 15)
                     {
                         MessageBoxX.Show("等级不足15级,无法使用日程表".Translate(), "等级不足".Translate());
                         return;

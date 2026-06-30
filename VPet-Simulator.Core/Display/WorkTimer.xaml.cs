@@ -124,13 +124,13 @@ namespace VPet_Simulator.Core
                 FinishWorkInfo fwi = new FinishWorkInfo(m.NowWork, GetCount, FinishWorkInfo.StopReason.TimeFinish);
                 if (m.NowWork.Type == Work.WorkType.Work)
                 {
-                    m.Core.Save.Money += GetCount * m.NowWork.FinishBonus;
+                    m.Core.Save!.Money += GetCount * m.NowWork.FinishBonus;
                     Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计赚了 {0:f2} 金钱\n共计花费了{1}分钟", fwi.count,
                         fwi.spendtime, fwi.work.NameTrans), true), StopReason.TimeFinish);
                 }
                 else
                 {
-                    m.Core.Save.Exp += GetCount * m.NowWork.FinishBonus;
+                    m.Core.Save!.Exp += GetCount * m.NowWork.FinishBonus;
                     Stop(() => m.SayRnd(LocalizeCore.Translate("{2}完成啦, 累计获得 {0:f2} 经验\n共计花费了{1}分钟", fwi.count,
                         fwi.spendtime, fwi.work.NameTrans), true), StopReason.TimeFinish);
                 }

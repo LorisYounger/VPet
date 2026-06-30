@@ -49,7 +49,7 @@ namespace VPet_Simulator.Windows
             else
                 LsbCategory.SelectedIndex = (int)type;
             if (rMoney != null)
-                rMoney.Text = mf.Core.Save.Money.ToString("f2");
+                rMoney.Text = mf.Core.Save!.Money.ToString("f2");
 
             Show();
         }
@@ -192,13 +192,13 @@ namespace VPet_Simulator.Windows
 
             if (EnableFunction)
             {
-                mf.wmp.Log("{0}花费${3}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName, item.Price));
-                mf.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName, item.Price), 6000);
+                mf.wmp.Log("{0}花费${3}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save!.Name, item.TranslateName, item.Price));
+                mf.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save!.Name, item.TranslateName, item.Price), 6000);
             }
             else
             {
-                mf.wmp.Log("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName));
-                mf.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName), 6000);
+                mf.wmp.Log("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save!.Name, item.TranslateName));
+                mf.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save!.Name, item.TranslateName), 6000);
             }
             var msg = new MPMessage()
             {
@@ -219,7 +219,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                rMoney.Text = mf.mw.Core.Save.Money.ToString("f2");
+                rMoney.Text = mf.mw.Core.Save!.Money.ToString("f2");
             }
         }
 
@@ -311,7 +311,7 @@ namespace VPet_Simulator.Windows
         private void rMoney_Loaded(object sender, RoutedEventArgs e)
         {
             rMoney = sender as Run;
-            rMoney.Text = mf.mw.Core.Save.Money.ToString("f2");
+            rMoney.Text = mf.mw.Core.Save!.Money.ToString("f2");
         }
         private void Button_Loaded(object sender, RoutedEventArgs e)
         {

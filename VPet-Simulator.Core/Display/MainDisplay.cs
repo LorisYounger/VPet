@@ -83,7 +83,7 @@ namespace VPet_Simulator.Core
         /// <returns>是否成功结束</returns>
         public bool DisplayStop(Action EndAction)
         {
-            var graph = Core.Graph.FindGraph(DisplayType.Name, AnimatType.C_End, Core.Save.Mode);
+            var graph = Core.Graph!.FindGraph(DisplayType.Name, AnimatType.C_End, Core.Save!.Mode);
             if (graph != null)
             {
                 if (State == WorkingState.Sleep)
@@ -109,7 +109,7 @@ namespace VPet_Simulator.Core
         /// <returns></returns>
         public bool DisplayToMove()
         {
-            var list = Core.Graph.GraphConfig.Moves.ToList();
+            var list = Core.Graph!.GraphConfig.Moves.ToList();
             for (int i = Function.Rnd.Next(list.Count); 0 != list.Count; i = Function.Rnd.Next(list.Count))
             {
                 var move = list[i];
@@ -135,11 +135,11 @@ namespace VPet_Simulator.Core
         public void DisplayToTouchHead()
         {
             CountNomal = 0;
-            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < Core.Save.FeelingMax)
+            if (Core.Controller!.EnableFunction && Core.Save!.Strength >= 10 && Core.Save!.Feeling < Core.Save!.FeelingMax)
             {
-                Core.Save.StrengthChange(-2);
-                Core.Save.FeelingChange(1);
-                Core.Save.Mode = Core.Save.CalMode();
+                Core.Save!.StrengthChange(-2);
+                Core.Save!.FeelingChange(1);
+                Core.Save!.Mode = Core.Save!.CalMode();
                 LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
             }
             if (DisplayType.Type == GraphType.Touch_Head)
@@ -173,11 +173,11 @@ namespace VPet_Simulator.Core
         public void DisplayToTouchBody()
         {
             CountNomal = 0;
-            if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < Core.Save.FeelingMax)
+            if (Core.Controller!.EnableFunction && Core.Save!.Strength >= 10 && Core.Save!.Feeling < Core.Save!.FeelingMax)
             {
-                Core.Save.StrengthChange(-2);
-                Core.Save.FeelingChange(1);
-                Core.Save.Mode = Core.Save.CalMode();
+                Core.Save!.StrengthChange(-2);
+                Core.Save!.FeelingChange(1);
+                Core.Save!.Mode = Core.Save!.CalMode();
                 LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
             }
             if (DisplayType.Type == GraphType.Touch_Body)
@@ -208,13 +208,13 @@ namespace VPet_Simulator.Core
         {
             looptimes = 0;
             CountNomal = 0;
-            var name = Core.Graph.FindName(GraphType.StateONE);
+            var name = Core.Graph!.FindName(GraphType.StateONE);
             if (name == null)
             {
                 DisplayIdel();
                 return;
             }
-            var list = Core.Graph.FindGraphs(name, AnimatType.A_Start, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == GraphType.StateONE);
+            var list = Core.Graph!.FindGraphs(name, AnimatType.A_Start, Core.Save!.Mode)?.FindAll(x => x.GraphInfo.Type == GraphType.StateONE);
             if (list != null && list.Count > 0)
                 Display(list[Function.Rnd.Next(list.Count)], () => DisplayIdel_StateONEing(name));
             else
@@ -225,7 +225,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         private void DisplayIdel_StateONEing(string graphname)
         {
-            if (Function.Rnd.Next(++looptimes) > Core.Graph.GraphConfig.GetDuration(graphname))
+            if (Function.Rnd.Next(++looptimes) > Core.Graph!.GraphConfig.GetDuration(graphname))
                 switch (Function.Rnd.Next(2 + CountNomal))
                 {
                     case 0:
@@ -254,7 +254,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         private void DisplayIdel_StateTWOing(string graphname)
         {
-            if (Function.Rnd.Next(++looptimes) > Core.Graph.GraphConfig.GetDuration(graphname))
+            if (Function.Rnd.Next(++looptimes) > Core.Graph!.GraphConfig.GetDuration(graphname))
             {
                 looptimes = 0;
                 Display(graphname, AnimatType.C_End, GraphType.StateTWO, DisplayIdel_StateONEing);
@@ -271,24 +271,24 @@ namespace VPet_Simulator.Core
         /// </summary>
         public bool DisplayToIdel()
         {
-            if (Core.Graph.GraphsName.TryGetValue(GraphType.Idel, out var gl))
+            if (Core.Graph!.GraphsName.TryGetValue(GraphType.Idel, out var gl))
             {
                 var list = gl.ToList();
                 for (int i = Function.Rnd.Next(list.Count); 0 != list.Count; i = Function.Rnd.Next(list.Count))
                 {
                     var idelname = list[i];
-                    var ig = Core.Graph.FindGraphs(idelname, AnimatType.A_Start, Core.Save.Mode);
+                    var ig = Core.Graph!.FindGraphs(idelname, AnimatType.A_Start, Core.Save!.Mode);
                     if (ig != null && ig.Count != 0)
                     {
                         looptimes = 0;
                         CountNomal = 0;
                         Display(ig[Function.Rnd.Next(ig.Count)], () =>
-                        DisplayBLoopingToNomal(idelname, Core.Graph.GraphConfig.GetDuration(idelname)));
+                        DisplayBLoopingToNomal(idelname, Core.Graph!.GraphConfig.GetDuration(idelname)));
                         return true;
                     }
                     else
                     {
-                        ig = Core.Graph.FindGraphs(idelname, AnimatType.Single, Core.Save.Mode);
+                        ig = Core.Graph!.FindGraphs(idelname, AnimatType.Single, Core.Save!.Mode);
                         if (ig != null && ig.Count != 0)
                         {
                             looptimes = 0;
@@ -333,7 +333,7 @@ namespace VPet_Simulator.Core
                 Display(GraphType.Sleep, AnimatType.A_Start, DisplayBLoopingForce);
             }
             else
-                Display(GraphType.Sleep, AnimatType.A_Start, (x) => DisplayBLoopingToNomal(x, Core.Graph.GraphConfig.GetDuration(x)));
+                Display(GraphType.Sleep, AnimatType.A_Start, (x) => DisplayBLoopingToNomal(x, Core.Graph!.GraphConfig.GetDuration(x)));
         }
         /// <summary>
         /// 显示B循环 (强制)
@@ -356,13 +356,13 @@ namespace VPet_Simulator.Core
             MainGrid.MouseMove += MainGrid_MouseMove;
 
             var mp = Dispatcher.Invoke(() => Mouse.GetPosition(MainGrid));
-            var x = mp.X - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].X;
-            var y = mp.Y - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].Y;
+            var x = mp.X - Core.Graph!.GraphConfig.RaisePoint[(int)Core.Save!.Mode].X;
+            var y = mp.Y - Core.Graph!.GraphConfig.RaisePoint[(int)Core.Save!.Mode].Y;
             if (Math.Abs(x) < 1)
                 x = 0;
             if (Math.Abs(y) < 1)
                 y = 0;
-            Core.Controller.MoveWindows(x, y);
+            Core.Controller!.MoveWindows(x, y);
             rasetype = 0;
             DisplayRaising();
         }
@@ -379,7 +379,7 @@ namespace VPet_Simulator.Core
                     break;
                 case -1:
                     rasetype = int.MinValue;
-                    Core.Controller.RePositionActive = !Core.Controller.CheckPosition();
+                    Core.Controller!.RePositionActive = !Core.Controller!.CheckPosition();
                     //判断侧边隐藏
                     if (!MoveSideHideCheck())
                     {
@@ -435,7 +435,7 @@ namespace VPet_Simulator.Core
         /// <param name="animat">动画的动作 Start Loop End</param>
         public void Display(GraphType Type, AnimatType animat, Action<string>? EndAction = null)
         {
-            var name = Core.Graph.FindName(Type);
+            var name = Core.Graph!.FindName(Type);
             if (name != null)
             {
                 Display(name, animat, EndAction);
@@ -453,7 +453,7 @@ namespace VPet_Simulator.Core
         /// <param name="animat">动画的动作 Start Loop End</param>
         public void Display(string? name, AnimatType animat, Action<string>? EndAction)
         {
-            Display(Core.Graph.FindGraph(name, animat, Core.Save.Mode), new Action(() => EndAction?.Invoke(name ?? "")));
+            Display(Core.Graph!.FindGraph(name, animat, Core.Save!.Mode), new Action(() => EndAction?.Invoke(name ?? "")));
         }
         /// <summary>
         /// 显示动画 根据名字和类型查找运行,若无则查找类型
@@ -464,7 +464,7 @@ namespace VPet_Simulator.Core
         /// <param name="animat">动画的动作 Start Loop End</param>
         public void Display(string name, AnimatType animat, GraphType Type, Action<string>? EndAction = null)
         {
-            var list = Core.Graph.FindGraphs(name, animat, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == Type);
+            var list = Core.Graph!.FindGraphs(name, animat, Core.Save!.Mode)?.FindAll(x => x.GraphInfo.Type == Type);
             if ((list?.Count ?? -1) > 0)
                 Display(list![Function.Rnd.Next(list.Count)], () => EndAction?.Invoke(name));
             else
@@ -479,7 +479,7 @@ namespace VPet_Simulator.Core
         /// <param name="animat">动画的动作 Start Loop End</param>
         public void Display(string name, AnimatType animat, GraphType Type, Action? EndAction = null)
         {
-            var list = Core.Graph.FindGraphs(name, animat, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == Type);
+            var list = Core.Graph!.FindGraphs(name, animat, Core.Save!.Mode)?.FindAll(x => x.GraphInfo.Type == Type);
             if ((list?.Count ?? -1) > 0)
                 Display(list![Function.Rnd.Next(list.Count)], EndAction);
             else
@@ -494,7 +494,7 @@ namespace VPet_Simulator.Core
         /// <param name="animat">动画的动作 Start Loop End</param>
         public void Display(GraphType Type, AnimatType animat, Action? EndAction = null)
         {
-            var name = Core.Graph.FindName(Type);
+            var name = Core.Graph!.FindName(Type);
             Display(name, animat, EndAction);
         }
         /// <summary>
@@ -505,7 +505,7 @@ namespace VPet_Simulator.Core
         /// <param name="animat">动画的动作 Start Loop End</param>
         public void Display(string? name, AnimatType animat, Action? EndAction = null)
         {
-            Display(Core.Graph.FindGraph(name, animat, Core.Save.Mode), EndAction);
+            Display(Core.Graph!.FindGraph(name, animat, Core.Save!.Mode), EndAction);
         }
         bool petgridcrlf = true;
         int nodisplayLoop = 0;
@@ -678,8 +678,8 @@ namespace VPet_Simulator.Core
         /// <param name="EndAction">动画结束后操作</param>
         public void Display(GraphType Type, ImageSource img, Action EndAction)
         {
-            var name = Core.Graph.FindName(Type);
-            var ig = Core.Graph.FindGraph(name, AnimatType.Single, Core.Save.Mode);
+            var name = Core.Graph!.FindName(Type);
+            var ig = Core.Graph!.FindGraph(name, AnimatType.Single, Core.Save!.Mode);
             if (ig != null)
             {
                 var b = FindDisplayBorder(ig);
@@ -694,7 +694,7 @@ namespace VPet_Simulator.Core
         /// <param name="EndAction">动画结束后操作</param>
         public void Display(string name, ImageSource img, Action EndAction)
         {
-            var ig = Core.Graph.FindGraph(name, AnimatType.Single, Core.Save.Mode);
+            var ig = Core.Graph!.FindGraph(name, AnimatType.Single, Core.Save!.Mode);
             if (ig != null)
             {
                 var b = FindDisplayBorder(ig);

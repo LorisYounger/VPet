@@ -378,7 +378,7 @@ namespace VPet_Simulator.Core
             public bool Triggered(Main m)
             {
                 var c = m.Core.Controller;
-                if (!Mode.HasFlag(GetModeType(m.Core.Save.Mode))) return false;
+                if (!Mode.HasFlag(GetModeType(m.Core.Save!.Mode))) return false;
                 if (TriggerType == DirectionType.None) return true;
                 if (TriggerType.HasFlag(DirectionType.Left) && c.GetWindowsDistanceLeft() > TriggerLeft * c.ZoomRatio)
                     return false;
@@ -433,7 +433,7 @@ namespace VPet_Simulator.Core
                 List<Move> ms = new List<Move>();
                 bool x = SpeedX > 0;
                 bool y = SpeedY > 0;
-                foreach (Move m in main.Core.Graph.GraphConfig.Moves)
+                foreach (Move m in main.Core.Graph!.GraphConfig.Moves)
                 {
                     //if (m == this) continue;
                     int bns = 0;
@@ -475,16 +475,16 @@ namespace VPet_Simulator.Core
                         switch (LocateType)
                         {
                             case DirectionType.Top:
-                                m.Core.Controller.MoveWindows(0, -m.Core.Controller.GetWindowsDistanceUp() / m.Core.Controller.ZoomRatio - LocateLength);
+                                m.Core.Controller!.MoveWindows(0, -m.Core.Controller!.GetWindowsDistanceUp() / m.Core.Controller!.ZoomRatio - LocateLength);
                                 break;
                             case DirectionType.Bottom:
-                                m.Core.Controller.MoveWindows(0, m.Core.Controller.GetWindowsDistanceDown() / m.Core.Controller.ZoomRatio + LocateLength);
+                                m.Core.Controller!.MoveWindows(0, m.Core.Controller!.GetWindowsDistanceDown() / m.Core.Controller!.ZoomRatio + LocateLength);
                                 break;
                             case DirectionType.Left:
-                                m.Core.Controller.MoveWindows(-m.Core.Controller.GetWindowsDistanceLeft() / m.Core.Controller.ZoomRatio - LocateLength, 0);
+                                m.Core.Controller!.MoveWindows(-m.Core.Controller!.GetWindowsDistanceLeft() / m.Core.Controller!.ZoomRatio - LocateLength, 0);
                                 break;
                             case DirectionType.Right:
-                                m.Core.Controller.MoveWindows(m.Core.Controller.GetWindowsDistanceRight() / m.Core.Controller.ZoomRatio + LocateLength, 0);
+                                m.Core.Controller!.MoveWindows(m.Core.Controller!.GetWindowsDistanceRight() / m.Core.Controller!.ZoomRatio + LocateLength, 0);
                                 break;
                         }
                         m.MoveTimerPoint = new Point(SpeedX, SpeedY);
@@ -535,9 +535,9 @@ namespace VPet_Simulator.Core
 
             private void StopMoving(Main m)
             {
-                if (m.Core.Controller.RePositionActive)
-                    m.Core.Controller.ResetPosition();
-                m.Core.Controller.RePositionActive = !m.Core.Controller.CheckPosition();
+                if (m.Core.Controller!.RePositionActive)
+                    m.Core.Controller!.ResetPosition();
+                m.Core.Controller!.RePositionActive = !m.Core.Controller!.CheckPosition();
                 m.MoveTimer.Enabled = false;
 
                 m.Display(Graph, AnimatType.C_End, () => { m.Event_MoveEndInvoke(this); m.DisplayToNomal(); });

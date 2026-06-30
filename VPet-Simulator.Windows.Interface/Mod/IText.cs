@@ -60,11 +60,11 @@ public class IText
     {
         if (text.Contains('{') && text.Contains('}'))
         {
-            return text.Replace("{name}", m.Core.Save!.Name).Replace("{food}", m.Core.Save.StrengthFood.ToString("f0"))
-                .Replace("{drink}", m.Core.Save.StrengthDrink.ToString("f0")).Replace("{feel}", m.Core.Save.Feeling.ToString("f0")).
-                Replace("{strength}", m.Core.Save.Strength.ToString("f0")).Replace("{money}", m.Core.Save.Money.ToString("f0"))
-                .Replace("{level}", m.Core.Save.Level.ToString("f0")).Replace("{health}", m.Core.Save.Health.ToString("f0"))
-                .Replace("{hostname}", m.Core.Save.HostName);
+            return text.Replace("{name}", m.Core.Save!.Name).Replace("{food}", m.Core.Save!.StrengthFood.ToString("f0"))
+                .Replace("{drink}", m.Core.Save!.StrengthDrink.ToString("f0")).Replace("{feel}", m.Core.Save!.Feeling.ToString("f0")).
+                Replace("{strength}", m.Core.Save!.Strength.ToString("f0")).Replace("{money}", m.Core.Save!.Money.ToString("f0"))
+                .Replace("{level}", m.Core.Save!.Level.ToString("f0")).Replace("{health}", m.Core.Save!.Health.ToString("f0"))
+                .Replace("{hostname}", m.Core.Save!.HostName);
         }
         else
             return text;

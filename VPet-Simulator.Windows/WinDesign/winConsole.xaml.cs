@@ -25,7 +25,7 @@ namespace VPet_Simulator.Windows
             InitializeComponent();
             Title = "桌宠管理开发控制台".Translate() + ' ' + mw.PrefixSave;
             this.mw = mw;
-            foreach (var v in mw.Core.Graph.GraphsList)
+            foreach (var v in mw.Core.Graph!.GraphsList)
             {
                 foreach (AnimatType k in v.Value.Keys)
                 {
@@ -34,7 +34,7 @@ namespace VPet_Simulator.Windows
                     GraphListPlayerBox.Items.Add(str);
                 }
             }
-            if (mw.Core.Graph.GraphsName.TryGetValue(GraphType.Say, out var gl))
+            if (mw.Core.Graph!.GraphsName.TryGetValue(GraphType.Say, out var gl))
                 foreach (string v in gl)
                 {
                     CombSay.Items.Add(v);
@@ -46,10 +46,10 @@ namespace VPet_Simulator.Windows
         {
             Dispatcher.Invoke(() =>
             {
-                RLeft.Text = mw.Core.Controller.GetWindowsDistanceLeft().ToString("f2");
-                RRight.Text = mw.Core.Controller.GetWindowsDistanceRight().ToString("f2");
-                RTop.Text = mw.Core.Controller.GetWindowsDistanceUp().ToString("f2");
-                RDown.Text = mw.Core.Controller.GetWindowsDistanceDown().ToString("f2");
+                RLeft.Text = mw.Core.Controller!.GetWindowsDistanceLeft().ToString("f2");
+                RRight.Text = mw.Core.Controller!.GetWindowsDistanceRight().ToString("f2");
+                RTop.Text = mw.Core.Controller!.GetWindowsDistanceUp().ToString("f2");
+                RDown.Text = mw.Core.Controller!.GetWindowsDistanceDown().ToString("f2");
             });
         }
         public void DisplayLoop(IGraph graph)
@@ -61,7 +61,7 @@ namespace VPet_Simulator.Windows
             if (GraphListBox.SelectedItem == null)
                 return;
             var kv = Sub.Split((string)GraphListBox.SelectedItem, "++");
-            var graph = mw.Main.Core.Graph.FindGraph(kv[0], (AnimatType)Enum.Parse(typeof(AnimatType), kv[1]), (IGameSave.ModeType)ComboxMode.SelectedIndex);
+            var graph = mw.Main.Core.Graph!.FindGraph(kv[0], (AnimatType)Enum.Parse(typeof(AnimatType), kv[1]), (IGameSave.ModeType)ComboxMode.SelectedIndex);
             if (graph == null)
             {
                 LabelNowPlay.Content = "未找到对应类型图像资源".Translate();
@@ -155,7 +155,7 @@ namespace VPet_Simulator.Windows
             }
             var v = list.Dequeue();
             var kv = Sub.Split(v.Item1, "++");
-            var graph = mw.Main.Core.Graph.FindGraph(kv[0], (AnimatType)Enum.Parse(typeof(AnimatType), kv[1]), v.Item2);
+            var graph = mw.Main.Core.Graph!.FindGraph(kv[0], (AnimatType)Enum.Parse(typeof(AnimatType), kv[1]), v.Item2);
             if (graph != null)
             {
                 mw.Main.Display(graph, () => DisplayList(list));
@@ -191,22 +191,22 @@ namespace VPet_Simulator.Windows
 
         private void Button_MoveToLeft_Click(object sender, RoutedEventArgs e)
         {
-            mw.Core.Graph.GraphConfig.Moves.Find(x => x.SpeedX < 0 && x.Checked(mw.MWController))?.Display(mw.Main);
+            mw.Core.Graph!.GraphConfig.Moves.Find(x => x.SpeedX < 0 && x.Checked(mw.MWController))?.Display(mw.Main);
         }
 
         private void Button_MoveToUp_Click(object sender, RoutedEventArgs e)
         {
-            mw.Core.Graph.GraphConfig.Moves.Find(x => x.SpeedY < 0 && x.Checked(mw.MWController))?.Display(mw.Main);
+            mw.Core.Graph!.GraphConfig.Moves.Find(x => x.SpeedY < 0 && x.Checked(mw.MWController))?.Display(mw.Main);
         }
 
         private void Button_MoveToButton_Click(object sender, RoutedEventArgs e)
         {
-            mw.Core.Graph.GraphConfig.Moves.Find(x => x.SpeedY > 0 && x.Checked(mw.MWController))?.Display(mw.Main);
+            mw.Core.Graph!.GraphConfig.Moves.Find(x => x.SpeedY > 0 && x.Checked(mw.MWController))?.Display(mw.Main);
         }
 
         private void Button_MoveToRight_Click(object sender, RoutedEventArgs e)
         {
-            mw.Core.Graph.GraphConfig.Moves.Find(x => x.SpeedX > 0 && x.Checked(mw.MWController))?.Display(mw.Main);
+            mw.Core.Graph!.GraphConfig.Moves.Find(x => x.SpeedX > 0 && x.Checked(mw.MWController))?.Display(mw.Main);
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -217,7 +217,7 @@ namespace VPet_Simulator.Windows
         private void Output_Graph(object sender, RoutedEventArgs e)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (var gfs in mw.Core.Graph.GraphsList.Values)
+            foreach (var gfs in mw.Core.Graph!.GraphsList.Values)
             {
                 foreach (List<IGraph> gf in gfs.Values)
                 {

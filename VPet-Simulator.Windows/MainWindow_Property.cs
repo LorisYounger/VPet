@@ -76,7 +76,7 @@ public partial class MainWindow
     public GameCore Core { get; set; } = new GameCore();
     public List<Window> Windows { get; set; } = new List<Window>();
     public Main Main { get; set; }
-    public UIElement TalkBox;
+    public UIElement? TalkBox;
     public winGameSetting winSetting { get; set; }
     public winBetterBuy winBetterBuy { get; set; }
     public winGallery winGallery { get; set; }

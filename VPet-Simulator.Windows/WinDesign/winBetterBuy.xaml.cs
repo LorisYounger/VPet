@@ -41,7 +41,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
 
-            nibuytimes.Maximum = Math.Max(2, mw.Core.Save.StrengthMax / 100);
+            nibuytimes.Maximum = Math.Max(2, mw.Core.Save!.StrengthMax / 100);
             nibuytimes.Value = mw.GameSavesData["betterbuysetting"].GetInt("double", 1);
 
             showeatanm = true;//逃出
@@ -52,7 +52,7 @@ namespace VPet_Simulator.Windows
             else
                 LsbCategory.SelectedIndex = (int)type;
             if (rMoney != null)
-                rMoney.Text = mw.Core.Save.Money.ToString("f2");
+                rMoney.Text = mw.Core.Save!.Money.ToString("f2");
 
             //喜好度刷新
             foreach (var sub in mw.GameSavesData["buytime"])
@@ -66,7 +66,7 @@ namespace VPet_Simulator.Windows
                 }
             }
             //没钱了,宠物给你私房钱 (开罗传统)
-            if (mw.Core.Save.Money <= 1)
+            if (mw.Core.Save!.Money <= 1)
             {
                 if (mw.GameSavesData[(gbol)"self"])
                 {
@@ -74,16 +74,16 @@ namespace VPet_Simulator.Windows
                 }
                 else
                 {
-                    MessageBoxX.Show("看到您囊中羞涩,{0}拿出了1000块私房钱出来给你".Translate(mw.Core.Save.Name));
+                    MessageBoxX.Show("看到您囊中羞涩,{0}拿出了1000块私房钱出来给你".Translate(mw.Core.Save!.Name));
                     mw.GameSavesData[(gbol)"self"] = true;
-                    mw.Core.Save.Money += 1000;
+                    mw.Core.Save!.Money += 1000;
                 }
             }
-            else if (mw.Core.Save.Money >= 11000 && mw.GameSavesData[(gbol)"self"])
+            else if (mw.Core.Save!.Money >= 11000 && mw.GameSavesData[(gbol)"self"])
             {
-                mw.Core.Save.Money -= 1000;
+                mw.Core.Save!.Money -= 1000;
                 mw.GameSavesData[(gbol)"self"] = false;
-                MessageBoxX.Show("{0}偷偷藏了1000块私房钱".Translate(mw.Core.Save.Name));
+                MessageBoxX.Show("{0}偷偷藏了1000块私房钱".Translate(mw.Core.Save!.Name));
             }
 
             Show();
@@ -223,10 +223,10 @@ namespace VPet_Simulator.Windows
             {//$1000以内的食物允许赊账
                 for (int i = 0; i < (int)nibuytimes.Value; i++)
                 {                        
-                    if ((item.Price >= 1000 || item.Exp >= 1000) && item.Price >= mw.Core.Save.Money)
+                    if ((item.Price >= 1000 || item.Exp >= 1000) && item.Price >= mw.Core.Save!.Money)
                     {//买不起
                         MessageBoxX.Show("您没有足够金钱来购买 {0}\n您需要 {1:f2} 金钱来购买\n您当前 {2:f2} 拥有金钱"
-                            .Translate(item.TranslateName, item.Price, mw.Core.Save.Money)
+                            .Translate(item.TranslateName, item.Price, mw.Core.Save!.Money)
                             , "金钱不足".Translate());
                         return;
                     }
@@ -240,7 +240,7 @@ namespace VPet_Simulator.Windows
                         }
                         mw.HashCheck = false;
                     }
-                    mw.Core.Save.Money -= item.Price;
+                    mw.Core.Save!.Money -= item.Price;
                     mw.TakeItem(item);
                 }
                 mw.TakeItemHandle(item, (int)nibuytimes.Value, "betterbuy");
@@ -254,7 +254,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                rMoney.Text = mw.Core.Save.Money.ToString("f2");
+                rMoney.Text = mw.Core.Save!.Money.ToString("f2");
             }
         }
 
@@ -354,7 +354,7 @@ namespace VPet_Simulator.Windows
         private void rMoney_Loaded(object sender, RoutedEventArgs e)
         {
             rMoney = sender as Run;
-            rMoney.Text = mw.Core.Save.Money.ToString("f2");
+            rMoney.Text = mw.Core.Save!.Money.ToString("f2");
         }
 
  
@@ -367,7 +367,7 @@ namespace VPet_Simulator.Windows
         }
         private void Switch_AutoBuy_Checked(object sender, RoutedEventArgs e)
         {
-            if (_puswitchautobuy.IsChecked.Value && mw.Core.Save.Money < 100)
+            if (_puswitchautobuy.IsChecked.Value && mw.Core.Save!.Money < 100)
             {
                 _puswitchautobuy.IsChecked = false;
                 MessageBoxX.Show(mw, "余额不足100，无法开启自动购买".Translate(), "更好买".Translate());

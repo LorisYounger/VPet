@@ -96,7 +96,7 @@ namespace VPet_Simulator.Core
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            MsgBar?.Show(Core.Save.Name, sayInfoWithStream);
+                            MsgBar?.Show(Core.Save!.Name, sayInfoWithStream);
                         });
                         DisplayBLoopingForce(sayInfoWithStream.GraphName!);
                     });
@@ -104,7 +104,7 @@ namespace VPet_Simulator.Core
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        MsgBar?.Show(Core.Save.Name, sayInfoWithStream);
+                        MsgBar?.Show(Core.Save!.Name, sayInfoWithStream);
                     });
                 }
             });
@@ -126,7 +126,7 @@ namespace VPet_Simulator.Core
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            MsgBar?.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                            MsgBar?.Show(Core.Save!.Name, sayinfo.Text, sayinfo.GraphName, sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
                                 new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                         });
                         DisplayBLoopingForce(sayinfo.GraphName!);
@@ -135,7 +135,7 @@ namespace VPet_Simulator.Core
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        MsgBar?.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgContent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                        MsgBar?.Show(Core.Save!.Name, sayinfo.Text, sayinfo.GraphName, msgContent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
                             new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                     });
                 }
@@ -233,17 +233,17 @@ namespace VPet_Simulator.Core
         /// <param name="TimePass">过去时间倍率</param>
         public void FunctionSpend(double TimePass)
         {
-            Core.Save.CleanChange();
-            Core.Save.StoreTake();
+            Core.Save!.CleanChange();
+            Core.Save!.StoreTake();
             double freedrop = (DateTime.Now - LastInteractionTime).TotalMinutes;
             if (freedrop < 1)
                 freedrop = 0;
             else
-                freedrop = Math.Min(Math.Sqrt(freedrop) * TimePass / 4, Core.Save.FeelingMax / 800);
-            double sm25 = Core.Save.StrengthMax * 0.25;
-            double sm50 = Core.Save.StrengthMax * 0.5;
-            double sm60 = Core.Save.StrengthMax * 0.6;
-            double sm75 = Core.Save.StrengthMax * 0.75;
+                freedrop = Math.Min(Math.Sqrt(freedrop) * TimePass / 4, Core.Save!.FeelingMax / 800);
+            double sm25 = Core.Save!.StrengthMax * 0.25;
+            double sm50 = Core.Save!.StrengthMax * 0.5;
+            double sm60 = Core.Save!.StrengthMax * 0.6;
+            double sm75 = Core.Save!.StrengthMax * 0.75;
 
             switch (State)
             {
@@ -251,21 +251,21 @@ namespace VPet_Simulator.Core
                     break;
                 case WorkingState.Sleep:
                     //睡觉 缓慢恢复所有(除了心情,但是心情不会下降)
-                    Core.Save.StrengthChange(TimePass * 2);
-                    Core.Save.StrengthChangeFood(TimePass);
-                    if (Core.Save.StrengthFood <= sm25)
+                    Core.Save!.StrengthChange(TimePass * 2);
+                    Core.Save!.StrengthChangeFood(TimePass);
+                    if (Core.Save!.StrengthFood <= sm25)
                     {//低状态2倍恢复速度
-                        Core.Save.StrengthChangeFood(TimePass);
+                        Core.Save!.StrengthChangeFood(TimePass);
                     }
-                    else if (Core.Save.StrengthFood >= sm75)
-                        Core.Save.Health += TimePass * 2;
-                    Core.Save.StrengthChangeDrink(TimePass);
-                    if (Core.Save.StrengthDrink >= sm25)
+                    else if (Core.Save!.StrengthFood >= sm75)
+                        Core.Save!.Health += TimePass * 2;
+                    Core.Save!.StrengthChangeDrink(TimePass);
+                    if (Core.Save!.StrengthDrink >= sm25)
                     {
-                        Core.Save.StrengthChangeDrink(TimePass);
+                        Core.Save!.StrengthChangeDrink(TimePass);
                     }
-                    else if (Core.Save.StrengthDrink >= sm75)
-                        Core.Save.Health += TimePass * 2;
+                    else if (Core.Save!.StrengthDrink >= sm75)
+                        Core.Save!.Health += TimePass * 2;
                     LastInteractionTime = DateTime.Now;
                     break;
                 case WorkingState.Work:
@@ -280,105 +280,105 @@ namespace VPet_Simulator.Core
 
                     var nsfood = needfood * .3;
                     var nsdrink = needdrink * .3;
-                    if (Core.Save.Strength > sm25 + nsfood + nsdrink)
+                    if (Core.Save!.Strength > sm25 + nsfood + nsdrink)
                     {//可以用体力减少一些消耗,并且增加效率
-                        Core.Save.StrengthChange(-nsfood - nsdrink);
+                        Core.Save!.StrengthChange(-nsfood - nsdrink);
                         efficiency += 0.1;
                         needfood -= nsfood;
                         needdrink -= nsdrink;
                     }
 
-                    if (Core.Save.StrengthFood <= sm25)
+                    if (Core.Save!.StrengthFood <= sm25)
                     {//低状态低效率
-                        Core.Save.StrengthChangeFood(-needfood / 2);
+                        Core.Save!.StrengthChangeFood(-needfood / 2);
                         efficiency += 0.2;
-                        if (Core.Save.Strength >= needfood)
+                        if (Core.Save!.Strength >= needfood)
                         {
-                            Core.Save.StrengthChange(-needfood);
+                            Core.Save!.StrengthChange(-needfood);
                             efficiency += 0.1;
                         }
                         addhealth -= 2;
                     }
                     else
                     {
-                        Core.Save.StrengthChangeFood(-needfood);
+                        Core.Save!.StrengthChangeFood(-needfood);
                         efficiency += 0.4;
-                        if (Core.Save.StrengthFood >= sm60)
+                        if (Core.Save!.StrengthFood >= sm60)
                         {
                             addhealth += Function.Rnd.Next(1, 3);
                             efficiency += 0.1;
                         }
                     }
-                    if (Core.Save.StrengthDrink <= sm25)
+                    if (Core.Save!.StrengthDrink <= sm25)
                     {//低状态低效率
-                        Core.Save.StrengthChangeDrink(-needdrink / 2);
+                        Core.Save!.StrengthChangeDrink(-needdrink / 2);
                         efficiency += 0.2;
-                        if (Core.Save.Strength >= needdrink)
+                        if (Core.Save!.Strength >= needdrink)
                         {
-                            Core.Save.StrengthChange(-needdrink);
+                            Core.Save!.StrengthChange(-needdrink);
                             efficiency += 0.1;
                         }
                         addhealth -= 2;
                     }
                     else
                     {
-                        Core.Save.StrengthChangeDrink(-needdrink);
+                        Core.Save!.StrengthChangeDrink(-needdrink);
                         efficiency += 0.4;
-                        if (Core.Save.StrengthDrink >= sm60)
+                        if (Core.Save!.StrengthDrink >= sm60)
                         {
                             addhealth += Function.Rnd.Next(1, 3);
                             efficiency += 0.1;
                         }
                     }
                     if (addhealth > 0)
-                        Core.Save.Health += addhealth * TimePass;
+                        Core.Save!.Health += addhealth * TimePass;
                     var addmoney = Math.Max(0, TimePass * NowWork.MoneyBase * (2 * efficiency - 0.5));
                     if (NowWork.Type == Work.WorkType.Work)
-                        Core.Save.Money += addmoney;
+                        Core.Save!.Money += addmoney;
                     else
-                        Core.Save.Exp += addmoney;
+                        Core.Save!.Exp += addmoney;
                     if (WorkTimer != null)
                         WorkTimer.GetCount += addmoney;
                     if (NowWork.Type == Work.WorkType.Play)
                     {
                         LastInteractionTime = DateTime.Now;
-                        Core.Save.FeelingChange(-NowWork.Feeling * TimePass);
+                        Core.Save!.FeelingChange(-NowWork.Feeling * TimePass);
                     }
                     else
-                        Core.Save.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2));
+                        Core.Save!.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2));
                     break;
                 default://默认
                     //饮食等乱七八糟的消耗
                     addhealth = -2;
-                    if (Core.Save.StrengthFood >= sm50)
+                    if (Core.Save!.StrengthFood >= sm50)
                     {
-                        Core.Save.StrengthChangeFood(-TimePass);
-                        Core.Save.StrengthChange(TimePass);
-                        if (Core.Save.StrengthFood >= sm75)
+                        Core.Save!.StrengthChangeFood(-TimePass);
+                        Core.Save!.StrengthChange(TimePass);
+                        if (Core.Save!.StrengthFood >= sm75)
                             addhealth += Function.Rnd.Next(1, 3);
                     }
-                    else if (Core.Save.StrengthFood <= sm25)
+                    else if (Core.Save!.StrengthFood <= sm25)
                     {
-                        Core.Save.Health -= Function.Rnd.NextDouble() * TimePass;
+                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass;
                         addhealth -= 2;
                     }
-                    if (Core.Save.StrengthDrink >= sm50)
+                    if (Core.Save!.StrengthDrink >= sm50)
                     {
-                        Core.Save.StrengthChangeDrink(-TimePass);
-                        Core.Save.StrengthChange(TimePass);
-                        if (Core.Save.StrengthDrink >= sm75)
+                        Core.Save!.StrengthChangeDrink(-TimePass);
+                        Core.Save!.StrengthChange(TimePass);
+                        if (Core.Save!.StrengthDrink >= sm75)
                             addhealth += Function.Rnd.Next(1, 3);
                     }
-                    else if (Core.Save.StrengthDrink <= sm25)
+                    else if (Core.Save!.StrengthDrink <= sm25)
                     {
-                        Core.Save.Health -= Function.Rnd.NextDouble() * TimePass;
+                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass;
                         addhealth -= 2;
                     }
                     if (addhealth > 0)
-                        Core.Save.Health += addhealth * TimePass;
-                    Core.Save.StrengthChangeFood(-TimePass);
-                    Core.Save.StrengthChangeDrink(-TimePass);
-                    Core.Save.FeelingChange(-freedrop);
+                        Core.Save!.Health += addhealth * TimePass;
+                    Core.Save!.StrengthChangeFood(-TimePass);
+                    Core.Save!.StrengthChangeDrink(-TimePass);
+                    Core.Save!.FeelingChange(-freedrop);
                     break;
             }
 
@@ -386,41 +386,41 @@ namespace VPet_Simulator.Core
             //{
             //    Core.GameSave.Health -= Function.Rnd.Next(0, 1);
             //}
-            Core.Save.Exp += TimePass;
+            Core.Save!.Exp += TimePass;
             //感受提升好感度
-            if (Core.Save.Feeling >= Core.Save.FeelingMax * 0.75)
+            if (Core.Save!.Feeling >= Core.Save!.FeelingMax * 0.75)
             {
-                if (Core.Save.Feeling >= Core.Save.FeelingMax * 0.90)
+                if (Core.Save!.Feeling >= Core.Save!.FeelingMax * 0.90)
                 {
-                    Core.Save.Likability += TimePass;
+                    Core.Save!.Likability += TimePass;
                 }
-                Core.Save.Exp += TimePass * 2;
-                Core.Save.Health += TimePass;
+                Core.Save!.Exp += TimePass * 2;
+                Core.Save!.Health += TimePass;
             }
-            else if (Core.Save.Feeling <= 25) //这个就不乘倍率了, 给上限高一些好处
+            else if (Core.Save!.Feeling <= 25) //这个就不乘倍率了, 给上限高一些好处
             {
-                Core.Save.Likability -= TimePass;
-                Core.Save.Exp -= TimePass;
+                Core.Save!.Likability -= TimePass;
+                Core.Save!.Exp -= TimePass;
             }
-            if (Core.Save.StrengthDrink <= sm25)
+            if (Core.Save!.StrengthDrink <= sm25)
             {
-                Core.Save.Health -= Function.Rnd.Next(0, 1) * TimePass;
-                Core.Save.Exp -= TimePass;
+                Core.Save!.Health -= Function.Rnd.Next(0, 1) * TimePass;
+                Core.Save!.Exp -= TimePass;
             }
-            else if (Core.Save.StrengthDrink >= sm75)
-                Core.Save.Health += Function.Rnd.Next(0, 1) * TimePass;
+            else if (Core.Save!.StrengthDrink >= sm75)
+                Core.Save!.Health += Function.Rnd.Next(0, 1) * TimePass;
 
             FunctionSpendHandle?.Invoke();
-            var newmod = Core.Save.CalMode();
-            if (Core.Save.Mode != newmod)
+            var newmod = Core.Save!.CalMode();
+            if (Core.Save!.Mode != newmod)
             {
                 //切换显示动画
-                PlaySwitchAnimat(Core.Save.Mode, newmod);
+                PlaySwitchAnimat(Core.Save!.Mode, newmod);
 
-                Core.Save.Mode = newmod;
+                Core.Save!.Mode = newmod;
             }
             //看情况播放停止工作动画
-            if (Core.Save.Mode == IGameSave.ModeType.Ill && State == WorkingState.Work)
+            if (Core.Save!.Mode == IGameSave.ModeType.Ill && State == WorkingState.Work)
             {
                 Dispatcher.Invoke(() => WorkTimer?.Stop(reason: FinishWorkInfo.StopReason.StateFail));
             }
@@ -443,12 +443,12 @@ namespace VPet_Simulator.Core
             }
             if (before < after)
             {
-                Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Down), AnimatType.Single, before),
+                Display(Core.Graph!.FindGraph(Core.Graph!.FindName(GraphType.Switch_Down), AnimatType.Single, before),
                     () => PlaySwitchAnimat((IGameSave.ModeType)(((int)before) + 1), after));
             }
             else
             {
-                Display(Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Switch_Up), AnimatType.Single, before),
+                Display(Core.Graph!.FindGraph(Core.Graph!.FindName(GraphType.Switch_Up), AnimatType.Single, before),
                     () => PlaySwitchAnimat((IGameSave.ModeType)(((int)before) - 1), after));
             }
         }
@@ -472,15 +472,15 @@ namespace VPet_Simulator.Core
         {
             //所有Handle
             TimeHandle?.Invoke(this);
-            if (Core.Controller.EnableFunction)
+            if (Core.Controller!.EnableFunction)
             {
                 FunctionSpend(0.05);
             }
             else
             {
-                //Core.Save.Mode = GameSave.ModeType.Happy;
+                //Core.Save!.Mode = GameSave.ModeType.Happy;
                 //Core.GameSave.Mode = GameSave.ModeType.Ill;
-                Core.Save.Mode = NoFunctionMOD;
+                Core.Save!.Mode = NoFunctionMOD;
             }
 
             //UIHandle
@@ -488,7 +488,7 @@ namespace VPet_Simulator.Core
 
             if (IsIdel)
             {
-                int rnddisplay = Math.Max(20, Core.Controller.InteractionCycle - CountNomal);
+                int rnddisplay = Math.Max(20, Core.Controller!.InteractionCycle - CountNomal);
                 if (DisplayType.Type == GraphType.Work)
                     rnddisplay = 2 * rnddisplay + 20;
                 switch (Function.Rnd.Next(rnddisplay))
@@ -538,40 +538,40 @@ namespace VPet_Simulator.Core
         /// <returns>是否成功进入侧边隐藏模式</returns>
         private bool MoveSideHideCheck()
         {
-            if (Core.Controller.IfInActivateScreen() == false && Core.Controller.AutoChangeWindow == true)
+            if (Core.Controller!.IfInActivateScreen() == false && Core.Controller!.AutoChangeWindow == true)
             {
-                Core.Controller.SetNowScreenActivate();
+                Core.Controller!.SetNowScreenActivate();
             }
             //判断是否靠边,如果靠边就进入侧边隐藏模式
-            if (Core.Controller.GetWindowsDistanceLeft() < -50 * Core.Controller.ZoomRatio)
+            if (Core.Controller!.GetWindowsDistanceLeft() < -50 * Core.Controller!.ZoomRatio)
             {
                 //检查下是否有SideLoad
-                if (Core.Graph.FindName(GraphType.SideHide_Left_Main) != null)
+                if (Core.Graph!.FindName(GraphType.SideHide_Left_Main) != null)
                 {
-                    Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio - Core.Graph.GraphConfig.Data["side"][(gdbe)"left"], 0);
-                    if (Core.Controller.GetWindowsDistanceDown() < 0) Core.Controller.MoveWindows(0, Core.Controller.GetWindowsDistanceDown() / Core.Controller.ZoomRatio - 100);
-                    else if (Core.Controller.GetWindowsDistanceUp() < 0) Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
+                    Core.Controller!.MoveWindows(-Core.Controller!.GetWindowsDistanceLeft() / Core.Controller!.ZoomRatio - Core.Graph!.GraphConfig.Data["side"][(gdbe)"left"], 0);
+                    if (Core.Controller!.GetWindowsDistanceDown() < 0) Core.Controller!.MoveWindows(0, Core.Controller!.GetWindowsDistanceDown() / Core.Controller!.ZoomRatio - 100);
+                    else if (Core.Controller!.GetWindowsDistanceUp() < 0) Core.Controller!.MoveWindows(0, -Core.Controller!.GetWindowsDistanceUp() / Core.Controller!.ZoomRatio);
                     Display(GraphType.SideHide_Left_Main, AnimatType.A_Start, DisplayBLoopingForce);
                     return true;
                 }
-                else if (Core.Controller.RePositionActive)
+                else if (Core.Controller!.RePositionActive)
                 {//没有就回正
-                    Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
+                    Core.Controller!.MoveWindows(-Core.Controller!.GetWindowsDistanceLeft() / Core.Controller!.ZoomRatio, 0);
                 }
             }
-            else if (Core.Controller.GetWindowsDistanceRight() < -50 * Core.Controller.ZoomRatio)
+            else if (Core.Controller!.GetWindowsDistanceRight() < -50 * Core.Controller!.ZoomRatio)
             {
-                if (Core.Graph.FindName(GraphType.SideHide_Right_Main) != null)
+                if (Core.Graph!.FindName(GraphType.SideHide_Right_Main) != null)
                 {
-                    Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio + 500 - Core.Graph.GraphConfig.Data["side"][(gdbe)"right"], 0);
-                    if (Core.Controller.GetWindowsDistanceDown() < 0) Core.Controller.MoveWindows(0, Core.Controller.GetWindowsDistanceDown() / Core.Controller.ZoomRatio - 100);
-                    else if (Core.Controller.GetWindowsDistanceUp() < 0) Core.Controller.MoveWindows(0, -Core.Controller.GetWindowsDistanceUp() / Core.Controller.ZoomRatio);
+                    Core.Controller!.MoveWindows(Core.Controller!.GetWindowsDistanceRight() / Core.Controller!.ZoomRatio + 500 - Core.Graph!.GraphConfig.Data["side"][(gdbe)"right"], 0);
+                    if (Core.Controller!.GetWindowsDistanceDown() < 0) Core.Controller!.MoveWindows(0, Core.Controller!.GetWindowsDistanceDown() / Core.Controller!.ZoomRatio - 100);
+                    else if (Core.Controller!.GetWindowsDistanceUp() < 0) Core.Controller!.MoveWindows(0, -Core.Controller!.GetWindowsDistanceUp() / Core.Controller!.ZoomRatio);
                     Display(GraphType.SideHide_Right_Main, AnimatType.A_Start, DisplayBLoopingForce);
                     return true;
                 }
-                else if (Core.Controller.RePositionActive)
+                else if (Core.Controller!.RePositionActive)
                 {
-                    Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio, 0);
+                    Core.Controller!.MoveWindows(Core.Controller!.GetWindowsDistanceRight() / Core.Controller!.ZoomRatio, 0);
                 }
             }
             return false;
@@ -672,7 +672,7 @@ namespace VPet_Simulator.Core
             ws = new List<Work>();
             ss = new List<Work>();
             ps = new List<Work>();
-            foreach (var w in Core.Graph.GraphConfig.Works)
+            foreach (var w in Core.Graph!.GraphConfig.Works)
             {
                 switch (w.Type)
                 {
@@ -700,8 +700,8 @@ namespace VPet_Simulator.Core
         {
             if (work == null)
                 return false;
-            if (!Core.Controller.EnableFunction || Core.Save.Mode != IGameSave.ModeType.Ill)
-                if (!Core.Controller.EnableFunction || Core.Save.Level >= work.LevelLimit)
+            if (!Core.Controller!.EnableFunction || Core.Save!.Mode != IGameSave.ModeType.Ill)
+                if (!Core.Controller!.EnableFunction || Core.Save!.Level >= work.LevelLimit)
                     if (State == Main.WorkingState.Work && NowWork?.Name == work.Name)
                         WorkTimer?.Stop(reason: FinishWorkInfo.StopReason.MenualStop);
                     else
@@ -712,10 +712,10 @@ namespace VPet_Simulator.Core
                         return true;
                     }
                 else
-                    MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/{2}\n无法进行{1}", Core.Save.Level.ToString()
+                    MessageBoxX.Show(LocalizeCore.Translate("您的桌宠等级不足{0}/{2}\n无法进行{1}", Core.Save!.Level.ToString()
                         , work.NameTrans, work.LevelLimit), LocalizeCore.Translate("{0}取消", work.NameTrans));
             else
-                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行{1}", Core.Save.Name,
+                MessageBoxX.Show(LocalizeCore.Translate("您的桌宠 {0} 生病啦,没法进行{1}", Core.Save!.Name,
                   work.NameTrans), LocalizeCore.Translate("{0}取消", work.NameTrans));
             return false;
         }

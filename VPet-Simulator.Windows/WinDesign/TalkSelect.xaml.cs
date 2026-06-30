@@ -129,8 +129,8 @@ namespace VPet_Simulator.Windows
                 else
                     mw.GameSavesData.Statistics[(gint)"stat_say_money_d"]++;
             }
-            mw.Main.Core.Save.EatFood(say);
-            mw.Main.Core.Save.Money += say.Money;
+            mw.Main.Core.Save!.EatFood(say);
+            mw.Main.Core.Save!.Money += say.Money;
 
             
             textSaid.Add(say.Choose);

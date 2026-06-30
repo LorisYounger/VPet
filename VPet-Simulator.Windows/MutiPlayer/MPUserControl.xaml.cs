@@ -31,11 +31,11 @@ public partial class MPUserControl : Border
         }
         Dispatcher.Invoke(async () =>
         {
-            rPetName.Text = mpf.Core.Save.Name;
+            rPetName.Text = mpf.Core.Save!.Name;
             hostName.Text = friend.Name;
             var img = await friend.GetMediumAvatarAsync();
             uimg.Source = winMutiPlayer.ConvertToImageSource(img);
-            info.Text = "Lv " + mpf.Core.Save.Level;
+            info.Text = "Lv " + mpf.Core.Save!.Level;
             if (lb.Owner.IsMe)
                 Kick.Visibility = Visibility.Visible;
         });
