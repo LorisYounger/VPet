@@ -118,7 +118,7 @@ namespace VPet_Simulator.Core
             // 新功能: 等待所有图像加载完成再跑
             var tasks = new List<Task>();
 
-            foreach (var igs in Core.Graph.GraphsList.Values)
+            foreach (var igs in Core.Graph!.GraphsList.Values)
             {
                 foreach (var ig2 in igs.Values)
                 {

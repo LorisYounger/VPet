@@ -51,7 +51,7 @@ public class Item : NotifyPropertyChangedBase
     /// 物品图片 (图片默认在 {itemtypes}/{Image or itemname}.png )
     /// </summary>
     [Line(ignoreCase: true)]
-    public virtual string Image { get; set; } = null;
+    public virtual string? Image { get; set; } = null;
     /// <summary>
     /// 使用该物品
     /// </summary>

@@ -100,7 +100,7 @@ public class GameSave_VPet : IGameSave
         /// </summary>
         public int BeforeLevelMax { get; set; }
     }
-    public event Action<LevelUpEventArgs> Event_LevelUp;
+    public event Action<LevelUpEventArgs>? Event_LevelUp;
     /// <summary>
     /// 玩家总共获得的经验值数量
     /// </summary>

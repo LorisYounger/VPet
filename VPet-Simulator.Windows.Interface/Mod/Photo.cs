@@ -26,12 +26,12 @@ public class Photo
 
     public Photo(Line line)
     {
-        Zip = line[(gstr)"zip"];
-        Path = line[(gstr)"path"];
+        Zip = line[(gstr)"zip"]!;
+        Path = line[(gstr)"path"]!;
         if (Enum.TryParse<PhotoType>(line[(gstr)"type"], true, out var tp))
             Type = tp;
-        Name = line[(gstr)"name"];
-        Description = line[(gstr)"desc"];
+        Name = line[(gstr)"name"]!;
+        Description = line[(gstr)"desc"]!;
         var tags = line.Find("tags");
         if (tags != null)
             Tags = tags.GetInfos().ToList();
@@ -585,7 +585,7 @@ public class Photo
         using (ZipArchive archive = ZipFile.OpenRead(zippath))
         {
             // 找到指定的文件
-            ZipArchiveEntry entry = archive.GetEntry(Path);
+            ZipArchiveEntry? entry = archive.GetEntry(Path);
             if (entry != null)
             {
                 using (Stream stream = entry.Open())
