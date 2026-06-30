@@ -73,6 +73,11 @@ public partial class MainWindow
 
     public List<PetLoader> Pets { get; set; } = new List<PetLoader>();
     internal List<CoreMOD> CoreMODs = new List<CoreMOD>();
+    private MODManager modManager;
+    /// <summary>
+    /// MOD 管理器: 以 CoreMODs 为唯一数据源, 提供 MOD 查询/筛选, 以及未加载 MOD 的异步带缓存扫描
+    /// </summary>
+    internal MODManager ModManager => modManager ??= new MODManager(this);
     public GameCore Core { get; set; } = new GameCore();
     public List<Window> Windows { get; set; } = new List<Window>();
     public Main Main { get; set; }

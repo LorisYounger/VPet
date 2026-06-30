@@ -595,6 +595,30 @@ namespace VPet_Simulator.Windows
             ShowMod((string)((ListBoxItem)ListMod.SelectedItem).Content);
         }
 
+        private async void ButtonRefreshMod_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // 异步扫描磁盘上运行期间新增的 MOD 目录(带缓存与防抖), 载入为停用 stub 后刷新列表
+            var prevText = ButtonRefreshMod.Text;
+            ButtonRefreshMod.IsEnabled = false;
+            ButtonRefreshMod.Text = "正在刷新".Translate();
+            try
+            {
+                int added = await mw.DiscoverNewModsAsync();
+                ShowModList();
+                if (added > 0)
+                    NoticeBox.Show("发现 {0} 个新 MOD, 已显示在列表中, 可手动启用".Translate(added.ToString()), "刷新MOD列表".Translate());
+            }
+            catch (Exception ex)
+            {
+                NoticeBox.Show("刷新 MOD 列表时出错:".Translate() + "\n" + ex.Message, "刷新MOD列表".Translate());
+            }
+            finally
+            {
+                ButtonRefreshMod.Text = prevText;
+                ButtonRefreshMod.IsEnabled = true;
+            }
+        }
+
         private void ButtonOpenModFolder_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var psi = new ProcessStartInfo
@@ -607,15 +631,23 @@ namespace VPet_Simulator.Windows
 
         private void ButtonEnable_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            mw.Set.OnMod(mod.Name);
+            if (mod == null)
+                return;
+            // 运行时热启用: 重新构造该 MOD 并即时执行插件生命周期, 尽量免重启
+            var reloaded = mw.EnableModRuntime(mod.Path);
+            if (reloaded != null)
+                mod = reloaded;
+            // 含动画/宠物模型的 MOD 因缓存在启动时生成, 仍提示重启以确保完整生效
+            if (mod.Tag.Contains("pet") || mod.Tag.Contains("theme"))
+                ButtonRestart.Visibility = Visibility.Visible;
             ShowMod(mod.Name);
-            ButtonRestart.Visibility = Visibility.Visible;
-            //int seleid = ListMod.SelectedIndex();
             ShowModList();
         }
 
         private void ButtonDisEnable_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (mod == null)
+                return;
             if (mod.Name == "Core")
             {
                 MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法停用".Translate(), "停用失败".Translate());
@@ -623,9 +655,10 @@ namespace VPet_Simulator.Windows
             }
             else if (CoreMOD.OnModDefList.Contains(mod.Name))
                 return;
-            mw.Set.OnModRemove(mod.Name);
-            ShowMod(mod.Name);
+            // 运行时软停用: 摘除可控钩子并收尾插件; 已加载的内容(数据/DLL)需重启后才完全卸载
+            mw.DisableModRuntime(mod);
             ButtonRestart.Visibility = Visibility.Visible;
+            ShowMod(mod.Name);
             ShowModList();
         }
         class ProgressClass : IProgress<float>

@@ -922,9 +922,16 @@
                         <ColumnDefinition Width="15" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <ListBox x:Name="ListMod" VerticalAlignment="Top" Background="Transparent" BorderThickness="0"
-                            SelectionChanged="ListMod_SelectionChanged" SelectionMode="Single"
-                            Style="{DynamicResource SideMenuListBoxStyle}" />
+                    <StackPanel>
+                        <TextBlock x:Name="ButtonRefreshMod" Margin="0,0,0,4" HorizontalAlignment="Left"
+                                VerticalAlignment="Top" Cursor="Hand" FontSize="13"
+                                Foreground="{DynamicResource DARKPrimaryDarker}"
+                                MouseDown="ButtonRefreshMod_MouseDown" Text="{ll:Str '刷新MOD列表'}"
+                                TextDecorations="Underline" TextWrapping="Wrap" />
+                        <ListBox x:Name="ListMod" VerticalAlignment="Top" Background="Transparent" BorderThickness="0"
+                                SelectionChanged="ListMod_SelectionChanged" SelectionMode="Single"
+                                Style="{DynamicResource SideMenuListBoxStyle}" />
+                    </StackPanel>
                     <StackPanel Grid.Column="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
