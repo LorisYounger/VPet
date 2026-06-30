@@ -20,15 +20,15 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 图像名
         /// </summary>
-        public string GraphName;
+        public string? GraphName;
         /// <summary>
         /// 说话的描述
         /// </summary>
-        public string Desc;
+        public string? Desc;
         /// <summary>
         /// 消息内容
         /// </summary>
-        public UIElement MsgContent;
+        public UIElement? MsgContent;
         /// <summary>
         /// 是否强制显示图像
         /// </summary>
@@ -54,7 +54,7 @@ namespace VPet_Simulator.Core
         /// <param name="graphname">图像名</param>
         /// <param name="desc">描述</param>
         /// <param name="force">强制显示图像</param>
-        public SayInfoWithOutStream(string text, string graphname = null, bool force = false, string desc = null)
+        public SayInfoWithOutStream(string text, string? graphname = null, bool force = false, string? desc = null)
         {
             Text = text;
             GraphName = graphname;
@@ -69,7 +69,7 @@ namespace VPet_Simulator.Core
         /// <param name="graphname">图像名</param>
         /// <param name="msgcontent">消息内容</param>
         /// <param name="force">强制显示图像</param>
-        public SayInfoWithOutStream(string text, UIElement msgcontent, string graphname = null, bool force = false)
+        public SayInfoWithOutStream(string text, UIElement msgcontent, string? graphname = null, bool force = false)
         {
             Text = text;
             GraphName = graphname;
@@ -79,7 +79,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 说话信息类
         /// </summary>
-        public SayInfoWithOutStream() { }
+        public SayInfoWithOutStream() { Text = ""; }
         /// <summary>
         /// 说话内容
         /// </summary>
@@ -109,7 +109,7 @@ namespace VPet_Simulator.Core
         /// <param name="graphname">图像名</param>
         /// <param name="desc">描述</param>
         /// <param name="force">强制显示图像</param>
-        public SayInfoWithStream(string graphname, bool force = false, string desc = null)
+        public SayInfoWithStream(string graphname, bool force = false, string? desc = null)
         {
             GraphName = graphname;
             Force = force;
@@ -122,7 +122,7 @@ namespace VPet_Simulator.Core
         /// <param name="graphname">图像名</param>
         /// <param name="msgcontent">消息内容</param>
         /// <param name="force">强制显示图像</param>
-        public SayInfoWithStream(UIElement msgcontent, string graphname = null, bool force = false)
+        public SayInfoWithStream(UIElement msgcontent, string? graphname = null, bool force = false)
         {
             GraphName = graphname;
             MsgContent = msgcontent;

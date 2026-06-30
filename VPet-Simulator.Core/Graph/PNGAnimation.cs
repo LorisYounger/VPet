@@ -39,16 +39,16 @@ namespace VPet_Simulator.Core
         /// </summary>
         public bool IsReady { get; private set; } = false;
 
-        public TaskControl Control { get; set; }
+        public TaskControl? Control { get; set; }
 
         int nowid;
         /// <summary>
         /// 图片资源
         /// </summary>
-        public string Path { get; set; }
-        private GraphCore GraphCore;
-        private BitmapSource SpriteSheetSource;
-        private Int32Rect[] FrameRects;
+        public string Path { get; set; } = "";
+        private GraphCore? GraphCore;
+        private BitmapSource? SpriteSheetSource;
+        private Int32Rect[]? FrameRects;
         private readonly object SpriteSheetLock = new object();
         private readonly object FrameCacheLock = new object();
         private readonly Dictionary<int, BitmapSource> FrameCache = new Dictionary<int, BitmapSource>();
@@ -125,7 +125,7 @@ namespace VPet_Simulator.Core
             {
                 //新方法:加载大图片
                 //生成大文件加载非常慢,先看看有没有缓存能用
-                Path = System.IO.Path.Combine(GraphCore.CachePath, $"{GraphCore.Resolution}_{Math.Abs(Sub.GetHashCode(path))}_{paths.Length}.png");
+                Path = System.IO.Path.Combine(GraphCore.CachePath, $"{GraphCore!.Resolution}_{Math.Abs(Sub.GetHashCode(path))}_{paths.Length}.png");
                 if (!File.Exists(Path) && !((List<string>)GraphCore.CommConfig["Cache"]).Contains(path))
                 {
                     ((List<string>)GraphCore.CommConfig["Cache"]).Add(path);
@@ -313,7 +313,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 从0开始运行该动画
         /// </summary>
-        public void Run(Decorator parant, Action EndAction = null)
+        public void Run(Decorator parant, Action? EndAction = null)
         {
             Touch();
             if (!IsReady)
@@ -338,7 +338,7 @@ namespace VPet_Simulator.Core
                 }
                 System.Windows.Controls.Image img;
 
-                if (parant.Child == GraphCore.CommUIElements["Image1.PNGAnimation"])
+                if (parant.Child == GraphCore!.CommUIElements["Image1.PNGAnimation"])
                 {
                     img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image1.PNGAnimation"];
                 }
@@ -376,7 +376,7 @@ namespace VPet_Simulator.Core
         /// <param name="img">用于显示的Image</param>
         /// <param name="EndAction">结束动画</param>
         /// <returns>准备好的线程</returns>
-        public Task Run(System.Windows.Controls.Image img, Action EndAction = null)
+        public Task Run(System.Windows.Controls.Image img, Action? EndAction = null)
         {
             Touch();
             if (!IsReady)
@@ -404,7 +404,7 @@ namespace VPet_Simulator.Core
             });
         }
 
-        private BitmapSource GetFrameSource(int frameIndex)
+        private BitmapSource? GetFrameSource(int frameIndex)
         {
             Touch();
             EnsureSpriteSheetLoaded();
@@ -443,17 +443,18 @@ namespace VPet_Simulator.Core
         {
             var keep = new HashSet<int> { frameIndex };
             int cursor = frameIndex;
-            for (int i = 0; i < FrameCacheAheadCount; i++)
-            {
-                cursor++;
-                if (cursor >= FrameRects.Length)
+            if (FrameRects != null)
+                for (int i = 0; i < FrameCacheAheadCount; i++)
                 {
-                    if (!IsLoop)
-                        break;
-                    cursor = 0;
+                    cursor++;
+                    if (cursor >= FrameRects.Length)
+                    {
+                        if (!IsLoop)
+                            break;
+                        cursor = 0;
+                    }
+                    keep.Add(cursor);
                 }
-                keep.Add(cursor);
-            }
             return keep;
         }
 
@@ -503,8 +504,8 @@ namespace VPet_Simulator.Core
 
         public void Dispose()
         {
-            Animations = null;
-            FrameRects = null;
+            Animations.Clear();
+            FrameRects = [];
             lock (SpriteSheetLock)
             {
                 SpriteSheetSource = null;

@@ -24,15 +24,15 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 菜单栏
         /// </summary>
-        public ToolBar ToolBar;
+        public ToolBar? ToolBar;
         /// <summary>
         /// 消息栏
         /// </summary>
-        public IMassageBar MsgBar;
+        public IMassageBar? MsgBar;
         /// <summary>
         /// 工作显示栏
         /// </summary>
-        public WorkTimer WorkTimer;
+        public WorkTimer? WorkTimer;
         /// <summary>
         /// 刷新时间时会调用该方法
         /// </summary>
@@ -106,7 +106,7 @@ namespace VPet_Simulator.Core
         /// 支持在加载等待的时候显示等待计数器
         /// </summary>
         /// <param name="WaitCountAction">当前已等待图像个数</param>
-        public async Task Load_2_WaitGraph(Action<int> WaitCountAction)
+        public async Task Load_2_WaitGraph(Action<int>? WaitCountAction)
         {
             if (WaitCountAction == null)
             {
@@ -163,10 +163,15 @@ namespace VPet_Simulator.Core
         /// 开始运行
         /// </summary>
         /// <param name="startUPGraph">开始运行初始动画</param>
-        public void Load_4_Start(IGraph startUPGraph = null)
+        public void Load_4_Start(IGraph? startUPGraph = null)
         {
-            IGraph ig = startUPGraph ?? Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, Core.Save.Mode);
+            IGraph? ig = startUPGraph ?? Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, Core.Save.Mode);
             ig ??= Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Default), AnimatType.Single, Core.Save.Mode);
+            if (ig == null)
+            {
+                MessageBox.Show("Did not find the Default animation, please check the graph configuration.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             Task.Run(() =>
             {
                 ig.Run(PetGrid, () =>
@@ -192,7 +197,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="WaitCountAction">当前已等待图像个数</param>
         /// <param name="startUPGraph">开始运行初始动画</param>
-        public void Load_24_WaitAndStart(Action<int> WaitCountAction, IGraph startUPGraph = null)
+        public void Load_24_WaitAndStart(Action<int> WaitCountAction, IGraph? startUPGraph = null)
         {
             Load_2_WaitGraph(WaitCountAction).Wait();
             Load_4_Start(startUPGraph);
@@ -213,7 +218,7 @@ namespace VPet_Simulator.Core
             DisplayTouchBody = DisplayToTouchBody;
             DisplayTouchHead = DisplayToTouchHead;
 
-            SayRndFunction = new Func<string, string>((x) => Core.Graph.FindName(GraphType.Say));
+            SayRndFunction = new Func<string, string>((x) => Core.Graph.FindName(GraphType.Say) ?? Core.Graph.FindName(GraphType.Default) ?? "");
 
             if (!core.Controller.EnableFunction)
                 Core.Save.Mode = NoFunctionMOD;
@@ -226,7 +231,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="WaitCountAction">当前已等待图像个数</param>
         /// <param name="startUPGraph">开始运行初始动画</param>
-        public void LoadALL(Action<int> WaitCountAction = null, IGraph startUPGraph = null)
+        public void LoadALL(Action<int>? WaitCountAction = null, IGraph? startUPGraph = null)
         {
             Load_0_BaseConsole();
             Load_2_TouchEvent();
@@ -235,7 +240,7 @@ namespace VPet_Simulator.Core
             Load_4_Start(startUPGraph);
         }
 
-        private void Labledisplaytimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void Labledisplaytimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             if (--labeldisplaycount <= 0)
             {
@@ -490,21 +495,21 @@ namespace VPet_Simulator.Core
 
         private void MainGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (ToolBar.Visibility == Visibility.Visible)
+            if (ToolBar?.Visibility == Visibility.Visible)
             {
                 ToolBar.CloseTimer.Enabled = false;
                 ToolBar.Visibility = Visibility.Collapsed;
             }
             else
-                ToolBar.Show();
+                ToolBar?.Show();
         }
 
         public void Dispose()
         {
             EventTimer.Dispose();
             MoveTimer.Dispose();
-            MsgBar.Dispose();
-            ToolBar.Dispose();
+            MsgBar?.Dispose();
+            ToolBar?.Dispose();
             if (PetGrid.Child is IGraph g)
                 g.Stop(true);
             if (PetGrid2.Child is IGraph g2)
@@ -600,7 +605,7 @@ namespace VPet_Simulator.Core
         private void MainGrid_MouseEnter(object sender, MouseEventArgs e)
         {
             //如果是在侧边模式, 播放鼠标进入动画
-            string gfname;
+            string? gfname;
             if (DisplayType.Type == GraphType.SideHide_Left_Main && (gfname = Core.Graph.FindName(GraphType.SideHide_Left_Rise)) != null)
             {
                 Display(gfname, AnimatType.A_Start, DisplayBLoopingForce);

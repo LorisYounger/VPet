@@ -65,7 +65,7 @@ namespace VPet_Simulator.Core
         /// 图片资源
         /// </summary>
         public string Path { get; set; }
-        private GraphCore GraphCore;
+        private GraphCore? GraphCore;
         public bool IsLoop { get; set; }
         /// <summary>
         /// 播放持续时间 毫秒
@@ -80,13 +80,13 @@ namespace VPet_Simulator.Core
 
         public bool IsReady { get; set; } = false;
 
-        public TaskControl Control { get; set; }
+        public TaskControl? Control { get; set; }
 
         public bool IsFail => false;
 
         public string FailMessage => "";
 
-        public void Run(Decorator parant, Action EndAction = null)
+        public void Run(Decorator parant, Action? EndAction = null)
         {
             if (Control?.PlayState == true)
             {//如果当前正在运行,重置状态
@@ -102,7 +102,7 @@ namespace VPet_Simulator.Core
                 if (parant.Tag != this)
                 {
                     Image img;
-                    if (parant.Child == GraphCore.CommUIElements["Image1.Picture"])
+                    if (parant.Child == GraphCore!.CommUIElements["Image1.Picture"])
                     {
                         img = (Image)GraphCore.CommUIElements["Image1.Picture"];
                     }
@@ -168,7 +168,7 @@ namespace VPet_Simulator.Core
             }
         }
 
-        public Task Run(Image img, Action EndAction = null)
+        public Task Run(Image img, Action? EndAction = null)
         {
             if (Control?.PlayState == true)
             {//如果当前正在运行,重置状态
@@ -199,7 +199,7 @@ namespace VPet_Simulator.Core
             /// <param name="img">用于显示的Image</param>
             /// <param name="EndAction">结束动画</param>
             /// <returns>准备好的线程</returns>
-            Task Run(System.Windows.Controls.Image img, Action EndAction = null);
+            Task Run(System.Windows.Controls.Image img, Action? EndAction = null);
         }
         public void Dispose()
         {

@@ -40,7 +40,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 说话,使用随机表情
         /// </summary>
-        public void SayRnd(string text, bool force = false, string desc = null)
+        public void SayRnd(string text, bool force = false, string? desc = null)
         {
             Say(text, SayRndFunction(text), force, desc);
         }
@@ -96,7 +96,7 @@ namespace VPet_Simulator.Core
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            MsgBar.Show(Core.Save.Name, sayInfoWithStream);
+                            MsgBar?.Show(Core.Save.Name, sayInfoWithStream);
                         });
                         DisplayBLoopingForce(sayInfoWithStream.GraphName);
                     });
@@ -104,7 +104,7 @@ namespace VPet_Simulator.Core
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        MsgBar.Show(Core.Save.Name, sayInfoWithStream);
+                        MsgBar?.Show(Core.Save.Name, sayInfoWithStream);
                     });
                 }
             });
@@ -126,7 +126,7 @@ namespace VPet_Simulator.Core
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                            MsgBar?.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
                                 new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                         });
                         DisplayBLoopingForce(sayinfo.GraphName);
@@ -135,7 +135,7 @@ namespace VPet_Simulator.Core
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        MsgBar.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgContent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
+                        MsgBar?.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, msgContent: sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
                             new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                     });
                 }
@@ -148,7 +148,7 @@ namespace VPet_Simulator.Core
         /// <param name="graphname">图像名</param>
         /// <param name="desc">描述</param>
         /// <param name="force">强制显示图像</param>
-        public void Say(string text, string graphname = null, bool force = false, string desc = null) => Say(new SayInfoWithOutStream()
+        public void Say(string text, string? graphname = null, bool force = false, string? desc = null) => Say(new SayInfoWithOutStream()
         {
             Text = text,
             GraphName = graphname,
@@ -163,7 +163,7 @@ namespace VPet_Simulator.Core
         /// <param name="graphname">图像名</param>
         /// <param name="msgcontent">消息内容</param>
         /// <param name="force">强制显示图像</param>
-        public void Say(string text, UIElement msgcontent, string graphname = null, bool force = false) => Say(new SayInfoWithOutStream()
+        public void Say(string text, UIElement msgcontent, string? graphname = null, bool force = false) => Say(new SayInfoWithOutStream()
         {
             Text = text,
             GraphName = graphname,
@@ -337,7 +337,8 @@ namespace VPet_Simulator.Core
                         Core.Save.Money += addmoney;
                     else
                         Core.Save.Exp += addmoney;
-                    WorkTimer.GetCount += addmoney;
+                    if (WorkTimer != null)
+                        WorkTimer.GetCount += addmoney;
                     if (NowWork.Type == Work.WorkType.Play)
                     {
                         LastInteractionTime = DateTime.Now;
@@ -421,7 +422,7 @@ namespace VPet_Simulator.Core
             //看情况播放停止工作动画
             if (Core.Save.Mode == IGameSave.ModeType.Ill && State == WorkingState.Work)
             {
-                Dispatcher.Invoke(() => WorkTimer.Stop(reason: FinishWorkInfo.StopReason.StateFail));
+                Dispatcher.Invoke(() => WorkTimer?.Stop(reason: FinishWorkInfo.StopReason.StateFail));
             }
         }
         /// <summary>
@@ -557,7 +558,7 @@ namespace VPet_Simulator.Core
                 {//没有就回正
                     Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
                 }
-            }   
+            }
             else if (Core.Controller.GetWindowsDistanceRight() < -50 * Core.Controller.ZoomRatio)
             {
                 if (Core.Graph.FindName(GraphType.SideHide_Right_Main) != null)
@@ -690,7 +691,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 工作检测
         /// </summary>
-        public Func<Work, bool> WorkCheck;
+        public Func<Work, bool>? WorkCheck;
         /// <summary>
         /// 开始工作
         /// </summary>
@@ -700,12 +701,12 @@ namespace VPet_Simulator.Core
             if (!Core.Controller.EnableFunction || Core.Save.Mode != IGameSave.ModeType.Ill)
                 if (!Core.Controller.EnableFunction || Core.Save.Level >= work.LevelLimit)
                     if (State == Main.WorkingState.Work && NowWork.Name == work.Name)
-                        WorkTimer.Stop(reason: FinishWorkInfo.StopReason.MenualStop);
+                        WorkTimer?.Stop(reason: FinishWorkInfo.StopReason.MenualStop);
                     else
                     {
                         if (WorkCheck != null && !WorkCheck.Invoke(work))
                             return false;
-                        WorkTimer.Start(work);
+                        WorkTimer?.Start(work);
                         return true;
                     }
                 else
@@ -731,11 +732,13 @@ namespace VPet_Simulator.Core
         {
             add
             {
-                WorkTimer.E_FinishWork += value;
+                if (WorkTimer != null)
+                    WorkTimer.E_FinishWork += value;
             }
             remove
             {
-                WorkTimer.E_FinishWork -= value;
+                if (WorkTimer != null)
+                    WorkTimer.E_FinishWork -= value;
             }
         }
         /// <summary>

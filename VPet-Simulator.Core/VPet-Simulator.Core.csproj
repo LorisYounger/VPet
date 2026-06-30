@@ -12,6 +12,7 @@
 		<FileVersion>1.0.0.0</FileVersion>
 		<Product>VPet-Simulator.Core</Product>
 		<Copyright>Copyright ©  2022</Copyright>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 		<WarningLevel>3</WarningLevel>
