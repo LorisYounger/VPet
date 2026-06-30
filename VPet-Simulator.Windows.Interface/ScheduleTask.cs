@@ -263,8 +263,8 @@ public class ScheduleTask
         }
     }
 
-    public Package PackageWork { get; set; }
-    public Package PackageStudy { get; set; }
+    public Package? PackageWork { get; set; }
+    public Package? PackageStudy { get; set; }
     /// <summary>
     /// 添加工作到日程表
     /// </summary>

@@ -164,7 +164,7 @@ namespace VPet_Simulator.Windows.Interface
         /// 食用时显示的动画
         /// </summary>
         [Line(ignoreCase: true)]
-        public string Graph { get; set; } = null;
+        public string? Graph { get; set; } = null;
         /// <summary>
         /// 获取食用时显示的动画
         /// </summary>

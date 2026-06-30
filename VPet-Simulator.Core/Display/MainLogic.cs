@@ -24,7 +24,7 @@ namespace VPet_Simulator.Core
         /// 处理说话内容
         /// </summary>
         [Obsolete("Use SayProcess instead")]
-        public event Action<string> OnSay;
+        public event Action<string>? OnSay;
         /// <summary>
         /// 上次交互时间
         /// </summary>
@@ -98,7 +98,7 @@ namespace VPet_Simulator.Core
                         {
                             MsgBar?.Show(Core.Save.Name, sayInfoWithStream);
                         });
-                        DisplayBLoopingForce(sayInfoWithStream.GraphName);
+                        DisplayBLoopingForce(sayInfoWithStream.GraphName!);
                     });
                 else
                 {
@@ -129,7 +129,7 @@ namespace VPet_Simulator.Core
                             MsgBar?.Show(Core.Save.Name, sayinfo.Text, sayinfo.GraphName, sayinfo.MsgContent ?? (string.IsNullOrWhiteSpace(sayinfo.Desc) ? null :
                                 new TextBlock() { Text = sayinfo.Desc, FontSize = 20, ToolTip = sayinfo.Desc, HorizontalAlignment = HorizontalAlignment.Right }));
                         });
-                        DisplayBLoopingForce(sayinfo.GraphName);
+                        DisplayBLoopingForce(sayinfo.GraphName!);
                     });
                 else
                 {
@@ -226,7 +226,7 @@ namespace VPet_Simulator.Core
                 labeldisplaytimer.Start();
             });
         }
-        public Work NowWork;
+        public Work? NowWork;
         /// <summary>
         /// 根据消耗计算相关数据
         /// </summary>
@@ -455,7 +455,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 状态计算Handle
         /// </summary>
-        public event Action FunctionSpendHandle;
+        public event Action? FunctionSpendHandle;
         /// <summary>
         /// 想要随机显示的接口 (return:是否成功)
         /// </summary>
@@ -696,11 +696,13 @@ namespace VPet_Simulator.Core
         /// 开始工作
         /// </summary>
         /// <param name="work">工作内容</param>
-        public bool StartWork(Work work)
+        public bool StartWork(Work? work)
         {
+            if (work == null)
+                return false;
             if (!Core.Controller.EnableFunction || Core.Save.Mode != IGameSave.ModeType.Ill)
                 if (!Core.Controller.EnableFunction || Core.Save.Level >= work.LevelLimit)
-                    if (State == Main.WorkingState.Work && NowWork.Name == work.Name)
+                    if (State == Main.WorkingState.Work && NowWork?.Name == work.Name)
                         WorkTimer?.Stop(reason: FinishWorkInfo.StopReason.MenualStop);
                     else
                     {
@@ -720,7 +722,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 任务开始时调用该参数
         /// </summary>
-        public event Action<Work> Event_WorkStart;
+        public event Action<Work>? Event_WorkStart;
         internal void Event_WorkStartInvoke(Work work)
         {
             Event_WorkStart?.Invoke(work);
@@ -744,11 +746,11 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 移动开始前(未播放动画)调用该参数
         /// </summary>
-        public event Action<Move> Event_MoveStart;
+        public event Action<Move>? Event_MoveStart;
         /// <summary>
         /// 移动结束后(播放完动画)调用该参数
         /// </summary>
-        public event Action<Move> Event_MoveEnd;
+        public event Action<Move>? Event_MoveEnd;
         internal void Event_MoveStartInvoke(Move move)
         {
             Event_MoveStart?.Invoke(move);

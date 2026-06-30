@@ -31,7 +31,7 @@ namespace VPet_Simulator.Core
 
         public readonly Dispatcher Dispatcher;
         public readonly Timer CleanTimer;
-        public GraphCore(int resolution, Dispatcher dispatcher)
+        public GraphCore(int resolution, Dispatcher dispatcher, Config config)
         {
             Dispatcher = dispatcher;
             if (!Directory.Exists(CachePath))
@@ -48,6 +48,7 @@ namespace VPet_Simulator.Core
                     GraphsALL[i].CleanupIdleCache(cleanTicks);
                 }
             }, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+            GraphConfig = config;
         }
 
         public static string CachePath = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName + @"\cache";
@@ -163,6 +164,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 查找动画列表
         /// </summary>
+        /// <param name="GraphName">动画名字</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
         public List<IGraph>? FindGraphs(string? GraphName, AnimatType animat, IGameSave.ModeType mode)
@@ -276,7 +278,7 @@ namespace VPet_Simulator.Core
             /// </summary>
             /// <param name="name">动画名称</param>
             /// <returns>持续时间</returns>
-            public int GetDuration(string name) => Duration.GetInt(name ?? "", 10);
+            public int GetDuration(string? name) => Duration.GetInt(name ?? "", 10);
             /// <summary>
             /// 获得 Str 里面储存的文本 (已翻译)
             /// </summary>

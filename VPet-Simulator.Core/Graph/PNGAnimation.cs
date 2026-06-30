@@ -349,17 +349,17 @@ namespace VPet_Simulator.Core
                 else
                 {
                     img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image2.PNGAnimation"];
-                    if (parant.Child != GraphCore.CommUIElements["Image2.PNGAnimation"])
+                    if (!ReferenceEquals(parant.Child, img))
                     {
-                        if (img.Parent == null)
-                        {
-                            parant.Child = img;
-                        }
-                        else
+                        if (img.Parent is not null)
                         {
                             img = (System.Windows.Controls.Image)GraphCore.CommUIElements["Image1.PNGAnimation"];
-                            if (img.Parent != null)
-                                ((Decorator)img.Parent).Child = null;
+                        }
+
+                        if (!ReferenceEquals(parant.Child, img))
+                        {
+                            if (img.Parent is Decorator oldParent)
+                                oldParent.Child = null;
                             parant.Child = img;
                         }
                     }

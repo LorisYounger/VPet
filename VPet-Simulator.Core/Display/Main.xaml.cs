@@ -36,11 +36,11 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 刷新时间时会调用该方法
         /// </summary>
-        public event Action<Main> TimeHandle;
+        public event Action<Main>? TimeHandle;
         /// <summary>
         /// 刷新时间时会调用该方法,在所有任务处理完之后
         /// </summary>
-        public event Action<Main> TimeUIHandle;
+        public event Action<Main>? TimeUIHandle;
         /// <summary>
         /// 如果不开启功能模式,默认状态设置
         /// </summary>
@@ -346,24 +346,24 @@ namespace VPet_Simulator.Core
         /// 当前是否正在播放
         /// </summary>
         public bool PlayingVoice = false;
-        private void MediaPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        private void MediaPlayer_MediaFailed(object? sender, ExceptionRoutedEventArgs e)
         {
             windowMediaPlayerAvailable = false;
             PlayingVoice = false;
             MessageBoxX.Show("音频播放失败,已尝试自动切换到备用播放器. 如果问题持续,请检查是否已安装WindowsMediaPlayer".Translate(), "音频错误".Translate(), MessageBoxIcon.Warning);
         }
-        private void Clock_Completed(object sender, EventArgs e)
+        private void Clock_Completed(object? sender, EventArgs e)
         {
             PlayingVoice = false;
             VoicePlayer.Clock = null;
         }
         public bool MoveTimerSmartMove = false;
-        private void SmartMoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void SmartMoveTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             MoveTimerSmartMove = false;
         }
 
-        private void MoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void MoveTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             if (DisplayType.Type != GraphType.Move || !MoveTimerSmartMove)
             {
@@ -394,11 +394,11 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 默认点击事件
         /// </summary>
-        public Action DefaultClickAction;
+        public Action? DefaultClickAction;
         /// <summary>
         /// 默认长按事件
         /// </summary>
-        public Action DefaultPressAction;
+        public Action? DefaultPressAction;
         public bool isPress = false;
         long presstime;
         private void MainGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

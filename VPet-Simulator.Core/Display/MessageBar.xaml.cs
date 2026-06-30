@@ -93,7 +93,7 @@ namespace VPet_Simulator.Core
             }
         }
 
-        List<char> outputtext;
+        List<char> outputtext = new List<char>();
         StringBuilder outputtextsample = new StringBuilder();
         private void ShowTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
@@ -121,7 +121,7 @@ namespace VPet_Simulator.Core
                 {
                     if (m.windowMediaPlayerAvailable)
                     {
-                        TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                        TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - (m.VoicePlayer.Clock.CurrentTime ?? TimeSpan.Zero)) : TimeSpan.Zero);
                         if (ts.TotalSeconds > 2)
                         {
                             return;
@@ -152,7 +152,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 被关闭时事件
         /// </summary>
-        public event Action EndAction;
+        public event Action? EndAction;
         private void EndTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (--timeleft <= 0)
@@ -294,10 +294,10 @@ namespace VPet_Simulator.Core
                 {
                     if (m.windowMediaPlayerAvailable)
                     {
-                        TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                        TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - (m.VoicePlayer.Clock.CurrentTime?? TimeSpan.Zero)) : TimeSpan.Zero);
                         while (ts.TotalSeconds > 2)
                         {
-                            ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                            ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - (m.VoicePlayer.Clock.CurrentTime ?? TimeSpan.Zero)) : TimeSpan.Zero);
                             Thread.Sleep(100);
                         }
                     }

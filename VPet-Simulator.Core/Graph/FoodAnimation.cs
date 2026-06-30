@@ -37,11 +37,11 @@ namespace VPet_Simulator.Core
             Back_Lay = back_Lay;
             Animations = new List<Animation>();
             int i = 0;
-            ISub sub = animations.Find("a" + i);
+            ISub sub = animations.Find("a" + i)!;
             while (sub != null)
             {
                 Animations.Add(new Animation(this, sub));
-                sub = animations.Find("a" + ++i);
+                sub = animations.Find("a" + ++i)!;
             }
             IsReady = true;
         }
@@ -49,7 +49,7 @@ namespace VPet_Simulator.Core
         public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
         {
             bool isLoop = info[(gbol)"loop"];
-            FoodAnimation pa = new FoodAnimation(graph, new GraphInfo(path, info), info[(gstr)"front_lay"], info[(gstr)"back_lay"], info, isLoop);
+            FoodAnimation pa = new FoodAnimation(graph, new GraphInfo(path, info), info[(gstr)"front_lay"]!, info[(gstr)"back_lay"]!, info, isLoop);
             graph.AddGraph(pa);
         }
         /// <summary>
@@ -81,14 +81,14 @@ namespace VPet_Simulator.Core
         public bool IsFail => false;
         public string FailMessage => "";
 
-        public TaskControl Control { get; set; }
+        public TaskControl? Control { get; set; }
 
         int nowid;
         /// <summary>
         /// 图片资源
         /// </summary>
-        public string Path { get; set; }
-        private GraphCore GraphCore;
+        public string? Path { get; set; }
+        private GraphCore? GraphCore;
         /// <summary>
         /// 单帧动画
         /// </summary>
@@ -240,9 +240,9 @@ namespace VPet_Simulator.Core
             public Image Back;
         }
 
-        public void Run(Decorator parant, Action EndAction = null) => Run(parant, null, EndAction);
+        public void Run(Decorator parant, Action? EndAction = null) => Run(parant, null, EndAction);
 
-        public void Run(Decorator parant, ImageSource image, Action EndAction = null)
+        public void Run(Decorator parant, ImageSource? image, Action? EndAction = null)
         {
             if (Control?.PlayState == true)
             {//如果当前正在运行,重置状态
@@ -263,7 +263,7 @@ namespace VPet_Simulator.Core
                     }
                     parant.Child = FoodGrid;
                 }
-                var FL = GraphCore.FindGraph(Front_Lay, GraphInfo.Animat, GraphInfo.ModeType);
+                var FL = GraphCore!.FindGraph(Front_Lay, GraphInfo.Animat, GraphInfo.ModeType);
                 var BL = GraphCore.FindGraph(Back_Lay, GraphInfo.Animat, GraphInfo.ModeType);
                 var t1 = FL?.Run(FoodGrid.Front);
                 var t2 = BL?.Run(FoodGrid.Back);
@@ -282,7 +282,7 @@ namespace VPet_Simulator.Core
         }
         public void Dispose()
         {
-            Animations = null;
+            Animations = [];
             GraphCore = null;
         }
     }

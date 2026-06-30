@@ -18,7 +18,7 @@ public class GameSave_VPet : IGameSave
     /// 宠物名字
     /// </summary>
     [Line(name: "name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = "";
     /// <summary>
     /// 主人称呼
     /// </summary>

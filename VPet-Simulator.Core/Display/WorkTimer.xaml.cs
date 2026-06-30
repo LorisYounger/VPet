@@ -115,7 +115,7 @@ namespace VPet_Simulator.Core
             if (Visibility == Visibility.Collapsed) return;
             TimeSpan ts = DateTime.Now - StartTime;
             TimeSpan tleft;
-            if (ts.TotalMinutes > m.NowWork.Time)
+            if (ts.TotalMinutes > m.NowWork?.Time)
             {
                 //学完了,停止
                 //ts = TimeSpan.FromMinutes(MaxTime);
@@ -138,7 +138,7 @@ namespace VPet_Simulator.Core
             }
             else
             {
-                tleft = TimeSpan.FromMinutes(m.NowWork.Time) - ts;
+                tleft = TimeSpan.FromMinutes(m.NowWork!.Time) - ts;
                 PBLeft.Value = ts.TotalMinutes;
             }
             switch (DisplayType)
@@ -150,7 +150,7 @@ namespace VPet_Simulator.Core
                     ShowTimeSpan(tleft); break;
                 case 2:
                     tNumber.Text = GetCount.ToString("f0");
-                    if (m.NowWork.Type == Work.WorkType.Work)
+                    if (m.NowWork!.Type == Work.WorkType.Work)
                         tNumberUnit.Text = LocalizeCore.Translate("钱");
                     else
                         tNumberUnit.Text = "EXP";
@@ -188,7 +188,7 @@ namespace VPet_Simulator.Core
             {
                 btnSwitch.Opacity = 1;
                 DisplayBorder.Visibility = Visibility.Visible;
-                btnStop.Content = LocalizeCore.Translate("停止") + m.NowWork.NameTrans;
+                btnStop.Content = LocalizeCore.Translate("停止") + m.NowWork!.NameTrans;
                 switch (DisplayType)
                 {
                     default:
@@ -236,7 +236,7 @@ namespace VPet_Simulator.Core
         /// 停止工作
         /// </summary>
         /// <param name="then"></param>
-        public void Stop(Action @then = null, StopReason reason = StopReason.MenualStop)
+        public void Stop(Action? @then = null, StopReason reason = StopReason.MenualStop)
         {
             if (m.State == Main.WorkingState.Work && m.NowWork != null)
             {
@@ -245,7 +245,7 @@ namespace VPet_Simulator.Core
             }
             Visibility = Visibility.Collapsed;
             m.State = Main.WorkingState.Nomal;
-            m.Display(m.NowWork.Graph, AnimatType.C_End, then ?? m.DisplayNomal);
+            m.Display(m.NowWork?.Graph, AnimatType.C_End, then ?? m.DisplayNomal);
         }
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
@@ -254,6 +254,6 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 任务完成时调用该参数
         /// </summary>
-        public event Action<FinishWorkInfo> E_FinishWork;
+        public event Action<FinishWorkInfo>? E_FinishWork;
     }
 }

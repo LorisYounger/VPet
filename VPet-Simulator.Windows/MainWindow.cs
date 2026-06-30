@@ -1452,7 +1452,7 @@ namespace VPet_Simulator.Windows
         /// </summary>
         /// <param name="prefixsave">存档前缀</param>
         /// <param name="basemw">基础窗口</param>
-        public MainWindow(string prefixsave, MainWindow basemw = null)
+        public MainWindow(string prefixsave, MainWindow? basemw = null)
         {
             PrefixSave = prefixsave;
             if (prefixsave != string.Empty && !PrefixSave.StartsWith("-"))
@@ -1473,7 +1473,7 @@ namespace VPet_Simulator.Windows
 
             if (basemw != null)
             {
-                Set["workshop"] = basemw.Set["workshop"];
+                Set!["workshop"] = basemw.Set["workshop"];
                 Set.Resolution = basemw.Set.Resolution;
             }
 
@@ -1482,7 +1482,7 @@ namespace VPet_Simulator.Windows
             List<DirectoryInfo> Path = new List<DirectoryInfo>();
             Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
 
-            var workshop = Set["workshop"];
+            var workshop = Set!["workshop"];
             foreach (ISub ws in workshop)
             {
                 Path.Add(new DirectoryInfo(ws.Name));

@@ -132,11 +132,11 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 说话内容更新事件
         /// </summary>
-        public event Action<(string fullText, string changedText)> Event_Update;
+        public event Action<(string fullText, string changedText)>? Event_Update;
         /// <summary>
         /// 生成完成事件, string为生成完成的全部文本
         /// </summary>
-        public event Action<string> Event_Finish;
+        public event Action<string>? Event_Finish;
         /// <summary>
         /// 当前对话内容
         /// </summary>

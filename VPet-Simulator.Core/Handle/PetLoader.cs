@@ -25,10 +25,9 @@ namespace VPet_Simulator.Core
         public GraphCore Graph(int Resolution, Dispatcher dispatcher)
         {
             GraphCount = 0;
-            var g = new GraphCore(Resolution, dispatcher);
+            var g = new GraphCore(Resolution, dispatcher, Config);
             foreach (var p in path)
                 GraphCount += LoadGraph(g, new DirectoryInfo(p), p);
-            g.GraphConfig = Config;
             return g;
         }
         /// <summary>
@@ -50,10 +49,10 @@ namespace VPet_Simulator.Core
         public GraphCore.Config Config;
         public PetLoader(LpsDocument lps, DirectoryInfo directory)
         {
-            Name = lps.First().Info;
-            Intor = lps.First()["intor"].Info;
-            PetName = lps.First()["petname"].Info;
-            path.Add(directory.FullName + "\\" + lps.First()["path"].Info);
+            Name = lps.First()!.Info;
+            Intor = lps.First()!["intor"].Info;
+            PetName = lps.First()!["petname"].Info;
+            path.Add(directory.FullName + "\\" + lps.First()!["path"].Info);
             Config = new Config(lps);
         }
         public delegate void LoadGraphDelegate(GraphCore graph, FileSystemInfo path, ILine info);
@@ -109,7 +108,7 @@ namespace VPet_Simulator.Core
                     }
                 }
             }
-            else if (list.Count() == 0)
+            else if (!list.Any())
             {//开始自动生成
                 var paths = di.GetFiles();
                 if (paths.Length == 0)

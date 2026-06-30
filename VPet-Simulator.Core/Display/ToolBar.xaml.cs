@@ -54,7 +54,7 @@ namespace VPet_Simulator.Core
             MenuStudy.Items.Clear();
             MenuPlay.Items.Clear();
         }
-        public void StartWork(Work w)
+        public void StartWork(Work? w)
         {
             if (m.StartWork(w))
                 Visibility = Visibility.Collapsed;
@@ -160,9 +160,9 @@ namespace VPet_Simulator.Core
         {
             StartWork(wstudy);
         }
-        Work wwork;
-        Work wstudy;
-        Work wplay;
+        Work? wwork;
+        Work? wstudy;
+        Work? wplay;
 
 
         private void MenuWork_Click(object sender, RoutedEventArgs e)
@@ -247,7 +247,7 @@ namespace VPet_Simulator.Core
             }
         }
 
-        private void ClosePanelTimer_Tick(object sender, EventArgs e)
+        private void ClosePanelTimer_Tick(object? sender, EventArgs e)
         {
             Dispatcher.Invoke(() =>
             {
@@ -261,7 +261,7 @@ namespace VPet_Simulator.Core
             });
         }
 
-        private void Closetimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void Closetimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (onFocus)
             {
@@ -274,7 +274,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// ToolBar显示事件
         /// </summary>
-        public event Action EventShow;
+        public event Action? EventShow;
         public void Show()
         {
             EventShow?.Invoke();
@@ -397,7 +397,7 @@ namespace VPet_Simulator.Core
             //}
         }
 
-        private Brush GetForeground(double value)
+        private Brush? GetForeground(double value)
         {
             if (value >= .6)
             {
@@ -415,7 +415,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// MenuPanel显示事件
         /// </summary>
-        public event Action EventMenuPanelShow;
+        public event Action? EventMenuPanelShow;
 
         private void MenuPanel_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -431,7 +431,6 @@ namespace VPet_Simulator.Core
 
         public void Dispose()
         {
-            m = null;
             CloseTimer.Dispose();
             closePanelTimer.Dispose();
         }
@@ -449,7 +448,7 @@ namespace VPet_Simulator.Core
                 m.DisplaySleep(true);
             else
             {
-                m.WorkTimer.Stop(() => m.DisplaySleep(true), WorkTimer.FinishWorkInfo.StopReason.MenualStop);
+                m.WorkTimer?.Stop(() => m.DisplaySleep(true), WorkTimer.FinishWorkInfo.StopReason.MenualStop);
             }
         }
     }

@@ -68,7 +68,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 动画文件路径, 可能是文件夹或文件
         /// </summary>
-        string Path { get; }
+        string? Path { get; }
         /// <summary>
         /// 上次使用时间戳, 用于判断是否需要释放资源
         /// </summary>

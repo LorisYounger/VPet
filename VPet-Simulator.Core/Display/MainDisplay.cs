@@ -37,7 +37,7 @@ namespace VPet_Simulator.Core
                     DisplaySleep(true);
                     return;
                 case WorkingState.Work:
-                    NowWork.Display(this);
+                    NowWork?.Display(this);
                     return;
                 case WorkingState.Travel:
                     //TODO
@@ -128,7 +128,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 当发生摸头时触发改方法
         /// </summary>
-        public event Action Event_TouchHead;
+        public event Action? Event_TouchHead;
         /// <summary>
         /// 显示摸头情况
         /// </summary>
@@ -166,7 +166,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 当发生摸身体时触发改方法
         /// </summary>
-        public event Action Event_TouchBody;
+        public event Action? Event_TouchBody;
         /// <summary>
         /// 显示摸身体情况
         /// </summary>
@@ -209,6 +209,11 @@ namespace VPet_Simulator.Core
             looptimes = 0;
             CountNomal = 0;
             var name = Core.Graph.FindName(GraphType.StateONE);
+            if (name == null)
+            {
+                DisplayIdel();
+                return;
+            }
             var list = Core.Graph.FindGraphs(name, AnimatType.A_Start, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == GraphType.StateONE);
             if (list != null && list.Count > 0)
                 Display(list[Function.Rnd.Next(list.Count)], () => DisplayIdel_StateONEing(name));
@@ -302,11 +307,11 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示B循环+C循环+ToNomal
         /// </summary>
-        public Action<string> DisplayBLoopingToNomal(int looplength) => (gn) => DisplayBLoopingToNomal(gn, looplength);
+        public Action<string?> DisplayBLoopingToNomal(int looplength) => (gn) => DisplayBLoopingToNomal(gn, looplength);
         /// <summary>
         /// 显示B循环+C循环+ToNomal
         /// </summary>
-        public void DisplayBLoopingToNomal(string graphname, int loopLength)
+        public void DisplayBLoopingToNomal(string? graphname, int loopLength)
         {
             if (Function.Rnd.Next(++looptimes) > loopLength)
                 DisplayCEndtoNomal(graphname);
@@ -365,7 +370,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示拖拽中
         /// </summary>
-        private void DisplayRaising(string name = null)
+        private void DisplayRaising(string? name = null)
         {
             Console.WriteLine(rasetype);
             switch (rasetype)
@@ -376,14 +381,14 @@ namespace VPet_Simulator.Core
                     rasetype = int.MinValue;
                     Core.Controller.RePositionActive = !Core.Controller.CheckPosition();
                     //判断侧边隐藏
-                    if(!MoveSideHideCheck())
+                    if (!MoveSideHideCheck())
                     {
                         if (string.IsNullOrEmpty(name))
                             Display(GraphType.Raised_Static, AnimatType.C_End, DisplayToNomal);
                         else
                             Display(name, AnimatType.C_End, GraphType.Raised_Static, DisplayToNomal);
                     }
-                   
+
                     return;
                 case 0:
                 case 1:
@@ -414,7 +419,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示结束动画到正常动画 (DisplayToNomal)
         /// </summary>
-        public void DisplayCEndtoNomal(string graphname)
+        public void DisplayCEndtoNomal(string? graphname)
         {
             Display(graphname, AnimatType.C_End, DisplayToNomal);
         }
@@ -428,10 +433,17 @@ namespace VPet_Simulator.Core
         /// <param name="Type">动画类型</param>
         /// <param name="EndAction">动画结束后操作(附带名字)</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
-        public void Display(GraphType Type, AnimatType animat, Action<string> EndAction = null)
+        public void Display(GraphType Type, AnimatType animat, Action<string>? EndAction = null)
         {
             var name = Core.Graph.FindName(Type);
-            Display(name, animat, EndAction);
+            if (name != null)
+            {
+                Display(name, animat, EndAction);
+            }
+            else
+            {
+                EndAction?.Invoke("");
+            }
         }
         /// <summary>
         /// 显示动画 根据名字播放
@@ -439,9 +451,9 @@ namespace VPet_Simulator.Core
         /// <param name="name">动画名称</param>
         /// <param name="EndAction">动画结束后操作(附带名字)</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
-        public void Display(string name, AnimatType animat, Action<string> EndAction)
+        public void Display(string? name, AnimatType animat, Action<string>? EndAction)
         {
-            Display(Core.Graph.FindGraph(name, animat, Core.Save.Mode), new Action(() => EndAction.Invoke(name)));
+            Display(Core.Graph.FindGraph(name, animat, Core.Save.Mode), new Action(() => EndAction?.Invoke(name ?? "")));
         }
         /// <summary>
         /// 显示动画 根据名字和类型查找运行,若无则查找类型
@@ -450,11 +462,11 @@ namespace VPet_Simulator.Core
         /// <param name="name">动画名称</param>
         /// <param name="EndAction">动画结束后操作(附带名字)</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
-        public void Display(string name, AnimatType animat, GraphType Type, Action<string> EndAction = null)
+        public void Display(string name, AnimatType animat, GraphType Type, Action<string>? EndAction = null)
         {
             var list = Core.Graph.FindGraphs(name, animat, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == Type);
             if ((list?.Count ?? -1) > 0)
-                Display(list[Function.Rnd.Next(list.Count)], () => EndAction(name));
+                Display(list![Function.Rnd.Next(list.Count)], () => EndAction?.Invoke(name));
             else
                 Display(Type, animat, EndAction);
         }
@@ -465,11 +477,11 @@ namespace VPet_Simulator.Core
         /// <param name="name">动画名称</param>
         /// <param name="EndAction">动画结束后操作</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
-        public void Display(string name, AnimatType animat, GraphType Type, Action EndAction = null)
+        public void Display(string name, AnimatType animat, GraphType Type, Action? EndAction = null)
         {
             var list = Core.Graph.FindGraphs(name, animat, Core.Save.Mode)?.FindAll(x => x.GraphInfo.Type == Type);
             if ((list?.Count ?? -1) > 0)
-                Display(list[Function.Rnd.Next(list.Count)], EndAction);
+                Display(list![Function.Rnd.Next(list.Count)], EndAction);
             else
                 Display(Type, animat, EndAction);
         }
@@ -480,7 +492,7 @@ namespace VPet_Simulator.Core
         /// <param name="Type">动画类型</param>
         /// <param name="EndAction">动画结束后操作</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
-        public void Display(GraphType Type, AnimatType animat, Action EndAction = null)
+        public void Display(GraphType Type, AnimatType animat, Action? EndAction = null)
         {
             var name = Core.Graph.FindName(Type);
             Display(name, animat, EndAction);
@@ -491,7 +503,7 @@ namespace VPet_Simulator.Core
         /// <param name="name">动画名称</param>
         /// <param name="EndAction">动画结束后操作</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
-        public void Display(string name, AnimatType animat, Action EndAction = null)
+        public void Display(string? name, AnimatType animat, Action? EndAction = null)
         {
             Display(Core.Graph.FindGraph(name, animat, Core.Save.Mode), EndAction);
         }
@@ -500,13 +512,13 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 显示过的动画
         /// </summary>
-        public event Action<GraphInfo> GraphDisplayHandler;
+        public event Action<GraphInfo>? GraphDisplayHandler;
         /// <summary>
         /// 显示动画 (自动多层切换)
         /// </summary>
         /// <param name="graph">动画</param>
         /// <param name="EndAction">结束操作</param>
-        public void Display(IGraph graph, Action EndAction = null)
+        public void Display(IGraph? graph, Action? EndAction = null)
         {
             if (graph == null)
             {

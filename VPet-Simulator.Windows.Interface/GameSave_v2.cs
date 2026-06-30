@@ -23,8 +23,8 @@ namespace VPet_Simulator.Windows.Interface
             GameSave = new GameSave_VPet(petname);
             Statistics = new Statistics();
         }
-        
-        protected void load(ILPS lps, Statistics oldStatistics = null, GameSave_VPet oldGameSave = null, ILPS olddata = null)
+
+        protected void load(ILPS lps, Statistics? oldStatistics = null, GameSave_VPet? oldGameSave = null, ILPS? olddata = null)
         {
             if (lps.FindLine("statistics") == null)
             {//尝试从老存档加载
@@ -34,7 +34,7 @@ namespace VPet_Simulator.Windows.Interface
             {
                 Statistics = new Statistics(lps["statistics"].ToList());
             }
-            ILine vpet = lps.FindLine("vpet");
+            ILine? vpet = lps.FindLine("vpet");
             bool nohashcheck = true;
             long hash;
             if (vpet != null)
@@ -77,17 +77,17 @@ namespace VPet_Simulator.Windows.Interface
                 if (lps.Remove("hash"))
                 {
                     if (ver == 2)
-                        HashCheck = Sub.GetHashCode(lps.ToString()) == hash;
+                        HashCheck = Sub.GetHashCode(lps.ToString()!) == hash;
                     else
                     {
                         try
                         {
                             using (MD5 md5 = MD5.Create())
                             {
-                                HashCheck = BitConverter.ToInt64(md5.ComputeHash(Encoding.UTF8.GetBytes(lps.ToString())), 0) == hash;
+                                HashCheck = BitConverter.ToInt64(md5.ComputeHash(Encoding.UTF8.GetBytes(lps.ToString()!)), 0) == hash;
                             }
                             if (!HashCheck)
-                                HashCheck = Sub.GetHashCode(lps.ToString()) == hash;
+                                HashCheck = Sub.GetHashCode(lps.ToString()!) == hash;
                         }
                         catch (Exception e)
                         {
@@ -109,7 +109,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="oldStatistics">老统计</param>
         /// <param name="oldGameSave">老存档</param>
         /// <param name="olddata">老数据</param>
-        public GameSave_v2(ILPS lps, Statistics oldStatistics = null, GameSave_VPet oldGameSave = null, ILPS olddata = null)
+        public GameSave_v2(ILPS lps, Statistics? oldStatistics = null, GameSave_VPet? oldGameSave = null, ILPS? olddata = null)
         {
             load(lps, oldStatistics, oldGameSave, olddata);
         }
@@ -130,18 +130,19 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 游戏存档
         /// </summary>
-        public GameSave_VPet GameSave;
+        public GameSave_VPet GameSave = new GameSave_VPet();
         /// <summary>
         /// 统计
         /// </summary>
-        public Statistics Statistics = null;
+        public Statistics? Statistics = null;
 
         public ILPS ToLPS()
         {
             var lps = new LPS_D();
             lps.AddRange(Data);
             lps.AddLine(GameSave.ToLine());
-            lps.Add(new Line("statistics", "", Statistics.ToSubs()));
+            if (Statistics != null)
+                lps.Add(new Line("statistics", "", Statistics.ToSubs()));
             lps.Remove("hash");
             if (HashCheck)
             {
@@ -177,7 +178,7 @@ namespace VPet_Simulator.Windows.Interface
         public long this[gi64 subName] { get => Data[subName]; set => Data[subName] = value; }
         public int this[gint subName] { get => Data[subName]; set => Data[subName] = value; }
         public bool this[gbol subName] { get => Data[subName]; set => Data[subName] = value; }
-        public string this[gstr subName] { get => Data[subName]; set => Data[subName] = value; }
+        public string? this[gstr subName] { get => Data[subName]; set => Data[subName] = value; }
         public ILine this[string subName] { get => Data[subName]; set => Data[subName] = value; }
 
         public bool GetBool(string subName)
@@ -230,12 +231,12 @@ namespace VPet_Simulator.Windows.Interface
             Data.SetDateTime(subName, value);
         }
 
-        public string GetString(string subName, string defaultvalue = null)
+        public string? GetString(string subName, string? defaultvalue = null)
         {
             return Data.GetString(subName, defaultvalue);
         }
 
-        public void SetString(string subName, string value)
+        public void SetString(string subName, string? value)
         {
             Data.SetString(subName, value);
         }
