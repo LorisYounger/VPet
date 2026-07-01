@@ -558,12 +558,16 @@ public partial class MPFriends : WindowX, IMPFriend
         var msg = new MPMessage() { Type = (int)MSGType.Interact, To = friend.Id };
         msg.SetContent(Interact.TouchPinch);
         wmp.SendMessageALL(msg);
-        if (Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
+
+        bool mouseStillPressed = Mouse.LeftButton == MouseButtonState.Pressed;
+
+        if (mouseStillPressed && Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
         {
             Main.Display("pinch", AnimatType.B_Loop, DisplayPinch_loop);
         }
         else
         {
+            Main.isPress = false;
             Main.DisplayCEndtoNomal("pinch");
         }
     }

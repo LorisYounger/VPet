@@ -21,6 +21,7 @@ using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using VPet_Simulator.Core;
@@ -2857,7 +2858,9 @@ namespace VPet_Simulator.Windows
         }
         private void DisplayPinch_loop()
         {
-            if (Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
+            bool mouseStillPressed = Mouse.LeftButton == MouseButtonState.Pressed;
+
+            if (mouseStillPressed && Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
             {
                 if (Core.Controller.EnableFunction && Core.Save.Strength >= 10 && Core.Save.Feeling < Core.Save.FeelingMax)
                 {
@@ -2870,6 +2873,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
+                Main.isPress = false;
                 Main.DisplayCEndtoNomal("pinch");
             }
         }
