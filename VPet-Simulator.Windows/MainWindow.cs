@@ -1501,6 +1501,166 @@ namespace VPet_Simulator.Windows
         public IEnumerable<IModInfo> OnModInfo => CoreMODs.FindAll(x => x.IsOnMOD(this));
 
         /// <summary>
+        /// 运行时热启用一个 MOD (尽量免重启).
+        /// <para>对纯数据类内容(food/text/image/theme)可即时生效; 包含代码插件的 MOD 会即时执行
+        /// <see cref="MainPlugin.LoadPlugin"/> 与 <see cref="MainPlugin.GameLoaded"/>; 但宠物模型动画因缓存
+        /// 在启动时一次性生成, 可能仍需重启才完整生效.</para>
+        /// </summary>
+        /// <param name="directory">MOD 目录(可以是尚未加载的新 MOD, 也可以是已存在的停用 MOD 的目录)</param>
+        /// <returns>新加载的 CoreMOD; 失败返回 null</returns>
+        internal CoreMOD EnableModRuntime(DirectoryInfo directory)
+        {
+            if (directory == null || !File.Exists(directory.FullName + @"\info.lps"))
+                return null;
+
+            // 读取 MOD 名称用于持久化启用; 名称解析失败则放弃
+            string modName;
+            try
+            {
+                modName = new LpsDocument(File.ReadAllText(directory.FullName + @"\info.lps")).FindLine("vupmod").Info;
+            }
+            catch (Exception ex)
+            {
+                NoticeBox.Show("无法读取该 MOD 信息, 启用失败:".Translate() + "\n" + ex.Message, "启用 MOD 失败".Translate());
+                return null;
+            }
+
+            // 持久化启用状态
+            Set.OnMod(modName);
+
+            // 移除同目录的已存在停用 stub, 否则重新构造时会触发"MOD名称重复"改名逻辑.
+            // 先缓存被移除的 stub, 若重新构造失败可还原, 避免列表中该 MOD 凭空消失.
+            var removedStubs = CoreMODs.Where(m => m.Path != null &&
+                string.Equals(m.Path.FullName, directory.FullName, StringComparison.OrdinalIgnoreCase)).ToList();
+            CoreMODs.RemoveAll(removedStubs.Contains);
+
+            // 记录加载前的插件, 用于 diff 出本次新加载的插件
+            var pluginsBefore = new HashSet<MainPlugin>(Plugins);
+
+            CoreMOD mod;
+            try
+            {
+                mod = new CoreMOD(directory, this);
+            }
+            catch (Exception ex)
+            {
+                // 还原: 撤销启用状态并放回原有 stub, 保证调用方后续 ShowMod 不会因找不到而出错
+                Set.OnModRemove(modName);
+                CoreMODs.AddRange(removedStubs);
+                CoreMOD.NowLoading = null;
+                NoticeBox.Show("启用 MOD {0} 时发生错误:".Translate(modName) + "\n" + ex.Message, "启用 MOD 失败".Translate());
+                return null;
+            }
+            CoreMOD.NowLoading = null;
+            CoreMODs.Add(mod);
+
+            // 对本次新加载的插件执行初始化生命周期(复用启动时的调用顺序与异常处理方式)
+            foreach (MainPlugin mp in Plugins)
+            {
+                if (pluginsBefore.Contains(mp))
+                    continue;
+                try
+                {
+                    mp.LoadPlugin();
+                    mp.GameLoaded();
+                }
+                catch (Exception e)
+                {
+                    NoticeBox.Show("由于插件引起的错误".Translate() + "\n" + e.ToString(),
+                        "由于插件引起的错误".Translate() + '-' + mp.PluginName);
+                }
+            }
+            return mod;
+        }
+
+        /// <summary>
+        /// 运行时"软停用"一个 MOD.
+        /// <para>受限于 .NET: 通过 <see cref="System.Reflection.Assembly.LoadFrom(string)"/> 加载的插件 DLL 进入
+        /// 默认且不可卸载的程序集加载上下文, 无法在运行时真正卸载. 因此本方法只做可控范围内的拆除:
+        /// 持久化停用状态、调用插件 <see cref="MainPlugin.EndGame"/> 收尾、从 <see cref="Plugins"/> 移除.
+        /// DLL 本身将驻留至下次重启才真正不再加载.</para>
+        /// </summary>
+        /// <param name="mod">要停用的 MOD</param>
+        /// <returns>该 MOD 是否包含代码插件(包含则建议重启以彻底卸载)</returns>
+        internal bool DisableModRuntime(CoreMOD mod)
+        {
+            if (mod == null)
+                return false;
+            if (CoreMOD.OnModDefList.Contains(mod.Name))
+                return false; // Core 等核心 MOD 不允许停用, 由调用方拦截
+
+            // 持久化停用状态
+            Set.OnModRemove(mod.Name);
+
+            bool hadPlugin = false;
+            // 摘除该 MOD 对应的插件实例(匹配规则与设置页一致: 插件名==MOD名 且程序集位于该 MOD 目录下)
+            for (int i = Plugins.Count - 1; i >= 0; i--)
+            {
+                var mp = Plugins[i];
+                bool belongs;
+                try
+                {
+                    belongs = mp.PluginName == mod.Name &&
+                        mod.Path != null &&
+                        mp.GetType().Assembly.Location.Contains(mod.Path.FullName);
+                }
+                catch
+                {
+                    belongs = mp.PluginName == mod.Name;
+                }
+                if (!belongs)
+                    continue;
+                hadPlugin = true;
+                try
+                {
+                    mp.EndGame();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"停用插件 {mp.PluginName} 时 EndGame 出错: {e.Message}");
+                }
+                Plugins.RemoveAt(i);
+            }
+
+            return hadPlugin;
+        }
+
+        /// <summary>
+        /// 异步扫描磁盘上"尚未加载"的 MOD 目录(本地 mod + 创意工坊), 将其作为停用 stub 载入 <see cref="CoreMODs"/>,
+        /// 以便在 MOD 列表中显示并供用户手动启用. 扫描带缓存与防抖, 不重复加载已存在的 MOD.
+        /// </summary>
+        /// <returns>本次新发现并载入的 MOD 数量</returns>
+        internal async Task<int> DiscoverNewModsAsync()
+        {
+            var unloaded = await ModManager.RefreshAsync(force: true).ConfigureAwait(false);
+            if (unloaded.Count == 0)
+                return 0;
+            // CoreMOD 构造会访问 WPF 资源, 必须回到 UI 线程
+            return await Dispatcher.InvokeAsync(() =>
+            {
+                int added = 0;
+                foreach (var dir in unloaded)
+                {
+                    // 防御: 期间可能已被其他途径加载
+                    if (CoreMODs.Any(m => m.Path != null &&
+                        string.Equals(m.Path.FullName, dir.FullName, StringComparison.OrdinalIgnoreCase)))
+                        continue;
+                    try
+                    {
+                        CoreMODs.Add(new CoreMOD(dir, this));
+                        added++;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"发现并载入 MOD {dir.Name} 失败, 已跳过: {ex.Message}");
+                    }
+                }
+                CoreMOD.NowLoading = null;
+                return added;
+            });
+        }
+
+        /// <summary>
         /// 加载游戏
         /// </summary>
         /// <param name="Path">MOD地址</param>
@@ -1509,15 +1669,33 @@ namespace VPet_Simulator.Windows
             MODPath = Path.GroupBy(x => x.FullName).Select(group => group.First()).ToList();
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading MOD"));
             //加载mod
+            //收集加载失败(抛出异常)的 MOD, 在加载结束后统一提示, 避免单个坏 MOD 直接中断整个启动流程
+            var failedMods = new List<(string Name, string Error)>();
             foreach (DirectoryInfo di in MODPath)
             {
                 if (!File.Exists(di.FullName + @"\info.lps"))
                     continue;
                 await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = $"Loading MOD: {di.Name}"));
-                CoreMODs.Add(new CoreMOD(di, this));
+                try
+                {
+                    CoreMODs.Add(new CoreMOD(di, this));
+                }
+                catch (Exception ex)
+                {
+                    //异常隔离: 该 MOD 加载彻底失败, 跳过并记录, 不影响其余 MOD 与游戏启动
+                    Console.WriteLine($"加载 MOD {di.Name} 失败, 已跳过: {ex}");
+                    failedMods.Add((di.Name, ex.Message));
+                }
             }
 
             CoreMOD.NowLoading = null;
+            if (failedMods.Count != 0)
+            {
+                var detail = string.Join("\n", failedMods.Select(f => $"- {f.Name}: {f.Error}"));
+                await Dispatcher.InvokeAsync(() => NoticeBox.Show(
+                    "以下 MOD 加载失败, 已被跳过, 游戏将继续启动:".Translate() + "\n" + detail,
+                    "部分 MOD 加载失败".Translate()));
+            }
 
             //判断是否需要清空缓存
             if (App.MainWindows.Count == 1 && Set.LastCacheDate < CoreMODs.Max(x => x.CacheDate))
