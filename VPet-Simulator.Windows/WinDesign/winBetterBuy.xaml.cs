@@ -19,10 +19,10 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public partial class winBetterBuy : WindowX
     {
-        private TextBox _searchTextBox;
+        private TextBox? _searchTextBox;
         MainWindow mw;
         private bool AllowChange = false;
-        private Switch _puswitch;
+        private Switch? _puswitch;
         private int _columns;
         private int _rows;
 
@@ -35,7 +35,7 @@ namespace VPet_Simulator.Windows
             LsbSortAsc.SelectedIndex = mw.Set["betterbuy"].GetBool("lastasc") ? 0 : 1;
             AllowChange = true;
         }
-        Run rMoney;
+        Run? rMoney;
         public void Show(Food.FoodType type)
         {
             if (!AllowChange)
@@ -88,7 +88,7 @@ namespace VPet_Simulator.Windows
 
             Show();
         }
-        public void OrderItemSource(Food.FoodType type, int sortrule, bool sortasc, string searchtext = null)
+        public void OrderItemSource(Food.FoodType type, int sortrule, bool sortasc, string? searchtext = null)
         {
             Task.Run(() =>
             {
@@ -217,13 +217,13 @@ namespace VPet_Simulator.Windows
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
             var Button = sender as Button;
-            var item = Button.DataContext as Food;
+            var item = Button!.DataContext as Food;
             //看是什么模式
             if (mw.Set.EnableFunction)
             {//$1000以内的食物允许赊账
-                for (int i = 0; i < (int)nibuytimes.Value; i++)
+                for (int i = 0; i < (int)(nibuytimes.Value ?? 0); i++)
                 {                        
-                    if ((item.Price >= 1000 || item.Exp >= 1000) && item.Price >= mw.Core.Save!.Money)
+                    if ((item!.Price >= 1000 || item.Exp >= 1000) && item.Price >= mw.Core.Save!.Money)
                     {//买不起
                         MessageBoxX.Show("您没有足够金钱来购买 {0}\n您需要 {1:f2} 金钱来购买\n您当前 {2:f2} 拥有金钱"
                             .Translate(item.TranslateName, item.Price, mw.Core.Save!.Money)
@@ -243,18 +243,18 @@ namespace VPet_Simulator.Windows
                     mw.Core.Save!.Money -= item.Price;
                     mw.TakeItem(item);
                 }
-                mw.TakeItemHandle(item, (int)nibuytimes.Value, "betterbuy");
+                mw.TakeItemHandle(item!, (int)(nibuytimes.Value ?? 0), "betterbuy");
             }
 
-            mw.DisplayFoodAnimation(item.GetGraph(), item.ImageSource);
+            mw.DisplayFoodAnimation(item!.GetGraph(), item.ImageSource);
 
-            if (!_puswitch.IsChecked.Value)
+            if (!_puswitch!.IsChecked ?? false)
             {
                 TryClose();
             }
             else
             {
-                rMoney.Text = mw.Core.Save!.Money.ToString("f2");
+                rMoney!.Text = mw.Core.Save!.Money.ToString("f2");
             }
         }
 
@@ -265,7 +265,7 @@ namespace VPet_Simulator.Windows
 
         private void BtnTitle_Click(object sender, RoutedEventArgs e)
         {
-            _searchTextBox.Text = "";
+            _searchTextBox!.Text = "";
             Search();
         }
 
@@ -311,13 +311,13 @@ namespace VPet_Simulator.Windows
         private void Switch_Loaded(object sender, RoutedEventArgs e)
         {
             _puswitch = sender as Switch;
-            _puswitch.IsChecked = mw.Set["betterbuy"].GetBool("noautoclose");
+            _puswitch!.IsChecked = mw.Set["betterbuy"].GetBool("noautoclose");
             _puswitch.Click += Switch_Checked;
         }
 
         private void Switch_Checked(object sender, RoutedEventArgs e)
         {
-            mw.Set["betterbuy"].SetBool("noautoclose", _puswitch.IsChecked.Value);
+            mw.Set["betterbuy"].SetBool("noautoclose", _puswitch!.IsChecked ?? false);
         }
 
         private void AutoUniformGrid_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -334,7 +334,7 @@ namespace VPet_Simulator.Windows
         private void AutoUniformGrid_Changed(object sender, RoutedEventArgs e)
         {
             var uniformGrid = e.OriginalSource as AutoUniformGrid;
-            var columns = uniformGrid.Columns;
+            var columns = uniformGrid!.Columns;
             if (columns != _columns)
             {
                 _columns = columns;
@@ -354,41 +354,41 @@ namespace VPet_Simulator.Windows
         private void rMoney_Loaded(object sender, RoutedEventArgs e)
         {
             rMoney = sender as Run;
-            rMoney.Text = mw.Core.Save!.Money.ToString("f2");
+            rMoney!.Text = mw.Core.Save!.Money.ToString("f2");
         }
 
  
-        private Switch _puswitchautobuy;
+        private Switch? _puswitchautobuy;
         private void Switch_Loaded_1(object sender, RoutedEventArgs e)
         {
             _puswitchautobuy = sender as Switch;
-            _puswitchautobuy.IsChecked = mw.Set.AutoBuy;
+            _puswitchautobuy!.IsChecked = mw.Set.AutoBuy;
             _puswitchautobuy.Click += Switch_AutoBuy_Checked;
         }
         private void Switch_AutoBuy_Checked(object sender, RoutedEventArgs e)
         {
-            if (_puswitchautobuy.IsChecked.Value && mw.Core.Save!.Money < 100)
+            if (_puswitchautobuy!.IsChecked ?? false && mw.Core.Save!.Money < 100)
             {
                 _puswitchautobuy.IsChecked = false;
                 MessageBoxX.Show(mw, "余额不足100，无法开启自动购买".Translate(), "更好买".Translate());
                 return;
             }
-            if (_puswitchautobuy.IsChecked.Value)
+            if (_puswitchautobuy!.IsChecked ?? false)
             {
                 mw.Set.AutoBuy = true;
-                _puswitchautogift.Visibility = Visibility.Visible;
+                _puswitchautogift!.Visibility = Visibility.Visible;
             }
             else
             {
                 mw.Set.AutoBuy = false;
-                _puswitchautogift.Visibility = Visibility.Collapsed;
+                _puswitchautogift!.Visibility = Visibility.Collapsed;
             }
         }
-        private Switch _puswitchautogift;
+        private Switch? _puswitchautogift;
         private void Switch_Loaded_2(object sender, RoutedEventArgs e)
         {
             _puswitchautogift = sender as Switch;
-            _puswitchautogift.IsChecked = mw.Set.AutoGift;
+            _puswitchautogift!.IsChecked = mw.Set.AutoGift;
             _puswitchautogift.Click += Switch_AutoGift_Checked;
             if (mw.Set.AutoBuy)
             {
@@ -397,7 +397,7 @@ namespace VPet_Simulator.Windows
         }
         private void Switch_AutoGift_Checked(object sender, RoutedEventArgs e)
         {
-            mw.Set.AutoGift = _puswitchautogift.IsChecked.Value;
+            mw.Set.AutoGift = _puswitchautogift!.IsChecked ?? false;
         }
 
         private void Button_Loaded(object sender, RoutedEventArgs e)
@@ -420,7 +420,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
 
-            mw.GameSavesData["betterbuysetting"][(gint)"double"] = (int)nibuytimes.Value;
+            mw.GameSavesData["betterbuysetting"][(gint)"double"] = (int)(nibuytimes.Value ?? 0);
         }
 
  

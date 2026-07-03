@@ -606,7 +606,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         MainWindow mw;
         Lobby lb;
         Friend friend;
-        winMutiPlayer wmp => mw.winMutiPlayer;
+        winMutiPlayer? wmp => mw.winMutiPlayer;
 
         public SelfFriends(MainWindow mw, Lobby lb)
         {
@@ -723,15 +723,15 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             {
                 case Chat.Type.Private:
                     Main.Say("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
-                    wmp.Log("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
+                    wmp!.Log("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
                     break;
                 case Chat.Type.Internal:
                     Main.Say("{0} 对 {2} 说: {1}".Translate(msg.SendName, msg.Content, msg.ToName));
-                    wmp.Log("{0} 对 {2} 说: {1}".Translate(msg.SendName, msg.Content, msg.ToName));
+                    wmp!.Log("{0} 对 {2} 说: {1}".Translate(msg.SendName, msg.Content, msg.ToName));
                     break;
                 case Chat.Type.Public:
                     Main.Say("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
-                    wmp.Log("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
+                    wmp!.Log("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
                     break;
             }
         }

@@ -35,7 +35,7 @@ namespace VPet_Simulator.Windows
         {
             InitializeComponent();
             this.mw = mw;
-            mw.Main.ToolBar.EventShow += RelsSelect;
+            mw.Main.ToolBar!.EventShow += RelsSelect;
             RelsSelect();
         }
 
@@ -98,36 +98,38 @@ namespace VPet_Simulator.Windows
             {
                 return;
             }
-            mw.Main.ToolBar.Visibility = Visibility.Collapsed;
+            mw.Main.ToolBar!.Visibility = Visibility.Collapsed;
             var say = textList[tbTalk.SelectedIndex];
             textList.RemoveAt(tbTalk.SelectedIndex);
 
             //添加日志
             mw.ActivityLogs.Add(new ActivityLog("hostsay",say.TranslateChoose));
-
-            //聊天效果
-            if (say.Exp != 0)
+            if (mw.GameSavesData.Statistics != null)
             {
-                if (say.Exp > 0)
+                //聊天效果
+                if (say.Exp != 0)
                 {
-                    mw.GameSavesData.Statistics[(gint)"stat_say_exp_p"]++;
+                    if (say.Exp > 0)
+                    {
+                        mw.GameSavesData.Statistics[(gint)"stat_say_exp_p"]++;
+                    }
+                    else
+                        mw.GameSavesData.Statistics[(gint)"stat_say_exp_d"]++;
                 }
-                else
-                    mw.GameSavesData.Statistics[(gint)"stat_say_exp_d"]++;
-            }
-            if (say.Likability != 0)
-            {
-                if (say.Likability > 0)
-                    mw.GameSavesData.Statistics[(gint)"stat_say_like_p"]++;
-                else
-                    mw.GameSavesData.Statistics[(gint)"stat_say_like_d"]++;
-            }
-            if (say.Money != 0)
-            {
-                if (say.Money > 0)
-                    mw.GameSavesData.Statistics[(gint)"stat_say_money_p"]++;
-                else
-                    mw.GameSavesData.Statistics[(gint)"stat_say_money_d"]++;
+                if (say.Likability != 0)
+                {
+                    if (say.Likability > 0)
+                        mw.GameSavesData.Statistics[(gint)"stat_say_like_p"]++;
+                    else
+                        mw.GameSavesData.Statistics[(gint)"stat_say_like_d"]++;
+                }
+                if (say.Money != 0)
+                {
+                    if (say.Money > 0)
+                        mw.GameSavesData.Statistics[(gint)"stat_say_money_p"]++;
+                    else
+                        mw.GameSavesData.Statistics[(gint)"stat_say_money_d"]++;
+                }
             }
             mw.Main.Core.Save!.EatFood(say);
             mw.Main.Core.Save!.Money += say.Money;

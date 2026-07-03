@@ -43,7 +43,7 @@ internal class MPMOD
 #endif
         var Path = directory;
         LpsDocument modlps = new LpsDocument(File.ReadAllText(directory.FullName + @"\info.lps"));
-        Name = modlps.FindLine("vupmod").Info;
+        Name = modlps.FindLine("vupmod")!.Info;
 
         //MOD未加载时支持翻译
         foreach (var line in modlps.FindAllLine("lang"))
@@ -69,9 +69,9 @@ internal class MPMOD
                     foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
                     {
                         LpsDocument lps = new LpsDocument(File.ReadAllText(fi.FullName));
-                        if (lps.First().Name.ToLowerInvariant() == "pet")
+                        if (lps.First()!.Name.ToLowerInvariant() == "pet")
                         {
-                            var name = lps.First().Info;
+                            var name = lps.First()!.Info;
                             if (name == "默认虚拟桌宠")
                                 name = "vup";//旧版本名称兼容
                             var p = mw.Pets.FirstOrDefault(x => x.Name == name);
@@ -82,8 +82,8 @@ internal class MPMOD
                             }
                             else
                             {
-                                var dis = new DirectoryInfo(di.FullName + "\\" + lps.First()["path"].Info);
-                                p.path.Add(di.FullName + "\\" + lps.First()["path"].Info);
+                                var dis = new DirectoryInfo(di.FullName + "\\" + lps.First()!["path"].Info);
+                                p.path.Add(di.FullName + "\\" + lps.First()!["path"].Info);
                                 p.Config.Set(lps);
                             }
                         }
@@ -97,9 +97,9 @@ internal class MPMOD
                         {
                             if (li.Name != "food")
                                 continue;
-                            string tmps = li.Find("name").info;
+                            string tmps = li.Find("name")!.info;
                             mw.Foods.RemoveAll(x => x.Name == tmps);
-                            mw.Foods.Add(LPSConvert.DeserializeObject<Food>(li));
+                            mw.Foods.Add(LPSConvert.DeserializeObject<Food>(li)!);
                         }
                     }
                     break;

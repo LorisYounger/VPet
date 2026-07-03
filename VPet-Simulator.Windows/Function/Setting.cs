@@ -165,12 +165,12 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public string Language
         {
-            get => GetString("language", "null");
+            get => GetString("language", "null")!;
             set => this[(gstr)"language"] = value;
         }
         public string Font
         {
-            get => GetString("font", "OPPOSans R");
+            get => GetString("font", "OPPOSans R")!;
             set => this[(gstr)"font"] = value;
         }
         public string Theme
@@ -350,7 +350,7 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public string PetGraph
         {
-            get => this["gameconfig"].GetString("petgraph", "vup");
+            get => this["gameconfig"].GetString("petgraph", "vup")!;
             set => this["gameconfig"].SetString("petgraph", value);
         }
 
@@ -619,6 +619,7 @@ namespace VPet_Simulator.Windows
             {
                 if (mw.Main.State != Main.WorkingState.Nomal)
                 {
+                    if(mw.Main.WorkTimer != null)
                     mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
                     mw.Main.State = Main.WorkingState.Nomal;
                 }

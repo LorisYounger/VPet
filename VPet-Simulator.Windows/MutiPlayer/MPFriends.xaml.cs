@@ -494,7 +494,7 @@ public partial class MPFriends : WindowX, IMPFriend
     }
 
 
-    public winMPBetterBuy winMPBetterBuy;
+    public winMPBetterBuy? winMPBetterBuy;
 
     public void ShowBetterBuy(Food.FoodType foodType)
     {

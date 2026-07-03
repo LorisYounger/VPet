@@ -494,7 +494,7 @@ namespace VPet_Simulator.Windows
         }
 
 
-        internal winMutiPlayer winMutiPlayer;
+        internal winMutiPlayer? winMutiPlayer;
 
         public new void Close()
         {

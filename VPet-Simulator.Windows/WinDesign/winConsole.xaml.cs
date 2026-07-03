@@ -42,7 +42,7 @@ namespace VPet_Simulator.Windows
             DestanceTimer.Elapsed += DestanceTimer_Elapsed;
         }
 
-        private void DestanceTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void DestanceTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             Dispatcher.Invoke(() =>
             {
@@ -135,7 +135,7 @@ namespace VPet_Simulator.Windows
             DestanceTimer.Stop();
         }
         List<Tuple<string, IGameSave.ModeType>> playlist = new List<Tuple<string, IGameSave.ModeType>>();
-        private void GraphListPlayerBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void GraphListPlayerBox_MouseDoubleClick(object sender, MouseButtonEventArgs? e)
         {
             playlist.Add(new Tuple<string, IGameSave.ModeType>((string)GraphListPlayerBox.SelectedItem,
                 (IGameSave.ModeType)Enum.Parse(typeof(IGameSave.ModeType), (string)(((ComboBoxItem)ComboxPlayMode.SelectedItem).Content))));

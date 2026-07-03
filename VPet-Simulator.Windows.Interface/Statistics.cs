@@ -117,7 +117,7 @@ namespace VPet_Simulator.Windows.Interface
 
         public void SetDateTime(string subName, DateTime value) => Set(subName, value);
 
-        public string GetString(string subName, string defaultvalue = null) => Find(subName)?.GetString() ?? defaultvalue;
+        public string? GetString(string subName, string? defaultvalue = null) => Find(subName)?.GetString() ?? defaultvalue;
 
         public void SetString(string subName, string value) => Set(subName, value);
 
