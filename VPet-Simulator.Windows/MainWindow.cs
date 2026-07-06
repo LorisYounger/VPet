@@ -1627,12 +1627,12 @@ namespace VPet_Simulator.Windows
 
         /// <summary>
         /// 异步扫描磁盘上"尚未加载"的 MOD 目录(本地 mod + 创意工坊), 将其作为停用 stub 载入 <see cref="CoreMODs"/>,
-        /// 以便在 MOD 列表中显示并供用户手动启用. 扫描带缓存与防抖, 不重复加载已存在的 MOD.
+        /// 以便在 MOD 列表中显示并供用户手动启用.不重复加载已存在的 MOD.
         /// </summary>
         /// <returns>本次新发现并载入的 MOD 数量</returns>
         internal async Task<int> DiscoverNewModsAsync()
         {
-            var unloaded = await ModManager.RefreshAsync(force: true).ConfigureAwait(false);
+            var unloaded = await ModManager.ScanUnloadedModsAsync().ConfigureAwait(false);
             if (unloaded.Count == 0)
                 return 0;
             // CoreMOD 构造会访问 WPF 资源, 必须回到 UI 线程

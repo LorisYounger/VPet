@@ -597,7 +597,7 @@ namespace VPet_Simulator.Windows
 
         private async void ButtonRefreshMod_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            // 异步扫描磁盘上运行期间新增的 MOD 目录(带缓存与防抖), 载入为停用 stub 后刷新列表
+            // 异步扫描磁盘上运行期间新增的 MOD 目录, 载入为停用 stub 后刷新列表; 刷新期间禁用按钮避免重复触发
             var prevText = ButtonRefreshMod.Text;
             ButtonRefreshMod.IsEnabled = false;
             ButtonRefreshMod.Text = "正在刷新".Translate();
