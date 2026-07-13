@@ -27,13 +27,13 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="sender">发送的统计(this)</param>
         /// <param name="name">变动的名称</param>
         /// <param name="value">变动的值</param>
-        public delegate void StatisticChangedEventHandler(Statistics sender, string name, SetObject value);
+        public delegate void StatisticChangedEventHandler(Statistics sender, string name, SetObject? value);
 
         public event StatisticChangedEventHandler StatisticChanged;
         /// <summary>
         /// 统计数据字典
         /// </summary>
-        public SortedDictionary<string, SetObject> Data = new SortedDictionary<string, SetObject>();
+        public SortedDictionary<string, SetObject?> Data = new SortedDictionary<string, SetObject?  >();
 
         #region IGetOBJ<SetObject>
         public DateTime this[gdat subName]
@@ -66,20 +66,20 @@ namespace VPet_Simulator.Windows.Interface
             get => GetBool((string)subName);
             set => SetBool((string)subName, value);
         }
-        public string this[gstr subName]
+        public string? this[gstr subName]
         {
             get => GetString((string)subName);
             set => SetString((string)subName, value);
         }
         public SetObject this[string subName] { get => Find(subName) ?? new SetObject(); set => Set(subName, value); }
-        public SetObject Find(string subName)
+        public SetObject? Find(string subName)
         {
-            if (Data.TryGetValue(subName, out SetObject value))
+            if (Data.TryGetValue(subName, out SetObject? value))
                 return value;
             else
                 return null;
         }
-        public void Set(string subName, SetObject value)
+        public void Set(string subName, SetObject? value)
         {
             StatisticChanged?.Invoke(this, subName, value);
             Data[subName] = value;
@@ -119,7 +119,7 @@ namespace VPet_Simulator.Windows.Interface
 
         public string? GetString(string subName, string? defaultvalue = null) => Find(subName)?.GetString() ?? defaultvalue;
 
-        public void SetString(string subName, string value) => Set(subName, value);
+        public void SetString(string subName, string? value) => Set(subName, value);
 
         public double GetDouble(string subName, double defaultvalue = 0) => Find(subName)?.GetDouble() ?? defaultvalue;
 

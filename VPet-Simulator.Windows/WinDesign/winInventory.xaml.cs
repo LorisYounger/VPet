@@ -22,8 +22,8 @@ namespace VPet_Simulator.Windows
     public partial class winInventory : WindowX
     {
         MainWindow mw;
-        private TextBox _searchTextBox;
-        private Run rTotalValue;
+        private TextBox? _searchTextBox;
+        private Run? rTotalValue;
         private Item _detailItem;
         private int _detailCount = 1;
 
@@ -144,7 +144,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 标题搜索框加载完成事件处理
         /// </summary>
-        private void TbTitleSearch_Loaded(object sender, RoutedEventArgs e)
+        private void TbTitleSearch_Loaded(object? sender, RoutedEventArgs e)
         {
             _searchTextBox = sender as TextBox;
         }
@@ -156,7 +156,8 @@ namespace VPet_Simulator.Windows
         {
             rTotalValue = sender as Run;
             var totalValue = mw.Items.Sum(x => x.Price * x.Count);
-            rTotalValue.Text = totalValue.ToString("f2");
+            if(rTotalValue != null)
+                rTotalValue.Text = totalValue.ToString("f2");
         }
 
 
@@ -361,7 +362,7 @@ namespace VPet_Simulator.Windows
             HideDetail();
         }
 
-        private CheckBox _puswitch;
+        private CheckBox? _puswitch;
         private void Switch_Loaded(object sender, RoutedEventArgs e)
         {
             _puswitch = sender as CheckBox;

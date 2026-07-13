@@ -513,8 +513,7 @@ namespace VPet_Simulator.Windows
                     Core.Save!.Money -= item.Price * 1.2;
                     TakeItemHandle(item, 1, "autofood");
                     TakeItem(item);
-                    if (GameSavesData.Statistics != null)
-                        GameSavesData.Statistics[(gint)"stat_autobuy"]++;
+                    GameSavesData.Statistics![(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
                 else if ((Core.Save!.StrengthDrink + Core.Save!.StoreStrengthDrink) < sm75)
@@ -526,8 +525,7 @@ namespace VPet_Simulator.Windows
                     Core.Save!.Money -= item.Price * 1.2;
                     TakeItemHandle(item, 1, "autodrink");
                     TakeItem(item);
-                    if(GameSavesData.Statistics != null)
-                        GameSavesData.Statistics[(gint)"stat_autobuy"]++;
+                    GameSavesData.Statistics![(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
                 else if (Core.Save!.Feeling < Core.Save!.FeelingMax * 0.50)
@@ -548,8 +546,7 @@ namespace VPet_Simulator.Windows
                     Core.Save!.Money -= item.Price * 1.2;
                     TakeItemHandle(item, 1, "autofeel");
                     TakeItem(item);
-                    if(GameSavesData.Statistics != null)
-                        GameSavesData.Statistics[(gint)"stat_autogift"]++;
+                    GameSavesData.Statistics![(gint)"stat_autogift"]++;
                     Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
             }
@@ -1136,8 +1133,7 @@ namespace VPet_Simulator.Windows
                     if (CurrMusicType != null && Main.IsIdel)
                     {//识别通过,开始跑跳舞动画
                         //先统计下
-                        if(GameSavesData.Statistics != null)
-                            GameSavesData.Statistics[(gint)"stat_music"]++;
+                        GameSavesData.Statistics![(gint)"stat_music"]++;
                         Main.Display(Core.Graph!.FindGraph("music", AnimatType.A_Start, Core.Save!.Mode), Display_Music);
                     }
                     else
@@ -1687,8 +1683,7 @@ namespace VPet_Simulator.Windows
 
 
             AutoSaveTimer.Elapsed += AutoSaveTimer_Elapsed;
-            if(GameSavesData.Statistics != null)
-            if (GameSavesData.Statistics[(gdbe)"stat_bb_food"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_drink"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_drug"] < 0
+            if (GameSavesData.Statistics![(gdbe)"stat_bb_food"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_drink"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_drug"] < 0
                 || GameSavesData.Statistics[(gdbe)"stat_bb_snack"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_functional"] < 0 || GameSavesData.Statistics[(gdbe)"stat_bb_meal"] < 0
                 || GameSavesData.Statistics[(gdbe)"stat_bb_gift"] < 0)
             {
@@ -1728,8 +1723,7 @@ namespace VPet_Simulator.Windows
                     TranslateText = "关注 {0} 谢谢喵".Translate(SteamClient.Name)
                 });
                 //Steam成就
-                if(GameSavesData.Statistics != null)
-                    GameSavesData.Statistics.StatisticChanged += Statistics_StatisticChanged;
+                GameSavesData.Statistics!.StatisticChanged += Statistics_StatisticChanged;
                 //Steam通知
                 SteamFriends.SetRichPresence("username", Core.Save!.Name);
                 SteamFriends.SetRichPresence("mode", (Core.Save!.Mode.ToString() + "ly").Translate());
@@ -2053,7 +2047,7 @@ namespace VPet_Simulator.Windows
                           if (rt != null)
                           {
                               //聊天效果
-                              if (rt.Exp != 0 && GameSavesData.Statistics != null)
+                              if (rt.Exp != 0)
                               {
                                   if (rt.Exp > 0)
                                   {
@@ -2062,14 +2056,14 @@ namespace VPet_Simulator.Windows
                                   else
                                       GameSavesData.Statistics[(gint)"stat_say_exp_d"]++;
                               }
-                              if (rt.Likability != 0 && GameSavesData.Statistics != null)
+                              if (rt.Likability != 0)
                               {
                                   if (rt.Likability > 0)
                                       GameSavesData.Statistics[(gint)"stat_say_like_p"]++;
                                   else
                                       GameSavesData.Statistics[(gint)"stat_say_like_d"]++;
                               }
-                              if (rt.Money != 0 && GameSavesData.Statistics != null)
+                              if (rt.Money != 0)
                               {
                                   if (rt.Money > 0)
                                       GameSavesData.Statistics[(gint)"stat_say_money_p"]++;
@@ -2250,8 +2244,7 @@ namespace VPet_Simulator.Windows
 
 
                   //成就和统计 
-                  if(GameSavesData.Statistics != null)
-                      GameSavesData.Statistics[(gint)"stat_open_times"]++;
+                  GameSavesData.Statistics![(gint)"stat_open_times"]++;
                   Main.MoveTimer.Elapsed += MoveTimer_Elapsed;
                   Main.SayProcess.Add(Main_OnSay);
                   Main.Event_TouchHead += Main_Event_TouchHead;

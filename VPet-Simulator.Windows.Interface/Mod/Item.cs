@@ -86,9 +86,9 @@ public class Item : NotifyPropertyChangedBase
     /// 物品名字 (ID)
     /// </summary>
     [Line(name: "name")]
-    public string Name { get; set; }
-    private string transname = null;
-    private string transdesc = null;
+    public string? Name { get; set; }
+    private string? transname = null;
+    private string? transdesc = null;
     /// <summary>
     /// 物品名字 (翻译)
     /// </summary>

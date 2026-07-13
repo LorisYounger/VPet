@@ -22,13 +22,13 @@ namespace VPet_Simulator.Windows
         string save;
         public bool IsUniformSizeChanged => false;
         public bool StoreSize => false;
-        public winReport(MainWindow mainw, string errmsg = null)
+        public winReport(MainWindow mainw, string? errmsg = null)
         {
             mainw.Windows.Add(this);
             InitializeComponent();
             mw = mainw;
             Title = "反馈中心".Translate() + ' ' + mw.PrefixSave;
-            save = mw?.Core?.Save?.ToLine().ToString() + mw.Set?.ToString();
+            save = mw!.Core?.Save?.ToLine().ToString() + mw!.Set?.ToString();
             if (errmsg != null)
             {
                 tType.SelectedIndex = 0;

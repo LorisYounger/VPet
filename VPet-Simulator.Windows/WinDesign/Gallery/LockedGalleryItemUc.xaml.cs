@@ -65,14 +65,14 @@ namespace VPet_Simulator.Windows.WinDesign.Gallery
         {//花钱解锁
             if (mw.GameSavesData.GameSave.Money < Photo.UnlockAble.SellPrice)
             {
-                mw.winGallery.Toast("金钱不足".Translate() + " " + convertk(Photo.UnlockAble.SellPrice),
+                mw.winGallery!.Toast("金钱不足".Translate() + " " + convertk(Photo.UnlockAble.SellPrice),
                     icon: MessageBoxIcon.Warning);
                 return;
             }
 
             mw.GameSavesData.GameSave.Money -= Photo.UnlockAble.SellPrice;
             Photo.Unlock(mw);
-            var i = mw.winGallery.AutoUniformGridImages.Children.IndexOf(this);
+            var i = mw.winGallery!.AutoUniformGridImages.Children.IndexOf(this);
             mw.winGallery.AutoUniformGridImages.Children.Remove(this);
             mw.winGallery.AutoUniformGridImages.Children.Insert(i, new UnLockedGalleryItemUc(Photo, mw));
             mw.winGallery.Toast(

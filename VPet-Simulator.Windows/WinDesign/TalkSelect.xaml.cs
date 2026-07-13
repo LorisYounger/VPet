@@ -103,38 +103,35 @@ namespace VPet_Simulator.Windows
             textList.RemoveAt(tbTalk.SelectedIndex);
 
             //添加日志
-            mw.ActivityLogs.Add(new ActivityLog("hostsay",say.TranslateChoose));
-            if (mw.GameSavesData.Statistics != null)
+            mw.ActivityLogs.Add(new ActivityLog("hostsay", say.TranslateChoose));
+            //聊天效果
+            if (say.Exp != 0)
             {
-                //聊天效果
-                if (say.Exp != 0)
+                if (say.Exp > 0)
                 {
-                    if (say.Exp > 0)
-                    {
-                        mw.GameSavesData.Statistics[(gint)"stat_say_exp_p"]++;
-                    }
-                    else
-                        mw.GameSavesData.Statistics[(gint)"stat_say_exp_d"]++;
+                    mw.GameSavesData.Statistics![(gint)"stat_say_exp_p"]++;
                 }
-                if (say.Likability != 0)
-                {
-                    if (say.Likability > 0)
-                        mw.GameSavesData.Statistics[(gint)"stat_say_like_p"]++;
-                    else
-                        mw.GameSavesData.Statistics[(gint)"stat_say_like_d"]++;
-                }
-                if (say.Money != 0)
-                {
-                    if (say.Money > 0)
-                        mw.GameSavesData.Statistics[(gint)"stat_say_money_p"]++;
-                    else
-                        mw.GameSavesData.Statistics[(gint)"stat_say_money_d"]++;
-                }
+                else
+                    mw.GameSavesData.Statistics![(gint)"stat_say_exp_d"]++;
+            }
+            if (say.Likability != 0)
+            {
+                if (say.Likability > 0)
+                    mw.GameSavesData.Statistics![(gint)"stat_say_like_p"]++;
+                else
+                    mw.GameSavesData.Statistics![(gint)"stat_say_like_d"]++;
+            }
+            if (say.Money != 0)
+            {
+                if (say.Money > 0)
+                    mw.GameSavesData.Statistics![(gint)"stat_say_money_p"]++;
+                else
+                    mw.GameSavesData.Statistics![(gint)"stat_say_money_d"]++;
             }
             mw.Main.Core.Save!.EatFood(say);
             mw.Main.Core.Save!.Money += say.Money;
 
-            
+
             textSaid.Add(say.Choose);
             RelsTime = RelsTime.AddMinutes(5);
             lastAddTime = DateTime.Now;

@@ -35,13 +35,10 @@ namespace VPet_Simulator.Windows
             InitializeComponent();
             Title = "面板".Translate() + ' ' + mw.PrefixSave;
             mw.Windows.Add(this);
-            if(mw.GameSavesData.Statistics == null)
-            {
-                mw.GameSavesData.Statistics = new Statistics();
-            }
+            mw.GameSavesData.Statistics = new Statistics();
             foreach (var v in mw.GameSavesData!.Statistics.Data)
             {
-                StatList.Add(new StatInfo(v.Key, v.Value.GetDouble()));
+                StatList.Add(new StatInfo(v.Key, v.Value!.GetDouble()));
             }
             DataGridStatic.ItemsSource = StatList;
             mw.GameSavesData.Statistics.StatisticChanged += Statistics_StatisticChanged;
@@ -55,8 +52,9 @@ namespace VPet_Simulator.Windows
             Task.Run(Load_Log);
         }
 
-        private void Statistics_StatisticChanged(Statistics sender, string name, SetObject value)
+        private void Statistics_StatisticChanged(Statistics sender, string name, SetObject? value)
         {
+            if(value != null)
             Dispatcher.Invoke(() =>
             {
                 try
@@ -154,7 +152,7 @@ namespace VPet_Simulator.Windows
 
         private void WindowX_Closed(object sender, EventArgs e)
         {
-            mw.GameSavesData.Statistics.StatisticChanged -= Statistics_StatisticChanged;
+            mw.GameSavesData.Statistics!.StatisticChanged -= Statistics_StatisticChanged;
             mw.Windows.Remove(this);
         }
 
@@ -219,7 +217,7 @@ namespace VPet_Simulator.Windows
             string petname = mw.GameSavesData.GameSave.Name;
             string username = mw.IsSteamUser ? SteamClient.Name : Environment.UserName;
 
-            int timelength = mw.GameSavesData.Statistics[(gint)"stat_total_time"];
+            int timelength = mw.GameSavesData.Statistics![(gint)"stat_total_time"];
             double timelength_h = (timelength / 3600.0);
             double startdatelength = (DateTime.Now - mw.GameSavesData[(gdat)"birthday"]).TotalDays;
             double startlengthrank = 0;
@@ -727,7 +725,7 @@ namespace VPet_Simulator.Windows
         }
         public void BDay_Load()
         {
-            var pl = bdpetlist[cb_birthday.SelectedIndex];
+            var pl = bdpetlist![cb_birthday.SelectedIndex];
             img_b_background.Source = mw.ImageSources.FindImage("bday_" + pl.loader.Name);
             tb_bdiy.Text = "{0} 祝 {1} 生日快乐!".Translate(pl.name, mw.GameSavesData.GameSave.HostName);
             ILine bdinfo = pl.loader!.Config!.Data!.FindLine("bday")!;
@@ -823,6 +821,7 @@ namespace VPet_Simulator.Windows
         {
             Dispatcher.Invoke(() =>
             {
+                if(e != null)
                 if (e.NewItems != null)
                 {
                     foreach (ActivityLog log in e.NewItems)

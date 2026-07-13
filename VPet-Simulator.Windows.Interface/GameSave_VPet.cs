@@ -402,7 +402,7 @@ public class GameSave_VPet : IGameSave
     /// <summary>
     /// 读档
     /// </summary>
-    public static GameSave_VPet Load(ILine data) => LPSConvert.DeserializeObject<GameSave_VPet>(data);
+    public static GameSave_VPet Load(ILine data) => LPSConvert.DeserializeObject<GameSave_VPet>(data)!;
     /// <summary>
     /// 存档
     /// </summary>

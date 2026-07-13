@@ -25,7 +25,7 @@ namespace VPet_Simulator.Windows;
 /// </summary>
 public partial class winGallery : WindowX
 {
-    private TextBox _searchTextBox;
+    private TextBox? _searchTextBox;
     MainWindow mw;
     private int _columns;
     private int _rows;
@@ -63,7 +63,7 @@ public partial class winGallery : WindowX
         RefreshList();
     }
 
-    private void TbTitleSearch_Loaded(object sender, RoutedEventArgs e)
+    private void TbTitleSearch_Loaded(object? sender, RoutedEventArgs e)
     {
         _searchTextBox = sender as TextBox;
         RefreshList();
@@ -94,7 +94,7 @@ public partial class winGallery : WindowX
 
         AutoUniformGridImages.Children.Clear();
 
-        var searchText = _searchTextBox.Text;
+        var searchText = _searchTextBox?.Text;
 
         //如果某个分类一个都没选中，那就等于全部选中
 
@@ -193,7 +193,7 @@ public partial class winGallery : WindowX
         nowphoto = photo;
         LablePhotoLoading.Visibility = Visibility.Visible;
         TextBlockPhotoDetailTitle.Text = photo.TranslateName;
-        TextBlockPhotoDetailDescription.Text = "解锁时间".Translate() + ": " + photo.PlayerInfo.UnlockTime.ToString() + '\n' + photo.Description.Translate();
+        TextBlockPhotoDetailDescription.Text = "解锁时间".Translate() + ": " + photo.PlayerInfo!.UnlockTime.ToString() + '\n' + photo.Description.Translate();
         IsMaskVisible = true;
         IsOverlayerVisible = true;
         if (photo.Type == Photo.PhotoType.Illustration)
@@ -351,7 +351,7 @@ public partial class winGallery : WindowX
     private void AutoUniformGridImages_Changed(object sender, RoutedEventArgs e)
     {
         var uniformGrid = e.OriginalSource as AutoUniformGrid;
-        var columns = uniformGrid.Columns;
+        var columns = uniformGrid!.Columns;
         var rows = uniformGrid.Rows;
 
         var isAnyChanged = false;

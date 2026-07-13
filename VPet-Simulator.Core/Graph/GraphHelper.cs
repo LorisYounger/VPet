@@ -380,21 +380,21 @@ namespace VPet_Simulator.Core
                 var c = m.Core.Controller;
                 if (!Mode.HasFlag(GetModeType(m.Core.Save!.Mode))) return false;
                 if (TriggerType == DirectionType.None) return true;
-                if (TriggerType.HasFlag(DirectionType.Left) && c.GetWindowsDistanceLeft() > TriggerLeft * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Left) && c!.GetWindowsDistanceLeft() > TriggerLeft * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.Right) && c.GetWindowsDistanceRight() > TriggerRight * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Right) && c!.GetWindowsDistanceRight() > TriggerRight * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.Top) && c.GetWindowsDistanceUp() > TriggerTop * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Top) && c!.GetWindowsDistanceUp() > TriggerTop * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.Bottom) && c.GetWindowsDistanceDown() > TriggerBottom * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Bottom) && c!.GetWindowsDistanceDown() > TriggerBottom * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.LeftGreater) && c.GetWindowsDistanceLeft() < TriggerLeft * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.LeftGreater) && c!.GetWindowsDistanceLeft() < TriggerLeft * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.RightGreater) && c.GetWindowsDistanceRight() < TriggerRight * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.RightGreater) && c!.GetWindowsDistanceRight() < TriggerRight * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.TopGreater) && c.GetWindowsDistanceUp() < TriggerTop * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.TopGreater) && c!.GetWindowsDistanceUp() < TriggerTop * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.BottomGreater) && c.GetWindowsDistanceDown() < TriggerBottom * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.BottomGreater) && c!.GetWindowsDistanceDown() < TriggerBottom * c.ZoomRatio)
                     return false;
                 return true;
             }
@@ -501,7 +501,7 @@ namespace VPet_Simulator.Core
             public void Displaying(Main m)
             {
                 //看看距离是不是不足
-                if (!Checked(m.Core.Controller))
+                if (!Checked(m.Core.Controller!))
                 {//是,停下恢复默认 or/爬墙
                     if (Function.Rnd.Next(Main.TreeRND) <= 1)
                     {

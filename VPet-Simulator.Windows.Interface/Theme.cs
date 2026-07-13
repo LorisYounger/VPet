@@ -10,7 +10,7 @@ namespace VPet_Simulator.Windows.Interface
     /// </summary>
     public class Theme
     {
-        private string transname = null;
+        private string? transname = null;
         /// <summary>
         /// 名字 (翻译)
         /// </summary>
@@ -33,9 +33,9 @@ namespace VPet_Simulator.Windows.Interface
         public LpsDocument ThemeColor;
         public Theme(LpsDocument lps)
         {
-            xName = lps.First().Name;
-            Name = lps.First().Info;
-            Image = lps.First().Find("image").info;
+            xName = lps.First()!.Name;
+            Name = lps.First()!.Info;
+            Image = lps.First()!.Find("image")!.info;
 
             lps.RemoveAt(0);
             ThemeColor = lps;
@@ -52,7 +52,7 @@ namespace VPet_Simulator.Windows.Interface
         /// 字体名字
         /// </summary>
         public string Name;
-        private string transname = null;
+        private string? transname = null;
         /// <summary>
         /// 名字 (翻译)
         /// </summary>
@@ -71,7 +71,7 @@ namespace VPet_Simulator.Windows.Interface
         public IFont(FileInfo path)
         {
             Name = path.Name.Substring(0, path.Name.Length - path.Extension.Length);
-            Path = path.Directory.FullName + @"\#" + Name;
+            Path = path.Directory!.FullName + @"\#" + Name;
         }
         public FontFamily Font
         {

@@ -1,5 +1,6 @@
 ﻿using LinePutScript;
 using LinePutScript.Localization.WPF;
+using NAudio.Midi;
 using NAudio.SoundFont;
 using Panuon.WPF.UI;
 using Steamworks;
@@ -175,7 +176,7 @@ namespace VPet_Simulator.Windows
             foreach (Sub sub in mw.Set["diy"])
                 StackDIY.Children.Add(new DIYViewer(sub));
 
-            SliderResolution.Maximum = Math.Min(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width,
+            SliderResolution.Maximum = Math.Min(System.Windows.Forms.Screen.PrimaryScreen!.Bounds.Width,
                 System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
             SliderResolution.Value = mw.Set.Resolution;
 
@@ -511,7 +512,7 @@ namespace VPet_Simulator.Windows
                 try
                 {
                     if (mainplug.PluginName == mod.Name &&
-                        mainplug.GetType().GetMethod("Setting").DeclaringType != typeof(MainPlugin)
+                        mainplug.GetType().GetMethod("Setting")!.DeclaringType != typeof(MainPlugin)
                     && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
                     {
                         ButtonSetting.Visibility = Visibility.Visible;
@@ -774,7 +775,7 @@ namespace VPet_Simulator.Windows
         public void UpdateMoveAreaText()
         {
             var mwCtrl = mw.Core.Controller as MWController;
-            if (mwCtrl.IsPrimaryScreen && !mwCtrl.AutoChangeWindow)
+            if (mwCtrl!.IsPrimaryScreen && !mwCtrl.AutoChangeWindow)
             {
                 textMoveArea.Text = "主屏幕".Translate();
                 return;
@@ -791,23 +792,23 @@ namespace VPet_Simulator.Windows
         private void BtnSetMoveArea_Default_Click(object sender, RoutedEventArgs e)
         {
             var mwCtrl = mw.Core.Controller as MWController;
-            mwCtrl.ResetScreenBorder();
+            mwCtrl!.ResetScreenBorder();
             UpdateMoveAreaText();
         }
 
         private void BtnSetMoveArea_DetectScreen_Click(object sender, RoutedEventArgs e)
         {
             var mwCtrl = mw.Core.Controller as MWController;
-            mwCtrl.SetNowScreenActivate();
+            mwCtrl!.SetNowScreenActivate();
             UpdateMoveAreaText();
         }
 
-        internal static System.Reflection.FieldInfo leftGetter, topGetter;
+        internal static System.Reflection.FieldInfo? leftGetter, topGetter;
         private void BtnSetMoveArea_Window_Click(object sender, RoutedEventArgs e)
         {
             var wma = new winMoveArea(mw);
             var mwCtrl = mw.Core.Controller as MWController;
-            if (!mwCtrl.IsPrimaryScreen)
+            if (!mwCtrl!.IsPrimaryScreen)
             {
                 var rect = mwCtrl.ScreenBorder;
                 wma.Width = rect.Width;
@@ -845,7 +846,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set.TopMost = true;
-            (mw.notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_TopMost", false).First() as System.Windows.Forms.ToolStripMenuItem).Checked = true;
+            (mw.notifyIcon.ContextMenuStrip!.Items.Find("NotifyIcon_TopMost", false).First() as System.Windows.Forms.ToolStripMenuItem)!.Checked = true;
         }
 
         private void TopMostBox_Unchecked(object sender, RoutedEventArgs e)
@@ -853,7 +854,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set.TopMost = false;
-            (mw.notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_TopMost", false).First() as System.Windows.Forms.ToolStripMenuItem).Checked = false;
+            (mw.notifyIcon.ContextMenuStrip!.Items.Find("NotifyIcon_TopMost", false).First() as System.Windows.Forms.ToolStripMenuItem)!.Checked = false;
         }
 
         private void ZoomSlider_MouseUp(object sender, MouseButtonEventArgs e)
@@ -1208,7 +1209,7 @@ namespace VPet_Simulator.Windows
                     BtnCGPTReSet.IsEnabled = true;
                     BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
                     mw.TalkBox = new TalkSelect(mw);
-                    mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
+                    mw.Main.ToolBar!.MainGrid.Children.Add(mw.TalkBox);
                     break;
                 case "OFF":
                 default:
@@ -1225,7 +1226,7 @@ namespace VPet_Simulator.Windows
             {
                 try
                 {
-                    if (mainplug.PluginName == mod.Name && mainplug.GetType().GetMethod("Setting").DeclaringType != typeof(MainPlugin)
+                    if (mainplug.PluginName == mod.Name && mainplug.GetType().GetMethod("Setting")!.DeclaringType != typeof(MainPlugin)
                     && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
                     {
                         mainplug.Setting();
@@ -1289,7 +1290,7 @@ namespace VPet_Simulator.Windows
                 combCalFunState.IsEnabled = true;
                 if (mw.Main.State != Main.WorkingState.Nomal)
                 {
-                    mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
+                    mw.Main.WorkTimer!.Visibility = Visibility.Collapsed;
                     mw.Main.State = Main.WorkingState.Nomal;
                 }
             }
@@ -1363,7 +1364,7 @@ namespace VPet_Simulator.Windows
                             {
                                 if (mw.Main.State != Main.WorkingState.Nomal)
                                 {
-                                    mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
+                                    mw.Main.WorkTimer!.Visibility = Visibility.Collapsed;
                                     mw.Main.State = Main.WorkingState.Nomal;
                                 }
                                 if (!mw.SavesLoad(new LPS(File.ReadAllText(path))))
@@ -1644,7 +1645,7 @@ namespace VPet_Simulator.Windows
             if (playtime == 0) return;
             if (mw.GameSavesData.HashCheck)
             {//对于
-                int hours = mw.GameSavesData.Statistics[(gint)"stat_total_time"] / 60;
+                int hours = mw.GameSavesData.Statistics![(gint)"stat_total_time"] / 60;
                 if (hours < playtime)
                 {
                     mw.GameSavesData.Statistics[(gint)"stat_total_time"] = playtime * 60;
@@ -1659,7 +1660,7 @@ namespace VPet_Simulator.Windows
             {
                 GameSave_v2 ogs = mw.GameSavesData;
                 mw.GameSavesData = new GameSave_v2(ogs.GameSave.Name);
-                mw.GameSavesData.Statistics[(gint)"stat_total_time"] = playtime * 60;
+                mw.GameSavesData.Statistics![(gint)"stat_total_time"] = playtime * 60;
                 mw.GameSavesData.GameSave.Event_LevelUp += mw.LevelUP;
 
                 //同步等级

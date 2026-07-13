@@ -79,10 +79,10 @@ public partial class MainWindow
     public UIElement? TalkBox;
     public winGameSetting winSetting { get; set; }
     public winBetterBuy winBetterBuy { get; set; }
-    public winGallery winGallery { get; set; }
+    public winGallery? winGallery { get; set; }
     public winInventory winInventory { get; set; }
 
-    public winWorkMenu winWorkMenu { get; set; }
+    public winWorkMenu? winWorkMenu { get; set; }
     //public ChatGPTClient CGPTClient;
     public ImageResources ImageSources { get; set; } = new ImageResources();
     public Resources FileSources { get; set; } = new Resources();

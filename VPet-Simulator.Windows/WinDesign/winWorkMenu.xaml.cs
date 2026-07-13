@@ -153,7 +153,7 @@ public partial class winWorkMenu : WindowX
         nowworkdisplay = work;
 
         //显示图像
-        string source = mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Graph) ?? mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Name);
+        string? source = mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Graph) ?? mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Name);
         if (source == null)
         {
             //尝试显示默认图像
@@ -236,7 +236,7 @@ public partial class winWorkMenu : WindowX
         ShowWork(nowwork.Double((int)wDouble.Value));
     }
 
-    private void detailTypes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void detailTypes_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
     {
         Dispatcher.BeginInvoke(() =>
         {
@@ -290,7 +290,7 @@ public partial class winWorkMenu : WindowX
         mw.winWorkMenu = null;
     }
 
-    private void Schedules_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void Schedules_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs? e)
     {
         CalculateSceduleTime();
     }
@@ -315,7 +315,7 @@ public partial class winWorkMenu : WindowX
         AllowChange = false;
         _starDetails.Clear();
         mw.WorkStarMenu.Items.Clear();
-        mw.Main.ToolBar.MenuStudy.Items.Clear();
+        mw.Main.ToolBar!.MenuStudy.Items.Clear();
         mw.Main.ToolBar.MenuWork.Items.Clear();
         mw.Main.ToolBar.MenuPlay.Items.Clear();
         //更新星标
@@ -408,8 +408,8 @@ public partial class winWorkMenu : WindowX
             runSchedulePercentage.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimary);
         rpgbSchedule.Foreground = runSchedulePercentage.Foreground;
     }
-    private Package pack = null;
-    private void rpnDisplay(Package package, Work.WorkType type)
+    private Package? pack = null;
+    private void rpnDisplay(Package? package, Work.WorkType type)
     {
         if (package == null)
         {
@@ -494,7 +494,7 @@ public partial class winWorkMenu : WindowX
     private void tbtnAgency_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         var toggleButton = sender as ToggleButton;
-        if (toggleButton.IsChecked == true)
+        if (toggleButton!.IsChecked == true)
         {
             e.Handled = true;
         }
@@ -521,8 +521,8 @@ public partial class winWorkMenu : WindowX
                 if (lefttime > 0.5)
                 {
                     var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Work && x.Name == mw.ScheduleTask.PackageWork.Name);
-                    var p = new Package(pw, mw.ScheduleTask.PackageWork.Level);
-                    refound = p.Price * (pw.Duration - lefttime) / pw.Duration;
+                    var p = new Package(pw!, mw.ScheduleTask.PackageWork.Level);
+                    refound = p.Price * (pw!.Duration - lefttime) / pw.Duration;
                     if (refound < 0 || refound > p.Price)
                     {
                         refound = 0;
@@ -543,8 +543,8 @@ public partial class winWorkMenu : WindowX
                 if (lefttime > 0.5)
                 {
                     var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Study && x.Name == mw.ScheduleTask.PackageStudy.Name);
-                    var p = new Package(pw, mw.ScheduleTask.PackageStudy.Level);
-                    refound = p.Price * (pw.Duration - lefttime) / pw.Duration;
+                    var p = new Package(pw!, mw.ScheduleTask.PackageStudy.Level);
+                    refound = p.Price * (pw!.Duration - lefttime) / pw.Duration;
                     if (refound < 0 || refound > p.Price)
                     {
                         refound = 0;
@@ -563,7 +563,7 @@ public partial class winWorkMenu : WindowX
     private void btn_addRest_Click(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
-        var scheduleItem = button.DataContext as ScheduleItemBase;
+        var scheduleItem = button!.DataContext as ScheduleItemBase;
         if (scheduleItem == null)
         {
             if (_schedules.LastOrDefault() is RestScheduleItem lastRest)
@@ -585,8 +585,8 @@ public partial class winWorkMenu : WindowX
     private void btn_removeSchedule_Click(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
-        var scheduleItem = button.DataContext as ScheduleItemBase;
-        var index = _schedules.IndexOf(scheduleItem);
+        var scheduleItem = button!.DataContext as ScheduleItemBase;
+        var index = _schedules.IndexOf(scheduleItem!);
         var previousItem = index == 0 ? null : _schedules[index - 1];
         var nextItem = index == _schedules.Count - 1 ? null : _schedules[index + 1];
 
@@ -596,14 +596,14 @@ public partial class winWorkMenu : WindowX
             previousRest.RestTime += nextRest.RestTime;
             _schedules.Remove(nextRest);
         }
-        _schedules.Remove(scheduleItem);
+        _schedules.Remove(scheduleItem!);
     }
 
     private void btn_scheduleUp_Click(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
-        var scheduleItem = button.DataContext as ScheduleItemBase;
-        var index = _schedules.IndexOf(scheduleItem);
+        var scheduleItem = button!.DataContext as ScheduleItemBase;
+        var index = _schedules.IndexOf(scheduleItem!);
         if (index == 0)
         {
             return;
@@ -617,15 +617,15 @@ public partial class winWorkMenu : WindowX
             previousRest.RestTime += nextRest.RestTime;
             _schedules.Remove(nextRest);
         }
-        _schedules.Remove(scheduleItem);
-        _schedules.Insert(Math.Max(index - 1, 0), scheduleItem);
+        _schedules.Remove(scheduleItem!);
+        _schedules.Insert(Math.Max(index - 1, 0), scheduleItem!);
     }
 
     private void btn_scheduleDown_Click(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
-        var scheduleItem = button.DataContext as ScheduleItemBase;
-        var index = _schedules.IndexOf(scheduleItem);
+        var scheduleItem = button!.DataContext as ScheduleItemBase;
+        var index = _schedules.IndexOf(scheduleItem!);
         if (index == _schedules.Count - 1)
         {
             return;
@@ -639,15 +639,15 @@ public partial class winWorkMenu : WindowX
             previousRest.RestTime += nextRest.RestTime;
             _schedules.Remove(nextRest);
         }
-        _schedules.Remove(scheduleItem);
-        _schedules.Insert(Math.Min(index + 1, _schedules.Count), scheduleItem);
+        _schedules.Remove(scheduleItem!);
+        _schedules.Insert(Math.Min(index + 1, _schedules.Count), scheduleItem!);
     }
 
     private void btnAddAuto_Click(object sender, RoutedEventArgs e)
     {
         if (nowwork != null || nowworkdisplay != null)
             //看看套餐
-            switch (nowwork.Type)
+            switch (nowwork!.Type)
             {
                 case Work.WorkType.Work:
                     if (mw.ScheduleTask.PackageWork?.IsActive() != true)
@@ -752,11 +752,11 @@ public partial class winWorkMenu : WindowX
 internal class ScheduleItemTemplateSelector
     : DataTemplateSelector
 {
-    public override DataTemplate SelectTemplate(object item, DependencyObject container)
+    public override DataTemplate? SelectTemplate(object item, DependencyObject container)
     {
         var element = container as FrameworkElement;
 
-        return element.FindResource(item.GetType().Name) as DataTemplate;
+        return element?.FindResource(item.GetType().Name) as DataTemplate;
         //if (item is WorkScheduleItem)
         //{
         //    return element.FindResource("WorkScheduleTemplate") as DataTemplate;
