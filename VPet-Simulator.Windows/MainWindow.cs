@@ -313,6 +313,26 @@ namespace VPet_Simulator.Windows
                         File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + @"\Save.bkp");
                     }
 
+                    //Steam云存档
+                    if (IsSteamUser)
+                    {
+                        var steamsave = SteamRemoteStorage.Files.Where(x => x.StartsWith($"VPetCloud/Save{PrefixSave}_")).ToList();
+                        if (steamsave.Count > Set.BackupSaveMaxNum)
+                        {
+                            steamsave = steamsave.OrderBy(x =>
+                            {
+                                if (int.TryParse(x.Split('_').Last().Split('.')[0], out int i))
+                                    return i;
+                                return 0;
+                            }).ToList();
+                            while (steamsave.Count > Set.BackupSaveMaxNum)
+                            {
+                                SteamRemoteStorage.FileDelete(steamsave[0]);
+                                steamsave.RemoveAt(0);
+                            }
+                        }
+                        SteamRemoteStorage.FileWrite($"VPetCloud/Save{PrefixSave}_{(DateTime.Now.Ticks / 60000):X}.lps", Encoding.UTF8.GetBytes(savesdata));
+                    }
                 }
             }
         }
@@ -2625,18 +2645,18 @@ namespace VPet_Simulator.Windows
                   //修复因为26年元旦bug导致HashCheck失效的问题
                   //简单来讲就是给所有有 2026跨年 这个照片的用户恢复一次HashCheck, 就当福利了(, 因为有这个照片的基本上都在bug周期里
                   //请看到这个代码的人不要外传, 避免滥用
-                  var photo25 = Photos.Find(x => x.Name == "2026跨年");
-                  if (photo25?.IsUnlock == true && GameSavesData.HashCheck == false && GameSavesData.Data["debug"][(gbol)"fix26"] == false)
-                  {
-                      GameSave_v2 ogs = GameSavesData;
-                      GameSavesData = new GameSave_v2(ogs.GameSave.Name);
-                      GameSavesData.Data = ogs.Data;
-                      GameSavesData.GameSave = ogs.GameSave;
-                      GameSavesData.Statistics = ogs.Statistics;
-                      HashCheck = true;
-                  }
-                  GameSavesData.Data["debug"][(gbol)"fix26"] = true;
-                  if (GameSavesData.HashCheck == false)
+                  //var photo25 = Photos.Find(x => x.Name == "2026跨年");
+                  //if (photo25?.IsUnlock == true && GameSavesData.HashCheck == false && GameSavesData.Data["debug"][(gbol)"fix26"] == false)
+                  //{
+                  //    GameSave_v2 ogs = GameSavesData;
+                  //    GameSavesData = new GameSave_v2(ogs.GameSave.Name);
+                  //    GameSavesData.Data = ogs.Data;
+                  //    GameSavesData.GameSave = ogs.GameSave;
+                  //    GameSavesData.Statistics = ogs.Statistics;
+                  //    HashCheck = true;
+                  //}
+                  //GameSavesData.Data["debug"][(gbol)"fix26"] = true;
+                  if (GameSavesData.HashCheck == false && GameSavesData["debug"].Find("losthash") == null)
                   {
                       GameSavesData["debug"][(gdat)"losthash"] = DateTime.Now;
                   }

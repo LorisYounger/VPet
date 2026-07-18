@@ -41,3 +41,17 @@ L徽章#L Badge:|
 启用窗口自动切换#enable window auto switch:|
 启用窗口切换，桌宠将能自主切换窗口#enable window switch, desktop pet will be able to switch windows on its own:|
 前往 更好买:贡献兑换#Go to Betterbuy: Contribution Exchange:|
+存档管理#Saves:|
+打开存档管理器#Open Save Management:|
+查看并加载游戏存档#View and Load Game Save:|
+存档管理器#Saves Management:|
+筛选来源:#Filter Source::|
+本地#Local:|
+本地存档, 会被Steam自动同步#Local saves, will be automatically synced by Steam:|
+备份#Backup:|
+本地备份文件, 不会被steam云存档同步#Local backup files, will not be synced by Steam Cloud:|
+Steam云#Steam Cloud:|
+Steam云备份存档, 跟随Steam账号保存#Steam Cloud backup saves, saved with your Steam account:|
+筛选存档时间:#Filter Save Time::|
+来源#Source:|
+存档时间#Save Time:|

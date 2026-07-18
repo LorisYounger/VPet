@@ -534,6 +534,12 @@ namespace VPet_Simulator.Windows
             set => this["gameconfig"].SetInt("gamescreenindex", value);
         }
 
+        public long SteamID
+        {
+            get => this[(gi64)"steamid"];
+            set => this[(gi64)"steamid"] = value;
+        }
+
         /// <summary>
         /// 读写自定义游戏设置(给mod准备的接口)
         /// </summary>

@@ -1345,75 +1345,9 @@ namespace VPet_Simulator.Windows
                 return;
             mw.Set.BackupSaveMaxNum = (int)numBackupSaveMaxNum.Value;
         }
-        int reloadid = 0;
-        private void CBSaveReLoad_MouseEnter(object sender, MouseEventArgs e)
+        private void BtnOpenSaveManager_Click(object sender, RoutedEventArgs e)
         {
-            if (reloadid != mw.Set.SaveTimes)
-            {
-                reloadid = mw.Set.SaveTimes;
-                CBSaveReLoad.SelectedItem = null;
-                CBSaveReLoad.Items.Clear();
-                if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
-                {
-                    foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves")
-                        .GetFiles($"Save{mw.PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime))
-                    {
-                        CBSaveReLoad.Items.Add(file.Name.Split('.').First());
-                    }
-                    CBSaveReLoad.SelectedIndex = 0;
-                }
-                if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))
-                {
-                    foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves_BKP")
-                        .GetFiles($"Save{mw.PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime))
-                    {
-                        CBSaveReLoad.Items.Add(file.Name.Split('.').First());
-                    }
-                    CBSaveReLoad.SelectedIndex = 0;
-                }
-            }
-        }
-
-        private void BtnSaveReload_Click(object sender, RoutedEventArgs e)
-        {
-            if (CBSaveReLoad.SelectedItem != null)
-            {
-                string txt = (string)CBSaveReLoad.SelectedItem;
-                string path = ExtensionValue.BaseDirectory + @"\Saves\" + txt + ".lps";
-                if (!File.Exists(path))
-                {
-                    path = ExtensionValue.BaseDirectory + @"\Saves_BKP\" + txt + ".lps";
-                }
-                if (File.Exists(path))
-                {
-                    try
-                    {
-                        GameSave_v2 gs = new GameSave_v2(new LPS(File.ReadAllText(path)));
-                        if (MessageBoxX.Show("存档名称:{0}\n存档等级:{1}\n存档金钱:{2}\nHashCheck:{3}\n是否加载该备份存档? 当前游戏数据会丢失"
-                            .Translate(gs.GameSave.Name, gs.GameSave.Level, gs.GameSave.Money, gs.HashCheck), "是否加载该备份存档? 当前游戏数据会丢失".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Info) == MessageBoxResult.Yes)
-                        {
-                            try
-                            {
-                                if (mw.Main.State != Main.WorkingState.Nomal)
-                                {
-                                    mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
-                                    mw.Main.State = Main.WorkingState.Nomal;
-                                }
-                                if (!mw.SavesLoad(new LPS(File.ReadAllText(path))))
-                                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
-                            }
-                        }
-                    }
-                    catch (Exception exp)
-                    {
-                        MessageBoxX.Show("存档损毁,无法加载该备份\n请更换备份重试".Translate() + '\n' + exp.ToString(), "存档损毁".Translate());
-                    }
-                }
-            }
+            new winSaveManager(mw).ShowDialog();
         }
 
         private void Mod_Click(object sender, RoutedEventArgs e)
