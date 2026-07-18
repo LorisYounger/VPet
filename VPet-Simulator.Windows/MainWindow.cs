@@ -1646,7 +1646,8 @@ namespace VPet_Simulator.Windows
         }
 
         /// <summary>
-        /// 扫描本地 MOD 目录和已下载的 Steam 创意工坊目录, 增量刷新 MOD 列表.
+        /// 扫描本地 mod 目录与已记录的创意工坊路径, 将尚未加载的 MOD 增量载入列表.
+        /// 与启动加载口径一致, 不做工坊目录的主动探测.
         /// </summary>
         /// <returns>本次新发现并载入的 MOD 数量</returns>
         internal async Task<int> DiscoverNewModsAsync()
@@ -1660,13 +1661,9 @@ namespace VPet_Simulator.Windows
                 savedWorkshopPaths.Add(workshop.Name);
 
             string localModPath = ModPath;
-            string baseDirectory = ExtensionValue.BaseDirectory;
-            bool isSteamUser = IsSteamUser;
             var unloaded = await Task.Run(() =>
             {
-                const string appId = "1920960";
                 var candidates = new List<DirectoryInfo>();
-                var workshopRoots = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
                 var localRoot = new DirectoryInfo(localModPath);
                 if (localRoot.Exists)
@@ -1676,41 +1673,9 @@ namespace VPet_Simulator.Windows
                 {
                     if (string.IsNullOrWhiteSpace(path))
                         continue;
-                    try
-                    {
-                        var directory = new DirectoryInfo(path);
-                        if (directory.Exists)
-                            candidates.Add(directory);
-                        if (directory.Parent?.Name == appId)
-                            workshopRoots.Add(directory.Parent.FullName);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"读取创意工坊 MOD 路径失败, 已跳过: {ex.Message}");
-                    }
-                }
-
-                if (isSteamUser && !string.IsNullOrWhiteSpace(baseDirectory))
-                {
-                    var directory = new DirectoryInfo(baseDirectory);
-                    while (directory != null && !directory.Name.Equals("steamapps", StringComparison.OrdinalIgnoreCase))
-                        directory = directory.Parent;
-                    if (directory != null)
-                        workshopRoots.Add(Path.Combine(directory.FullName, "workshop", "content", appId));
-                }
-
-                foreach (string path in workshopRoots)
-                {
-                    try
-                    {
-                        var root = new DirectoryInfo(path);
-                        if (root.Exists)
-                            candidates.AddRange(root.EnumerateDirectories());
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"扫描创意工坊 MOD 目录失败, 已跳过: {ex.Message}");
-                    }
+                    var directory = new DirectoryInfo(path);
+                    if (directory.Exists)
+                        candidates.Add(directory);
                 }
 
                 return candidates
