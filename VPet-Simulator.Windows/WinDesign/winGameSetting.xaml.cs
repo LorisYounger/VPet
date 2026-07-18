@@ -597,7 +597,7 @@ namespace VPet_Simulator.Windows
 
         private async void ButtonRefreshMod_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            // 异步扫描磁盘上运行期间新增的 MOD 目录, 载入为停用 stub 后刷新列表; 刷新期间禁用按钮避免重复触发
+            // 扫描本地和已下载的创意工坊 MOD 目录; 刷新期间禁用按钮避免重复触发
             var prevText = ButtonRefreshMod.Text;
             ButtonRefreshMod.IsEnabled = false;
             ButtonRefreshMod.Text = "正在刷新".Translate();
@@ -606,7 +606,7 @@ namespace VPet_Simulator.Windows
                 int added = await mw.DiscoverNewModsAsync();
                 ShowModList();
                 if (added > 0)
-                    NoticeBox.Show("发现 {0} 个新 MOD, 已显示在列表中, 可手动启用".Translate(added.ToString()), "刷新MOD列表".Translate());
+                    NoticeBox.Show("发现 {0} 个新 MOD, 已加入列表".Translate(added.ToString()), "刷新MOD列表".Translate());
             }
             catch (Exception ex)
             {

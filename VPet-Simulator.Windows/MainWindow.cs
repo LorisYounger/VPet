@@ -1646,36 +1646,109 @@ namespace VPet_Simulator.Windows
         }
 
         /// <summary>
-        /// 异步扫描磁盘上"尚未加载"的 MOD 目录(本地 mod + 创意工坊), 将其作为停用 stub 载入 <see cref="CoreMODs"/>,
-        /// 以便在 MOD 列表中显示并供用户手动启用.不重复加载已存在的 MOD.
+        /// 扫描本地 MOD 目录和已下载的 Steam 创意工坊目录, 增量刷新 MOD 列表.
         /// </summary>
         /// <returns>本次新发现并载入的 MOD 数量</returns>
         internal async Task<int> DiscoverNewModsAsync()
         {
-            var unloaded = await ModManager.ScanUnloadedModsAsync().ConfigureAwait(false);
-            if (unloaded.Count == 0)
-                return 0;
-            // CoreMOD 构造会访问 WPF 资源, 必须回到 UI 线程
-            return await Dispatcher.InvokeAsync(() =>
+            Dispatcher.VerifyAccess();
+            var loadedPaths = new HashSet<string>(
+                CoreMODs.Where(mod => mod.Path != null).Select(mod => mod.Path.FullName),
+                StringComparer.OrdinalIgnoreCase);
+            var savedWorkshopPaths = new List<string>();
+            foreach (ISub workshop in Set["workshop"])
+                savedWorkshopPaths.Add(workshop.Name);
+
+            string localModPath = ModPath;
+            string baseDirectory = ExtensionValue.BaseDirectory;
+            bool isSteamUser = IsSteamUser;
+            var unloaded = await Task.Run(() =>
             {
-                int added = 0;
-                foreach (var dir in unloaded)
+                const string appId = "1920960";
+                var candidates = new List<DirectoryInfo>();
+                var workshopRoots = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                var localRoot = new DirectoryInfo(localModPath);
+                if (localRoot.Exists)
+                    candidates.AddRange(localRoot.EnumerateDirectories());
+
+                foreach (string path in savedWorkshopPaths)
                 {
-                    // 防御: 期间可能已被其他途径加载
-                    if (CoreMODs.Any(m => m.Path != null &&
-                        string.Equals(m.Path.FullName, dir.FullName, StringComparison.OrdinalIgnoreCase)))
+                    if (string.IsNullOrWhiteSpace(path))
                         continue;
                     try
                     {
-                        CoreMODs.Add(new CoreMOD(dir, this));
-                        added++;
+                        var directory = new DirectoryInfo(path);
+                        if (directory.Exists)
+                            candidates.Add(directory);
+                        if (directory.Parent?.Name == appId)
+                            workshopRoots.Add(directory.Parent.FullName);
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"发现并载入 MOD {dir.Name} 失败, 已跳过: {ex.Message}");
+                        Console.WriteLine($"读取创意工坊 MOD 路径失败, 已跳过: {ex.Message}");
                     }
                 }
-                CoreMOD.NowLoading = null;
+
+                if (isSteamUser && !string.IsNullOrWhiteSpace(baseDirectory))
+                {
+                    var directory = new DirectoryInfo(baseDirectory);
+                    while (directory != null && !directory.Name.Equals("steamapps", StringComparison.OrdinalIgnoreCase))
+                        directory = directory.Parent;
+                    if (directory != null)
+                        workshopRoots.Add(Path.Combine(directory.FullName, "workshop", "content", appId));
+                }
+
+                foreach (string path in workshopRoots)
+                {
+                    try
+                    {
+                        var root = new DirectoryInfo(path);
+                        if (root.Exists)
+                            candidates.AddRange(root.EnumerateDirectories());
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"扫描创意工坊 MOD 目录失败, 已跳过: {ex.Message}");
+                    }
+                }
+
+                return candidates
+                    .GroupBy(directory => directory.FullName, StringComparer.OrdinalIgnoreCase)
+                    .Select(group => group.First())
+                    .Where(directory => !loadedPaths.Contains(directory.FullName) &&
+                                        File.Exists(Path.Combine(directory.FullName, "info.lps")))
+                    .ToList();
+            }).ConfigureAwait(false);
+
+            if (unloaded.Count == 0)
+                return 0;
+
+            return await Dispatcher.InvokeAsync(() =>
+            {
+                int added = 0;
+                try
+                {
+                    foreach (var directory in unloaded)
+                    {
+                        if (CoreMODs.Any(mod => mod.Path != null &&
+                            string.Equals(mod.Path.FullName, directory.FullName, StringComparison.OrdinalIgnoreCase)))
+                            continue;
+                        try
+                        {
+                            CoreMODs.Add(new CoreMOD(directory, this));
+                            added++;
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"发现并载入 MOD {directory.Name} 失败, 已跳过: {ex.Message}");
+                        }
+                    }
+                }
+                finally
+                {
+                    CoreMOD.NowLoading = null;
+                }
                 return added;
             });
         }
