@@ -31,8 +31,8 @@
                     SelectionChanged="Filter_Changed" Style="{DynamicResource StandardComboBoxStyle}">
                 <ComboBoxItem Content="{ll:Str '全部'}" Tag="all" />
                 <ComboBoxItem Content="{ll:Str '本地'}" Tag="local" ToolTip="{ll:Str '本地存档, 会被Steam自动同步'}" />
-                <ComboBoxItem Content="{ll:Str '备份'}" Tag="localbackup" ToolTip="{ll:Str '本地备份文件, 不会被steam云存档同步'}" />
-                <ComboBoxItem Content="{ll:Str 'Steam云'}" Tag="steam" ToolTip="{ll:Str 'Steam云备份存档, 跟随Steam账号保存'}" />
+                <ComboBoxItem Content="{ll:Str '离线备份'}" Tag="localbackup" ToolTip="{ll:Str '本地备份文件, 不会被steam云存档同步'}" />
+                <ComboBoxItem Content="{ll:Str 'Steam储存'}" Tag="steam" ToolTip="{ll:Str 'Steam云储存备份存档, 跟随Steam账号保存'}" />
             </ComboBox>
             <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{ll:Str '筛选存档时间:'}" FontWeight="Bold" />
             <pu:DateTimePicker x:Name="DPStart" Grid.Column="4" Margin="6,0,0,0"

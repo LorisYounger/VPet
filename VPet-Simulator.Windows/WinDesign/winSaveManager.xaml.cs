@@ -220,7 +220,7 @@ namespace VPet_Simulator.Windows
                         PetName = gs.GameSave.Name,
                         SaveTime = saveTime,
                         SaveTimeText = saveTime == DateTime.MinValue ? "-" : saveTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                        LevelText = $"{gs.GameSave.Level}+{gs.GameSave.LevelMax}",
+                        LevelText = $"{gs.GameSave.Level} (x{gs.GameSave.LevelMax})",
                         MoneyText = gs.GameSave.Money.ToString("f2"),
                         SteamPath = file,
                         HashCheck = gs.HashCheck,

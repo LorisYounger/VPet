@@ -64,6 +64,7 @@ namespace VPet_Simulator.Core
         public static Dictionary<string, LoadGraphDelegate> IGraphConvert = new Dictionary<string, LoadGraphDelegate>()
         {
             { "pnganimation", PNGAnimation.LoadGraph},
+            { "apnganimation", APNGAnimation.LoadGraph },
             { "picture", Picture.LoadGraph },
             { "foodanimation", FoodAnimation.LoadGraph },
         };
