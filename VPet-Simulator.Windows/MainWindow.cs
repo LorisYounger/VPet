@@ -937,6 +937,13 @@ namespace VPet_Simulator.Windows
             }
             GameSavesData = tmp;
             Core.Save = tmp.GameSave;
+            Items.Clear();
+            foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("item")))
+            {
+                var itm = Item.CreateItem(this, line.Value);
+                Dispatcher.Invoke(() => itm.LoadSource(this));
+                ItemsAdd(itm);
+            }
             HashCheck = HashCheck;
             GameSavesData.GameSave.Event_LevelUp += LevelUP;
             return true;
@@ -2131,14 +2138,6 @@ namespace VPet_Simulator.Windows
                       }
                   Foods.ForEach(item => item.LoadImageSource(this));
                   Photos.ForEach(item => item.LoadUserInfo(this));
-
-                  //物品栏加载
-                  foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("item")))
-                  {
-                      var itm = Item.CreateItem(this, line.Value);
-                      itm.LoadSource(this);
-                      ItemsAdd(itm);
-                  }
 
                   //添加基本物品项目 (根据名称添加)
                   if (Set.PetGraph == "vup")

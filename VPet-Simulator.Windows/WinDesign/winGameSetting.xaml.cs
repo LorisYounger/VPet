@@ -34,6 +34,7 @@ namespace VPet_Simulator.Windows
     {
         MainWindow mw;
         private bool AllowChange = false;
+
         public winGameSetting(MainWindow mw)
         {
             this.mw = mw;
@@ -1364,7 +1365,24 @@ namespace VPet_Simulator.Windows
 
         private void Using_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxX.Show(string.Join("\n", CoreMOD.LoadedDLL), "DLL引用名单".Translate());
+            string NormalizeDllName(string dll)
+            {
+                var fileName = Path.GetFileName(dll);
+                if (string.IsNullOrWhiteSpace(fileName))
+                    fileName = dll;
+                return Path.GetFileNameWithoutExtension(fileName) ?? fileName;
+            }
+
+            var rows = CoreMOD.LoadedDLL
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(NormalizeDllName)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Select(name => ExtensionValue.DllReferenceDescriptions.TryGetValue(name, out var description)
+                    ? $"> {name}\n{description}"
+                    : $"> {name}.dll")
+                .ToList();
+
+            MessageBoxX.Show(string.Join("\n", rows), "DLL引用名单".Translate());
         }
 
         private void combCalFunState_SelectionChanged(object sender, SelectionChangedEventArgs e)
