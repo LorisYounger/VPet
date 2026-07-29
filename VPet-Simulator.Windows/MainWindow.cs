@@ -183,6 +183,8 @@ namespace VPet_Simulator.Windows
                             hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash.png");
                             hashcheckimg.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
                             hashcheckimg.ToolTip = "是没有修改过存档/使用超模MOD的玩家专属标志".Translate();
+                            hashcheckimg.Width = 64;
+                            hashcheckimg.Height = 64;
                             Grid.SetColumn(hashcheckimg, 4);
                             Grid.SetRowSpan(hashcheckimg, 2);
                             Main.ToolBar.gdPanel.Children.Add(hashcheckimg);
