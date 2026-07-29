@@ -1611,6 +1611,7 @@ namespace VPet_Simulator.Windows
             {
                 GameSave_v2 ogs = mw.GameSavesData;
                 mw.GameSavesData = new GameSave_v2(ogs.GameSave.Name);
+                mw.GameSavesData.Statistics = ogs.Statistics;
                 mw.GameSavesData.Statistics[(gint)"stat_total_time"] = playtime * 60;
                 mw.GameSavesData.GameSave.Event_LevelUp += mw.LevelUP;
 

@@ -180,9 +180,31 @@ namespace VPet_Simulator.Windows
                         if (hashcheckimg == null)
                         {
                             hashcheckimg = new Image();
+                            int hours = GameSavesData.Statistics[(gint)"stat_total_time"] / 3600;
+                            //if (hours < 10)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash.png");
+                            //else if (hours < 50)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash1.png");
+                            //else if (hours < 100)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash2.png");
+                            //else if (hours < 200)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash3.png");
+                            //else if (hours < 500)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash4.png");
+                            //else if (hours < 1000)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash5.png");
+                            //else if (hours < 2000)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash6.png");
+                            //else if (hours < 5000)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash7.png");
+                            //else if (hours < 10000)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash8.png");
+                            //else
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash9.png");
+
                             hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash.png");
                             hashcheckimg.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-                            hashcheckimg.ToolTip = "是没有修改过存档/使用超模MOD的玩家专属标志".Translate();
+                            hashcheckimg.ToolTip = "是没有修改过存档/使用超模MOD的玩家专属标志".Translate() + ' ' + ((int)(Math.Sqrt(hours))).ToString("X");
                             hashcheckimg.Width = 64;
                             hashcheckimg.Height = 64;
                             Grid.SetColumn(hashcheckimg, 4);
