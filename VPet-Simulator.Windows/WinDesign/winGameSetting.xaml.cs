@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using NAudio.SoundFont;
 using Panuon.WPF.UI;
@@ -34,6 +35,82 @@ namespace VPet_Simulator.Windows
     {
         MainWindow mw;
         private bool AllowChange = false;
+        private readonly List<ModInfo> modInfos = new List<ModInfo>();
+
+        /// <summary>
+        /// 设置页使用的 MOD 元数据。它只读取 info.lps 和目录名，不构造 CoreMOD，
+        /// 因而刷新列表不会加载资源、插件或翻译。
+        /// </summary>
+        private sealed class ModInfo : IModInfo
+        {
+            public string Name { get; set; }
+            public string Author { get; set; }
+            public long AuthorID { get; set; }
+            public ulong ItemID { get; set; }
+            public string Intro { get; set; }
+            public DirectoryInfo Path { get; set; }
+            public int GameVer { get; set; }
+            public int Ver { get; set; }
+            public HashSet<string> Tag { get; set; } = new HashSet<string>();
+            public bool SuccessLoad { get; set; } = true;
+            public DateTime CacheDate { get; set; }
+            public string ErrorMessage { get; set; }
+
+            public ModInfo(CoreMOD mod)
+            {
+                Name = mod.Name;
+                Author = mod.Author;
+                AuthorID = mod.AuthorID;
+                ItemID = mod.ItemID;
+                Intro = mod.Intro;
+                Path = mod.Path;
+                GameVer = mod.GameVer;
+                Ver = mod.Ver;
+                Tag = new HashSet<string>(mod.Tag);
+                SuccessLoad = mod.SuccessLoad;
+                CacheDate = mod.CacheDate;
+                ErrorMessage = mod.ErrorMessage;
+            }
+
+            public ModInfo(DirectoryInfo directory, MainWindow mw)
+            {
+                Path = directory;
+                var modlps = new LpsDocument(File.ReadAllText(System.IO.Path.Combine(directory.FullName, "info.lps")));
+                Name = modlps.FindLine("vupmod").Info;
+                Intro = modlps.FindLine("intro").Info;
+                GameVer = modlps.FindSub("gamever").InfoToInt;
+                Ver = modlps.FindSub("ver").InfoToInt;
+                Author = modlps.FindSub("author").Info.Split('[').First();
+                AuthorID = modlps.FindLine("authorid")?.InfoToInt64 ?? 0;
+                ItemID = modlps.FindLine("itemid") == null ? 0 : Convert.ToUInt64(modlps.FindLine("itemid").info);
+                CacheDate = modlps.GetDateTime("cachedate", DateTime.MinValue);
+
+                foreach (DirectoryInfo child in directory.EnumerateDirectories())
+                    Tag.Add(child.Name.ToLowerInvariant());
+                if (!mw.Set.IsOnMod(Name))
+                    Tag.Add("该模组已停用");
+
+                // 未加载的代码 MOD 不能在刷新时执行签名检查；先按授权状态显示提示，
+                // 实际加载仍由启动阶段 CoreMOD 的完整安全检查负责。
+                if (Tag.Contains("plugin") && !mw.Set.IsPassMOD(Name))
+                    SuccessLoad = false;
+            }
+
+            public bool IsOnMOD(MainWindow window) => window.Set.IsOnMod(Name);
+
+            public void WriteFile()
+            {
+                var modlps = new LpsDocument(File.ReadAllText(System.IO.Path.Combine(Path.FullName, "info.lps")));
+                modlps.FindLine("vupmod").Info = Name;
+                modlps.FindLine("intro").Info = Intro;
+                modlps.FindSub("gamever").InfoToInt = GameVer;
+                modlps.FindSub("ver").InfoToInt = Ver;
+                modlps.FindSub("author").Info = Author;
+                modlps.FindorAddLine("authorid").InfoToInt64 = AuthorID;
+                modlps.FindorAddLine("itemid").info = ItemID.ToString();
+                File.WriteAllText(System.IO.Path.Combine(Path.FullName, "info.lps"), modlps.ToString());
+            }
+        }
 
         public winGameSetting(MainWindow mw)
         {
@@ -241,9 +318,13 @@ namespace VPet_Simulator.Windows
             runabVer.Text = $"v{mw.Version} ({mw.version})";
 
             //mod列表
+            modInfos.AddRange(mw.CoreMODs.Select(x => new ModInfo(x)));
             ShowModList();
-            ListMod.SelectedIndex = 0;
-            ShowMod((string)((ListBoxItem)ListMod.SelectedItem).Content);
+            if (ListMod.Items.Count > 0)
+            {
+                ListMod.SelectedIndex = 0;
+                ShowMod((ModInfo)((ListBoxItem)ListMod.SelectedItem).Tag);
+            }
 
             voicetimer = new DispatcherTimer()
             {
@@ -348,34 +429,48 @@ namespace VPet_Simulator.Windows
 
         public void ShowModList()
         {
+            string selectedPath = mod?.Path?.FullName;
             ListMod.Items.Clear();
-            foreach (CoreMOD mod in mw.CoreMODs)
+            foreach (ModInfo modInfo in modInfos)
             {
                 ListBoxItem moditem = (ListBoxItem)ListMod.Items[ListMod.Items.Add(new ListBoxItem())];
                 moditem.Padding = new Thickness(5, 0, 5, 0);
-                moditem.Content = mod.Name;
-                if (!mod.IsOnMOD(mw))
+                moditem.Content = modInfo.Name;
+                moditem.Tag = modInfo;
+                if (!modInfo.IsOnMOD(mw))
                 {
                     moditem.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 }
                 else
                 {
-                    if (mod.GameVer / 1000 == mw.version / 1000)
+                    if (modInfo.GameVer / 1000 == mw.version / 1000)
                     {
                         moditem.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
                     }
                     else
                     {
-                        if (mod.Tag.Contains("plugin"))
+                        if (modInfo.Tag.Contains("plugin"))
                             moditem.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
                     }
                 }
             }
+
+            if (ListMod.Items.Count == 0)
+            {
+                mod = null;
+                return;
+            }
+
+            int selectedIndex = modInfos.FindIndex(x => string.Equals(x.Path?.FullName, selectedPath,
+                StringComparison.OrdinalIgnoreCase));
+            ListMod.SelectedIndex = selectedIndex >= 0 ? selectedIndex : 0;
         }
-        CoreMOD mod;
-        private void ShowMod(string modname)
+        ModInfo mod;
+        private void ShowMod(ModInfo modInfo)
         {
-            mod = mw.CoreMODs.Find(x => x.Name == modname);
+            if (modInfo == null)
+                return;
+            mod = modInfo;
             LabelModName.Content = mod.Name.Translate();
             runMODAuthor.Text = mod.Author;
             runMODGameVer.Text = CoreMOD.INTtoVER(mod.GameVer);
@@ -593,11 +688,155 @@ namespace VPet_Simulator.Windows
             if (!AllowChange || ListMod.SelectedItem == null)
                 return;
 
-            ShowMod((string)((ListBoxItem)ListMod.SelectedItem).Content);
+            ShowMod((ModInfo)((ListBoxItem)ListMod.SelectedItem).Tag);
+        }
+
+        private List<string> GetModDirectories()
+        {
+            var paths = new List<string>();
+            void Add(string path)
+            {
+                if (!string.IsNullOrWhiteSpace(path))
+                    paths.Add(path);
+            }
+            void AddChildren(string path)
+            {
+                try
+                {
+                    if (!Directory.Exists(path))
+                        return;
+                    foreach (DirectoryInfo directory in new DirectoryInfo(path).EnumerateDirectories())
+                        Add(directory.FullName);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"扫描 MOD 目录 {path} 失败: {ex.Message}");
+                }
+            }
+
+            if (Directory.Exists(mw.ModPath))
+                AddChildren(mw.ModPath);
+            if (mw.MODPath != null)
+            {
+                foreach (DirectoryInfo directory in mw.MODPath)
+                    Add(directory.FullName);
+            }
+            foreach (ISub workshop in mw.Set["workshop"])
+                Add(workshop.Name);
+
+            // 已记录的 Workshop MOD 的兄弟目录，以及程序所在 Steam 库的标准 Workshop 根目录，
+            // 允许本次运行期间下载完成的新订阅出现在列表中，而不需要主动查询 Steam。
+            foreach (string path in paths.ToList())
+            {
+                var directory = new DirectoryInfo(path);
+                while (directory != null)
+                {
+                    if (directory.Name == "1920960" && directory.Parent?.Name == "content" &&
+                        directory.Parent.Parent?.Name == "workshop")
+                    {
+                        AddChildren(directory.FullName);
+                        break;
+                    }
+                    directory = directory.Parent;
+                }
+            }
+            var baseDirectory = new DirectoryInfo(ExtensionValue.BaseDirectory);
+            while (baseDirectory != null)
+            {
+                if (baseDirectory.Name == "steamapps")
+                {
+                    AddChildren(System.IO.Path.Combine(baseDirectory.FullName, "workshop", "content", "1920960"));
+                    break;
+                }
+                baseDirectory = baseDirectory.Parent;
+            }
+
+            return paths.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        }
+
+        private async Task<int> RefreshModInfosAsync()
+        {
+            var oldPaths = new HashSet<string>(modInfos
+                .Where(x => x.Path != null)
+                .Select(x => x.Path.FullName), StringComparer.OrdinalIgnoreCase);
+            var loadedPaths = new HashSet<string>(mw.CoreMODs
+                .Where(x => x.Path != null)
+                .Select(x => x.Path.FullName), StringComparer.OrdinalIgnoreCase);
+            var directories = GetModDirectories();
+            var candidates = await Task.Run(() =>
+            {
+                var result = new List<DirectoryInfo>();
+                foreach (string path in directories)
+                {
+                    try
+                    {
+                        var directory = new DirectoryInfo(path);
+                        if (directory.Exists && File.Exists(System.IO.Path.Combine(directory.FullName, "info.lps")))
+                            result.Add(directory);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"扫描 MOD 目录 {path} 失败: {ex.Message}");
+                    }
+                }
+                return result
+                    .GroupBy(x => x.FullName, StringComparer.OrdinalIgnoreCase)
+                    .Select(x => x.First())
+                    .ToList();
+            });
+
+            var refreshed = mw.CoreMODs.Select(x => new ModInfo(x)).ToList();
+            int added = 0;
+            foreach (DirectoryInfo directory in candidates)
+            {
+                if (loadedPaths.Contains(directory.FullName))
+                    continue;
+                try
+                {
+                    var info = new ModInfo(directory, mw);
+                    refreshed.Add(info);
+                    if (!oldPaths.Contains(directory.FullName))
+                        added++;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"读取 MOD 信息 {directory.FullName} 失败: {ex.Message}");
+                }
+            }
+
+            modInfos.Clear();
+            modInfos.AddRange(refreshed);
+            return added;
+        }
+
+        private async void ButtonRefreshMod_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // 只刷新展示用元数据，不加载或卸载 MOD；启用状态仍需重启后生效。
+            var prevText = ButtonRefreshMod.Text;
+            ButtonRefreshMod.IsEnabled = false;
+            ButtonRefreshMod.Text = "正在刷新".Translate();
+            try
+            {
+                int added = await RefreshModInfosAsync();
+                ShowModList();
+                if (added > 0)
+                    NoticeBox.Show("发现 {0} 个新 MOD, 已加入列表".Translate(added.ToString()), "刷新MOD列表".Translate());
+            }
+            catch (Exception ex)
+            {
+                NoticeBox.Show("刷新 MOD 列表时出错:".Translate() + "\n" + ex.Message, "刷新MOD列表".Translate());
+            }
+            finally
+            {
+                ButtonRefreshMod.Text = prevText;
+                ButtonRefreshMod.IsEnabled = true;
+            }
         }
 
         private void ButtonOpenModFolder_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (mod?.Path == null)
+                return;
             var psi = new ProcessStartInfo
             {
                 FileName = mod.Path.FullName,
@@ -608,15 +847,18 @@ namespace VPet_Simulator.Windows
 
         private void ButtonEnable_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (mod == null)
+                return;
             mw.Set.OnMod(mod.Name);
-            ShowMod(mod.Name);
             ButtonRestart.Visibility = Visibility.Visible;
-            //int seleid = ListMod.SelectedIndex();
+            ShowMod(mod);
             ShowModList();
         }
 
         private void ButtonDisEnable_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (mod == null)
+                return;
             if (mod.Name == "Core")
             {
                 MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法停用".Translate(), "停用失败".Translate());
@@ -625,8 +867,8 @@ namespace VPet_Simulator.Windows
             else if (CoreMOD.OnModDefList.Contains(mod.Name))
                 return;
             mw.Set.OnModRemove(mod.Name);
-            ShowMod(mod.Name);
             ButtonRestart.Visibility = Visibility.Visible;
+            ShowMod(mod);
             ShowModList();
         }
         class ProgressClass : IProgress<float>
@@ -759,7 +1001,7 @@ namespace VPet_Simulator.Windows
                 "启用 {0} 的代码插件?".Translate(mod.Name), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
             {
                 mw.Set.PassMod(mod.Name);
-                ShowMod(mod.Name);
+                ShowMod(mod);
                 ButtonRestart.Visibility = Visibility.Visible;
             }
         }

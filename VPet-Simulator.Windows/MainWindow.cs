@@ -1560,15 +1560,33 @@ namespace VPet_Simulator.Windows
             MODPath = Path.GroupBy(x => x.FullName).Select(group => group.First()).ToList();
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading MOD"));
             //加载mod
+            //收集加载失败(抛出异常)的 MOD, 在加载结束后统一提示, 避免单个坏 MOD 直接中断整个启动流程
+            var failedMods = new List<(string Name, string Error)>();
             foreach (DirectoryInfo di in MODPath)
             {
                 if (!File.Exists(di.FullName + @"\info.lps"))
                     continue;
                 await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = $"Loading MOD: {di.Name}"));
-                CoreMODs.Add(new CoreMOD(di, this));
+                try
+                {
+                    CoreMODs.Add(new CoreMOD(di, this));
+                }
+                catch (Exception ex)
+                {
+                    //异常隔离: 该 MOD 加载彻底失败, 跳过并记录, 不影响其余 MOD 与游戏启动
+                    Console.WriteLine($"加载 MOD {di.Name} 失败, 已跳过: {ex}");
+                    failedMods.Add((di.Name, ex.Message));
+                }
             }
 
             CoreMOD.NowLoading = null;
+            if (failedMods.Count != 0)
+            {
+                var detail = string.Join("\n", failedMods.Select(f => $"- {f.Name}: {f.Error}"));
+                await Dispatcher.InvokeAsync(() => NoticeBox.Show(
+                    "以下 MOD 加载失败, 已被跳过, 游戏将继续启动:".Translate() + "\n" + detail,
+                    "部分 MOD 加载失败".Translate()));
+            }
 
             //判断是否需要清空缓存
             if (App.MainWindows.Count == 1 && Set.LastCacheDate < CoreMODs.Max(x => x.CacheDate))
