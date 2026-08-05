@@ -365,13 +365,12 @@
                             <pu:NumberInput x:Name="numBackupSaveMaxNum" Grid.Column="2" Margin="0,1,0,1"
                                     BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="1.5" CornerRadius="4"
                                     Minimum="1" ValueChanged="numBackupSaveMaxNum_ValueChanged" Value="20" />
-                            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 加载存档}" />
-                            <Button x:Name="BtnSaveReload" Grid.Row="1" Grid.Column="3" Margin="5" Padding="1"
-                                    pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
-                                    Click="BtnSaveReload_Click" Content="{ll:Str 加载}" ToolTip="{ll:Str 加载上次保存的存档}" />
-                            <ComboBox x:Name="CBSaveReLoad" Grid.Row="1" Grid.Column="2" FontSize="16"
-                                    MouseEnter="CBSaveReLoad_MouseEnter" SelectedIndex="3"
-                                    Style="{DynamicResource StandardComboBoxStyle}" />
+                            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 存档管理}" />
+                            <Button x:Name="BtnOpenSaveManager" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
+                                    Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
+                                    Background="{DynamicResource SecondaryLight}" Click="BtnOpenSaveManager_Click"
+                                    Content="{ll:Str 打开存档管理器}"
+                                    ToolTip="{ll:Str 查看并加载游戏存档}" />
                         </Grid>
 
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"

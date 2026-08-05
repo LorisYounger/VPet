@@ -35,6 +35,7 @@ namespace VPet_Simulator.Windows
     {
         MainWindow mw;
         private bool AllowChange = false;
+
         public winGameSetting(MainWindow mw)
         {
             this.mw = mw;
@@ -546,7 +547,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.LoadTheme(mw.Themes[ThemeBox.SelectedIndex].xName);
-            mw.Set.Theme = mw.Theme.xName;
+            mw.Set.Theme = mw.Theme?.xName ?? string.Empty;
         }
 
         private void FontBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1315,75 +1316,9 @@ namespace VPet_Simulator.Windows
                 return;
             mw.Set.BackupSaveMaxNum = (int)(numBackupSaveMaxNum?.Value ?? 0);
         }
-        int reloadid = 0;
-        private void CBSaveReLoad_MouseEnter(object sender, MouseEventArgs e)
+        private void BtnOpenSaveManager_Click(object sender, RoutedEventArgs e)
         {
-            if (reloadid != mw.Set.SaveTimes)
-            {
-                reloadid = mw.Set.SaveTimes;
-                CBSaveReLoad.SelectedItem = null;
-                CBSaveReLoad.Items.Clear();
-                if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
-                {
-                    foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves")
-                        .GetFiles($"Save{mw.PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime))
-                    {
-                        CBSaveReLoad.Items.Add(file.Name.Split('.').First());
-                    }
-                    CBSaveReLoad.SelectedIndex = 0;
-                }
-                if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))
-                {
-                    foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves_BKP")
-                        .GetFiles($"Save{mw.PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime))
-                    {
-                        CBSaveReLoad.Items.Add(file.Name.Split('.').First());
-                    }
-                    CBSaveReLoad.SelectedIndex = 0;
-                }
-            }
-        }
-
-        private void BtnSaveReload_Click(object sender, RoutedEventArgs e)
-        {
-            if (CBSaveReLoad.SelectedItem != null)
-            {
-                string txt = (string)CBSaveReLoad.SelectedItem;
-                string path = ExtensionValue.BaseDirectory + @"\Saves\" + txt + ".lps";
-                if (!File.Exists(path))
-                {
-                    path = ExtensionValue.BaseDirectory + @"\Saves_BKP\" + txt + ".lps";
-                }
-                if (File.Exists(path))
-                {
-                    try
-                    {
-                        GameSave_v2 gs = new GameSave_v2(new LPS(File.ReadAllText(path)));
-                        if (MessageBoxX.Show("存档名称:{0}\n存档等级:{1}\n存档金钱:{2}\nHashCheck:{3}\n是否加载该备份存档? 当前游戏数据会丢失"
-                            .Translate(gs.GameSave.Name, gs.GameSave.Level, gs.GameSave.Money, gs.HashCheck), "是否加载该备份存档? 当前游戏数据会丢失".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Info) == MessageBoxResult.Yes)
-                        {
-                            try
-                            {
-                                if (mw.Main.State != Main.WorkingState.Nomal)
-                                {
-                                    mw.Main.WorkTimer!.Visibility = Visibility.Collapsed;
-                                    mw.Main.State = Main.WorkingState.Nomal;
-                                }
-                                if (!mw.SavesLoad(new LPS(File.ReadAllText(path))))
-                                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
-                            }
-                        }
-                    }
-                    catch (Exception exp)
-                    {
-                        MessageBoxX.Show("存档损毁,无法加载该备份\n请更换备份重试".Translate() + '\n' + exp.ToString(), "存档损毁".Translate());
-                    }
-                }
-            }
+            new winSaveManager(mw).ShowDialog();
         }
 
         private void Mod_Click(object sender, RoutedEventArgs e)
@@ -1400,7 +1335,24 @@ namespace VPet_Simulator.Windows
 
         private void Using_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxX.Show(string.Join("\n", CoreMOD.LoadedDLL), "DLL引用名单".Translate());
+            string NormalizeDllName(string dll)
+            {
+                var fileName = Path.GetFileName(dll);
+                if (string.IsNullOrWhiteSpace(fileName))
+                    fileName = dll;
+                return Path.GetFileNameWithoutExtension(fileName) ?? fileName;
+            }
+
+            var rows = CoreMOD.LoadedDLL
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(NormalizeDllName)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Select(name => ExtensionValue.DllReferenceDescriptions.TryGetValue(name, out var description)
+                    ? $"> {name}\n{description}"
+                    : $"> {name}.dll")
+                .ToList();
+
+            MessageBoxX.Show(string.Join("\n", rows), "DLL引用名单".Translate());
         }
 
         private void combCalFunState_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1662,7 +1614,25 @@ namespace VPet_Simulator.Windows
             {
                 GameSave_v2 ogs = mw.GameSavesData;
                 mw.GameSavesData = new GameSave_v2(ogs.GameSave.Name);
-                mw.GameSavesData.Statistics![(gint)"stat_total_time"] = playtime * 60;
+                mw.GameSavesData.Statistics[(gint)"stat_time"] = ogs.Statistics![(gint)"stat_time"];
+                mw.GameSavesData.Statistics[(gint)"stat_autobuy"] = ogs.Statistics![(gint)"stat_autobuy"];
+                mw.GameSavesData.Statistics[(gint)"autofeel"] = ogs.Statistics![(gint)"autofeel"];
+                mw.GameSavesData.Statistics[(gint)"stat_autogift"] = ogs.Statistics![(gint)"stat_autogift"];
+                mw.GameSavesData.Statistics[(gint)"stat_buytimes"] = ogs.Statistics![(gint)"stat_buytimes"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_food"] = ogs.Statistics![(gint)"stat_bb_food"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_drink"] = ogs.Statistics![(gint)"stat_bb_drink"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_drug"] = ogs.Statistics![(gint)"stat_bb_drug"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_drug_exp"] = ogs.Statistics![(gint)"stat_bb_drug_exp"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_snack"] = ogs.Statistics![(gint)"stat_bb_snack"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_functional"] = ogs.Statistics![(gint)"stat_bb_functional"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_meal"] = ogs.Statistics![(gint)"stat_bb_meal"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_gift"] = ogs.Statistics![(gint)"stat_bb_gift"];
+                mw.GameSavesData.Statistics[(gint)"stat_work_time"] = ogs.Statistics![(gint)"stat_work_time"];
+                mw.GameSavesData.Statistics[(gint)"stat_study_time"] = ogs.Statistics![(gint)"stat_study_time"];
+                mw.GameSavesData.Statistics[(gint)"stat_sleep_time"] = ogs.Statistics![(gint)"stat_sleep_time"];
+                mw.GameSavesData.Statistics[(gint)"stat_betterbuy"] = ogs.Statistics![(gint)"stat_betterbuy"];
+
+                mw.GameSavesData.Statistics[(gint)"stat_total_time"] = playtime * 60;
                 mw.GameSavesData.GameSave.Event_LevelUp += mw.LevelUP;
 
                 //同步等级

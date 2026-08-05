@@ -117,7 +117,7 @@ public partial class winWorkMenu : WindowX
         //判断倍率
         if (nowwork.LevelLimit > mw.GameSavesData.GameSave.Level)
         {
-            wDouble.IsEnabled = false;
+            wDouble.Visibility = Visibility.Collapsed;
             wDouble.Value = 1;
         }
         else
@@ -125,12 +125,12 @@ public partial class winWorkMenu : WindowX
             int max = Math.Min(4000, mw.GameSavesData.GameSave.Level) / (nowwork.LevelLimit + 10);
             if (max <= 1)
             {
-                wDouble.IsEnabled = false;
+                wDouble.Visibility = Visibility.Collapsed;
                 wDouble.Value = 1;
             }
             else
             {
-                wDouble.IsEnabled = true;
+                wDouble.Visibility = Visibility.Visible;
                 wDouble.Maximum = max;
                 if (max > 25)
                     wDouble.TickFrequency = max / 25;

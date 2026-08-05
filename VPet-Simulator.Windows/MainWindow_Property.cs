@@ -53,7 +53,7 @@ public partial class MainWindow
     public bool IsSteamUser { get; }
     public LPS_D Args { get; }
     public string PrefixSave { get; } = "";
-    private string prefixsavetrans = null;
+    private string? prefixsavetrans = null;
     public string PrefixSaveTrans
     {
         get
@@ -106,7 +106,7 @@ public partial class MainWindow
     /// <summary>
     /// 当前启用主题
     /// </summary>
-    public Theme Theme = null;
+    public Theme? Theme = null;
 
     /// <summary>
     /// 日程表

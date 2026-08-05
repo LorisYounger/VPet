@@ -180,12 +180,36 @@ namespace VPet_Simulator.Windows
                         if (hashcheckimg == null)
                         {
                             hashcheckimg = new Image();
+                            int hours = GameSavesData.Statistics![(gint)"stat_total_time"] / 3600;
+                            //if (hours < 10)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash.png");
+                            //else if (hours < 50)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash1.png");
+                            //else if (hours < 100)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash2.png");
+                            //else if (hours < 200)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash3.png");
+                            //else if (hours < 500)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash4.png");
+                            //else if (hours < 1000)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash5.png");
+                            //else if (hours < 2000)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash6.png");
+                            //else if (hours < 5000)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash7.png");
+                            //else if (hours < 10000)
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash8.png");
+                            //else
+                            //    hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash9.png");
+
                             hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash.png");
                             hashcheckimg.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-                            hashcheckimg.ToolTip = "是没有修改过存档/使用超模MOD的玩家专属标志".Translate();
+                            hashcheckimg.ToolTip = "是没有修改过存档/使用超模MOD的玩家专属标志".Translate() + ' ' + ((int)(Math.Sqrt(hours))).ToString("X");
+                            hashcheckimg.Width = 64;
+                            hashcheckimg.Height = 64;
                             Grid.SetColumn(hashcheckimg, 4);
                             Grid.SetRowSpan(hashcheckimg, 2);
-                            if(Main.ToolBar != null)
+                            if (Main.ToolBar != null)
                                 Main.ToolBar.gdPanel.Children.Add(hashcheckimg);
                         }
                     }
@@ -298,6 +322,9 @@ namespace VPet_Simulator.Windows
 
                     var saveslps = GameSavesData.ToLPS();
                     var savesdata = saveslps.ToString();
+                    if (savesdata == null)
+                        throw new Exception("Save data is null");
+
 
                     int hash = Math.Abs(saveslps.GetHashCode() % 255);
                     if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves_BKP\\Save{PrefixSave}_{hash:X}.lps"))
@@ -315,6 +342,26 @@ namespace VPet_Simulator.Windows
                         File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + @"\Save.bkp");
                     }
 
+                    //Steam云存档
+                    if (IsSteamUser)
+                    {
+                        var steamsave = SteamRemoteStorage.Files.Where(x => x.StartsWith($"VPetCloud/Save{PrefixSave}_")).ToList();
+                        if (steamsave.Count > Set.BackupSaveMaxNum)
+                        {
+                            steamsave = steamsave.OrderBy(x =>
+                            {
+                                if (int.TryParse(x.Split('_').Last().Split('.')[0], out int i))
+                                    return i;
+                                return 0;
+                            }).ToList();
+                            while (steamsave.Count > Set.BackupSaveMaxNum)
+                            {
+                                SteamRemoteStorage.FileDelete(steamsave[0]);
+                                steamsave.RemoveAt(0);
+                            }
+                        }
+                        SteamRemoteStorage.FileWrite($"VPetCloud/Save{PrefixSave}_{(DateTime.Now.Ticks / 60000):X}.lps", Encoding.UTF8.GetBytes(savesdata));
+                    }
                 }
             }
         }
@@ -922,6 +969,16 @@ namespace VPet_Simulator.Windows
             }
             GameSavesData = tmp;
             Core.Save = tmp.GameSave;
+            Items.Clear();
+            foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("item")))
+            {
+                var itm = Item.CreateItem(this, line.Value);
+                if (itm != null)
+                {
+                    Dispatcher.Invoke(() => itm.LoadSource(this));
+                    ItemsAdd(itm);
+                }
+            }
             HashCheck = HashCheck;
             GameSavesData.GameSave.Event_LevelUp += LevelUP;
             return true;
@@ -1774,9 +1831,9 @@ namespace VPet_Simulator.Windows
               {
                   //清空资源
                   Main.Resources = Application.Current.Resources;
-                  if(Main.MsgBar != null)
+                  if (Main.MsgBar != null)
                       Main.MsgBar.This.Resources = Application.Current.Resources;
-                  if(Main.ToolBar != null)
+                  if (Main.ToolBar != null)
                       Main.ToolBar.Resources = Application.Current.Resources;
                   Main.ToolBar?.LoadClean();
                   Main.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
@@ -1887,7 +1944,7 @@ namespace VPet_Simulator.Windows
                       winSetting.Show();
                   };
                   Main.FunctionSpendHandle += lowStrength;
-                  if(Main.WorkTimer != null)
+                  if (Main.WorkTimer != null)
                       Main.WorkTimer.E_FinishWork += WorkTimer_E_FinishWork;
                   Main.ToolBar.MenuMODConfig.Items.Add(m);
 
@@ -2174,7 +2231,7 @@ namespace VPet_Simulator.Windows
 
 
                   m_menu = new ContextMenu();
-                  m_menu.Opening += (x, y) => {if(GameSavesData.Statistics != null)GameSavesData.Statistics[(gint)"stat_menu_pop"]++; };
+                  m_menu.Opening += (x, y) => { if (GameSavesData.Statistics != null) GameSavesData.Statistics[(gint)"stat_menu_pop"]++; };
                   var hitThrough = new MenuItem("鼠标穿透".Translate(), null, (x, y) => { SetTransparentHitThrough(); })
                   {
                       Name = "NotifyIcon_HitThrough",
@@ -2455,18 +2512,18 @@ namespace VPet_Simulator.Windows
                   //修复因为26年元旦bug导致HashCheck失效的问题
                   //简单来讲就是给所有有 2026跨年 这个照片的用户恢复一次HashCheck, 就当福利了(, 因为有这个照片的基本上都在bug周期里
                   //请看到这个代码的人不要外传, 避免滥用
-                  var photo25 = Photos.Find(x => x.Name == "2026跨年");
-                  if (photo25?.IsUnlock == true && GameSavesData.HashCheck == false && GameSavesData.Data["debug"][(gbol)"fix26"] == false)
-                  {
-                      GameSave_v2 ogs = GameSavesData;
-                      GameSavesData = new GameSave_v2(ogs.GameSave.Name);
-                      GameSavesData.Data = ogs.Data;
-                      GameSavesData.GameSave = ogs.GameSave;
-                      GameSavesData.Statistics = ogs.Statistics;
-                      HashCheck = true;
-                  }
-                  GameSavesData.Data["debug"][(gbol)"fix26"] = true;
-                  if (GameSavesData.HashCheck == false)
+                  //var photo25 = Photos.Find(x => x.Name == "2026跨年");
+                  //if (photo25?.IsUnlock == true && GameSavesData.HashCheck == false && GameSavesData.Data["debug"][(gbol)"fix26"] == false)
+                  //{
+                  //    GameSave_v2 ogs = GameSavesData;
+                  //    GameSavesData = new GameSave_v2(ogs.GameSave.Name);
+                  //    GameSavesData.Data = ogs.Data;
+                  //    GameSavesData.GameSave = ogs.GameSave;
+                  //    GameSavesData.Statistics = ogs.Statistics;
+                  //    HashCheck = true;
+                  //}
+                  //GameSavesData.Data["debug"][(gbol)"fix26"] = true;
+                  if (GameSavesData.HashCheck == false && GameSavesData["debug"].Find("losthash") == null)
                   {
                       GameSavesData["debug"][(gdat)"losthash"] = DateTime.Now;
                   }
@@ -2548,28 +2605,28 @@ namespace VPet_Simulator.Windows
         public static object LogsLock = new object();
         private void ActivityLogs_WriteFile(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs? e)
         {
-            if(e != null)
-            if (e.NewItems != null)
-            {
-                List<string> sb = new List<string>();
-                foreach (ActivityLog log in e.NewItems)
+            if (e != null)
+                if (e.NewItems != null)
                 {
-                    sb.Add(log.ToString(Main));
-                }
-                string logPath = ExtensionValue.BaseDirectory + $"\\Logs{PrefixSave}.txt";
-                lock (LogsLock)
-                {
-                    if (File.Exists(logPath) && new FileInfo(logPath).Length > 1024 * 1024)
+                    List<string> sb = new List<string>();
+                    foreach (ActivityLog log in e.NewItems)
                     {
-                        var allLines = File.ReadAllLines(logPath);
-                        if (allLines.Length > 2000)
-                        {
-                            File.WriteAllLines(logPath, allLines.Skip(allLines.Length - 2000));
-                        }
+                        sb.Add(log.ToString(Main));
                     }
-                    File.AppendAllLines(logPath, sb);
+                    string logPath = ExtensionValue.BaseDirectory + $"\\Logs{PrefixSave}.txt";
+                    lock (LogsLock)
+                    {
+                        if (File.Exists(logPath) && new FileInfo(logPath).Length > 1024 * 1024)
+                        {
+                            var allLines = File.ReadAllLines(logPath);
+                            if (allLines.Length > 2000)
+                            {
+                                File.WriteAllLines(logPath, allLines.Skip(allLines.Length - 2000));
+                            }
+                        }
+                        File.AppendAllLines(logPath, sb);
+                    }
                 }
-            }
         }
 
         private void everydaygift()
@@ -2902,11 +2959,7 @@ namespace VPet_Simulator.Windows
             var gf = Core.Graph!.FindGraph("levelup", GraphInfo.AnimatType.Single, GameSavesData.GameSave.Mode);
             if (gf != null)
             {
-                Task.Run(() =>
-                {
-                    Thread.Sleep(5000);
-                    Main.Display(gf, Main.DisplayToNomal);
-                });
+                Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name), "levelup", true);
             }
             if (args.IsLevelMaxUp)
             {//告知用户上限等级上升
@@ -2915,7 +2968,6 @@ namespace VPet_Simulator.Windows
                     Thread.Sleep(5000);
                     Dispatcher.Invoke(() =>
                     {
-                        Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
                         MessageBoxX.Show("系统提示\n您的桌宠等级已经突破\nLv{0}→LV{1} x{2}\n已突破为尊贵的x{3}阶".Translate(
                             1000 + args.BeforeLevelMax * 100, 100 * GameSavesData.GameSave.LevelMax, GameSavesData.GameSave.LevelMax),
                             "桌宠等级突破".Translate());

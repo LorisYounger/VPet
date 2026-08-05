@@ -21,7 +21,6 @@ namespace VPet_Simulator.Windows.Interface
         public GameSave_v2(string petname)
         {
             GameSave = new GameSave_VPet(petname);
-            Statistics = new Statistics();
         }
 
         protected void load(ILPS lps, Statistics? oldStatistics = null, GameSave_VPet? oldGameSave = null, ILPS? olddata = null)
@@ -134,15 +133,14 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 统计
         /// </summary>
-        public Statistics? Statistics = null;
+        public Statistics Statistics = new Statistics();
 
         public ILPS ToLPS()
         {
             var lps = new LPS_D();
             lps.AddRange(Data);
             lps.AddLine(GameSave.ToLine());
-            if (Statistics != null)
-                lps.Add(new Line("statistics", "", Statistics.ToSubs()));
+            lps.Add(new Line("statistics", "", Statistics.ToSubs()));
             lps.Remove("hash");
             if (HashCheck)
             {

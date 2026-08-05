@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using SkiaSharp;
 using System;
 using System.IO;
 using System.Linq;
@@ -50,6 +51,19 @@ namespace VPet_Simulator.Core
             }
             if (path.Extension != ".png")
                 return;
+            try
+            {
+                using var stream = File.OpenRead(path.FullName);
+                using var codec = SKCodec.Create(stream);
+                if (codec != null && codec.FrameCount > 1)
+                {
+                    APNGAnimation.LoadGraph(graph, path, info);
+                    return;
+                }
+            }
+            catch
+            {
+            }
             int length = info.GetInt("length");
             if (length == 0)
             {

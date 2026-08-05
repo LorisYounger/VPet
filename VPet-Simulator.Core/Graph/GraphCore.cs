@@ -3,6 +3,7 @@ using LinePutScript.Converter;
 using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -50,8 +51,14 @@ namespace VPet_Simulator.Core
             }, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
             GraphConfig = config;
         }
-
+        /// <summary>
+        /// 缓存路径,用于缓存图像,默认在程序目录下的cache文件夹
+        /// </summary>
         public static string CachePath = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName + @"\cache";
+        /// <summary>
+        /// 提供给缓存文件生成的锁,用于防止多线程同时生成同一个缓存文件
+        /// </summary>
+        public static readonly ConcurrentDictionary<string, SemaphoreSlim> SpriteSheetBuildLocks = new ConcurrentDictionary<string, SemaphoreSlim>();
 
         /// <summary>
         /// 图像名字字典: 动画类型->动画名字

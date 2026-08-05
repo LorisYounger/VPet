@@ -1,5 +1,6 @@
 ﻿using LinePutScript;
 using LinePutScript.Localization.WPF;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -62,6 +63,7 @@ namespace VPet_Simulator.Core
         public static Dictionary<string, LoadGraphDelegate> IGraphConvert = new Dictionary<string, LoadGraphDelegate>()
         {
             { "pnganimation", PNGAnimation.LoadGraph},
+            { "apnganimation", APNGAnimation.LoadGraph },
             { "picture", Picture.LoadGraph },
             { "foodanimation", FoodAnimation.LoadGraph },
         };
@@ -73,7 +75,7 @@ namespace VPet_Simulator.Core
         /// <param name="startuppath">起始目录</param>
         public static int LoadGraph(GraphCore graph, DirectoryInfo di, string startuppath)
         {
-            if(!di.Exists)
+            if (!di.Exists)
                 return 0;
             int GraphCount = 0;
             var list = di.EnumerateDirectories();
@@ -95,7 +97,7 @@ namespace VPet_Simulator.Core
                             else if (File.Exists(p))
                                 func.Invoke(graph, new FileInfo(p), line);
                             else
-                                MessageBox.Show(LocalizeCore.Translate("未知的图像位置: ") + p);
+                                Console.WriteLine("Unknow Graph Type: " + p);
                         }
                         else
                             func.Invoke(graph, di, line);
@@ -104,7 +106,7 @@ namespace VPet_Simulator.Core
                     else
                     {
                         if (!string.IsNullOrEmpty(line.Name))
-                            MessageBox.Show(LocalizeCore.Translate("未知的图像类型: ") + line.Name.ToLowerInvariant());
+                            Console.WriteLine("Unknow Graph Type: " + line.Name.ToLowerInvariant());
                     }
                 }
             }

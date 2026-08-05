@@ -257,6 +257,7 @@ namespace VPet_Simulator.Windows
                         }
                         Set["v"][(gbol)"CODC"] = true;
                     }
+                    Set.SteamID = (long)SteamID;
                     Dispatcher.Invoke(() =>
                     {
                         var menuItem = new MenuItem()
@@ -295,7 +296,7 @@ namespace VPet_Simulator.Windows
                         {
                             if (winMutiPlayer == null)
                             {
-                                winInputBox.Show(this, "请输入访客表ID/固定ID".Translate(), "加入访客表".Translate(), "1860000",async (id) =>
+                                winInputBox.Show(this, "请输入访客表ID/固定ID".Translate(), "加入访客表".Translate(), "1860000", async (id) =>
                                 {
                                     if (ulong.TryParse(id, NumberStyles.HexNumber, null, out ulong lid))
                                     {
@@ -672,73 +673,87 @@ namespace VPet_Simulator.Windows
                     var latestsave = ds[i];
                     if (latestsave != null)
                     {
-#if !DEBUG
-                        try
-                        {
-#endif
-                        GameSave_v2 gs = new GameSave_v2(new LPS(File.ReadAllText(latestsave)));
-                        //看看有没有备份,和备份对比下
-                        if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))
-                        {
-                            var bks = new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves_BKP")
-                                .GetFiles($"Save{PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime).FirstOrDefault();
-                            if (bks != null)
-                                try
-                                {
-                                    var gs2 = new GameSave_v2(new LPS(File.ReadAllText(bks.FullName)));
-                                    if (!(gs2.GameSave.Level == gs.GameSave.Level &&
-                                        gs2.GameSave.Exp == gs.GameSave.Exp &&
-                                        gs2.GameSave.Money == gs.GameSave.Money))
-                                    {
-                                        //和备份不一样,说明可能有问题, 提示用户
-                                        MessageBox.Show("检测到存档和备份不一致\n当前存档:{0} Lv{1} ${4:f0}\n备份存档:{2} Lv{3} ${5:f0}\n如需还原请在设置中加载备份还原存档"
-                                            .Translate(new FileInfo(latestsave).Name, gs.GameSave.Level, bks.Name, gs2.GameSave.Level, gs.GameSave.Money, gs2.GameSave.Money)
-                                            , "存档不一致提示".Translate());
-
-                                    }
-                                }
-                                catch
-                                {
-                                    //备份损坏了,那就不管了                           
-                                }
-                        }
-
-                        if (SavesLoad(new LPS(File.ReadAllText(latestsave))))
+                        if (TryLoadSaveFile(latestsave))
                             return;
-                        //MessageBoxX.Show("存档损毁,无法加载该存档\n可能是上次储存出错或Steam云同步导致的\n请在设置中加载备份还原存档", "存档损毁".Translate());
-#if !DEBUG
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
-                        }
-#endif
                     }
                 }
 
             }
             GameSavesData = new GameSave_v2(petname.Translate());
             //看看有没有备份,和备份对比下 (新建游戏)
-            if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))
-            {
-                try
-                {
-                    var bks = new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves_BKP")
-                        .GetFiles($"Save{PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime).First();
-                    var gs2 = new GameSave_v2(new LPS(File.ReadAllText(bks.FullName)));
-                    //和备份不一样,说明可能有问题, 提示用户
-                    MessageBox.Show("检测到存档和备份不一致\n当前存档:{0} Lv{1} ${4:f0}\n备份存档:{2} Lv{3} ${5:f0}\n如需还原请在设置中加载备份还原存档"
-                        .Translate("New Game", GameSavesData.GameSave.Level, bks.Name, gs2.GameSave.Level, GameSavesData.GameSave.Money, gs2.GameSave.Money)
-                        , "存档不一致提示".Translate());
-                }
-                catch
-                {
-                    //备份损坏了,那就不管了
-                }
-            }
+            CheckBackupConsistency(GameSavesData, "New Game");
             Core.Save = GameSavesData.GameSave;
             HashCheck = HashCheck;
             GameSavesData.GameSave.Event_LevelUp += LevelUP;
+        }
+
+        /// <summary>
+        /// 尝试加载指定存档文件
+        /// </summary>
+        /// <param name="saveFilePath"></param>
+        /// <returns></returns>
+        private bool TryLoadSaveFile(string saveFilePath)
+        {
+            if (string.IsNullOrEmpty(saveFilePath))
+                return false;
+#if !DEBUG
+            try
+            {
+#endif
+            var content = File.ReadAllText(saveFilePath);
+            GameSave_v2 gs = new GameSave_v2(new LPS(content));
+            // 检查备份一致性
+            CheckBackupConsistency(gs, new FileInfo(saveFilePath).Name);
+
+            if (SavesLoad(new LPS(content)))
+                return true;
+#if !DEBUG
+            }
+            catch (Exception ex)
+            {
+                MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
+            }
+#endif
+            return false;
+        }
+
+        /// <summary>
+        /// 与最新备份对比并提示用户
+        /// </summary>
+        private void CheckBackupConsistency(GameSave_v2 gs, string currentName)
+        {
+            if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))
+                return;
+            try
+            {
+                var bks = new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves_BKP")
+                    .GetFiles($"Save{PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime).FirstOrDefault();
+                if (bks != null)
+                {
+                    try
+                    {
+                        var gs2 = new GameSave_v2(new LPS(File.ReadAllText(bks.FullName)));
+                        if (!(gs2.GameSave.Level == gs.GameSave.Level &&
+                            gs2.GameSave.Exp == gs.GameSave.Exp &&
+                            gs2.GameSave.Money == gs.GameSave.Money))
+                        {
+                            //和备份不一样,说明可能有问题, 提示用户
+                            MessageBox.Show("检测到存档和备份不一致\n当前存档:{0} Lv{1} ${4:f0}\n备份存档:{2} Lv{3} ${5:f0}\n如需还原请在设置中加载备份还原存档"
+                                .Translate(currentName, gs.GameSave.Level, bks.Name, gs2.GameSave.Level, gs.GameSave.Money, gs2.GameSave.Money)
+                                , "存档不一致提示".Translate());
+
+                        }
+                    }
+                    catch
+                    {
+                        //备份损坏了,那就不管了
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
 
         private void WorkTimer_E_FinishWork(WorkTimer.FinishWorkInfo obj)

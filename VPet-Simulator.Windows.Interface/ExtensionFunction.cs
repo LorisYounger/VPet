@@ -260,6 +260,81 @@ namespace VPet_Simulator.Windows.Interface
                 Directory.CreateDirectory(path);
             return path;
         }
+
+        public static readonly IReadOnlyDictionary<string, string> DllReferenceDescriptions =
+            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["VPet-Simulator.Core"] = "License: Apache-2.0 | Copyright © VPet Group",
+                ["VPet-Simulator.Windows.Interface"] = "License: Apache-2.0 | Copyright © VPet Group",
+                ["VPet.ModMaker"] = "License: Apache-2.0 | Copyright © VPet Group",
+                ["VPet.Plugin.VPetTTS"] = "License: Apache-2.0 | Copyright © VPet Group",
+                ["VPet.Plugin.ChatGPTPlus.x64"] = "License: Apache-2.0 | Copyright © VPet Group",
+                ["VPet.Plugin.DoingDisplay"] = "License: Apache-2.0 | Copyright © VPet Group",
+                ["VPet.Plugin.CloudSaves"] = "License: Apache-2.0 | Copyright © VPet Group",
+                ["VPet.Plugin.MutiRedEnvelope"] = "License: Apache-2.0 | Copyright © VPet Group",
+                ["VPet.Plugin.Monitor"] = "License: Apache-2.0 | Copyright © VPet Group",
+                ["VPet.Plugin.SearchBoxForMod"] = "License: Apache-2.0 | Copyright © VPet Group",
+
+                ["NAudio"] = "License: MIT | Copyright © Mark Heath",
+                ["NAudio.Asio"] = "License: MIT | Copyright © Mark Heath",
+                ["NAudio.Core"] = "License: MIT | Copyright © Mark Heath",
+                ["NAudio.Midi"] = "License: MIT | Copyright © Mark Heath",
+                ["NAudio.Wasapi"] = "License: MIT | Copyright © Mark Heath",
+                ["NAudio.WinForms"] = "License: MIT | Copyright © Mark Heath",
+                ["NAudio.WinMM"] = "License: MIT | Copyright © Mark Heath",
+                ["NAudio.SoundFont"] = "License: MIT | Copyright © Mark Heath",
+
+                ["Steamworks"] = "License: MIT | Copyright © Facepunch Studios LTD",
+                ["Steamworks.Ugc"] = "License: MIT | Copyright © Facepunch Studios LTD",
+                ["Facepunch.Steamworks.Win32"] = "License: MIT | Copyright © Facepunch Studios LTD",
+                ["Facepunch.Steamworks.Win64"] = "License: MIT | Copyright © Facepunch Studios LTD",
+                ["steam_api"] = "License: Proprietary | Copyright © Valve Corporation",
+                ["steam_api64"] = "License: Proprietary | Copyright © Valve Corporation",
+
+                ["Panuon.WPF"] = "License: Apache-2.0 | Copyright © Panuon",
+                ["Panuon.WPF.UI"] = "License: Apache-2.0 | Copyright © Panuon",
+                ["SkiaSharp"] = "License: MIT | Copyright © Xamarin, Inc. / Microsoft Corporation",
+                ["libSkiaSharp"] = "License: MIT | Copyright © Xamarin, Inc. / Microsoft Corporation",
+                ["WpfAnimatedGif"] = "License: MIT | Copyright © Thomas Levesque",
+                ["Live2DCubismCore"] = "License: Live2D Proprietary | Copyright © Live2D Inc.",
+                ["glfw3"] = "License: zlib/libpng | Copyright © Marcus Geelnard, Camilla Löwy",
+
+                ["Newtonsoft.Json"] = "License: MIT | Copyright © James Newton-King",
+                ["YamlDotNet"] = "License: MIT | Copyright © YamlDotNet contributors",
+
+                ["HanumanInstitute.MvvmDialogs"] = "License: MIT | Copyright © HanumanInstitute (mysteryx93)",
+                ["HanumanInstitute.MvvmDialogs.Wpf"] = "License: MIT | Copyright © HanumanInstitute (mysteryx93)",
+
+                ["ReactiveUI"] = "License: MIT | Copyright © ReactiveUI Association and Contributors",
+                ["ReactiveUI.Wpf"] = "License: MIT | Copyright © ReactiveUI Association and Contributors",
+                ["Splat"] = "License: MIT | Copyright © ReactiveUI / .NET Foundation and Contributors",
+                ["Splat.NLog"] = "License: MIT | Copyright © ReactiveUI / .NET Foundation and Contributors",
+                ["System.Reactive"] = "License: MIT | Copyright © .NET Foundation and Contributors",
+
+                ["Microsoft.Bcl.AsyncInterfaces"] = "License: MIT | Copyright © .NET Foundation and Contributors",
+                ["Microsoft.Extensions.DependencyInjection"] = "License: MIT | Copyright © .NET Foundation and Contributors",
+                ["Microsoft.Extensions.DependencyInjection.Abstractions"] = "License: MIT | Copyright © .NET Foundation and Contributors / Microsoft Corporation",
+                ["Microsoft.Extensions.Logging.Abstractions"] = "License: MIT | Copyright © .NET Foundation and Contributors",
+                ["Microsoft.Xaml.Behaviors"] = "License: MIT | Copyright © Microsoft Corporation",
+                ["System.IO.Pipelines"] = "License: MIT | Copyright © .NET Foundation and Contributors",
+                ["System.Drawing.Common"] = "License: MIT | Copyright © .NET Foundation",
+
+                ["NLog"] = "License: BSD 3-Clause | Copyright © Jaroslaw Kowalski, Kim Christensen, Julian Verdurmen",
+                ["Serilog"] = "License: Apache-2.0 | Copyright © Serilog Contributors",
+
+                ["DynamicData"] = "License: MIT | Copyright © Roland Pheasant",
+                ["LinePutScript"] = "License: Apache-2.0 | Copyright © LorisYounger",
+                ["LinePutScript.Localization.WPF"] = "License: Apache-2.0 | Copyright © LorisYounger",
+                ["EdgeTTS.Net"] = "License: GPL-3.0 | Copyright © rany2 & LorisYounger",
+                ["CloudSaves.Client"] = "License: MIT | Copyright © David DeSimone",
+
+                ["HKW.CommonValueConverters"] = "Copyright © Hakoyu",
+                ["HKW.Mapper"] = "Copyright © Hakoyu",
+                ["HKW.MVVMDialogs"] = "Copyright © Hakoyu",
+                ["HKW.ReactiveUI"] = "Copyright © Hakoyu",
+                ["HKW.Utils"] = "Copyright © Hakoyu",
+                ["HKW.WPF"] = "Copyright © Hakoyu",
+            };
     }
 
 }
