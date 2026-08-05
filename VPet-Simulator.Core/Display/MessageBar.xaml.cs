@@ -250,6 +250,7 @@ namespace VPet_Simulator.Core
         /// 流式传输用的阻断文字显示用的计时器
         /// </summary>
         DateTime nextshow = DateTime.Now;
+        private readonly object nextshowLock = new();
         /// <summary>
         /// 增加显示新词
         /// </summary>
@@ -260,23 +261,19 @@ namespace VPet_Simulator.Core
             Task.Run(() =>
             {
                 int sleeptime = 0;
-                if (oldsaystream == null)
-                    if (DateTime.Now < nextshow)
+                lock (nextshowLock)
+                {
+                    var now = DateTime.Now;
+                    if (now < nextshow)
                     {
-                        sleeptime = (int)(nextshow - DateTime.Now).TotalMilliseconds;
+                        sleeptime = (int)(nextshow - now).TotalMilliseconds;
                         nextshow = nextshow.AddMilliseconds(150);
                     }
                     else
-                        nextshow = DateTime.Now.AddMilliseconds(150);
-                else
-                    lock (oldsaystream)
-                        if (DateTime.Now < nextshow)
-                        {
-                            sleeptime = (int)(nextshow - DateTime.Now).TotalMilliseconds;
-                            nextshow = nextshow.AddMilliseconds(150);
-                        }
-                        else
-                            nextshow = DateTime.Now.AddMilliseconds(150);
+                    {
+                        nextshow = now.AddMilliseconds(150);
+                    }
+                }
                 if (sleeptime > 0) //处理前等待
                     Thread.Sleep(sleeptime);
                 Dispatcher.Invoke(() => { TText.Text = data.fullText; });
