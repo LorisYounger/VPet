@@ -35,7 +35,6 @@ namespace VPet_Simulator.Windows
             InitializeComponent();
             Title = "面板".Translate() + ' ' + mw.PrefixSave;
             mw.Windows.Add(this);
-            mw.GameSavesData.Statistics = new Statistics();
             foreach (var v in mw.GameSavesData!.Statistics.Data)
             {
                 StatList.Add(new StatInfo(v.Key, v.Value!.GetDouble()));
