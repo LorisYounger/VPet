@@ -32,7 +32,7 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public partial class MainWindow : WindowX
     {
-        internal System.Windows.Forms.NotifyIcon notifyIcon;
+        internal System.Windows.Forms.NotifyIcon notifyIcon = null!;
         public PetHelper? petHelper;
         public System.Timers.Timer AutoSaveTimer = new System.Timers.Timer();
 
@@ -178,11 +178,11 @@ namespace VPet_Simulator.Windows
                             }
                         }
                         if (workshop.Count != 0)
-                            Set!["workshop"] = workshop;
+                            Set["workshop"] = workshop;
                     }
                     else
                     {
-                        var workshop = Set!["workshop"];
+                        var workshop = Set["workshop"];
                         foreach (Sub ws in workshop)
                         {
                             Path.Add(new DirectoryInfo(ws.Name));
@@ -197,7 +197,7 @@ namespace VPet_Simulator.Windows
                 if (!NOCancel)
                 {
                     source.Cancel();
-                    var workshop = Set!["workshop"];
+                    var workshop = Set["workshop"];
                     foreach (Sub ws in workshop)
                     {
                         Path.Add(new DirectoryInfo(ws.Name));
@@ -208,12 +208,12 @@ namespace VPet_Simulator.Windows
                 Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading Translate")).Wait();
                 //加载语言
                 LocalizeCore.StoreTranslation = true;
-                if (Set!.Language == "null")
+                if (Set.Language == "null")
                 {
                     LocalizeCore.LoadDefaultCulture();
                     if (LocalizeCore.CurrentCulture == "null")
                         LocalizeCore.CurrentCulture = "en";
-                    Set!.Language = LocalizeCore.CurrentCulture;
+                    Set.Language = LocalizeCore.CurrentCulture;
                 }
                 else
                     LocalizeCore.LoadCulture(Set.Language);
@@ -264,7 +264,7 @@ namespace VPet_Simulator.Windows
                             Header = "访客表".Translate(),
                             HorizontalContentAlignment = HorizontalAlignment.Center
                         };
-                        Main!.ToolBar!.MenuInteract.Items.Add(menuItem);
+                        Main.ToolBar!.MenuInteract.Items.Add(menuItem);
 
                         var menuCreate = new MenuItem()
                         {
@@ -363,7 +363,7 @@ namespace VPet_Simulator.Windows
                              graph = imw.Core.Graph!.FindGraph(Item.Data, AnimatType.Single, imw.GameSavesData.GameSave.Mode);
                               if(graph != null)
                                 {
-                                    imw.Main.Display(graph, Main!.DisplayToNomal);
+                                    imw.Main.Display(graph, Main.DisplayToNomal);
                                 }
                                 else
                                 {
@@ -408,7 +408,7 @@ namespace VPet_Simulator.Windows
                       }
                       if(itemnames.Count != 0)
                       {
-                          Main!.SayRnd("你打开了{0},获得了物品".Translate(Item.Name) +"\n" + string.Join(',',itemnames));
+                          Main.SayRnd("你打开了{0},获得了物品".Translate(Item.Name) +"\n" + string.Join(',',itemnames));
                       }
                       Item.Consume(this);
                      return true;
@@ -815,7 +815,9 @@ namespace VPet_Simulator.Windows
                 //所以这里通过 Hook 的方式，在不使用WPF内置的透明实现的情况下，强行保证这个样式存在。
                 if (msg == (int)Win32.WM.STYLECHANGING && (long)wParam == (long)Win32.GetWindowLongFields.GWL_EXSTYLE)
                 {
+#pragma warning disable CS8605 // 取消装箱可能为 null 的值。
                     var styleStruct = (STYLESTRUCT)Marshal.PtrToStructure(lParam, typeof(STYLESTRUCT));
+#pragma warning restore CS8605 // 取消装箱可能为 null 的值。
                     styleStruct.styleNew |= (int)Win32.ExtendedWindowStyles.WS_EX_LAYERED;
 
                     // Hide windows from alt+tab: https://stackoverflow.com/questions/357076/best-way-to-hide-a-window-from-the-alt-tab-program-switcher

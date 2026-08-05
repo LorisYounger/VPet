@@ -54,23 +54,23 @@ namespace VPet_Simulator.Windows
 
         private void Statistics_StatisticChanged(Statistics sender, string name, SetObject? value)
         {
-            if(value != null)
-            Dispatcher.Invoke(() =>
-            {
-                try
+            if (value != null)
+                Dispatcher.Invoke(() =>
                 {
-                    var v = StatList.FirstOrDefault(x => x.StatId == name);
-                    if (v != null)
+                    try
                     {
-                        v.StatCount = value.GetDouble();
+                        var v = StatList.FirstOrDefault(x => x.StatId == name);
+                        if (v != null)
+                        {
+                            v.StatCount = value.GetDouble();
+                        }
+                        else
+                        {
+                            StatList.Add(new StatInfo(name, value.GetDouble()));
+                        }
                     }
-                    else
-                    {
-                        StatList.Add(new StatInfo(name, value.GetDouble()));
-                    }
-                }
-                catch { }
-            });
+                    catch { }
+                });
         }
 
         private ObservableCollection<StatInfo> StatList { get; set; } = new();
@@ -224,7 +224,9 @@ namespace VPet_Simulator.Windows
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_total_time", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore(timelength);
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore(timelength);
                 var length = leaderboard?.EntryCount ?? 1.0;
                 startlengthrank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
             }
@@ -314,7 +316,9 @@ namespace VPet_Simulator.Windows
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_single_profit_exp", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore(studyexpmax);
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore(studyexpmax);
                 var length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     studyexpmaxrank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -322,7 +326,9 @@ namespace VPet_Simulator.Windows
                     studyexpmaxrank = 0;
 
                 leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_single_profit_money", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                result = await leaderboard?.ReplaceScore(studymoneymax);
+                result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore(studymoneymax);
                 length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     studymoneymaxrank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -386,7 +392,9 @@ namespace VPet_Simulator.Windows
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_work_time_ph", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore((int)(worktimeph * 10000));
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore((int)(worktimeph * 10000));
                 var length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     worktimephrank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -433,7 +441,7 @@ namespace VPet_Simulator.Windows
                 Name = "None",
             };
 
-            foreach (var pair in mw.GameSavesData.Statistics.Data.Where(x => x.Key.StartsWith("buy_")).OrderByDescending(x => ((int)x.Value)))
+            foreach (var pair in mw.GameSavesData.Statistics.Data.Where(x => x.Key.StartsWith("buy_")).OrderByDescending(x => ((int)x.Value!)))
             {
                 var fn = pair.Key.Substring(4);
                 var f = mw.Foods.FirstOrDefault(x => x.Name == fn);
@@ -475,7 +483,9 @@ namespace VPet_Simulator.Windows
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_autobuy_ph", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore((int)(autobuytimesph * 10000));
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore((int)(autobuytimesph * 10000));
                 var length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     autobuytimesphrank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -514,7 +524,9 @@ namespace VPet_Simulator.Windows
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("workshop", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore(modworkshop);
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore(modworkshop);
                 var length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     modworkshoprank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -560,7 +572,9 @@ namespace VPet_Simulator.Windows
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_likability", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore((int)mw.GameSavesData.GameSave.Likability);
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore((int)mw.GameSavesData.GameSave.Likability);
                 var length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     likerank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -821,17 +835,17 @@ namespace VPet_Simulator.Windows
         {
             Dispatcher.Invoke(() =>
             {
-                if(e != null)
-                if (e.NewItems != null)
-                {
-                    foreach (ActivityLog log in e.NewItems)
+                if (e != null)
+                    if (e.NewItems != null)
                     {
-                        if (mw.Set.DeBug || log.IsDebug == false)
+                        foreach (ActivityLog log in e.NewItems)
                         {
-                            tb_log.AppendText("\n" + log.ToString(mw.Main));
+                            if (mw.Set.DeBug || log.IsDebug == false)
+                            {
+                                tb_log.AppendText("\n" + log.ToString(mw.Main));
+                            }
                         }
                     }
-                }
             });
         }
     }

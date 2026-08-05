@@ -457,8 +457,8 @@ namespace VPet_Simulator.Windows
         public void ShowSetting(int page = -1)
         {
             if (page >= 0 && page <= 6)
-                winSetting.MainTab.SelectedIndex = page;
-            winSetting.Show();
+                winSetting!.MainTab.SelectedIndex = page;
+            winSetting!.Show();
         }
         public void ShowWorkMenu(Work.WorkType type)
         {
@@ -476,7 +476,7 @@ namespace VPet_Simulator.Windows
         }
         public void ShowBetterBuy(Food.FoodType type)
         {
-            winBetterBuy.Show(type);
+            winBetterBuy!.Show(type);
         }
         public void ShowGallery()
         {
@@ -514,7 +514,7 @@ namespace VPet_Simulator.Windows
                     TakeItemHandle(item, 1, "autofood");
                     TakeItem(item);
                     GameSavesData.Statistics![(gint)"stat_autobuy"]++;
-                    Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
+                    Main.Display(item.GetGraph(), item.ImageSource!, Main.DisplayToNomal);
                 }
                 else if ((Core.Save!.StrengthDrink + Core.Save!.StoreStrengthDrink) < sm75)
                 {
@@ -669,7 +669,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 事件:使用东西 (所有使用东西都会触发)
         /// </summary>
-        public event Action<Food> Event_TakeItem;
+        public event Action<Food>? Event_TakeItem;
         /// <summary>
         /// 事件:使用东西 (仅 自动购买/更好买 调用) int: 个数 string: 来源
         /// betterbuy: 更好买手动购买
@@ -677,7 +677,7 @@ namespace VPet_Simulator.Windows
         /// friend: 朋友赠送 (访客表)
         /// *: 其他MOD调用
         /// </summary>
-        public event Action<Food, int, string> Event_TakeItemHandle;
+        public event Action<Food, int, string>? Event_TakeItemHandle;
         /// <summary>
         /// 呼叫事件 Event_TakeItemHandle
         /// </summary>
@@ -791,11 +791,11 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// Steam统计相关变化
         /// </summary>
-        private void Statistics_StatisticChanged(Statistics sender, string name, SetObject value)
+        private void Statistics_StatisticChanged(Statistics sender, string name, SetObject? value)
         {
-            if (name.StartsWith("stat_"))
+            if (name.StartsWith("stat_") && value != null)
             {
-                SteamUserStats.SetStat(name, (int)value);
+                SteamUserStats.SetStat(name, (int)value.Value);
             }
         }
         /// <summary>
@@ -1195,7 +1195,7 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        public Timer MusicTimer;
+        public Timer MusicTimer = null!;
         private double catch_MusicVolSum;
         private int catch_MusicVolCount;
         /// <summary>
@@ -1288,7 +1288,7 @@ namespace VPet_Simulator.Windows
         Grid IMainWindow.MGHost => MGHost;
 
         Grid IMainWindow.PetGrid => MGrid;
-        internal MWController MWController { get; set; }
+        internal MWController MWController { get; set; } = null!;
         /// <summary>
         /// 移除所有聊天对话框
         /// </summary>
@@ -1296,12 +1296,12 @@ namespace VPet_Simulator.Windows
         {
             if (TalkBox != null)
             {
-                Main!.ToolBar!.MainGrid.Children.Remove(TalkBox);
+                Main.ToolBar!.MainGrid.Children.Remove(TalkBox);
                 TalkBox = null;
             }
             if (TalkAPIIndex == -1)
                 return;
-            Main!.ToolBar!.MainGrid.Children.Remove(TalkAPI[TalkAPIIndex].This);
+            Main.ToolBar!.MainGrid.Children.Remove(TalkAPI[TalkAPIIndex].This);
         }
         /// <summary>
         /// 加载自定义对话框
@@ -1311,7 +1311,7 @@ namespace VPet_Simulator.Windows
             RemoveTalkBox();
             if (TalkAPIIndex == -1)
                 return;
-            Main!.ToolBar!.MainGrid.Children.Add(TalkAPI[TalkAPIIndex].This);
+            Main.ToolBar!.MainGrid.Children.Add(TalkAPI[TalkAPIIndex].This);
         }
         /// <summary>
         /// 超模工作检查
@@ -1479,7 +1479,7 @@ namespace VPet_Simulator.Windows
 
             if (basemw != null)
             {
-                Set!["workshop"] = basemw.Set["workshop"];
+                Set["workshop"] = basemw.Set["workshop"];
                 Set.Resolution = basemw.Set.Resolution;
             }
 
@@ -1488,7 +1488,7 @@ namespace VPet_Simulator.Windows
             List<DirectoryInfo> Path = new List<DirectoryInfo>();
             Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
 
-            var workshop = Set!["workshop"];
+            var workshop = Set["workshop"];
             foreach (ISub ws in workshop)
             {
                 Path.Add(new DirectoryInfo(ws.Name));
@@ -1500,7 +1500,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// MOD地址
         /// </summary>
-        public List<DirectoryInfo> MODPath { get; private set; }
+        public List<DirectoryInfo> MODPath { get; private set; } = new List<DirectoryInfo>();
 
         public IEnumerable<IModInfo> ModInfo => CoreMODs;
 
@@ -1883,7 +1883,7 @@ namespace VPet_Simulator.Windows
                   m.Click += (x, y) =>
                   {
                       Main.ToolBar.Visibility = Visibility.Collapsed;
-                      winSetting.MainTab.SelectedIndex = 5;
+                      winSetting!.MainTab.SelectedIndex = 5;
                       winSetting.Show();
                   };
                   Main.FunctionSpendHandle += lowStrength;
@@ -2686,9 +2686,9 @@ namespace VPet_Simulator.Windows
             }
         }
 
-        TextBlock tlvplus;
+        TextBlock tlvplus = null!;
 
-        public event Action<IMPWindows> MutiPlayerHandle;
+        public event Action<IMPWindows>? MutiPlayerHandle;
         public void MutiPlayerStart(IMPWindows mp)
         {
             MutiPlayerHandle?.Invoke(mp);
@@ -2784,7 +2784,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 事件:新的一天
         /// </summary>
-        public event Action Event_NewDay;
+        public event Action? Event_NewDay;
 #if NewYear
         /// <summary>
         /// 新年说
@@ -2895,7 +2895,7 @@ namespace VPet_Simulator.Windows
             }
             return works;
         }
-        public System.Windows.Controls.MenuItem WorkStarMenu;
+        public System.Windows.Controls.MenuItem WorkStarMenu = null!;
 
         public void LevelUP(GameSave_VPet.LevelUpEventArgs args)
         {

@@ -24,7 +24,7 @@ namespace VPet_Simulator.Windows
         MainWindow mw;
         private TextBox? _searchTextBox;
         private Run? rTotalValue;
-        private Item _detailItem;
+        private Item? _detailItem;
         private int _detailCount = 1;
 
         /// <summary>

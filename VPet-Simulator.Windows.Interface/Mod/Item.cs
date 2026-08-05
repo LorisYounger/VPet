@@ -86,7 +86,7 @@ public class Item : NotifyPropertyChangedBase
     /// 物品名字 (ID)
     /// </summary>
     [Line(name: "name")]
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     private string? transname = null;
     private string? transdesc = null;
     /// <summary>
@@ -152,12 +152,12 @@ public class Item : NotifyPropertyChangedBase
     /// 描述
     /// </summary>
     [Line(ignoreCase: true)]
-    public string Desc { get; set; }
+    public string Desc { get; set; } = string.Empty;
 
     /// <summary>
     /// 显示的图片 (图片默认在 {itemtypes}/{itemname}.png )
     /// </summary>
-    public virtual BitmapImage ImageSource { get; set; }
+    public virtual BitmapImage ImageSource { get; set; } = null!;
 
     /// <summary>
     /// 物品个数

@@ -25,7 +25,7 @@ namespace VPet_Simulator.Windows;
 public partial class winMutiPlayer : WindowX, IMPWindows
 {
     public Lobby lb;
-    MainWindow mw;
+    readonly MainWindow mw;
     /// <summary>
     /// 好友宠物模块
     /// </summary>
@@ -34,6 +34,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     public winMutiPlayer(MainWindow mw, ulong? lobbyid = null)
     {
         InitializeComponent();
+        this.mw = mw; 
         if (mw.Core.Save!.Mode == IGameSave.ModeType.Ill)
         {
             MessageBoxX.Show("{0}生病了,无法创建或者加入访客表".Translate());
@@ -42,7 +43,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         }
 
         swAllowTouch.IsChecked = !mw.Set.MPNOTouch;
-        this.mw = mw;
+     
         if (lobbyid == null)
             CreateLobby();
         else
@@ -267,7 +268,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         }
     }
 
-    public event Action<ulong> OnMemberLeave;
+    public event Action<ulong>? OnMemberLeave;
     private void SteamMatchmaking_OnLobbyMemberLeave(Lobby lobby, Friend friend)
     {
         if (lobby.Id != lb.Id) return;
@@ -342,7 +343,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     /// <summary>
     /// 事件:成员加入
     /// </summary>
-    public event Action<ulong> OnMemberJoined;
+    public event Action<ulong>? OnMemberJoined;
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
         if (lobby.Id == lb.Id && MPFriends.Find(x => x.friend.Id == friend.Id) == null)
@@ -374,11 +375,11 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                         {
                             case (int)MSGType.DispayGraph:
                                 var To = MPFriends.Find(x => x.friend.Id == MSG.To);
-                                To?.DisplayGraph(MSG.GetContent<GraphInfo>());
+                                To?.DisplayGraph(MSG.GetContent<GraphInfo>()!);
                                 break;
                             case (int)MSGType.Chat:
                                 To = MPFriends.Find(x => x.friend.Id == MSG.To);
-                                To?.DisplayMessage(MSG.GetContent<Chat>());
+                                To?.DisplayMessage(MSG.GetContent<Chat>()!);
                                 break;
                             case (int)MSGType.Interact:
                                 var byname = lb.Members.First(x => x.Id == From).Name;
@@ -457,7 +458,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             }
     }
     private double giveprice = 0;
-    public event Action<ulong, MPMessage> ReceivedMessage;
+    public event Action<ulong, MPMessage>? ReceivedMessage;
     private void Window_Closed(object sender, EventArgs e)
     {
         mw.Main.TimeHandle -= Main_TimeHandle;
@@ -476,7 +477,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     /// <summary>
     /// 事件: 结束访客表, 窗口关闭
     /// </summary>
-    public event Action ClosingMutiPlayer;
+    public event Action? ClosingMutiPlayer;
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         if (!lb.Equals(default(Lobby)))

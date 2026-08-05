@@ -46,6 +46,8 @@ namespace VPet_Simulator.Windows
             ////ImageWHY.Source = bit;
             //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
 
+            mod = mw.CoreMODs[0];
+
             Title = "设置".Translate() + ' ' + mw.PrefixSave;
             SettingMenuWidth.Width = new GridLength(LocalizeCore.GetDouble("SettingMenuWidth", 150));
             TopMostBox.IsChecked = mw.Set.TopMost;

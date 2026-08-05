@@ -20,7 +20,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 玩家选项名称 (翻译)
         /// </summary>
-        public string TranslateChoose
+        public string? TranslateChoose
         {
             get
             {

@@ -107,10 +107,11 @@ public partial class winWorkMenu : WindowX
     public bool IsWorkStar(Work work) => mw.Set["work_star"].GetBool(work.Name);
     public void SetWorkStar(Work work, bool setvalue) => mw.Set["work_star"].SetBool(work.Name, setvalue);
     private bool AllowChange = false;
-    Work nowwork;
-    Work nowworkdisplay;
+    Work? nowwork;
+    Work? nowworkdisplay;
     public void ShowWork()
     {
+        if (nowwork == null) return;
         AllowChange = false;
         btnStart.IsEnabled = true;
         //判断倍率
@@ -231,7 +232,7 @@ public partial class winWorkMenu : WindowX
 
     private void wDouble_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (!AllowChange) return;
+        if (!AllowChange || nowwork == null) return;
         mw.Set["workmenu"].SetInt("double_" + nowwork.Name, (int)wDouble.Value);
         ShowWork(nowwork.Double((int)wDouble.Value));
     }
@@ -297,7 +298,7 @@ public partial class winWorkMenu : WindowX
 
     private void btnStart_Click(object sender, RoutedEventArgs e)
     {
-        if (nowwork != null || nowworkdisplay != null)
+        if (nowworkdisplay != null)
         {
             mw.Set["workmenu"].SetString("DIY_TEXT" + LsbCategory.SelectedIndex, tbDIYName.Text);
             if (cbDIYName.IsChecked == true && !string.IsNullOrWhiteSpace(tbDIYName.Text))
@@ -345,7 +346,7 @@ public partial class winWorkMenu : WindowX
                     mw.Main.ToolBar.MenuPlay.Items.Add(mi);
                     break;
             }
-        }       
+        }
         if (detailTypes.ItemsSource == _starDetails)
         {
             detailTypes_SelectionChanged(null, null);
@@ -645,7 +646,7 @@ public partial class winWorkMenu : WindowX
 
     private void btnAddAuto_Click(object sender, RoutedEventArgs e)
     {
-        if (nowwork != null || nowworkdisplay != null)
+        if (nowwork != null && nowworkdisplay != null)
             //看看套餐
             switch (nowwork!.Type)
             {
@@ -687,7 +688,7 @@ public partial class winWorkMenu : WindowX
                     break;
             }
     }
-    PackageFull nowselefull;
+    PackageFull? nowselefull;
     private void combTaskType_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (!AllowChange) return;
@@ -700,6 +701,7 @@ public partial class winWorkMenu : WindowX
     }
     private void nowselefullDisplay()
     {
+        if (nowselefull == null) return;
         if (nowselefull.WorkType == Work.WorkType.Work)
         {
             rCommissions.Text = nowselefull.Commissions.ToString("p0");

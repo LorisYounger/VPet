@@ -41,11 +41,11 @@ public class Photo
     /// <summary>
     /// 图片所在ZIP
     /// </summary>
-    public string Zip { get; set; }
+    public string Zip { get; set; } = string.Empty;
     /// <summary>
     /// 图片所在位置
     /// </summary>
-    public string Path { get; set; }
+    public string Path { get; set; }  = string.Empty;
 
     /// <summary>
     /// 图片类型
@@ -72,7 +72,7 @@ public class Photo
     /// <summary>
     /// 图片名字
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     private string? transname = null;
     /// <summary>
     /// 图片名字 (翻译)
@@ -110,7 +110,7 @@ public class Photo
     /// <summary>
     /// 描述
     /// </summary>
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// 解锁条件
@@ -437,7 +437,7 @@ public class Photo
     /// <summary>
     /// 解锁条件
     /// </summary>
-    public UnlockCondition UnlockAble { get; set; }
+    public UnlockCondition UnlockAble { get; set; } = new UnlockCondition();
 
     /// <summary>
     /// 玩家数据

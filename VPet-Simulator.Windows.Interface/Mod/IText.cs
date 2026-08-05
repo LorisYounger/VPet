@@ -11,7 +11,7 @@ public class IText
     /// <summary>
     /// 说话的内容
     /// </summary>
-    [Line(IgnoreCase = true)] public string Text { get; set; }
+    [Line(IgnoreCase = true)] public string Text { get; set; } = string.Empty;
 
     private string? transText = null;
     /// <summary>

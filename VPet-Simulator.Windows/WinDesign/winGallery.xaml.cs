@@ -187,7 +187,7 @@ public partial class winGallery : WindowX
                 : Visibility.Collapsed;
         process = false;
     }
-    private Photo nowphoto;
+    private Photo? nowphoto;
     public void DisplayDetail(Photo photo)
     {
         nowphoto = photo;

@@ -463,7 +463,7 @@ public class ScheduleTask
         /// <summary>
         /// 套餐名称
         /// </summary>
-        [Line] public string Name { get; set; }
+        [Line] public string Name { get; set; } = string.Empty;
         /// <summary>
         /// 协议名称 (已翻译)
         /// </summary>
@@ -479,11 +479,11 @@ public class ScheduleTask
             }
             set => nametrans = value;
         }
-        private string nametrans;
+        private string? nametrans;
         /// <summary>
         /// 描述
         /// </summary>
-        [Line] public string Describe { get; set; }
+        [Line] public string Describe { get; set; } = string.Empty;
         /// <summary>
         /// 描述 已翻译
         /// </summary>
@@ -499,7 +499,7 @@ public class ScheduleTask
             }
             set => describetrans = value;
         }
-        private string describetrans;
+        private string? describetrans;
         /// <summary>
         /// 抽成
         /// </summary>

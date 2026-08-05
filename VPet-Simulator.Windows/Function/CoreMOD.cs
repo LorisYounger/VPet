@@ -49,7 +49,7 @@ namespace VPet_Simulator.Windows
         public HashSet<string> Tag { get; set; } = new HashSet<string>();
         public bool SuccessLoad = true;
         public DateTime CacheDate;
-        public string ErrorMessage;
+        public string ErrorMessage = string.Empty;
         public static string INTtoVER(int ver) => ver < 10000 ? $"{ver / 100}.{ver % 100:00}" : $"{ver / 10000}.{ver % 10000 / 100}.{ver % 100:00}";
         public static void LoadImage(MainWindow mw, DirectoryInfo di, string pre = "")
         {

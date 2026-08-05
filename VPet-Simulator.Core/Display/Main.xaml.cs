@@ -20,19 +20,19 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 游戏核心
         /// </summary>
-        public GameCore Core;
+        public GameCore Core = null!;
         /// <summary>
         /// 菜单栏
         /// </summary>
-        public ToolBar? ToolBar;
+        public ToolBar ToolBar = null!;
         /// <summary>
         /// 消息栏
         /// </summary>
-        public IMassageBar? MsgBar;
+        public IMassageBar MsgBar = null!;
         /// <summary>
         /// 工作显示栏
         /// </summary>
-        public WorkTimer? WorkTimer;
+        public WorkTimer WorkTimer = null!;
         /// <summary>
         /// 刷新时间时会调用该方法
         /// </summary>

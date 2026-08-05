@@ -38,9 +38,9 @@ public partial class MPFriends : WindowX, IMPFriend
     public List<Food> Foods { get; } = new List<Food>();
     public ImageResources ImageSources { get; } = new ImageResources();
     public List<PetLoader> Pets { get; set; } = new List<PetLoader>();
-    public ILine OnMod { get; set; }
+    public ILine OnMod { get; set; } = null!;
 
-    public string SetPetGraph { get; set; }
+    public string SetPetGraph { get; set; } = string.Empty;
     public bool IsOnMod(string ModName)
     {
         if (CoreMOD.OnModDefList.Contains(ModName))
@@ -128,7 +128,7 @@ public partial class MPFriends : WindowX, IMPFriend
 
             //加载所有MOD
             List<DirectoryInfo> Path = new List<DirectoryInfo>();
-            Path.AddRange(new DirectoryInfo(mw.ModPath).EnumerateDirectories());
+            Path.AddRange(new DirectoryInfo(MainWindow.ModPath).EnumerateDirectories());
 
             var workshop = mw.Set["workshop"];
             foreach (Sub ws in workshop)
@@ -181,20 +181,20 @@ public partial class MPFriends : WindowX, IMPFriend
                         hashcheckimg.ToolTip = "是没有修改过存档/使用超模MOD的玩家专属标志".Translate();
                         Grid.SetColumn(hashcheckimg, 4);
                         Grid.SetRowSpan(hashcheckimg, 2);
-                        Main!.ToolBar!.gdPanel.Children.Add(hashcheckimg);
+                        Main.ToolBar!.gdPanel.Children.Add(hashcheckimg);
                     }
                 }
                 else
                 {
                     if (hashcheckimg != null)
                     {
-                        Main!.ToolBar!.gdPanel.Children.Remove(hashcheckimg);
+                        Main.ToolBar!.gdPanel.Children.Remove(hashcheckimg);
                         hashcheckimg = null;
                     }
                 }
             });
 
-            Main!.Event_TouchHead += Main_Event_TouchHead;
+            Main.Event_TouchHead += Main_Event_TouchHead;
             Main.Event_TouchBody += Main_Event_TouchBody;
             SteamMatchmaking.OnLobbyMemberDataChanged += SteamMatchmaking_OnLobbyMemberDataChanged;
 
@@ -212,7 +212,7 @@ public partial class MPFriends : WindowX, IMPFriend
                 if (!string.IsNullOrEmpty(tmp))
                 {
                     Core.Save = GameSave_VPet.Load(new Line(tmp));
-                    Main!.ToolBar!.M_TimeUIHandle(Main);
+                    Main.ToolBar!.M_TimeUIHandle(Main);
                     Main.ToolBar.tfun.Visibility = Visibility.Collapsed;
                 }
                 if (lb.GetMemberData(friend, "notouch") == "true")
@@ -229,12 +229,12 @@ public partial class MPFriends : WindowX, IMPFriend
     private void NoTouchTrue()
     {
         NOTouch = true;
-        Main!.ToolBar!.MenuInteract.IsEnabled = false;
+        Main.ToolBar!.MenuInteract.IsEnabled = false;
     }
     private void NoTouchFalse()
     {
         NOTouch = false;
-        Main!.ToolBar!.MenuInteract.IsEnabled = true;
+        Main.ToolBar!.MenuInteract.IsEnabled = true;
     }
 
     private void Main_Event_TouchHead()
@@ -253,7 +253,7 @@ public partial class MPFriends : WindowX, IMPFriend
     }
 
     internal List<MPMOD> MPMODs = new List<MPMOD>();
-    public Main Main { get; set; }
+    public Main Main { get; set; } = null!;
 
     public ulong LobbyID => lb.Id;
     /// <summary>
@@ -812,16 +812,16 @@ public partial class MPFriends : WindowX, IMPFriend
         {
             Send_Click(sender, e);
             e.Handled = true;
-            Main!.ToolBar!.Visibility = Visibility.Collapsed;
+            Main.ToolBar!.Visibility = Visibility.Collapsed;
             return;
         }
         if (tbTalk.Text.Length > 0)
         {
-            Main!.ToolBar!.CloseTimer.Stop();
+            Main.ToolBar!.CloseTimer.Stop();
         }
         else
         {
-            Main!.ToolBar!.CloseTimer.Start();
+            Main.ToolBar!.CloseTimer.Start();
         }
     }
     private void Send_Click(object sender, RoutedEventArgs e)
@@ -832,7 +832,7 @@ public partial class MPFriends : WindowX, IMPFriend
         }
         var cont = tbTalk.Text;
         tbTalk.Text = "";
-        Main!.ToolBar!.Visibility = Visibility.Collapsed;
+        Main.ToolBar!.Visibility = Visibility.Collapsed;
         int talktype = cbTalk.SelectedIndex;
 
         Task.Run(() =>

@@ -29,11 +29,11 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="value">变动的值</param>
         public delegate void StatisticChangedEventHandler(Statistics sender, string name, SetObject? value);
 
-        public event StatisticChangedEventHandler StatisticChanged;
+        public event StatisticChangedEventHandler? StatisticChanged;
         /// <summary>
         /// 统计数据字典
         /// </summary>
-        public SortedDictionary<string, SetObject?> Data = new SortedDictionary<string, SetObject?  >();
+        public SortedDictionary<string, SetObject?> Data = new SortedDictionary<string, SetObject?>();
 
         #region IGetOBJ<SetObject>
         public DateTime this[gdat subName]
@@ -92,6 +92,7 @@ namespace VPet_Simulator.Windows.Interface
             List<Sub> subs = new List<Sub>();
             foreach (var item in Data)
             {
+                if (item.Value == null) continue;
                 subs.Add(new Sub(item.Key, item.Value));
             }
             return subs;
@@ -119,7 +120,7 @@ namespace VPet_Simulator.Windows.Interface
 
         public string? GetString(string subName, string? defaultvalue = null) => Find(subName)?.GetString() ?? defaultvalue;
 
-        public void SetString(string subName, string? value) => Set(subName, value);
+        public void SetString(string subName, string? value) => Set(subName, value is null ? null : (SetObject)value);
 
         public double GetDouble(string subName, double defaultvalue = 0) => Find(subName)?.GetDouble() ?? defaultvalue;
 

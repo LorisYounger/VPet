@@ -46,7 +46,7 @@ namespace VPet_Simulator.Windows
                 );
             }
             mwCtrl!.ScreenBorder = bounds;
-            mw.winSetting.UpdateMoveAreaText();
+            mw.winSetting!.UpdateMoveAreaText();
             Close();
         }
 

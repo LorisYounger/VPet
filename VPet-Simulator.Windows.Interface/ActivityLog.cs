@@ -54,12 +54,12 @@ public class ActivityLog
     /// 日志类型
     /// </summary>
     [Line]
-    public string Type { get; set; }
+    public string Type { get; set; } = string.Empty;
     /// <summary>
     /// 日志详细信息, `|`分割
     /// </summary>
     [Line]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// 是否是调试日志 (仅在调试模式下显示给玩家)
