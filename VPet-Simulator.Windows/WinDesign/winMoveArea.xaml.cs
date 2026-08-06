@@ -31,8 +31,8 @@ namespace VPet_Simulator.Windows
                 // 反射捞一下左上角
                 if (winGameSetting.leftGetter == null) winGameSetting.leftGetter = typeof(Window).GetField("_actualLeft", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                 if (winGameSetting.topGetter == null) winGameSetting.topGetter = typeof(Window).GetField("_actualTop", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                var actualLeft = Convert.ToInt32(winGameSetting.leftGetter.GetValue(this));
-                var actualTop = Convert.ToInt32(winGameSetting.topGetter.GetValue(this));
+                var actualLeft = Convert.ToInt32(winGameSetting.leftGetter?.GetValue(this));
+                var actualTop = Convert.ToInt32(winGameSetting.topGetter?.GetValue(this));
                 bounds = new System.Drawing.Rectangle(
                     actualLeft, actualTop,
                     (int)ActualWidth, (int)ActualHeight
@@ -45,8 +45,8 @@ namespace VPet_Simulator.Windows
                     (int)Width, (int)Height
                 );
             }
-            mwCtrl.ScreenBorder = bounds;
-            mw.winSetting.UpdateMoveAreaText();
+            mwCtrl!.ScreenBorder = bounds;
+            mw.winSetting!.UpdateMoveAreaText();
             Close();
         }
 

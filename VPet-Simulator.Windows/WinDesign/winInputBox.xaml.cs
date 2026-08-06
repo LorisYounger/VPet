@@ -38,7 +38,7 @@ public partial class winInputBox : WindowX
         ReturnYes = true;
         Close();
     }
-    Action<string> ENDAction;
+    Action<string>? ENDAction;
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         if (!ReturnYes)

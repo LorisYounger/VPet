@@ -25,7 +25,7 @@ namespace VPet_Simulator.Windows
 #endif
             //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
-        public static string[] Args { get; set; }
+        public static string[] Args { get; set; } = [];
         /// <summary>
         /// 多存档系统名称
         /// </summary>

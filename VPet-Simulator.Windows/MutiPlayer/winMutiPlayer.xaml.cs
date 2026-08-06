@@ -25,7 +25,7 @@ namespace VPet_Simulator.Windows;
 public partial class winMutiPlayer : WindowX, IMPWindows
 {
     public Lobby lb;
-    MainWindow mw;
+    readonly MainWindow mw;
     /// <summary>
     /// 好友宠物模块
     /// </summary>
@@ -34,7 +34,8 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     public winMutiPlayer(MainWindow mw, ulong? lobbyid = null)
     {
         InitializeComponent();
-        if (mw.Core.Save.Mode == IGameSave.ModeType.Ill)
+        this.mw = mw; 
+        if (mw.Core.Save!.Mode == IGameSave.ModeType.Ill)
         {
             MessageBoxX.Show("{0}生病了,无法创建或者加入访客表".Translate());
             Close();
@@ -42,7 +43,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         }
 
         swAllowTouch.IsChecked = !mw.Set.MPNOTouch;
-        this.mw = mw;
+     
         if (lobbyid == null)
             CreateLobby();
         else
@@ -215,8 +216,8 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                         }
                         Dispatcher.Invoke(() =>
                         {
-                            Title = "{0}的访客表".Translate(mpf.Core.Save.Name);
-                            hostPet.Text = mpf.Core.Save.Name;
+                            Title = "{0}的访客表".Translate(mpf.Core.Save!.Name);
+                            hostPet.Text = mpf.Core.Save!.Name;
                         });
                     });
             }
@@ -235,7 +236,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         //    isOPEN = false;
         //    lb.Leave();
         //    lb = default;
-        //    MessageBoxX.Show("{0}生病了,已自动退出访客表".Translate(obj.Core.Save.Name));
+        //    MessageBoxX.Show("{0}生病了,已自动退出访客表".Translate(obj.Core.Save!.Name));
         //    Close();
         //    return;
         //}
@@ -267,7 +268,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         }
     }
 
-    public event Action<ulong> OnMemberLeave;
+    public event Action<ulong>? OnMemberLeave;
     private void SteamMatchmaking_OnLobbyMemberLeave(Lobby lobby, Friend friend)
     {
         if (lobby.Id != lb.Id) return;
@@ -342,7 +343,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     /// <summary>
     /// 事件:成员加入
     /// </summary>
-    public event Action<ulong> OnMemberJoined;
+    public event Action<ulong>? OnMemberJoined;
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
         if (lobby.Id == lb.Id && MPFriends.Find(x => x.friend.Id == friend.Id) == null)
@@ -374,11 +375,11 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                         {
                             case (int)MSGType.DispayGraph:
                                 var To = MPFriends.Find(x => x.friend.Id == MSG.To);
-                                To?.DisplayGraph(MSG.GetContent<GraphInfo>());
+                                To?.DisplayGraph(MSG.GetContent<GraphInfo>()!);
                                 break;
                             case (int)MSGType.Chat:
                                 To = MPFriends.Find(x => x.friend.Id == MSG.To);
-                                To?.DisplayMessage(MSG.GetContent<Chat>());
+                                To?.DisplayMessage(MSG.GetContent<Chat>()!);
                                 break;
                             case (int)MSGType.Interact:
                                 var byname = lb.Members.First(x => x.Id == From).Name;
@@ -390,17 +391,17 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                                     switch (interact)
                                     {
                                         case Interact.TouchHead:
-                                            mw.Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, mw.Core.Save.Name), 3000);
+                                            mw.Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, mw.Core.Save!.Name), 3000);
                                             if (isok)
                                                 DisplayNOCALTouchHead();
                                             break;
                                         case Interact.TouchBody:
-                                            mw.Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, mw.Core.Save.Name), 3000);
+                                            mw.Main.LabelDisplayShow("{0}在摸{1}的头".Translate(byname, mw.Core.Save!.Name), 3000);
                                             if (isok)
                                                 DisplayNOCALTouchBody();
                                             break;
                                         case Interact.TouchPinch:
-                                            mw.Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, mw.Core.Save.Name), 3000);
+                                            mw.Main.LabelDisplayShow("{0}在捏{1}的脸".Translate(byname, mw.Core.Save!.Name), 3000);
                                             if (isok)
                                                 DisplayNOCALTouchPinch();
                                             break;
@@ -457,7 +458,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             }
     }
     private double giveprice = 0;
-    public event Action<ulong, MPMessage> ReceivedMessage;
+    public event Action<ulong, MPMessage>? ReceivedMessage;
     private void Window_Closed(object sender, EventArgs e)
     {
         mw.Main.TimeHandle -= Main_TimeHandle;
@@ -476,7 +477,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     /// <summary>
     /// 事件: 结束访客表, 窗口关闭
     /// </summary>
-    public event Action ClosingMutiPlayer;
+    public event Action? ClosingMutiPlayer;
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         if (!lb.Equals(default(Lobby)))
@@ -606,7 +607,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         MainWindow mw;
         Lobby lb;
         Friend friend;
-        winMutiPlayer wmp => mw.winMutiPlayer;
+        winMutiPlayer? wmp => mw.winMutiPlayer;
 
         public SelfFriends(MainWindow mw, Lobby lb)
         {
@@ -669,7 +670,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             {
                 case AnimatType.A_Start:
                     gi.Animat = AnimatType.B_Loop;
-                    var img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+                    var img = Core.Graph!.FindGraphs(gi.Name, gi.Animat, Core.Save!.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
                     if (img.Count != 0)
                     {
                         Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
@@ -680,7 +681,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                     }
                     break;
                 case AnimatType.B_Loop:
-                    img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+                    img = Core.Graph!.FindGraphs(gi.Name, gi.Animat, Core.Save!.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
                     if (img.Count != 0)
                     {
                         Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
@@ -708,7 +709,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                 if (gi.Type != GraphType.Common)
                     return false;
             }
-            var img = Core.Graph.FindGraphs(gi.Name, gi.Animat, Core.Save.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
+            var img = Core.Graph!.FindGraphs(gi.Name, gi.Animat, Core.Save!.Mode).FindAll(x => x.GraphInfo.Type == gi.Type);
             if (img.Count != 0)
             {
                 Main.Display(img[Function.Rnd.Next(img.Count)], () => DisplayAuto(gi));
@@ -723,15 +724,15 @@ public partial class winMutiPlayer : WindowX, IMPWindows
             {
                 case Chat.Type.Private:
                     Main.Say("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
-                    wmp.Log("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
+                    wmp!.Log("{0} 悄悄地对你说: {1}".Translate(msg.SendName, msg.Content));
                     break;
                 case Chat.Type.Internal:
                     Main.Say("{0} 对 {2} 说: {1}".Translate(msg.SendName, msg.Content, msg.ToName));
-                    wmp.Log("{0} 对 {2} 说: {1}".Translate(msg.SendName, msg.Content, msg.ToName));
+                    wmp!.Log("{0} 对 {2} 说: {1}".Translate(msg.SendName, msg.Content, msg.ToName));
                     break;
                 case Chat.Type.Public:
                     Main.Say("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
-                    wmp.Log("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
+                    wmp!.Log("{0} 对大家说: {1}".Translate(msg.SendName, msg.Content));
                     break;
             }
         }

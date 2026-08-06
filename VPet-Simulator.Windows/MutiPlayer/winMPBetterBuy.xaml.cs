@@ -21,10 +21,10 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public partial class winMPBetterBuy : WindowX
     {
-        private TextBox _searchTextBox;
+        private TextBox? _searchTextBox;
         MPFriends mf;
         private bool AllowChange = false;
-        private Switch _puswitch;
+        private Switch? _puswitch;
         private int _columns;
         private int _rows;
 
@@ -37,7 +37,7 @@ namespace VPet_Simulator.Windows
             LsbSortAsc.SelectedIndex = mf.mw.Set["betterbuy"].GetBool("lastasc") ? 0 : 1;
             AllowChange = true;
         }
-        Run rMoney;
+        Run? rMoney;
         public void Show(Food.FoodType type)
         {
             if (!AllowChange)
@@ -49,11 +49,11 @@ namespace VPet_Simulator.Windows
             else
                 LsbCategory.SelectedIndex = (int)type;
             if (rMoney != null)
-                rMoney.Text = mf.Core.Save.Money.ToString("f2");
+                rMoney.Text = mf.Core.Save!.Money.ToString("f2");
 
             Show();
         }
-        public void OrderItemSource(Food.FoodType type, int sortrule, bool sortasc, string searchtext = null)
+        public void OrderItemSource(Food.FoodType type, int sortrule, bool sortasc, string? searchtext = null)
         {
             Task.Run(() =>
             {
@@ -177,28 +177,28 @@ namespace VPet_Simulator.Windows
         private void BtnBuy_Click(object sender, RoutedEventArgs e)
         {
             var Button = sender as Button;
-            var item = Button.DataContext as Food;
+            var item = Button!.DataContext as Food;
             //看是什么模式
-            bool EnableFunction = mf.mw.Set.EnableFunction && mf.mw.HashCheck && !item.IsOverLoad()
+            bool EnableFunction = mf.mw.Set.EnableFunction && mf.mw.HashCheck && !item!.IsOverLoad()
                 && item.Price >= 1 && item.Price <= (100 * (mf.mw.GameSavesData.GameSave.LevelMax + 1) + mf.mw.GameSavesData.GameSave.Level) * 10 && item.Health >= 0 && item.Exp >= 0 &&
                 item.Likability >= 0 && item.Price + 1000 < mf.mw.GameSavesData.GameSave.Money &&
                 item.Strength >= 0 && item.StrengthDrink >= 0 && item.StrengthFood >= 0 && item.Feeling >= 0;
             //不吃负面/太贵/太便宜
 
             if (EnableFunction)//扣钱
-                mf.mw.GameSavesData.GameSave.Money -= item.Price;
+                mf.mw.GameSavesData.GameSave.Money -= item!.Price;
 
-            mf.DisplayFoodAnimation(item.GetGraph(), item.ImageSource);
+            mf.DisplayFoodAnimation(item!.GetGraph(), item.ImageSource);
 
             if (EnableFunction)
             {
-                mf.wmp.Log("{0}花费${3}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName, item.Price));
-                mf.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName, item.Price), 6000);
+                mf.wmp.Log("{0}花费${3}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save!.Name, item.TranslateName, item.Price));
+                mf.Main.LabelDisplayShow("{0}花费${3}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save!.Name, item.TranslateName, item.Price), 6000);
             }
             else
             {
-                mf.wmp.Log("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName));
-                mf.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save.Name, item.TranslateName), 6000);
+                mf.wmp.Log("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save!.Name, item.TranslateName));
+                mf.Main.LabelDisplayShow("{0}给{1}买了{2}".Translate(SteamClient.Name, mf.Core.Save!.Name, item.TranslateName), 6000);
             }
             var msg = new MPMessage()
             {
@@ -213,13 +213,13 @@ namespace VPet_Simulator.Windows
             msg.SetContent(feed);
             mf.wmp.SendMessageALL(msg);
 
-            if (!_puswitch.IsChecked.Value)
+            if (!_puswitch!.IsChecked ?? false)
             {
                 Close();
             }
             else
             {
-                rMoney.Text = mf.mw.Core.Save.Money.ToString("f2");
+                rMoney!.Text = mf.mw.Core.Save!.Money.ToString("f2");
             }
         }
 
@@ -230,7 +230,7 @@ namespace VPet_Simulator.Windows
 
         private void BtnTitle_Click(object sender, RoutedEventArgs e)
         {
-            _searchTextBox.Text = "";
+            _searchTextBox!.Text = "";
             Search();
         }
 
@@ -268,7 +268,7 @@ namespace VPet_Simulator.Windows
         private void Switch_Loaded(object sender, RoutedEventArgs e)
         {
             _puswitch = sender as Switch;
-            _puswitch.IsChecked = mf.mw.Set["betterbuy"].GetBool("noautoclose");
+            _puswitch!.IsChecked = mf.mw.Set["betterbuy"].GetBool("noautoclose");
             _puswitch.Click += Switch_Checked;
         }
 
@@ -291,7 +291,7 @@ namespace VPet_Simulator.Windows
         private void AutoUniformGrid_Changed(object sender, RoutedEventArgs e)
         {
             var uniformGrid = e.OriginalSource as AutoUniformGrid;
-            var columns = uniformGrid.Columns;
+            var columns = uniformGrid!.Columns;
             if (columns != _columns)
             {
                 _columns = columns;
@@ -311,7 +311,7 @@ namespace VPet_Simulator.Windows
         private void rMoney_Loaded(object sender, RoutedEventArgs e)
         {
             rMoney = sender as Run;
-            rMoney.Text = mf.mw.Core.Save.Money.ToString("f2");
+            rMoney!.Text = mf.mw.Core.Save!.Money.ToString("f2");
         }
         private void Button_Loaded(object sender, RoutedEventArgs e)
         {

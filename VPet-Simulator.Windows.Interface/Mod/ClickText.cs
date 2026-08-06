@@ -23,7 +23,7 @@ namespace VPet_Simulator.Windows.Interface
         /// 指定干活时说, 空为任意, sleep 为睡觉时
         /// </summary>
         [Line(ignoreCase: true)]
-        public string Working { get; set; } = null;
+        public string? Working { get; set; } = null;
 
         /// <summary>
         /// 日期区间
@@ -74,7 +74,7 @@ namespace VPet_Simulator.Windows.Interface
             {
                 if (m.State != WorkingState.Work)
                     return false;
-                if (m.NowWork.Name != Working)
+                if (m.NowWork?.Name != Working)
                     return false;
             }
             return true;

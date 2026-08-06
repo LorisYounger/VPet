@@ -18,7 +18,7 @@ public class GameSave_VPet : IGameSave
     /// 宠物名字
     /// </summary>
     [Line(name: "name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = "";
     /// <summary>
     /// 主人称呼
     /// </summary>
@@ -100,7 +100,7 @@ public class GameSave_VPet : IGameSave
         /// </summary>
         public int BeforeLevelMax { get; set; }
     }
-    public event Action<LevelUpEventArgs> Event_LevelUp;
+    public event Action<LevelUpEventArgs>? Event_LevelUp;
     /// <summary>
     /// 玩家总共获得的经验值数量
     /// </summary>
@@ -402,7 +402,7 @@ public class GameSave_VPet : IGameSave
     /// <summary>
     /// 读档
     /// </summary>
-    public static GameSave_VPet Load(ILine data) => LPSConvert.DeserializeObject<GameSave_VPet>(data);
+    public static GameSave_VPet Load(ILine data) => LPSConvert.DeserializeObject<GameSave_VPet>(data)!;
     /// <summary>
     /// 存档
     /// </summary>

@@ -84,12 +84,12 @@ public partial class winWorkMenu : WindowX
         foreach (var v in mw.SchedulePackage.FindAll(x => x.WorkType == Work.WorkType.Work))
             combTaskType.Items.Add(v);
 
-        if (mw.Core.Save.Level >= 15)
+        if (mw.Core.Save!.Level >= 15)
             blockTask.Visibility = Visibility.Collapsed;
         rpnDisplay(mw.ScheduleTask.PackageWork, Work.WorkType.Work);
-        sliderTaskLevel.Maximum = mw.Core.Save.Level / 5 * 5;
-        if (mw.Core.Save.Level > 200)
-            sliderTaskLevel.TickFrequency = mw.Core.Save.Level / 100 * 5;
+        sliderTaskLevel.Maximum = mw.Core.Save!.Level / 5 * 5;
+        if (mw.Core.Save!.Level > 200)
+            sliderTaskLevel.TickFrequency = mw.Core.Save!.Level / 100 * 5;
         else
             sliderTaskLevel.TickFrequency = 5;
         tbtnCurrentPlan.IsChecked = mw.ScheduleTask.PackageWork?.IsActive() == true;
@@ -107,10 +107,11 @@ public partial class winWorkMenu : WindowX
     public bool IsWorkStar(Work work) => mw.Set["work_star"].GetBool(work.Name);
     public void SetWorkStar(Work work, bool setvalue) => mw.Set["work_star"].SetBool(work.Name, setvalue);
     private bool AllowChange = false;
-    Work nowwork;
-    Work nowworkdisplay;
+    Work? nowwork;
+    Work? nowworkdisplay;
     public void ShowWork()
     {
+        if (nowwork == null) return;
         AllowChange = false;
         btnStart.IsEnabled = true;
         //判断倍率
@@ -153,7 +154,7 @@ public partial class winWorkMenu : WindowX
         nowworkdisplay = work;
 
         //显示图像
-        string source = mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Graph) ?? mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Name);
+        string? source = mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Graph) ?? mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Name);
         if (source == null)
         {
             //尝试显示默认图像
@@ -231,12 +232,12 @@ public partial class winWorkMenu : WindowX
 
     private void wDouble_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (!AllowChange) return;
+        if (!AllowChange || nowwork == null) return;
         mw.Set["workmenu"].SetInt("double_" + nowwork.Name, (int)wDouble.Value);
         ShowWork(nowwork.Double((int)wDouble.Value));
     }
 
-    private void detailTypes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void detailTypes_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
     {
         Dispatcher.BeginInvoke(() =>
         {
@@ -269,14 +270,14 @@ public partial class winWorkMenu : WindowX
                     break;
                 case 2:
                     nowwork = (ps[detailTypes.SelectedIndex]);
-                    btnAddAuto.IsEnabled = mw.Core.Save.Level >= 15;
+                    btnAddAuto.IsEnabled = mw.Core.Save!.Level >= 15;
                     break;
                 case 3:
                     if (!AllowChange) return;
                     var works = mw.WorkStar();
                     if (works.Count <= detailTypes.SelectedIndex) return;
                     nowwork = (works[detailTypes.SelectedIndex]);
-                    btnAddAuto.IsEnabled = mw.Core.Save.Level >= 15;
+                    btnAddAuto.IsEnabled = mw.Core.Save!.Level >= 15;
                     break;
                 case 4:
                     return;
@@ -290,14 +291,14 @@ public partial class winWorkMenu : WindowX
         mw.winWorkMenu = null;
     }
 
-    private void Schedules_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void Schedules_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs? e)
     {
         CalculateSceduleTime();
     }
 
     private void btnStart_Click(object sender, RoutedEventArgs e)
     {
-        if (nowwork != null || nowworkdisplay != null)
+        if (nowworkdisplay != null)
         {
             mw.Set["workmenu"].SetString("DIY_TEXT" + LsbCategory.SelectedIndex, tbDIYName.Text);
             if (cbDIYName.IsChecked == true && !string.IsNullOrWhiteSpace(tbDIYName.Text))
@@ -315,7 +316,7 @@ public partial class winWorkMenu : WindowX
         AllowChange = false;
         _starDetails.Clear();
         mw.WorkStarMenu.Items.Clear();
-        mw.Main.ToolBar.MenuStudy.Items.Clear();
+        mw.Main.ToolBar!.MenuStudy.Items.Clear();
         mw.Main.ToolBar.MenuWork.Items.Clear();
         mw.Main.ToolBar.MenuPlay.Items.Clear();
         //更新星标
@@ -345,7 +346,7 @@ public partial class winWorkMenu : WindowX
                     mw.Main.ToolBar.MenuPlay.Items.Add(mi);
                     break;
             }
-        }       
+        }
         if (detailTypes.ItemsSource == _starDetails)
         {
             detailTypes_SelectionChanged(null, null);
@@ -408,8 +409,8 @@ public partial class winWorkMenu : WindowX
             runSchedulePercentage.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimary);
         rpgbSchedule.Foreground = runSchedulePercentage.Foreground;
     }
-    private Package pack = null;
-    private void rpnDisplay(Package package, Work.WorkType type)
+    private Package? pack = null;
+    private void rpnDisplay(Package? package, Work.WorkType type)
     {
         if (package == null)
         {
@@ -456,9 +457,9 @@ public partial class winWorkMenu : WindowX
         {
             return;
         }
-        sliderTaskLevel.Maximum = mw.Core.Save.Level / 5 * 5;
-        if (mw.Core.Save.Level > 200)
-            sliderTaskLevel.TickFrequency = mw.Core.Save.Level / 100 * 5;
+        sliderTaskLevel.Maximum = mw.Core.Save!.Level / 5 * 5;
+        if (mw.Core.Save!.Level > 200)
+            sliderTaskLevel.TickFrequency = mw.Core.Save!.Level / 100 * 5;
         else
             sliderTaskLevel.TickFrequency = 5;
         if (sender == tbtnAgencyJob)
@@ -494,7 +495,7 @@ public partial class winWorkMenu : WindowX
     private void tbtnAgency_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         var toggleButton = sender as ToggleButton;
-        if (toggleButton.IsChecked == true)
+        if (toggleButton!.IsChecked == true)
         {
             e.Handled = true;
         }
@@ -505,7 +506,7 @@ public partial class winWorkMenu : WindowX
         if (nowselefull == null) return;
         Package package = new Package(nowselefull, (int)sliderTaskLevel.Value);
         double refound = 0;
-        if (package.Price > mw.Core.Save.Money)
+        if (package.Price > mw.Core.Save!.Money)
         {
             MessageBoxX.Show("金钱不足".Translate(), "签署失败".Translate());
             return;
@@ -521,8 +522,8 @@ public partial class winWorkMenu : WindowX
                 if (lefttime > 0.5)
                 {
                     var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Work && x.Name == mw.ScheduleTask.PackageWork.Name);
-                    var p = new Package(pw, mw.ScheduleTask.PackageWork.Level);
-                    refound = p.Price * (pw.Duration - lefttime) / pw.Duration;
+                    var p = new Package(pw!, mw.ScheduleTask.PackageWork.Level);
+                    refound = p.Price * (pw!.Duration - lefttime) / pw.Duration;
                     if (refound < 0 || refound > p.Price)
                     {
                         refound = 0;
@@ -543,8 +544,8 @@ public partial class winWorkMenu : WindowX
                 if (lefttime > 0.5)
                 {
                     var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Study && x.Name == mw.ScheduleTask.PackageStudy.Name);
-                    var p = new Package(pw, mw.ScheduleTask.PackageStudy.Level);
-                    refound = p.Price * (pw.Duration - lefttime) / pw.Duration;
+                    var p = new Package(pw!, mw.ScheduleTask.PackageStudy.Level);
+                    refound = p.Price * (pw!.Duration - lefttime) / pw.Duration;
                     if (refound < 0 || refound > p.Price)
                     {
                         refound = 0;
@@ -555,7 +556,7 @@ public partial class winWorkMenu : WindowX
             rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull.WorkType);
         }
         tbtnCurrentPlan.IsChecked = true;
-        mw.Core.Save.Money -= package.Price - refound;
+        mw.Core.Save!.Money -= package.Price - refound;
         MessageBoxX.Show("套餐 {0} 签署成功".Translate(package.NameTrans) + (refound == 0 ? "" :
           '\n' + "获得 {0:f1} 退款".Translate(refound)), "签署成功".Translate());
     }
@@ -563,7 +564,7 @@ public partial class winWorkMenu : WindowX
     private void btn_addRest_Click(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
-        var scheduleItem = button.DataContext as ScheduleItemBase;
+        var scheduleItem = button!.DataContext as ScheduleItemBase;
         if (scheduleItem == null)
         {
             if (_schedules.LastOrDefault() is RestScheduleItem lastRest)
@@ -585,8 +586,8 @@ public partial class winWorkMenu : WindowX
     private void btn_removeSchedule_Click(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
-        var scheduleItem = button.DataContext as ScheduleItemBase;
-        var index = _schedules.IndexOf(scheduleItem);
+        var scheduleItem = button!.DataContext as ScheduleItemBase;
+        var index = _schedules.IndexOf(scheduleItem!);
         var previousItem = index == 0 ? null : _schedules[index - 1];
         var nextItem = index == _schedules.Count - 1 ? null : _schedules[index + 1];
 
@@ -596,14 +597,14 @@ public partial class winWorkMenu : WindowX
             previousRest.RestTime += nextRest.RestTime;
             _schedules.Remove(nextRest);
         }
-        _schedules.Remove(scheduleItem);
+        _schedules.Remove(scheduleItem!);
     }
 
     private void btn_scheduleUp_Click(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
-        var scheduleItem = button.DataContext as ScheduleItemBase;
-        var index = _schedules.IndexOf(scheduleItem);
+        var scheduleItem = button!.DataContext as ScheduleItemBase;
+        var index = _schedules.IndexOf(scheduleItem!);
         if (index == 0)
         {
             return;
@@ -617,15 +618,15 @@ public partial class winWorkMenu : WindowX
             previousRest.RestTime += nextRest.RestTime;
             _schedules.Remove(nextRest);
         }
-        _schedules.Remove(scheduleItem);
-        _schedules.Insert(Math.Max(index - 1, 0), scheduleItem);
+        _schedules.Remove(scheduleItem!);
+        _schedules.Insert(Math.Max(index - 1, 0), scheduleItem!);
     }
 
     private void btn_scheduleDown_Click(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
-        var scheduleItem = button.DataContext as ScheduleItemBase;
-        var index = _schedules.IndexOf(scheduleItem);
+        var scheduleItem = button!.DataContext as ScheduleItemBase;
+        var index = _schedules.IndexOf(scheduleItem!);
         if (index == _schedules.Count - 1)
         {
             return;
@@ -639,15 +640,15 @@ public partial class winWorkMenu : WindowX
             previousRest.RestTime += nextRest.RestTime;
             _schedules.Remove(nextRest);
         }
-        _schedules.Remove(scheduleItem);
-        _schedules.Insert(Math.Min(index + 1, _schedules.Count), scheduleItem);
+        _schedules.Remove(scheduleItem!);
+        _schedules.Insert(Math.Min(index + 1, _schedules.Count), scheduleItem!);
     }
 
     private void btnAddAuto_Click(object sender, RoutedEventArgs e)
     {
-        if (nowwork != null || nowworkdisplay != null)
+        if (nowwork != null && nowworkdisplay != null)
             //看看套餐
-            switch (nowwork.Type)
+            switch (nowwork!.Type)
             {
                 case Work.WorkType.Work:
                     if (mw.ScheduleTask.PackageWork?.IsActive() != true)
@@ -678,7 +679,7 @@ public partial class winWorkMenu : WindowX
                     mw.ScheduleTask.AddStudy(nowwork, (int)wDouble.Value);
                     break;
                 case Work.WorkType.Play:
-                    if (mw.Core.Save.Level < 15)
+                    if (mw.Core.Save!.Level < 15)
                     {
                         MessageBoxX.Show("等级不足15级,无法使用日程表".Translate(), "等级不足".Translate());
                         return;
@@ -687,7 +688,7 @@ public partial class winWorkMenu : WindowX
                     break;
             }
     }
-    PackageFull nowselefull;
+    PackageFull? nowselefull;
     private void combTaskType_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (!AllowChange) return;
@@ -700,6 +701,7 @@ public partial class winWorkMenu : WindowX
     }
     private void nowselefullDisplay()
     {
+        if (nowselefull == null) return;
         if (nowselefull.WorkType == Work.WorkType.Work)
         {
             rCommissions.Text = nowselefull.Commissions.ToString("p0");
@@ -752,11 +754,11 @@ public partial class winWorkMenu : WindowX
 internal class ScheduleItemTemplateSelector
     : DataTemplateSelector
 {
-    public override DataTemplate SelectTemplate(object item, DependencyObject container)
+    public override DataTemplate? SelectTemplate(object item, DependencyObject container)
     {
         var element = container as FrameworkElement;
 
-        return element.FindResource(item.GetType().Name) as DataTemplate;
+        return element?.FindResource(item.GetType().Name) as DataTemplate;
         //if (item is WorkScheduleItem)
         //{
         //    return element.FindResource("WorkScheduleTemplate") as DataTemplate;

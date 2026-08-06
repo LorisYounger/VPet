@@ -35,9 +35,9 @@ namespace VPet_Simulator.Windows
             InitializeComponent();
             Title = "面板".Translate() + ' ' + mw.PrefixSave;
             mw.Windows.Add(this);
-            foreach (var v in mw.GameSavesData.Statistics.Data)
+            foreach (var v in mw.GameSavesData!.Statistics.Data)
             {
-                StatList.Add(new StatInfo(v.Key, v.Value.GetDouble()));
+                StatList.Add(new StatInfo(v.Key, v.Value!.GetDouble()));
             }
             DataGridStatic.ItemsSource = StatList;
             mw.GameSavesData.Statistics.StatisticChanged += Statistics_StatisticChanged;
@@ -51,24 +51,25 @@ namespace VPet_Simulator.Windows
             Task.Run(Load_Log);
         }
 
-        private void Statistics_StatisticChanged(Statistics sender, string name, SetObject value)
+        private void Statistics_StatisticChanged(Statistics sender, string name, SetObject? value)
         {
-            Dispatcher.Invoke(() =>
-            {
-                try
+            if (value != null)
+                Dispatcher.Invoke(() =>
                 {
-                    var v = StatList.FirstOrDefault(x => x.StatId == name);
-                    if (v != null)
+                    try
                     {
-                        v.StatCount = value.GetDouble();
+                        var v = StatList.FirstOrDefault(x => x.StatId == name);
+                        if (v != null)
+                        {
+                            v.StatCount = value.GetDouble();
+                        }
+                        else
+                        {
+                            StatList.Add(new StatInfo(name, value.GetDouble()));
+                        }
                     }
-                    else
-                    {
-                        StatList.Add(new StatInfo(name, value.GetDouble()));
-                    }
-                }
-                catch { }
-            });
+                    catch { }
+                });
         }
 
         private ObservableCollection<StatInfo> StatList { get; set; } = new();
@@ -123,7 +124,7 @@ namespace VPet_Simulator.Windows
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
-            public event PropertyChangedEventHandler PropertyChanged;
+            public event PropertyChangedEventHandler? PropertyChanged;
         }
         private void TextBox_Search_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -150,7 +151,7 @@ namespace VPet_Simulator.Windows
 
         private void WindowX_Closed(object sender, EventArgs e)
         {
-            mw.GameSavesData.Statistics.StatisticChanged -= Statistics_StatisticChanged;
+            mw.GameSavesData.Statistics!.StatisticChanged -= Statistics_StatisticChanged;
             mw.Windows.Remove(this);
         }
 
@@ -215,14 +216,16 @@ namespace VPet_Simulator.Windows
             string petname = mw.GameSavesData.GameSave.Name;
             string username = mw.IsSteamUser ? SteamClient.Name : Environment.UserName;
 
-            int timelength = mw.GameSavesData.Statistics[(gint)"stat_total_time"];
+            int timelength = mw.GameSavesData.Statistics![(gint)"stat_total_time"];
             double timelength_h = (timelength / 3600.0);
             double startdatelength = (DateTime.Now - mw.GameSavesData[(gdat)"birthday"]).TotalDays;
             double startlengthrank = 0;
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_total_time", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore(timelength);
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore(timelength);
                 var length = leaderboard?.EntryCount ?? 1.0;
                 startlengthrank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
             }
@@ -312,7 +315,9 @@ namespace VPet_Simulator.Windows
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_single_profit_exp", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore(studyexpmax);
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore(studyexpmax);
                 var length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     studyexpmaxrank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -320,7 +325,9 @@ namespace VPet_Simulator.Windows
                     studyexpmaxrank = 0;
 
                 leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_single_profit_money", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                result = await leaderboard?.ReplaceScore(studymoneymax);
+                result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore(studymoneymax);
                 length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     studymoneymaxrank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -384,7 +391,9 @@ namespace VPet_Simulator.Windows
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_work_time_ph", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore((int)(worktimeph * 10000));
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore((int)(worktimeph * 10000));
                 var length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     worktimephrank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -431,7 +440,7 @@ namespace VPet_Simulator.Windows
                 Name = "None",
             };
 
-            foreach (var pair in mw.GameSavesData.Statistics.Data.Where(x => x.Key.StartsWith("buy_")).OrderByDescending(x => ((int)x.Value)))
+            foreach (var pair in mw.GameSavesData.Statistics.Data.Where(x => x.Key.StartsWith("buy_")).OrderByDescending(x => ((int)x.Value!)))
             {
                 var fn = pair.Key.Substring(4);
                 var f = mw.Foods.FirstOrDefault(x => x.Name == fn);
@@ -473,7 +482,9 @@ namespace VPet_Simulator.Windows
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_autobuy_ph", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore((int)(autobuytimesph * 10000));
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore((int)(autobuytimesph * 10000));
                 var length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     autobuytimesphrank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -512,7 +523,9 @@ namespace VPet_Simulator.Windows
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("workshop", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore(modworkshop);
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore(modworkshop);
                 var length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     modworkshoprank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -558,7 +571,9 @@ namespace VPet_Simulator.Windows
             if (useranking)
             {
                 Leaderboard? leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_likability", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
-                var result = await leaderboard?.ReplaceScore((int)mw.GameSavesData.GameSave.Likability);
+                LeaderboardUpdate? result = null;
+                if (leaderboard.HasValue)
+                    result = await leaderboard.Value.ReplaceScore((int)mw.GameSavesData.GameSave.Likability);
                 var length = leaderboard?.EntryCount ?? 1.0;
                 if (result?.NewGlobalRank != null)
                     likerank = 1 - (result.Value.NewGlobalRank - 1) / length;
@@ -675,7 +690,7 @@ namespace VPet_Simulator.Windows
         }
 
         bool load2 = false;
-        List<(string name, Core.PetLoader loader)> bdpetlist = null;
+        List<(string name, Core.PetLoader loader)>? bdpetlist = null;
         private async void MainTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (MainTab.SelectedIndex == 2 && load2 == false)
@@ -723,14 +738,14 @@ namespace VPet_Simulator.Windows
         }
         public void BDay_Load()
         {
-            var pl = bdpetlist[cb_birthday.SelectedIndex];
+            var pl = bdpetlist![cb_birthday.SelectedIndex];
             img_b_background.Source = mw.ImageSources.FindImage("bday_" + pl.loader.Name);
             tb_bdiy.Text = "{0} 祝 {1} 生日快乐!".Translate(pl.name, mw.GameSavesData.GameSave.HostName);
-            ILine bdinfo = pl.loader.Config.Data.FindLine("bday");
+            ILine bdinfo = pl.loader!.Config!.Data!.FindLine("bday")!;
             img_b_head.Width = bdinfo[(gdbe)"w"];
             img_b_head.Margin = new Thickness(bdinfo[(gdbe)"x"], bdinfo[(gdbe)"y"], 0, 0);
-            lb_b_datetime.VerticalAlignment = Enum.Parse<VerticalAlignment>(bdinfo[(gstr)"va"], true);
-            lb_b_datetime.HorizontalAlignment = Enum.Parse<HorizontalAlignment>(bdinfo[(gstr)"ha"], true);
+            lb_b_datetime.VerticalAlignment = Enum.Parse<VerticalAlignment>(bdinfo[(gstr)"va"]!, true);
+            lb_b_datetime.HorizontalAlignment = Enum.Parse<HorizontalAlignment>(bdinfo[(gstr)"ha"]!, true);
             b_b_text.Background = new SolidColorBrush(Function.HEXToColor('#' + bdinfo[(gstr)"tb"]));
             tb_b_text.Foreground = new SolidColorBrush(Function.HEXToColor('#' + bdinfo[(gstr)"tf"]));
             vb_b_text.Margin = new Thickness(bdinfo[(gdbe)"tleft"], bdinfo[(gdbe)"ttop"], bdinfo[(gdbe)"tright"], bdinfo[(gdbe)"tbottom"]);
@@ -815,20 +830,21 @@ namespace VPet_Simulator.Windows
             mw.ActivityLogs.CollectionChanged += ActivityLogs_CollectionChanged;
         }
 
-        private void ActivityLogs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void ActivityLogs_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs? e)
         {
             Dispatcher.Invoke(() =>
             {
-                if (e.NewItems != null)
-                {
-                    foreach (ActivityLog log in e.NewItems)
+                if (e != null)
+                    if (e.NewItems != null)
                     {
-                        if (mw.Set.DeBug || log.IsDebug == false)
+                        foreach (ActivityLog log in e.NewItems)
                         {
-                            tb_log.AppendText("\n" + log.ToString(mw.Main));
+                            if (mw.Set.DeBug || log.IsDebug == false)
+                            {
+                                tb_log.AppendText("\n" + log.ToString(mw.Main));
+                            }
                         }
                     }
-                }
             });
         }
     }

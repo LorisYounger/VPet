@@ -47,13 +47,13 @@ public partial class MainWindow
     public List<Food> Foods { get; } = new List<Food>();
     public List<Photo> Photos { get; } = new List<Photo>();
 
-    public GameSave_v2 GameSavesData { get; set; }
+    public GameSave_v2 GameSavesData { get; set; } = new GameSave_v2("VPET");
 
-    public readonly string ModPath = ExtensionValue.BaseDirectory + @"\mod";
+    public static readonly string ModPath = ExtensionValue.BaseDirectory + @"\mod";
     public bool IsSteamUser { get; }
     public LPS_D Args { get; }
     public string PrefixSave { get; } = "";
-    private string prefixsavetrans = null;
+    private string? prefixsavetrans = null;
     public string PrefixSaveTrans
     {
         get
@@ -68,21 +68,21 @@ public partial class MainWindow
             return prefixsavetrans;
         }
     }
-    internal Setting Set { get; set; }
+    internal Setting Set { get; set; } = null!;
     ISetting IMainWindow.Set => Set;
 
     public List<PetLoader> Pets { get; set; } = new List<PetLoader>();
     internal List<CoreMOD> CoreMODs = new List<CoreMOD>();
     public GameCore Core { get; set; } = new GameCore();
     public List<Window> Windows { get; set; } = new List<Window>();
-    public Main Main { get; set; }
-    public UIElement TalkBox;
-    public winGameSetting winSetting { get; set; }
-    public winBetterBuy winBetterBuy { get; set; }
-    public winGallery winGallery { get; set; }
-    public winInventory winInventory { get; set; }
+    public Main Main { get; set; } = null!;
+    public UIElement? TalkBox;
+    public winGameSetting? winSetting { get; set; }
+    public winBetterBuy? winBetterBuy { get; set; }
+    public winGallery? winGallery { get; set; } 
+    public winInventory? winInventory { get; set; }
 
-    public winWorkMenu winWorkMenu { get; set; }
+    public winWorkMenu? winWorkMenu { get; set; }
     //public ChatGPTClient CGPTClient;
     public ImageResources ImageSources { get; set; } = new ImageResources();
     public Resources FileSources { get; set; } = new Resources();
@@ -106,19 +106,19 @@ public partial class MainWindow
     /// <summary>
     /// 当前启用主题
     /// </summary>
-    public Theme Theme = null;
+    public Theme? Theme = null;
 
     /// <summary>
     /// 日程表
     /// </summary>
-    public ScheduleTask ScheduleTask { get; set; }
+    public ScheduleTask ScheduleTask { get; set; } = null!;
 
     /// <summary>
     /// 物品栏 桌宠有的物品
     /// </summary>
     public List<Item> Items { get; set; } = new List<Item>();
 
-    
+
 
     /// <summary>
     /// 所有可用套餐

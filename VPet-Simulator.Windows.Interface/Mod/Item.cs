@@ -25,11 +25,11 @@ public class Item : NotifyPropertyChangedBase
     /// </summary>
     /// <param name="data">物品数据</param>
     /// <returns>物品</returns>
-    public static Item CreateItem(IMainWindow imw, ILine data)
+    public static Item? CreateItem(IMainWindow imw, ILine data)
     {
-        if (Creators.ContainsKey(data[(gstr)"itemtype"]))
+        if (Creators.ContainsKey(data[(gstr)"itemtype"] ?? ""))
         {
-            return Creators[data[(gstr)"itemtype"]](imw, data);
+            return Creators[data[(gstr)"itemtype"] ?? ""](imw, data);
         }
         else
         {
@@ -39,7 +39,7 @@ public class Item : NotifyPropertyChangedBase
     /// <summary>
     /// 创建物品方法集合, 在这里添加自定义物品类型的创建方法 在LoadPlugin之后,GameLoaded之前. 请不要添加阻塞内容
     /// </summary>
-    public static Dictionary<string, Func<IMainWindow, ILine, Item>> Creators = new()
+    public static Dictionary<string, Func<IMainWindow, ILine, Item?>> Creators = new()
     {
         { "Food", (_,line) => { return LPSConvert.DeserializeObject<Food>(line); } },
     };
@@ -51,7 +51,7 @@ public class Item : NotifyPropertyChangedBase
     /// 物品图片 (图片默认在 {itemtypes}/{Image or itemname}.png )
     /// </summary>
     [Line(ignoreCase: true)]
-    public virtual string Image { get; set; } = null;
+    public virtual string? Image { get; set; } = null;
     /// <summary>
     /// 使用该物品
     /// </summary>
@@ -86,9 +86,9 @@ public class Item : NotifyPropertyChangedBase
     /// 物品名字 (ID)
     /// </summary>
     [Line(name: "name")]
-    public string Name { get; set; }
-    private string transname = null;
-    private string transdesc = null;
+    public string Name { get; set; } = string.Empty;
+    private string? transname = null;
+    private string? transdesc = null;
     /// <summary>
     /// 物品名字 (翻译)
     /// </summary>
@@ -152,12 +152,12 @@ public class Item : NotifyPropertyChangedBase
     /// 描述
     /// </summary>
     [Line(ignoreCase: true)]
-    public string Desc { get; set; }
+    public string Desc { get; set; } = string.Empty;
 
     /// <summary>
     /// 显示的图片 (图片默认在 {itemtypes}/{itemname}.png )
     /// </summary>
-    public virtual BitmapImage ImageSource { get; set; }
+    public virtual BitmapImage ImageSource { get; set; } = null!;
 
     /// <summary>
     /// 物品个数

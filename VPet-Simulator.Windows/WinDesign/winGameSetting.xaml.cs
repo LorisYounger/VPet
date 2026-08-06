@@ -1,5 +1,6 @@
 ﻿using LinePutScript;
 using LinePutScript.Localization.WPF;
+using NAudio.Midi;
 using NAudio.SoundFont;
 using Panuon.WPF.UI;
 using Steamworks;
@@ -46,6 +47,8 @@ namespace VPet_Simulator.Windows
             ////ImageWHY.Source = bit;
             //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
 
+            mod = mw.CoreMODs[0];
+
             Title = "设置".Translate() + ' ' + mw.PrefixSave;
             SettingMenuWidth.Width = new GridLength(LocalizeCore.GetDouble("SettingMenuWidth", 150));
             TopMostBox.IsChecked = mw.Set.TopMost;
@@ -76,7 +79,7 @@ namespace VPet_Simulator.Windows
 
             StartUpBox.IsChecked = mw.Set.StartUPBoot;
             StartUpSteamBox.IsChecked = mw.Set.StartUPBootSteam;
-            TextBoxPetName.Text = mw.Core.Save.Name;
+            TextBoxPetName.Text = mw.Core.Save!.Name;
             foreach (PetLoader pl in mw.Pets)
             {
                 PetBox.Items.Add(pl.Name.Translate());
@@ -176,7 +179,7 @@ namespace VPet_Simulator.Windows
             foreach (Sub sub in mw.Set["diy"])
                 StackDIY.Children.Add(new DIYViewer(sub));
 
-            SliderResolution.Maximum = Math.Min(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width,
+            SliderResolution.Maximum = Math.Min(System.Windows.Forms.Screen.PrimaryScreen!.Bounds.Width,
                 System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
             SliderResolution.Value = mw.Set.Resolution;
 
@@ -328,7 +331,7 @@ namespace VPet_Simulator.Windows
             };
             return lbi;
         }
-        private void Voicetimer_Tick(object sender, EventArgs e)
+        private void Voicetimer_Tick(object? sender, EventArgs? e)
         {
             var v = mw.AudioPlayingVolume();
             RVoice.Text = v.ToString("p2");
@@ -375,7 +378,7 @@ namespace VPet_Simulator.Windows
         CoreMOD mod;
         private void ShowMod(string modname)
         {
-            mod = mw.CoreMODs.Find(x => x.Name == modname);
+            mod = mw.CoreMODs!.Find(x => x.Name == modname)!;
             LabelModName.Content = mod.Name.Translate();
             runMODAuthor.Text = mod.Author;
             runMODGameVer.Text = CoreMOD.INTtoVER(mod.GameVer);
@@ -512,7 +515,7 @@ namespace VPet_Simulator.Windows
                 try
                 {
                     if (mainplug.PluginName == mod.Name &&
-                        mainplug.GetType().GetMethod("Setting").DeclaringType != typeof(MainPlugin)
+                        mainplug.GetType().GetMethod("Setting")!.DeclaringType != typeof(MainPlugin)
                     && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
                     {
                         ButtonSetting.Visibility = Visibility.Visible;
@@ -544,7 +547,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.LoadTheme(mw.Themes[ThemeBox.SelectedIndex].xName);
-            mw.Set.Theme = mw.Theme.xName;
+            mw.Set.Theme = mw.Theme?.xName ?? string.Empty;
         }
 
         private void FontBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -775,7 +778,7 @@ namespace VPet_Simulator.Windows
         public void UpdateMoveAreaText()
         {
             var mwCtrl = mw.Core.Controller as MWController;
-            if (mwCtrl.IsPrimaryScreen && !mwCtrl.AutoChangeWindow)
+            if (mwCtrl!.IsPrimaryScreen && !mwCtrl.AutoChangeWindow)
             {
                 textMoveArea.Text = "主屏幕".Translate();
                 return;
@@ -792,23 +795,23 @@ namespace VPet_Simulator.Windows
         private void BtnSetMoveArea_Default_Click(object sender, RoutedEventArgs e)
         {
             var mwCtrl = mw.Core.Controller as MWController;
-            mwCtrl.ResetScreenBorder();
+            mwCtrl!.ResetScreenBorder();
             UpdateMoveAreaText();
         }
 
         private void BtnSetMoveArea_DetectScreen_Click(object sender, RoutedEventArgs e)
         {
             var mwCtrl = mw.Core.Controller as MWController;
-            mwCtrl.SetNowScreenActivate();
+            mwCtrl!.SetNowScreenActivate();
             UpdateMoveAreaText();
         }
 
-        internal static System.Reflection.FieldInfo leftGetter, topGetter;
+        internal static System.Reflection.FieldInfo? leftGetter, topGetter;
         private void BtnSetMoveArea_Window_Click(object sender, RoutedEventArgs e)
         {
             var wma = new winMoveArea(mw);
             var mwCtrl = mw.Core.Controller as MWController;
-            if (!mwCtrl.IsPrimaryScreen)
+            if (!mwCtrl!.IsPrimaryScreen)
             {
                 var rect = mwCtrl.ScreenBorder;
                 wma.Width = rect.Width;
@@ -846,7 +849,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set.TopMost = true;
-            (mw.notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_TopMost", false).First() as System.Windows.Forms.ToolStripMenuItem).Checked = true;
+            (mw.notifyIcon.ContextMenuStrip!.Items.Find("NotifyIcon_TopMost", false).First() as System.Windows.Forms.ToolStripMenuItem)!.Checked = true;
         }
 
         private void TopMostBox_Unchecked(object sender, RoutedEventArgs e)
@@ -854,7 +857,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set.TopMost = false;
-            (mw.notifyIcon.ContextMenuStrip.Items.Find("NotifyIcon_TopMost", false).First() as System.Windows.Forms.ToolStripMenuItem).Checked = false;
+            (mw.notifyIcon.ContextMenuStrip!.Items.Find("NotifyIcon_TopMost", false).First() as System.Windows.Forms.ToolStripMenuItem)!.Checked = false;
         }
 
         private void ZoomSlider_MouseUp(object sender, MouseButtonEventArgs e)
@@ -1096,7 +1099,7 @@ namespace VPet_Simulator.Windows
             }
 
 
-            bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
+            bool ischangename = mw.Core.Save!.Name == petloader.PetName.Translate();
             petboxbef = PetBox.SelectedIndex;
             mw.Set.PetGraph = mw.Pets[petboxbef].Name;
             PetIntor.Text = mw.Pets[petboxbef].Intor.Translate();
@@ -1104,10 +1107,10 @@ namespace VPet_Simulator.Windows
 
             if (ischangename)
             {
-                mw.Core.Save.Name = mw.Pets[petboxbef].PetName.Translate();
-                TextBoxPetName.Text = mw.Core.Save.Name;
+                mw.Core.Save!.Name = mw.Pets[petboxbef].PetName.Translate();
+                TextBoxPetName.Text = mw.Core.Save!.Name;
                 if (mw.IsSteamUser)
-                    SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
+                    SteamFriends.SetRichPresence("username", mw.Core.Save!.Name);
             }
         }
 
@@ -1115,9 +1118,9 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Core.Save.Name = TextBoxPetName.Text;
+            mw.Core.Save!.Name = TextBoxPetName.Text;
             if (mw.IsSteamUser)
-                SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
+                SteamFriends.SetRichPresence("username", mw.Core.Save!.Name);
         }
 
         private void DIY_ADD_Click(object sender, RoutedEventArgs e)
@@ -1209,7 +1212,7 @@ namespace VPet_Simulator.Windows
                     BtnCGPTReSet.IsEnabled = true;
                     BtnCGPTReSet.Content = "初始化桌宠聊天程序".Translate();
                     mw.TalkBox = new TalkSelect(mw);
-                    mw.Main.ToolBar.MainGrid.Children.Add(mw.TalkBox);
+                    mw.Main.ToolBar!.MainGrid.Children.Add(mw.TalkBox);
                     break;
                 case "OFF":
                 default:
@@ -1226,7 +1229,7 @@ namespace VPet_Simulator.Windows
             {
                 try
                 {
-                    if (mainplug.PluginName == mod.Name && mainplug.GetType().GetMethod("Setting").DeclaringType != typeof(MainPlugin)
+                    if (mainplug.PluginName == mod.Name && mainplug.GetType().GetMethod("Setting")!.DeclaringType != typeof(MainPlugin)
                     && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
                     {
                         mainplug.Setting();
@@ -1290,7 +1293,7 @@ namespace VPet_Simulator.Windows
                 combCalFunState.IsEnabled = true;
                 if (mw.Main.State != Main.WorkingState.Nomal)
                 {
-                    mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
+                    mw.Main.WorkTimer!.Visibility = Visibility.Collapsed;
                     mw.Main.State = Main.WorkingState.Nomal;
                 }
             }
@@ -1300,18 +1303,18 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Set.MessageBarOutside = SwitchMsgOut.IsChecked.Value;
-            if (SwitchMsgOut.IsChecked.Value)
-                mw.Main.MsgBar.SetPlaceOUT();
+            mw.Set.MessageBarOutside = SwitchMsgOut?.IsChecked ?? false;
+            if (SwitchMsgOut?.IsChecked ?? false)
+                mw.Main.MsgBar?.SetPlaceOUT();
             else
-                mw.Main.MsgBar.SetPlaceIN();
+                mw.Main.MsgBar?.SetPlaceIN();
         }
 
         private void numBackupSaveMaxNum_ValueChanged(object sender, Panuon.WPF.SelectedValueChangedRoutedEventArgs<double?> e)
         {
             if (!AllowChange)
                 return;
-            mw.Set.BackupSaveMaxNum = (int)numBackupSaveMaxNum.Value;
+            mw.Set.BackupSaveMaxNum = (int)(numBackupSaveMaxNum?.Value ?? 0);
         }
         private void BtnOpenSaveManager_Click(object sender, RoutedEventArgs e)
         {
@@ -1366,10 +1369,10 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set["v"][(gbol)"HitThrough"] = true;
-            mw.Set.HitThrough = HitThroughBox.IsChecked.Value;
-            if (HitThroughBox.IsChecked.Value != mw.HitThrough)
+            mw.Set.HitThrough = HitThroughBox.IsChecked ?? false;
+            if (HitThroughBox.IsChecked ?? false != mw.HitThrough)
                 mw.SetTransparentHitThrough();
-            if (HitThroughBox.IsChecked.Value)
+            if (HitThroughBox.IsChecked ?? false)
                 PetHelperBox.IsChecked = true;
         }
 
@@ -1395,7 +1398,7 @@ namespace VPet_Simulator.Windows
             if (!AllowChange)
                 return;
             mw.Set.SetLanguage((string)LanguageBox.SelectedItem);
-            TextBoxPetName.Text = mw.Core.Save.Name;
+            TextBoxPetName.Text = mw.Core.Save!.Name;
             ButtonRestartGraph.Visibility = Visibility.Visible;
 
         }
@@ -1454,7 +1457,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Set["gameconfig"].SetBool("noAutoCal", !swAutoCal.IsChecked.Value);
+            mw.Set["gameconfig"].SetBool("noAutoCal", !(swAutoCal.IsChecked ?? false));
         }
 
         private void restart_click(object sender, RoutedEventArgs e)
@@ -1462,7 +1465,7 @@ namespace VPet_Simulator.Windows
             if (MessageBoxX.Show("是否重置游戏数据重新开始?".Translate(), "重新开始".Translate(), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 var oldsave = mw.GameSavesData;
-                mw.GameSavesData = new GameSave_v2(mw.Core.Save.Name);
+                mw.GameSavesData = new GameSave_v2(mw.Core.Save!.Name);
                 mw.Core.Save = mw.GameSavesData.GameSave;
                 mw.GameSavesData.GameSave.Event_LevelUp += mw.LevelUP;
 
@@ -1471,8 +1474,8 @@ namespace VPet_Simulator.Windows
                     mw.GameSavesData.Statistics = oldsave.Statistics;
                     if (oldsave.GameSave.Money > 10000000 || oldsave.GameSave.Money < -1000000000 || oldsave.GameSave.Exp > 100000000 || oldsave.GameSave.Exp < -10000000000)
                     {
-                        mw.Core.Save.Money = 10000;
-                        mw.Core.Save.Exp = 10000;
+                        mw.Core.Save!.Money = 10000;
+                        mw.Core.Save!.Exp = 10000;
                     }
                 }
                 mw.HashCheck = true;
@@ -1596,7 +1599,7 @@ namespace VPet_Simulator.Windows
             if (playtime == 0) return;
             if (mw.GameSavesData.HashCheck)
             {//对于
-                int hours = mw.GameSavesData.Statistics[(gint)"stat_total_time"] / 60;
+                int hours = mw.GameSavesData.Statistics![(gint)"stat_total_time"] / 60;
                 if (hours < playtime)
                 {
                     mw.GameSavesData.Statistics[(gint)"stat_total_time"] = playtime * 60;
@@ -1611,7 +1614,24 @@ namespace VPet_Simulator.Windows
             {
                 GameSave_v2 ogs = mw.GameSavesData;
                 mw.GameSavesData = new GameSave_v2(ogs.GameSave.Name);
-                mw.GameSavesData.Statistics = ogs.Statistics;
+                mw.GameSavesData.Statistics[(gint)"stat_time"] = ogs.Statistics![(gint)"stat_time"];
+                mw.GameSavesData.Statistics[(gint)"stat_autobuy"] = ogs.Statistics![(gint)"stat_autobuy"];
+                mw.GameSavesData.Statistics[(gint)"autofeel"] = ogs.Statistics![(gint)"autofeel"];
+                mw.GameSavesData.Statistics[(gint)"stat_autogift"] = ogs.Statistics![(gint)"stat_autogift"];
+                mw.GameSavesData.Statistics[(gint)"stat_buytimes"] = ogs.Statistics![(gint)"stat_buytimes"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_food"] = ogs.Statistics![(gint)"stat_bb_food"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_drink"] = ogs.Statistics![(gint)"stat_bb_drink"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_drug"] = ogs.Statistics![(gint)"stat_bb_drug"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_drug_exp"] = ogs.Statistics![(gint)"stat_bb_drug_exp"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_snack"] = ogs.Statistics![(gint)"stat_bb_snack"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_functional"] = ogs.Statistics![(gint)"stat_bb_functional"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_meal"] = ogs.Statistics![(gint)"stat_bb_meal"];
+                mw.GameSavesData.Statistics[(gint)"stat_bb_gift"] = ogs.Statistics![(gint)"stat_bb_gift"];
+                mw.GameSavesData.Statistics[(gint)"stat_work_time"] = ogs.Statistics![(gint)"stat_work_time"];
+                mw.GameSavesData.Statistics[(gint)"stat_study_time"] = ogs.Statistics![(gint)"stat_study_time"];
+                mw.GameSavesData.Statistics[(gint)"stat_sleep_time"] = ogs.Statistics![(gint)"stat_sleep_time"];
+                mw.GameSavesData.Statistics[(gint)"stat_betterbuy"] = ogs.Statistics![(gint)"stat_betterbuy"];
+
                 mw.GameSavesData.Statistics[(gint)"stat_total_time"] = playtime * 60;
                 mw.GameSavesData.GameSave.Event_LevelUp += mw.LevelUP;
 
@@ -1646,7 +1666,7 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            mw.Set.DeBug = ConsoleBox.IsChecked.Value;
+            mw.Set.DeBug = ConsoleBox.IsChecked ?? false;
         }
 
         private void TextBoxHostName_TextChanged(object sender, TextChangedEventArgs e)

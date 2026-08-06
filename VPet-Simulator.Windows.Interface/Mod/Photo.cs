@@ -26,12 +26,12 @@ public class Photo
 
     public Photo(Line line)
     {
-        Zip = line[(gstr)"zip"];
-        Path = line[(gstr)"path"];
+        Zip = line[(gstr)"zip"]!;
+        Path = line[(gstr)"path"]!;
         if (Enum.TryParse<PhotoType>(line[(gstr)"type"], true, out var tp))
             Type = tp;
-        Name = line[(gstr)"name"];
-        Description = line[(gstr)"desc"];
+        Name = line[(gstr)"name"]!;
+        Description = line[(gstr)"desc"]!;
         var tags = line.Find("tags");
         if (tags != null)
             Tags = tags.GetInfos().ToList();
@@ -41,11 +41,11 @@ public class Photo
     /// <summary>
     /// 图片所在ZIP
     /// </summary>
-    public string Zip { get; set; }
+    public string Zip { get; set; } = string.Empty;
     /// <summary>
     /// 图片所在位置
     /// </summary>
-    public string Path { get; set; }
+    public string Path { get; set; }  = string.Empty;
 
     /// <summary>
     /// 图片类型
@@ -72,8 +72,8 @@ public class Photo
     /// <summary>
     /// 图片名字
     /// </summary>
-    public string Name { get; set; }
-    private string transname = null;
+    public string Name { get; set; } = string.Empty;
+    private string? transname = null;
     /// <summary>
     /// 图片名字 (翻译)
     /// </summary>
@@ -92,7 +92,7 @@ public class Photo
     /// 标签
     /// </summary>
     public List<string> Tags { get; set; } = new List<string>();
-    private List<string> tagstrans = null;
+    private List<string>? tagstrans = null;
     /// <summary>
     /// 标签 (翻译)
     /// </summary>
@@ -110,7 +110,7 @@ public class Photo
     /// <summary>
     /// 描述
     /// </summary>
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// 解锁条件
@@ -283,7 +283,7 @@ public class Photo
             //统计数据检查
             foreach (var (stat, value) in StatCheck)
             {
-                var statvalue = save.Statistics.GetInt(stat, -1);
+                var statvalue = save.Statistics!.GetInt(stat, -1);
                 if (statvalue < value)
                     return false;
             }
@@ -437,7 +437,7 @@ public class Photo
     /// <summary>
     /// 解锁条件
     /// </summary>
-    public UnlockCondition UnlockAble { get; set; }
+    public UnlockCondition UnlockAble { get; set; } = new UnlockCondition();
 
     /// <summary>
     /// 玩家数据
@@ -460,7 +460,7 @@ public class Photo
     /// <summary>
     /// 玩家数据
     /// </summary>
-    public Info PlayerInfo { get; set; } = null;
+    public Info? PlayerInfo { get; set; } = null;
     /// <summary>
     /// 是否收藏
     /// </summary>
@@ -573,7 +573,7 @@ public class Photo
     public BitmapImage GetImage(IMainWindow imw)
     {
         //解压zip
-        string zippath = imw.FileSources.FindSource(Zip + ".zlps");
+        string? zippath = imw.FileSources.FindSource(Zip + ".zlps");
         if (zippath == null)
         {
             zippath = imw.FileSources.FindSource(Zip + ".zip");
@@ -585,7 +585,7 @@ public class Photo
         using (ZipArchive archive = ZipFile.OpenRead(zippath))
         {
             // 找到指定的文件
-            ZipArchiveEntry entry = archive.GetEntry(Path);
+            ZipArchiveEntry? entry = archive.GetEntry(Path);
             if (entry != null)
             {
                 using (Stream stream = entry.Open())
@@ -621,7 +621,7 @@ public class Photo
         //但是这个方法不回收MemoryStream, 占用内存更多, 为了节省内存, 普通图片用GetImage, GIF图片用这个
 
         // 解压zip
-        string zippath = imw.FileSources.FindSource(Zip + ".zlps");
+        string? zippath = imw.FileSources.FindSource(Zip + ".zlps");
         if (zippath == null)
         {
             zippath = imw.FileSources.FindSource(Zip + ".zip");
@@ -634,7 +634,7 @@ public class Photo
         using (ZipArchive archive = ZipFile.OpenRead(zippath))
         {
             // 找到指定的文件
-            ZipArchiveEntry entry = archive.GetEntry(Path);
+            ZipArchiveEntry? entry = archive.GetEntry(Path);
             if (entry != null)
             {
                 using (Stream stream = entry.Open())
@@ -688,7 +688,7 @@ public class Photo
     public void SaveAs(IMainWindow imw, string filepath)
     {
         //解压zip
-        string zippath = imw.FileSources.FindSource(Zip + ".zlps");
+        string? zippath = imw.FileSources.FindSource(Zip + ".zlps");
         if (zippath == null)
         {
             zippath = imw.FileSources.FindSource(Zip + ".zip");
@@ -700,7 +700,7 @@ public class Photo
         using (ZipArchive archive = ZipFile.OpenRead(zippath))
         {
             // 找到指定的文件
-            ZipArchiveEntry entry = archive.GetEntry(Path);
+            ZipArchiveEntry? entry = archive.GetEntry(Path);
             if (entry != null)
             {
                 // 打开源文件流
@@ -726,7 +726,7 @@ public class Photo
     public bool CopyImageToClipboard(IMainWindow imw)
     {
         // 解压zip
-        string zippath = imw.FileSources.FindSource(Zip + ".zlps");
+        string?  zippath = imw.FileSources.FindSource(Zip + ".zlps");
         if (zippath == null)
         {
             zippath = imw.FileSources.FindSource(Zip + ".zip");
@@ -746,7 +746,7 @@ public class Photo
             using (ZipArchive archive = ZipFile.OpenRead(zippath))
             {
                 // 找到指定的文件
-                ZipArchiveEntry entry = archive.GetEntry(Path);
+                ZipArchiveEntry? entry = archive.GetEntry(Path);
                 if (entry != null)
                 {
                     // 打开源文件流

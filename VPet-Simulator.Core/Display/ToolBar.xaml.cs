@@ -54,7 +54,7 @@ namespace VPet_Simulator.Core
             MenuStudy.Items.Clear();
             MenuPlay.Items.Clear();
         }
-        public void StartWork(Work w)
+        public void StartWork(Work? w)
         {
             if (m.StartWork(w))
                 Visibility = Visibility.Collapsed;
@@ -160,9 +160,9 @@ namespace VPet_Simulator.Core
         {
             StartWork(wstudy);
         }
-        Work wwork;
-        Work wstudy;
-        Work wplay;
+        Work? wwork;
+        Work? wstudy;
+        Work? wplay;
 
 
         private void MenuWork_Click(object sender, RoutedEventArgs e)
@@ -180,12 +180,12 @@ namespace VPet_Simulator.Core
         {
             if (BdrPanel.Visibility == Visibility.Visible)
             {
-                Tlv.Text = "Lv " + m.Core.Save.Level.ToString();
-                tExp.Text = "x" + m.Core.Save.ExpBonus.ToString("f2");
-                tMoney.Text = "$ " + m.Core.Save.Money.ToString("N2");
-                if (m.Core.Controller.EnableFunction)
+                Tlv.Text = "Lv " + m.Core.Save!.Level.ToString();
+                tExp.Text = "x" + m.Core.Save!.ExpBonus.ToString("f2");
+                tMoney.Text = "$ " + m.Core.Save!.Money.ToString("N2");
+                if (m.Core.Controller!.EnableFunction)
                 {
-                    till.Visibility = m.Core.Save.Mode == IGameSave.ModeType.Ill ? Visibility.Visible : Visibility.Collapsed;
+                    till.Visibility = m.Core.Save!.Mode == IGameSave.ModeType.Ill ? Visibility.Visible : Visibility.Collapsed;
                     tfun.Visibility = Visibility.Collapsed;
                 }
                 else
@@ -193,18 +193,18 @@ namespace VPet_Simulator.Core
                     till.Visibility = Visibility.Collapsed;
                     tfun.Visibility = Visibility.Visible;
                 }
-                var max = m.Core.Save.LevelUpNeed();
+                var max = m.Core.Save!.LevelUpNeed();
                 pExp.Value = 0;
                 pExp.Maximum = max;
-                if (m.Core.Save.Exp < 0)
+                if (m.Core.Save!.Exp < 0)
                 {
-                    pExp.Minimum = m.Core.Save.Exp;
+                    pExp.Minimum = m.Core.Save!.Exp;
                 }
                 else
                 {
                     pExp.Minimum = 0;
                 }
-                pExp.Value = m.Core.Save.Exp;
+                pExp.Value = m.Core.Save!.Exp;
 
 
                 pStrengthFood.Value = 0;
@@ -212,42 +212,42 @@ namespace VPet_Simulator.Core
                 pStrength.Value = 0;
                 pFeeling.Value = 0;
 
-                pStrengthFood.Maximum = m.Core.Save.StrengthMax;
-                pStrengthDrink.Maximum = m.Core.Save.StrengthMax;
-                pStrength.Maximum = m.Core.Save.StrengthMax;
-                pFeeling.Maximum = m.Core.Save.FeelingMax;
+                pStrengthFood.Maximum = m.Core.Save!.StrengthMax;
+                pStrengthDrink.Maximum = m.Core.Save!.StrengthMax;
+                pStrength.Maximum = m.Core.Save!.StrengthMax;
+                pFeeling.Maximum = m.Core.Save!.FeelingMax;
 
 
 
-                pStrength.Value = m.Core.Save.Strength;
-                pFeeling.Value = m.Core.Save.Feeling;
+                pStrength.Value = m.Core.Save!.Strength;
+                pFeeling.Value = m.Core.Save!.Feeling;
 
-                pStrengthFood.Value = m.Core.Save.StrengthFood;
-                pStrengthDrink.Value = m.Core.Save.StrengthDrink;
-                pStrengthFoodMax.Value = Math.Min(100, (m.Core.Save.StrengthFood + m.Core.Save.StoreStrengthFood) / m.Core.Save.StrengthMax * 100);
-                pStrengthDrinkMax.Value = Math.Min(100, (m.Core.Save.StrengthDrink + m.Core.Save.StoreStrengthDrink) / m.Core.Save.StrengthMax * 100);
+                pStrengthFood.Value = m.Core.Save!.StrengthFood;
+                pStrengthDrink.Value = m.Core.Save!.StrengthDrink;
+                pStrengthFoodMax.Value = Math.Min(100, (m.Core.Save!.StrengthFood + m.Core.Save!.StoreStrengthFood) / m.Core.Save!.StrengthMax * 100);
+                pStrengthDrinkMax.Value = Math.Min(100, (m.Core.Save!.StrengthDrink + m.Core.Save!.StoreStrengthDrink) / m.Core.Save!.StrengthMax * 100);
 
-                if (Math.Abs(m.Core.Save.ChangeStrength) > 1)
-                    tStrength.Text = $"{m.Core.Save.ChangeStrength:f1}/t";
+                if (Math.Abs(m.Core.Save!.ChangeStrength) > 1)
+                    tStrength.Text = $"{m.Core.Save!.ChangeStrength:f1}/t";
                 else
-                    tStrength.Text = $"{m.Core.Save.ChangeStrength:f2}/t";
-                if (Math.Abs(m.Core.Save.ChangeFeeling) > 1)
-                    tFeeling.Text = $"{m.Core.Save.ChangeFeeling:f1}/t";
+                    tStrength.Text = $"{m.Core.Save!.ChangeStrength:f2}/t";
+                if (Math.Abs(m.Core.Save!.ChangeFeeling) > 1)
+                    tFeeling.Text = $"{m.Core.Save!.ChangeFeeling:f1}/t";
                 else
-                    tFeeling.Text = $"{m.Core.Save.ChangeFeeling:f2}/t";
-                if (Math.Abs(m.Core.Save.ChangeStrengthDrink) > 1)
-                    tStrengthDrink.Text = $"{m.Core.Save.ChangeStrengthDrink:f1}/t";
+                    tFeeling.Text = $"{m.Core.Save!.ChangeFeeling:f2}/t";
+                if (Math.Abs(m.Core.Save!.ChangeStrengthDrink) > 1)
+                    tStrengthDrink.Text = $"{m.Core.Save!.ChangeStrengthDrink:f1}/t";
                 else
-                    tStrengthDrink.Text = $"{m.Core.Save.ChangeStrengthDrink:f2}/t";
-                if (Math.Abs(m.Core.Save.ChangeStrengthFood) > 1)
-                    tStrengthFood.Text = $"{m.Core.Save.ChangeStrengthFood:f1}/t";
+                    tStrengthDrink.Text = $"{m.Core.Save!.ChangeStrengthDrink:f2}/t";
+                if (Math.Abs(m.Core.Save!.ChangeStrengthFood) > 1)
+                    tStrengthFood.Text = $"{m.Core.Save!.ChangeStrengthFood:f1}/t";
                 else
-                    tStrengthFood.Text = $"{m.Core.Save.ChangeStrengthFood:f2}/t";
+                    tStrengthFood.Text = $"{m.Core.Save!.ChangeStrengthFood:f2}/t";
 
             }
         }
 
-        private void ClosePanelTimer_Tick(object sender, EventArgs e)
+        private void ClosePanelTimer_Tick(object? sender, EventArgs e)
         {
             Dispatcher.Invoke(() =>
             {
@@ -261,7 +261,7 @@ namespace VPet_Simulator.Core
             });
         }
 
-        private void Closetimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void Closetimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (onFocus)
             {
@@ -274,7 +274,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// ToolBar显示事件
         /// </summary>
-        public event Action EventShow;
+        public event Action? EventShow;
         public void Show()
         {
             EventShow?.Invoke();
@@ -301,7 +301,7 @@ namespace VPet_Simulator.Core
 
         private void MenuPanel_Click(object sender, RoutedEventArgs e)
         {
-            m.Core.Controller.ShowPanel();
+            m.Core.Controller!.ShowPanel();
         }
         /// <summary>
         /// 窗口类型
@@ -397,7 +397,7 @@ namespace VPet_Simulator.Core
             //}
         }
 
-        private Brush GetForeground(double value)
+        private Brush? GetForeground(double value)
         {
             if (value >= .6)
             {
@@ -415,7 +415,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// MenuPanel显示事件
         /// </summary>
-        public event Action EventMenuPanelShow;
+        public event Action? EventMenuPanelShow;
 
         private void MenuPanel_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -431,7 +431,6 @@ namespace VPet_Simulator.Core
 
         public void Dispose()
         {
-            m = null;
             CloseTimer.Dispose();
             closePanelTimer.Dispose();
         }
@@ -440,7 +439,7 @@ namespace VPet_Simulator.Core
         {
             if (m.State == Main.WorkingState.Sleep)
             {
-                if (m.Core.Save.Mode == IGameSave.ModeType.Ill)
+                if (m.Core.Save!.Mode == IGameSave.ModeType.Ill)
                     return;
                 m.State = WorkingState.Nomal;
                 m.Display(GraphType.Sleep, AnimatType.C_End, m.DisplayNomal);
@@ -449,7 +448,7 @@ namespace VPet_Simulator.Core
                 m.DisplaySleep(true);
             else
             {
-                m.WorkTimer.Stop(() => m.DisplaySleep(true), WorkTimer.FinishWorkInfo.StopReason.MenualStop);
+                m.WorkTimer?.Stop(() => m.DisplaySleep(true), WorkTimer.FinishWorkInfo.StopReason.MenualStop);
             }
         }
     }

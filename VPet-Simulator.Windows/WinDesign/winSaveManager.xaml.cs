@@ -59,14 +59,14 @@ namespace VPet_Simulator.Windows
                 SourceType.Steam => "Steam云备份存档, 跟随Steam账号保存".Translate(),
                 _ => string.Empty
             };
-            public string SaveId { get; init; }
-            public string PetName { get; init; }
-            public DateTime SaveTime { get; init; }
-            public string SaveTimeText { get; init; }
-            public string LevelText { get; init; }
-            public string MoneyText { get; init; }
-            public string FullPath { get; init; }
-            public string SteamPath { get; init; }
+            public string SaveId { get; init; } = string.Empty;
+            public string PetName { get; init; } = string.Empty;
+            public DateTime SaveTime { get; init; } = DateTime.MinValue;
+            public string SaveTimeText { get; init; } = string.Empty;
+            public string LevelText { get; init; } = string.Empty;
+            public string MoneyText { get; init; } = string.Empty;
+            public string FullPath { get; init; } = string.Empty;
+            public string SteamPath { get; init; } = string.Empty;
             public bool HashCheck { get; init; }
             public string HashCheckText => HashCheck ? "Pass" : "Fail";
         }

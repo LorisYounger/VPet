@@ -15,7 +15,7 @@ namespace VPet_Simulator.Core
 {
     public static class GraphHelper
     {
-        internal static string[][] graphtypevalue = null;
+        internal static string[][]? graphtypevalue ;
         /// <summary>
         /// 动画类型默认前文本
         /// </summary>
@@ -42,7 +42,7 @@ namespace VPet_Simulator.Core
         /// <param name="parant">显示位置</param>
         /// <param name="EndAction">结束方法</param>
         /// <param name="image">额外图片</param>
-        public static void Run(this IGraph graph, Decorator parant, ImageSource image, Action EndAction = null)
+        public static void Run(this IGraph graph, Decorator parant, ImageSource image, Action? EndAction = null)
         {
             if (graph is IRunImage iri)
             {
@@ -60,7 +60,7 @@ namespace VPet_Simulator.Core
         /// <param name="img">用于显示的Image</param>
         /// <param name="EndAction">结束动画</param>
         /// <returns>准备好的线程</returns>
-        public static Task Run(this IGraph graph, Image img, Action EndAction = null)
+        public static Task? Run(this IGraph graph, Image img, Action? EndAction = null)
         {
             if (graph is IImageRun iri)
             {
@@ -91,8 +91,8 @@ namespace VPet_Simulator.Core
             /// 工作名称
             /// </summary>
             [Line(ignoreCase: true)]
-            public string Name { get; set; }
-            public string nametrans = null;
+            public string Name { get; set; } = "";
+            public string? nametrans = null;
             /// <summary>
             /// 工作名称 已翻译
             /// </summary>
@@ -109,7 +109,7 @@ namespace VPet_Simulator.Core
             /// 使用动画名称
             /// </summary>
             [Line(ignoreCase: true, converter: typeof(Function.LPSConvertToLower))]
-            public string Graph { get; set; }
+            public string Graph { get; set; } = "";
             /// <summary>
             /// 工作盈利/学习基本倍率
             /// </summary>
@@ -223,7 +223,7 @@ namespace VPet_Simulator.Core
             /// 使用动画名称
             /// </summary>
             [Line(ignoreCase: true, converter: typeof(Function.LPSConvertToLower))]
-            public string Graph { get; set; }
+            public string Graph { get; set; } = "";
             /// <summary>
             /// 定位类型
             /// </summary>
@@ -378,23 +378,23 @@ namespace VPet_Simulator.Core
             public bool Triggered(Main m)
             {
                 var c = m.Core.Controller;
-                if (!Mode.HasFlag(GetModeType(m.Core.Save.Mode))) return false;
+                if (!Mode.HasFlag(GetModeType(m.Core.Save!.Mode))) return false;
                 if (TriggerType == DirectionType.None) return true;
-                if (TriggerType.HasFlag(DirectionType.Left) && c.GetWindowsDistanceLeft() > TriggerLeft * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Left) && c!.GetWindowsDistanceLeft() > TriggerLeft * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.Right) && c.GetWindowsDistanceRight() > TriggerRight * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Right) && c!.GetWindowsDistanceRight() > TriggerRight * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.Top) && c.GetWindowsDistanceUp() > TriggerTop * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Top) && c!.GetWindowsDistanceUp() > TriggerTop * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.Bottom) && c.GetWindowsDistanceDown() > TriggerBottom * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.Bottom) && c!.GetWindowsDistanceDown() > TriggerBottom * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.LeftGreater) && c.GetWindowsDistanceLeft() < TriggerLeft * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.LeftGreater) && c!.GetWindowsDistanceLeft() < TriggerLeft * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.RightGreater) && c.GetWindowsDistanceRight() < TriggerRight * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.RightGreater) && c!.GetWindowsDistanceRight() < TriggerRight * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.TopGreater) && c.GetWindowsDistanceUp() < TriggerTop * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.TopGreater) && c!.GetWindowsDistanceUp() < TriggerTop * c.ZoomRatio)
                     return false;
-                if (TriggerType.HasFlag(DirectionType.BottomGreater) && c.GetWindowsDistanceDown() < TriggerBottom * c.ZoomRatio)
+                if (TriggerType.HasFlag(DirectionType.BottomGreater) && c!.GetWindowsDistanceDown() < TriggerBottom * c.ZoomRatio)
                     return false;
                 return true;
             }
@@ -428,12 +428,12 @@ namespace VPet_Simulator.Core
             /// <summary>
             /// 获取兼容支持下个播放的移动
             /// </summary>
-            public Move GetCompatibilityMove(Main main)
+            public Move? GetCompatibilityMove(Main main)
             {
                 List<Move> ms = new List<Move>();
                 bool x = SpeedX > 0;
                 bool y = SpeedY > 0;
-                foreach (Move m in main.Core.Graph.GraphConfig.Moves)
+                foreach (Move m in main.Core.Graph!.GraphConfig.Moves)
                 {
                     //if (m == this) continue;
                     int bns = 0;
@@ -475,16 +475,16 @@ namespace VPet_Simulator.Core
                         switch (LocateType)
                         {
                             case DirectionType.Top:
-                                m.Core.Controller.MoveWindows(0, -m.Core.Controller.GetWindowsDistanceUp() / m.Core.Controller.ZoomRatio - LocateLength);
+                                m.Core.Controller!.MoveWindows(0, -m.Core.Controller!.GetWindowsDistanceUp() / m.Core.Controller!.ZoomRatio - LocateLength);
                                 break;
                             case DirectionType.Bottom:
-                                m.Core.Controller.MoveWindows(0, m.Core.Controller.GetWindowsDistanceDown() / m.Core.Controller.ZoomRatio + LocateLength);
+                                m.Core.Controller!.MoveWindows(0, m.Core.Controller!.GetWindowsDistanceDown() / m.Core.Controller!.ZoomRatio + LocateLength);
                                 break;
                             case DirectionType.Left:
-                                m.Core.Controller.MoveWindows(-m.Core.Controller.GetWindowsDistanceLeft() / m.Core.Controller.ZoomRatio - LocateLength, 0);
+                                m.Core.Controller!.MoveWindows(-m.Core.Controller!.GetWindowsDistanceLeft() / m.Core.Controller!.ZoomRatio - LocateLength, 0);
                                 break;
                             case DirectionType.Right:
-                                m.Core.Controller.MoveWindows(m.Core.Controller.GetWindowsDistanceRight() / m.Core.Controller.ZoomRatio + LocateLength, 0);
+                                m.Core.Controller!.MoveWindows(m.Core.Controller!.GetWindowsDistanceRight() / m.Core.Controller!.ZoomRatio + LocateLength, 0);
                                 break;
                         }
                         m.MoveTimerPoint = new Point(SpeedX, SpeedY);
@@ -501,7 +501,7 @@ namespace VPet_Simulator.Core
             public void Displaying(Main m)
             {
                 //看看距离是不是不足
-                if (!Checked(m.Core.Controller))
+                if (!Checked(m.Core.Controller!))
                 {//是,停下恢复默认 or/爬墙
                     if (Function.Rnd.Next(Main.TreeRND) <= 1)
                     {
@@ -535,9 +535,9 @@ namespace VPet_Simulator.Core
 
             private void StopMoving(Main m)
             {
-                if (m.Core.Controller.RePositionActive)
-                    m.Core.Controller.ResetPosition();
-                m.Core.Controller.RePositionActive = !m.Core.Controller.CheckPosition();
+                if (m.Core.Controller!.RePositionActive)
+                    m.Core.Controller!.ResetPosition();
+                m.Core.Controller!.RePositionActive = !m.Core.Controller!.CheckPosition();
                 m.MoveTimer.Enabled = false;
 
                 m.Display(Graph, AnimatType.C_End, () => { m.Event_MoveEndInvoke(this); m.DisplayToNomal(); });

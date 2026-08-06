@@ -18,7 +18,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="modpath">功能位置</param>
         public void AddSource(ILine line, string modpath)
         {
-            ISub source = line.Find("source");
+            ISub? source = line.Find("source");
             if (source == null)
                 return;
             //else if (!source.Info.Contains(":\\"))
@@ -32,7 +32,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="line">资源行</param>
         public void AddSource(ILine line)
         {
-            ISub source = line.Find("source");
+            ISub? source = line.Find("source");
             if (source == null)
                 return;
             //else if (!source.Info.Contains(":\\"))
@@ -78,12 +78,12 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="name">资源名称</param>
         /// <param name="nofind">如果未找到,退回这个值</param>
         /// <returns>返回资源位置,如果未找到,则退回nofind</returns>
-        public string FindSource(string name, string nofind = null)
+        public string? FindSource(string name, string? nofind = null)
         {
-            ILine line = FindLine(name.ToLowerInvariant());
+            ILine? line = FindLine(name.ToLowerInvariant());
             if (line == null)
                 return nofind;
-            return line.Find("source").Info;
+            return line.Find("source")?.Info;
         }
         /// <summary>
         /// 查找资源
@@ -91,15 +91,20 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="name">资源名称</param>
         /// <param name="nofind">如果未找到,退回这个值</param>
         /// <returns>返回资源位置,如果未找到,则退回nofind</returns>
-        public Uri FindSourceUri(string name, string nofind = null)
+        public Uri? FindSourceUri(string name, string? nofind = null)
         {
-            ILine line = FindLine(name.ToLowerInvariant());
+            ILine? line = FindLine(name.ToLowerInvariant());
             if (line == null)
                 if (nofind != null)
                     return new Uri(nofind);
                 else
                     return null;
-            return new Uri(line.Find("source").Info);
+            if(line.Find("source") == null)
+                if (nofind != null)
+                    return new Uri(nofind);
+                else
+                    return null;
+            return new Uri(line.Find("source")!.Info);
         }
     }
 
@@ -131,7 +136,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <returns>图片资源,如果未找到则退回错误提示图片</returns>
         public BitmapImage FindImage(string imagename) => NewSafeBitmapImage(FindImageUri(imagename));
 
-        public Uri FindImageUri(string imagename)
+        public Uri? FindImageUri(string imagename)
         {
 #if DEBUGs
             var v = FindSourceUri(imagename, "pack://application:,,,/Res/Image/system/error.png");
@@ -151,7 +156,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <param name="superior">上级图片 如果没有专属的图片,则提供上级的图片</param>
         public BitmapImage FindImage(string imagename, string superior)
         {
-            string source = FindSource(imagename);
+            string? source = FindSource(imagename);
             if (source == null)
             {
                 return NewSafeBitmapImage(FindImageUri(superior));
@@ -173,8 +178,10 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         /// <param name="source">图片源</param>
         /// <returns>BitmapImage</returns>
-        public static BitmapImage NewSafeBitmapImage(Uri source)
+        public static BitmapImage NewSafeBitmapImage(Uri? source)
         {
+            if(source == null)
+                return new BitmapImage(new Uri("pack://application:,,,/Res/img/error.png"));
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
             bi.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;

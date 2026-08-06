@@ -24,7 +24,7 @@ namespace VPet_Simulator.Core
         /// <param name="text">内容</param>
         /// <param name="graphName">图像名</param>
         /// <param name="msgContent">消息框内容</param>
-        void Show(string name, string text, string graphName = null, UIElement msgContent = null);
+        void Show(string name, string text, string? graphName = null, UIElement? msgContent = null);
 
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace VPet_Simulator.Core
             this.m = m;
         }
 
-        private void CloseTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void CloseTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (Dispatcher.Invoke(() => Opacity) <= 0.05)
             {
@@ -93,9 +93,9 @@ namespace VPet_Simulator.Core
             }
         }
 
-        List<char> outputtext;
+        List<char> outputtext = new List<char>();
         StringBuilder outputtextsample = new StringBuilder();
-        private void ShowTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void ShowTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (outputtext.Count > 0)
             {
@@ -121,7 +121,7 @@ namespace VPet_Simulator.Core
                 {
                     if (m.windowMediaPlayerAvailable)
                     {
-                        TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                        TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - (m.VoicePlayer.Clock.CurrentTime ?? TimeSpan.Zero)) : TimeSpan.Zero);
                         if (ts.TotalSeconds > 2)
                         {
                             return;
@@ -152,8 +152,8 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 被关闭时事件
         /// </summary>
-        public event Action EndAction;
-        private void EndTimer_Elapsed(object sender, ElapsedEventArgs e)
+        public event Action? EndAction;
+        private void EndTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (--timeleft <= 0)
             {
@@ -166,13 +166,13 @@ namespace VPet_Simulator.Core
         public Timer ShowTimer = new Timer() { Interval = 150 };
         public Timer CloseTimer = new Timer() { Interval = 50 };
         int timeleft;
-        string graphName;
+        string? graphName;
         /// <summary>
         /// 显示消息
         /// </summary>
         /// <param name="name">名字</param>
         /// <param name="text">内容</param>
-        public void Show(string name, string text, string graphName = null, UIElement msgContent = null)
+        public void Show(string name, string text, string? graphName = null, UIElement? msgContent = null)
         {
             if (m.UIGrid.Children.IndexOf(this) != m.UIGrid.Children.Count - 1)
             {
@@ -193,7 +193,7 @@ namespace VPet_Simulator.Core
                 MessageBoxContent.Children.Add(msgContent);
             }
         }
-        private SayInfoWithStream oldsaystream;
+        private SayInfoWithStream? oldsaystream;
         /// <summary>
         /// 流式传输模式 显示文字
         /// </summary>
@@ -250,6 +250,7 @@ namespace VPet_Simulator.Core
         /// 流式传输用的阻断文字显示用的计时器
         /// </summary>
         DateTime nextshow = DateTime.Now;
+        private readonly object nextshowLock = new();
         /// <summary>
         /// 增加显示新词
         /// </summary>
@@ -260,14 +261,19 @@ namespace VPet_Simulator.Core
             Task.Run(() =>
             {
                 int sleeptime = 0;
-                lock (oldsaystream)
-                    if (DateTime.Now < nextshow)
+                lock (nextshowLock)
+                {
+                    var now = DateTime.Now;
+                    if (now < nextshow)
                     {
-                        sleeptime = (int)(nextshow - DateTime.Now).TotalMilliseconds;
+                        sleeptime = (int)(nextshow - now).TotalMilliseconds;
                         nextshow = nextshow.AddMilliseconds(150);
                     }
                     else
-                        nextshow = DateTime.Now.AddMilliseconds(150);
+                    {
+                        nextshow = now.AddMilliseconds(150);
+                    }
+                }
                 if (sleeptime > 0) //处理前等待
                     Thread.Sleep(sleeptime);
                 Dispatcher.Invoke(() => { TText.Text = data.fullText; });
@@ -285,10 +291,10 @@ namespace VPet_Simulator.Core
                 {
                     if (m.windowMediaPlayerAvailable)
                     {
-                        TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                        TimeSpan ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - (m.VoicePlayer.Clock.CurrentTime?? TimeSpan.Zero)) : TimeSpan.Zero);
                         while (ts.TotalSeconds > 2)
                         {
-                            ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - m.VoicePlayer.Clock.CurrentTime.Value) : TimeSpan.Zero);
+                            ts = Dispatcher.Invoke(() => m.VoicePlayer?.Clock?.NaturalDuration.HasTimeSpan == true ? (m.VoicePlayer.Clock.NaturalDuration.TimeSpan - (m.VoicePlayer.Clock.CurrentTime ?? TimeSpan.Zero)) : TimeSpan.Zero);
                             Thread.Sleep(100);
                         }
                     }
@@ -319,14 +325,14 @@ namespace VPet_Simulator.Core
             });
         }
 
-        public void Border_MouseEnter(object sender, MouseEventArgs e)
+        public void Border_MouseEnter(object? sender, MouseEventArgs? e)
         {
             EndTimer.Stop();
             CloseTimer.Stop();
             this.Opacity = .8;
         }
 
-        public void Border_MouseLeave(object sender, MouseEventArgs e)
+        public void Border_MouseLeave(object? sender, MouseEventArgs? e)
         {
             if (!ShowTimer.Enabled)
                 EndTimer.Start();

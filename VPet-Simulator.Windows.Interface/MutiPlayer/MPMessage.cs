@@ -62,9 +62,9 @@ public struct MPMessage
     /// 获取消息内容(类)
     /// </summary>
     /// <typeparam name="T">类类型</typeparam>
-    public T GetContent<T>()
+    public T? GetContent<T>()
     {
-        return (T)LPSConvert.GetStringObject(Content, typeof(T), convertNoneLineAttribute: true);
+        return (T?)LPSConvert.GetStringObject(Content, typeof(T), convertNoneLineAttribute: true);
     }
     /// <summary>
     /// 设置消息内容(字符串)

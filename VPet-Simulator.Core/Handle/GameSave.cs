@@ -14,8 +14,9 @@ namespace VPet_Simulator.Core
         /// 宠物名字
         /// </summary>
         [Line(name: "name")]
-        public string Name { get; set; }
-        public string HostName { get; set; }
+        public string Name { get; set; } = "";
+        [Line(name: "hostname")]
+        public string HostName { get; set; } = "";
 
         /// <summary>
         /// 金钱
@@ -322,7 +323,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 读档
         /// </summary>
-        public static GameSave Load(ILine data) => LPSConvert.DeserializeObject<GameSave>(data);
+        public static GameSave Load(ILine data) => LPSConvert.DeserializeObject<GameSave>(data)!;
         /// <summary>
         /// 存档
         /// </summary>

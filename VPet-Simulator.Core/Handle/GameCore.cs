@@ -12,7 +12,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 控制器
         /// </summary>
-        public IController Controller;
+        public IController? Controller;
         /// <summary>
         /// 触摸范围和事件列表
         /// </summary>
@@ -20,11 +20,11 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 图形核心
         /// </summary>
-        public GraphCore Graph;
+        public GraphCore? Graph;
         /// <summary>
         /// 游戏数据
         /// </summary>
-        public IGameSave Save;
+        public IGameSave? Save;
     }
     /// <summary>
     /// 触摸范围事件
