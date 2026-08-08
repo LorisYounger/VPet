@@ -48,9 +48,9 @@ namespace VPet_Simulator.Core
         {
             string pn;
             if (path is DirectoryInfo)
-                pn = Sub.Split(path.FullName.ToLowerInvariant(), info[(gstr)"startuppath"].ToLowerInvariant()).Last();
+                pn = Sub.Split(path.FullName.ToLowerInvariant(), info[(gstr)"startuppath"]!.ToLowerInvariant()).Last();
             else
-                pn = Sub.Split(path.FullName.Substring(0, path.FullName.Length - path.Extension.Length).ToLowerInvariant(), info[(gstr)"startuppath"].ToLowerInvariant()).Last();
+                pn = Sub.Split(path.FullName.Substring(0, path.FullName.Length - path.Extension.Length).ToLowerInvariant(), info[(gstr)"startuppath"]!.ToLowerInvariant()).Last();
 
             var path_name = pn.Replace('\\', '_').Split('_').ToList();
             path_name.RemoveAll(string.IsNullOrWhiteSpace);
@@ -271,7 +271,7 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 动画名字: 用户自定义 同名字动画支持相同随机,不再使用StoreRand
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
         /// <summary>
         /// 动作: 动画的动作 Start Loop End
         /// </summary>

@@ -138,6 +138,6 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 检查部分状态是否满足需求
         /// </summary>之所以不是全部的,是因为挨个取效率太差了
-        public virtual bool CheckState(Main m) => CheckState(m.Core.Save);
+        public virtual bool CheckState(Main m) => CheckState(m.Core.Save!);
     }
 }

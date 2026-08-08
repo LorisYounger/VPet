@@ -19,8 +19,8 @@ namespace VPet_Simulator.Core
     {
         private class PngChunk
         {
-            public string Type;
-            public byte[] Data;
+            public string Type = "";
+            public byte[] Data = Array.Empty<byte>();
         }
 
         private class ApngFrameData
@@ -40,7 +40,7 @@ namespace VPet_Simulator.Core
         {
             public int CanvasWidth;
             public int CanvasHeight;
-            public byte[] IhdrTemplate;
+            public byte[] IhdrTemplate = Array.Empty<byte>();
             public List<PngChunk> SharedChunks = new List<PngChunk>();
             public List<ApngFrameData> Frames = new List<ApngFrameData>();
         }
@@ -51,13 +51,13 @@ namespace VPet_Simulator.Core
         private static readonly uint[] CrcTable = BuildCrcTable();
 
         private GraphCore GraphCore;
-        private BitmapSource SpriteSheetSource;
-        private Int32Rect[] FrameRects;
+        private BitmapSource? SpriteSheetSource;
+        private Int32Rect[]? FrameRects;
         private readonly object SpriteSheetLock = new object();
         private readonly object FrameCacheLock = new object();
         private readonly Dictionary<int, BitmapSource> FrameCache = new Dictionary<int, BitmapSource>();
         private readonly List<int> FrameDurations = new List<int>();
-        private string SpriteSheetPath;
+        private string SpriteSheetPath = string.Empty;
         private int FrameWidth;
         private int FrameHeight;
         private int nowid;
@@ -67,7 +67,7 @@ namespace VPet_Simulator.Core
         public bool IsFail { get; private set; }
         public string FailMessage { get; private set; } = "";
         public GraphInfo GraphInfo { get; private set; }
-        public TaskControl Control { get; private set; }
+        public TaskControl? Control { get; private set; }
         public string Path { get; private set; }
         public long LastUseTimeTicks = DateTime.UtcNow.Ticks;
 
@@ -198,7 +198,7 @@ namespace VPet_Simulator.Core
                 }
 
                 SKBitmap drawBitmap = canvasBitmap;
-                SKBitmap scaledBitmap = null;
+                SKBitmap? scaledBitmap = null;
                 if (canvasBitmap.Width != FrameWidth || canvasBitmap.Height != FrameHeight)
                 {
                     scaledBitmap = new SKBitmap(FrameWidth, FrameHeight, canvasBitmap.ColorType, canvasBitmap.AlphaType);
@@ -249,7 +249,7 @@ namespace VPet_Simulator.Core
                 throw new InvalidDataException("Invalid PNG/APNG signature.");
 
             var result = new ParsedApng();
-            ApngFrameData currentFrame = null;
+            ApngFrameData? currentFrame = null;
             bool imageDataStarted = false;
 
             while (stream.Position < stream.Length)
@@ -351,7 +351,7 @@ namespace VPet_Simulator.Core
             return SKBitmap.Decode(memory.ToArray());
         }
 
-        private BitmapSource GetFrameSource(int frameIndex)
+        private BitmapSource? GetFrameSource(int frameIndex)
         {
             Touch();
             EnsureSpriteSheetLoaded();
@@ -389,7 +389,7 @@ namespace VPet_Simulator.Core
             for (int i = 0; i < FrameCacheAheadCount; i++)
             {
                 cursor++;
-                if (cursor >= FrameRects.Length)
+                if (FrameRects == null || cursor >= FrameRects.Length)
                 {
                     if (!IsLoop)
                         break;
@@ -520,7 +520,7 @@ namespace VPet_Simulator.Core
             {
                 int frameIndex;
                 int duration;
-                BitmapSource frameSource;
+                BitmapSource? frameSource;
                 lock (FrameCacheLock)
                 {
                     if (FrameDurations.Count == 0)
@@ -578,7 +578,7 @@ namespace VPet_Simulator.Core
             }
         }
 
-        public Task Run(System.Windows.Controls.Image img, Action EndAction = null)
+        public Task Run(System.Windows.Controls.Image img, Action? EndAction = null)
         {
             Touch();
             if (!IsReady)
@@ -607,7 +607,7 @@ namespace VPet_Simulator.Core
             });
         }
 
-        public void Run(Decorator parant, Action EndAction = null)
+        public void Run(Decorator parant, Action? EndAction = null)
         {
             Touch();
             if (!IsReady)
@@ -691,7 +691,7 @@ namespace VPet_Simulator.Core
 
         public void Dispose()
         {
-            FrameRects = null;
+            FrameRects = [];
             lock (SpriteSheetLock)
             {
                 SpriteSheetSource = null;
@@ -701,8 +701,7 @@ namespace VPet_Simulator.Core
                 FrameCache.Clear();
                 FrameDurations.Clear();
             }
-            GraphCore = null;
-            Control = null;
+            //GraphCore = null;
         }
     }
 }

@@ -165,12 +165,12 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public string Language
         {
-            get => GetString("language", "null");
+            get => GetString("language", "null")!;
             set => this[(gstr)"language"] = value;
         }
         public string Font
         {
-            get => GetString("font", "OPPOSans R");
+            get => GetString("font", "OPPOSans R")!;
             set => this[(gstr)"font"] = value;
         }
         public string Theme
@@ -350,7 +350,7 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public string PetGraph
         {
-            get => this["gameconfig"].GetString("petgraph", "vup");
+            get => this["gameconfig"].GetString("petgraph", "vup")!;
             set => this["gameconfig"].SetString("petgraph", value);
         }
 
@@ -589,14 +589,14 @@ namespace VPet_Simulator.Windows
         {
             var petloader = mw.Pets.Find(x => x.Name == PetGraph);
             petloader ??= mw.Pets[0];
-            bool ischangename = mw.Core.Save.Name == petloader.PetName.Translate();
+            bool ischangename = mw.Core.Save!.Name == petloader.PetName.Translate();
             LocalizeCore.LoadCulture(language);
             Language = LocalizeCore.CurrentCulture;
             if (ischangename)
             {
-                mw.Core.Save.Name = petloader.PetName.Translate();
+                mw.Core.Save!.Name = petloader.PetName.Translate();
                 if (mw.IsSteamUser)
-                    SteamFriends.SetRichPresence("username", mw.Core.Save.Name);
+                    SteamFriends.SetRichPresence("username", mw.Core.Save!.Name);
             }
         }
 
@@ -625,6 +625,7 @@ namespace VPet_Simulator.Windows
             {
                 if (mw.Main.State != Main.WorkingState.Nomal)
                 {
+                    if(mw.Main.WorkTimer != null)
                     mw.Main.WorkTimer.Visibility = Visibility.Collapsed;
                     mw.Main.State = Main.WorkingState.Nomal;
                 }

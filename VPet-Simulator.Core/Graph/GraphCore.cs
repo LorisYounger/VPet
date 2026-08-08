@@ -32,7 +32,7 @@ namespace VPet_Simulator.Core
 
         public readonly Dispatcher Dispatcher;
         public readonly Timer CleanTimer;
-        public GraphCore(int resolution, Dispatcher dispatcher)
+        public GraphCore(int resolution, Dispatcher dispatcher, Config config)
         {
             Dispatcher = dispatcher;
             if (!Directory.Exists(CachePath))
@@ -49,6 +49,7 @@ namespace VPet_Simulator.Core
                     GraphsALL[i].CleanupIdleCache(cleanTicks);
                 }
             }, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+            GraphConfig = config;
         }
         /// <summary>
         /// 缓存路径,用于缓存图像,默认在程序目录下的cache文件夹
@@ -113,7 +114,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="type">动画类型</param>
         /// <returns>动画名字,找不到则返回null</returns>
-        public string FindName(GraphType type)
+        public string? FindName(GraphType type)
         {
             if (GraphsName.TryGetValue(type, out var gl))
             {
@@ -127,7 +128,7 @@ namespace VPet_Simulator.Core
         /// <param name="GraphName">动画名字</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
-        public IGraph FindGraph(string GraphName, AnimatType animat, IGameSave.ModeType mode)
+        public IGraph? FindGraph(string? GraphName, AnimatType animat, IGameSave.ModeType mode)
         {
             if (GraphName == null)
                 return null;
@@ -170,12 +171,13 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 查找动画列表
         /// </summary>
+        /// <param name="GraphName">动画名字</param>
         /// <param name="mode">状态类型,找不到就找相同动画类型</param>
         /// <param name="animat">动画的动作 Start Loop End</param>
-        public List<IGraph> FindGraphs(string GraphName, AnimatType animat, IGameSave.ModeType mode)
+        public List<IGraph> FindGraphs(string? GraphName, AnimatType animat, IGameSave.ModeType mode)
         {
             if (GraphName == null)
-                return null;
+                return new List<IGraph>();
             if (GraphsList.TryGetValue(GraphName, out var d3) && d3.TryGetValue(animat, out var gl))
             {
                 var list = gl.FindAll(x => x.GraphInfo.ModeType == mode);
@@ -213,22 +215,18 @@ namespace VPet_Simulator.Core
         public void Dispose()
         {
             CleanTimer.Dispose();
-            GraphConfig = null;
             if (GraphsALL != null)
+            {
                 foreach (var graph in GraphsALL)
                 {
                     graph.Dispose();
                 }
-            GraphsALL.Clear();
+                GraphsALL.Clear();
+            }
             GraphsList.Clear();
             GraphsName.Clear();
             CommUIElements.Clear();
             CommConfig.Clear();
-            GraphsALL = null;
-            CommConfig = null;
-            CommUIElements = null;
-            GraphsName = null;
-            GraphsList = null;
         }
 
         public Config GraphConfig;
@@ -287,13 +285,13 @@ namespace VPet_Simulator.Core
             /// </summary>
             /// <param name="name">动画名称</param>
             /// <returns>持续时间</returns>
-            public int GetDuration(string name) => Duration.GetInt(name ?? "", 10);
+            public int GetDuration(string? name) => Duration.GetInt(name ?? "", 10);
             /// <summary>
             /// 获得 Str 里面储存的文本 (已翻译)
             /// </summary>
             /// <param name="name">定位名称</param>
             /// <returns>储存的文本 (已翻译)</returns>
-            public string StrGetString(string name) => LocalizeCore.Translate(Str.GetString(name));
+            public string StrGetString(string name) => LocalizeCore.Translate(Str.GetString(name) ?? "");
             /// <summary>
             /// 剩余设置数据
             /// </summary>
@@ -329,11 +327,15 @@ namespace VPet_Simulator.Core
 
                 foreach (var line in lps.FindAllLine("work"))
                 {
-                    Works.Add(LPSConvert.DeserializeObject<Work>(line));
+                    var work = LPSConvert.DeserializeObject<Work>(line);
+                    if (work != null)
+                        Works.Add(work);
                 }
                 foreach (var line in lps.FindAllLine("move"))
                 {
-                    Moves.Add(LPSConvert.DeserializeObject<Move>(line));
+                    var move = LPSConvert.DeserializeObject<Move>(line);
+                    if (move != null)
+                        Moves.Add(move);
                 }
                 Str = new Line_D(lps["str"]);
                 Duration = new Line_D(lps["duration"]);
@@ -386,11 +388,15 @@ namespace VPet_Simulator.Core
 
                 foreach (var line in lps.FindAllLine("work"))
                 {
-                    Works.Add(LPSConvert.DeserializeObject<Work>(line));
+                    var work = LPSConvert.DeserializeObject<Work>(line);
+                    if (work != null)
+                        Works.Add(work);
                 }
                 foreach (var line in lps.FindAllLine("move"))
                 {
-                    Moves.Add(LPSConvert.DeserializeObject<Move>(line));
+                    var move = LPSConvert.DeserializeObject<Move>(line);
+                    if (move != null)
+                        Moves.Add(move);
                 }
                 foreach (var line in lps)
                 {

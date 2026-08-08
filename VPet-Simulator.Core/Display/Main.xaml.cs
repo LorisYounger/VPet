@@ -20,27 +20,27 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 游戏核心
         /// </summary>
-        public GameCore Core;
+        public GameCore Core = null!;
         /// <summary>
         /// 菜单栏
         /// </summary>
-        public ToolBar ToolBar;
+        public ToolBar ToolBar = null!;
         /// <summary>
         /// 消息栏
         /// </summary>
-        public IMassageBar MsgBar;
+        public IMassageBar MsgBar = null!;
         /// <summary>
         /// 工作显示栏
         /// </summary>
-        public WorkTimer WorkTimer;
+        public WorkTimer WorkTimer = null!;
         /// <summary>
         /// 刷新时间时会调用该方法
         /// </summary>
-        public event Action<Main> TimeHandle;
+        public event Action<Main>? TimeHandle;
         /// <summary>
         /// 刷新时间时会调用该方法,在所有任务处理完之后
         /// </summary>
-        public event Action<Main> TimeUIHandle;
+        public event Action<Main>? TimeUIHandle;
         /// <summary>
         /// 如果不开启功能模式,默认状态设置
         /// </summary>
@@ -80,7 +80,7 @@ namespace VPet_Simulator.Core
         public async Task Load_2_WaitGraph()
         {
             //新功能:等待所有图像加载完成再跑
-            foreach (var igs in Core.Graph.GraphsList.Values)
+            foreach (var igs in Core.Graph!.GraphsList.Values)
             {
                 foreach (var ig2 in igs.Values)
                 {
@@ -106,7 +106,7 @@ namespace VPet_Simulator.Core
         /// 支持在加载等待的时候显示等待计数器
         /// </summary>
         /// <param name="WaitCountAction">当前已等待图像个数</param>
-        public async Task Load_2_WaitGraph(Action<int> WaitCountAction)
+        public async Task Load_2_WaitGraph(Action<int>? WaitCountAction)
         {
             if (WaitCountAction == null)
             {
@@ -118,7 +118,7 @@ namespace VPet_Simulator.Core
             // 新功能: 等待所有图像加载完成再跑
             var tasks = new List<Task>();
 
-            foreach (var igs in Core.Graph.GraphsList.Values)
+            foreach (var igs in Core.Graph!.GraphsList.Values)
             {
                 foreach (var ig2 in igs.Values)
                 {
@@ -163,10 +163,15 @@ namespace VPet_Simulator.Core
         /// 开始运行
         /// </summary>
         /// <param name="startUPGraph">开始运行初始动画</param>
-        public void Load_4_Start(IGraph startUPGraph = null)
+        public void Load_4_Start(IGraph? startUPGraph = null)
         {
-            IGraph ig = startUPGraph ?? Core.Graph.FindGraph(Core.Graph.FindName(GraphType.StartUP), AnimatType.Single, Core.Save.Mode);
-            ig ??= Core.Graph.FindGraph(Core.Graph.FindName(GraphType.Default), AnimatType.Single, Core.Save.Mode);
+            IGraph? ig = startUPGraph ?? Core.Graph!.FindGraph(Core.Graph!.FindName(GraphType.StartUP), AnimatType.Single, Core.Save!.Mode);
+            ig ??= Core.Graph!.FindGraph(Core.Graph!.FindName(GraphType.Default), AnimatType.Single, Core.Save!.Mode);
+            if (ig == null)
+            {
+                MessageBox.Show("Did not find the Default animation, please check the graph configuration.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             Task.Run(() =>
             {
                 ig.Run(PetGrid, () =>
@@ -192,7 +197,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="WaitCountAction">当前已等待图像个数</param>
         /// <param name="startUPGraph">开始运行初始动画</param>
-        public void Load_24_WaitAndStart(Action<int> WaitCountAction, IGraph startUPGraph = null)
+        public void Load_24_WaitAndStart(Action<int> WaitCountAction, IGraph? startUPGraph = null)
         {
             Load_2_WaitGraph(WaitCountAction).Wait();
             Load_4_Start(startUPGraph);
@@ -213,10 +218,10 @@ namespace VPet_Simulator.Core
             DisplayTouchBody = DisplayToTouchBody;
             DisplayTouchHead = DisplayToTouchHead;
 
-            SayRndFunction = new Func<string, string>((x) => Core.Graph.FindName(GraphType.Say));
+            SayRndFunction = new Func<string, string>((x) => Core.Graph!.FindName(GraphType.Say) ?? Core.Graph!.FindName(GraphType.Default) ?? "");
 
-            if (!core.Controller.EnableFunction)
-                Core.Save.Mode = NoFunctionMOD;
+            if (!core.Controller!.EnableFunction)
+                Core.Save!.Mode = NoFunctionMOD;
         }
 
 
@@ -226,7 +231,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         /// <param name="WaitCountAction">当前已等待图像个数</param>
         /// <param name="startUPGraph">开始运行初始动画</param>
-        public void LoadALL(Action<int> WaitCountAction = null, IGraph startUPGraph = null)
+        public void LoadALL(Action<int>? WaitCountAction = null, IGraph? startUPGraph = null)
         {
             Load_0_BaseConsole();
             Load_2_TouchEvent();
@@ -235,7 +240,7 @@ namespace VPet_Simulator.Core
             Load_4_Start(startUPGraph);
         }
 
-        private void Labledisplaytimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void Labledisplaytimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             if (--labeldisplaycount <= 0)
             {
@@ -266,27 +271,27 @@ namespace VPet_Simulator.Core
             {
                 if (DisplayType.Type == GraphType.SideHide_Left_Main || DisplayType.Type == GraphType.SideHide_Left_Rise)
                 {
-                    Core.Controller.MoveWindows(-Core.Controller.GetWindowsDistanceLeft() / Core.Controller.ZoomRatio, 0);
-                    DisplayCEndtoNomal(Core.Graph.FindName(GraphType.SideHide_Left_Main));
+                    Core.Controller!.MoveWindows(-Core.Controller!.GetWindowsDistanceLeft() / Core.Controller!.ZoomRatio, 0);
+                    DisplayCEndtoNomal(Core.Graph!.FindName(GraphType.SideHide_Left_Main));
                     return true;
                 }
                 if (DisplayType.Type == GraphType.SideHide_Right_Main || DisplayType.Type == GraphType.SideHide_Right_Rise)
                 {
-                    Core.Controller.MoveWindows(Core.Controller.GetWindowsDistanceRight() / Core.Controller.ZoomRatio, 0);
-                    DisplayCEndtoNomal(Core.Graph.FindName(GraphType.SideHide_Right_Main));
+                    Core.Controller!.MoveWindows(Core.Controller!.GetWindowsDistanceRight() / Core.Controller!.ZoomRatio, 0);
+                    DisplayCEndtoNomal(Core.Graph!.FindName(GraphType.SideHide_Right_Main));
                     return true;
                 }
                 return false;
             }));
-            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchHeadLocate, Core.Graph.GraphConfig.TouchHeadSize, () => { DisplayTouchHead(); return true; }));
-            Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchBodyLocate, Core.Graph.GraphConfig.TouchBodySize, () => { DisplayTouchBody(); return true; }));
+            Core.TouchEvent.Add(new TouchArea(Core.Graph!.GraphConfig.TouchHeadLocate, Core.Graph!.GraphConfig.TouchHeadSize, () => { DisplayTouchHead(); return true; }));
+            Core.TouchEvent.Add(new TouchArea(Core.Graph!.GraphConfig.TouchBodyLocate, Core.Graph!.GraphConfig.TouchBodySize, () => { DisplayTouchBody(); return true; }));
             for (int i = 0; i < 4; i++)
             {
                 IGameSave.ModeType m = (IGameSave.ModeType)i;
-                Core.TouchEvent.Add(new TouchArea(Core.Graph.GraphConfig.TouchRaisedLocate[i], Core.Graph.GraphConfig.TouchRaisedSize[i],
+                Core.TouchEvent.Add(new TouchArea(Core.Graph!.GraphConfig.TouchRaisedLocate[i], Core.Graph!.GraphConfig.TouchRaisedSize[i],
                     () =>
                     {
-                        if (Core.Save.Mode == m)
+                        if (Core.Save!.Mode == m)
                         {
                             DisplayRaised();
                             return true;
@@ -341,59 +346,59 @@ namespace VPet_Simulator.Core
         /// 当前是否正在播放
         /// </summary>
         public bool PlayingVoice = false;
-        private void MediaPlayer_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        private void MediaPlayer_MediaFailed(object? sender, ExceptionRoutedEventArgs e)
         {
             windowMediaPlayerAvailable = false;
             PlayingVoice = false;
             MessageBoxX.Show("音频播放失败,已尝试自动切换到备用播放器. 如果问题持续,请检查是否已安装WindowsMediaPlayer".Translate(), "音频错误".Translate(), MessageBoxIcon.Warning);
         }
-        private void Clock_Completed(object sender, EventArgs e)
+        private void Clock_Completed(object? sender, EventArgs e)
         {
             PlayingVoice = false;
             VoicePlayer.Clock = null;
         }
         public bool MoveTimerSmartMove = false;
-        private void SmartMoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void SmartMoveTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             MoveTimerSmartMove = false;
         }
 
-        private void MoveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void MoveTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             if (DisplayType.Type != GraphType.Move || !MoveTimerSmartMove)
             {
                 MoveTimer.Stop();
                 return;
             }
-            Core.Controller.MoveWindows(MoveTimerPoint.X, MoveTimerPoint.Y);
+            Core.Controller!.MoveWindows(MoveTimerPoint.X, MoveTimerPoint.Y);
 
-            var z500 = -500 * Core.Controller.ZoomRatio;
-            if (Core.Controller.GetWindowsDistanceLeft() < z500)
+            var z500 = -500 * Core.Controller!.ZoomRatio;
+            if (Core.Controller!.GetWindowsDistanceLeft() < z500)
             {
-                Console.WriteLine("当前动画移动设计错误: 已到达边界 左侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceLeft()));
+                Console.WriteLine("当前动画移动设计错误: 已到达边界 左侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller!.GetWindowsDistanceLeft()));
             }
-            else if (Core.Controller.GetWindowsDistanceRight() < z500)
+            else if (Core.Controller!.GetWindowsDistanceRight() < z500)
             {
-                Console.WriteLine("当前动画移动设计错误: 已到达边界 右侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceRight()));
+                Console.WriteLine("当前动画移动设计错误: 已到达边界 右侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller!.GetWindowsDistanceRight()));
             }
-            else if (Core.Controller.GetWindowsDistanceUp() < z500)
+            else if (Core.Controller!.GetWindowsDistanceUp() < z500)
             {
-                Console.WriteLine("当前动画移动设计错误: 已到达边界 上侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceUp()));
+                Console.WriteLine("当前动画移动设计错误: 已到达边界 上侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller!.GetWindowsDistanceUp()));
             }
-            else if (Core.Controller.GetWindowsDistanceDown() < z500)
+            else if (Core.Controller!.GetWindowsDistanceDown() < z500)
             {
-                Console.WriteLine("当前动画移动设计错误: 已到达边界 下侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller.GetWindowsDistanceDown()));
+                Console.WriteLine("当前动画移动设计错误: 已到达边界 下侧\n动画名称: {0}\n距离: {1}".Translate(DisplayType.Name, Core.Controller!.GetWindowsDistanceDown()));
             }
             MoveTimer.Start();
         }
         /// <summary>
         /// 默认点击事件
         /// </summary>
-        public Action DefaultClickAction;
+        public Action? DefaultClickAction;
         /// <summary>
         /// 默认长按事件
         /// </summary>
-        public Action DefaultPressAction;
+        public Action? DefaultPressAction;
         public bool isPress = false;
         long presstime;
         private void MainGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -404,10 +409,10 @@ namespace VPet_Simulator.Core
             {
                 var pth = DateTime.Now.Ticks;
                 presstime = pth;
-                Thread.Sleep(Core.Controller.PressLength);
+                Thread.Sleep(Core.Controller!.PressLength);
                 Point mp = default;
                 Dispatcher.BeginInvoke(new Action(() => mp = Mouse.GetPosition(MainGrid))).Wait();
-                //mp = new Point(mp.X * Core.Controller.ZoomRatio, mp.Y * Core.Controller.ZoomRatio);
+                //mp = new Point(mp.X * Core.Controller!.ZoomRatio, mp.Y * Core.Controller!.ZoomRatio);
                 if (isPress && presstime == pth)
                 {//历遍长按事件
                     LastInteractionTime = DateTime.Now;
@@ -477,34 +482,34 @@ namespace VPet_Simulator.Core
                 return;
             }
             var mp = e.GetPosition(MainGrid);
-            var x = mp.X - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].X;
-            var y = mp.Y - Core.Graph.GraphConfig.RaisePoint[(int)Core.Save.Mode].Y;
+            var x = mp.X - Core.Graph!.GraphConfig.RaisePoint[(int)Core.Save!.Mode].X;
+            var y = mp.Y - Core.Graph!.GraphConfig.RaisePoint[(int)Core.Save!.Mode].Y;
             if (Math.Abs(x) < 1)
                 x = 0;
             if (Math.Abs(y) < 1)
                 y = 0;
-            Core.Controller.MoveWindows(x, y);
+            Core.Controller!.MoveWindows(x, y);
             if (Math.Abs(x) + Math.Abs(y) > 20 && rasetype >= 1)
                 rasetype = 0;
         }
 
         private void MainGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (ToolBar.Visibility == Visibility.Visible)
+            if (ToolBar?.Visibility == Visibility.Visible)
             {
                 ToolBar.CloseTimer.Enabled = false;
                 ToolBar.Visibility = Visibility.Collapsed;
             }
             else
-                ToolBar.Show();
+                ToolBar?.Show();
         }
 
         public void Dispose()
         {
             EventTimer.Dispose();
             MoveTimer.Dispose();
-            MsgBar.Dispose();
-            ToolBar.Dispose();
+            MsgBar?.Dispose();
+            ToolBar?.Dispose();
             if (PetGrid.Child is IGraph g)
                 g.Stop(true);
             if (PetGrid2.Child is IGraph g2)
@@ -600,12 +605,12 @@ namespace VPet_Simulator.Core
         private void MainGrid_MouseEnter(object sender, MouseEventArgs e)
         {
             //如果是在侧边模式, 播放鼠标进入动画
-            string gfname;
-            if (DisplayType.Type == GraphType.SideHide_Left_Main && (gfname = Core.Graph.FindName(GraphType.SideHide_Left_Rise)) != null)
+            string? gfname;
+            if (DisplayType.Type == GraphType.SideHide_Left_Main && (gfname = Core.Graph!.FindName(GraphType.SideHide_Left_Rise)) != null)
             {
                 Display(gfname, AnimatType.A_Start, DisplayBLoopingForce);
             }
-            else if (DisplayType.Type == GraphType.SideHide_Right_Main && (gfname = Core.Graph.FindName(GraphType.SideHide_Right_Rise)) != null)
+            else if (DisplayType.Type == GraphType.SideHide_Right_Main && (gfname = Core.Graph!.FindName(GraphType.SideHide_Right_Rise)) != null)
             {
                 Display(gfname, AnimatType.A_Start, DisplayBLoopingForce);
             }

@@ -38,14 +38,19 @@ public class ScheduleTask
             var schedule = mw.GameSavesData.Data["schedule"];
             while (schedule.Contains(i.ToString()))
             {
-                var sub = schedule[(gstr)i.ToString()].Split(',');
+                var sub = schedule[(gstr)i.ToString()]?.Split(',');
+                if(sub == null)
+                {
+                    i++;
+                    continue;
+                }   
                 if (sub[0] == "rest")
                 {
                     ScheduleItems.Add(new RestScheduleItem(this, int.Parse(sub[1])));
                 }
                 else
                 {
-                    Work work = mw.Core.Graph.GraphConfig.Works.Find(w => w.Name == sub[0]);
+                    Work? work = mw.Core.Graph!.GraphConfig.Works.Find(w => w.Name == sub[0]);
                     if (work != null)
                     {
                         int dbl = int.Parse(sub[1]);
@@ -77,7 +82,7 @@ public class ScheduleTask
             IsOn = schedule[(gbol)"ison"];
         }
 
-        imw.Main.WorkTimer.E_FinishWork += WorkTimer_E_FinishWork;
+        imw.Main.WorkTimer!.E_FinishWork += WorkTimer_E_FinishWork;
         RestTimer.Elapsed += RestTimer_Elapsed;
         if (IsOn)
             RestTimer.Start();
@@ -150,7 +155,7 @@ public class ScheduleTask
         return isrenew;
     }
 
-    private void RestTimer_Elapsed(object sender, ElapsedEventArgs e)
+    private void RestTimer_Elapsed(object? sender, ElapsedEventArgs? e)
     {
         if (RestTime-- < 0)
             return;
@@ -268,8 +273,8 @@ public class ScheduleTask
         }
     }
 
-    public Package PackageWork { get; set; }
-    public Package PackageStudy { get; set; }
+    public Package? PackageWork { get; set; }
+    public Package? PackageStudy { get; set; }
     /// <summary>
     /// 添加工作到日程表
     /// </summary>
@@ -361,7 +366,7 @@ public class ScheduleTask
         {
             this.DBL = dbl;
             this.Work = work;
-            string source = task.mw.ImageSources.FindSource("work_" + task.mw.Set.PetGraph + "_" + work.Graph) ?? task.mw.ImageSources.FindSource("work_" + task.mw.Set.PetGraph + "_" + work.Name);
+            string? source = task.mw.ImageSources.FindSource("work_" + task.mw.Set.PetGraph + "_" + work.Graph) ?? task.mw.ImageSources.FindSource("work_" + task.mw.Set.PetGraph + "_" + work.Name);
 
             if (source == null)
             {
@@ -463,7 +468,7 @@ public class ScheduleTask
         /// <summary>
         /// 套餐名称
         /// </summary>
-        [Line] public string Name { get; set; }
+        [Line] public string Name { get; set; } = string.Empty;
         /// <summary>
         /// 协议名称 (已翻译)
         /// </summary>
@@ -479,11 +484,11 @@ public class ScheduleTask
             }
             set => nametrans = value;
         }
-        private string nametrans;
+        private string? nametrans;
         /// <summary>
         /// 描述
         /// </summary>
-        [Line] public string Describe { get; set; }
+        [Line] public string Describe { get; set; } = string.Empty;
         /// <summary>
         /// 描述 已翻译
         /// </summary>
@@ -499,7 +504,7 @@ public class ScheduleTask
             }
             set => describetrans = value;
         }
-        private string describetrans;
+        private string? describetrans;
         /// <summary>
         /// 抽成
         /// </summary>

@@ -35,7 +35,7 @@ namespace VPet_Simulator.Windows
         {
             InitializeComponent();
             this.mw = mw;
-            mw.Main.ToolBar.EventShow += RelsSelect;
+            mw.Main.ToolBar!.EventShow += RelsSelect;
             RelsSelect();
         }
 
@@ -68,10 +68,10 @@ namespace VPet_Simulator.Windows
             //刷新显示
             if (textList.Count > 0)
             {
-                tbTalk.Items.Clear();
+                tbTalk.Items.Clear();                
                 foreach (var item in textList)
                 {
-                    if (!textSaid.Contains(item.Choose))
+                    if (item.Choose != null && !textSaid.Contains(item.Choose))
                     {
                         tbTalk.Items.Add(item.TranslateChoose);
                     }
@@ -98,42 +98,42 @@ namespace VPet_Simulator.Windows
             {
                 return;
             }
-            mw.Main.ToolBar.Visibility = Visibility.Collapsed;
+            mw.Main.ToolBar!.Visibility = Visibility.Collapsed;
             var say = textList[tbTalk.SelectedIndex];
             textList.RemoveAt(tbTalk.SelectedIndex);
 
             //添加日志
-            mw.ActivityLogs.Add(new ActivityLog("hostsay",say.TranslateChoose));
-
+            if(say.TranslateChoose != null)
+            mw.ActivityLogs.Add(new ActivityLog("hostsay", say.TranslateChoose));
             //聊天效果
             if (say.Exp != 0)
             {
                 if (say.Exp > 0)
                 {
-                    mw.GameSavesData.Statistics[(gint)"stat_say_exp_p"]++;
+                    mw.GameSavesData.Statistics![(gint)"stat_say_exp_p"]++;
                 }
                 else
-                    mw.GameSavesData.Statistics[(gint)"stat_say_exp_d"]++;
+                    mw.GameSavesData.Statistics![(gint)"stat_say_exp_d"]++;
             }
             if (say.Likability != 0)
             {
                 if (say.Likability > 0)
-                    mw.GameSavesData.Statistics[(gint)"stat_say_like_p"]++;
+                    mw.GameSavesData.Statistics![(gint)"stat_say_like_p"]++;
                 else
-                    mw.GameSavesData.Statistics[(gint)"stat_say_like_d"]++;
+                    mw.GameSavesData.Statistics![(gint)"stat_say_like_d"]++;
             }
             if (say.Money != 0)
             {
                 if (say.Money > 0)
-                    mw.GameSavesData.Statistics[(gint)"stat_say_money_p"]++;
+                    mw.GameSavesData.Statistics![(gint)"stat_say_money_p"]++;
                 else
-                    mw.GameSavesData.Statistics[(gint)"stat_say_money_d"]++;
+                    mw.GameSavesData.Statistics![(gint)"stat_say_money_d"]++;
             }
-            mw.Main.Core.Save.EatFood(say);
-            mw.Main.Core.Save.Money += say.Money;
+            mw.Main.Core.Save!.EatFood(say);
+            mw.Main.Core.Save!.Money += say.Money;
 
-            
-            textSaid.Add(say.Choose);
+            if (say.Choose != null)
+                textSaid.Add(say.Choose);
             RelsTime = RelsTime.AddMinutes(5);
             lastAddTime = DateTime.Now;
 
@@ -146,7 +146,7 @@ namespace VPet_Simulator.Windows
                     int sid = Function.Rnd.Next(list.Count);
                     var select = list[sid];
                     list.RemoveAt(sid);
-                    if (textList.Find(x => x.Choose == select.Choose) == null && !textSaid.Contains(select.Choose) && select.CheckState(mw.Main))
+                    if (select.Choose != null && textList.Find(x => x.Choose == select.Choose) == null && !textSaid.Contains(select.Choose) && select.CheckState(mw.Main))
                     {
                         textList.Add(select);
                         break;

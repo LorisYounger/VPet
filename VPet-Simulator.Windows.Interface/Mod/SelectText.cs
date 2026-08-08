@@ -14,16 +14,20 @@ namespace VPet_Simulator.Windows.Interface
         /// 玩家选项名称
         /// </summary>
         [Line(IgnoreCase = true)]
-        public string Choose { get; set; } = null;
+        public string? Choose { get; set; } = null;
 
-        private string transChoose = null;
+        private string? transChoose = null;
         /// <summary>
         /// 玩家选项名称 (翻译)
         /// </summary>
-        public string TranslateChoose
+        public string? TranslateChoose
         {
             get
             {
+                if(Choose == null)
+                {
+                    return null;
+                }
                 if (transChoose == null)
                 {
                     transChoose = LocalizeCore.Translate(Choose);
