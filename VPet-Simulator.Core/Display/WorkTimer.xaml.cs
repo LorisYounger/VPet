@@ -112,7 +112,7 @@ namespace VPet_Simulator.Core
         /// <param name="m"></param>
         private void M_TimeUIHandle(Main m)
         {
-            if (Visibility == Visibility.Collapsed) return;
+            if (Visibility == Visibility.Collapsed || m.NowWork == null) return;
             TimeSpan ts = DateTime.Now - StartTime;
             TimeSpan tleft;
             if (ts.TotalMinutes > m.NowWork.Time)

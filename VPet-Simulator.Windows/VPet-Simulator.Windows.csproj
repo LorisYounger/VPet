@@ -79,6 +79,15 @@
 	<ItemGroup>
 		<None Remove="mklink.bat" />
 		<None Remove="Res\Gallery.png" />
+		<None Remove="Res\hash0.png" />
+		<None Remove="Res\hash1.png" />
+		<None Remove="Res\hash2.png" />
+		<None Remove="Res\hash3.png" />
+		<None Remove="Res\hash4.png" />
+		<None Remove="Res\hash5.png" />
+		<None Remove="Res\hash6.png" />
+		<None Remove="Res\hash7.png" />
+		<None Remove="Res\hash8.png" />
 		<None Remove="Res\img\error.png" />
 		<None Remove="Res\img\rank1.png" />
 		<None Remove="Res\img\rank2.png" />
@@ -136,6 +145,15 @@
 		<Resource Include="Res\Font\OPPOSans B.ttf" />
 		<Resource Include="Res\Font\OPPOSans R.ttf" />
 		<Resource Include="Res\Gallery.png" />
+		<Resource Include="Res\hash0.png" />
+		<Resource Include="Res\hash1.png" />
+		<Resource Include="Res\hash2.png" />
+		<Resource Include="Res\hash3.png" />
+		<Resource Include="Res\hash4.png" />
+		<Resource Include="Res\hash5.png" />
+		<Resource Include="Res\hash6.png" />
+		<Resource Include="Res\hash7.png" />
+		<Resource Include="Res\hash8.png" />
 		<Resource Include="Res\img\error.png" />
 		<Resource Include="Res\img\rank2.png" />
 		<Resource Include="Res\img\rank1.png" />
