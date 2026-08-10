@@ -1,12 +1,12 @@
 # VPet-Simulator
 
-简体中文(./README.md) | 繁體中文 | [English](./README_en.md) | [日本語](./README_ja.md)
+[简体中文](./README.md) | 繁體中文 | [English](./README_en.md) | [日本語](./README_ja.md)
 
-《虛擬桌寵模擬器》一個開源的桌寵軟體，可以內建至任何WPF應用程式中。
+《虛擬桌寵模擬器》一個開源的桌寵軟體，可以內建至任何 WPF 應用程式中。
 
 ![主圖](README.assets/%E4%B8%BB%E5%9B%BE.png)
 
-在[Steam](https://store.steampowered.com/app/1920960/VPet)上取得虛擬桌寵模擬器（免費），或透過[Nuget](https://www.nuget.org/packages/VPet-Simulator.Core)內建至應用程式中。
+在 [Steam](https://store.steampowered.com/app/1920960/VPet) 上取得虛擬桌寵模擬器（免費），或透過 [Nuget](https://www.nuget.org/packages/VPet-Simulator.Core) 內建至應用程式中。
 
 ## 虛擬桌寵模擬器 - 詳細介紹
 
@@ -18,7 +18,7 @@
 
 ### 超多的互動及動畫
 
-多達32（種類）×4（狀態）×3（類型）種動畫。<br/>
+多達 32（種類）×4（狀態）×3（類型）種動畫。  
 *註：部分種類並未有生病或循環等內容，實際上會略低於此數值。*
 
 #### 動畫範例：
@@ -37,13 +37,13 @@
 
 ### 免費
 
-本遊戲完全免費！既然都不用錢，那就試試看吧！<br/>
+本遊戲完全免費！既然都不用錢，那就試試看吧！  
 本遊戲主要目的為宣傳[虛擬主播模擬器](https://store.steampowered.com/app/1352140/_/). 這是虛擬主播模擬器裡面的桌寵.
 
 ### 開源
 
-本遊戲於Github上開源，歡迎提出自己的想法、創意，或直接參與開發！<br/>
-您還可以修改原始碼來製作自己專屬的桌寵！（雖然說大部分內容支援工作坊，毋須修改程式碼）<br/>
+本遊戲於 GitHub 上開源，歡迎提出自己的想法、創意，或直接參與開發！  
+您還可以修改原始碼來製作自己專屬的桌寵！（雖然說大部分內容支援工作坊，毋須修改程式碼）  
 專案位置：https://github.com/LorisYounger/VPet
 
 ### 支援工作坊
@@ -52,21 +52,21 @@
 
 模組製作器：https://github.com/LorisYounger/VPet.ModMaker
 
-工作坊支援加入／修改下列內容
+工作坊支援加入 / 修改下列內容
 
 * 桌寵動畫
-* 物品／食品／飲料等
+* 物品 / 食品 / 飲料等
 * 自訂桌寵工作內容
 * 對話內容
 * 主題
 * 程式碼外掛：編撰程式碼來加入新內容
-  * 加入新的動畫邏輯或顯示效果（例如：l2d/spine等）
+  * 加入新的動畫邏輯或顯示效果（例如：l2d/spine 等）
   * 加入新功能（鬧鐘、記事本等）
-  * 幾乎無所不能，範例請見[VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo)
+  * 幾乎無所不能，範例請見 [VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo)
 
-###聯絡我們
+### 聯絡我們
 
-若有建議或意見，可以在Steam商店、Steam社群中評論，在Github發Issue，使用虛擬桌寵模擬器QQ群（907101442）或電子郵件[mailto:service@exlb.net](mailto:service@exlb.net)聯絡作者。
+若有建議或意見，可以在 [Steam 商店](https://store.steampowered.com/app/1920960/VPet/)、[Steam 社群](https://steamcommunity.com/app/1920960/discussions/)中評論，在 [GitHub 發 Issue](https://github.com/LorisYounger/VPet/issues)，使用虛擬桌寵模擬器 QQ 群（907101442）或電子郵件 [mailto:service@exlb.net](mailto:service@exlb.net) 聯絡作者。
 
 
 ## 軟體架構
@@ -115,11 +115,11 @@
 
 ## 參與開發
 
-歡迎參與虛擬桌寵模擬器的開發！為了保證程式碼的可維護性及遊戲性，若想要開發新的功能，請先[電子郵件聯絡](mailto:zoujin.dev@exlb.org)或提交[Issue](https://github.com/LorisYounger/VPet/issues)，標題為想要新增的功能／玩法，以確保該功能／玩法適用於虛擬桌寵模擬器，以免在您完成開發後，因不適合而被拒絕（而浪費您的時間）。<br/>
-如果是修正錯誤或BUG，則不需要先行聯絡，修好後直接提交即可。
+歡迎參與虛擬桌寵模擬器的開發！為了保證程式碼的可維護性及遊戲性，若想要開發新的功能，請先[電子郵件聯絡](mailto:zoujin.dev@exlb.org)或提交 [Issue](https://github.com/LorisYounger/VPet/issues)，標題為想要新增的功能 / 玩法，以確保該功能 / 玩法適用於虛擬桌寵模擬器，以免在您完成開發後，因不適合而被拒絕（而浪費您的時間）。  
+如果是修正錯誤或 BUG，則不需要先行聯絡，修好後直接提交即可。
 
-當您提供的想法被贊同後，您可以使用[Fork](https://github.com/LorisYounger/VPet/fork)功能，將專案程式碼整個複製至個人的Github上，以便撰寫自己的程式碼。撰寫完畢後，使用[Pull Requests](https://github.com/LorisYounger/VPet/compare)提交。<br/>
-若您的想法並未被同意，也可以另起爐灶，開發一個不同版本及功能的桌寵軟體。須遵守[Apache License 2.0](https://github.com/LorisYounger/VPet/blob/main/LICENSE)及[動畫版權聲明與授權](https://github.com/LorisYounger/VPet/blob/main/README_zht.md#%E5%8B%95%E7%95%AB%E7%89%88%E6%AC%8A%E8%81%B2%E6%98%8E%E8%88%87%E6%8E%88%E6%AC%8A)。<br/>
+當您提供的想法被贊同後，您可以使用[Fork](https://github.com/LorisYounger/VPet/fork)功能，將專案程式碼整個複製至個人的Github上，以便撰寫自己的程式碼。撰寫完畢後，使用[Pull Requests](https://github.com/LorisYounger/VPet/compare)提交。  
+若您的想法並未被同意，也可以另起爐灶，開發一個不同版本及功能的桌寵軟體。須遵守[Apache License 2.0](https://github.com/LorisYounger/VPet/blob/main/LICENSE)及[動畫版權聲明與授權](https://github.com/LorisYounger/VPet/blob/main/README_zht.md#%E5%8B%95%E7%95%AB%E7%89%88%E6%AC%8A%E8%81%B2%E6%98%8E%E8%88%87%E6%8E%88%E6%AC%8A)。  
 註：一般而言，加入新功能都可以透過撰寫模組來達成，詳情請見：[VPet.Plugin.Demo](https://github.com/LorisYounger/VPet.Plugin.Demo)
 
 作者可能會修改、刪減部分您所提交的程式碼，以確保該功能／玩法適用於虛擬桌寵模擬器。
@@ -127,15 +127,13 @@
 
 感謝下列參與的開發及翻譯人員
 
-<a href="https://github.com/LorisYounger/VPet/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=LorisYounger/VPet" />
-</a>
+[![](https://contrib.rocks/image?repo=LorisYounger/VPet)](https://github.com/LorisYounger/VPet/graphs/contributors)
 
 以及提供社群翻譯與更多內容的工作坊作者
 
 ## 動畫版權聲明與授權
 
-在Github中，[桌寵動畫檔案](https://github.com/LorisYounger/VPet/tree/main/VPet-Simulator.Windows/mod/0000_core/pet/vup)之動畫版權歸[虛擬主播模擬器製作組](https://www.exlb.net/VUP-Simulator)所有，在使用本類別庫時，您可能會需要自行準備動畫檔，或遵循下列協定：</br>
+在 GitHub 中，[桌寵動畫檔案](https://github.com/LorisYounger/VPet/tree/main/VPet-Simulator.Windows/mod/0000_core/pet/vup)之動畫版權歸[虛擬主播模擬器製作組](https://www.exlb.net/VUP-Simulator)所有，在使用本類別庫時，您可能會需要自行準備動畫檔，或遵循下列協定：  
 *註：本聲明只限於桌寵自帶的動畫，其餘經工作坊等方式額外加入的內容並不適用*
 
 ### 非商業用途授權
@@ -164,9 +162,9 @@
 
 ## 桌面應用程式部署方式
 
-1. 下載本專案，透過VisualStudio開啟`VPet.sln`檔案
-2. 在「建置」選項中，選擇位元數`x64`及建置專案`Vpet-Simulator.Windows`
+1. 下載本專案，透過 VisualStudio 開啟 `VPet.sln` 檔案
+2. 在「建置」選項中，選擇位元數 `x64` 及建置專案 `Vpet-Simulator.Windows`  
    ![image-20230208004330895](README.assets/image-20230208004330895.png)
-3. 點擊「開始」，若一切順利將會報錯`缺少Core模組，無法啟動桌寵`
-4. 以管理員身分執行`mklink.bat`，這會讓模組檔案連結至產生的位置
+3. 點擊「開始」，若一切順利將會報錯 `缺少Core模組，無法啟動桌寵`
+4. 以管理員身分執行 `mklink.bat`，這會讓模組檔案連結至產生的位置
 5. 再次點擊啟動即可正常執行
