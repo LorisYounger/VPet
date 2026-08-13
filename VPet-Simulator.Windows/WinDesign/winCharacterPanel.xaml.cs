@@ -665,7 +665,11 @@ namespace VPet_Simulator.Windows
                 Height = 800;
             });
         }
-        private string px_tocm(long px, out string cm)
+        public static string px_tocm(long px)
+        {
+            return px_tocm(px, out string cm) + cm;
+        }
+        public static string px_tocm(long px, out string cm)
         {
             if (px < 37795)
             {

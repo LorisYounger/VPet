@@ -5,17 +5,17 @@
 啊！{hostname}！我在看前几天生日会拍的照片和视频！真开心呀！#Oh, {hostname}! I'm looking through the photos and videos from the birthday party the other day. It was so much fun!:|
 嗯哼哼~怎么啦{hostname}？人家在想象明年{hostname}会怎么给{name}过生日喵~#Hmm-hmm~ What's up, {hostname}? I'm just imagining what kind of birthday {hostname} will throw for {name} next year, meow~:|
 生日已经过去了一个星期吗？和{hostname}在一起的时间真是过得很快喵~今年请继续和{name}在一起喵！#Has it really been a whole week since my birthday? Time flies when I'm with {hostname}, meow~ Stay by {name}'s side this year too, okay?:|
-萝莉丝今年一岁啦#Lolis turns one this year.:|
-萝莉丝今年两岁啦#Lolis turns two this year.:|
-萝莉丝今年三岁啦#Lolis turns three this year.:|
-萝莉丝今年两岁啦#Lolis turns two this year.:|
-萝莉丝的生日是8月13日#Lolis's birthday is on August 13.:|
-萝莉丝的生日是8月14日#Lolis's birthday is on August 14.:|
-萝莉丝的生日是7月14日#Lolis's birthday is on July 14.:|
-萝莉丝的生日是3月25日#Lolis's birthday is on March 25.:|
-萝莉丝没开过生日会#Lolis has never had a birthday party.:|
-萝莉丝生日会有很多二创作品#Lolis's birthday party features tons of fan creations.:|
-萝莉丝生日会在b站直播#Lolis's birthday party is streamed live on Bilibili.:|
+{name}今年一岁啦#{name} turns one this year.:|
+{name}今年两岁啦#{name} turns two this year.:|
+{name}今年三岁啦#{name} turns three this year.:|
+{name}今年两岁啦#{name} turns two this year.:|
+{name}的生日是8月13日#{name}'s birthday is on August 13.:|
+{name}的生日是8月14日#{name}'s birthday is on August 14.:|
+{name}的生日是7月14日#{name}'s birthday is on July 14.:|
+{name}的生日是3月25日#{name}'s birthday is on March 25.:|
+{name}没开过生日会#{name} has never had a birthday party.:|
+{name}生日会有很多二创作品#{name}'s birthday party features tons of fan creations.:|
+{name}生日会在b站直播#{name}'s birthday party is streamed live on Bilibili.:|
 更好买有1种生日蛋糕#BetterBuy carries 1 kind of birthday cake.:|
 更好买有2种生日蛋糕#BetterBuy carries 2 kinds of birthday cake.:|
 更好买有3种生日蛋糕#BetterBuy carries 3 kinds of birthday cake.:|
@@ -24,19 +24,57 @@
 一周年的生日蛋糕叫“全回复生日蛋糕”#The first-anniversary cake is called the “Full-Restore Birthday Cake.”:|
 二周年的生日蛋糕叫“惊喜生日蛋糕”#The second-anniversary cake is called the “Surprise Birthday Cake.”:|
 LBGame制作组（虚拟桌宠模拟器的制作组）是一个效率高，产能大，更新快，不画饼，永不跳票的好制作组。#LBGame—the team behind Virtual Pet Simulator—is efficient, prolific, and quick with updates. They never make promises they can't keep, and they never, ever delay a release. What a great dev team!:|
-萝莉丝偷偷藏零花钱了#Lolis has been secretly squirreling away her allowance.:|
-萝莉丝变聪明了#Lolis got smarter.:|
-萝莉丝想吃东西了#Lolis is getting hungry.:|
-萝莉丝想喝东西了#Lolis is getting thirsty.:|
-萝莉丝假装逃跑了#Lolis pretended to run away.:|
-萝莉丝假装偷吃了#Lolis pretended to sneak some food.:|
-萝莉丝假装睡觉了#Lolis pretended to be asleep.:|
-萝莉丝假装工作了#Lolis pretended to be hard at work.:|
-萝莉丝假装学习了#Lolis pretended to be studying.:|
-萝莉丝假装去玩了#Lolis pretended to go out and play.:|
-萝莉丝跑掉了#Lolis ran away.:|
+{name}偷偷藏零花钱了#{name} has been secretly squirreling away her allowance.:|
+{name}变聪明了#{name} got smarter.:|
+{name}想吃东西了#{name} is getting hungry.:|
+{name}想喝东西了#{name} is getting thirsty.:|
+{name}假装逃跑了#{name} pretended to run away.:|
+{name}假装偷吃了#{name} pretended to sneak some food.:|
+{name}假装睡觉了#{name} pretended to be asleep.:|
+{name}假装工作了#{name} pretended to be hard at work.:|
+{name}假装学习了#{name} pretended to be studying.:|
+{name}假装去玩了#{name} pretended to go out and play.:|
+{name}跑掉了#{name} ran away.:|
 生日蛋糕3#Third-Anniversary Interactive Birthday Cake:|
 为了报答主人去年生日制作的惊喜蛋糕，今年萝莉丝打算扳回一局，制作了带考验的生日蛋糕，每个蛋糕都有一个关于桌宠生日的问题，只有回答正确才能好好享用生日蛋糕，回答错误虽然也可以享用惊喜蛋糕但是会被调皮萝莉丝恶作剧，真是记仇呢。#Last year, Master made Lolis a surprise birthday cake. This year, she's out to return the favor—and settle the score—with a batch of cakes that each come with a challenge. Every cake asks a question about VPet's birthday. Get it right, and you can enjoy your cake in peace. Get it wrong, and you still get the surprise cake... plus one of mischievous Lolis's pranks. She sure knows how to hold a grudge!:|
 前往 生日会投票 页面#Head to the Birthday Party Voting page:|
 三周年生日蛋糕#Third-Anniversary Birthday Cake:|
 拍摄于桌宠制作蛋糕的厨房,桌宠正和主人炫耀自己亲手做的生日蛋糕，殊不知一场考验正等着主人。#Taken in the kitchen where VPet makes cakes. VPet proudly shows Master the birthday cake she made from scratch—but little does Master know, a challenge awaits.:|
+桌宠的DLC是宅女#VPet's DLC character is a homebody.:|
+桌宠的DLC是小恶魔#VPet's DLC character is a little devil.:|
+桌宠的DLC是女仆#VPet's DLC character is a maid.:|
+桌宠的DLC是JK#VPet's DLC character is a high school girl.:|
+在面板详细里可以查看{name}的统计面板#You can view {name}'s Statistics panel under Panel Details.:|
+在面板详细里可以查看{name}的活动日志#You can view {name}'s Activity Log under Panel Details.:|
+在面板详细里可以生成{name}的统计总结#You can generate {name}'s Statistics Summary under Panel Details.:|
+在面板详细里可以生成{name}的生日祝福#You can generate a birthday message for {name} under Panel Details.:|
+想使用日程表来让{name}自动学习要签署培训机构#To have {name} study automatically through the Schedule, you need to sign with a training institution.:|
+想使用日程表来让{name}自动工作要签署工作中介#To have {name} work automatically through the Schedule, you need to sign with an employment agency.:|
+在互动里可以打开访客表功能邀请其他桌宠来玩#You can enable the Visitor List under Interactions to invite other desktop pets over.:|
+你的桌宠名叫{name}#Your desktop pet's name is {name}.:|
+{name}目前已经升到{0}级啦#{name} has reached level {0}!:|
+{name}当前的饱食度为{0}#{name}'s current Fullness is {0}.:|
+{name}当前的口渴度为{0}#{name}'s current Thirst is {0}.:|
+{name}在更好买中购买最多的是{0}#The item {name} buys most often on BetterBuy is {0}.:|
+{name}最常购买的正餐是{0}#The meal {name} buys most often is {0}.:|
+{name}最常购买的零食是{0}#The snack {name} buys most often is {0}.:|
+{name}最常购买的饮料是{0}#The drink {name} buys most often is {0}.:|
+{name}最常购买的功能性物品是{0}#The functional item {name} buys most often is {0}.:|
+{name}最常购买的药品是{0}#The medicine {name} buys most often is {0}.:|
+{name}最常购买的礼品是{0}#The gift {name} buys most often is {0}.:|
+{name}一共在饮料上花费了{0}#{name} has spent {0} on drinks in total.:|
+{name}一共在药品上花费了{0}#{name} has spent {0} on medicine in total.:|
+{name}通过药品获得了{0}点经验#{name} has gained {0} EXP from medicine.:|
+{name}一共在礼物上花费了{0}#{name} has spent {0} on gifts in total.:|
+{name}一共在正餐上花费了{0}#{name} has spent {0} on meals in total.:|
+{name}一共在零食上花费了{0}#{name} has spent {0} on snacks in total.:|
+{name}在更好买中累计花费了{0}#{name} has spent {0} on BetterBuy in total.:|
+{name}已经移动了足足{0}px#{name} has moved a whopping {0} px.:|
+{name}跟着音乐跳了{0}次舞#{name} has danced to the music {0} times.:|
+{hostname}一共启动了{name}所在的游戏{0}次#{hostname} has launched {name}'s game {0} times in total.:|
+{name}一共睡了{0}小时#{name} has slept for {0} hours in total.:|
+{name}认真学习了{0}小时#{name} has studied diligently for {0} hours.:|
+{hostname}已经陪伴{name}度过了{0}小时#{hostname} has spent {0} hours with {name}.:|
+{name}被{hostname}摸了{0}次身体#{hostname} has petted {name}'s body {0} times.:|
+{name}被{hostname}摸了{0}次头#{hostname} has patted {name}'s head {0} times.:|
+{name}勤勤恳恳地工作了{0}小时#{name} has worked diligently for {0} hours.:|
