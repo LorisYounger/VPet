@@ -138,7 +138,7 @@
                             <Slider x:Name="wDouble" pu:SliderHelper.ThumbWidth="10"
                                     pu:SliderHelper.ThumbCornerRadius="2" pu:SliderHelper.ThumbHeight="16"
                                     pu:SliderHelper.ThumbBorderThickness="2" Grid.Row="9" Grid.Column="0"
-                                    Grid.ColumnSpan="4" SmallChange="1" Value="1" Minimum="1" IsEnabled="False"
+                                    Grid.ColumnSpan="4" SmallChange="1" Value="1" Minimum="1"
                                     TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="wDouble_ValueChanged"
                                     LargeChange="1" Style="{DynamicResource StandardSliderStyle}" TickPlacement="Both" />
                         </Grid>

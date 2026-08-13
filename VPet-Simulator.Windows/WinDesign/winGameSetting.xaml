@@ -1106,7 +1106,10 @@
                         <Run FontSize="12" FontStyle="Italic" Text="{ll:Str '由于游戏暂未开发完毕,该名单并非完整名单.将在正式版完成前修改'}" /><LineBreak /><LineBreak />
                          <Hyperlink Click="BC_Click">
                              <Run x:Name="run_BC" Text="" />
-                         </Hyperlink>
+                         </Hyperlink> <LineBreak />
+                        <Hyperlink Click="VV_Click">
+                            <Run x:Name="run_VV" Text="" />
+                        </Hyperlink>
                     </TextBlock>
                 </Grid>
             </TabItem>

@@ -293,5 +293,9 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         /// <param name="item">物品</param>
         public void ItemsAdd(Item item);
+        /// <summary>
+        /// 上次吃食物的时间
+        /// </summary>
+        public DateTime LastTakeItemTime { get; }
     }
 }

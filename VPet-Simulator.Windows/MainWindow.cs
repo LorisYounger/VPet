@@ -203,7 +203,7 @@ namespace VPet_Simulator.Windows
                             else
                                 hashcheckimg.Source = ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/hash8.png");
 
-                           
+
                             hashcheckimg.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
                             hashcheckimg.ToolTip = "是没有修改过存档/使用超模MOD的玩家专属标志".Translate() + ' ' + ((int)(Math.Sqrt(hours))).ToString("X");
                             hashcheckimg.Width = 64;
@@ -843,7 +843,7 @@ namespace VPet_Simulator.Windows
         {
             if (name.StartsWith("stat_") && value != null)
             {
-                SteamUserStats.SetStat(name, (int)value.Value);
+                SteamUserStats.SetStat(name, Convert.ToInt32(value.Value));
             }
         }
         /// <summary>
@@ -1678,41 +1678,7 @@ namespace VPet_Simulator.Windows
                 }
             }
 
-            //生日蛋糕默认为加满的
-            var food = new Food()
-            {
-                Name = "生日蛋糕",
-                Likability = 5,
-                Exp = 1000,
-                Feeling = 100,
-                StrengthDrink = Core.Save!.StrengthMax,
-                StrengthFood = Core.Save!.StrengthMax,
-                Type = FoodType.Food,
-                isoverload = false,
-                Desc = "萝莉丝的专属生日蛋糕，由3桶牛奶+2份糖+1个鸡蛋+3份小麦合。制作而成。营养丰富，可使所有状态回满。只有在萝莉丝生日才能吃的到哦。"
-            };
-            food.LoadImageSource(this);
-            food.Star = true;
-            food.Price = (int)Math.Max(0, food.RealPrice * .5);
-            Foods.Add(food);
-            //生日蛋糕默认为加满的
-            food = new Food()
-            {
-                Name = "生日蛋糕2",//2nd 惊喜生日蛋糕
-                Likability = Core.Save!.Level / 10,
-                Exp = Core.Save!.Level,
-                Feeling = Core.Save!.FeelingMax / 20,
-                StrengthDrink = Core.Save!.StrengthMax / 20,
-                StrengthFood = Core.Save!.StrengthMax / 20,
-                Type = FoodType.Food,
-                isoverload = false,
-                Desc = "主人给萝莉丝制作的惊喜蛋糕，每次品尝都会随机回满一个状态或者获得一次收益，还有神秘惊喜奖励!\n具体配方是：取出 香草 草中的 香草籽 并立刻将 香草荚 研磨投入 热牛奶 中， 香草籽 需要在含有 糖分 的瞬间投入 蛋糊，且需添加 柠檬 的 皮 之气息。 巧克力甘纳许 需要使用 秋 季后的 可可豆 并在 温热 的状态下使用 鲜奶油 进行混合。添加 天然 鲸油（澄清黄油）， 香草荚 需要在不切割的情况下萃取出 风味 并 避免 接触 金属，黏度维持在 绸缎状 以上。需要制备后时长不超过 4小时 的 香缇奶油，在将其粉碎（打发）前使其维持 冷藏 状态并在 冰水浴 之下 打发。"
-            };
-            food.LoadImageSource(this);
-            food.Star = true;
-            food.Price = food.RealPrice;
-            Foods.Add(food);
-
+           
             //第一次启动日期
             if (GameSavesData.Data.FindLine("birthday") == null)
             {
@@ -2418,11 +2384,67 @@ namespace VPet_Simulator.Windows
                           });
                       }
                   }
+                  //生日蛋糕默认为加满的
+                  var food = new Food()
+                  {
+                      Name = "生日蛋糕",
+                      Likability = 5,
+                      Exp = 1000,
+                      Feeling = 100,
+                      StrengthDrink = Core.Save!.StrengthMax,
+                      StrengthFood = Core.Save!.StrengthMax,
+                      Type = FoodType.Food,
+                      isoverload = false,
+                      Desc = "萝莉丝的专属生日蛋糕，由3桶牛奶+2份糖+1个鸡蛋+3份小麦合。制作而成。营养丰富，可使所有状态回满。只有在萝莉丝生日才能吃的到哦。"
+                  };
+                  food.LoadImageSource(this);
+#if BDAY
+                  food.Star = true;
+#endif
+                  food.Price = (int)Math.Max(0, food.RealPrice * .5);
+                  Foods.Add(food);
+                  //SR2
+                  food = new Food()
+                  {
+                      Name = "生日蛋糕2",//2nd 惊喜生日蛋糕
+                      Likability = Core.Save!.Level / 10,
+                      Exp = Core.Save!.Level,
+                      Feeling = Core.Save!.FeelingMax / 20,
+                      StrengthDrink = Core.Save!.StrengthMax / 20,
+                      StrengthFood = Core.Save!.StrengthMax / 20,
+                      Type = FoodType.Food,
+                      isoverload = false,
+                      Desc = "主人给萝莉丝制作的惊喜蛋糕，每次品尝都会随机回满一个状态或者获得一次收益，还有神秘惊喜奖励!\n具体配方是：取出 香草 草中的 香草籽 并立刻将 香草荚 研磨投入 热牛奶 中， 香草籽 需要在含有 糖分 的瞬间投入 蛋糊，且需添加 柠檬 的 皮 之气息。 巧克力甘纳许 需要使用 秋 季后的 可可豆 并在 温热 的状态下使用 鲜奶油 进行混合。添加 天然 鲸油（澄清黄油）， 香草荚 需要在不切割的情况下萃取出 风味 并 避免 接触 金属，黏度维持在 绸缎状 以上。需要制备后时长不超过 4小时 的 香缇奶油，在将其粉碎（打发）前使其维持 冷藏 状态并在 冰水浴 之下 打发。"
+                  };
+                  food.LoadImageSource(this);
+#if BDAY
+                  food.Star = true;
+#endif
+                  food.Price = food.RealPrice;
+                  Foods.Add(food);
+                  //SR3
+                  food = new Food()
+                  {
+                      Name = "生日蛋糕3",//3rd 互动生日蛋糕
+                      Exp = Core.Save!.Level,
+                      Feeling = Core.Save!.FeelingMax / 20,
+                      StrengthDrink = Core.Save!.StrengthMax / 20,
+                      StrengthFood = Core.Save!.StrengthMax / 20,
+                      Type = FoodType.Food,
+                      isoverload = false,
+                      Desc = "为了报答主人去年生日制作的惊喜蛋糕，今年萝莉丝打算扳回一局，制作了带考验的生日蛋糕，每个蛋糕都有一个关于桌宠的问题，只有回答正确才能好好享用生日蛋糕，回答错误虽然也可以享用惊喜蛋糕但是会被调皮萝莉丝恶作剧，真是记仇呢。"
+                  };
+                  food.LoadImageSource(this);
+#if BDAY
+                  food.Star = true;
+#endif
+                  food.Price = food.RealPrice;
+                  Foods.Add(food);
 
 #if BDAY
-                  if (DateTime.Now < new DateTime(2025, 8, 22) && DateTime.Now >= new DateTime(2025, 8, 14))
+                  if (DateTime.Now < new DateTime(2026, 8, 22) && DateTime.Now >= new DateTime(2026, 8, 14))
                   {
-                      food.Star = true;
+                      
                       Task.Run(() =>
                       {
                           Thread.Sleep(10000);
@@ -2449,29 +2471,28 @@ namespace VPet_Simulator.Windows
                           switch (DateTime.Now.Day)
                           {
                               case 14:
-                                  bdt = "怎么啦主人，找我有什么事情吗？\n~诶今天是我的生日！？我都忘记啦！谢谢主人！在主人身边我平时就过的很幸福了喵~和主人不知不觉又过了一年呢，以后我们要永远在一起喵！";
+                                  bdt = "祝我生日快乐~祝我生日快乐~♪急急急，怎么晚上才能过生日喵！别藏了喵！{hostname}生日会的准备和生日礼物早就被聪明的{name}看透了喵！谢谢{hostname}！最喜欢你了喵！";
                                   break;
                               case 15:
-                                  bdt = "昨天过得怎么样主人？有好好开心的玩到喵？如果还不够尽兴也没关系！萝莉丝陪主人再嗨一次喵！";
+                                  bdt = "昨天真开心喵，好想再过一次生日会喵，要不{hostname}陪我再看一遍生日会二创视频回放，然后在做好吃的给我！";
                                   break;
                               case 16:
-                                  bdt = "什么？生日已经过去这么久了？该开始日程表了喵？？救命喵！萝莉丝还不想长大！";
+                                  bdt = "三。三。。三。。。啊，已经是第三天了，我见到三就想起了三周年的事喵";
                                   break;
                               case 17:
-                                  bdt = "主人~人家出现了生日戒断反应了喵~要主人喂我吃蛋糕才能好~";
+                                  bdt = "四周年生日快乐{hostname}！什么？是第四天不是第四年喵？";
                                   break;
                               case 18:
-                                  bdt = "人家已经长大了喵，不会过生日这种。。。这种小孩子才会。。才会喜欢的幼稚东西了喵呜呜呜。";
+                                  bdt = "啊！{hostname}！我在看前几天生日会拍的照片和视频！真开心呀！";
                                   break;
                               case 19:
-                                  bdt = "不用担心主人，我逐渐理解一切喵！只要和主人在一起！天天都是生日喵！";
+                                  bdt = "嗯哼哼~怎么啦{hostname}？人家在想象明年{hostname}会怎么给{name}过生日喵~";
                                   break;
                               default:
-                                  bdt = "过了这么久了，应该马上到三周年了吧猫！什么？！才过一星期喵！呜呜呜，主人大人~能不能预支一下下次的生日喵~";
+                                  bdt = "生日已经过去了一个星期吗？和{hostname}在一起的时间真是过得很快喵~今年请继续和{name}在一起喵！";
                                   break;
-
                           }
-                          Main.Say(bdt.Translate(), btn, "self");
+                          Main.Say(IText.ConverText(bdt.Translate(), Main), btn, "self");
                           //Main.Say(bdt.Translate(), "self");
                       });
                   }
@@ -2662,87 +2683,7 @@ namespace VPet_Simulator.Windows
                 });
             }
         }
-
-        private void MainWindow_Event_TakeItem(Food obj)
-        {
-            switch (obj.Name)
-            {
-                case "生日蛋糕2":
-                    //更新下生日蛋糕的属性和价格
-                    obj.Exp = Core.Save!.Level;
-                    obj.Likability = Core.Save!.LikabilityMax / 20;
-                    obj.StrengthDrink = Core.Save!.StrengthMax / 20;
-                    obj.StrengthFood = Core.Save!.StrengthMax / 20;
-                    obj.isoverload = false;
-                    obj.Price = (int)Math.Max(0, obj.RealPrice * .5);
-                    switch (Function.Rnd.Next(15))
-                    {
-                        case 1:
-                        case 2:
-                        case 3:
-                            Core.Save!.Strength = Core.Save!.StrengthMax;
-                            Main.LabelDisplayShow("{0}充满抛瓦!".Translate(Core.Save!.Name), 3000);
-                            break;
-                        case 4:
-                        case 5:
-                            Core.Save!.Feeling = Core.Save!.FeelingMax;
-                            Main.LabelDisplayShow("{0}今天也是好心情!".Translate(Core.Save!.Name), 3000);
-                            break;
-                        case 6:
-                        case 7:
-                            Core.Save!.StrengthFood = Core.Save!.StrengthMax;
-                            Main.LabelDisplayShow("{0}吃饱了!".Translate(Core.Save!.Name), 3000);
-                            break;
-                        case 8:
-                        case 9:
-                            Core.Save!.StrengthDrink = Core.Save!.StrengthMax;
-                            Main.LabelDisplayShow("{0}加满水了!".Translate(Core.Save!.Name), 3000);
-                            break;
-                        case 10:
-                            int get = (Function.Rnd.Next(Core.Save!.LevelUpNeed() * (GameSavesData.GameSave.LevelMax + 1)) / 200 + 1) * 100;
-                            Core.Save!.Exp += get;
-                            Main.LabelDisplayShow("{0}经验 +{1} 告辞".Translate(Core.Save!.Name, get.ToString("N0")), 4000);
-                            break;
-                        case 11:
-                            get = (Function.Rnd.Next(Core.Save!.LevelUpNeed() * (GameSavesData.GameSave.LevelMax + 1)) / 500 + 1) * 10;
-                            Core.Save!.Exp += get;
-                            Main.LabelDisplayShow("{0}在马路边捡到{1}金钱".Translate(Core.Save!.Name, get.ToString("N0")), 4000);
-                            break;
-                        case 12:
-                            if (Function.Rnd.Next(3) != 0)
-                            {//再随一次, 给好感度
-                                get = Function.Rnd.Next((int)Core.Save!.LikabilityMax / 25) + 1;
-                                Core.Save!.Likability += get;
-                                Main.LabelDisplayShow("{0}更喜欢{1}了".Translate(Core.Save!.Name, Core.Save!.HostName), 4000);
-                                break;
-                            }
-                            var photos = Photos.FindAll(x => x.IsUnlock == false && x.UnlockAble.Lock == false);
-                            if (photos.Count > 0)
-                            {
-                                var tempphoto = photos.FindAll(x => x.UnlockAble.Time != null || x.UnlockAble.Date != null || x.UnlockAble.Holiday != HolidayType.None);
-                                if (tempphoto.Count > 0)//优先解锁时间/日期/节日的照片
-                                    photos = tempphoto;
-                                else
-                                {
-                                    tempphoto = photos.FindAll(x => x.UnlockAble.SellBoth == false && (x.UnlockAble.Feeling > 10 || x.UnlockAble.Likability >= 10 || x.UnlockAble.Money >= 10));
-                                    if (tempphoto.Count > 0)//然后解锁好感度/金钱/饱腹/口渴的照片
-                                        photos = tempphoto;
-                                }
-
-                                var photo = photos[Function.Rnd.Next(photos.Count)];
-                                photo.Unlock(this);
-                                Main.LabelDisplayShow("{0}收到了新照片".Translate(Core.Save!.Name) + '\n' + photo.Name, 4000);
-                            }
-                            else
-                                goto case 11;
-                            break;
-                        default:
-                            Main.LabelDisplayShow("{0}获得了谢谢惠顾".Translate(Core.Save!.Name), 4000);
-                            break;
-                    }
-                    break;
-            }
-        }
+      
 
         TextBlock tlvplus = null!;
 

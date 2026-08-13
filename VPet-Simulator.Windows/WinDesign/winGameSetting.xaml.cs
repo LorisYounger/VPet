@@ -198,6 +198,7 @@ namespace VPet_Simulator.Windows
                 runUserName.Text = SteamClient.Name;
                 runActivate.Text = "已通过Steam[{0}]激活服务注册".Translate(SteamClient.SteamId.Value.ToString("x").Substring(6));
                 run_BC.Text = "前往 更好买:贡献兑换".Translate();
+                run_VV.Text = "前往 生日会投票 页面".Translate();
             }
             else
             {
@@ -1733,6 +1734,11 @@ namespace VPet_Simulator.Windows
         private void BC_Click(object sender, RoutedEventArgs e)
         {
             Task.Run(() => ExtensionFunction.StartURL($"https://bettercontribution.exlb.net/shop#steamid={mw.SteamID}&checkkey={mw.GenerateAuthKey().Result}&lang={LocalizeCore.CurrentCulture}"));
+        }
+
+        private void VV_Click(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() => ExtensionFunction.StartURL($"https://vpetvote.exlb.net/#steamid={mw.SteamID}&checkkey={mw.GenerateAuthKey().Result}&lang={LocalizeCore.CurrentCulture}"));
         }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
