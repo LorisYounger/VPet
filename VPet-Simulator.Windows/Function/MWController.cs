@@ -142,13 +142,13 @@ namespace VPet_Simulator.Windows
 
         public void SetNowScreenActivate()
         {
-            if (!mw.IsLoaded) return;
-            if (mw.winSetting != null && mw.winSetting.Visibility == Visibility.Visible) return;
-            if (mw.winBetterBuy != null && mw.winBetterBuy.Visibility == Visibility.Visible) return;
-            if (mw.winWorkMenu != null && mw.winWorkMenu.Visibility == Visibility.Visible) return;
-            if (mw.winMutiPlayer != null && mw.winMutiPlayer.Visibility == Visibility.Visible) return;
             mw.Dispatcher.Invoke(() =>
             {
+                if (!mw.IsLoaded) return;
+                if (mw.winSetting != null && mw.winSetting.Visibility == Visibility.Visible) return;
+                if (mw.winBetterBuy != null && mw.winBetterBuy.Visibility == Visibility.Visible) return;
+                if (mw.winWorkMenu != null && mw.winWorkMenu.Visibility == Visibility.Visible) return;
+                if (mw.winMutiPlayer != null && mw.winMutiPlayer.Visibility == Visibility.Visible) return;
                 var helper = new WindowInteropHelper(mw);
                 var currentScreen = Screen.FromHandle(helper.Handle);
                 var hwndSource = HwndSource.FromHwnd(helper.Handle);
