@@ -2461,9 +2461,9 @@ namespace VPet_Simulator.Windows
                               button.Click += (x, y) =>
                               {
                                   if (LocalizeCore.CurrentCulture.StartsWith("zh"))
-                                      ExtensionFunction.StartURL("https://www.bilibili.com/opus/1100685352151023623");
+                                      ExtensionFunction.StartURL("https://www.bilibili.com/opus/1236088065966997511");
                                   else
-                                      ExtensionFunction.StartURL("https://store.steampowered.com/news/app/1920960/view/528729123117336267");
+                                      ExtensionFunction.StartURL("https://store.steampowered.com/news/app/1920960/view/705528385946780595");
                               };
                               return button;
                           });
