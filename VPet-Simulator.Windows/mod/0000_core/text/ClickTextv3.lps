@@ -72,7 +72,7 @@ clicktext:|State#Work:|Working#烧烤:|LikeMin#0:|LikeMax#700:|Text#来，这是
 clicktext:|State#Work:|Working#烧烤:|LikeMin#0:|LikeMax#800:|Text#主人烤的外焦里嫩，怎么做到的！？:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#烧烤:|LikeMin#0:|LikeMax#900:|Text#朕的可乐呢！端上来！:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#烧烤:|LikeMin#0:|LikeMax#1000:|Text#这烤肉动画居然不加饱食度，感觉不如更好买的拼好饭。:|Tags#vup,girl:|
-clicktext:|State#Work:|Working#烧烤:|LikeMin#0:|LikeMax#0:|Text#烧烤不要只肉喵:|Tags#vup,girl:|
+clicktext:|State#Work:|Working#烧烤:|LikeMin#0:|LikeMax#0:|Text#烧烤不要只吃肉喵:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#烧烤:|LikeMin#0:|LikeMax#0:|Text#烧烤就是要吃肉喵！:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#烧烤:|LikeMin#0:|LikeMax#0:|Text#烧烤一时爽，采购修罗场:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#烧烤:|LikeMin#0:|LikeMax#0:|Text#烧烤一时爽，串串手酸爽:|Tags#vup,girl:|
@@ -86,7 +86,7 @@ clicktext:|State#Work:|Working#烧烤:|Mode#1:|LikeMin#0:|LikeMax#0:|Text#烤肉
 clicktext:|State#Work:|Working#烧烤:|Mode#3:|LikeMin#0:|LikeMax#0:|Text#好耶！:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#烧烤:|Mode#4:|LikeMin#0:|LikeMax#0:|Text#主人负责烤！咱就负责吃！:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#烧烤:|Mode#4:|LikeMin#0:|LikeMax#0:|Text#烤焦了呜呜呜:|Tags#vup,girl:|
-clicktext:|State#Work:|Working#烧烤:|dayTime#1:|LikeMin#0:|LikeMax#0:|Text##桌宠早餐 应主人的要求，今天早上吃烤肉:|Tags#vup,girl:|
+clicktext:|State#Work:|Working#烧烤:|dayTime#1:|LikeMin#0:|LikeMax#0:|Text#桌宠早餐 应主人的要求，今天早上吃烤肉:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#烧烤:|dayTime#1:|LikeMin#0:|LikeMax#0:|Text#早上吃这么罪恶的早餐真的好吗？:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#烧烤:|dayTime#2:|LikeMin#0:|LikeMax#0:|Text#午饭~午饭~:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#烧烤:|dayTime#2:|LikeMin#0:|LikeMax#0:|Text#吃完直接晕碳一下午:|Tags#vup,girl:|
@@ -128,6 +128,7 @@ clicktext:|State#Work:|Working#玩水:|dayTime#4:|LikeMin#0:|LikeMax#0:|Text#半
 clicktext:|State#Work:|Working#玩水:|dayTime#4:|LikeMin#0:|LikeMax#0:|Text#呜！好冰！:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#修屏幕:|LikeMin#0:|LikeMax#100:|Text#啊哈哈，不小心弄坏了屏幕，主人不会怪咱喵。:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#修屏幕:|LikeMin#0:|LikeMax#200:|Text#啊，主人你什么什么都没看见喵！:|Tags#vup,girl:|
+clicktext:|State#Work:|Working#修屏幕:|LikeMin#0:|LikeMax#200:|Text#啊，主人你什么都没看见喵！:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#修屏幕:|LikeMin#0:|LikeMax#300:|Text#不就是个破屏幕吗！看我把他修回去！:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#修屏幕:|LikeMin#0:|LikeMax#400:|Text#就弄坏这一点应该没问题吧。大概。。:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#修屏幕:|LikeMin#0:|LikeMax#500:|Text#其实主人调下透明度就好了喵）:|Tags#vup,girl:|
@@ -157,4 +158,4 @@ clicktext:|State#Work:|Working#修屏幕:|dayTime#2:|LikeMin#0:|LikeMax#0:|Text#
 clicktext:|State#Work:|Working#修屏幕:|dayTime#3:|LikeMin#0:|LikeMax#0:|Text#天黑了关电脑就看不到坏了喵！:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#修屏幕:|dayTime#3:|LikeMin#0:|LikeMax#0:|Text#电脑维修没有下班喵。:|Tags#vup,girl:|
 clicktext:|State#Work:|Working#修屏幕:|dayTime#4:|LikeMin#0:|LikeMax#0:|Text#熬夜给屏幕熬穿了喵！早点睡觉吧！:|Tags#vup,girl:|
-clicktext:|State#Work:|Working#修屏幕:|dayTime#4:|LikeMin#0:|LikeMax#0:|Text#主人先睡把，我修好就睡。:|Tags#vup,girl:|
+clicktext:|State#Work:|Working#修屏幕:|dayTime#4:|LikeMin#0:|LikeMax#0:|Text#主人先睡吧，我修好就睡。:|Tags#vup,girl:|
