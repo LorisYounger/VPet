@@ -367,13 +367,13 @@ namespace VPet_Simulator.Windows
         }
         private void Switch_AutoBuy_Checked(object sender, RoutedEventArgs e)
         {
-            if (_puswitchautobuy!.IsChecked ?? false && mw.Core.Save!.Money < 100)
+            if (_puswitchautobuy?.IsChecked == true && mw.Core.Save!.Money < 100)
             {
                 _puswitchautobuy.IsChecked = false;
                 MessageBoxX.Show(mw, "余额不足100，无法开启自动购买".Translate(), "更好买".Translate());
                 return;
             }
-            if (_puswitchautobuy!.IsChecked ?? false)
+            if (_puswitchautobuy?.IsChecked == true)
             {
                 mw.Set.AutoBuy = true;
                 _puswitchautogift!.Visibility = Visibility.Visible;
