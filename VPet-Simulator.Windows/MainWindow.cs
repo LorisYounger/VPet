@@ -980,6 +980,21 @@ namespace VPet_Simulator.Windows
                     ItemsAdd(itm);
                 }
             }
+            //临时修复下生日更新
+            if (DateTime.Now.Month == 8 || DateTime.Now.Month == 9)
+                foreach (var item in Items)
+                {
+                    if (item.Name == "每日礼包")
+                    {
+                        if (item.Count > 400)
+                            item.Count = 365;
+                    }
+                    else if (item.Count > 32)
+                        item.Count = 32;
+                    else if (item.Count <= 0)
+                        item.Count = 1;
+                }
+
             HashCheck = HashCheck;
             GameSavesData.GameSave.Event_LevelUp += LevelUP;
             return true;
@@ -1678,7 +1693,7 @@ namespace VPet_Simulator.Windows
                 }
             }
 
-           
+
             //第一次启动日期
             if (GameSavesData.Data.FindLine("birthday") == null)
             {
@@ -1928,13 +1943,6 @@ namespace VPet_Simulator.Windows
                   Foods.ForEach(item => item.LoadImageSource(this));
                   Photos.ForEach(item => item.LoadUserInfo(this));
 
-                  //物品栏加载
-                  foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("item")))
-                  {
-                      var itm = Item.CreateItem(this, line.Value)!;
-                      itm.LoadSource(this);
-                      ItemsAdd(itm);
-                  }
 
                   //添加基本物品项目 (根据名称添加)
                   if (Set.PetGraph == "vup")
@@ -2444,7 +2452,7 @@ namespace VPet_Simulator.Windows
 #if BDAY
                   if (DateTime.Now < new DateTime(2026, 8, 22) && DateTime.Now >= new DateTime(2026, 8, 14))
                   {
-                      
+
                       Task.Run(() =>
                       {
                           Thread.Sleep(10000);
@@ -2683,7 +2691,7 @@ namespace VPet_Simulator.Windows
                 });
             }
         }
-      
+
 
         TextBlock tlvplus = null!;
 
