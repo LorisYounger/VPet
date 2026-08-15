@@ -222,12 +222,12 @@ public class ScheduleTask
                     }
                 }
                 var newwork = wsi.Work.Double(wsi.DBL);
-                while (mw.GameSavesData.GameSave.LevelMax < newwork.LevelLimit && wsi.DBL > 1)
+                while (mw.GameSavesData.GameSave.Level < newwork.LevelLimit && wsi.DBL > 1)
                 {
                     wsi.DBL = wsi.DBL - 1;
                     newwork = wsi.Work.Double(wsi.DBL);
                 }
-                mw.Dispatcher.Invoke(() => mw.Main.StartWork(wsi.Work.Double(wsi.DBL)));
+                mw.Dispatcher.Invoke(() => mw.Main.StartWork(newwork));
                 NowIndex++;
             }
             else if (ScheduleItems[NowIndex] is RestScheduleItem rsi)
