@@ -1,11 +1,11 @@
 咱是烤肉man~#I'm the barbecue master~:|
 肉~肉~肉~#Meat~ Meat~ Meat~:|
-主人喜欢吃烤肉喵？#Do you like barbecue, Master, meow?:|
-主人喜欢吃什么烤肉？#What kind of barbecue do you like, Master?:|
-主人来一起烤肉吧？#Master, want to barbecue together?:|
-和主人一起烤肉嗯哼哼~#Barbecuing with Master, hmm-hmm~:|
-来，这是主人的份~#Here, this one's for you, Master~:|
-主人烤的外焦里嫩，怎么做到的！？#Yours is charred outside and tender inside—how did you do that, Master!?:|
+主人喜欢吃烤肉喵？#Do you like barbecue, {hostname}, meow?:|
+主人喜欢吃什么烤肉？#What kind of barbecue do you like, {hostname}?:|
+主人来一起烤肉吧？#{hostname}, want to barbecue together?:|
+和主人一起烤肉嗯哼哼~#Barbecuing with {hostname}, hmm-hmm~:|
+来，这是主人的份~#Here, this one's for you, {hostname}~:|
+主人烤的外焦里嫩，怎么做到的！？#Yours is charred outside and tender inside—how did you do that, {hostname}!?:|
 朕的可乐呢！端上来！#Where is my cola? Bring it forth!:|
 这烤肉动画居然不加饱食度，感觉不如更好买的拼好饭。#This barbecue animation doesn't even raise Fullness. Honestly, the budget combo meals on BetterBuy are better.:|
 烧烤不要只吃肉喵#Barbecue shouldn't be all meat, meow.:|
@@ -20,26 +20,26 @@
 烤的生了叫血红蛋白，烤的焦了叫干煸#Undercooked is hemoglobin; burnt is dry-fried.:|
 烤肉可乐炫起来！#Time to devour some barbecue and cola!:|
 好耶！#Yay!:|
-主人负责烤！咱就负责吃！#Master grills, and I eat!:|
+主人负责烤！咱就负责吃！#{hostname} grills, and I eat!:|
 烤焦了呜呜呜#I burned it, waaah...:|
-桌宠早餐 应主人的要求，今天早上吃烤肉#/idVPet Breakfast: At Master's request, we're having barbecue for breakfast today.:|
+桌宠早餐 应主人的要求，今天早上吃烤肉#/idVPet Breakfast: At {hostname}'s request, we're having barbecue for breakfast today.:|
 早上吃这么罪恶的早餐真的好吗？#Is such a sinful breakfast really okay this early?:|
 午饭~午饭~#Lunch~ Lunch~:|
 吃完直接晕碳一下午#One bite and I'll be in a food coma all afternoon.:|
 今晚去吃烤肉吧#Let's get barbecue tonight.:|
 吃太多小心睡不着哦！#Eat too much and you might not be able to sleep!:|
 半夜才是吃烧烤的时间！#Midnight is barbecue time!:|
-{name}这个人最精了，熬穿了，给自己烧烤的夜宵，说给主人的早饭#{name} is so crafty—she stayed up all night, called the barbecue her midnight snack, then told Master it was breakfast.:|
-主人以前玩过水吗#Master, have you played in the water before?:|
-主人会游泳喵？#Can you swim, Master, meow?:|
-主人陪咱玩水吧！#Master, come play in the water with me!:|
-主人叫咱游泳喵#Master told me to swim, meow.:|
-主人咱先下水咯~#Master, I'm getting in first~:|
-主人你看~水好干净~#Look, Master~ The water is so clean~:|
-主人快来玩水呀~#Master, come play in the water~:|
-泼主人一身水~#Splashing Master from head to toe~:|
-我鞋子丢了！要找我主人打！#I lost my shoes! Time to go pick a fight with Master!:|
-【虚拟桌宠制作组】提醒广大家长:请切实加强监护,教育桌宠做到"不私自下水游泳，不到无安全保障水域玩耍,不盲目下水施救"。珍爱生命、严防溺水!#[Virtual Pet Simulator Team] A reminder to all Masters: Please supervise your desktop pets closely. Teach them never to swim alone, enter unsafe waters, or attempt a blind rescue. Cherish life and prevent drowning!:|
+{name}这个人最精了，熬穿了，给自己烧烤的夜宵，说给主人的早饭#{name} is so crafty—she stayed up all night, called the barbecue her midnight snack, then told {hostname} it was breakfast.:|
+主人以前玩过水吗#{hostname}, have you played in the water before?:|
+主人会游泳喵？#Can you swim, {hostname}, meow?:|
+主人陪咱玩水吧！#{hostname}, come play in the water with me!:|
+主人叫咱游泳喵#{hostname} told me to swim, meow.:|
+主人咱先下水咯~#{hostname}, I'm getting in first~:|
+主人你看~水好干净~#Look, {hostname}~ The water is so clean~:|
+主人快来玩水呀~#{hostname}, come play in the water~:|
+泼主人一身水~#Splashing {hostname} from head to toe~:|
+我鞋子丢了！要找我主人打！#I lost my shoes! I'm gonna get beaten by {hostname}!:|
+【虚拟桌宠制作组】提醒广大家长:请切实加强监护,教育桌宠做到"不私自下水游泳，不到无安全保障水域玩耍,不盲目下水施救"。珍爱生命、严防溺水!#[Virtual Pet Simulator Team] A reminder to all Players: Please supervise your desktop pets closely. Teach them never to swim alone, enter unsafe waters, or attempt a blind rescue. Cherish life and prevent drowning!:|
 洞潜圈传来噩耗#Bad news from the cave-diving community.:|
 我负责搅动泥沙#I'm in charge of stirring up the silt.:|
 我负责临时起意#I'm in charge of acting on impulse.:|
@@ -60,18 +60,18 @@
 太阳落山正是玩水的好时机#Sunset is the perfect time to play in the water.:|
 夜。。夜游？#N-night swimming?:|
 晚上玩水也是别有一番滋味在心头#Playing in the water at night has its own special charm.:|
-半夜出来玩水真的不会被主人打吗#Will Master really not hit me for playing in the water at midnight?:|
+半夜出来玩水真的不会被主人打吗#Will {hostname} really not hit me for playing in the water at midnight?:|
 呜！好冰！#Brr! So cold!:|
-啊哈哈，不小心弄坏了屏幕，主人不会怪咱喵。#Ahaha, I accidentally broke the screen. Master won't blame me, meow.:|
-啊，主人你什么都没看见喵！#Ah, Master, you didn't see anything, meow!:|
+啊哈哈，不小心弄坏了屏幕，主人不会怪咱喵。#Ahaha, I accidentally broke the screen. {hostname} won't blame me, meow.:|
+啊，主人你什么都没看见喵！#Ah, {hostname}, you didn't see anything, meow!:|
 不就是个破屏幕吗！看我把他修回去！#It's just a lousy screen! Watch me fix it!:|
 就弄坏这一点应该没问题吧。大概。。#Only this little spot is broken. It should be fine. Probably...:|
-其实主人调下透明度就好了喵）#Actually, Master, just adjust the transparency and it'll be fine, meow):|
+其实主人调下透明度就好了喵）#Actually, {hostname}, just adjust the transparency and it'll be fine, meow:|
 私密马赛！不小心搞坏了啦！人家会修好的喵！#Sumimasen! I broke it by accident! I'll fix it, meow!:|
 屏幕后面其实是这样的喵，没想到吧！#This is what it looks like behind the screen, meow. Bet you didn't expect that!:|
-这屏幕这么老，有空去更好买给主人换一个喵。#This screen is so old. I'll get Master a new one from BetterBuy sometime, meow.:|
+这屏幕这么老，有空去更好买给主人换一个喵。#This screen is so old. I'll get {hostname} a new one from BetterBuy sometime, meow.:|
 幸好弄坏的不是显卡，什么喵？屏幕也涨价了？#At least I didn't break the graphics card. What, meow? Screens got more expensive too?:|
-这后面，就是主人吗？如果彻底弄坏的话。。。#Is that Master back there? If I break it completely...:|
+这后面，就是主人吗？如果彻底弄坏的话。。。#Is that {hostname} back there? If I break it completely...:|
 80！80！#Eighty! Eighty!:|
 这种东西！敲敲就好了喵！#Things like this just need a few smacks, meow!:|
 发光管？那是什么？#A light tube? What's that?:|
@@ -86,14 +86,14 @@
 哈，这种小问题咱手拿把掐喵！平时才没有弄坏过！#Ha! This little problem is a piece of cake, meow! It's not like I break things all the time!:|
 好累哦，怎么也修不好喵。#I'm so tired. Why can't I get it fixed, meow?:|
 呜呜，对不起喵，人家不是故意搞坏的。#Waaah, I'm sorry, meow. I didn't mean to break it.:|
-幸好是早上坏的，主人还没醒喵#Good thing it broke in the morning while Master was still asleep, meow.:|
+幸好是早上坏的，主人还没醒喵#Good thing it broke in the morning while {hostname} was still asleep, meow.:|
 什么？开了电脑才知道坏了喵！#What? You only find out it's broken when you turn on the computer, meow!:|
-怎么办！主人下午还要用屏幕#What do I do? Master needs the screen this afternoon!:|
+怎么办！主人下午还要用屏幕#What do I do? {hostname} needs the screen this afternoon!:|
 是。是。是中午热烧了喵！#I-it-it overheated at noon, meow!:|
 天黑了关电脑就看不到坏了喵！#Once it's dark, turn off the computer and you won't see the damage, meow!:|
 电脑维修没有下班喵。#Computer repair doesn't get to clock out, meow.:|
 熬夜给屏幕熬穿了喵！早点睡觉吧！#Staying up late wore a hole through the screen, meow! Go to bed early!:|
-主人先睡吧，我修好就睡。#Master, go to sleep first. I'll sleep once it's fixed.:|
+主人先睡吧，我修好就睡。#{hostname}, go to sleep first. I'll sleep once it's fixed.:|
 修屏幕#Screen Repair:|
 玩水#Water Play:|
 烧烤#Barbecue:|

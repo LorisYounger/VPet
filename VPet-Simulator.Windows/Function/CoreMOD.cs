@@ -32,18 +32,18 @@ namespace VPet_Simulator.Windows
         };
         public static Dictionary<string, Type> LoadPlug { get; } = new Dictionary<string, Type>();
         public static string? NowLoading = null;
-        public string Name { get; set; }
-        public string Author { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Author { get; set; } = string.Empty;
         /// <summary>
         /// 如果是上传至Steam,则为SteamUserID
         /// </summary>
-        public long AuthorID { get; set; }
+        public long AuthorID { get; set; } = 0;
         /// <summary>
         /// 上传至Steam的ItemID
         /// </summary>
-        public ulong ItemID { get; set; }
-        public string Intro { get; set; }
-        public DirectoryInfo Path { get; set; }
+        public ulong ItemID { get; set; } = 0;
+        public string Intro { get; set; } = string.Empty;
+        public DirectoryInfo Path { get; set; } = null!;
         public int GameVer { get; set; }
         public int Ver { get; set; }
         public HashSet<string> Tag { get; set; } = new HashSet<string>();

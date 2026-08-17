@@ -21,7 +21,7 @@ namespace VPet_Simulator.Windows
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
 #if !DEBUG
             base.DispatcherUnhandledException += (s, e) => { e.Handled = true; UnhandledException(e.Exception, false); };
-            AppDomain.CurrentDomain.UnhandledException += (s, e) => { UnhandledException((e.ExceptionObject as Exception), true); };
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => { UnhandledException((e.ExceptionObject as Exception)!, true); };
 #endif
             //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }

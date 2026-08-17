@@ -36,11 +36,11 @@ LBGame制作组（虚拟桌宠模拟器的制作组）是一个效率高，产�
 {name}假装去玩了#{name} pretended to go out and play.:|
 {name}跑掉了#{name} ran away.:|
 生日蛋糕3#Third-Anniversary Interactive Birthday Cake:|
-为了报答主人去年生日制作的惊喜蛋糕，今年萝莉丝打算扳回一局，制作了带考验的生日蛋糕，每个蛋糕都有一个关于桌宠生日的问题，只有回答正确才能好好享用生日蛋糕，回答错误虽然也可以享用惊喜蛋糕但是会被调皮萝莉丝恶作剧，真是记仇呢。#Last year, Master made Lolis a surprise birthday cake. This year, she's out to return the favor—and settle the score—with a batch of cakes that each come with a challenge. Every cake asks a question about VPet's birthday. Get it right, and you can enjoy your cake in peace. Get it wrong, and you still get the surprise cake... plus one of mischievous Lolis's pranks. She sure knows how to hold a grudge!:|
+为了报答主人去年生日制作的惊喜蛋糕，今年萝莉丝打算扳回一局，制作了带考验的生日蛋糕，每个蛋糕都有一个关于桌宠生日的问题，只有回答正确才能好好享用生日蛋糕，回答错误虽然也可以享用惊喜蛋糕但是会被调皮萝莉丝恶作剧，真是记仇呢。#Last year, {hostname} made Lolis a surprise birthday cake. This year, she's out to return the favor—and settle the score—with a batch of cakes that each come with a challenge. Every cake asks a question about VPet's birthday. Get it right, and you can enjoy your cake in peace. Get it wrong, and you still get the surprise cake... plus one of mischievous Lolis's pranks. She sure knows how to hold a grudge!:|
 前往 生日会投票 页面#Head to the Birthday Party Voting page:|
 三周年生日蛋糕#Third-Anniversary Birthday Cake:|
-拍摄于桌宠制作蛋糕的厨房,桌宠正和主人炫耀自己亲手做的生日蛋糕，殊不知一场考验正等着主人。#Taken in the kitchen where VPet makes cakes. VPet proudly shows Master the birthday cake she made from scratch—but little does Master know, a challenge awaits.:|
-桌宠的DLC是宅女#VPet's DLC character is a homebody.:|
+拍摄于桌宠制作蛋糕的厨房,桌宠正和主人炫耀自己亲手做的生日蛋糕，殊不知一场考验正等着主人。#Taken in the kitchen where VPet makes cakes. VPet proudly shows {hostname} the birthday cake she made from scratch—but little does {hostname} know, a challenge awaits.:|
+桌宠的DLC是宅女#VPet's DLC character is an otaku.:|
 桌宠的DLC是小恶魔#VPet's DLC character is a little devil.:|
 桌宠的DLC是女仆#VPet's DLC character is a maid.:|
 桌宠的DLC是JK#VPet's DLC character is a high school girl.:|

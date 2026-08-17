@@ -20,6 +20,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace VPet_Simulator.Windows.Interface;
+
 public class Photo
 {
     public Photo() { }
@@ -45,7 +46,7 @@ public class Photo
     /// <summary>
     /// 图片所在位置
     /// </summary>
-    public string Path { get; set; }  = string.Empty;
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>
     /// 图片类型
@@ -274,10 +275,15 @@ public class Photo
                         if (!CheckDate(new DateTime(now.Year, 12, 25)))
                             return false;
                         break;
-                        //case HolidayType.Player_Birthday: //TODO: 玩家生日
-                        //    if (now.Month != save.GameSave.Birthday.Month || now.Day != save.GameSave.Birthday.Day)
-                        //        return false;
-                        //    break;
+                    case HolidayType.Qixi_Festival:
+                        if (!CheckDate(GetLunarDate(7, 7)))
+                            return false;
+                        break;
+                    case HolidayType.Player_Birthday: //玩家生日
+                        var bdt = save.GetDateTime("HostBDay");
+                        if (now.Month != bdt.Month || now.Day != bdt.Day)
+                            return false;
+                        break;
                 }
             }
             //统计数据检查
@@ -410,6 +416,10 @@ public class Photo
             /// 生日(玩家)
             /// </summary>
             Player_Birthday,
+            /// <summary>
+            /// 七夕
+            /// </summary>
+            Qixi_Festival
         }
         /// <summary>
         /// 节假日
@@ -726,7 +736,7 @@ public class Photo
     public bool CopyImageToClipboard(IMainWindow imw)
     {
         // 解压zip
-        string?  zippath = imw.FileSources.FindSource(Zip + ".zlps");
+        string? zippath = imw.FileSources.FindSource(Zip + ".zlps");
         if (zippath == null)
         {
             zippath = imw.FileSources.FindSource(Zip + ".zip");

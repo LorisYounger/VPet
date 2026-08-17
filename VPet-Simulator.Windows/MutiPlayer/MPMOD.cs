@@ -34,7 +34,7 @@ internal class MPMOD
                 mw.ImageSources.AddImages(tmp, di.FullName);
         }
     }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public MPMOD(DirectoryInfo directory, MPFriends mw)
     {
 #if !DEBUG
