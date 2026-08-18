@@ -914,7 +914,7 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str MOD管理}">
+            <TabItem x:Name="TabModManage" BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str MOD管理}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120" />
@@ -924,6 +924,9 @@
                     <ListBox x:Name="ListMod" VerticalAlignment="Top" Background="Transparent" BorderThickness="0"
                             SelectionChanged="ListMod_SelectionChanged" SelectionMode="Single"
                             Style="{DynamicResource SideMenuListBoxStyle}" />
+                    <Button x:Name="ButtonReLS" Grid.ColumnSpan="2" Margin="0,2,0,0" VerticalAlignment="Bottom"
+                            Background="{DynamicResource Primary}" pu:ButtonHelper.Icon="&#xF064;"
+                            pu:IconHelper.FontFamily="{StaticResource RemixIcon}" Content="{ll:Str 刷新列表}" Foreground="{DynamicResource PrimaryText}" Click="ButtonReLS_Click" />
                     <StackPanel Grid.Column="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -983,37 +986,37 @@
                                         Foreground="{DynamicResource DARKPrimaryDarker}"
                                         MouseDown="ButtonOpenModFolder_MouseDown" Text="{ll:Str '所在文件夹'}"
                                         TextDecorations="Underline" TextWrapping="Wrap" />
-                                <TextBlock x:Name="ButtonEnable" Margin="0,2,0,0" HorizontalAlignment="Left"
+                                <TextBlock x:Name="ButtonEnable" Margin="0,4,0,0" HorizontalAlignment="Left"
                                         VerticalAlignment="Top" Cursor="Hand" FontSize="14"
                                         Foreground="{DynamicResource DARKPrimaryDarker}"
                                         MouseDown="ButtonEnable_MouseDown" Text="{ll:Str '启用该模组'}"
                                         TextDecorations="Underline" TextWrapping="Wrap" />
-                                <TextBlock x:Name="ButtonDisEnable" Margin="0,2,0,0" HorizontalAlignment="Left"
+                                <TextBlock x:Name="ButtonDisEnable" Margin="0,4,0,0" HorizontalAlignment="Left"
                                         VerticalAlignment="Top" Cursor="Hand" FontSize="14"
                                         Foreground="{DynamicResource DARKPrimaryDarker}"
                                         MouseDown="ButtonDisEnable_MouseDown" Text="{ll:Str '停用该模组'}"
                                         TextDecorations="Underline" TextWrapping="Wrap" />
-                                <TextBlock x:Name="ButtonPublish" Margin="0,2,0,0" HorizontalAlignment="Left"
+                                <TextBlock x:Name="ButtonPublish" Margin="0,4,0,0" HorizontalAlignment="Left"
                                         VerticalAlignment="Top" Cursor="Hand" FontSize="14" Foreground="DimGray"
                                         MouseDown="ButtonPublish_MouseDown" Text="{ll:Str 更新至Steam}"
                                         TextDecorations="Underline" TextWrapping="Wrap" />
-                                <TextBlock x:Name="ButtonSteam" Margin="0,2,0,0" HorizontalAlignment="Left"
+                                <TextBlock x:Name="ButtonSteam" Margin="0,4,0,0" HorizontalAlignment="Left"
                                         VerticalAlignment="Top" Cursor="Hand" FontSize="14" Foreground="DimGray"
                                         MouseDown="ButtonSteam_MouseDown" Text="{ll:Str 创意工坊页面}"
                                         TextDecorations="Underline" TextWrapping="Wrap" />
-                                <ProgressBar x:Name="ProgressBarUpload" Height="30" Margin="0,2,0,0"
+                                <ProgressBar x:Name="ProgressBarUpload" Height="30" Margin="0,4,0,0"
                                         VerticalAlignment="Top" pu:ProgressBarHelper.CornerRadius="2"
                                         pu:ProgressBarHelper.IsPercentVisible="True"
                                         Background="{DynamicResource Primary}"
                                         BorderBrush="{DynamicResource PrimaryDarker}" BorderThickness="2"
                                         Foreground="{DynamicResource DARKPrimary}" Visibility="Collapsed" Value="60" />
-                                <TextBlock x:Name="ButtonSetting" Margin="0,2,0,0" HorizontalAlignment="Left"
+                                <TextBlock x:Name="ButtonSetting" Margin="0,4,0,0" HorizontalAlignment="Left"
                                         VerticalAlignment="Top" Cursor="Hand" FontSize="14"
                                         Foreground="{DynamicResource DARKPrimaryDarker}"
                                         MouseDown="ButtonSetting_MouseDown" Text="{ll:Str MOD设置}"
                                         TextDecorations="Underline" TextWrapping="Wrap" />
                                 <Button x:Name="ButtonAllow" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                        Background="#FFFF2C2C" Click="ButtonAllow_Click" Content="{ll:Str 启用代码插件}"
+                                        Margin="0,4,0,0" Background="#FFFF2C2C" Click="ButtonAllow_Click" Content="{ll:Str 启用代码插件}"
                                         FontSize="12" Foreground="White" ToolTip="{ll:Str '启用该模组的代码内容,不能保证系统安全性'}" />
                             </StackPanel>
                             <Button x:Name="ButtonRestart" Grid.ColumnSpan="2" Margin="0,2,0,0"

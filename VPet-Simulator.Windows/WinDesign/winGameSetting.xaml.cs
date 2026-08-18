@@ -1,4 +1,5 @@
 ﻿using LinePutScript;
+using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using NAudio.Midi;
 using NAudio.SoundFont;
@@ -246,8 +247,6 @@ namespace VPet_Simulator.Windows
 
             //mod列表
             ShowModList();
-            ListMod.SelectedIndex = 0;
-            ShowMod((string)((ListBoxItem)ListMod.SelectedItem).Content);
 
             voicetimer = new DispatcherTimer()
             {
@@ -293,6 +292,7 @@ namespace VPet_Simulator.Windows
             ToolTipService.SetInitialShowDelay(runMODGameVerInfo, 0);
 
         }
+
         public List<ListBoxItem> ListMenuItems = new List<ListBoxItem>();
         private void tb_seach_menu_textchange(object sender, TextChangedEventArgs e)
         {
@@ -350,51 +350,245 @@ namespace VPet_Simulator.Windows
                 RVoice.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
         }
 
-        public void ShowModList()
+        private class ModInfo
         {
+            public CoreMOD? CoreMod { get; }
+            public string Name { get; }
+            public string Author { get; }
+            public long AuthorID { get; }
+            public ulong ItemID { get; }
+            public string Intro { get; }
+            public DirectoryInfo Path { get; }
+            public int GameVer { get; }
+            public int Ver { get; }
+            public HashSet<string> Tag { get; }
+
+            public bool IsLoaded => CoreMod != null;
+            public bool IsPlugin => Tag.Contains("plugin");
+
+            private ModInfo(CoreMOD? coreMod, string name, string author, long authorID, ulong itemID, string intro, DirectoryInfo path, int gameVer, int ver, HashSet<string> tag)
+            {
+                CoreMod = coreMod;
+                Name = name;
+                Author = author;
+                AuthorID = authorID;
+                ItemID = itemID;
+                Intro = intro;
+                Path = path;
+                GameVer = gameVer;
+                Ver = ver;
+                Tag = tag;
+            }
+
+            public static ModInfo FromCoreMod(CoreMOD mod) => new ModInfo(mod, mod.Name, mod.Author, mod.AuthorID, mod.ItemID, mod.Intro, mod.Path, mod.GameVer, mod.Ver, new HashSet<string>(mod.Tag));
+
+            public static ModInfo FromDirectory(DirectoryInfo directory)
+            {
+                string name = directory.Name;
+                string author = string.Empty;
+                long authorID = 0;
+                ulong itemID = 0;
+                string intro = string.Empty;
+                int gameVer = 0;
+                int ver = 0;
+                HashSet<string> tag = new HashSet<string>();
+
+                foreach (var di in directory.EnumerateDirectories())
+                    tag.Add(di.Name.ToLowerInvariant());
+
+                string infoFile = System.IO.Path.Combine(directory.FullName, "info.lps");
+                if (File.Exists(infoFile))
+                {
+                    try
+                    {
+                        var modlps = new LpsDocument(File.ReadAllText(infoFile));
+                        name = modlps.FindLine("vupmod")?.Info ?? name;
+                        intro = modlps.FindLine("intro")?.Info ?? string.Empty;
+                        gameVer = modlps.FindSub("gamever")?.InfoToInt ?? 0;
+                        ver = modlps.FindSub("ver")?.InfoToInt ?? 0;
+                        author = modlps.FindSub("author")?.Info.Split('[').FirstOrDefault() ?? string.Empty;
+                        authorID = modlps.FindLine("authorid")?.InfoToInt64 ?? 0;
+                        var itemStr = modlps.FindLine("itemid")?.info;
+                        if (!string.IsNullOrWhiteSpace(itemStr))
+                            ulong.TryParse(itemStr, out itemID);
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                return new ModInfo(null, name, author, authorID, itemID, intro, directory, gameVer, ver, tag);
+            }
+        }
+
+        private readonly List<ModInfo> modInfos = new List<ModInfo>();
+        private ModInfo? selectedModInfo;
+        CoreMOD? mod;
+
+        private IEnumerable<DirectoryInfo> GetModDirectories()
+        {
+            if (Directory.Exists(MainWindow.ModPath))
+            {
+                foreach (var di in new DirectoryInfo(MainWindow.ModPath).EnumerateDirectories())
+                    yield return di;
+            }
+
+            foreach (Sub ws in mw.Set["workshop"])
+            {
+                if (Directory.Exists(ws.Name))
+                    yield return new DirectoryInfo(ws.Name);
+            }
+        }
+
+        private bool isWorkshopRefreshing = false;
+
+        private void RefreshModInfos()
+        {
+            modInfos.Clear();
+            var modInfoByPath = new Dictionary<string, ModInfo>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (CoreMOD core in mw.CoreMODs)
+                modInfoByPath[core.Path.FullName] = ModInfo.FromCoreMod(core);
+
+            foreach (var di in GetModDirectories())
+            {
+                if (!File.Exists(Path.Combine(di.FullName, "info.lps")))
+                    continue;
+                if (!modInfoByPath.ContainsKey(di.FullName))
+                    modInfoByPath[di.FullName] = ModInfo.FromDirectory(di);
+            }
+
+            modInfos.AddRange(modInfoByPath.Values.OrderBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase));
+        }
+
+        private void RenderModList(string? selectedPath)
+        {
+            RefreshModInfos();
             ListMod.Items.Clear();
-            foreach (CoreMOD mod in mw.CoreMODs)
+
+            foreach (ModInfo info in modInfos)
             {
                 ListBoxItem moditem = (ListBoxItem)ListMod.Items[ListMod.Items.Add(new ListBoxItem())];
                 moditem.Padding = new Thickness(5, 0, 5, 0);
-                moditem.Content = mod.Name;
-                if (!mod.IsOnMOD(mw))
+                moditem.Content = info.Name;
+                moditem.Tag = info;
+                bool isOnMod = mw.Set.IsOnMod(info.Name);
+                if (!isOnMod)
                 {
                     moditem.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 }
                 else
                 {
-                    if (mod.GameVer / 1000 == mw.version / 1000)
+                    if (info.GameVer / 1000 == mw.version / 1000)
                     {
                         moditem.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
                     }
-                    else
+                    else if (info.IsPlugin)
                     {
-                        if (mod.Tag.Contains("plugin"))
-                            moditem.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
+                        moditem.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
                     }
                 }
             }
+
+            if (ListMod.Items.Count == 0)
+            {
+                selectedModInfo = null;
+                mod = null;
+                return;
+            }
+
+            int selectedIndex = 0;
+            if (!string.IsNullOrWhiteSpace(selectedPath))
+            {
+                for (int i = 0; i < ListMod.Items.Count; i++)
+                {
+                    if (((ListBoxItem)ListMod.Items[i]).Tag is ModInfo info && info.Path.FullName.Equals(selectedPath, StringComparison.OrdinalIgnoreCase))
+                    {
+                        selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            ListMod.SelectedIndex = selectedIndex;
+            if (ListMod.SelectedItem is ListBoxItem item && item.Tag is ModInfo modInfo)
+                ShowMod(modInfo);
         }
-        CoreMOD mod;
+
+        private async Task RefreshWorkshopListFromSteamAsync()
+        {
+            if (!mw.IsSteamUser)
+                return;
+
+            var workshop = new Line_D("workshop");
+            int i = 1;
+            while (true)
+            {
+                var page = await Steamworks.Ugc.Query.ItemsReadyToUse.GetPageAsync(i++);
+                if (!page.HasValue || page.Value.ResultCount == 0)
+                    break;
+
+                foreach (Steamworks.Ugc.Item entry in page.Value.Entries)
+                {
+                    if (entry.Directory != null)
+                        workshop.Add(new Sub(entry.Directory, ""));
+                }
+            }
+
+            mw.Set["workshop"] = workshop;
+        }
+
+        public async void ShowModList()
+        {
+            if (isWorkshopRefreshing)
+                return;
+
+            var selectedPath = selectedModInfo?.Path.FullName;
+            isWorkshopRefreshing = true;
+            TabModManage.IsEnabled = false;
+            ButtonReLS.IsEnabled = false;
+            try
+            {
+                await RefreshWorkshopListFromSteamAsync();
+            }
+            catch
+            {
+            }
+            finally
+            {
+                RenderModList(selectedPath);
+                ButtonReLS.IsEnabled = true;
+                TabModManage.IsEnabled = true;
+                isWorkshopRefreshing = false;
+            }
+        }
+
         private void ShowMod(string modname)
         {
-            mod = mw.CoreMODs!.Find(x => x.Name == modname)!;
-            LabelModName.Content = mod.Name.Translate();
-            runMODAuthor.Text = mod.Author;
-            runMODGameVer.Text = CoreMOD.INTtoVER(mod.GameVer);
+            var modInfo = modInfos.FirstOrDefault(x => x.Name == modname);
+            if (modInfo != null)
+                ShowMod(modInfo);
+        }
+
+        private void ShowMod(ModInfo modInfo)
+        {
+            selectedModInfo = modInfo;
+            mod = modInfo.CoreMod;
+
+            LabelModName.Content = modInfo.Name.Translate();
+            runMODAuthor.Text = modInfo.Author;
+            runMODGameVer.Text = CoreMOD.INTtoVER(modInfo.GameVer);
             runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
             if (ImageMOD.Source is BitmapImage bitmapImage)
             {
                 bitmapImage.StreamSource?.Dispose();
             }
-            if (File.Exists(mod.Path.FullName + @"\icon.png"))
+            if (File.Exists(modInfo.Path.FullName + @"\icon.png"))
             {
                 bitmapImage = new();
                 bitmapImage.BeginInit();
                 try
                 {
-                    var bytes = File.ReadAllBytes(mod.Path.FullName + @"\icon.png");
+                    var bytes = File.ReadAllBytes(modInfo.Path.FullName + @"\icon.png");
                     bitmapImage.StreamSource = new MemoryStream(bytes);
                     bitmapImage.DecodePixelWidth = 250;
                 }
@@ -407,10 +601,10 @@ namespace VPet_Simulator.Windows
             else
                 ImageMOD.Source = ImageResources.NewSafeBitmapImage(@"pack://application:,,,/Res/TopLogo2019.PNG");
             runMODGameVerInfo.Visibility = Visibility.Collapsed;
-            if (mod.GameVer / 100 != mw.version / 100)
-                if (mod.GameVer < mw.version)
+            if (modInfo.GameVer / 100 != mw.version / 100)
+                if (modInfo.GameVer < mw.version)
                 {
-                    if (mod.GameVer / 1000 == mw.version / 1000)
+                    if (modInfo.GameVer / 1000 == mw.version / 1000)
                     {
                         runMODGameVer.Text += " (兼容)".Translate();
                     }
@@ -418,20 +612,20 @@ namespace VPet_Simulator.Windows
                     {
                         runMODGameVer.Text += " (版本低)".Translate();
                         runMODGameVerInfo.Visibility = Visibility.Visible;
-                        if (mod.Tag.Contains("plugin"))
+                        if (modInfo.IsPlugin)
                         {
                             runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
                             runMODGameVerInfo.ToolTip = "MOD对应游戏版本比当前游戏版本低, 因为包含代码插件, 可能有严重的兼容性问题.\n请联系MOD作者更新MOD".Translate()
-                                + $"\nv{CoreMOD.INTtoVER(mod.GameVer)} < v{mw.Version}";
+                                + $"\nv{CoreMOD.INTtoVER(modInfo.GameVer)} < v{mw.Version}";
                         }
                         else
                             runMODGameVerInfo.ToolTip = "MOD对应游戏版本比当前游戏版本低, 但是游戏的兼容功能可能会生效, MOD可能可以正常使用.\n为确保最佳体验,请联系MOD作者更新MOD".Translate()
-                               + $"\nv{CoreMOD.INTtoVER(mod.GameVer)} < v{mw.Version}";
+                               + $"\nv{CoreMOD.INTtoVER(modInfo.GameVer)} < v{mw.Version}";
                     }
                 }
-                else if (mod.GameVer > mw.version)
+                else if (modInfo.GameVer > mw.version)
                 {
-                    if (mod.GameVer / 1000 == mw.version / 1000)
+                    if (modInfo.GameVer / 1000 == mw.version / 1000)
                     {
                         runMODGameVer.Text += " (兼容)".Translate();
                         runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
@@ -442,10 +636,11 @@ namespace VPet_Simulator.Windows
                         runMODGameVerInfo.Visibility = Visibility.Visible;
                         runMODGameVer.Foreground = new SolidColorBrush(Color.FromRgb(190, 0, 0));
                         runMODGameVerInfo.ToolTip = "MOD对应游戏版本比当前游戏版本高, 可能会有兼容性问题.\n请更新游戏".Translate()
-                            + $"\nv{CoreMOD.INTtoVER(mod.GameVer)} > v{mw.Version}";
+                            + $"\nv{CoreMOD.INTtoVER(modInfo.GameVer)} > v{mw.Version}";
                     }
                 }
-            if (!mod.IsOnMOD(mw))
+            bool isOnMod = mw.Set.IsOnMod(modInfo.Name);
+            if (!isOnMod)
             {
                 LabelModName.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 ButtonEnable.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimaryDarker);
@@ -462,15 +657,15 @@ namespace VPet_Simulator.Windows
                 ButtonDisEnable.IsEnabled = true;
             }
             //发布steam等功能
-            if (mw.IsSteamUser)
+            if (mw.IsSteamUser && modInfo.IsLoaded)
             {
-                if (mod.ItemID == 1)
+                if (modInfo.ItemID == 1)
                 {
                     ButtonSteam.IsEnabled = false;
                     ButtonPublish.Text = "系统自带".Translate();
                     ButtonSteam.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 }
-                else if (mod.ItemID == 0)
+                else if (modInfo.ItemID == 0)
                 {
                     ButtonSteam.IsEnabled = false;
                     ButtonPublish.Text = "上传至Steam".Translate();
@@ -482,7 +677,7 @@ namespace VPet_Simulator.Windows
                     ButtonPublish.Text = "更新至Steam".Translate();
                     ButtonSteam.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimaryDarker);
                 }
-                if (mod.ItemID != 1 && (mod.AuthorID == SteamClient.SteamId.AccountId || mod.AuthorID == 0))
+                if (modInfo.ItemID != 1 && (modInfo.AuthorID == SteamClient.SteamId.AccountId || modInfo.AuthorID == 0))
                 {
                     ButtonPublish.IsEnabled = true;
                     ButtonPublish.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimaryDarker);
@@ -496,34 +691,37 @@ namespace VPet_Simulator.Windows
             else
             {
                 ButtonSteam.IsEnabled = false;
-                ButtonPublish.Text = "未登录".Translate();
+                ButtonPublish.Text = modInfo.IsLoaded ? "未登录".Translate() : "重启后可用".Translate();
                 ButtonPublish.IsEnabled = false;
                 ButtonPublish.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 ButtonSteam.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
             }
-            runMODVer.Text = CoreMOD.INTtoVER(mod.Ver);
-            GameInfo.Text = mod.Intro.Translate();
+            runMODVer.Text = CoreMOD.INTtoVER(modInfo.Ver);
+            GameInfo.Text = modInfo.Intro.Translate();
             string content = "";
-            foreach (string tag in mod.Tag)
+            foreach (string tag in modInfo.Tag)
             {
                 content += tag.Translate() + "\n";
             }
             GameHave.Text = content;
-            ButtonAllow.Visibility = mod.SuccessLoad || mw.Set.IsPassMOD(mod.Name) ? Visibility.Collapsed : Visibility.Visible;
+            ButtonAllow.Visibility = mod?.SuccessLoad == false && !mw.Set.IsPassMOD(modInfo.Name) ? Visibility.Visible : Visibility.Collapsed;
 
-            foreach (var mainplug in mw.Plugins)
+            if (mod != null)
             {
-                try
+                foreach (var mainplug in mw.Plugins)
                 {
-                    if (mainplug.PluginName == mod.Name &&
-                        mainplug.GetType().GetMethod("Setting")!.DeclaringType != typeof(MainPlugin)
-                    && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
+                    try
                     {
-                        ButtonSetting.Visibility = Visibility.Visible;
-                        return;
+                        if (mainplug.PluginName == mod.Name &&
+                            mainplug.GetType().GetMethod("Setting")!.DeclaringType != typeof(MainPlugin)
+                        && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
+                        {
+                            ButtonSetting.Visibility = Visibility.Visible;
+                            return;
+                        }
                     }
+                    finally { }
                 }
-                finally { }
             }
             ButtonSetting.Visibility = Visibility.Collapsed;
         }
@@ -594,17 +792,19 @@ namespace VPet_Simulator.Windows
 
         private void ListMod_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!AllowChange || ListMod.SelectedItem == null)
+            if (!AllowChange || ListMod.SelectedItem is not ListBoxItem item || item.Tag is not ModInfo modInfo)
                 return;
 
-            ShowMod((string)((ListBoxItem)ListMod.SelectedItem).Content);
+            ShowMod(modInfo);
         }
 
         private void ButtonOpenModFolder_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (selectedModInfo == null)
+                return;
             var psi = new ProcessStartInfo
             {
-                FileName = mod.Path.FullName,
+                FileName = selectedModInfo.Path.FullName,
                 UseShellExecute = true
             };
             Process.Start(psi);
@@ -612,24 +812,25 @@ namespace VPet_Simulator.Windows
 
         private void ButtonEnable_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            mw.Set.OnMod(mod.Name);
-            ShowMod(mod.Name);
+            if (selectedModInfo == null)
+                return;
+            mw.Set.OnMod(selectedModInfo.Name);
             ButtonRestart.Visibility = Visibility.Visible;
-            //int seleid = ListMod.SelectedIndex();
             ShowModList();
         }
 
         private void ButtonDisEnable_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (mod.Name == "Core")
+            if (selectedModInfo == null)
+                return;
+            if (selectedModInfo.Name == "Core")
             {
                 MessageBoxX.Show("模组 Core 为<虚拟桌宠模拟器>核心文件,无法停用".Translate(), "停用失败".Translate());
                 return;
             }
-            else if (CoreMOD.OnModDefList.Contains(mod.Name))
+            else if (CoreMOD.OnModDefList.Contains(selectedModInfo.Name))
                 return;
-            mw.Set.OnModRemove(mod.Name);
-            ShowMod(mod.Name);
+            mw.Set.OnModRemove(selectedModInfo.Name);
             ButtonRestart.Visibility = Visibility.Visible;
             ShowModList();
         }
@@ -648,6 +849,8 @@ namespace VPet_Simulator.Windows
         private async void ButtonPublish_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var mods = mod;
+            if (mods == null)
+                return;
             if (!mw.IsSteamUser)
             {
                 MessageBoxX.Show("请先登录Steam后才能上传文件".Translate(), "上传MOD需要Steam登录".Translate(), MessageBoxIcon.Warning);
@@ -710,7 +913,7 @@ namespace VPet_Simulator.Windows
             }
             else if (mods.AuthorID == SteamClient.SteamId.AccountId)
             {
-                var item = await Item.GetAsync(mod.ItemID);
+                var item = await Item.GetAsync(mods.ItemID);
                 Editor result;
                 if (item == null)
                 {
@@ -752,18 +955,20 @@ namespace VPet_Simulator.Windows
 
         private void ButtonSteam_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!AllowChange)
+            if (!AllowChange || mod == null)
                 return;
             ExtensionFunction.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + mod.ItemID);
         }
 
         private void ButtonAllow_Click(object sender, RoutedEventArgs e)
         {
+            if (mod == null || selectedModInfo == null)
+                return;
             if (MessageBoxX.Show("是否启用 {0} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查".Translate(mod.Name),
                 "启用 {0} 的代码插件?".Translate(mod.Name), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
             {
                 mw.Set.PassMod(mod.Name);
-                ShowMod(mod.Name);
+                ShowMod(selectedModInfo);
                 ButtonRestart.Visibility = Visibility.Visible;
             }
         }
@@ -1226,6 +1431,8 @@ namespace VPet_Simulator.Windows
 
         private void ButtonSetting_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (mod == null)
+                return;
             foreach (var mainplug in mw.Plugins)
             {
                 try
@@ -1739,6 +1946,11 @@ namespace VPet_Simulator.Windows
         private void VV_Click(object sender, RoutedEventArgs e)
         {
             Task.Run(() => ExtensionFunction.StartURL($"https://vpetvote.exlb.net/#steamid={mw.SteamID}&checkkey={mw.GenerateAuthKey().Result}&lang={LocalizeCore.CurrentCulture}"));
+        }
+
+        private void ButtonReLS_Click(object sender, RoutedEventArgs e)
+        {
+            ShowModList();
         }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
