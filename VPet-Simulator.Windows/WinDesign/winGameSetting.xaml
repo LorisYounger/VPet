@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VPet_Simulator.Windows" Foreground="{StaticResource PrimaryText}"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" d:DesignHeight="1000"
-        xmlns:system="clr-namespace:System;assembly=mscorlib" Width="{ll:Dbe SettingWidth_650, DefValue=650}"
+        xmlns:system="clr-namespace:System;assembly=mscorlib" Width="{ll:Dbe SettingWidth_700, DefValue=700}"
         Height="{ll:Dbe SettingHeight_550, DefValue=550}" Closing="WindowX_Closing" FontSize="16"
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" mc:Ignorable="d">
     <!--<pu:WindowX.Resources>
@@ -369,8 +369,7 @@
                             <Button x:Name="BtnOpenSaveManager" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
                                     Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
                                     Background="{DynamicResource SecondaryLight}" Click="BtnOpenSaveManager_Click"
-                                    Content="{ll:Str 打开存档管理器}"
-                                    ToolTip="{ll:Str 查看并加载游戏存档}" />
+                                    Content="{ll:Str 打开存档管理器}" ToolTip="{ll:Str 查看并加载游戏存档}" />
                         </Grid>
 
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -916,18 +915,28 @@
             </TabItem>
             <TabItem x:Name="TabModManage" BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str MOD管理}">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="20" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="140" />
                         <ColumnDefinition Width="15" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="tb_seach_mod" FontSize="16" pu:TextBoxHelper.Watermark="{ll:Str 搜索MOD}"
+                            BorderThickness="1" pu:TextBoxHelper.CornerRadius="4" BorderBrush="LightGray"
+                            Style="{DynamicResource StandardTextBoxStyle}" VerticalAlignment="Center"
+                            TextChanged="tb_seach_mod_TextChanged" />
                     <ListBox x:Name="ListMod" VerticalAlignment="Top" Background="Transparent" BorderThickness="0"
                             SelectionChanged="ListMod_SelectionChanged" SelectionMode="Single"
-                            Style="{DynamicResource SideMenuListBoxStyle}" />
-                    <Button x:Name="ButtonReLS" Grid.ColumnSpan="2" Margin="0,2,0,0" VerticalAlignment="Bottom"
-                            Background="{DynamicResource Primary}" pu:ButtonHelper.Icon="&#xF064;"
-                            pu:IconHelper.FontFamily="{StaticResource RemixIcon}" Content="{ll:Str 刷新列表}" Foreground="{DynamicResource PrimaryText}" Click="ButtonReLS_Click" />
-                    <StackPanel Grid.Column="2">
+                            Style="{DynamicResource SideMenuListBoxStyle}" Grid.Row="1" Margin="0,5,0,5" />
+                    <Button x:Name="ButtonReLS" Background="{DynamicResource Primary}" pu:ButtonHelper.Icon="&#xF064;"
+                            pu:IconHelper.FontFamily="{StaticResource RemixIcon}" Content="{ll:Str 刷新列表}"
+                            Foreground="{DynamicResource PrimaryText}" Click="ButtonReLS_Click" Grid.Row="2" />
+                    <StackPanel Grid.Column="2" Grid.RowSpan="3">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -1016,15 +1025,16 @@
                                         MouseDown="ButtonSetting_MouseDown" Text="{ll:Str MOD设置}"
                                         TextDecorations="Underline" TextWrapping="Wrap" />
                                 <Button x:Name="ButtonAllow" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                        Margin="0,4,0,0" Background="#FFFF2C2C" Click="ButtonAllow_Click" Content="{ll:Str 启用代码插件}"
-                                        FontSize="12" Foreground="White" ToolTip="{ll:Str '启用该模组的代码内容,不能保证系统安全性'}" />
-                            </StackPanel>
-                            <Button x:Name="ButtonRestart" Grid.ColumnSpan="2" Margin="0,2,0,0"
-                                    VerticalAlignment="Bottom" Background="{DynamicResource DARKPrimary}"
-                                    Click="ButtonRestart_Click" Content="{ll:Str 重启软件以应用更改}"
-                                    Foreground="{DynamicResource DARKPrimaryText}" Visibility="Collapsed" />
+                                        Margin="0,4,0,0" Background="#FFFF2C2C" Click="ButtonAllow_Click"
+                                        Content="{ll:Str 启用代码插件}" FontSize="12" Foreground="White"
+                                        ToolTip="{ll:Str '启用该模组的代码内容,不能保证系统安全性'}" />
+                            </StackPanel>                            
                         </Grid>
                     </StackPanel>
+                    <Button x:Name="ButtonRestart" Grid.Column="2" Grid.RowSpan="3" Margin="0,2,0,0" VerticalAlignment="Bottom"
+                            Background="{DynamicResource DARKPrimary}" Click="ButtonRestart_Click"
+                            Content="{ll:Str 重启软件以应用更改}" Foreground="{DynamicResource DARKPrimaryText}"
+                            Visibility="Collapsed" />
                 </Grid>
             </TabItem>
             <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Foreground="{DynamicResource PrimaryText}"

@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -353,6 +354,7 @@ namespace VPet_Simulator.Windows
         private class ModInfo
         {
             public CoreMOD? CoreMod { get; }
+            public int LoadOrder { get; }
             public string Name { get; }
             public string Author { get; }
             public long AuthorID { get; }
@@ -365,10 +367,12 @@ namespace VPet_Simulator.Windows
 
             public bool IsLoaded => CoreMod != null;
             public bool IsPlugin => Tag.Contains("plugin");
+            public bool HasTrustedCertificate { get; }
 
-            private ModInfo(CoreMOD? coreMod, string name, string author, long authorID, ulong itemID, string intro, DirectoryInfo path, int gameVer, int ver, HashSet<string> tag)
+            private ModInfo(CoreMOD? coreMod, int loadOrder, string name, string author, long authorID, ulong itemID, string intro, DirectoryInfo path, int gameVer, int ver, HashSet<string> tag)
             {
                 CoreMod = coreMod;
+                LoadOrder = loadOrder;
                 Name = name;
                 Author = author;
                 AuthorID = authorID;
@@ -378,9 +382,76 @@ namespace VPet_Simulator.Windows
                 GameVer = gameVer;
                 Ver = ver;
                 Tag = tag;
+                HasTrustedCertificate = !IsPlugin || HasTrustedPluginCertificate(path);
             }
 
-            public static ModInfo FromCoreMod(CoreMOD mod) => new ModInfo(mod, mod.Name, mod.Author, mod.AuthorID, mod.ItemID, mod.Intro, mod.Path, mod.GameVer, mod.Ver, new HashSet<string>(mod.Tag));
+
+
+            private static bool HasTrustedPluginCertificate(DirectoryInfo directory)
+            {
+                string dllPath = System.IO.Path.Combine(directory.FullName, "plugin");
+                var loadfile = new LpsDocument();
+                string loadFilePath = System.IO.Path.Combine(dllPath, "load.lps");
+                if (File.Exists(loadFilePath))
+                    loadfile = new LpsDocument(File.ReadAllText(loadFilePath));
+
+                foreach (FileInfo tmpfi in new DirectoryInfo(dllPath).EnumerateFiles("*.dll"))
+                {
+#if X64
+                    if (tmpfi.Name.Contains("x86"))
+                        continue;
+                    string cputype = "x64";
+#else
+                    if (tmpfi.Name.Contains("x64"))
+                        continue;
+                    string cputype = "x86";
+#endif
+                    if (loadfile[tmpfi.Name][(gbol)"skip"])
+                        continue;
+
+                    string? dllcpu = loadfile[tmpfi.Name].GetString("cpu", "anycpu")?.ToLowerInvariant();
+                    if (dllcpu != "anycpu" && dllcpu != cputype)
+                        continue;
+
+                    try
+                    {
+                        var certificate = new X509Certificate2(tmpfi.FullName);
+                        if (!(CoreMOD.IsTrustedCertificate(certificate) || CoreMOD.IsLBGameCertificate(certificate)))
+                            return false;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            public bool MatchesSearch(string? searchText)
+            {
+                if (string.IsNullOrWhiteSpace(searchText))
+                    return true;
+
+                var terms = searchText.Split(new[] { ' ', '\t', '\\', '/', ',' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                if (terms.Length == 0)
+                    return true;
+
+                var tagTranslateText = string.Join(" ", Tag.Select(x => x.Translate()));
+                var searchPool = string.Join("\n", new[]
+                {
+                    Name,
+                    Name.Translate(),
+                    Intro,
+                    Intro.Translate(),
+                    Author,
+                    tagTranslateText
+                });
+
+                return terms.Any(term => searchPool.Contains(term, StringComparison.OrdinalIgnoreCase));
+            }
+
+            public static ModInfo FromCoreMod(CoreMOD mod, int loadOrder) => new ModInfo(mod, loadOrder, mod.Name, mod.Author, mod.AuthorID, mod.ItemID, mod.Intro, mod.Path, mod.GameVer, mod.Ver, new HashSet<string>(mod.Tag));
 
             public static ModInfo FromDirectory(DirectoryInfo directory)
             {
@@ -417,7 +488,7 @@ namespace VPet_Simulator.Windows
                     }
                 }
 
-                return new ModInfo(null, name, author, authorID, itemID, intro, directory, gameVer, ver, tag);
+                return new ModInfo(null, int.MaxValue, name, author, authorID, itemID, intro, directory, gameVer, ver, tag);
             }
         }
 
@@ -447,8 +518,11 @@ namespace VPet_Simulator.Windows
             modInfos.Clear();
             var modInfoByPath = new Dictionary<string, ModInfo>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (CoreMOD core in mw.CoreMODs)
-                modInfoByPath[core.Path.FullName] = ModInfo.FromCoreMod(core);
+            for (int i = 0; i < mw.CoreMODs.Count; i++)
+            {
+                CoreMOD core = mw.CoreMODs[i];
+                modInfoByPath[core.Path.FullName] = ModInfo.FromCoreMod(core, i);
+            }
 
             foreach (var di in GetModDirectories())
             {
@@ -458,15 +532,22 @@ namespace VPet_Simulator.Windows
                     modInfoByPath[di.FullName] = ModInfo.FromDirectory(di);
             }
 
-            modInfos.AddRange(modInfoByPath.Values.OrderBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase));
+            modInfos.AddRange(modInfoByPath.Values
+                .OrderByDescending(x => mw.Set.IsOnMod(x.Name))
+                .ThenByDescending(x => mw.Set.IsOnMod(x.Name) && x.IsLoaded)
+                .ThenBy(x => mw.Set.IsOnMod(x.Name) && x.IsLoaded ? x.LoadOrder : int.MaxValue)
+                .ThenBy(x => !x.Path.FullName.Contains("DLC"))
+                .ThenBy(x => !x.Author.Contains("LorisYounger"))
+                .ThenBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase));
         }
 
-        private void RenderModList(string? selectedPath)
+        private void RenderModList(string? selectedPath, string? searchText)
         {
             RefreshModInfos();
             ListMod.Items.Clear();
 
-            foreach (ModInfo info in modInfos)
+            var visibleMods = modInfos.Where(x => x.MatchesSearch(searchText)).ToList();
+            foreach (ModInfo info in visibleMods)
             {
                 ListBoxItem moditem = (ListBoxItem)ListMod.Items[ListMod.Items.Add(new ListBoxItem())];
                 moditem.Padding = new Thickness(5, 0, 5, 0);
@@ -543,6 +624,7 @@ namespace VPet_Simulator.Windows
                 return;
 
             var selectedPath = selectedModInfo?.Path.FullName;
+            var searchText = tb_seach_mod.Text;
             isWorkshopRefreshing = true;
             TabModManage.IsEnabled = false;
             ButtonReLS.IsEnabled = false;
@@ -555,14 +637,14 @@ namespace VPet_Simulator.Windows
             }
             finally
             {
-                RenderModList(selectedPath);
+                RenderModList(selectedPath, searchText);
                 ButtonReLS.IsEnabled = true;
                 TabModManage.IsEnabled = true;
                 isWorkshopRefreshing = false;
             }
         }
 
-        private void ShowMod(string modname)
+        public void ShowMod(string modname)
         {
             var modInfo = modInfos.FirstOrDefault(x => x.Name == modname);
             if (modInfo != null)
@@ -704,7 +786,7 @@ namespace VPet_Simulator.Windows
                 content += tag.Translate() + "\n";
             }
             GameHave.Text = content;
-            ButtonAllow.Visibility = mod?.SuccessLoad == false && !mw.Set.IsPassMOD(modInfo.Name) ? Visibility.Visible : Visibility.Collapsed;
+            ButtonAllow.Visibility = ((mod?.SuccessLoad == false || (modInfo.IsPlugin && !modInfo.HasTrustedCertificate)) && !mw.Set.IsPassMOD(modInfo.Name)) ? Visibility.Visible : Visibility.Collapsed;
 
             if (mod != null)
             {
@@ -955,19 +1037,19 @@ namespace VPet_Simulator.Windows
 
         private void ButtonSteam_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!AllowChange || mod == null)
+            if (!AllowChange || selectedModInfo == null)
                 return;
-            ExtensionFunction.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + mod.ItemID);
+            ExtensionFunction.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + selectedModInfo.ItemID);
         }
 
         private void ButtonAllow_Click(object sender, RoutedEventArgs e)
         {
-            if (mod == null || selectedModInfo == null)
+            if (selectedModInfo == null)
                 return;
-            if (MessageBoxX.Show("是否启用 {0} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查".Translate(mod.Name),
-                "启用 {0} 的代码插件?".Translate(mod.Name), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
+            if (MessageBoxX.Show("是否启用 {0} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查".Translate(selectedModInfo.Name),
+                "启用 {0} 的代码插件?".Translate(selectedModInfo.Name), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
             {
-                mw.Set.PassMod(mod.Name);
+                mw.Set.PassMod(selectedModInfo.Name);
                 ShowMod(selectedModInfo);
                 ButtonRestart.Visibility = Visibility.Visible;
             }
@@ -1951,6 +2033,13 @@ namespace VPet_Simulator.Windows
         private void ButtonReLS_Click(object sender, RoutedEventArgs e)
         {
             ShowModList();
+        }
+
+        private void tb_seach_mod_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!AllowChange)
+                return;
+            RenderModList(selectedModInfo?.Path.FullName, tb_seach_mod.Text);
         }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
