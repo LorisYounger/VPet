@@ -49,6 +49,12 @@ namespace VPet_Simulator.Windows
                     cb_AgreeUpload.IsEnabled = true;
             }
             Task.Run(Load_Log);
+            //关闭时反订阅, 不然常驻的ActivityLogs/Statistics会一直引用着本窗口, 关了也释放不掉
+            Closed += (_, _) =>
+            {
+                mw.GameSavesData.Statistics.StatisticChanged -= Statistics_StatisticChanged;
+                mw.ActivityLogs.CollectionChanged -= ActivityLogs_CollectionChanged;
+            };
         }
 
         private void Statistics_StatisticChanged(Statistics sender, string name, SetObject? value)
@@ -847,6 +853,11 @@ namespace VPet_Simulator.Windows
                             {
                                 tb_log.AppendText("\n" + log.ToString(mw.Main));
                             }
+                        }
+                        //日志框文本太长会拖慢UI, 超过20万字时只保留最后10万字
+                        if (tb_log.Text.Length > 200000)
+                        {
+                            tb_log.Text = tb_log.Text.Substring(tb_log.Text.Length - 100000);
                         }
                     }
             });
