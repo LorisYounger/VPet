@@ -42,8 +42,7 @@ namespace VPet_Simulator.Core
             }
             IsReady = true;
         }
-        public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)
-        {
+        public static void LoadGraph(GraphCore graph, FileSystemInfo path, ILine info)        {
             if (!(path is FileInfo))
             {
                 PNGAnimation.LoadGraph(graph, path, info);
@@ -79,6 +78,24 @@ namespace VPet_Simulator.Core
         /// 图片资源
         /// </summary>
         public string Path { get; set; }
+        private BitmapSource? sourceCache;
+        /// <summary>
+        /// 获取图片源, 首次解码后冻结缓存复用, 避免每次显示都重新创建BitmapImage
+        /// </summary>
+        private BitmapSource GetSource()
+        {
+            if (sourceCache == null)
+            {
+                var bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                bmp.UriSource = new Uri(Path);
+                bmp.EndInit();
+                bmp.Freeze();
+                sourceCache = bmp;
+            }
+            return sourceCache;
+        }
         private GraphCore? GraphCore;
         public bool IsLoop { get; set; }
         /// <summary>
@@ -143,7 +160,7 @@ namespace VPet_Simulator.Core
                         }
                     }
                     img.Width = 500;
-                    img.Source = new BitmapImage(new Uri(Path));
+                    img.Source = GetSource();
                     parant.Tag = this;
                 }
                 Task.Run(() => Run(NEWControl));
@@ -197,7 +214,7 @@ namespace VPet_Simulator.Core
                     return new Task(() => Run(Control));
                 }
                 img.Tag = this;
-                img.Source = new BitmapImage(new Uri(Path));
+                img.Source = GetSource();
                 img.Width = 500;
                 return new Task(() => Run(Control));
             });
