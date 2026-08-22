@@ -280,6 +280,14 @@ namespace VPet_Simulator.Core
                     var ig = Core.Graph!.FindGraphs(idelname, AnimatType.A_Start, Core.Save!.Mode);
                     if (ig != null && ig.Count != 0)
                     {
+                        //A段存在但B循环缺失时(常见于各帧模式标记不全的MOD), A段播完会在
+                        //中途静默跳回默认待机, 看起来就像动画被强行打断。
+                        //这种不完整的动画直接跳过, 挑下一位候选
+                        if (Core.Graph!.FindGraph(idelname, AnimatType.B_Loop, Core.Save!.Mode) == null)
+                        {
+                            list.RemoveAt(i);
+                            continue;
+                        }
                         looptimes = 0;
                         CountNomal = 0;
                         Display(ig[Function.Rnd.Next(ig.Count)], () =>
@@ -313,7 +321,8 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void DisplayBLoopingToNomal(string? graphname, int loopLength)
         {
-            if (Function.Rnd.Next(++looptimes) > loopLength)
+            //B循环缺失(比如生病模式下MOD只标了A段)时直接走收尾, 不要静默跳回默认待机
+            if (Function.Rnd.Next(++looptimes) > loopLength || Core.Graph!.FindGraph(graphname, AnimatType.B_Loop, Core.Save!.Mode) == null)
                 DisplayCEndtoNomal(graphname);
             else
                 Display(graphname, AnimatType.B_Loop, DisplayBLoopingToNomal(loopLength));
