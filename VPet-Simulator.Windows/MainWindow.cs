@@ -1476,30 +1476,27 @@ namespace VPet_Simulator.Windows
                 // control position inside bounds
                 MWController = new MWController(this);
                 Core.Controller = MWController;
-                Task.Run(() =>
+                //布局与MOD异步加载完成后才能正确夹回位置。
+                //窗口初始高度只有35px左右, MOD加载完成后才长到实际尺寸(500*ZoomLevel),
+                //过早夹回会用错误的高度漏判越界, 导致启动后桌宠停留在屏幕外不可见
+                Loaded += async (_, _) =>
                 {
+                    for (int i = 0; i < 60 && (ActualWidth < 100 || ActualHeight < 100); i++)
+                        await Task.Delay(200);
+                    if (ActualWidth < 100 || ActualHeight < 100)
+                    {
+                        return;
+                    }
                     double dist;
                     if ((dist = Core.Controller!.GetWindowsDistanceLeft()) < 0)
-                    {
-                        Thread.Sleep(100);
-                        Dispatcher.Invoke(() => Left -= dist);
-                    }
+                        Left -= dist;
                     if ((dist = Core.Controller!.GetWindowsDistanceRight()) < 0)
-                    {
-                        Thread.Sleep(100);
-                        Dispatcher.Invoke(() => Left += dist);
-                    }
+                        Left += dist;
                     if ((dist = Core.Controller!.GetWindowsDistanceUp()) < 0)
-                    {
-                        Thread.Sleep(100);
-                        Dispatcher.Invoke(() => Top -= dist);
-                    }
+                        Top -= dist;
                     if ((dist = Core.Controller!.GetWindowsDistanceDown()) < 0)
-                    {
-                        Thread.Sleep(100);
-                        Dispatcher.Invoke(() => Top += dist);
-                    }
-                });
+                        Top += dist;
+                };
                 if (Set.TopMost)
                 {
                     Topmost = true;
