@@ -546,6 +546,15 @@ namespace VPet_Simulator.Core
             //判断是否靠边,如果靠边就进入侧边隐藏模式
             if (Core.Controller!.GetWindowsDistanceLeft() < -50 * Core.Controller!.ZoomRatio)
             {
+                //物理像素级复核: 合法的侧边隐藏完成后窗口仍保留约56%可见面积,
+                //若当前窗口几乎完全在屏幕内, 说明上面的逻辑坐标已经失真(多屏/DPI换算误差),
+                //这时进入侧边隐藏会把桌宠藏到唤醒不到的位置, 直接放弃并重新同步活动屏幕
+                if (ScreenNative.GetVisibleFraction(Core.Controller.GetWindowHandle()) > 0.95)
+                {
+                    if (Core.Controller!.AutoChangeWindow == true)
+                        Core.Controller!.SetNowScreenActivate();
+                    return false;
+                }
                 //检查下是否有SideLoad
                 if (Core.Graph!.FindName(GraphType.SideHide_Left_Main) != null)
                 {
@@ -562,6 +571,13 @@ namespace VPet_Simulator.Core
             }
             else if (Core.Controller!.GetWindowsDistanceRight() < -50 * Core.Controller!.ZoomRatio)
             {
+                //同左分支, 先做物理复核, 防止逻辑坐标失真时误把桌宠藏进侧边隐藏
+                if (ScreenNative.GetVisibleFraction(Core.Controller.GetWindowHandle()) > 0.95)
+                {
+                    if (Core.Controller!.AutoChangeWindow == true)
+                        Core.Controller!.SetNowScreenActivate();
+                    return false;
+                }
                 if (Core.Graph!.FindName(GraphType.SideHide_Right_Main) != null)
                 {
                     Core.Controller!.MoveWindows(Core.Controller!.GetWindowsDistanceRight() / Core.Controller!.ZoomRatio + 500 - Core.Graph!.GraphConfig.Data["side"][(gdbe)"right"], 0);
