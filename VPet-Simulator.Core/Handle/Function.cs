@@ -22,7 +22,7 @@ namespace VPet_Simulator.Core
         /// <param name="color">颜色</param>
         /// <returns>HEX值</returns>
         public static string ColorToHEX(Color color) => "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
-        public static Random Rnd = new Random();
+        public static Random Rnd = Random.Shared;
         /// <summary>
         /// 获取资源笔刷
         /// </summary>
