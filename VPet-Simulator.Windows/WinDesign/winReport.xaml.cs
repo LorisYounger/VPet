@@ -159,10 +159,6 @@ namespace VPet_Simulator.Windows
              });
 
         }
-        private void MainGrid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            Height = MainGrid.ActualHeight + 50;
-        }
 
         private void tType_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
