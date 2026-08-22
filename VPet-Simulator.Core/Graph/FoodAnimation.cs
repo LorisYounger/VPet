@@ -1,6 +1,7 @@
-﻿using LinePutScript;
+using LinePutScript;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -127,18 +128,18 @@ namespace VPet_Simulator.Core
             {
                 this.parent = parent;
                 var strs = sub.GetInfos();
-                Time = int.Parse(strs[0]);//0: Time
+                Time = int.Parse(strs[0], CultureInfo.InvariantCulture);//0: Time
                 if (strs.Length == 1)
                     IsVisiable = false;
                 else
                 {//1,2: Margin X,Y
-                    Width = double.Parse(strs[3]);//3:Width
-                    MarginWI = new Thickness(double.Parse(strs[1]), double.Parse(strs[2]), 0, 0);
+                    Width = double.Parse(strs[3], CultureInfo.InvariantCulture);//3:Width
+                    MarginWI = new Thickness(double.Parse(strs[1], CultureInfo.InvariantCulture), double.Parse(strs[2], CultureInfo.InvariantCulture), 0, 0);
                     if (strs.Length > 4)
                     {
-                        Rotate = double.Parse(strs[4]);//Rotate
+                        Rotate = double.Parse(strs[4], CultureInfo.InvariantCulture);//Rotate
                         if (strs.Length > 5)
-                            Opacity = double.Parse(strs[5]);//Opacity
+                            Opacity = double.Parse(strs[5], CultureInfo.InvariantCulture);//Opacity
                     }
                 }
             }
