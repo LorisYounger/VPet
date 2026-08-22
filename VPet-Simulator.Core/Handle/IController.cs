@@ -1,4 +1,6 @@
-﻿namespace VPet_Simulator.Core
+﻿using System;
+
+namespace VPet_Simulator.Core
 {
     /// <summary>
     /// 桌宠控制器 需自行实现
@@ -86,5 +88,10 @@
         /// 是否自动切换活动屏幕
         /// </summary>
         bool AutoChangeWindow => false;
+
+        /// <summary>
+        /// 获取窗口句柄 用于原生屏幕API (物理像素级判定, 免疫DPI换算误差)
+        /// </summary>
+        IntPtr GetWindowHandle() => IntPtr.Zero;
     }
 }
