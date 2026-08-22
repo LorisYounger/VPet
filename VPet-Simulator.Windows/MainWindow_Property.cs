@@ -126,7 +126,7 @@ public partial class MainWindow
     public List<PackageFull> SchedulePackage { get; set; } = new List<PackageFull>();
 
     /// <summary>
-    /// 活动日志 不会保存
+    /// 活动日志 不会保存 (实际上限1000条, 防止后台长时间运行时无限增长)
     /// </summary>
-    public ObservableCollection<ActivityLog> ActivityLogs { get; set; } = new ObservableCollection<ActivityLog>();
+    public ObservableCollection<ActivityLog> ActivityLogs { get; set; } = new CappedActivityLogs();
 }
