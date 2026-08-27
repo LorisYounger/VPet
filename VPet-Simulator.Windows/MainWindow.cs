@@ -43,6 +43,8 @@ namespace VPet_Simulator.Windows
 {
     public partial class MainWindow : IMainWindow
     {
+        private bool startupPositionCorrectionQueued;
+        private bool startupPositionCorrected;
 
         /// <summary>
         /// 加载主题
@@ -1476,25 +1478,6 @@ namespace VPet_Simulator.Windows
                 // control position inside bounds
                 MWController = new MWController(this);
                 Core.Controller = MWController;
-                // MOD 异步加载会让窗口从初始占位高度增长到实际尺寸；等待布局稳定后再夹回。
-                Loaded += async (_, _) =>
-                {
-                    for (int i = 0; i < 60 && (ActualWidth < 100 || ActualHeight < 100); i++)
-                        await Task.Delay(200);
-
-                    if (ActualWidth < 100 || ActualHeight < 100)
-                        return;
-
-                    double dist;
-                    if ((dist = Core.Controller!.GetWindowsDistanceLeft()) < 0)
-                        Left -= dist;
-                    if ((dist = Core.Controller!.GetWindowsDistanceRight()) < 0)
-                        Left += dist;
-                    if ((dist = Core.Controller!.GetWindowsDistanceUp()) < 0)
-                        Top -= dist;
-                    if ((dist = Core.Controller!.GetWindowsDistanceDown()) < 0)
-                        Top += dist;
-                };
                 if (Set.TopMost)
                 {
                     Topmost = true;
@@ -1573,6 +1556,35 @@ namespace VPet_Simulator.Windows
         public IEnumerable<IModInfo> ModInfo => CoreMODs;
 
         public IEnumerable<IModInfo> OnModInfo => CoreMODs.FindAll(x => x.IsOnMOD(this));
+
+        private void QueueStartupPositionCorrection()
+        {
+            if (startupPositionCorrected || startupPositionCorrectionQueued)
+                return;
+
+            startupPositionCorrectionQueued = true;
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                startupPositionCorrectionQueued = false;
+                if (startupPositionCorrected || Core.Controller == null)
+                    return;
+
+                UpdateLayout();
+                if (ActualWidth <= 0 || ActualHeight <= 0)
+                    return;
+
+                startupPositionCorrected = true;
+                double dist;
+                if ((dist = Core.Controller.GetWindowsDistanceLeft()) < 0)
+                    Left -= dist;
+                if ((dist = Core.Controller.GetWindowsDistanceRight()) < 0)
+                    Left += dist;
+                if ((dist = Core.Controller.GetWindowsDistanceUp()) < 0)
+                    Top -= dist;
+                if ((dist = Core.Controller.GetWindowsDistanceDown()) < 0)
+                    Top += dist;
+            }), System.Windows.Threading.DispatcherPriority.Render);
+        }
 
         /// <summary>
         /// 加载游戏
@@ -2106,6 +2118,7 @@ namespace VPet_Simulator.Windows
                   Main.PlayVoiceVolume = Set.VoiceVolume;
                   Main.FunctionSpendHandle += StatisticsCalHandle;
                   DisplayGrid.Child = Main;
+                  QueueStartupPositionCorrection();
                   Task.Run(async () =>
                   {
                       while (!Main.IsWorking)
