@@ -235,10 +235,21 @@ namespace VPet_Simulator.Windows
 
         public IntPtr GetWindowHandle()
         {
-            var helper = new WindowInteropHelper(mw);
-            if (helper.Handle == IntPtr.Zero)
-                mw.Dispatcher.Invoke(helper.EnsureHandle);
-            return helper.Handle;
+            if (mw.Dispatcher.HasShutdownStarted || mw.Dispatcher.HasShutdownFinished)
+                return IntPtr.Zero;
+
+            try
+            {
+                return mw.Dispatcher.Invoke(() =>
+                {
+                    var helper = new WindowInteropHelper(mw);
+                    return helper.Handle == IntPtr.Zero ? helper.EnsureHandle() : helper.Handle;
+                });
+            }
+            catch
+            {
+                return IntPtr.Zero;
+            }
         }
 
         public double ZoomRatio => mw.Set.ZoomLevel;

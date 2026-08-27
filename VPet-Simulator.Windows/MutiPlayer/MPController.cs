@@ -104,10 +104,21 @@ namespace VPet_Simulator.Windows
 
         public IntPtr GetWindowHandle()
         {
-            var helper = new System.Windows.Interop.WindowInteropHelper(mp);
-            if (helper.Handle == IntPtr.Zero)
-                mp.Dispatcher.Invoke(helper.EnsureHandle);
-            return helper.Handle;
+            if (mp.Dispatcher.HasShutdownStarted || mp.Dispatcher.HasShutdownFinished)
+                return IntPtr.Zero;
+
+            try
+            {
+                return mp.Dispatcher.Invoke(() =>
+                {
+                    var helper = new System.Windows.Interop.WindowInteropHelper(mp);
+                    return helper.Handle == IntPtr.Zero ? helper.EnsureHandle() : helper.Handle;
+                });
+            }
+            catch
+            {
+                return IntPtr.Zero;
+            }
         }
 
         public double ZoomRatio => mw.Set.ZoomLevel;
