@@ -102,6 +102,14 @@ namespace VPet_Simulator.Windows
 
         public bool RePositionActive { get; set; } = true;
 
+        public IntPtr GetWindowHandle()
+        {
+            var helper = new System.Windows.Interop.WindowInteropHelper(mp);
+            if (helper.Handle == IntPtr.Zero)
+                mp.Dispatcher.Invoke(helper.EnsureHandle);
+            return helper.Handle;
+        }
+
         public double ZoomRatio => mw.Set.ZoomLevel;
 
         public int PressLength => mw.Set.PressLength;

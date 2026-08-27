@@ -546,6 +546,13 @@ namespace VPet_Simulator.Core
             //判断是否靠边,如果靠边就进入侧边隐藏模式
             if (Core.Controller!.GetWindowsDistanceLeft() < -50 * Core.Controller!.ZoomRatio)
             {
+                // WPF 逻辑坐标在多屏异 DPI 下可能失真；窗口几乎完全可见时不应进入侧隐。
+                if (ScreenNative.GetVisibleFraction(Core.Controller.GetWindowHandle()) > 0.80)
+                {
+                    if (Core.Controller!.AutoChangeWindow)
+                        Core.Controller.SetNowScreenActivate();
+                    return false;
+                }
                 //检查下是否有SideLoad
                 if (Core.Graph!.FindName(GraphType.SideHide_Left_Main) != null)
                 {
@@ -562,6 +569,13 @@ namespace VPet_Simulator.Core
             }
             else if (Core.Controller!.GetWindowsDistanceRight() < -50 * Core.Controller!.ZoomRatio)
             {
+                // 同左侧分支，先以物理像素复核可见面积。
+                if (ScreenNative.GetVisibleFraction(Core.Controller.GetWindowHandle()) > 0.80)
+                {
+                    if (Core.Controller!.AutoChangeWindow)
+                        Core.Controller.SetNowScreenActivate();
+                    return false;
+                }
                 if (Core.Graph!.FindName(GraphType.SideHide_Right_Main) != null)
                 {
                     Core.Controller!.MoveWindows(Core.Controller!.GetWindowsDistanceRight() / Core.Controller!.ZoomRatio + 500 - Core.Graph!.GraphConfig.Data["side"][(gdbe)"right"], 0);
