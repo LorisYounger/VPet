@@ -54,6 +54,9 @@ namespace VPet_Simulator.Windows
 
         public void MoveWindows(double X, double Y)
         {
+            if (X == 0 && Y == 0)
+                return;
+
             mp.Dispatcher.Invoke(() =>
             {
                 mp.Left += X * ZoomRatio;

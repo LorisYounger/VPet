@@ -400,6 +400,8 @@ namespace VPet_Simulator.Core
         /// </summary>
         public Action? DefaultPressAction;
         public bool isPress = false;
+        private bool dragMoveQueued;
+        private Point pendingDragMove;
         long presstime;
         private void MainGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -446,6 +448,7 @@ namespace VPet_Simulator.Core
         private void MainGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             isPress = false;
+            FlushPendingDragMove();
             if (DisplayType.Type.ToString().StartsWith("Raised"))
             {
                 MainGrid.MouseMove -= MainGrid_MouseWave;
@@ -472,7 +475,8 @@ namespace VPet_Simulator.Core
 
         private void MainGrid_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!((UIElement)e.Source).CaptureMouse() || !isPress)
+            var source = (UIElement)e.Source;
+            if (!isPress || (!source.IsMouseCaptured && !source.CaptureMouse()))
             {
                 MainGrid.MouseMove -= MainGrid_MouseWave;
                 MainGrid.MouseMove -= MainGrid_MouseMove;
@@ -488,9 +492,29 @@ namespace VPet_Simulator.Core
                 x = 0;
             if (Math.Abs(y) < 1)
                 y = 0;
-            Core.Controller!.MoveWindows(x, y);
+            QueueDragMove(x, y);
             if (Math.Abs(x) + Math.Abs(y) > 20 && rasetype >= 1)
                 rasetype = 0;
+        }
+
+        // Keep native window updates at the render cadence while preserving the latest drag position.
+        private void QueueDragMove(double x, double y)
+        {
+            pendingDragMove = new Point(x, y);
+            if (dragMoveQueued)
+                return;
+
+            dragMoveQueued = true;
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Render, new Action(FlushPendingDragMove));
+        }
+
+        private void FlushPendingDragMove()
+        {
+            if (!dragMoveQueued)
+                return;
+
+            dragMoveQueued = false;
+            Core.Controller!.MoveWindows(pendingDragMove.X, pendingDragMove.Y);
         }
 
         private void MainGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
