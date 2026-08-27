@@ -37,12 +37,18 @@ namespace VPet_Simulator.Windows
     {
         MainWindow mw;
         private bool AllowChange = false;
+        private readonly DispatcherTimer modSearchDebounceTimer;
 
         public winGameSetting(MainWindow mw)
         {
             this.mw = mw;
             //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
             InitializeComponent();
+            modSearchDebounceTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(250)
+            };
+            modSearchDebounceTimer.Tick += ModSearchDebounceTimer_Tick;
             //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
             //var bit = new BitmapImage(new Uri("pack://application:,,,/Res/TopLogo2019.png"));
             //Console.WriteLine(DateTime.Now.ToString("mm:ss.fff"));
@@ -367,7 +373,7 @@ namespace VPet_Simulator.Windows
 
             public bool IsLoaded => CoreMod != null;
             public bool IsPlugin => Tag.Contains("plugin");
-            public bool HasTrustedCertificate { get; }
+            private Task<bool>? trustedCertificateTask;
 
             private ModInfo(CoreMOD? coreMod, int loadOrder, string name, string author, long authorID, ulong itemID, string intro, DirectoryInfo path, int gameVer, int ver, HashSet<string> tag)
             {
@@ -382,50 +388,64 @@ namespace VPet_Simulator.Windows
                 GameVer = gameVer;
                 Ver = ver;
                 Tag = tag;
-                HasTrustedCertificate = !IsPlugin || HasTrustedPluginCertificate(path);
             }
 
 
 
+            public Task<bool> GetTrustedCertificateAsync()
+            {
+                if (!IsPlugin)
+                    return Task.FromResult(true);
+
+                return trustedCertificateTask ??= Task.Run(() => HasTrustedPluginCertificate(Path));
+            }
+
             private static bool HasTrustedPluginCertificate(DirectoryInfo directory)
             {
-                string dllPath = System.IO.Path.Combine(directory.FullName, "plugin");
-                var loadfile = new LpsDocument();
-                string loadFilePath = System.IO.Path.Combine(dllPath, "load.lps");
-                if (File.Exists(loadFilePath))
-                    loadfile = new LpsDocument(File.ReadAllText(loadFilePath));
-
-                foreach (FileInfo tmpfi in new DirectoryInfo(dllPath).EnumerateFiles("*.dll"))
+                try
                 {
+                    string dllPath = System.IO.Path.Combine(directory.FullName, "plugin");
+                    var loadfile = new LpsDocument();
+                    string loadFilePath = System.IO.Path.Combine(dllPath, "load.lps");
+                    if (File.Exists(loadFilePath))
+                        loadfile = new LpsDocument(File.ReadAllText(loadFilePath));
+
+                    foreach (FileInfo tmpfi in new DirectoryInfo(dllPath).EnumerateFiles("*.dll"))
+                    {
 #if X64
-                    if (tmpfi.Name.Contains("x86"))
-                        continue;
-                    string cputype = "x64";
+                        if (tmpfi.Name.Contains("x86"))
+                            continue;
+                        string cputype = "x64";
 #else
-                    if (tmpfi.Name.Contains("x64"))
-                        continue;
-                    string cputype = "x86";
+                        if (tmpfi.Name.Contains("x64"))
+                            continue;
+                        string cputype = "x86";
 #endif
-                    if (loadfile[tmpfi.Name][(gbol)"skip"])
-                        continue;
+                        if (loadfile[tmpfi.Name][(gbol)"skip"])
+                            continue;
 
-                    string? dllcpu = loadfile[tmpfi.Name].GetString("cpu", "anycpu")?.ToLowerInvariant();
-                    if (dllcpu != "anycpu" && dllcpu != cputype)
-                        continue;
+                        string? dllcpu = loadfile[tmpfi.Name].GetString("cpu", "anycpu")?.ToLowerInvariant();
+                        if (dllcpu != "anycpu" && dllcpu != cputype)
+                            continue;
 
-                    try
-                    {
-                        var certificate = new X509Certificate2(tmpfi.FullName);
-                        if (!(CoreMOD.IsTrustedCertificate(certificate) || CoreMOD.IsLBGameCertificate(certificate)))
+                        try
+                        {
+                            using var certificate = new X509Certificate2(tmpfi.FullName);
+                            if (!(CoreMOD.IsTrustedCertificate(certificate) || CoreMOD.IsLBGameCertificate(certificate)))
+                                return false;
+                        }
+                        catch
+                        {
                             return false;
+                        }
                     }
-                    catch
-                    {
-                        return false;
-                    }
-                }
 
-                return true;
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
             }
 
             public bool MatchesSearch(string? searchText)
@@ -532,18 +552,27 @@ namespace VPet_Simulator.Windows
                     modInfoByPath[di.FullName] = ModInfo.FromDirectory(di);
             }
 
-            modInfos.AddRange(modInfoByPath.Values
+            modInfos.AddRange(modInfoByPath.Values);
+            SortModInfos();
+        }
+
+        private void SortModInfos()
+        {
+            var sortedModInfos = modInfos
                 .OrderByDescending(x => mw.Set.IsOnMod(x.Name))
                 .ThenByDescending(x => mw.Set.IsOnMod(x.Name) && x.IsLoaded)
                 .ThenBy(x => mw.Set.IsOnMod(x.Name) && x.IsLoaded ? x.LoadOrder : int.MaxValue)
                 .ThenBy(x => !x.Path.FullName.Contains("DLC"))
                 .ThenBy(x => !x.Author.Contains("LorisYounger"))
-                .ThenBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase));
+                .ThenBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase)
+                .ToList();
+            modInfos.Clear();
+            modInfos.AddRange(sortedModInfos);
         }
 
         private void RenderModList(string? selectedPath, string? searchText)
         {
-            RefreshModInfos();
+            SortModInfos();
             ListMod.Items.Clear();
 
             var visibleMods = modInfos.Where(x => x.MatchesSearch(searchText)).ToList();
@@ -595,6 +624,13 @@ namespace VPet_Simulator.Windows
                 ShowMod(modInfo);
         }
 
+        private void ModSearchDebounceTimer_Tick(object? sender, EventArgs e)
+        {
+            modSearchDebounceTimer.Stop();
+            if (AllowChange)
+                RenderModList(selectedModInfo?.Path.FullName, tb_seach_mod.Text);
+        }
+
         private async Task RefreshWorkshopListFromSteamAsync()
         {
             if (!mw.IsSteamUser)
@@ -637,6 +673,7 @@ namespace VPet_Simulator.Windows
             }
             finally
             {
+                RefreshModInfos();
                 RenderModList(selectedPath, searchText);
                 ButtonReLS.IsEnabled = true;
                 TabModManage.IsEnabled = true;
@@ -649,6 +686,44 @@ namespace VPet_Simulator.Windows
             var modInfo = modInfos.FirstOrDefault(x => x.Name == modname);
             if (modInfo != null)
                 ShowMod(modInfo);
+        }
+
+        private void UpdateButtonAllow(ModInfo modInfo, bool? hasTrustedCertificate)
+        {
+            if (mw.Set.IsPassMOD(modInfo.Name))
+            {
+                ButtonAllow.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            if (modInfo.IsPlugin && !hasTrustedCertificate.HasValue)
+            {
+                ButtonAllow.Content = "验证中".Translate();
+                ButtonAllow.IsEnabled = false;
+                ButtonAllow.Visibility = Visibility.Visible;
+                return;
+            }
+
+            bool needsManualApproval = modInfo.CoreMod?.SuccessLoad == false || (modInfo.IsPlugin && hasTrustedCertificate == false);
+            ButtonAllow.Content = "启用代码插件".Translate();
+            ButtonAllow.IsEnabled = needsManualApproval;
+            ButtonAllow.Visibility = needsManualApproval ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private async Task UpdatePluginTrustStatusAsync(ModInfo modInfo)
+        {
+            bool hasTrustedCertificate;
+            try
+            {
+                hasTrustedCertificate = await modInfo.GetTrustedCertificateAsync();
+            }
+            catch
+            {
+                hasTrustedCertificate = false;
+            }
+
+            if (selectedModInfo == modInfo)
+                UpdateButtonAllow(modInfo, hasTrustedCertificate);
         }
 
         private void ShowMod(ModInfo modInfo)
@@ -786,7 +861,10 @@ namespace VPet_Simulator.Windows
                 content += tag.Translate() + "\n";
             }
             GameHave.Text = content;
-            ButtonAllow.Visibility = ((mod?.SuccessLoad == false || (modInfo.IsPlugin && !modInfo.HasTrustedCertificate)) && !mw.Set.IsPassMOD(modInfo.Name)) ? Visibility.Visible : Visibility.Collapsed;
+            bool hasPassMod = mw.Set.IsPassMOD(modInfo.Name);
+            UpdateButtonAllow(modInfo, hasPassMod || !modInfo.IsPlugin ? true : null);
+            if (modInfo.IsPlugin && !hasPassMod)
+                _ = UpdatePluginTrustStatusAsync(modInfo);
 
             if (mod != null)
             {
@@ -898,7 +976,7 @@ namespace VPet_Simulator.Windows
                 return;
             mw.Set.OnMod(selectedModInfo.Name);
             ButtonRestart.Visibility = Visibility.Visible;
-            ShowModList();
+            RenderModList(selectedModInfo.Path.FullName, tb_seach_mod.Text);
         }
 
         private void ButtonDisEnable_MouseDown(object sender, MouseButtonEventArgs e)
@@ -914,7 +992,7 @@ namespace VPet_Simulator.Windows
                 return;
             mw.Set.OnModRemove(selectedModInfo.Name);
             ButtonRestart.Visibility = Visibility.Visible;
-            ShowModList();
+            RenderModList(selectedModInfo.Path.FullName, tb_seach_mod.Text);
         }
         class ProgressClass : IProgress<float>
         {
@@ -1129,6 +1207,7 @@ namespace VPet_Simulator.Windows
             mw.Topmost = mw.Set.TopMost;
             e.Cancel = mw.CloseConfirm;
             voicetimer.Stop();
+            modSearchDebounceTimer.Stop();
             Hide();
         }
 
@@ -2039,7 +2118,8 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            RenderModList(selectedModInfo?.Path.FullName, tb_seach_mod.Text);
+            modSearchDebounceTimer.Stop();
+            modSearchDebounceTimer.Start();
         }
 
         private void SwitchHideFromTaskControl_OnChecked(object sender, RoutedEventArgs e)
