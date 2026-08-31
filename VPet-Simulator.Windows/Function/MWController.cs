@@ -55,40 +55,94 @@ namespace VPet_Simulator.Windows
             IsPrimaryScreen = true;
         }
 
+        private readonly struct BoundarySnapshot
+        {
+            public BoundarySnapshot(double left, double right, double up, double down, double width, double height)
+            {
+                Left = left;
+                Right = right;
+                Up = up;
+                Down = down;
+                Width = width;
+                Height = height;
+            }
+
+            public double Left { get; }
+            public double Right { get; }
+            public double Up { get; }
+            public double Down { get; }
+            public double Width { get; }
+            public double Height { get; }
+        }
+
+        private BoundarySnapshot GetBoundarySnapshot()
+        {
+            if (AutoChangeWindow && TryGetCurrentMonitorSnapshot(out var monitorSnapshot))
+                return monitorSnapshot;
+
+            if (IsPrimaryScreen)
+            {
+                return new BoundarySnapshot(
+                    mw.Left,
+                    SystemParameters.PrimaryScreenWidth - mw.Left - mw.ActualWidth,
+                    mw.Top,
+                    SystemParameters.PrimaryScreenHeight - mw.Top - mw.ActualHeight,
+                    SystemParameters.PrimaryScreenWidth,
+                    SystemParameters.PrimaryScreenHeight);
+            }
+
+            return new BoundarySnapshot(
+                mw.Left - ScreenBorder.X,
+                ScreenBorder.Right - mw.Left - mw.ActualWidth,
+                mw.Top - ScreenBorder.Y,
+                ScreenBorder.Bottom - mw.Top - mw.ActualHeight,
+                ScreenBorder.Width,
+                ScreenBorder.Height);
+        }
+
+        private bool TryGetCurrentMonitorSnapshot(out BoundarySnapshot snapshot)
+        {
+            snapshot = default;
+            var handle = GetWindowHandle();
+            if (!ScreenNative.TryGetMonitorBounds(handle, out var monitorBounds, out var windowBounds))
+                return false;
+
+            var source = HwndSource.FromHwnd(handle);
+            var transform = source?.CompositionTarget?.TransformToDevice;
+            var scaleX = transform?.M11 ?? 1;
+            var scaleY = transform?.M22 ?? 1;
+            if (scaleX <= 0 || scaleY <= 0)
+                return false;
+
+            // Convert only local physical distances. Global virtual-desktop coordinates do not share one DPI scale.
+            snapshot = new BoundarySnapshot(
+                (windowBounds.Left - monitorBounds.Left) / scaleX,
+                (monitorBounds.Right - windowBounds.Right) / scaleX,
+                (windowBounds.Top - monitorBounds.Top) / scaleY,
+                (monitorBounds.Bottom - windowBounds.Bottom) / scaleY,
+                monitorBounds.Width / scaleX,
+                monitorBounds.Height / scaleY);
+            return true;
+        }
+
         public double GetWindowsDistanceLeft()
         {
-            return mw.Dispatcher.Invoke(() =>
-            {
-                if (IsPrimaryScreen) return mw.Left;
-                return mw.Left - ScreenBorder.X;
-            });
+            return mw.Dispatcher.Invoke(() => GetBoundarySnapshot().Left);
         }
 
         public double GetWindowsDistanceUp()
         {
-            return mw.Dispatcher.Invoke(() =>
-            {
-                if (IsPrimaryScreen) return mw.Top;
-                return mw.Top - ScreenBorder.Y;
-            });
+            return mw.Dispatcher.Invoke(() => GetBoundarySnapshot().Up);
         }
 
         public double GetWindowsDistanceRight()
         {
-            return mw.Dispatcher.Invoke(() =>
-            {
-                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenWidth - mw.Left - mw.ActualWidth;
-                return ScreenBorder.Width + ScreenBorder.X - mw.Left - mw.ActualWidth;
-            });
+            return mw.Dispatcher.Invoke(() => GetBoundarySnapshot().Right);
         }
 
         public double GetWindowsDistanceDown()
         {
-            return mw.Dispatcher.Invoke(() =>
-            {
-                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenHeight - mw.Top - mw.ActualHeight;
-                return ScreenBorder.Height + ScreenBorder.Y - mw.Top - mw.ActualHeight;
-            });
+            return mw.Dispatcher.Invoke(() => GetBoundarySnapshot().Down);
         }
 
         public void MoveWindows(double X, double Y)
@@ -154,6 +208,20 @@ namespace VPet_Simulator.Windows
                 if (mw.winMutiPlayer != null && mw.winMutiPlayer.Visibility == Visibility.Visible) return;
                 var helper = new WindowInteropHelper(mw);
                 var currentScreen = Screen.FromHandle(helper.Handle);
+                var screens = Screen.AllScreens;
+                for (int i = 0; i < screens.Length; i++)
+                {
+                    if (screens[i].DeviceName == currentScreen.DeviceName)
+                    {
+                        mw.Set.GameScreenIndex = i;
+                        break;
+                    }
+                }
+
+                // Automatic screen selection is runtime-only and must not overwrite a saved MoveArea.
+                if (AutoChangeWindow)
+                    return;
+
                 var hwndSource = HwndSource.FromHwnd(helper.Handle);
 
                 Rectangle logicalBounds;
@@ -180,16 +248,6 @@ namespace VPet_Simulator.Windows
                 }
 
                 ScreenBorder = logicalBounds;
-
-                var screens = Screen.AllScreens;
-                for (int i = 0; i < screens.Length; i++)
-                {
-                    if (screens[i].DeviceName == currentScreen.DeviceName)
-                    {
-                        mw.Set.GameScreenIndex = i;
-                        break;
-                    }
-                }
             });
         }
 
@@ -209,30 +267,33 @@ namespace VPet_Simulator.Windows
         {
             mw.Dispatcher.Invoke(() =>
             {
-                if (GetWindowsDistanceUp() < -0.25 * mw.ActualHeight && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight)
+                var bounds = GetBoundarySnapshot();
+                if (bounds.Up < -0.25 * mw.ActualHeight && bounds.Down < bounds.Height)
                 {
-                    MoveWindows(0, -GetWindowsDistanceUp() / ZoomRatio);
+                    MoveWindows(0, -bounds.Up / ZoomRatio);
                 }
-                else if (GetWindowsDistanceDown() < -0.25 * mw.ActualHeight && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight)
+                else if (bounds.Down < -0.25 * mw.ActualHeight && bounds.Up < bounds.Height)
                 {
-                    MoveWindows(0, GetWindowsDistanceDown() / ZoomRatio);
+                    MoveWindows(0, bounds.Down / ZoomRatio);
                 }
-                if (GetWindowsDistanceLeft() < -0.25 * mw.ActualWidth && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth)
+                if (bounds.Left < -0.25 * mw.ActualWidth && bounds.Right < bounds.Width)
                 {
-                    MoveWindows(-GetWindowsDistanceLeft() / ZoomRatio, 0);
+                    MoveWindows(-bounds.Left / ZoomRatio, 0);
                 }
-                else if (GetWindowsDistanceRight() < -0.25 * mw.ActualWidth && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth)
+                else if (bounds.Right < -0.25 * mw.ActualWidth && bounds.Left < bounds.Width)
                 {
-                    MoveWindows(GetWindowsDistanceRight() / ZoomRatio, 0);
+                    MoveWindows(bounds.Right / ZoomRatio, 0);
                 }
             });
         }
         public bool CheckPosition() => mw.Dispatcher.Invoke(() =>
-               GetWindowsDistanceUp() < -0.25 * mw.ActualHeight && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight
-            || GetWindowsDistanceDown() < -0.25 * mw.ActualHeight && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight
-            || GetWindowsDistanceLeft() < -0.25 * mw.ActualWidth && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth
-            || GetWindowsDistanceRight() < -0.25 * mw.ActualWidth && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth
-        );
+        {
+            var bounds = GetBoundarySnapshot();
+            return bounds.Up < -0.25 * mw.ActualHeight && bounds.Down < bounds.Height
+                || bounds.Down < -0.25 * mw.ActualHeight && bounds.Up < bounds.Height
+                || bounds.Left < -0.25 * mw.ActualWidth && bounds.Right < bounds.Width
+                || bounds.Right < -0.25 * mw.ActualWidth && bounds.Left < bounds.Width;
+        });
 
         public bool RePositionActive { get; set; } = true;
 

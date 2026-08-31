@@ -8,6 +8,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.GraphInfo;
 
@@ -18,13 +19,19 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public partial class winConsole : Window
     {
+        private const int WM_DPICHANGED = 0x02E0;
         MainWindow mw;
+        private HwndSource? mainWindowSource;
+        private double mainWindowScaleX = 1;
+        private double mainWindowScaleY = 1;
+
         public winConsole(MainWindow mw)
         {
             mw.Windows.Add(this);
             InitializeComponent();
             Title = "桌宠管理开发控制台".Translate() + ' ' + mw.PrefixSave;
             this.mw = mw;
+            InitializeDpiScaleCache();
             foreach (var v in mw.Core.Graph!.GraphsList)
             {
                 foreach (AnimatType k in v.Value.Keys)
@@ -46,11 +53,52 @@ namespace VPet_Simulator.Windows
         {
             Dispatcher.Invoke(() =>
             {
-                RLeft.Text = mw.Core.Controller!.GetWindowsDistanceLeft().ToString("f2");
-                RRight.Text = mw.Core.Controller!.GetWindowsDistanceRight().ToString("f2");
-                RTop.Text = mw.Core.Controller!.GetWindowsDistanceUp().ToString("f2");
-                RDown.Text = mw.Core.Controller!.GetWindowsDistanceDown().ToString("f2");
+                var controller = mw.Core.Controller!;
+
+                RLeft.Text = (controller.GetWindowsDistanceLeft() * mainWindowScaleX).ToString("f2");
+                RRight.Text = (controller.GetWindowsDistanceRight() * mainWindowScaleX).ToString("f2");
+                RTop.Text = (controller.GetWindowsDistanceUp() * mainWindowScaleY).ToString("f2");
+                RDown.Text = (controller.GetWindowsDistanceDown() * mainWindowScaleY).ToString("f2");
             });
+        }
+
+        private void InitializeDpiScaleCache()
+        {
+            var source = PresentationSource.FromVisual(mw) as HwndSource;
+            if (source == null)
+            {
+                mw.SourceInitialized += MainWindow_SourceInitialized;
+                return;
+            }
+
+            mainWindowSource = source;
+            UpdateDpiScale(source);
+            source.AddHook(MainWindowMessageHook);
+        }
+
+        private void MainWindow_SourceInitialized(object? sender, EventArgs e)
+        {
+            mw.SourceInitialized -= MainWindow_SourceInitialized;
+            InitializeDpiScaleCache();
+        }
+
+        private void UpdateDpiScale(HwndSource source)
+        {
+            var transform = source.CompositionTarget?.TransformToDevice;
+            mainWindowScaleX = transform?.M11 > 0 ? transform.Value.M11 : 1;
+            mainWindowScaleY = transform?.M22 > 0 ? transform.Value.M22 : 1;
+        }
+
+        private IntPtr MainWindowMessageHook(IntPtr hwnd, int message, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (message == WM_DPICHANGED)
+            {
+                var dpi = wParam.ToInt64();
+                mainWindowScaleX = (ushort)(dpi & 0xffff) / 96.0;
+                mainWindowScaleY = (ushort)((dpi >> 16) & 0xffff) / 96.0;
+            }
+
+            return IntPtr.Zero;
         }
         public void DisplayLoop(IGraph graph)
         {
@@ -211,6 +259,9 @@ namespace VPet_Simulator.Windows
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            DestanceTimer.Stop();
+            mw.SourceInitialized -= MainWindow_SourceInitialized;
+            mainWindowSource?.RemoveHook(MainWindowMessageHook);
             mw.Windows.Remove(this);
         }
 

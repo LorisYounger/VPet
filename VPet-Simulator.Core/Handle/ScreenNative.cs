@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace VPet_Simulator.Core
@@ -36,6 +37,44 @@ namespace VPet_Simulator.Core
 
         [DllImport("user32.dll")]
         private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        /// <summary>
+        /// Gets the physical bounds of a window and the monitor selected for it by Windows.
+        /// </summary>
+        public static bool TryGetMonitorBounds(IntPtr hwnd, out Rectangle monitorBounds, out Rectangle windowBounds)
+        {
+            monitorBounds = default;
+            windowBounds = default;
+
+            try
+            {
+                if (hwnd == IntPtr.Zero || !GetWindowRect(hwnd, out var windowRect))
+                    return false;
+
+                var monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+                if (monitor == IntPtr.Zero)
+                    return false;
+
+                var monitorInfo = new MONITORINFO { cbSize = Marshal.SizeOf<MONITORINFO>() };
+                if (!GetMonitorInfo(monitor, ref monitorInfo))
+                    return false;
+
+                windowBounds = Rectangle.FromLTRB(windowRect.Left, windowRect.Top, windowRect.Right, windowRect.Bottom);
+                monitorBounds = Rectangle.FromLTRB(
+                    monitorInfo.rcMonitor.Left,
+                    monitorInfo.rcMonitor.Top,
+                    monitorInfo.rcMonitor.Right,
+                    monitorInfo.rcMonitor.Bottom);
+                return windowBounds.Width > 0 && windowBounds.Height > 0
+                    && monitorBounds.Width > 0 && monitorBounds.Height > 0;
+            }
+            catch
+            {
+                monitorBounds = default;
+                windowBounds = default;
+                return false;
+            }
+        }
 
         /// <summary>
         /// 计算窗口与其所在显示器工作区的可见面积比例（0 到 1）。
