@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="VPet_Simulator.Core.MutiPlatform.Controls.WorkTimer">
+  <Border Background="#AA151515" CornerRadius="8" Padding="8">
+    <StackPanel Spacing="4">
+      <TextBlock x:Name="NowText" Text="Idle"/>
+      <TextBlock x:Name="NumberText" Text="0"/>
+      <TextBlock x:Name="UnitText" Text="sec"/>
+    </StackPanel>
+  </Border>
+</UserControl>

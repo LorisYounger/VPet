@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace VPet_Simulator.Core
 {
-    public static partial class Function
+    public static class Function
     {
         /// <summary>
         /// HEX值转颜色

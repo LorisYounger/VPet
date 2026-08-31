@@ -12,7 +12,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// WorkTimer.xaml 的交互逻辑
     /// </summary>
-    public partial class WorkTimer : Viewbox
+    public partial class WorkTimer : Viewbox, IWorkTimerBase
     {
         Main m;
         public WorkTimer(Main m)
@@ -29,15 +29,15 @@ namespace VPet_Simulator.Core
         /// 1 = 剩余时间
         /// 2 = 已获取(金钱/等级)
         /// </summary>
-        public int DisplayType = 0;
+        public int DisplayType { get; set; } = 0;
         /// <summary>
         /// 累计获得的钱/经验值
         /// </summary>
-        public double GetCount;
+        public double GetCount { get; set; }
         /// <summary>
         /// 开始时间
         /// </summary>
-        public DateTime StartTime;
+        public DateTime StartTime { get; set; }
         /// <summary>
         /// 完成工作信息
         /// </summary>
@@ -255,5 +255,23 @@ namespace VPet_Simulator.Core
         /// 任务完成时调用该参数
         /// </summary>
         public event Action<FinishWorkInfo>? E_FinishWork;
+
+        bool IUiModuleBase.IsVisible
+        {
+            get => Visibility == Visibility.Visible;
+            set => Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        object IUiModuleBase.View => this;
+
+        void IWorkTimerBase.Stop()
+        {
+            Stop();
+        }
+
+        public void Dispose()
+        {
+            m.TimeUIHandle -= M_TimeUIHandle;
+        }
     }
 }

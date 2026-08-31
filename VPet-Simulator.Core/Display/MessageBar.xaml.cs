@@ -61,7 +61,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// MessageBar.xaml 的交互逻辑
     /// </summary>
-    public partial class MessageBar : UserControl, IDisposable, IMassageBar
+    public partial class MessageBar : UserControl, IDisposable, IMassageBar, IMessageBarBase
     {
         public Control This => this;
         Main m;
@@ -390,6 +390,30 @@ namespace VPet_Simulator.Core
         private void TText_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             sv.ScrollToEnd();
+        }
+
+        bool IMessageBarBase.IsVisible
+        {
+            get => Visibility == Visibility.Visible;
+            set => Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        object IMessageBarBase.View => this;
+
+        event Action IMessageBarBase.EndAction
+        {
+            add => EndAction += value;
+            remove => EndAction -= value;
+        }
+
+        void IMessageBarBase.Show(string name, string text, string? graphName, object? msgContent)
+        {
+            Show(name, text, graphName, msgContent as UIElement);
+        }
+
+        void IMessageBarBase.Show(string name, SayInfoWithStreamBase sayInfoWithStream)
+        {
+            throw new NotSupportedException("WPF MessageBar uses WPF-specific SayInfoWithStream implementation.");
         }
     }
 }

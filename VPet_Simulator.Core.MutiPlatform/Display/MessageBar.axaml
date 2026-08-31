@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="VPet_Simulator.Core.MutiPlatform.Display.MessageBar">
+  <Border x:Name="RootBorder"
+          Background="#CC1F1F1F"
+          CornerRadius="8"
+          Padding="12"
+          Margin="12"
+          HorizontalAlignment="Left"
+          VerticalAlignment="Bottom">
+    <StackPanel Spacing="8">
+      <TextBlock x:Name="NameText"
+                 FontWeight="Bold"
+                 FontSize="14"/>
+      <TextBlock x:Name="MessageText"
+                 TextWrapping="Wrap"
+                 MaxWidth="520"/>
+      <ContentControl x:Name="MessageContentHost"
+                      IsVisible="False"/>
+    </StackPanel>
+  </Border>
+</UserControl>

@@ -19,7 +19,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// 图像显示核心
     /// </summary>
-    public class GraphCore : IDisposable
+    public class GraphCore : IDisposable, IGraphCoreBase<IGraph>
     {
         /// <summary>
         /// 桌宠图形渲染的分辨率,越高图形越清晰
@@ -228,6 +228,12 @@ namespace VPet_Simulator.Core
             CommUIElements.Clear();
             CommConfig.Clear();
         }
+
+        Dictionary<GraphType, HashSet<string>> IGraphCoreBase<IGraph>.GraphsName => GraphsName;
+        Dictionary<string, Dictionary<AnimatType, List<IGraph>>> IGraphCoreBase<IGraph>.GraphsList => GraphsList;
+        List<IGraph> IGraphCoreBase<IGraph>.GraphsALL => GraphsALL;
+        int IGraphCoreBase<IGraph>.Resolution => Resolution;
+        long IGraphCoreBase<IGraph>.IdleCacheTimeout => IdleCacheTimeout;
 
         public Config GraphConfig;
         /// <summary>

@@ -15,7 +15,7 @@ using static VPet_Simulator.Core.Picture;
 
 namespace VPet_Simulator.Core
 {
-    public partial class APNGAnimation : IImageRun
+    public partial class APNGAnimation : IImageRun, IFrameSequenceGraphBase
     {
         private class PngChunk
         {
@@ -70,6 +70,11 @@ namespace VPet_Simulator.Core
         public TaskControl? Control { get; private set; }
         public string Path { get; private set; }
         public long LastUseTimeTicks = DateTime.UtcNow.Ticks;
+
+        int IFrameSequenceGraphBase.FrameCount => FrameDurations.Count;
+        int IFrameSequenceGraphBase.FrameWidth => FrameWidth;
+        int IFrameSequenceGraphBase.FrameHeight => FrameHeight;
+        long IGraphBase.LastUseTimeTicks => LastUseTimeTicks;
 
         public APNGAnimation(GraphCore graphCore, string path, GraphInfo graphinfo, bool isLoop = false)
         {

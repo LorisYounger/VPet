@@ -17,7 +17,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// ToolBar.xaml 的交互逻辑
     /// </summary>
-    public partial class ToolBar : UserControl, IDisposable
+    public partial class ToolBar : UserControl, IDisposable, IToolBarBase
     {
         Main m;
         public Timer CloseTimer;
@@ -434,6 +434,14 @@ namespace VPet_Simulator.Core
             CloseTimer.Dispose();
             closePanelTimer.Dispose();
         }
+
+        bool IUiModuleBase.IsVisible
+        {
+            get => Visibility == Visibility.Visible;
+            set => Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        object IUiModuleBase.View => this;
 
         private void Sleep_Click(object sender, RoutedEventArgs e)
         {

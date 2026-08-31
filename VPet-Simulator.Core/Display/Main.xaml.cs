@@ -15,7 +15,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// Main.xaml 的交互逻辑
     /// </summary>
-    public partial class Main : ContentControlX, IDisposable
+    public partial class Main : ContentControlX, IDisposable, IMainUiBase
     {
         /// <summary>
         /// 游戏核心
@@ -515,6 +515,20 @@ namespace VPet_Simulator.Core
             if (PetGrid2.Child is IGraph g2)
                 g2.Stop(true);
         }
+
+        bool IUiModuleBase.IsVisible
+        {
+            get => Visibility == Visibility.Visible;
+            set => Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        object IUiModuleBase.View => this;
+
+        IMessageBarBase? IMainUiBase.MsgBarBase => MsgBar as IMessageBarBase;
+
+        IToolBarBase? IMainUiBase.ToolBarBase => ToolBar;
+
+        IWorkTimerBase? IMainUiBase.WorkTimerBase => WorkTimer;
         /// <summary>
         /// 清理所有状态
         /// </summary>

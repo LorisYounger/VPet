@@ -17,7 +17,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// Picture.xaml 的交互逻辑
     /// </summary>
-    public class Picture : IImageRun
+    public class Picture : IImageRun, IPictureGraphBase
     {
         /// <summary>
         /// 新建新静态图像
@@ -99,6 +99,8 @@ namespace VPet_Simulator.Core
         public bool IsFail => false;
 
         public string FailMessage => "";
+
+        int IPictureGraphBase.Length => Length;
 
         public void Run(Decorator parant, Action? EndAction = null)
         {

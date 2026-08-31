@@ -16,7 +16,7 @@ namespace VPet_Simulator.Core
     /// 食物动画 支持显示前中后3层夹心动画
     /// 不一定只用于食物,只是叫这个名字
     /// </summary>
-    public class FoodAnimation : IRunImage
+    public class FoodAnimation : IRunImage, IFoodAnimationGraphBase
     {
         /// <summary>
         /// 创建食物动画 第二层夹心为运行时提供
@@ -89,6 +89,10 @@ namespace VPet_Simulator.Core
         /// </summary>
         public string? Path { get; set; }
         private GraphCore? GraphCore;
+
+        string IFoodAnimationGraphBase.FrontLayerName => Front_Lay;
+        string IFoodAnimationGraphBase.BackLayerName => Back_Lay;
+        int IFoodAnimationGraphBase.FrameCount => Animations.Count;
         /// <summary>
         /// 单帧动画
         /// </summary>

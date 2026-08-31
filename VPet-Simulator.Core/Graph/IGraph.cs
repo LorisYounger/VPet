@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace VPet_Simulator.Core
 {
     /// <summary>
-    /// 动画显示接口
+    /// 动画显示接口 (WPF)
     /// </summary>
-    public interface IGraph : IEquatable<object>, IDisposable
+    public interface IGraph : IGraphBase
     {
         /// <summary>
         /// 从0开始运行该动画
@@ -17,45 +17,25 @@ namespace VPet_Simulator.Core
         void Run(Decorator parant, Action? EndAction = null);
 
         /// <summary>
-        /// 是否循环播放
-        /// </summary>
-        bool IsLoop { get; set; }
-
-        /// <summary>
-        /// 是否准备完成
-        /// </summary>
-        bool IsReady { get; }
-
-        /// <summary>
-        /// 是否读取失败
-        /// </summary>
-        bool IsFail { get; }
-        /// <summary>
-        /// 失败报错信息
-        /// </summary>
-        string FailMessage { get; }
-        /// <summary>
-        /// 该动画信息
-        /// </summary>
-        GraphInfo GraphInfo { get; }
-
-        /// <summary>
         /// 当前动画播放状态和控制
         /// </summary>
-        TaskControl? Control { get; }
+        new TaskControl? Control { get; }
+
+        object? IGraphBase.Control => Control;
 
         /// <summary>
         /// 停止动画
         /// </summary>
-        /// <param name="StopEndAction">停止动画时是否不运行结束动画</param>
-        void Stop(bool StopEndAction)
+        /// <param name="stopEndAction">停止动画时是否不运行结束动画</param>
+        void Stop(bool stopEndAction)
         {
             if (Control == null)
                 return;
-            if (StopEndAction)
+            if (stopEndAction)
                 Control.EndAction = null;
             Control.Type = TaskControl.ControlType.Stop;
         }
+
         /// <summary>
         /// 设置为继续播放
         /// </summary>
@@ -66,23 +46,37 @@ namespace VPet_Simulator.Core
         }
 
         /// <summary>
-        /// 动画文件路径, 可能是文件夹或文件
+        /// 停止动画
         /// </summary>
-        string? Path { get; }
+        /// <param name="stopEndAction">停止动画时是否不运行结束动画</param>
+        void IGraphBase.Stop(bool stopEndAction)
+        {
+            Stop(stopEndAction);
+        }
+
+        /// <summary>
+        /// 设置为继续播放
+        /// </summary>
+        void IGraphBase.SetContinue()
+        {
+            SetContinue();
+        }
+
         /// <summary>
         /// 上次使用时间戳, 用于判断是否需要释放资源
         /// </summary>
-        long LastUseTimeTicks => 0;
+        long IGraphBase.LastUseTimeTicks => 0;
 
         /// <summary>
         /// 修改最后使用时间为当前时间，以便在清理空闲缓存时判断是否需要清理
         /// </summary>
-        void Touch() { }
+        void IGraphBase.Touch() { }
+
         /// <summary>
         /// 清理空闲缓存, 如果该动画长时间未使用, 则释放资源
         /// </summary>
         /// <param name="nowTicks">当前时间</param>
-        void CleanupIdleCache(long nowTicks) { }
+        void IGraphBase.CleanupIdleCache(long nowTicks) { }
 
         /// <summary>
         /// 指示该ImageRun支持
@@ -99,59 +93,12 @@ namespace VPet_Simulator.Core
         }
 
         /// <summary>
-        /// 动画控制类
+        /// 动画控制类 (兼容旧代码)
         /// </summary>
-        public class TaskControl
+        public class TaskControl : GraphTaskControl
         {
-            /// <summary>
-            /// 当前动画播放状态
-            /// </summary>
-            public bool PlayState => Type != ControlType.Status_Stoped && Type != ControlType.Stop;
-            /// <summary>
-            /// 设置为继续播放
-            /// </summary>
-            public void SetContinue() { Type = ControlType.Continue; }
-            /// <summary>
-            /// 停止播放
-            /// </summary>
-            public void Stop(Action? endAction = null) { EndAction = endAction; Type = ControlType.Stop; }
-            /// <summary>
-            /// 控制类型
-            /// </summary>
-            public enum ControlType
+            public TaskControl(Action? endAction = null) : base(endAction)
             {
-                /// <summary>
-                /// 维持现状, 不进行任何超控
-                /// </summary>
-                Status_Quo,
-                /// <summary>
-                /// 停止当前动画
-                /// </summary>
-                Stop,
-                /// <summary>
-                /// 播放完成后继续播放,仅生效一次, 之后将恢复为Status_Quo
-                /// </summary>
-                Continue,
-                /// <summary>
-                /// 动画已停止
-                /// </summary>
-                Status_Stoped,
-            }
-            /// <summary>
-            /// 结束动作
-            /// </summary>
-            public Action? EndAction;
-            /// <summary>
-            /// 控制类型
-            /// </summary>
-            public ControlType Type = ControlType.Status_Quo;
-            /// <summary>
-            /// 为动画控制类提供操作和结束动作
-            /// </summary>
-            /// <param name="endAction"></param>
-            public TaskControl(Action? endAction = null)
-            {
-                EndAction = endAction;
             }
         }
     }

@@ -18,7 +18,7 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// PNGAnimation.xaml 的交互逻辑
     /// </summary>
-    public partial class PNGAnimation : IImageRun
+    public partial class PNGAnimation : IImageRun, IFrameSequenceGraphBase
     {
         /// <summary>
         /// 所有动画帧
@@ -61,6 +61,11 @@ namespace VPet_Simulator.Core
         public bool IsFail { get; set; } = false;
 
         public string FailMessage { get; set; } = "";
+
+        int IFrameSequenceGraphBase.FrameCount => Animations.Count;
+        int IFrameSequenceGraphBase.FrameWidth => FrameWidth;
+        int IFrameSequenceGraphBase.FrameHeight => FrameHeight;
+        long IGraphBase.LastUseTimeTicks => LastUseTimeTicks;
 
         /// <summary>
         /// 新建 PNG 动画

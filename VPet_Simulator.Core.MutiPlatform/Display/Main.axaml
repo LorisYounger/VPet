@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:VPet_Simulator.Core.MutiPlatform.Controls"
+             xmlns:display="clr-namespace:VPet_Simulator.Core.MutiPlatform.Display"
+             x:Class="VPet_Simulator.Core.MutiPlatform.Controls.Main">
+  <Grid>
+    <display:MessageBar x:Name="MessageBarControl" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+    <controls:ToolBar x:Name="ToolBarControl" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8"/>
+    <controls:WorkTimer x:Name="WorkTimerControl" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="8"/>
+  </Grid>
+</UserControl>
