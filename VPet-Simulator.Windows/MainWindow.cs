@@ -2226,11 +2226,11 @@ namespace VPet_Simulator.Windows
                   m_menu.Items.Add(new MenuItem("操作教程".Translate(), null, (x, y) =>
                   {
                       if (LocalizeCore.CurrentCulture == "zh-Hans")
-                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
+                          ExtensionFunction.StartURL("https://wiki.exlb.net/vpet/tutorial");
                       else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
+                          ExtensionFunction.StartURL("https://wiki.exlb.net/zh-hant/vpet/tutorial");
                       else
-                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
+                          ExtensionFunction.StartURL("https://wiki.exlb.net/en/vpet/tutorial");
                   }));
                   m_menu.Items.Add(new MenuItem("重置位置与状态".Translate(), null, (x, y) =>
                   {
@@ -2305,15 +2305,15 @@ namespace VPet_Simulator.Windows
                           SetTransparentHitThrough();
                   }
 
-                  if (File.Exists(ExtensionValue.BaseDirectory + @"\Tutorial.html") && Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 10, 20) && App.MainWindows.Count == 1)
+                  if (Set["SingleTips"].GetDateTime("tutorial") <= new DateTime(2023, 10, 20) && App.MainWindows.Count == 1)
                   {
                       Set["SingleTips"].SetDateTime("tutorial", DateTime.Now);
                       if (LocalizeCore.CurrentCulture == "zh-Hans")
-                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial.html");
+                          ExtensionFunction.StartURL("https://wiki.exlb.net/vpet/tutorial");
                       else if (LocalizeCore.CurrentCulture == "zh-Hant")
-                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_zht.html");
+                          ExtensionFunction.StartURL("https://wiki.exlb.net/zh-hant/vpet/tutorial");
                       else
-                          ExtensionFunction.StartURL(ExtensionValue.BaseDirectory + @"\Tutorial_en.html");
+                          ExtensionFunction.StartURL("https://wiki.exlb.net/en/vpet/tutorial");
                   }
                   if (!Set["SingleTips"].GetBool("helloworld"))
                   {

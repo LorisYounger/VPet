@@ -1,10 +1,10 @@
-mklink /d "%~dp0\bin\x64\Debug\net8.0-windows\mod" "%~dp0\mod"
+mklink /d "%~dp0\bin\x64\Debug\net10.0-windows7.0\mod" "%~dp0\mod"
 
 echo The following is the automatic link generation for other related MODs. If an error is prompted, it is a normal phenomenon and can be ignored
 
-mklink /d "%~dp0\bin\x86\Debug\net8.0-windows\mod" "%~dp0\mod"
-mklink /d "%~dp0\bin\x64\Release\net8.0-windows\mod" "%~dp0\mod"
-mklink /d "%~dp0\..\VPet.Solution\bin\Debug\net8.0-windows\mod" "%~dp0\mod"
+mklink /d "%~dp0\bin\x86\Debug\net10.0-windows7.0\mod" "%~dp0\mod"
+mklink /d "%~dp0\bin\x64\Release\net10.0-windows7.0\mod" "%~dp0\mod"
+mklink /d "%~dp0\..\VPet.Solution\bin\Debug\net10.0-windows7.0\mod" "%~dp0\mod"
 
 mklink /d "%~dp0\mod\0001_ModMaker" "%~dp0\..\..\VPet.ModMaker\0001_ModMaker"
 mklink /d "%~dp0\mod\1100_DemoClock" "%~dp0\..\..\VPet.Plugin.Demo\VPet.Plugin.DemoClock\1100_DemoClock"
