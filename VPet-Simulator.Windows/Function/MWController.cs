@@ -161,14 +161,14 @@ namespace VPet_Simulator.Windows
         {
             try
             {
-                if (mw.Dispatcher.HasShutdownStarted || mw.Dispatcher.HasShutdownFinished) return false;
-                if (mw.winSetting != null && mw.winSetting.Visibility == Visibility.Visible) return false;
-                if (mw.winBetterBuy != null && mw.winBetterBuy.Visibility == Visibility.Visible) return false;
-                if (mw.winWorkMenu != null && mw.winWorkMenu.Visibility == Visibility.Visible) return false;
-                if (mw.winMutiPlayer != null && mw.winMutiPlayer.Visibility == Visibility.Visible) return false;
+                if (mw.Dispatcher.HasShutdownStarted || mw.Dispatcher.HasShutdownFinished) return true;
+                if (mw.winSetting != null && mw.winSetting.Visibility == Visibility.Visible) return true;
+                if (mw.winBetterBuy != null && mw.winBetterBuy.Visibility == Visibility.Visible) return true;
+                if (mw.winWorkMenu != null && mw.winWorkMenu.Visibility == Visibility.Visible) return true;
+                if (mw.winMutiPlayer != null && mw.winMutiPlayer.Visibility == Visibility.Visible) return true;
                 for (int i = 0; i < mw.Windows.Count; i++)
                 {
-                    if (mw.Windows[i] != null && mw.Windows[i].Visibility == Visibility.Visible) return false;
+                    if (mw.Windows[i] != null && mw.Windows[i].Visibility == Visibility.Visible) return true;
                 }
             }
             catch { }
