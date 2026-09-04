@@ -346,22 +346,26 @@ namespace VPet_Simulator.Windows
                     //Steam云存档
                     if (IsSteamUser)
                     {
-                        var steamsave = SteamRemoteStorage.Files.Where(x => x.StartsWith($"VPetCloud/Save{PrefixSave}_")).ToList();
-                        if (steamsave.Count > Set.BackupSaveMaxNum)
+                        try
                         {
-                            steamsave = steamsave.OrderBy(x =>
+                            var steamsave = SteamRemoteStorage.Files.Where(x => x.StartsWith($"VPetCloud/Save{PrefixSave}_")).ToList();
+                            if (steamsave.Count > Set.BackupSaveMaxNum)
                             {
-                                if (int.TryParse(x.Split('_').Last().Split('.')[0], out int i))
-                                    return i;
-                                return 0;
-                            }).ToList();
-                            while (steamsave.Count > Set.BackupSaveMaxNum)
-                            {
-                                SteamRemoteStorage.FileDelete(steamsave[0]);
-                                steamsave.RemoveAt(0);
+                                steamsave = steamsave.OrderBy(x =>
+                                {
+                                    if (int.TryParse(x.Split('_').Last().Split('.')[0], out int i))
+                                        return i;
+                                    return 0;
+                                }).ToList();
+                                while (steamsave.Count > Set.BackupSaveMaxNum)
+                                {
+                                    SteamRemoteStorage.FileDelete(steamsave[0]);
+                                    steamsave.RemoveAt(0);
+                                }
                             }
+                            SteamRemoteStorage.FileWrite($"VPetCloud/Save{PrefixSave}_{(DateTime.Now.Ticks / 60000):X}.lps", Encoding.UTF8.GetBytes(savesdata));
                         }
-                        SteamRemoteStorage.FileWrite($"VPetCloud/Save{PrefixSave}_{(DateTime.Now.Ticks / 60000):X}.lps", Encoding.UTF8.GetBytes(savesdata));
+                        catch (Exception e) { Console.WriteLine(e); }
                     }
                 }
             }
