@@ -1,0 +1,274 @@
+﻿<UserControl
+  x:Class="VPet.Solution.Views.SettingEditor.ModSettingView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:h="https://hkw.com/wpf/helpers"
+  xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+  xmlns:local="clr-namespace:VPet.Solution.Views.SettingEditor"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:pu="https://opensource.panuon.com/wpf-ui"
+  xmlns:m="clr-namespace:VPet.Solution.Models.SettingEditor"
+  xmlns:vm="clr-namespace:VPet.Solution.ViewModels.SettingEditor"
+  d:DataContext="{d:DesignInstance Type=vm:ModSettingViewModel}"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d"
+  d:Background="White"
+>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="200" />
+      <ColumnDefinition Width="0" />
+      <ColumnDefinition MinWidth="200" />
+    </Grid.ColumnDefinitions>
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <TextBox
+        x:Name="SearchMod"
+        Text="{Binding SearchMod,UpdateSourceTrigger=PropertyChanged}"
+        pu:TextBoxHelper.Watermark="{ll:Str 搜索模组}"
+        Style="{DynamicResource StandardTextBoxStyle}"
+      />
+      <DataGrid
+        ItemsSource="{Binding Mods.FilteredList}"
+        SelectedItem="{Binding CurrentMod}"
+        x:Name="Mods"
+        Grid.Row="1"
+        AutoGenerateColumns="False"
+        CanUserAddRows="False"
+      >
+        <DataGrid.Columns>
+          <DataGridTextColumn
+            Binding="{Binding State}"
+            ElementStyle="{DynamicResource TextBlock_BaseStyle}"
+            Header="{ll:Str 状态}"
+            IsReadOnly="True"
+          />
+          <DataGridTextColumn
+            Binding="{Binding Name}"
+            ElementStyle="{DynamicResource TextBlock_BaseStyle}"
+            Header="{ll:Str 名称}"
+            IsReadOnly="True"
+          />
+        </DataGrid.Columns>
+      </DataGrid>
+      <Button
+        Grid.Row="2"
+        Margin="0"
+        x:Name="ClearFailMods"
+        HorizontalAlignment="Stretch"
+        Command="{Binding ClearFailModsCommand}"
+        Content="{ll:Str 清除失效模组}"
+        Style="{DynamicResource Button_BaseStyle}"
+      />
+      <Button
+        Grid.Row="3"
+        Margin="0"
+        HorizontalAlignment="Stretch"
+        x:Name="ClearMods"
+        Command="{Binding ClearModsCommand}"
+        Content="{ll:Str 清除全部模组}"
+        Style="{DynamicResource Button_BaseStyle}"
+      />
+    </Grid>
+    <Grid
+      IsEnabled="{Binding SelectedItem,ElementName=Mods,Converter={StaticResource NullToFalseConverter}}"
+      x:Name="CurrentMod"
+      Grid.Column="2"
+      DataContext="{Binding SelectedItem, ElementName=Mods}"
+      d:DataContext="{d:DesignInstance Type=m:ModModel}"
+    >
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Image Width="150" Source="{Binding Image}" Stretch="Fill" />
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+          <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*">
+            <Label
+              Margin="0"
+              Content="{ll:Str '模组名称:'}"
+              Style="{DynamicResource Label_BaseStyle}"
+            />
+            <TextBlock
+              Grid.Column="1"
+              Style="{DynamicResource TextBlock_LeftCenter}"
+              Text="{Binding Name}"
+            />
+            <Label
+              Margin="0"
+              Grid.Row="1"
+              Content="{ll:Str '作者:'}"
+              Style="{DynamicResource Label_BaseStyle}"
+            />
+            <TextBlock
+              Grid.Row="1"
+              Grid.Column="1"
+              Style="{DynamicResource TextBlock_LeftCenter}"
+              Text="{Binding Author}"
+            />
+            <Label
+              Margin="0"
+              Grid.Row="2"
+              Content="{ll:Str '模组版本:'}"
+              Style="{DynamicResource Label_BaseStyle}"
+            />
+            <TextBlock
+              Grid.Row="2"
+              Grid.Column="1"
+              Style="{DynamicResource TextBlock_LeftCenter}"
+              Text="{Binding ModVersion}"
+            />
+            <Label
+              Margin="0"
+              Grid.Row="3"
+              Content="{ll:Str '游戏版本:'}"
+              Style="{DynamicResource Label_BaseStyle}"
+            />
+            <TextBlock
+              Grid.Row="3"
+              Grid.Column="1"
+              Style="{DynamicResource TextBlock_LeftCenter}"
+              Text="{Binding GameVersion}"
+            />
+            <Label
+              Margin="0"
+              Grid.Row="4"
+              Content="{ll:Str '模组路径:'}"
+              Style="{DynamicResource Label_BaseStyle}"
+            />
+            <TextBlock
+              Grid.Row="4"
+              Grid.Column="1"
+              Style="{DynamicResource TextBlock_LeftCenter}"
+              Text="{Binding ModPath}"
+            />
+          </Grid>
+        </ScrollViewer>
+      </Grid>
+      <Grid Grid.Row="1">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label
+          HorizontalAlignment="Left"
+          Content="{ll:Str MOD介绍}"
+          FontSize="18"
+          FontWeight="Bold"
+          Style="{DynamicResource Label_BaseStyle}"
+        />
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+          <TextBlock
+            x:Name="GameInfo"
+            FontSize="14"
+            Style="{DynamicResource TextBlock_Wrap}"
+            Text="{Binding Description}"
+          />
+        </ScrollViewer>
+      </Grid>
+      <Grid Grid.Row="2">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+          </Grid.RowDefinitions>
+          <Label
+            HorizontalAlignment="Left"
+            Content="{ll:Str 内容}"
+            FontSize="18"
+            FontWeight="Bold"
+            Style="{DynamicResource Label_BaseStyle}"
+          />
+          <ItemsControl Grid.Row="1" ItemsSource="{Binding Tags}" />
+        </Grid>
+        <Grid
+          Grid.Column="1"
+          IsEnabled="{Binding IsEnabled,Converter={StaticResource NullToFalseConverter}}"
+        >
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+          </Grid.RowDefinitions>
+          <Label
+            HorizontalAlignment="Left"
+            Content="{ll:Str 操作}"
+            FontSize="18"
+            FontWeight="Bold"
+            Style="{DynamicResource Label_BaseStyle}"
+          />
+          <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+              <pu:Switch
+                Height="30"
+                x:Name="ModIsEnabled"
+                Content="{ll:Str 启用模组}"
+                IsChecked="{Binding IsEnabled}"
+                Style="{DynamicResource Switch_BaseStyle}"
+              />
+              <pu:Switch
+                x:Name="ModIsPass"
+                Checked="ModIsPass_Checked"
+                Height="30"
+                Content="{ll:Str 启用代码插件}"
+                IsChecked="{Binding IsPass, Mode=OneWay}"
+                IsEnabled="{Binding IsMsg}"
+                Style="{DynamicResource Switch_BaseStyle}"
+              />
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+              <Button
+                x:Name="OpenModPath"
+                HorizontalAlignment="Stretch"
+                CommandParameter="{Binding}"
+                Content="{ll:Str '打开所在文件夹'}"
+                Command="{Binding DataContext.OpenModPathCommand,RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Style="{DynamicResource Button_BaseStyle}"
+              />
+              <!--<TextBlock
+                x:Name="ButtonPublish"
+                Margin="0,2,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                d:MouseDown="ButtonPublish_MouseDown"
+                Cursor="Hand"
+                FontSize="14"
+                Foreground="DimGray"
+                Text="{ll:Str 更新至Steam}"
+                TextDecorations="Underline"
+                TextWrapping="Wrap" />-->
+              <Button
+                x:Name="OpenSteamCommunity"
+                HorizontalAlignment="Stretch"
+                CommandParameter="{Binding}"
+                Command="{Binding DataContext.OpenSteamCommunityCommand,RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Content="{ll:Str 打开创意工坊页面}"
+                Style="{DynamicResource Button_BaseStyle}"
+              />
+            </StackPanel>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

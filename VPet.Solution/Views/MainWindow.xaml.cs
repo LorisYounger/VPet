@@ -1,45 +1,44 @@
-﻿using Panuon.WPF.UI;
-using System.Windows;
-using VPet.Solution.Models.SettingEditor;
+﻿using System.Windows;
+using Panuon.WPF.UI;
+using ReactiveUI;
+using ReactiveUI.Primitives;
+using ReactiveUI.Primitives.Disposables;
 using VPet.Solution.ViewModels;
-using VPet.Solution.Views.SaveViewer;
-using VPet.Solution.Views.SettingEditor;
 
 namespace VPet.Solution.Views;
 
 /// <summary>
 /// MainWindow.xaml 的交互逻辑
 /// </summary>
-public partial class MainWindow : WindowX
+public partial class MainWindow : WindowX, IViewFor<MainViewModel>
 {
-    public MainWindowVM ViewModel => (MainWindowVM)DataContext;
-
-    public SettingWindow SettingWindow { get; } = new();
-    public SaveWindow SaveWindow { get; } = new();
+    public MainViewModel? ViewModel
+    {
+        get => (MainViewModel)DataContext!;
+        set => DataContext = value;
+    }
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (MainViewModel)value!;
+    }
 
     public MainWindow()
     {
         InitializeComponent();
-        this.SetViewModel<MainWindowVM>();
-        Closed += MainWindow_Closed;
+        Loaded += MainWindow_Loaded;
     }
 
-    private void MainWindow_Closed(object? sender, EventArgs e)
+    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        if (ModSettingModel.LocalMods != null)
-            foreach (var mod in ModSettingModel.LocalMods)
-                mod.Value.Image?.CloseStream();
-        SettingWindow.CloseX();
-        SaveWindow.CloseX();
-    }
-
-    private void Button_OpenSettingEditor_Click(object? sender, RoutedEventArgs e)
-    {
-        SettingWindow.ShowOrActivate();
-    }
-
-    private void Button_OpenSaveViewer_Click(object? sender, RoutedEventArgs e)
-    {
-        SaveWindow.ShowOrActivate();
+        Languages.ItemsSource = MainViewModel.AvailableCultures;
+        this.Bind(ViewModel, vm => vm.CurrentCulture, v => v.Languages.SelectedItem)
+            .DisposeWith(ViewModel!.Disposables);
+        this.BindCommand(ViewModel, vm => vm.OpenLocalTextCommand, v => v.OpenLocalText)
+            .DisposeWith(ViewModel.Disposables);
+        this.BindCommand(ViewModel, vm => vm.FirstStartFailedCommand, v => v.FirstStartFailed)
+            .DisposeWith(ViewModel.Disposables);
+        this.BindCommand(ViewModel, vm => vm.OpenSettingCommand, v => v.OpenSettingEditor)
+            .DisposeWith(ViewModel.Disposables);
     }
 }

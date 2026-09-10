@@ -1,8 +1,13 @@
-﻿using LinePutScript.Localization.WPF;
-using Panuon.WPF.UI;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using HanumanInstitute.MvvmDialogs;
+using HKW.HKWUtils;
+using LinePutScript.Localization.WPF;
+using Panuon.WPF.UI;
+using ReactiveUI;
+using ReactiveUI.Primitives;
+using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.ViewModels.SettingEditor;
 
 namespace VPet.Solution.Views.SettingEditor;
@@ -10,63 +15,148 @@ namespace VPet.Solution.Views.SettingEditor;
 /// <summary>
 /// MainWindow.xaml 的交互逻辑
 /// </summary>
-public partial class SettingWindow : WindowX
+public partial class SettingWindow : WindowX, IViewFor<SettingViewModel>
 {
-    public static SettingWindow Instance { get; private set; }
-    public SettingWindowVM ViewModel => (SettingWindowVM)DataContext;
+    public SettingViewModel? ViewModel
+    {
+        get => (SettingViewModel)DataContext!;
+        set => DataContext = value;
+    }
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (SettingViewModel)value!;
+    }
 
     public SettingWindow()
     {
         InitializeComponent();
-        this.SetViewModel<SettingWindowVM>();
-        this.SetCloseState(WindowCloseState.Hidden);
-
-        ListBoxItem_GraphicsSettings.Tag = new GraphicsSettingPage();
-        ListBoxItem_SystemSettings.Tag = new SystemSettingPage();
-        ListBoxItem_InteractiveSettings.Tag = new InteractiveSettingPage();
-        ListBoxItem_CustomizedSettings.Tag = new CustomizedSettingPage();
-        ListBoxItem_DiagnosticSettings.Tag = new DiagnosticSettingPage();
-        ListBoxItem_ModSettings.Tag = new ModSettingPage();
-        ListBox_Pages.SelectedIndex = 0;
-        Instance = this;
+        DataContextChanged += SettingWindow_DataContextChanged;
+        Closing += SettingWindow_Closing;
+        Closed += SettingWindow_Closed;
     }
 
     private void SettingWindow_Closing(object? sender, CancelEventArgs e)
     {
-        if (ViewModel?.CurrentSetting?.IsChanged is true)
+        if (ViewModel?.CurrentSetting?.IsChanged is not true)
+            return;
+        var result = ViewModel.DialogService.ShowMessageBox(
+            ViewModel,
+            "当前设置未保存, 是否保存".Translate(),
+            "",
+            HanumanInstitute.MvvmDialogs.FrameworkDialogs.MessageBoxButton.YesNoCancel
+        );
+        if (result is true)
         {
-            if (ViewModel?.CurrentSetting?.IsChanged is true)
-            {
-                this.SetCloseState(WindowCloseState.Hidden | WindowCloseState.SkipNext);
-                var result = MessageBox.Show(
-                    "当前设置未保存 确定要保存吗".Translate(),
-                    "",
-                    MessageBoxButton.YesNoCancel
-                );
-                if (result is MessageBoxResult.Yes)
-                {
-                    ViewModel.CurrentSetting.Save();
-                    Close();
-                }
-                else if (result is MessageBoxResult.No)
-                {
-                    ViewModel.CurrentSetting.IsChanged = false;
-                }
-                else if (result is MessageBoxResult.Cancel)
-                {
-                    e.Cancel = true;
-                }
-            }
+            ViewModel.CurrentSetting.Save();
+        }
+        else if (result is false)
+        {
+            ViewModel.CurrentSetting.Reload();
+        }
+        else
+        {
+            e.Cancel = true;
         }
     }
 
-    private void Frame_Main_ContentRendered(object? sender, EventArgs e)
+    private void LastSubSettingType_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not Frame frame)
+        if (ViewModel is null)
             return;
-        // 清理过时页面
-        while (frame.CanGoBack)
-            frame.RemoveBackEntry();
-        GC.Collect();
+        var index = (int)ViewModel.CurrentSubSettingType.Value;
+        if (index > 0)
+        {
+            SubSettingTypes.SelectedIndex--;
+            SubSettingTypes.ScrollIntoView(SubSettingTypes.SelectedItem);
+        }
+    }
+
+    private void NextSubSettingType_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel is null)
+            return;
+        var index = (int)ViewModel.CurrentSubSettingType.Value;
+        if (index < ViewModel.CurrentSubSettingType.InfoDictionary.Count - 1)
+        {
+            SubSettingTypes.SelectedIndex++;
+            SubSettingTypes.ScrollIntoView(SubSettingTypes.SelectedItem);
+        }
+    }
+
+    private void SettingWindow_Closed(object? sender, EventArgs e)
+    {
+        _lastSettingModel = null;
+        foreach (var view in _settingViewByType.Values)
+        {
+            if (view.DataContext is ISubSettingViewModel vm)
+            {
+                vm.Setting = null!;
+            }
+            view.DataContext = null;
+        }
+    }
+
+    private readonly Dictionary<SubSettingModelType, UserControl> _settingViewByType = new()
+    {
+        [SubSettingModelType.Graphics] = new GraphicsSettingView(),
+        [SubSettingModelType.System] = new SystemSettingView(),
+        [SubSettingModelType.Interactive] = new InteractiveSettingView(),
+        [SubSettingModelType.Customized] = new CustomizedSettingView(),
+        [SubSettingModelType.Diagnostic] = new DiagnosticSettingView(),
+        [SubSettingModelType.Mod] = new ModSettingView(),
+    };
+
+    private void SettingWindow_DataContextChanged(
+        object sender,
+        DependencyPropertyChangedEventArgs e
+    )
+    {
+        if (ViewModel is null)
+            return;
+        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        SettingView.Content = GetSettingView(
+            ViewModel.CurrentSubSettingViewModel,
+            ViewModel.CurrentSubSettingType
+        );
+    }
+
+    private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (ViewModel is null)
+            return;
+        if (e.PropertyName == nameof(ViewModel.CurrentSubSettingViewModel))
+        {
+            SettingView.Content = GetSettingView(
+                ViewModel.CurrentSubSettingViewModel,
+                ViewModel.CurrentSubSettingType
+            );
+        }
+    }
+
+    private UserControl? GetSettingView(ISubSettingViewModel? viewModel, SubSettingModelType type)
+    {
+        if (viewModel is null)
+            return null;
+        var view = _settingViewByType[type];
+        view.DataContext = null;
+        view.DataContext = viewModel;
+        return view;
+    }
+
+    SettingModel? _lastSettingModel;
+
+    private void Settings_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ViewModel is null)
+            return;
+        if (_lastSettingModel == ViewModel.CurrentSetting)
+        {
+            Settings.SelectedItem = ViewModel.CurrentSetting;
+        }
+        else
+        {
+            _lastSettingModel = ViewModel.CurrentSetting;
+        }
     }
 }

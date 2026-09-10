@@ -9,22 +9,23 @@
   xmlns:pu="https://opensource.panuon.com/wpf-ui"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:VPet.Solution.ViewModels.SettingEditor"
+  xmlns:m="clr-namespace:VPet.Solution.Models.SettingEditor"
+  d:DataContext="{d:DesignInstance Type=vm:SettingViewModel}"
   Title="{ll:Str 'VPET 设置编辑器'}"
   Width="1000"
   Height="600"
   MinWidth="400"
   MinHeight="200"
-  d:DataContext="{d:DesignInstance Type=vm:SettingWindowVM}"
-  Closing="SettingWindow_Closing"
   WindowStartupLocation="CenterScreen"
-  mc:Ignorable="d">
+  mc:Ignorable="d"
+>
   <Window.Resources>
-    <Style
-      x:Key="RemindStyle"
-      BasedOn="{StaticResource Button_BaseStyle}"
-      TargetType="Button">
+    <Style x:Key="RemindStyle" BasedOn="{StaticResource Button_BaseStyle}" TargetType="Button">
       <Style.Triggers>
-        <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}" Value="True">
+        <DataTrigger
+          Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}"
+          Value="True"
+        >
           <DataTrigger.EnterActions>
             <BeginStoryboard x:Name="RemindSaveStoryboard">
               <Storyboard RepeatBehavior="Forever">
@@ -42,180 +43,164 @@
       </Style.Triggers>
     </Style>
   </Window.Resources>
-  <Grid>
+  <Grid Margin="10">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" MinWidth="100" />
-      <ColumnDefinition MinWidth="300" />
+      <ColumnDefinition Width="200" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition />
     </Grid.ColumnDefinitions>
-    <Grid>
+    <Grid Margin="10">
       <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
         <RowDefinition />
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
+      <Label
+        Margin="0"
+        Content="{ll:Str 存档文件}"
+        FontSize="16"
+        FontWeight="Bold"
+        Style="{DynamicResource Label_BaseStyle}"
+      >
+        <Label.ContextMenu>
+          <ContextMenu
+            d:DataContext="{d:DesignInstance Type=vm:SettingViewModel}"
+            DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+          >
+            <MenuItem
+              x:Name="SaveAllSetting"
+              Header="{ll:Str 全部保存}"
+              Command="{Binding SaveAllSettingCommand}"
+            />
+            <MenuItem
+              x:Name="ResetAllSetting"
+              Header="{ll:Str 全部重置}"
+              Command="{Binding ResetAllSettingCommand}"
+            />
+          </ContextMenu>
+        </Label.ContextMenu>
+      </Label>
       <TextBox
-        pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
-        Style="{DynamicResource StandardTextBoxStyle}"
-        Text="{Binding SearchSetting, UpdateSourceTrigger=PropertyChanged}" />
-      <ListBox
-        x:Name="ListBox_Saves"
         Grid.Row="1"
+        x:Name="SearchSetting"
+        pu:TextBoxHelper.Watermark="{ll:Str 搜索文件}"
+        Style="{DynamicResource StandardTextBoxStyle}"
+        Text="{Binding SearchSetting, UpdateSourceTrigger=PropertyChanged}"
+      />
+      <ListBox
+        x:Name="Settings"
+        Grid.Row="2"
         d:ItemsSource="{d:SampleData ItemCount=5}"
-        ItemsSource="{Binding ShowSettings}"
+        SelectionChanged="Settings_SelectionChanged"
+        Style="{DynamicResource SideMenuListBoxStyle}"
+        ItemsSource="{Binding Settings.FilteredList}"
         SelectedItem="{Binding CurrentSetting}"
-        Style="{DynamicResource SideMenuListBoxStyle}">
+      >
         <ListBox.ItemContainerStyle>
           <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
-            <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}" />
+            <Setter
+              Property="Tag"
+              Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
+            />
             <Setter Property="Content" Value="{Binding Name}" />
             <Setter Property="ToolTip" Value="{Binding FilePath}" />
           </Style>
         </ListBox.ItemContainerStyle>
       </ListBox>
-      <StackPanel Grid.Row="2">
+      <StackPanel
+        Grid.Row="3"
+        IsEnabled="{Binding SelectedItem, ElementName=Settings, Converter={StaticResource NullToFalseConverter}}"
+      >
         <Button
-          Margin="0"
+          Margin="1"
+          x:Name="OpenFile"
           HorizontalAlignment="Stretch"
-          Command="{Binding ResetAllSettingCommand}"
-          Content="{ll:Str 全部重置}"
-          Style="{DynamicResource Button_BaseStyle}" />
+          Content="{ll:Str 打开文件}"
+          Style="{StaticResource Button_BaseStyle}"
+          Command="{Binding OpenFileCommand}"
+          CommandParameter="{Binding CurrentSetting}"
+        />
         <Button
-          Margin="0"
+          Grid.Column="1"
+          Margin="1"
+          x:Name="OpenFileFromExplorer"
           HorizontalAlignment="Stretch"
-          Command="{Binding SaveAllSettingCommand}"
-          Content="{ll:Str 全部保存}"
-          Style="{DynamicResource Button_BaseStyle}" />
+          Content="{ll:Str 从资源管理器打开文件}"
+          Style="{StaticResource Button_BaseStyle}"
+          Command="{Binding OpenFileFromExplorerCommand}"
+          CommandParameter="{Binding CurrentSetting}"
+        />
+        <Button
+          Grid.Column="2"
+          Margin="1"
+          HorizontalAlignment="Stretch"
+          x:Name="SaveSetting"
+          Content="{ll:Str 保存}"
+          Style="{StaticResource RemindStyle}"
+          Tag="{Binding CurrentSetting.IsChanged, TargetNullValue=False}"
+          Command="{Binding SaveSettingCommand}"
+          CommandParameter="{Binding CurrentSetting}"
+        />
+        <Button
+          Grid.Column="3"
+          Margin="1"
+          x:Name="ResetSetting"
+          HorizontalAlignment="Stretch"
+          Content="{ll:Str 重置}"
+          Style="{StaticResource Button_BaseStyle}"
+          Command="{Binding ResetSettingCommand}"
+          CommandParameter="{Binding CurrentSetting}"
+        />
       </StackPanel>
     </Grid>
-    <Grid Grid.Column="1" IsEnabled="{Binding SelectedItem, ElementName=ListBox_Saves, Converter={StaticResource NullToFalse}}">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition />
-        <ColumnDefinition Width="Auto" />
-      </Grid.ColumnDefinitions>
-      <Grid>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
-          <RowDefinition />
-        </Grid.RowDefinitions>
-        <ListBox x:Name="ListBox_Pages" Style="{DynamicResource SideMenuListBoxStyle}">
+    <Rectangle Grid.Column="1" Width="2" Fill="#06000000" />
+    <Grid Margin="10" Grid.Column="2">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <Grid ColumnDefinitions="*,Auto,Auto" Height="30">
+        <ListBox
+          x:Name="SubSettingTypes"
+          Style="{DynamicResource SideMenuListBoxStyle}"
+          ItemsSource="{x:Static vm:SettingViewModel.SubSettingTypes}"
+          SelectedItem="{Binding CurrentSubSettingType}"
+        >
           <ListBox.ItemsPanel>
             <ItemsPanelTemplate>
               <StackPanel Orientation="Horizontal" />
             </ItemsPanelTemplate>
           </ListBox.ItemsPanel>
-          <ListBoxItem x:Name="ListBoxItem_GraphicsSettings" Content="{ll:Str 图形}" />
-          <ListBoxItem x:Name="ListBoxItem_SystemSettings" Content="{ll:Str 系统}" />
-          <ListBoxItem x:Name="ListBoxItem_InteractiveSettings" Content="{ll:Str 互动}" />
-          <ListBoxItem x:Name="ListBoxItem_CustomizedSettings" Content="{ll:Str 自定}" />
-          <ListBoxItem x:Name="ListBoxItem_DiagnosticSettings" Content="{ll:Str 诊断}" />
-          <ListBoxItem x:Name="ListBoxItem_ModSettings" Content="{ll:Str Mod管理}" />
         </ListBox>
-        <Frame
-          x:Name="Frame_Main"
-          Grid.Row="1"
-          Content="{Binding SelectedItem.Tag, ElementName=ListBox_Pages}"
-          ContentRendered="Frame_Main_ContentRendered"
-          NavigationUIVisibility="Hidden" />
-      </Grid>
-      <StackPanel Grid.Column="1" MinWidth="100">
         <Button
-          Margin="0"
+          x:Name="LastSubSettingType"
           HorizontalAlignment="Stretch"
-          Command="{Binding OpenFileCommand}"
-          CommandParameter="{Binding SelectedItem, ElementName=ListBox_Saves}"
-          Content="{ll:Str 打开文件}"
-          Style="{StaticResource Button_BaseStyle}" />
-        <Button
+          VerticalAlignment="Stretch"
           Grid.Column="1"
+          Width="20"
           Margin="0"
-          HorizontalAlignment="Stretch"
-          Command="{Binding OpenFileInExplorerCommand}"
-          CommandParameter="{Binding SelectedItem, ElementName=ListBox_Saves}"
-          Content="{ll:Str 从资源管理器打开文件}"
-          Style="{StaticResource Button_BaseStyle}" />
+          Padding="0"
+          Click="LastSubSettingType_Click"
+          Style="{DynamicResource Button_BaseStyle}"
+        >
+          <TextBlock Text="《" Width="17" Height="16" />
+        </Button>
         <Button
+          x:Name="NextSubSettingType"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          Margin="0"
+          Click="NextSubSettingType_Click"
+          Padding="0"
+          Style="{DynamicResource Button_BaseStyle}"
           Grid.Column="2"
-          Margin="0"
-          HorizontalAlignment="Stretch"
-          Command="{Binding SaveSettingCommand}"
-          CommandParameter="{Binding SelectedItem, ElementName=ListBox_Saves}"
-          Content="{ll:Str 保存}"
-          Style="{StaticResource RemindStyle}"
-          Tag="{Binding CurrentSetting.IsChanged}" />
-        <Button
-          Grid.Column="3"
-          Margin="0"
-          HorizontalAlignment="Stretch"
-          Command="{Binding ResetSettingCommand}"
-          CommandParameter="{Binding SelectedItem, ElementName=ListBox_Saves}"
-          Content="{ll:Str 重置}"
-          Style="{StaticResource Button_BaseStyle}" />
-      </StackPanel>
-      <!--<TabControl
-          x:Name="MainTab"
-          Grid.Column="1"
-          Margin="5"
-          d:SelectionChanged="MainTab_SelectionChanged"
-          pu:TabControlHelper.CanHeaderPanelScroll="True"
-          pu:TabControlHelper.ItemsCornerRadius="4"
-          pu:TabControlHelper.ItemsHeight="NaN"
-          pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
-          pu:TabControlHelper.ItemsPadding="10,7"
-          pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"
-          pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
-          Background="Transparent"
-          BorderThickness="0"
-          Foreground="{DynamicResource PrimaryText}">
-          <TabControl.ContentTemplate>
-            <DataTemplate>
-              <Border
-                Margin="0,5,0,10"
-                Background="{DynamicResource DARKPrimaryText}"
-                CornerRadius="15">
-                <ContentControl Margin="10,5" Content="{Binding}" />
-              </Border>
-            </DataTemplate>
-          </TabControl.ContentTemplate>
-          <TabItem
-            BorderBrush="{DynamicResource PrimaryDarker}"
-            Foreground="{DynamicResource PrimaryText}"
-            Header="" />
-          <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 系统}" />
-          <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 互动}" />
-          <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 自定}" />
-          <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 诊断}" />
-          <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str MOD管理}" />
-        </TabControl>
-        <Label
-          x:Name="GameVerison"
-          Grid.ColumnSpan="2"
-          HorizontalAlignment="Right"
-          VerticalAlignment="Bottom"
-          Background="{x:Null}"
-          Content="版本v1.0 (655366666)"
-          FontSize="10"
-          Foreground="Green" />-->
+          Width="20"
+        >
+          <TextBlock HorizontalAlignment="Right" Text="》" Width="7" Height="16" />
+        </Button>
+      </Grid>
+      <ContentControl x:Name="SettingView" Grid.Row="1" />
     </Grid>
-    <!--<Grid Grid.Column="1">
-        <TextBox
-          x:Name="tb_seach_menu"
-          Margin="3,6,6,0"
-          VerticalAlignment="Top"
-          d:TextChanged="tb_seach_menu_textchange"
-          pu:TextBoxHelper.Watermark="{ll:Str 搜索设置}"
-          FontSize="16"
-          Style="{DynamicResource StandardTextBoxStyle}" />
-        <ListBox
-          x:Name="ListMenu"
-          Margin="3,40,6,3"
-          pu:ListBoxHelper.CornerRadius="5"
-          pu:ListBoxHelper.ItemsHoverBackground="{DynamicResource Primary}"
-          pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource SecondaryLight}"
-          Background="{DynamicResource SecondaryLighter}"
-          BorderBrush="{DynamicResource Primary}"
-          BorderThickness="2"
-          ScrollViewer.HorizontalScrollBarVisibility="Auto"
-          ScrollViewer.VerticalScrollBarVisibility="Auto" />
-      </Grid>-->
   </Grid>
 </pu:WindowX>

@@ -1,30 +1,51 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows;
+using System.IO;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
+using ReactiveUI;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-public class ModSettingModel : ObservableClass<ModSettingModel>
+public partial class ModSettingModel : ReactiveObject, ISubSettingModel
 {
+    public SubSettingModelType ModelType => SubSettingModelType.Mod;
     public const string ModLineName = "onmod";
     public const string PassModLineName = "passmod";
     public const string MsgModLineName = "msgmod";
     public const string WorkShopLineName = "workshop";
-    public static string ModDirectory = Path.Combine(Environment.CurrentDirectory, "mod");
+    public static readonly string ModDirectory = Path.Combine(Environment.CurrentDirectory, "mod");
     public static Dictionary<string, ModLoader> LocalMods { get; private set; } = null!;
 
-    #region Mods
-    private ObservableCollection<ModModel> _mods = new();
-    public ObservableCollection<ModModel> Mods
-    {
-        get => _mods;
-        set => SetProperty(ref _mods, value);
-    }
+    public List<ModModel> Mods { get; } = [];
+    public List<string> Errors { get; } = [];
 
-    public ModSettingModel(Setting setting)
+    public ModSettingModel()
     {
         LocalMods ??= GetLocalMods();
+    }
+
+    private Dictionary<string, ModLoader> GetLocalMods()
+    {
+        var dic = new Dictionary<string, ModLoader>(StringComparer.OrdinalIgnoreCase);
+        if (Directory.Exists(ModDirectory) is false)
+            return dic;
+        foreach (var dir in Directory.EnumerateDirectories(ModDirectory))
+        {
+            try
+            {
+                var loader = new ModLoader(dir);
+                dic.TryAdd(loader.Name, loader);
+            }
+            catch (Exception ex)
+            {
+                Errors.Add("路径:\"{0}\" 异常:\"{1}\"".Translate(dir, ex.Message));
+            }
+        }
+        return dic;
+    }
+
+    public void Load(Setting setting)
+    {
         foreach (var item in setting[ModLineName])
         {
             var modID = item.Name;
@@ -41,7 +62,7 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
                     new()
                     {
                         Name = modID,
-                        ModPath = "未知, 可能是{0}".Translate(Path.Combine(ModDirectory, modID))
+                        ModPath = "未知, 可能是{0}".Translate(Path.Combine(ModDirectory, modID)),
                     }
                 );
             }
@@ -63,32 +84,6 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
         }
     }
 
-    private static Dictionary<string, ModLoader> GetLocalMods()
-    {
-        var dic = new Dictionary<string, ModLoader>(StringComparer.OrdinalIgnoreCase);
-        foreach (var dir in Directory.EnumerateDirectories(ModDirectory))
-        {
-            try
-            {
-                var loader = new ModLoader(dir);
-                dic.TryAdd(loader.Name, loader);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("模组载入错误\n路径:{0}\n异常:{1}".Translate(dir, ex));
-            }
-        }
-        return dic;
-    }
-
-    public void Close()
-    {
-        foreach (var modLoader in LocalMods)
-        {
-            modLoader.Value.Image.CloseStream();
-        }
-    }
-
     public void Save(Setting setting)
     {
         setting.Remove(ModLineName);
@@ -104,5 +99,4 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
                 setting[PassModLineName].Add(new Sub(mod.ID.ToLowerInvariant()));
         }
     }
-    #endregion
 }

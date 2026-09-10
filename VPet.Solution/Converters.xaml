@@ -1,25 +1,35 @@
 ﻿<ResourceDictionary
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:c="clr-namespace:HKW.WPF.Converters">
-  <c:MarginConverter x:Key="MarginConverter" />
-  <c:MarginConverter x:Key="RatioMarginConverter" HaveRatio="True" />
+  xmlns:c="https://hkw.com/wpf/converters"
+  xmlns:h="https://hkw.com/wpf/helpers"
+>
+  <c:MarginMultiConverter x:Key="MarginMultiConverter" />
+  <c:MarginMultiConverter x:Key="RatioMarginMultiConverter" HasRatio="True" />
   <c:CalculatorConverter x:Key="CalculatorConverter" />
-  <c:StringFormatConverter x:Key="StringFormatConverter" />
-  <c:BrushToMediaColorConverter x:Key="BrushToMediaColorConverter" />
-  <c:BoolToVisibilityConverter x:Key="FalseToHiddenConverter" />
+  <c:StringFormatMultiConverter x:Key="StringFormatMultiConverter" />
+  <c:SolidColorBrushToMediaColorConverter x:Key="BrushToMediaColorConverter" />
+  <c:BoolToVisibilityConverter
+    x:Key="FalseToHiddenConverter"
+    FalseValue="Hidden"
+    NullValue="Hidden"
+    TrueValue="Visible"
+  />
   <c:BoolToVisibilityConverter
     x:Key="FalseToVisibleConverter"
-    FalseVisibilityValue="Visible"
-    NullValue="True"
-    TrueVisibilityValue="Hidden" />
-  <c:NullToVisibilityConverter x:Key="NotNullToVisibleConverter" />
-  <c:NullToVisibilityConverter
-    x:Key="NullToVisibleConverter"
-    NotNullVisibilityValue="Hidden"
-    NullVisibilityValue="Visible" />
+    FalseValue="Visible"
+    NullValue="Visible"
+    TrueValue="Collapsed"
+  />
+  <c:EqualsToVisibilityConverter x:Key="NullToCollapsedConverter" />
+  <c:EqualsToVisibilityConverter
+    x:Key="NotNullToCollapsedConverter"
+    FalseValue="Visible"
+    NullValue="Visible"
+    TrueValue="Collapsed"
+  />
   <c:EqualsConverter x:Key="EqualsConverter" />
-  <c:EqualsConverter x:Key="NotEqualsConverter" Inverter="True" />
-  <c:ValueToBoolConverter x:Key="NullToFalse" Invert="True" />
+  <c:EqualsConverter x:Key="NotEqualsConverter" IsInverted="True" />
+  <c:EqualsConverter x:Key="NullToFalseConverter" IsInverted="True" Other="{x:Null}" />
   <c:BoolInverter x:Key="BoolInverter" />
 </ResourceDictionary>

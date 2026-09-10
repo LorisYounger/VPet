@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <LangVersion>latest</LangVersion>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWPF>true</UseWPF>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-  </PropertyGroup>
-  <PropertyGroup>
+    <Nullable>enable</Nullable>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\VPet-Simulator.Core\VPet-Simulator.Core.csproj" />
@@ -18,12 +18,30 @@
     <Resource Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FastMember" Version="1.5.0" />
+    <PackageReference Include="HanumanInstitute.MvvmDialogs" Version="2.4.0" />
+    <PackageReference Include="HanumanInstitute.MvvmDialogs.Wpf" Version="2.4.0" />
     <PackageReference Include="LinePutScript" Version="1.11.9" />
     <PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.7" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Panuon.WPF" Version="1.1.3" />
-    <PackageReference Include="Panuon.WPF.UI" Version="1.2.4.10" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Panuon.WPF.UI" Version="1.3.0.2" />
+    <PackageReference Include="ReactiveUI" Version="24.2.0" />
+    <PackageReference Include="ReactiveUI.WPF" Version="24.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Fody" Version="6.9.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Splat.DependencyInjection.SourceGenerator" Version="2.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HKW.Mapper" Version="0.1.4" />
+    <PackageReference Include="HKW.ReactiveUI" Version="0.5.0" />
+    <PackageReference Include="HKW.Utils" Version="1.4.0" />
+    <PackageReference Include="HKW.WPF" Version="1.2.0" />
+    <PackageReference Include="HKW.CommonValueConverters" Version="0.2.0" />
   </ItemGroup>
 </Project>
