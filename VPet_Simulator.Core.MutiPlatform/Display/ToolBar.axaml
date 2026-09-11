@@ -1,12 +1,189 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="VPet_Simulator.Core.MutiPlatform.Controls.ToolBar">
-  <Border Background="#AA101010" CornerRadius="8" Padding="8">
-    <StackPanel Orientation="Horizontal" Spacing="8">
-      <Button x:Name="WorkButton" Content="Work"/>
-      <Button x:Name="StudyButton" Content="Study"/>
-      <Button x:Name="PlayButton" Content="Play"/>
-      <Button x:Name="PanelButton" Content="Panel"/>
-    </StackPanel>
-  </Border>
+             xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+             x:Class="VPet_Simulator.Core.MutiPlatform.Display.ToolBar"
+             Width="500" Height="500" VerticalAlignment="Top"
+             PointerEntered="UserControl_PointerEntered" PointerExited="UserControl_PointerExited">
+    <!--
+    与 Windows 版 VPet-Simulator.Core/Display/ToolBar.xaml 对应: 底部一排菜单,
+    悬停"面板"时在菜单上方弹出数值面板.
+
+    Windows 版的菜单外观来自 Panuon.WPF.UI, 那套控件库是 WPF 独占的, 跨平台版只能
+    照着它的观感用 Avalonia 的 Style 重写一遍 —— 深蓝底、白字、居中、悬停变亮.
+    -->
+    <UserControl.Resources>
+        <!--
+        进度条的斜纹画刷, 照搬 basestyle.xaml 里的 DrawingBrush:
+        8×22 的贴片, 左边 5.5 实色 + 右边 2.5 半透明.
+        Windows 版还整体旋转了 2 度, Avalonia 的画刷没有 RelativeTransform,
+        这点纯装饰的差异就不还原了.
+        -->
+        <DrawingBrush x:Key="ProgressBarForeground" TileMode="Tile" Stretch="None"
+                      SourceRect="0,0,8,22" DestinationRect="0,0,8,22">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#AA039be5" Geometry="M5.5,0 L8,0 L8,22 L5.5,22 Z" />
+                    <GeometryDrawing Brush="#FF039be5" Geometry="M0,0 L5.5,0 L5.5,22 L0,22 Z" />
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+        <DrawingBrush x:Key="SuccessProgressBarForeground" TileMode="Tile" Stretch="None"
+                      SourceRect="0,0,8,22" DestinationRect="0,0,8,22">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#AAAACC6C" Geometry="M5.5,0 L8,0 L8,22 L5.5,22 Z" />
+                    <GeometryDrawing Brush="#FFAACC6C" Geometry="M0,0 L5.5,0 L5.5,22 L0,22 Z" />
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+        <DrawingBrush x:Key="WarningProgressBarForeground" TileMode="Tile" Stretch="None"
+                      SourceRect="0,0,8,22" DestinationRect="0,0,8,22">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#AAFFCC4C" Geometry="M5.5,0 L8,0 L8,22 L5.5,22 Z" />
+                    <GeometryDrawing Brush="#FFFFCC4C" Geometry="M0,0 L5.5,0 L5.5,22 L0,22 Z" />
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+        <DrawingBrush x:Key="DangerProgressBarForeground" TileMode="Tile" Stretch="None"
+                      SourceRect="0,0,8,22" DestinationRect="0,0,8,22">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#AAFF4C4C" Geometry="M5.5,0 L8,0 L8,22 L5.5,22 Z" />
+                    <GeometryDrawing Brush="#FFFF4C4C" Geometry="M0,0 L5.5,0 L5.5,22 L0,22 Z" />
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="Menu#ToolBarMenu">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="Menu#ToolBarMenu > MenuItem">
+            <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+        <!-- Avalonia 的 MenuItem 没有 ContentAlignment, 只能直接摆模板里的 Header -->
+        <Style Selector="Menu#ToolBarMenu > MenuItem /template/ ContentPresenter#PART_HeaderPresenter">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Menu#ToolBarMenu > MenuItem:pointerover">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryDarker}" />
+        </Style>
+        <!-- 二级菜单是弹出层, 底色要给足, 否则会透出桌面 -->
+        <Style Selector="MenuItem MenuItem">
+            <Setter Property="Foreground" Value="{DynamicResource DARKPrimary}" />
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+            <Setter Property="FontSize" Value="24" />
+        </Style>
+        <Style Selector="MenuItem MenuItem:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SecondaryLighter}" />
+        </Style>
+        <Style Selector="Border#BdrPanel TextBlock">
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border#BdrPanel TextBlock.barText">
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        </Style>
+        <Style Selector="Border#BdrPanel ProgressBar">
+            <Setter Property="Height" Value="22" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="CornerRadius" Value="11" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="{DynamicResource ProgressBarForeground}" />
+        </Style>
+    </UserControl.Styles>
+
+    <!-- 公开给宿主: 选项式聊天框挂在这里, 与 Windows 版 MainGrid 的用法一致 -->
+    <Grid x:Name="MainGrid" x:FieldModifier="public">
+        <Border x:Name="BdrPanel" Margin="0,0,0,55" VerticalAlignment="Bottom" IsVisible="False"
+                Background="{DynamicResource DARKPrimaryText}"
+                BorderBrush="{DynamicResource DARKPrimaryDarker}" BorderThickness="1" CornerRadius="5"
+                PointerExited="MenuPanel_PointerExited">
+            <Grid x:Name="gdPanel" Margin="15"
+                  ColumnDefinitions="Auto,5,*,5,Auto"
+                  RowDefinitions="30,Auto,30,30,30,30,30,30">
+                <TextBlock x:Name="Tlv" Grid.ColumnSpan="3" Foreground="{DynamicResource DARKPrimary}" Text="Lv 14" />
+
+                <TextBlock x:Name="till" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#FF4C4C"
+                           Text="宠物已经生病, 通过服用药物可以恢复" TextWrapping="Wrap" IsVisible="False" />
+                <TextBlock x:Name="tfun" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#4caf50"
+                           Text="已关闭数据计算, 可放心挂机" TextWrapping="Wrap" IsVisible="False" />
+
+                <TextBlock Grid.Row="2" Text="{ll:Str 金钱}" />
+                <TextBlock x:Name="tMoney" Grid.Row="2" Grid.Column="2"
+                           Foreground="{DynamicResource DARKPrimary}" Text="$100,000" />
+
+                <TextBlock Grid.Row="3" Text="{ll:Str 经验}" />
+                <ProgressBar x:Name="pExp" Grid.Row="3" Grid.Column="2" Value="40" />
+                <TextBlock x:Name="tExpValue" Grid.Row="3" Grid.Column="2" Classes="barText" />
+                <TextBlock x:Name="tExp" Grid.Row="3" Grid.Column="4" HorizontalAlignment="Right"
+                           Foreground="{DynamicResource DARKPrimary}" Text="x1.0" />
+
+                <TextBlock Grid.Row="4" Text="{ll:Str 体力}" />
+                <ProgressBar x:Name="pStrength" Grid.Row="4" Grid.Column="2" Maximum="100" Value="40" />
+                <TextBlock x:Name="tStrengthValue" Grid.Row="4" Grid.Column="2" Classes="barText" />
+                <TextBlock x:Name="tStrength" Grid.Row="4" Grid.Column="4" HorizontalAlignment="Right"
+                           Foreground="{DynamicResource DARKPrimary}" Text="+1/t" />
+
+                <TextBlock Grid.Row="5" Text="{ll:Str 心情}" />
+                <ProgressBar x:Name="pFeeling" Grid.Row="5" Grid.Column="2" Maximum="100" Value="60" />
+                <TextBlock x:Name="tFeelingValue" Grid.Row="5" Grid.Column="2" Classes="barText" />
+                <TextBlock x:Name="tFeeling" Grid.Row="5" Grid.Column="4" HorizontalAlignment="Right"
+                           Foreground="{DynamicResource DARKPrimary}" Text="+1/t" />
+
+                <!-- Max 那条画的是"算上存储值之后能涨到多少", 半透明垫在实际值下面 -->
+                <TextBlock Grid.Row="6" Text="{ll:Str 饱腹度}" />
+                <ProgressBar x:Name="pStrengthFoodMax" Grid.Row="6" Grid.Column="2" Background="#FFDDDDDD"
+                             Maximum="100" Opacity="0.5" Value="90" />
+                <ProgressBar x:Name="pStrengthFood" Grid.Row="6" Grid.Column="2" Background="Transparent"
+                             Maximum="100" Value="60" />
+                <TextBlock x:Name="tStrengthFoodValue" Grid.Row="6" Grid.Column="2" Classes="barText" />
+                <TextBlock x:Name="tStrengthFood" Grid.Row="6" Grid.Column="4" HorizontalAlignment="Right"
+                           Foreground="{DynamicResource DARKPrimary}" Text="-1/t" />
+
+                <TextBlock Grid.Row="7" Text="{ll:Str 口渴度}" />
+                <ProgressBar x:Name="pStrengthDrinkMax" Grid.Row="7" Grid.Column="2" Background="#FFDDDDDD"
+                             Maximum="100" Opacity="0.5" Value="90" />
+                <ProgressBar x:Name="pStrengthDrink" Grid.Row="7" Grid.Column="2" Background="Transparent"
+                             Maximum="100" Value="60" />
+                <TextBlock x:Name="tStrengthDrinkValue" Grid.Row="7" Grid.Column="2" Classes="barText" />
+                <TextBlock x:Name="tStrengthDrink" Grid.Row="7" Grid.Column="4" HorizontalAlignment="Right"
+                           Foreground="{DynamicResource DARKPrimary}" Text="-1/t" />
+            </Grid>
+        </Border>
+
+        <Menu x:Name="ToolBarMenu" Width="500" Height="60" VerticalAlignment="Bottom">
+            <!--
+            Windows 版把列数存在 Menu.Tag 里, 显示/隐藏"自定"时手动改成 4 或 5.
+            Avalonia 的 UniformGrid 只写 Rows=1 就会按可见子项自动分列, 不用再手动维护.
+            -->
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="1" />
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
+            <MenuItem x:Name="MenuFeed" Header="{ll:Str 投喂}" />
+            <MenuItem x:Name="MenuPanel" Header="{ll:Str 面板}"
+                      PointerEntered="MenuPanel_PointerEntered" PointerExited="MenuPanel_PointerExited" />
+            <MenuItem x:Name="MenuInteract" Header="{ll:Str 互动}">
+                <MenuItem x:Name="MenuSleep" Header="{ll:Str 睡觉}" Click="Sleep_Click" />
+                <MenuItem x:Name="MenuStudy" Header="{ll:Str 学习}" />
+                <MenuItem x:Name="MenuPlay" Header="{ll:Str 玩耍}" />
+                <MenuItem x:Name="MenuWork" Header="{ll:Str 工作}" />
+            </MenuItem>
+            <MenuItem x:Name="MenuDIY" Header="{ll:Str 自定}" IsVisible="False" />
+            <MenuItem x:Name="MenuSetting" Header="{ll:Str 系统}" />
+        </Menu>
+    </Grid>
 </UserControl>

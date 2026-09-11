@@ -21,10 +21,27 @@
 		<NoWarn>CS1591</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Include="..\.editorconfig" Link=".editorconfig" />
+	  <None Include="..\.editorconfig" Link=".editorconfig" />
 	</ItemGroup>
+	<!--
+	跨平台共享源码.
+
+	刻意使用 Compile 而不是 ProjectReference: 这些类型必须仍然编译在
+	VPet-Simulator.Core.dll 内部, 它们的 ABI 才能逐字节保持不变. 一旦改成引用
+	Base.dll, 老 MOD 的 TypeRef 就会失效(类型转发也救不了字段和成员的搬迁).
+	详见 docs/ABI-RULES.md.
+
+	只 glob 源码子目录, 不能写 **\*.cs 全量, 否则会把 Base 的 obj\ 下生成的
+	AssemblyInfo.cs 一并编进来, 产生重复特性错误.
+
+	刻意不包含 Base\Abstractions\: 那里放的是只给跨平台侧用的契约(IGraphBase 等),
+	Core 用不到. 编进来虽然是纯新增、不破坏 ABI, 但会平白给 Core 的公开 API 增加
+	八十多项, 让 MOD 作者看到一堆和 Windows 版无关的类型.
+	-->
 	<ItemGroup>
-		<ProjectReference Include="..\VPet_Simulator.Core.Base\VPet_Simulator.Core.Base.csproj" />
+		<Compile Include="..\VPet_Simulator.Core.Base\Graph\**\*.cs" LinkBase="Shared\Graph" />
+		<Compile Include="..\VPet_Simulator.Core.Base\Handle\**\*.cs" LinkBase="Shared\Handle" />
+		<Compile Include="..\VPet_Simulator.Core.Base\Logic\**\*.cs" LinkBase="Shared\Logic" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="LinePutScript" Version="1.11.9" />

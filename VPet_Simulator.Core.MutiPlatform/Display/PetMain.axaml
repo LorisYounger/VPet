@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="VPet_Simulator.Core.MutiPlatform.Display.PetMain">
+    <!--
+    与 Windows 版 VPet-Simulator.Core/Display/Main.xaml 的可视树保持一致:
+      UIGrid_Back  背景层, 供 MOD 往桌宠身后放东西
+      PetGrid      动画层一
+      PetGrid2     动画层二 (双缓冲, 详见 PetMainDisplay.cs)
+      UIGrid       前景层, 消息栏/工具栏/工作计时器都挂在这里
+      LabelDisplay 数值提示气泡
+
+    语音播放不放在可视树里: WPF 用的 MediaElement 是控件, Avalonia 没有等价物,
+    跨平台版打算由 MOD 通过统一契约提供播放器, 宿主自己不内置音频后端(尚未落地).
+    -->
+    <Viewbox>
+        <Grid x:Name="MainGrid" Width="500" Height="500">
+            <Grid x:Name="UIGrid_Back" VerticalAlignment="Top" Width="500" />
+            <Decorator x:Name="PetGrid" Height="500" VerticalAlignment="Top" Width="500" />
+            <Decorator x:Name="PetGrid2" Height="500" VerticalAlignment="Top" Width="500" IsVisible="False" />
+            <Grid x:Name="UIGrid" VerticalAlignment="Top" Width="500" />
+            <Border x:Name="LabelDisplay" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Background="{DynamicResource DARKPrimaryTransA}" CornerRadius="15"
+                    Margin="0,300,0,0" Padding="15,7" IsVisible="False"
+                    BoxShadow="0 0 15 0 #CC90CAF9">
+                <TextBlock x:Name="LabelDisplayText" Text="Hello World!" FontSize="30"
+                           Foreground="{DynamicResource DARKPrimaryText}"
+                           TextWrapping="WrapWithOverflow" />
+            </Border>
+        </Grid>
+    </Viewbox>
+</UserControl>

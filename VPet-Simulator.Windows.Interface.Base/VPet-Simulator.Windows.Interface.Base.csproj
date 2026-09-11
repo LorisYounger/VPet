@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!--
+	Interface 的跨平台共享源码层, 与 VPet_Simulator.Core.Base 是同一个套路.
+
+	这个目录里的源码有两个消费者:
+	  - VPet-Simulator.Windows.Interface (WPF/Windows) 用 Compile Include 直接编译,
+	    **不引用**本程序集 —— 这样 Interface.dll 里这些类型的 ABI 才能逐字节不变,
+	    Windows 的部署目录也不会多出新 dll(CoreMOD 有个写死的 LoadedDLL 白名单)
+	  - VPet_Simulator.Core.MutiPlatform (Avalonia) 正常 ProjectReference 本程序集
+
+	因此编译设置必须和 VPet-Simulator.Windows.Interface 对齐. 注意那边是
+	LangVersion=preview, 这边是 latest —— 共享文件里不要用 preview 独有的语法.
+
+	Platform\ 子目录**不**被 Interface glob: 那里放的是各平台各一份的适配垫片.
+
+	本项目能在不装 Windows Desktop SDK 的 Linux 上编译通过, 这是"真的平台无关"的
+	客观证据, 由仓库外的门禁脚本检查.
+	-->
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>VPet_Simulator.Windows.Interface</RootNamespace>
+		<AssemblyName>VPet-Simulator.Windows.Interface.Base</AssemblyName>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>CS1591</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\VPet_Simulator.Core.Base\VPet_Simulator.Core.Base.csproj" />
+		<ProjectReference Include="..\VPet-Simulator.Unified.Services\VPet-Simulator.Unified.Services.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="LinePutScript" Version="1.11.9" />
+		<PackageReference Include="LinePutScript.Localization" Version="1.1.0" />
+	</ItemGroup>
+
+</Project>

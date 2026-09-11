@@ -8,10 +8,30 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="12.1.1" />
     <PackageReference Include="LinePutScript" Version="1.11.9" />
+    <!--
+    本地化用的是跨平台版而不是 Windows 版用的 LinePutScript.Localization.WPF ——
+    后者的 lib/net6.0 引用了 PresentationFramework 和 System.Xaml (因为里面有五个
+    WPF 的 MarkupExtension), 在非 Windows 上根本加载不了.
+    两个包的 LocalizeCore API 面完全一致, 只是命名空间少了 .WPF 后缀.
+    注意它们各有一套独立的静态翻译状态, 同一个进程里不要同时用.
+    -->
+    <PackageReference Include="LinePutScript.Localization" Version="1.1.0" />
     <PackageReference Include="SkiaSharp" Version="3.116.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\VPet_Simulator.Core.Base\VPet_Simulator.Core.Base.csproj" />
+		<ProjectReference Include="..\VPet-Simulator.Windows.Interface.Base\VPet-Simulator.Windows.Interface.Base.csproj" />
+		<ProjectReference Include="..\VPet-Simulator.Unified.Services\VPet-Simulator.Unified.Services.csproj" />
+		<ProjectReference Include="..\VPet-Simulator.Unified.Interface\VPet-Simulator.Unified.Interface.csproj" />
+  </ItemGroup>
+
+  <!--
+  数值模拟这类"绝不能在两个平台之间分叉"的算法, 与 VPet-Simulator.Core 编译同一份
+  源码而不是各写一份. 这些类型都是 internal, Base.dll 里虽然也有一份但对外不可见,
+  因此不会和这里编译出来的副本冲突.
+  -->
+  <ItemGroup>
+    <Compile Include="..\VPet_Simulator.Core.Base\Logic\**\*.cs" LinkBase="Shared\Logic" />
   </ItemGroup>
 </Project>

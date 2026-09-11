@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using Color = System.Windows.Media.Color;
+using VPet_Simulator.Unified.Services;
 
 namespace VPet_Simulator.Windows
 {
@@ -217,7 +218,7 @@ namespace VPet_Simulator.Windows
             string username = mw.IsSteamUser ? SteamClient.Name : Environment.UserName;
 
             int timelength = mw.GameSavesData.Statistics![(gint)"stat_total_time"];
-            double timelength_h = (timelength / 3600.0);
+            double timelength_h = StatsSummary.Hours(timelength);
             double startdatelength = (DateTime.Now - mw.GameSavesData[(gdat)"birthday"]).TotalDays;
             double startlengthrank = 0;
             if (useranking)
@@ -227,77 +228,43 @@ namespace VPet_Simulator.Windows
                 if (leaderboard.HasValue)
                     result = await leaderboard.Value.ReplaceScore(timelength);
                 var length = leaderboard?.EntryCount ?? 1.0;
-                startlengthrank = 1 - ((result?.NewGlobalRank - 1) ?? length) / length;
+                startlengthrank = StatsSummary.RankPercentile(result?.NewGlobalRank, length);
             }
             string startlengthranktext;
-            if (startlengthrank < 0.5)
+            if (startlengthrank < StatsSummary.CompanionRankSplit)
                 startlengthranktext = '"' + "主人~多陪陪我~".Translate() + '"';
             else
                 startlengthranktext = '"' + "主人~感谢陪伴~".Translate() + '"';
 
-            double timelengthph = timelength_h / startdatelength;
-            string timelengthphtext;
-            string timelengthtext;
-            int timelength_i;
-            if (timelengthph < 2)
+            double timelengthph = StatsSummary.HoursPerDay(timelength_h, startdatelength);
+            int timelength_i = StatsSummary.CompanionTier(timelengthph);
+            string timelengthphtext = timelength_i switch
             {
-                timelengthphtext = "同学".Translate();
-                timelengthtext = '"' + "学长~前辈~".Translate() + '"';
-                timelength_i = 1;
-            }
-            else if (timelengthph < 4)
+                1 => "同学".Translate(),
+                2 => "朋友".Translate(),
+                3 => "挚友".Translate(),
+                4 => "家人".Translate(),
+                _ => "女鹅".Translate(),
+            };
+            string timelengthtext = '"' + (timelength_i switch
             {
-                timelengthphtext = "朋友".Translate();
-                timelengthtext = '"' + "兄弟!".Translate() + '"';
-                timelength_i = 2;
-            }
-            else if (timelengthph < 7)
-            {
-                timelengthphtext = "挚友".Translate();
-                timelengthtext = '"' + "不求同年同月同日生，但求同年同月同日打开《虚拟桌宠模拟器》".Translate() + '"';
-                timelength_i = 3;
-            }
-            else if (timelengthph < 10)
-            {
-                timelengthphtext = "家人".Translate();
-                timelengthtext = '"' + "We are 伐木累~".Translate() + '"';
-                timelength_i = 4;
-            }
-            else
-            {
-                timelengthphtext = "女鹅".Translate();
-                timelengthtext = '"' + "爸妈~ 这么叫好像不太好".Translate() + '"';
-                timelength_i = 5;
-            }
+                1 => "学长~前辈~".Translate(),
+                2 => "兄弟!".Translate(),
+                3 => "不求同年同月同日生，但求同年同月同日打开《虚拟桌宠模拟器》".Translate(),
+                4 => "We are 伐木累~".Translate(),
+                _ => "爸妈~ 这么叫好像不太好".Translate(),
+            }) + '"';
 
             await Dispatcher.InvokeAsync(() => pb_r_genRank.Value = 10);
-            string studytext;
-            int study_i;
-            if (mw.GameSavesData.GameSave.Level < 20)
+            int study_i = StatsSummary.StudyTier(mw.GameSavesData.GameSave.Level);
+            string studytext = study_i switch
             {
-                studytext = "相当于桌宠的小学学历哦\n\"肃清! {0}的安魂曲☆\"".Translate(petname);
-                study_i = 1;
-            }
-            else if (mw.GameSavesData.GameSave.Level < 40)
-            {
-                studytext = "相当于桌宠的中学学历哦\n<高考桌宠100天>".Translate();
-                study_i = 2;
-            }
-            else if (mw.GameSavesData.GameSave.Level < 60)
-            {
-                studytext = "相当于桌宠的大学学历哦\n\"大学生上课吃饭睡觉, {0}学习吃饭睡觉, {0}＝大学生\"".Translate(petname);
-                study_i = 3;
-            }
-            else if (mw.GameSavesData.GameSave.Level < 80)
-            {
-                studytext = "相当于桌宠的博士学历哦\n\"大学生上课吃饭睡觉, 人家和那个带兜帽的没关系啦\"".Translate();
-                study_i = 4;
-            }
-            else
-            {
-                studytext = "<虚拟桌宠模拟器砖家>\n\"一定是{0}干的!\"".Translate(username);
-                study_i = 5;
-            }
+                1 => "相当于桌宠的小学学历哦\n\"肃清! {0}的安魂曲☆\"".Translate(petname),
+                2 => "相当于桌宠的中学学历哦\n<高考桌宠100天>".Translate(),
+                3 => "相当于桌宠的大学学历哦\n\"大学生上课吃饭睡觉, {0}学习吃饭睡觉, {0}＝大学生\"".Translate(petname),
+                4 => "相当于桌宠的博士学历哦\n\"大学生上课吃饭睡觉, 人家和那个带兜帽的没关系啦\"".Translate(),
+                _ => "<虚拟桌宠模拟器砖家>\n\"一定是{0}干的!\"".Translate(username),
+            };
 
             int studyexpmax, studymoneymax;
             double studyexpmaxrank = 0, studymoneymaxrank = 0;
@@ -319,74 +286,39 @@ namespace VPet_Simulator.Windows
                 if (leaderboard.HasValue)
                     result = await leaderboard.Value.ReplaceScore(studyexpmax);
                 var length = leaderboard?.EntryCount ?? 1.0;
-                if (result?.NewGlobalRank != null)
-                    studyexpmaxrank = 1 - (result.Value.NewGlobalRank - 1) / length;
-                else
-                    studyexpmaxrank = 0;
+                studyexpmaxrank = StatsSummary.RankPercentile(result?.NewGlobalRank, length);
 
                 leaderboard = await SteamUserStats.FindOrCreateLeaderboardAsync("stat_single_profit_money", LeaderboardSort.Descending, LeaderboardDisplay.Numeric);
                 result = null;
                 if (leaderboard.HasValue)
                     result = await leaderboard.Value.ReplaceScore(studymoneymax);
                 length = leaderboard?.EntryCount ?? 1.0;
-                if (result?.NewGlobalRank != null)
-                    studymoneymaxrank = 1 - (result.Value.NewGlobalRank - 1) / length;
-                else
-                    studymoneymaxrank = 0;
+                studymoneymaxrank = StatsSummary.RankPercentile(result?.NewGlobalRank, length);
             }
             string studyexptext, workmoneytext;
-            int studyexp_i, workmoney_i;
-            if (studyexpmaxrank < 0.25)
+            int studyexp_i = StatsSummary.StudyExpTier(studyexpmaxrank);
+            studyexptext = '"' + (studyexp_i switch
             {
-                studyexptext = '"' + "在你这个年纪,你怎么睡得着觉的?".Translate() + '"';
-                studyexp_i = 5;
-            }
-            else if (studyexpmaxrank < 0.4)
-            {
-                studyexptext = '"' + "孩子学习老不好，多半是废了，快来试试思维驰学习机".Translate() + '"';
-                studyexp_i = 4;
-            }
-            else if (studyexpmaxrank < 0.55)
-            {
-                studyexptext = '"' + "孩子学习老不好，多半是废了，快来试试思维驰学习机".Translate() + '"';
-                studyexp_i = 3;
-            }
-            else if (studyexpmaxrank < 0.75)
-            {
-                studyexptext = '"' + "学而不思则罔，思而不学则die".Translate() + '"';
-                studyexp_i = 2;
-            }
-            else
-            {
-                studyexptext = '"' + "看我量子速读法!".Translate() + '"';
-                studyexp_i = 1;
-            }
+                5 => "在你这个年纪,你怎么睡得着觉的?".Translate(),
+                4 => "孩子学习老不好，多半是废了，快来试试思维驰学习机".Translate(),
+                3 => "孩子学习老不好，多半是废了，快来试试思维驰学习机".Translate(),
+                2 => "学而不思则罔，思而不学则die".Translate(),
+                _ => "看我量子速读法!".Translate(),
+            }) + '"';
 
-            if (studymoneymaxrank < 0.25)
+            int workmoney_i = StatsSummary.WorkMoneyTier(studymoneymaxrank);
+            workmoneytext = '"' + (workmoney_i switch
             {
-                workmoneytext = '"' + "钱钱乃身外之物".Translate() + '"';
-                workmoney_i = 4;
-            }
-            else if (studymoneymaxrank < 0.5)
-            {
-                workmoneytext = '"' + "风声雨声读书声声声入耳，日结月结次次结钱钱入账".Translate() + '"';
-                workmoney_i = 3;
-            }
-            else if (studymoneymaxrank < 0.75)
-            {
-                workmoneytext = '"' + "有钱能使磨推鬼".Translate() + '"';
-                workmoney_i = 2;
-            }
-            else
-            {
-                workmoneytext = '"' + "可是，我真的很需要那些钱钱!".Translate() + '"';
-                workmoney_i = 1;
-            }
+                4 => "钱钱乃身外之物".Translate(),
+                3 => "风声雨声读书声声声入耳，日结月结次次结钱钱入账".Translate(),
+                2 => "有钱能使磨推鬼".Translate(),
+                _ => "可是，我真的很需要那些钱钱!".Translate(),
+            }) + '"';
 
             await Dispatcher.InvokeAsync(() => pb_r_genRank.Value = 40);
 
             int worktime = mw.GameSavesData.Statistics[(gint)"stat_work_time"];
-            double worktimeph = (double)worktime / timelength;
+            double worktimeph = StatsSummary.WorkRatio(worktime, timelength);
             double worktimephrank = 0;
             if (useranking)
             {
@@ -395,42 +327,18 @@ namespace VPet_Simulator.Windows
                 if (leaderboard.HasValue)
                     result = await leaderboard.Value.ReplaceScore((int)(worktimeph * 10000));
                 var length = leaderboard?.EntryCount ?? 1.0;
-                if (result?.NewGlobalRank != null)
-                    worktimephrank = 1 - (result.Value.NewGlobalRank - 1) / length;
-                else worktimephrank = 0;
+                worktimephrank = StatsSummary.RankPercentile(result?.NewGlobalRank, length);
             }
-            string worktimephtext;
-            int worktime_i;
-            if (worktimephrank < 0.25)
+            int worktime_i = StatsSummary.WorkTimeTier(worktimephrank);
+            string worktimephtext = '"' + (worktime_i switch
             {
-                worktimephtext = '"' + "干一天来歇一天, 能混一天是一天".Translate() + '"';
-                worktime_i = 1;
-            }
-            else if (worktimephrank < 0.35)
-            {
-                worktimephtext = '"' + "早8晚5，快乐回家".Translate() + '"';
-                worktime_i = 2;
-            }
-            else if (worktimephrank < 0.45)
-            {
-                worktimephtext = '"' + "早8晚5，快乐回家".Translate() + '"';
-                worktime_i = 3;
-            }
-            else if (worktimephrank < 0.55)
-            {
-                worktimephtext = '"' + "早8晚5，快乐回家".Translate() + '"';
-                worktime_i = 4;
-            }
-            else if (worktimephrank < 0.75)
-            {
-                worktimephtext = '"' + "加班没有加班费不是基本常识吗?".Translate() + '"';
-                worktime_i = 5;
-            }
-            else
-            {
-                worktimephtext = '"' + "老板! 路灯已经准备好了!".Translate() + '"';
-                worktime_i = 6;
-            }
+                1 => "干一天来歇一天, 能混一天是一天".Translate(),
+                2 => "早8晚5，快乐回家".Translate(),
+                3 => "早8晚5，快乐回家".Translate(),
+                4 => "早8晚5，快乐回家".Translate(),
+                5 => "加班没有加班费不是基本常识吗?".Translate(),
+                _ => "老板! 路灯已经准备好了!".Translate(),
+            }) + '"';
 
             int betterbuytimes = mw.GameSavesData.Statistics[(gint)"stat_buytimes"];
             int betterbuycount = (int)mw.GameSavesData.Statistics[(gdbe)"stat_betterbuy"];
@@ -477,7 +385,7 @@ namespace VPet_Simulator.Windows
             await Dispatcher.InvokeAsync(() => pb_r_genRank.Value = 60);
 
             int autobuytimes = mw.GameSavesData.Statistics[(gint)"stat_autobuy"];
-            double autobuytimesph = (double)autobuytimes / betterbuytimes;
+            double autobuytimesph = StatsSummary.AutoBuyRatio(autobuytimes, betterbuytimes);
             double autobuytimesphrank = 0;
             if (useranking)
             {
@@ -486,33 +394,16 @@ namespace VPet_Simulator.Windows
                 if (leaderboard.HasValue)
                     result = await leaderboard.Value.ReplaceScore((int)(autobuytimesph * 10000));
                 var length = leaderboard?.EntryCount ?? 1.0;
-                if (result?.NewGlobalRank != null)
-                    autobuytimesphrank = 1 - (result.Value.NewGlobalRank - 1) / length;
-                else
-                    autobuytimesphrank = 0;
+                autobuytimesphrank = StatsSummary.RankPercentile(result?.NewGlobalRank, length);
             }
-            string autobuytext;
-            int autobuy_i;
-            if (autobuytimesph < 0.25)
+            int autobuy_i = StatsSummary.AutoBuyTier(autobuytimesph);
+            string autobuytext = '"' + (autobuy_i switch
             {
-                autobuytext = '"' + "主人, 是担心我乱买东西嘛".Translate() + '"';
-                autobuy_i = 4;
-            }
-            else if (autobuytimesph < 0.5)
-            {
-                autobuytext = '"' + "自己赚的钱自己花".Translate() + '"';
-                autobuy_i = 3;
-            }
-            else if (autobuytimesph < 0.75)
-            {
-                autobuytext = '"' + "不要小看我的情报网! 你自动购买礼物没关,对不对?".Translate() + '"';
-                autobuy_i = 2;
-            }
-            else
-            {
-                autobuytext = '"' + "诚招保姆,工资面议".Translate() + '"';
-                autobuy_i = 1;
-            }
+                4 => "主人, 是担心我乱买东西嘛".Translate(),
+                3 => "自己赚的钱自己花".Translate(),
+                2 => "不要小看我的情报网! 你自动购买礼物没关,对不对?".Translate(),
+                _ => "诚招保姆,工资面议".Translate(),
+            }) + '"';
 
             await Dispatcher.InvokeAsync(() => pb_r_genRank.Value = 70);
 
@@ -527,27 +418,20 @@ namespace VPet_Simulator.Windows
                 if (leaderboard.HasValue)
                     result = await leaderboard.Value.ReplaceScore(modworkshop);
                 var length = leaderboard?.EntryCount ?? 1.0;
-                if (result?.NewGlobalRank != null)
-                    modworkshoprank = 1 - (result.Value.NewGlobalRank - 1) / length;
-                else
-                    modworkshoprank = 0;
+                modworkshoprank = StatsSummary.RankPercentile(result?.NewGlobalRank, length);
             }
             string modworkshoptext;
             int modworkshop_i;
-            if (modworkshop == 0)
-            {
-                modworkshoptext = '"' + "桌宠的steam创意工坊里有许多的mod喵, 主人快去试试吧".Translate() + '"';
-                modworkshop_i = 3;
-            }
-            else if (modworkshoprank < 0.3)
-            {
-                modworkshoptext = '"' + "主人还可以再去创意工坊体验更多MOD喵".Translate() + '"';
-                modworkshop_i = 3;
-            }
-            else if (modworkshoprank < 0.7)
-            { modworkshoptext = '"' + "创意工坊又更新了很多有趣的mod喵, 主人要不要去看看?".Translate() + '"'; modworkshop_i = 2; }
-            else
-            { modworkshoptext = '"' + "主人已经是mod大师了喵,要不要试试mod制作器,给我做mod喵!".Translate() + '"'; modworkshop_i = 1; }
+            modworkshop_i = StatsSummary.ModTier(modworkshop, modworkshoprank);
+            //一个都没装和装了但排名靠后同为 3 档, 台词不一样
+            modworkshoptext = '"' + (modworkshop == 0
+                ? "桌宠的steam创意工坊里有许多的mod喵, 主人快去试试吧".Translate()
+                : modworkshop_i switch
+                {
+                    3 => "主人还可以再去创意工坊体验更多MOD喵".Translate(),
+                    2 => "创意工坊又更新了很多有趣的mod喵, 主人要不要去看看?".Translate(),
+                    _ => "主人已经是mod大师了喵,要不要试试mod制作器,给我做mod喵!".Translate(),
+                }) + '"';
 
             await Dispatcher.InvokeAsync(() => pb_r_genRank.Value = 80);
 
@@ -575,10 +459,7 @@ namespace VPet_Simulator.Windows
                 if (leaderboard.HasValue)
                     result = await leaderboard.Value.ReplaceScore((int)mw.GameSavesData.GameSave.Likability);
                 var length = leaderboard?.EntryCount ?? 1.0;
-                if (result?.NewGlobalRank != null)
-                    likerank = 1 - (result.Value.NewGlobalRank - 1) / length;
-                else
-                    likerank = 0;
+                likerank = StatsSummary.RankPercentile(result?.NewGlobalRank, length);
             }
             await Dispatcher.InvokeAsync(() => pb_r_genRank.Value = 88);
 
@@ -647,7 +528,7 @@ namespace VPet_Simulator.Windows
                 r_r_musiccount.Text = mw.GameSavesData.Statistics[(gint)"stat_music"].ToString();
                 r_r_touchtotal.Text = (mw.GameSavesData.Statistics[(gint)"stat_touch_body"] + mw.GameSavesData.Statistics[(gint)"stat_touch_head"]).ToString();
 
-                if (mw.GameSavesData.GameSave.Likability > 100)
+                if (mw.GameSavesData.GameSave.Likability > StatsSummary.LikabilityIconThreshold)
                     r_i_like.Visibility = Visibility.Visible;
                 else
                     r_i_like.Visibility = Visibility.Collapsed;
@@ -671,26 +552,10 @@ namespace VPet_Simulator.Windows
         }
         public static string px_tocm(long px, out string cm)
         {
-            if (px < 37795)
-            {
-                cm = "px";
-                return px.ToString();
-            }
-            else if (px < 3779527)
-            {
-                cm = "cm";
-                return (px * 2.54 / 96).ToString("f1");
-            }
-            else if (px < 377952755)
-            {
-                cm = "m";
-                return (px * 2.54 / 9600).ToString("f1");
-            }
-            else
-            {
-                cm = "km";
-                return (px * 2.54 / 9600000).ToString("f1");
-            }
+            //换算表在共享后端里
+            var (value, unit) = StatsSummary.LengthFromPixels(px);
+            cm = unit;
+            return value;
         }
 
         bool load2 = false;

@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!--
+	跨平台桌宠宿主.
+
+	对应 Windows 版的 VPet-Simulator.Windows, 但只负责三件事:
+	  1. 提供一个无边框透明置顶窗口承载桌宠
+	  2. 实现 IController (窗口位置/屏幕距离等桌宠需要的宿主能力)
+	  3. 加载 MOD 目录里的宠物动画并把桌宠跑起来
+
+	设置界面、商店、图鉴、多人联机等重界面功能不在这里 —— 那些在 Windows 版里
+	是靠 Panuon.WPF.UI 实现的, 没有 Avalonia 移植版, 需要重新设计.
+	-->
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>VPet_Simulator.MutiPlatform</RootNamespace>
+		<AssemblyName>VPet-Simulator.MutiPlatform</AssemblyName>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<!-- 桌宠窗口自己画, 不需要 Avalonia 的默认标题栏 -->
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="12.1.1" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
+		<PackageReference Include="Avalonia.Themes.Simple" Version="12.1.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\VPet_Simulator.Core.MutiPlatform\VPet_Simulator.Core.MutiPlatform.csproj" />
+	</ItemGroup>
+
+</Project>

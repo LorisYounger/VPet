@@ -9,7 +9,7 @@ using static VPet_Simulator.Core.GraphHelper;
 
 namespace VPet_Simulator.Windows.Interface
 {
-    public static class ExtensionFunction
+    public static partial class ExtensionFunction
     {
         /// <summary>
         /// 工作获取效率
@@ -22,13 +22,6 @@ namespace VPet_Simulator.Windows.Interface
                 return MathPow(Math.Abs(work.MoneyBase) * (1 + work.FinishBonus / 2) + 1, 1.25);
             else
                 return MathPow((Math.Abs(work.MoneyBase) * (1 + work.FinishBonus / 2) + 1) / 10, 1.25);
-        }
-        /// <summary>
-        /// 求幂(带符号)
-        /// </summary>
-        public static double MathPow(double value, double pow)
-        {
-            return Math.Pow(Math.Abs(value), pow) * Math.Sign(value);
         }
         /// <summary>
         /// 工作花费效率
@@ -154,86 +147,11 @@ namespace VPet_Simulator.Windows.Interface
             return w;
         }
 
-        public static string FoodToDescription(this IFood food)
-        {
-            var dic = new List<Tuple<string, double, string>>()
-            {
-                    new Tuple<string, double, string>(LocalizeCore.Translate("经验值"), food.Exp, ValueToPlusPlus(food.Exp, 1 / 4, 5)),
-                     new Tuple<string, double, string>(LocalizeCore.Translate("饱腹度"),food.StrengthFood, ValueToPlusPlus(food.StrengthFood, 1 / 2, 5)) ,
-                     new Tuple<string, double, string>(LocalizeCore.Translate("口渴度"), food.StrengthDrink, ValueToPlusPlus(food.StrengthDrink, 1 / 2.5, 5)),
-                     new Tuple<string, double, string>(LocalizeCore.Translate("体力"),food.Strength, ValueToPlusPlus(food.Strength, 1 / 4, 5)),
-                     new Tuple<string, double, string>(LocalizeCore.Translate("心情"), food.Feeling, ValueToPlusPlus(food.Feeling, 1 / 3, 5)),
-                    new Tuple<string, double, string>(LocalizeCore.Translate("健康"),food.Health, ValueToPlusPlus(food.Health, 1, 5)) ,
-                     new Tuple<string, double, string>(LocalizeCore.Translate("好感度"),food.Likability, ValueToPlusPlus(food.Likability, 1.5, 5))
-                };
-            var dic2 = dic.Where(kv => kv.Item2 != 0)
-                         .Select(x => x.Item1 + x.Item3);
-            return string.Join("\n", dic2);
-        }
-        /// <summary>
-        /// 把值变成++
-        /// </summary>
-        /// <param name="value">值</param>
-        /// <param name="magnification">倍率</param>
-        /// <returns></returns>
-        public static string ValueToPlusPlus(double value, double magnification, int max = 10)
-        {
-            int v = (int)Math.Abs(value);
-            v = (int)(Math.Pow(v, magnification));
-            v = Math.Min(Math.Max(v, 0), max);
-            if (value < 0)
-                return new string('-', v);
 
-            else
-                return new string('+', v);
-        }
 
-        /// <summary>
-        /// 启动URL
-        /// </summary>
-        public static void StartURL(string url)
-        {
-            try
-            {
-                var psi = new ProcessStartInfo
-                {
-                    FileName = url,
-                    UseShellExecute = true
-                };
-                Process.Start(psi);
-            }
-            catch
-            {
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = "explorer.exe";
-                startInfo.UseShellExecute = false;
-                startInfo.Arguments = url;
-                Process.Start(startInfo);
-            }
-        }
-
-        /// <summary>
-        /// 吃食物 附带倍率
-        /// </summary>
-        /// <param name="save">存档</param>
-        /// <param name="food">食物</param>
-        /// <param name="buff">默认1倍</param>
-        public static void EatFood(this IGameSave save, IFood food, double buff)
-        {
-            save.Exp += food.Exp * buff;
-            var tmp = food.Strength / 2 * buff;
-            save.StrengthChange(tmp);
-            save.StoreStrength += tmp;
-            tmp = food.StrengthFood / 2 * buff;
-            save.StrengthChangeFood(tmp);
-            save.StoreStrengthFood += tmp;
-            tmp = food.StrengthDrink / 2 * buff;
-            save.StrengthChangeDrink(tmp);
-            save.StoreStrengthDrink += tmp;
-            save.FeelingChange(food.Feeling * buff);
-            save.Health += food.Health * buff;
-            save.Likability += food.Likability * buff;
-        }
+        //MathPow / FoodToDescription / ValueToPlusPlus / StartURL / EatFood 都搬进了
+        //共享源码 (Interface.Base/Save/ExtensionFunction.Shared.cs 与 EatFoodBuff.cs).
+        //留在这里的是要 Work 类型的那几个: Work 在 Core.dll 和 Base.dll 里是两个类型.
     }
     /// <summary>
     /// 扩展值

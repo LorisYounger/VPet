@@ -24,6 +24,7 @@ using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 using VPet_Simulator.Core;
+using VPet_Simulator.Unified.Services;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
@@ -60,43 +61,12 @@ namespace VPet_Simulator.Windows
             //加载图片包
             ImageSources.AddSources(ctheme.Images);
 
-            //阴影颜色
-            Application.Current.Resources["ShadowColor"] = Function.HEXToColor('#' + ctheme.ThemeColor[(gstr)"ShadowColor"]);
-
-            foreach (ILine lin in ctheme.ThemeColor.Assemblage.FindAll(x => !x.Name.Contains("Color")))
-                Application.Current.Resources[lin.Name] = new SolidColorBrush(Function.HEXToColor('#' + lin.info));
-
-            //系统生成部分颜色
-            Color c = Function.HEXToColor('#' + ctheme.ThemeColor["Primary"].info);
-            c.A = 204;
-            Application.Current.Resources["PrimaryTrans"] = new SolidColorBrush(c);
-            c.A = 44;
-            Application.Current.Resources["PrimaryTrans4"] = new SolidColorBrush(c);
-            c.A = 170;
-            Application.Current.Resources["PrimaryTransA"] = new SolidColorBrush(c);
-            c.A = 238;
-            Application.Current.Resources["PrimaryTransE"] = new SolidColorBrush(c);
-
-            c = Function.HEXToColor('#' + ctheme.ThemeColor["Secondary"].info);
-            c.A = 204;
-            Application.Current.Resources["SecondaryTrans"] = new SolidColorBrush(c);
-            c.A = 44;
-            Application.Current.Resources["SecondaryTrans4"] = new SolidColorBrush(c);
-            c.A = 170;
-            Application.Current.Resources["SecondaryTransA"] = new SolidColorBrush(c);
-            c.A = 238;
-            Application.Current.Resources["SecondaryTransE"] = new SolidColorBrush(c);
-
-
-            c = Function.HEXToColor('#' + ctheme.ThemeColor["DARKPrimary"].info);
-            c.A = 204;
-            Application.Current.Resources["DARKPrimaryTrans"] = new SolidColorBrush(c);
-            c.A = 44;
-            Application.Current.Resources["DARKPrimaryTrans4"] = new SolidColorBrush(c);
-            c.A = 170;
-            Application.Current.Resources["DARKPrimaryTransA"] = new SolidColorBrush(c);
-            c.A = 238;
-            Application.Current.Resources["DARKPrimaryTransE"] = new SolidColorBrush(c);
+            //配色的展开规则(哪些当颜色、哪些当画刷、四种半透明变体各是多少)在共享后端里
+            foreach (var color in ThemeRules.Expand(ctheme.ThemeColor))
+            {
+                var c = Color.FromArgb(color.A, color.R, color.G, color.B);
+                Application.Current.Resources[color.Key] = color.IsRawColor ? c : new SolidColorBrush(c);
+            }
         }
 
         public void LoadFont(string fontname)
@@ -264,6 +234,9 @@ namespace VPet_Simulator.Windows
                 //保存插件
                 foreach (MainPlugin mp in Plugins)
                     mp.Save();
+                //统一契约插件
+                foreach (var uh in UnifiedHosts)
+                    uh.Plugin.Save();
             }
             catch (Exception e)
             {
@@ -299,69 +272,33 @@ namespace VPet_Simulator.Windows
                 }
                 File.WriteAllText(ExtensionValue.BaseDirectory + @$"\Setting{PrefixSave}.lps", Set.ToString());
 
-                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
-                    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves");
-                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))//备份功能
-                    Directory.CreateDirectory(ExtensionValue.BaseDirectory + @"\Saves_BKP");
-
                 if (Core != null && Core.Save != null)
                 {
-                    var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\Saves", $"Save{PrefixSave}_*.lps")).OrderBy(x =>
-                    {
-                        if (int.TryParse(x.Split('_').Last().Split('.')[0], out int i))
-                            return i;
-                        return 0;
-                    }).ToList();
-                    while (ds.Count > Set.BackupSaveMaxNum)
-                    {
-                        File.Delete(ds[0]);
-                        ds.RemoveAt(0);
-                    }
-
-                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps"))
-                        File.Delete(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps");
-
                     var saveslps = GameSavesData.ToLPS();
                     var savesdata = saveslps.ToString();
                     if (savesdata == null)
                         throw new Exception("Save data is null");
 
+                    //命名、轮换、备份都走共享后端, 跨平台版用的是同一份实现
+                    SaveCatalog.Write(saveslps,
+                        SaveCatalog.SaveDirectory(ExtensionValue.BaseDirectory),
+                        SaveCatalog.BackupDirectory(ExtensionValue.BaseDirectory),
+                        PrefixSave, st, Set.BackupSaveMaxNum);
 
-                    int hash = Math.Abs(saveslps.GetHashCode() % 255);
-                    if (File.Exists(ExtensionValue.BaseDirectory + $"\\Saves_BKP\\Save{PrefixSave}_{hash:X}.lps"))
-                        File.Delete(ExtensionValue.BaseDirectory + $"\\Saves_BKP\\Save{PrefixSave}_{hash:X}.lps");
-
-                    //存档
-                    File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps", savesdata);
-                    //备份
-                    File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves_BKP\\Save{PrefixSave}_{hash:X}.lps", savesdata);
-
-                    if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
-                    {
-                        if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.bkp"))
-                            File.Delete(ExtensionValue.BaseDirectory + @"\Save.bkp");
-                        File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + @"\Save.bkp");
-                    }
+                    //老版本的存档在根目录, 读过一次之后就让位
+                    SaveCatalog.MigrateLegacy(ExtensionValue.BaseDirectory);
 
                     //Steam云存档
                     if (IsSteamUser)
                     {
-                        var steamsave = SteamRemoteStorage.Files.Where(x => x.StartsWith($"VPetCloud/Save{PrefixSave}_")).ToList();
-                        if (steamsave.Count > Set.BackupSaveMaxNum)
+                        //云存档名里的编号是十六进制的, 排序交给共享后端, 免得两处解析方式不一样
+                        var steamsave = SaveCatalog.ListCloud(SteamRemoteStorage.Files, PrefixSave);
+                        while (steamsave.Count > Set.BackupSaveMaxNum)
                         {
-                            steamsave = steamsave.OrderBy(x =>
-                            {
-                                if (int.TryParse(x.Split('_').Last().Split('.')[0], out int i))
-                                    return i;
-                                return 0;
-                            }).ToList();
-                            while (steamsave.Count > Set.BackupSaveMaxNum)
-                            {
-                                SteamRemoteStorage.FileDelete(steamsave[0]);
-                                steamsave.RemoveAt(0);
-                            }
+                            SteamRemoteStorage.FileDelete(steamsave[0]);
+                            steamsave.RemoveAt(0);
                         }
-                        SteamRemoteStorage.FileWrite($"VPetCloud/Save{PrefixSave}_{(DateTime.Now.Ticks / 60000):X}.lps", Encoding.UTF8.GetBytes(savesdata));
+                        SteamRemoteStorage.FileWrite(SaveCatalog.CloudName(PrefixSave, DateTime.Now), Encoding.UTF8.GetBytes(savesdata));
                     }
                 }
             }
@@ -425,6 +362,16 @@ namespace VPet_Simulator.Windows
                 catch (Exception e)
                 {
                     MessageBoxX.Show(e.ToString(), "由于插件引起的自定按钮加载错误".Translate() + '-' + mp.PluginName);
+                }
+            //统一契约插件
+            foreach (var uh in UnifiedHosts)
+                try
+                {
+                    uh.Plugin.LoadDIY();
+                }
+                catch (Exception e)
+                {
+                    MessageBoxX.Show(e.ToString(), "由于插件引起的自定按钮加载错误".Translate() + '-' + uh.Plugin.PluginName);
                 }
             Main.ToolBar.LoadDIY();
         }
@@ -544,58 +491,60 @@ namespace VPet_Simulator.Windows
         private void lowStrength()
         {
             var sm = Core.Save!.StrengthMax;
-            var sm75 = sm * 0.70;
-            if (Set.AutoBuy && Core.Save!.Money >= 100)
+            var sm75 = sm * PurchaseRules.LowRate;
+            //外层这个余额判断不能省: 开着自动购买但钱不够时, 桌宠还是要照常喊饿
+            if (Set.AutoBuy && Core.Save!.Money >= PurchaseRules.AutoBuyMinMoney)
             {
-                var havemoney = Core.Save!.Money * 0.8;
-                List<Food> food = Foods.FindAll(x => x.Price >= 2 && x.Health >= -5 && x.Exp >= -10 && x.Likability >= 0 && x.Price < havemoney //桌宠不吃负面的食物
-                 && !x.IsOverLoad() // 不吃超模食物
-                );
+                //买什么、预算多少、看得上哪些食物, 判断都在共享后端里
+                var need = PurchaseRules.WhatToBuy(
+                    Core.Save!.StrengthFood + Core.Save!.StoreStrengthFood,
+                    Core.Save!.StrengthDrink + Core.Save!.StoreStrengthDrink,
+                    sm, Core.Save!.Feeling, Core.Save!.FeelingMax, Core.Save!.Money, Set.AutoGift);
+                if (need != PurchaseRules.AutoBuyNeed.None)
+                {
+                    var havemoney = PurchaseRules.AutoBuyBudget(Core.Save!.Money);
+                    List<Food> food = Foods.FindAll(x => PurchaseRules.IsAutoBuyCandidate(
+                        x.Price, x.Health, x.Exp, x.Likability, havemoney, x.IsOverLoad()));
 
-                if ((Core.Save!.StrengthFood + Core.Save!.StoreStrengthFood) < sm75)
-                {//饿了就该吃正餐
-                    food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > Math.Min(sm * 0.20, 100));
+                    switch (need)
+                    {
+                        case PurchaseRules.AutoBuyNeed.Meal:
+                            food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > PurchaseRules.MealThreshold(sm));
+                            break;
+                        case PurchaseRules.AutoBuyNeed.Drink:
+                            food = food.FindAll(x => x.Type == Food.FoodType.Drink && x.StrengthDrink > PurchaseRules.DrinkThreshold(sm));
+                            break;
+                        case PurchaseRules.AutoBuyNeed.Gift:
+                            food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > PurchaseRules.GiftThreshold(Core.Save!.FeelingMax));
+                            break;
+                        case PurchaseRules.AutoBuyNeed.Snack:
+                            // 没开自动购买礼物的, 买零食能加点是一点
+                            food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.Feeling > PurchaseRules.SnackThreshold(Core.Save!.FeelingMax));
+                            break;
+                    }
                     if (food.Count == 0)
                         return;
+
                     var item = food[Function.Rnd.Next(food.Count)];
-                    Core.Save!.Money -= item.Price * 1.2;
-                    TakeItemHandle(item, 1, "autofood");
+                    Core.Save!.Money -= PurchaseRules.AutoBuyCost(item.Price);
+                    switch (need)
+                    {
+                        case PurchaseRules.AutoBuyNeed.Meal:
+                            TakeItemHandle(item, 1, "autofood");
+                            break;
+                        case PurchaseRules.AutoBuyNeed.Drink:
+                            TakeItemHandle(item, 1, "autodrink");
+                            break;
+                        default:
+                            TakeItemHandle(item, 1, "autofeel");
+                            break;
+                    }
                     TakeItem(item);
-                    GameSavesData.Statistics![(gint)"stat_autobuy"]++;
+                    if (need == PurchaseRules.AutoBuyNeed.Meal || need == PurchaseRules.AutoBuyNeed.Drink)
+                        GameSavesData.Statistics![(gint)"stat_autobuy"]++;
+                    else
+                        GameSavesData.Statistics![(gint)"stat_autogift"]++;
                     Main.Display(item.GetGraph(), item.ImageSource!, Main.DisplayToNomal);
-                }
-                else if ((Core.Save!.StrengthDrink + Core.Save!.StoreStrengthDrink) < sm75)
-                {
-                    food = food.FindAll(x => x.Type == Food.FoodType.Drink && x.StrengthDrink > Math.Min(sm * 0.20, 50));
-                    if (food.Count == 0)
-                        return;
-                    var item = food[Function.Rnd.Next(food.Count)];
-                    Core.Save!.Money -= item.Price * 1.2;
-                    TakeItemHandle(item, 1, "autodrink");
-                    TakeItem(item);
-                    GameSavesData.Statistics![(gint)"stat_autobuy"]++;
-                    Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
-                }
-                else if (Core.Save!.Feeling < Core.Save!.FeelingMax * 0.50)
-                {
-                    if (Set.AutoGift)
-                    {
-                        food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > Math.Min(Core.Save!.FeelingMax * 0.10, 50));
-                        if (food.Count == 0)
-                            return;
-                    }
-                    else // 没有自动购买礼物的可以试试自动购买零食能加点是一点
-                    {
-                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.Feeling > Math.Min(Core.Save!.FeelingMax * 0.10, 40));
-                        if (food.Count == 0)
-                            return;
-                    }
-                    var item = food[Function.Rnd.Next(food.Count)];
-                    Core.Save!.Money -= item.Price * 1.2;
-                    TakeItemHandle(item, 1, "autofeel");
-                    TakeItem(item);
-                    GameSavesData.Statistics![(gint)"stat_autogift"]++;
-                    Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
             }
             else if (Core.Save!.Mode == IGameSave.ModeType.Happy || Core.Save!.Mode == IGameSave.ModeType.Nomal)
@@ -742,25 +691,17 @@ namespace VPet_Simulator.Windows
         /// <param name="item">物品</param>
         public void TakeItem(Food item)
         {
-            //获取吃腻时间
+            //吃腻度的算式在共享后端里
             Main.LastInteractionTime = DateTime.Now;
             DateTime now = DateTime.Now;
-            DateTime eattime = GameSavesData["buytime"].GetDateTime(item.Name, now);
-            double eattimes = 0;
-            if (eattime > now)
-            {
-                eattimes = (eattime - now).TotalHours;
-            }
-            double eatuseps;
-            if (item.Type == FoodType.Gift)
-                eatuseps = Math.Max(0.5, 1 - eattimes * eattimes * 0.01);
-            else
-                eatuseps = Math.Max(0.5, 1 - eattimes * eattimes * 0.02);
+            var buytime = GameSavesData[FeedingRules.BuyTimeLineName];
+            double eattimes = FeedingRules.RemainingBoredom(buytime.GetDateTime(item.Name, now), now);
+            double eatuseps = FeedingRules.Effectiveness(eattimes, item.Type == FoodType.Gift);
             //开始加点
             Core.Save!.EatFood(item, eatuseps);
             //吃腻了
-            eattimes += Math.Max(0.5, Math.Min(4, 2 - (item.Likability + item.Feeling / 2) / 5));
-            GameSavesData["buytime"].SetDateTime(item.Name, now.AddHours(eattimes));
+            eattimes += FeedingRules.AddedBoredom(item.Likability, item.Feeling);
+            buytime.SetDateTime(item.Name, now.AddHours(eattimes));
             //通知
             item.LoadEatTimeSource(this);
             item.NotifyOfPropertyChange("Description");
@@ -770,35 +711,16 @@ namespace VPet_Simulator.Windows
             //统计
             if (GameSavesData.Statistics == null)
                 return;
-            GameSavesData.Statistics[(gint)"stat_buytimes"]++;
-            GameSavesData.Statistics[(gint)("buy_" + item.Name)]++;
-            GameSavesData.Statistics[(gdbe)"stat_betterbuy"] += item.Price;
-            switch (item.Type)
-            {
-                case Food.FoodType.Food:
-                    GameSavesData.Statistics[(gdbe)"stat_bb_food"] += item.Price;
-                    break;
-                case Food.FoodType.Drink:
-                    GameSavesData.Statistics[(gdbe)"stat_bb_drink"] += item.Price;
-                    break;
-                case Food.FoodType.Drug:
-                    GameSavesData.Statistics[(gdbe)"stat_bb_drug"] += item.Price;
-                    GameSavesData.Statistics[(gdbe)"stat_bb_drug_exp"] += item.Exp;
-                    break;
-                case Food.FoodType.Snack:
-                    GameSavesData.Statistics[(gdbe)"stat_bb_snack"] += item.Price;
-                    break;
-                case Food.FoodType.Functional:
-                    GameSavesData.Statistics[(gdbe)"stat_bb_functional"] += item.Price;
-                    break;
-                case Food.FoodType.Meal:
-                    GameSavesData.Statistics[(gdbe)"stat_bb_meal"] += item.Price;
-                    break;
-                case Food.FoodType.Gift:
-                    GameSavesData.Statistics[(gdbe)"stat_bb_gift"] += item.Price;
-                    GameSavesData.Statistics[(gdbe)"stat_bb_gift_like"] += item.Likability;
-                    break;
-            }
+            GameSavesData.Statistics[(gint)FeedingRules.BuyTimesStat]++;
+            GameSavesData.Statistics[(gint)FeedingRules.BuyCountStat(item.Name)]++;
+            GameSavesData.Statistics[(gdbe)FeedingRules.TotalSpendStat] += item.Price;
+            var spend = FeedingRules.SpendStat((FeedingRules.FoodKind)(int)item.Type);
+            if (spend != null)
+                GameSavesData.Statistics[(gdbe)spend] += item.Price;
+            if (item.Type == Food.FoodType.Drug)
+                GameSavesData.Statistics[(gdbe)FeedingRules.DrugExpStat] += item.Exp;
+            else if (item.Type == Food.FoodType.Gift)
+                GameSavesData.Statistics[(gdbe)FeedingRules.GiftLikeStat] += item.Likability;
 
             Event_TakeItem?.Invoke(item);
         }
@@ -1940,6 +1862,16 @@ namespace VPet_Simulator.Windows
                       {
                           NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName);
                       }
+                  //统一契约插件: OnLoadPlugin 会先挂事件、把挂起的物品补出来, 再调 LoadPlugin
+                  foreach (var uh in UnifiedHosts)
+                      try
+                      {
+                          uh.OnLoadPlugin();
+                      }
+                      catch (Exception e)
+                      {
+                          NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + uh.Plugin.PluginName);
+                      }
                   Foods.ForEach(item => item.LoadImageSource(this));
                   Photos.ForEach(item => item.LoadUserInfo(this));
 
@@ -2604,6 +2536,16 @@ namespace VPet_Simulator.Windows
                       {
                           NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName);
                       }
+                  //统一契约插件
+                  foreach (var uh in UnifiedHosts)
+                      try
+                      {
+                          uh.Plugin.GameLoaded();
+                      }
+                      catch (Exception e)
+                      {
+                          NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + uh.Plugin.PluginName);
+                      }
 
                   //这里写的都是共通的功能, 如果限定第一个MW使用的功能, 请前往
 
@@ -2661,11 +2603,13 @@ namespace VPet_Simulator.Windows
 
         private void everydaygift()
         {
-            if (Set["dailydata"][(gint)"everydaygift"] == DateTime.Now.DayOfYear)
+            //一天一份的判断在共享后端里
+            var giftLine = Set[PurchaseRules.DailyGiftLineName];
+            if (!PurchaseRules.ShouldGiveDailyGift(giftLine[(gint)PurchaseRules.DailyGiftSubName], DateTime.Now))
             {
                 return;
             }
-            Set["dailydata"][(gint)"everydaygift"] = DateTime.Now.DayOfYear;
+            giftLine[(gint)PurchaseRules.DailyGiftSubName] = DateTime.Now.DayOfYear;
             var itm = new Item
             {
                 Name = "每日礼包",
@@ -2928,7 +2872,9 @@ namespace VPet_Simulator.Windows
 
         public void CheckGalleryUnlock()
         {
-            var ps = Photos.FindAll(x => !x.IsUnlock && !x.UnlockAble.SellBoth && x.UnlockAble.Check(GameSavesData));
+            //要花钱的那种不自动解锁, 玩家得自己去图库里买 —— 判断在共享后端里
+            var ps = Photos.FindAll(x => GalleryUnlockRules.ShouldAutoUnlock(
+                x.IsUnlock, x.UnlockAble.SellBoth, x.UnlockAble.Check(GameSavesData)));
             if (ps.Count == 0) return;
             StringBuilder sb = new StringBuilder();
             foreach (Photo p in ps)

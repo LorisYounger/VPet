@@ -17,6 +17,7 @@ using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Windows.Interface.MPMessage;
 using static VPet_Simulator.Windows.Win32;
+using VPet_Simulator.Unified.Services;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -85,7 +86,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
         lb = lbt.Value;
         lb.SetJoinable(true);
         lb.SetPublic();
-        lb.SetData("isvpets", "true");
+        lb.SetData(MPProtocol.LobbyMarkKey, MPProtocol.LobbyMarkValue);
         IsHost = true;
         swAllowJoin.IsEnabled = true;
         ShowLobbyInfo();
@@ -247,7 +248,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
     {
         if (lb.Id == lobby.Id)
         {
-            if (lb.GetData("kick") == SteamClient.SteamId.Value.ToString())
+            if (lb.GetData(MPProtocol.LobbyKickKey) == SteamClient.SteamId.Value.ToString())
             {
                 Task.Run(() => MessageBox.Show("访客表已被房主{0}关闭".Translate(lb.Owner.Name)));//温柔的谎言
                 lb.Leave();
@@ -255,7 +256,7 @@ public partial class winMutiPlayer : WindowX, IMPWindows
                 Close();
             }
 
-            if (lb.GetData("nojoin") == "true")
+            if (lb.GetData(MPProtocol.LobbyNoJoinKey) == "true")
             {
                 Joinable = false;
                 Dispatcher.Invoke(() => swAllowJoin.IsChecked = false);
@@ -492,13 +493,13 @@ public partial class winMutiPlayer : WindowX, IMPWindows
 
     private void swAllowJoin_Checked(object sender, RoutedEventArgs e)
     {
-        lb.SetData("nojoin", "false");
+        lb.SetData(MPProtocol.LobbyNoJoinKey, "false");
         lb.SetJoinable(true);
     }
 
     private void swAllowJoin_Unchecked(object sender, RoutedEventArgs e)
     {
-        lb.SetData("nojoin", "true");
+        lb.SetData(MPProtocol.LobbyNoJoinKey, "true");
         lb.SetJoinable(false);
     }
 

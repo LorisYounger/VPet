@@ -15,26 +15,12 @@ namespace VPet_Simulator.Core
 {
     public static class GraphHelper
     {
-        internal static string[][]? graphtypevalue ;
         /// <summary>
         /// 动画类型默认前文本
         /// </summary>
-        public static string[][] GraphTypeValue
-        {
-            get
-            {
-                if (graphtypevalue == null)
-                {
-                    List<string[]> gtv = new List<string[]>();
-                    foreach (string v in Enum.GetNames(typeof(GraphType)))
-                    {
-                        gtv.Add(v.ToLowerInvariant().Split('_'));
-                    }
-                    graphtypevalue = gtv.ToArray();
-                }
-                return graphtypevalue;
-            }
-        }
+        /// 实现已挪到平台无关的 GraphTypeNames, 因为 GraphInfo 的路径解析要用它
+        /// 而本类依赖 WPF. 这里保留原属性转发过去, 对 MOD 完全透明.
+        public static string[][] GraphTypeValue => GraphTypeNames.GraphTypeValue;
         /// <summary>
         /// 使用RunImage 从0开始运行该动画 若无RunImage 则使用Run
         /// </summary>
@@ -76,8 +62,16 @@ namespace VPet_Simulator.Core
         /// <summary>
         /// 工作/学习
         /// </summary>
-        public class Work : ICloneable
+        public class Work : ICloneable, IWorkDefinition
         {
+            // 数值模拟(PetStatLogic)是与跨平台侧共享的同一份源码, 它通过这个窄接口
+            // 读取工作参数. 全部显式实现, 不占用任何公开名字, 现有字段一个不动.
+            PetWorkKind IWorkDefinition.Kind => (PetWorkKind)Type;
+            double IWorkDefinition.MoneyBase => MoneyBase;
+            double IWorkDefinition.StrengthFood => StrengthFood;
+            double IWorkDefinition.StrengthDrink => StrengthDrink;
+            double IWorkDefinition.Feeling => Feeling;
+
             /// <summary>
             /// 类型
             /// </summary>
@@ -270,7 +264,9 @@ namespace VPet_Simulator.Core
             public ModeType Mode
             {
                 get => (ModeType)modeType;
-                set => checkType = (int)value;
+                // 这里原本误写成 checkType, 会在赋值时改坏 CheckType 而 Mode 本身不变.
+                // 全仓没有任何地方调用过这个 setter, 所以修正它不改变现有行为
+                set => modeType = (int)value;
             }
 
             /// <summary>

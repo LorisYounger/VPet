@@ -19,6 +19,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using VPet_Simulator.Core;
+using VPet_Simulator.Unified.Services;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphInfo;
 using static VPet_Simulator.Core.Main;
@@ -106,21 +107,8 @@ namespace VPet_Simulator.Windows
                 IsSteamUser = false;
             }
 
-            //更新存档系统
-            if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
-            {
-                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
-                    Directory.Move(ExtensionValue.BaseDirectory + @"\BackUP", ExtensionValue.BaseDirectory + @"\Saves");
-                else
-                {
-                    foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\BackUP").GetFiles())
-                        if (!File.Exists(ExtensionValue.BaseDirectory + @"\Saves\" + file.Name))
-                            file.MoveTo(ExtensionValue.BaseDirectory + @"\Saves\" + file.Name);
-                        else
-                            file.Delete();
-                    Directory.Delete(ExtensionValue.BaseDirectory + @"\BackUP", true);
-                }
-            }
+            //更新存档系统: 更老版本的 BackUP 目录并进 Saves, 规则在共享后端里
+            SaveCatalog.MigrateLegacyFolder(ExtensionValue.BaseDirectory);
 
             _dwmEnabled = Win32.Dwmapi.DwmIsCompositionEnabled();
             _hwnd = new WindowInteropHelper(this).EnsureHandle();
@@ -424,6 +412,8 @@ namespace VPet_Simulator.Windows
                       }
                       return false;
                   }]);
+                //内置的使用处理器都注册完了, 把插件排队的那些补上
+                UnifiedItemRegistry.UseActionsReady();
             });
         }
 
@@ -525,6 +515,13 @@ namespace VPet_Simulator.Windows
                     mp.EndGame();
             }
             catch { }
+            //统一契约插件: 单独兜一层, 老插件抛异常时不影响它们的清理
+            foreach (var uh in UnifiedHosts)
+                try
+                {
+                    uh.OnEndGame();
+                }
+                catch { }
             Save();
             if (App.MainWindows.Count == 1)
             {
@@ -650,35 +647,16 @@ namespace VPet_Simulator.Windows
 
         public void LoadLatestSave(string petname)
         {
-            if (Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
-            {
-                var ds = new List<string>(Directory.GetFiles(ExtensionValue.BaseDirectory + @"\Saves", $@"Save{PrefixSave}_*.lps"))
-                    .OrderBy(x =>
-                 {
-                     if (int.TryParse(x.Split('_').Last().Split('.')[0], out int i))
-                         return i;
-                     return 0;
-                 }).ToList();
+            //设置里记的编号可能比目录里实际存在的小(比如换台机器把存档拷回来),
+            //以目录里最大的为准, 免得新存档把旧的覆盖掉
+            var saveDir = SaveCatalog.SaveDirectory(ExtensionValue.BaseDirectory);
+            Set.SaveTimes = SaveCatalog.SyncSaveTimes(saveDir, PrefixSave, Set.SaveTimes);
 
-                if (ds.Count != 0)
-                {
-                    int.TryParse(ds.Last().Split('_').Last().Split('.')[0], out int lastid);
-                    if (Set.SaveTimes < lastid)
-                    {
-                        Set.SaveTimes = lastid;
-                    }
-                }
-                for (int i = ds.Count - 1; i >= 0; i--)
-                {
-                    var latestsave = ds[i];
-                    if (latestsave != null)
-                    {
-                        if (TryLoadSaveFile(latestsave))
-                            return;
-                    }
-                }
+            //从新到旧挨个试, 第一个读得动的就是要用的那份
+            foreach (var latestsave in SaveCatalog.LoadCandidates(saveDir, PrefixSave))
+                if (TryLoadSaveFile(latestsave))
+                    return;
 
-            }
             GameSavesData = new GameSave_v2(petname.Translate());
             //看看有没有备份,和备份对比下 (新建游戏)
             CheckBackupConsistency(GameSavesData, "New Game");
@@ -722,24 +700,23 @@ namespace VPet_Simulator.Windows
         /// </summary>
         private void CheckBackupConsistency(GameSave_v2 gs, string currentName)
         {
-            if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves_BKP"))
-                return;
             try
             {
-                var bks = new DirectoryInfo(ExtensionValue.BaseDirectory + @"\Saves_BKP")
-                    .GetFiles($"Save{PrefixSave}_*.lps").OrderByDescending(x => x.LastWriteTime).FirstOrDefault();
+                //备份目录里最新的那份
+                var bks = SaveCatalog.ListAll(ExtensionValue.BaseDirectory, PrefixSave)
+                    .Where(x => x.IsBackup).Cast<SaveCatalog.SaveFile?>().FirstOrDefault();
                 if (bks != null)
                 {
                     try
                     {
-                        var gs2 = new GameSave_v2(new LPS(File.ReadAllText(bks.FullName)));
+                        var gs2 = new GameSave_v2(new LPS(File.ReadAllText(bks.Value.Path)));
                         if (!(gs2.GameSave.Level == gs.GameSave.Level &&
                             gs2.GameSave.Exp == gs.GameSave.Exp &&
                             gs2.GameSave.Money == gs.GameSave.Money))
                         {
                             //和备份不一样,说明可能有问题, 提示用户
                             MessageBox.Show("检测到存档和备份不一致\n当前存档:{0} Lv{1} ${4:f0}\n备份存档:{2} Lv{3} ${5:f0}\n如需还原请在设置中加载备份还原存档"
-                                .Translate(currentName, gs.GameSave.Level, bks.Name, gs2.GameSave.Level, gs.GameSave.Money, gs2.GameSave.Money)
+                                .Translate(currentName, gs.GameSave.Level, Path.GetFileName(bks.Value.Path), gs2.GameSave.Level, gs.GameSave.Money, gs2.GameSave.Money)
                                 , "存档不一致提示".Translate());
 
                         }
@@ -805,6 +782,13 @@ namespace VPet_Simulator.Windows
                     mp.EndGame();
             }
             catch { }
+            //统一契约插件: 单独兜一层, 老插件抛异常时不影响它们的清理
+            foreach (var uh in UnifiedHosts)
+                try
+                {
+                    uh.OnEndGame();
+                }
+                catch { }
             Save();
             Exit();
         }

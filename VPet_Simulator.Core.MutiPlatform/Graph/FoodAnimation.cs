@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -149,7 +149,26 @@ public class FoodAnimation : IAvaloniaRunImageGraph, IFoodAnimationGraphBase
         }
     }
 
-    public static Grid FoodGrid { get; } = CreateGrid();
+    private static Grid? foodGrid;
+
+    /// <summary>
+    /// 所有食物动画共用的那一层可视树
+    /// </summary>
+    /// 与 Windows 版一样只建一份, 谁播就挂到谁下面.
+    ///
+    /// 刻意不写成静态字段初始化器: 静态构造会在第一次碰到 FoodAnimation 这个类型时
+    /// 触发, 而那通常是扫描动画的后台线程(FoodAnimation.LoadGraph). Avalonia 的
+    /// 控件在构造时就记下了创建它的 Dispatcher —— 这一层目前在后台线程建出来也能跑,
+    /// 但同一类问题在 MessageBar 的描述小字上已经真炸过一次(见 PetMainSay 的注释),
+    /// 这里加上 VerifyAccess 把线程约定写死, 将来谁改坏了会当场报错而不是留个暗雷.
+    public static Grid FoodGrid
+    {
+        get
+        {
+            Dispatcher.UIThread.VerifyAccess();
+            return foodGrid ??= CreateGrid();
+        }
+    }
 
     private static Grid CreateGrid()
     {
@@ -190,14 +209,24 @@ public class FoodAnimation : IAvaloniaRunImageGraph, IFoodAnimationGraphBase
 
         Dispatcher.UIThread.Post(() =>
         {
-            if (parent.Child != FoodGrid)
+            var grid = FoodGrid;
+            if (parent.Child != grid)
             {
-                parent.Child = FoodGrid;
+                // 先从上一个宿主上摘下来: 这一层是所有食物动画共用的, 而桌宠是
+                // 双缓冲的(PetGrid / PetGrid2 轮流用). Windows 版这里必须摘,
+                // 否则 WPF 会因为"控件已经有父级了"抛异常; 实测 Avalonia 的
+                // Decorator.Child 会自己处理换父级, 不摘也不炸. 保留这一步是为了
+                // 和 Windows 版对着看的时候形状一致, 也不去依赖那个未写进文档的行为.
+                if (grid.Parent is Decorator old)
+                {
+                    old.Child = null;
+                }
+                parent.Child = grid;
             }
 
-            var front = (Image)FoodGrid.Children[2];
-            var food = (Image)FoodGrid.Children[1];
-            var back = (Image)FoodGrid.Children[0];
+            var front = (Image)grid.Children[2];
+            var food = (Image)grid.Children[1];
+            var back = (Image)grid.Children[0];
 
             var frontLayer = _graphCore.FindGraph(FrontLayerName, GraphInfo.Animat, GraphInfo.ModeType);
             var backLayer = _graphCore.FindGraph(BackLayerName, GraphInfo.Animat, GraphInfo.ModeType);
@@ -247,10 +276,15 @@ public class FoodAnimation : IAvaloniaRunImageGraph, IFoodAnimationGraphBase
     {
     }
 
-    public bool Equals(object? other)
-    {
-        return ReferenceEquals(this, other);
-    }
+    /// <summary>
+    /// 动画的相等性一律按引用判断
+    /// </summary>
+    /// 双缓冲靠 graph.Equals(层的 Tag) 判断"这一层是不是正在放同一个动画",
+    /// 必须是引用相等. 写成 override 而不是新方法, 免得从 object 静态类型调用时
+    /// 走到不同的实现上去.
+    public override bool Equals(object? other) => ReferenceEquals(this, other);
+
+    public override int GetHashCode() => System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(this);
 
     public void Dispose()
     {

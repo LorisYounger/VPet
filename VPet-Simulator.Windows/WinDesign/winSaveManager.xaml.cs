@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using VPet_Simulator.Core;
+using VPet_Simulator.Unified.Services;
 using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows
@@ -145,32 +146,23 @@ namespace VPet_Simulator.Windows
         private IEnumerable<SaveEntry> GetLocalSaveEntries()
         {
             var entries = new List<SaveEntry>();
-            var saves = new List<FileInfo>();
-            var pattern = $"Save{mw.PrefixSave}_*.lps";
-            var saveDir = Path.Combine(ExtensionValue.BaseDirectory, "Saves");
-            var backupDir = Path.Combine(ExtensionValue.BaseDirectory, "Saves_BKP");
-
-            if (Directory.Exists(saveDir))
-                saves.AddRange(new DirectoryInfo(saveDir).GetFiles(pattern));
-            if (Directory.Exists(backupDir))
-                saves.AddRange(new DirectoryInfo(backupDir).GetFiles(pattern));
-
-            foreach (var file in saves.OrderByDescending(x => x.LastWriteTime))
+            //存档目录和备份目录的枚举、排序都走共享后端
+            foreach (var file in SaveCatalog.ListAll(ExtensionValue.BaseDirectory, mw.PrefixSave))
             {
                 try
                 {
-                    var lpsText = File.ReadAllText(file.FullName);
+                    var lpsText = File.ReadAllText(file.Path);
                     var gs = new GameSave_v2(new LPS(lpsText));
                     entries.Add(new SaveEntry()
                     {
-                        Source = file.Directory?.Name == "Saves_BKP" ? SaveEntry.SourceType.Backup : SaveEntry.SourceType.Local,
-                        SaveId = Path.GetFileNameWithoutExtension(file.Name),
+                        Source = file.IsBackup ? SaveEntry.SourceType.Backup : SaveEntry.SourceType.Local,
+                        SaveId = Path.GetFileNameWithoutExtension(file.Path),
                         PetName = gs.GameSave.Name,
-                        SaveTime = file.LastWriteTime,
-                        SaveTimeText = file.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                        SaveTime = file.Time,
+                        SaveTimeText = file.Time.ToString("yyyy-MM-dd HH:mm:ss"),
                         LevelText = $"{gs.GameSave.Level} (x{gs.GameSave.LevelMax})",
                         MoneyText = gs.GameSave.Money.ToString("f2"),
-                        FullPath = file.FullName,
+                        FullPath = file.Path,
                         HashCheck = gs.HashCheck,
                     });
                 }
@@ -187,12 +179,8 @@ namespace VPet_Simulator.Windows
             if (!mw.IsSteamUser)
                 return entries;
 
-            var steamFiles = SteamRemoteStorage.Files.ToList();
-            steamFiles = steamFiles
-                .Where(x =>
-                    (x.StartsWith($"VPetCloud/Save{mw.PrefixSave}_"))
-                    && x.EndsWith(".lps"))
-                .ToList();
+            //筛选与时间解析都走共享后端, 与 MainWindow.Save 用的是同一份规则
+            var steamFiles = SaveCatalog.ListCloud(SteamRemoteStorage.Files, mw.PrefixSave);
 
             foreach (var file in steamFiles)
             {
@@ -212,7 +200,7 @@ namespace VPet_Simulator.Windows
                 try
                 {
                     var gs = new GameSave_v2(new LPS(lpsText));
-                    var saveTime = ParseSteamSaveTime(file);
+                    var saveTime = SaveCatalog.ParseCloudTime(file);
                     entries.Add(new SaveEntry()
                     {
                         Source = SaveEntry.SourceType.Steam,
@@ -231,27 +219,6 @@ namespace VPet_Simulator.Windows
                 }
             }
             return entries;
-        }
-
-        private static DateTime ParseSteamSaveTime(string steamFilePath)
-        {
-            try
-            {
-                var fileName = Path.GetFileNameWithoutExtension(steamFilePath);
-                var suffix = fileName.Split('_').LastOrDefault();
-                if (string.IsNullOrEmpty(suffix))
-                    return DateTime.MinValue;
-
-                if (long.TryParse(suffix, System.Globalization.NumberStyles.HexNumber, null, out var ticksDivMinute))
-                {
-                    var ticks = ticksDivMinute * 60000;
-                    return new DateTime(ticks);
-                }
-            }
-            catch
-            {
-            }
-            return DateTime.MinValue;
         }
 
         private void LoadSelectedSave()

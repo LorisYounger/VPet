@@ -16,8 +16,33 @@ using Timer = System.Timers.Timer;
 
 namespace VPet_Simulator.Core
 {
-    public partial class Main
+    public partial class Main : IPetStatHost
     {
+        // ---- 数值模拟的宿主实现 ----
+        // PetStatLogic 是与跨平台侧共享的同一份源码, 通过这个窄接口读写状态.
+        // 全部显式实现: 元数据里的名字是 VPet_Simulator.Core.IPetStatHost.XXX,
+        // 与同名公开字段零冲突, 现有字段一个都不用动 —— 一旦把公开字段挪到基类
+        // 或改成属性, 已编译的 MOD 就会失效.
+        IGameSave IPetStatHost.Save => Core.Save!;
+        Random IPetStatHost.Rnd => Function.Rnd;
+        PetWorkingState IPetStatHost.WorkingState => (PetWorkingState)State;
+        IWorkDefinition? IPetStatHost.CurrentWork => NowWork;
+        DateTime IPetStatHost.LastInteraction
+        {
+            get => LastInteractionTime;
+            set => LastInteractionTime = value;
+        }
+        void IPetStatHost.AddWorkCount(double value)
+        {
+            if (WorkTimer != null)
+                WorkTimer.GetCount += value;
+        }
+        void IPetStatHost.RaiseFunctionSpend() => FunctionSpendHandle?.Invoke();
+        void IPetStatHost.PlaySwitchAnimat(IGameSave.ModeType before, IGameSave.ModeType after)
+            => PlaySwitchAnimat(before, after);
+        void IPetStatHost.StopWorkByStateFail()
+            => Dispatcher.Invoke(() => WorkTimer?.Stop(reason: FinishWorkInfo.StopReason.StateFail));
+
         public const int TreeRND = 5;
 
         /// <summary>
@@ -233,197 +258,10 @@ namespace VPet_Simulator.Core
         /// <param name="TimePass">过去时间倍率</param>
         public void FunctionSpend(double TimePass)
         {
-            Core.Save!.CleanChange();
-            Core.Save!.StoreTake();
-            double freedrop = (DateTime.Now - LastInteractionTime).TotalMinutes;
-            if (freedrop < 1)
-                freedrop = 0;
-            else
-                freedrop = Math.Min(Math.Sqrt(freedrop) * TimePass / 4, Core.Save!.FeelingMax / 800);
-            double sm25 = Core.Save!.StrengthMax * 0.25;
-            double sm50 = Core.Save!.StrengthMax * 0.5;
-            double sm60 = Core.Save!.StrengthMax * 0.6;
-            double sm75 = Core.Save!.StrengthMax * 0.75;
-
-            switch (State)
-            {
-                case WorkingState.Empty:
-                    break;
-                case WorkingState.Sleep:
-                    //睡觉 缓慢恢复所有(除了心情,但是心情不会下降)
-                    Core.Save!.StrengthChange(TimePass * 2);
-                    Core.Save!.StrengthChangeFood(TimePass);
-                    if (Core.Save!.StrengthFood <= sm25)
-                    {//低状态2倍恢复速度
-                        Core.Save!.StrengthChangeFood(TimePass);
-                    }
-                    else if (Core.Save!.StrengthFood >= sm75)
-                        Core.Save!.Health += TimePass * 2;
-                    Core.Save!.StrengthChangeDrink(TimePass);
-                    if (Core.Save!.StrengthDrink >= sm25)
-                    {
-                        Core.Save!.StrengthChangeDrink(TimePass);
-                    }
-                    else if (Core.Save!.StrengthDrink >= sm75)
-                        Core.Save!.Health += TimePass * 2;
-                    LastInteractionTime = DateTime.Now;
-                    break;
-                case WorkingState.Work:
-                    if (NowWork == null)
-                        break;
-                    var needfood = TimePass * NowWork.StrengthFood;
-                    var needdrink = TimePass * NowWork.StrengthDrink;
-
-                    double efficiency = 0;
-                    int addhealth = -2;
-
-
-                    var nsfood = needfood * .3;
-                    var nsdrink = needdrink * .3;
-                    if (Core.Save!.Strength > sm25 + nsfood + nsdrink)
-                    {//可以用体力减少一些消耗,并且增加效率
-                        Core.Save!.StrengthChange(-nsfood - nsdrink);
-                        efficiency += 0.1;
-                        needfood -= nsfood;
-                        needdrink -= nsdrink;
-                    }
-
-                    if (Core.Save!.StrengthFood <= sm25)
-                    {//低状态低效率
-                        Core.Save!.StrengthChangeFood(-needfood / 2);
-                        efficiency += 0.2;
-                        if (Core.Save!.Strength >= needfood)
-                        {
-                            Core.Save!.StrengthChange(-needfood);
-                            efficiency += 0.1;
-                        }
-                        addhealth -= 2;
-                    }
-                    else
-                    {
-                        Core.Save!.StrengthChangeFood(-needfood);
-                        efficiency += 0.4;
-                        if (Core.Save!.StrengthFood >= sm60)
-                        {
-                            addhealth += Function.Rnd.Next(1, 3);
-                            efficiency += 0.1;
-                        }
-                    }
-                    if (Core.Save!.StrengthDrink <= sm25)
-                    {//低状态低效率
-                        Core.Save!.StrengthChangeDrink(-needdrink / 2);
-                        efficiency += 0.2;
-                        if (Core.Save!.Strength >= needdrink)
-                        {
-                            Core.Save!.StrengthChange(-needdrink);
-                            efficiency += 0.1;
-                        }
-                        addhealth -= 2;
-                    }
-                    else
-                    {
-                        Core.Save!.StrengthChangeDrink(-needdrink);
-                        efficiency += 0.4;
-                        if (Core.Save!.StrengthDrink >= sm60)
-                        {
-                            addhealth += Function.Rnd.Next(1, 3);
-                            efficiency += 0.1;
-                        }
-                    }
-                    if (addhealth > 0)
-                        Core.Save!.Health += addhealth * TimePass;
-                    var addmoney = Math.Max(0, TimePass * NowWork.MoneyBase * (2 * efficiency - 0.5));
-                    if (NowWork.Type == Work.WorkType.Work)
-                        Core.Save!.Money += addmoney;
-                    else
-                        Core.Save!.Exp += addmoney;
-                    if (WorkTimer != null)
-                        WorkTimer.GetCount += addmoney;
-                    if (NowWork.Type == Work.WorkType.Play)
-                    {
-                        LastInteractionTime = DateTime.Now;
-                        Core.Save!.FeelingChange(-NowWork.Feeling * TimePass);
-                    }
-                    else
-                        Core.Save!.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2));
-                    break;
-                default://默认
-                    //饮食等乱七八糟的消耗
-                    addhealth = -2;
-                    if (Core.Save!.StrengthFood >= sm50)
-                    {
-                        Core.Save!.StrengthChangeFood(-TimePass);
-                        Core.Save!.StrengthChange(TimePass);
-                        if (Core.Save!.StrengthFood >= sm75)
-                            addhealth += Function.Rnd.Next(1, 3);
-                    }
-                    else if (Core.Save!.StrengthFood <= sm25)
-                    {
-                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass;
-                        addhealth -= 2;
-                    }
-                    if (Core.Save!.StrengthDrink >= sm50)
-                    {
-                        Core.Save!.StrengthChangeDrink(-TimePass);
-                        Core.Save!.StrengthChange(TimePass);
-                        if (Core.Save!.StrengthDrink >= sm75)
-                            addhealth += Function.Rnd.Next(1, 3);
-                    }
-                    else if (Core.Save!.StrengthDrink <= sm25)
-                    {
-                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass;
-                        addhealth -= 2;
-                    }
-                    if (addhealth > 0)
-                        Core.Save!.Health += addhealth * TimePass;
-                    Core.Save!.StrengthChangeFood(-TimePass);
-                    Core.Save!.StrengthChangeDrink(-TimePass);
-                    Core.Save!.FeelingChange(-freedrop);
-                    break;
-            }
-
-            //if (Core.GameSave.Strength <= 40)
-            //{
-            //    Core.GameSave.Health -= Function.Rnd.Next(0, 1);
-            //}
-            Core.Save!.Exp += TimePass;
-            //感受提升好感度
-            if (Core.Save!.Feeling >= Core.Save!.FeelingMax * 0.75)
-            {
-                if (Core.Save!.Feeling >= Core.Save!.FeelingMax * 0.90)
-                {
-                    Core.Save!.Likability += TimePass;
-                }
-                Core.Save!.Exp += TimePass * 2;
-                Core.Save!.Health += TimePass;
-            }
-            else if (Core.Save!.Feeling <= 25) //这个就不乘倍率了, 给上限高一些好处
-            {
-                Core.Save!.Likability -= TimePass;
-                Core.Save!.Exp -= TimePass;
-            }
-            if (Core.Save!.StrengthDrink <= sm25)
-            {
-                Core.Save!.Health -= Function.Rnd.Next(0, 1) * TimePass;
-                Core.Save!.Exp -= TimePass;
-            }
-            else if (Core.Save!.StrengthDrink >= sm75)
-                Core.Save!.Health += Function.Rnd.Next(0, 1) * TimePass;
-
-            FunctionSpendHandle?.Invoke();
-            var newmod = Core.Save!.CalMode();
-            if (Core.Save!.Mode != newmod)
-            {
-                //切换显示动画
-                PlaySwitchAnimat(Core.Save!.Mode, newmod);
-
-                Core.Save!.Mode = newmod;
-            }
-            //看情况播放停止工作动画
-            if (Core.Save!.Mode == IGameSave.ModeType.Ill && State == WorkingState.Work)
-            {
-                Dispatcher.Invoke(() => WorkTimer?.Stop(reason: FinishWorkInfo.StopReason.StateFail));
-            }
+            // 实现在平台无关的 PetStatLogic 里, 与跨平台版编译同一份源码.
+            // 这段数值演化决定了整个游戏的平衡性, 两个平台一旦分叉就是"手感不一样"
+            // 这种没有报错、极难回溯的问题.
+            PetStatLogic.FunctionSpend(this, TimePass);
         }
         /// <summary>
         /// 播放切换动画

@@ -96,6 +96,17 @@ public partial class MainWindow
     /// </summary>
     public List<MainPlugin> Plugins { get; } = new List<MainPlugin>();
     /// <summary>
+    /// 统一契约插件的宿主
+    /// </summary>
+    /// 与 Plugins 并列: 那边是老的 Windows 专用插件, 这边是按统一契约写的、
+    /// 同一个 dll 在跨平台版上也能跑的插件.
+    internal List<UnifiedPluginHost> UnifiedHosts { get; } = new List<UnifiedPluginHost>();
+    /// <summary>
+    /// 已加载的统一契约插件
+    /// </summary>
+    public IEnumerable<VPet_Simulator.Unified.Interface.UnifiedPlugin> UnifiedPlugins
+        => UnifiedHosts.Select(x => x.Plugin);
+    /// <summary>
     /// 所有字体(位置)
     /// </summary>
     public List<IFont> Fonts { get; } = new List<IFont>();

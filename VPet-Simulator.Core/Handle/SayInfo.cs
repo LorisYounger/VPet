@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -8,18 +10,38 @@ namespace VPet_Simulator.Core
     /// <summary>
     /// 增加父类 以便适应带有流式传输的说话
     /// </summary>
-    public abstract class SayInfo : SayInfoBase
+    public abstract class SayInfo
     {
-        /// <summary>
-        /// 消息内容 (WPF)
-        /// </summary>
-        public new UIElement? MsgContent
+        public SayInfo()
         {
-            get => base.MsgContent as UIElement;
-            set => base.MsgContent = value;
-        }
-    }
 
+        }
+        /* --------- 消息信息 -----------*/
+        /// <summary>
+        /// 图像名
+        /// </summary>
+        public string? GraphName;
+        /// <summary>
+        /// 说话的描述
+        /// </summary>
+        public string? Desc;
+        /// <summary>
+        /// 消息内容
+        /// </summary>
+        public UIElement? MsgContent;
+        /// <summary>
+        /// 是否强制显示图像
+        /// </summary>
+        public bool Force = false;
+        /// <summary>
+        /// 是否已经播放了语音
+        /// </summary>
+        public bool IsGenVoice = false;
+        /// <summary>
+        /// 获得说话内容 (若是流式传输则会等待完成)
+        /// </summary>
+        public abstract Task<string> GetSayText();
+    }
     /// <summary>
     /// 说话信息类 原本的SayInfo
     /// </summary>
@@ -54,17 +76,14 @@ namespace VPet_Simulator.Core
             MsgContent = msgcontent;
             Force = force;
         }
-
         /// <summary>
         /// 说话信息类
         /// </summary>
         public SayInfoWithOutStream() { Text = ""; }
-
         /// <summary>
         /// 说话内容
         /// </summary>
         public string Text;
-
         /// <summary>
         /// 获得说话内容 接口实现, 就是 返回Text
         /// </summary>
@@ -73,7 +92,6 @@ namespace VPet_Simulator.Core
             return Task.FromResult(Text);
         }
     }
-
     /// <summary>
     /// 说话信息类 带有流式传输的SayInfo
     /// </summary>
@@ -85,7 +103,6 @@ namespace VPet_Simulator.Core
         public SayInfoWithStream()
         {
         }
-
         /// <summary>
         /// 说话信息类
         /// </summary>

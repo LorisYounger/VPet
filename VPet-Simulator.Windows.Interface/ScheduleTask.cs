@@ -14,13 +14,14 @@ using System.Windows;
 using System.Windows.Media;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphHelper.Work;
+using VPet_Simulator.Unified.Services;
 
 namespace VPet_Simulator.Windows.Interface;
 
 /// <summary>
 /// 日程表功能
 /// </summary>
-public class ScheduleTask
+public partial class ScheduleTask
 {
     public ObservableCollection<ScheduleItemBase> ScheduleItems { get; set; } = [];
     private IMainWindow mw;
@@ -457,90 +458,10 @@ public class ScheduleTask
         public override int RestTime { get => _restTime; set => Set(ref _restTime, value); }
         private int _restTime;
     }
-    /// <summary>
-    /// 套餐信息
-    /// </summary>
-    public class Package
-    {
-        public Package()
-        {
-        }
-        /// <summary>
-        /// 套餐名称
-        /// </summary>
-        [Line] public string Name { get; set; } = string.Empty;
-        /// <summary>
-        /// 协议名称 (已翻译)
-        /// </summary>
-        public string NameTrans
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(nametrans))
-                {
-                    nametrans = string.IsNullOrEmpty(Name) ? "" : Name.Translate();
-                }
-                return nametrans;
-            }
-            set => nametrans = value;
-        }
-        private string? nametrans;
-        /// <summary>
-        /// 描述
-        /// </summary>
-        [Line] public string Describe { get; set; } = string.Empty;
-        /// <summary>
-        /// 描述 已翻译
-        /// </summary>
-        public string DescribeTrans
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(describetrans))
-                {
-                    describetrans = string.IsNullOrEmpty(Describe) ? "" : Describe.Translate();
-                }
-                return describetrans;
-            }
-            set => describetrans = value;
-        }
-        private string? describetrans;
-        /// <summary>
-        /// 抽成
-        /// </summary>
-        [Line] public double Commissions { get; set; }
-        /// <summary>
-        /// 办理费用
-        /// </summary>
-        [Line] public double Price { get; set; }
-        /// <summary>
-        /// 截止时间
-        /// </summary>
-        [Line] public DateTime EndTime { get; set; } = DateTime.MinValue;
-        /// <summary>
-        /// 是否自动续费
-        /// </summary>
-        [Line] public bool AutoRenew { get; set; } = false;
-        /// <summary>
-        /// 可用等级
-        /// </summary>
-        [Line] public int Level { get; set; }
-        /// <summary>
-        /// 是否生效
-        /// </summary>
-        /// <returns>判断套餐是否生效</returns>
-        public bool IsActive() => DateTime.Now < EndTime;
-
-        public Package(PackageFull packageFull, int level)
-        {
-            Name = packageFull.Name;
-            Describe = packageFull.Describe;
-            Commissions = packageFull.Commissions;
-            Price = packageFull.Price * (200 * level - 100);
-            EndTime = DateTime.Now.AddDays(packageFull.Duration);
-            Level = (int)(level / packageFull.LevelInNeed);
-        }
-    }
+    //套餐本体(Package)搬进了共享源码 (Interface.Base/Save/Package.cs):
+    //它是要存进存档的数据, 两个平台必须读得出同一份.
+    //PackageFull 留在这里 —— 它有个 WorkType 属性, 而 GraphHelper.Work 在
+    //Core.dll 和跨平台 Core 里是两个不同的类型, 改属性类型会破坏已编译的 MOD.
     /// <summary>
     /// 套餐详细
     /// </summary>

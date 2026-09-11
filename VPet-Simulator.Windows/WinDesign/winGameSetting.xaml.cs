@@ -24,6 +24,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using VPet_Simulator.Core;
+using VPet_Simulator.Unified.Interface;
+using VPet_Simulator.Unified.Services;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Windows.Win32;
 using Item = Steamworks.Ugc.Item;
@@ -397,20 +399,8 @@ namespace VPet_Simulator.Windows
 
                 foreach (FileInfo tmpfi in new DirectoryInfo(dllPath).EnumerateFiles("*.dll"))
                 {
-#if X64
-                    if (tmpfi.Name.Contains("x86"))
-                        continue;
-                    string cputype = "x64";
-#else
-                    if (tmpfi.Name.Contains("x64"))
-                        continue;
-                    string cputype = "x86";
-#endif
-                    if (loadfile[tmpfi.Name][(gbol)"skip"])
-                        continue;
-
-                    string? dllcpu = loadfile[tmpfi.Name].GetString("cpu", "anycpu")?.ToLowerInvariant();
-                    if (dllcpu != "anycpu" && dllcpu != cputype)
+                    //要加载哪些 dll 的规则走共享后端, 与 CoreMOD 那边是同一份
+                    if (PluginClassifier.ShouldSkip(tmpfi.Name, loadfile))
                         continue;
 
                     try
@@ -455,40 +445,16 @@ namespace VPet_Simulator.Windows
 
             public static ModInfo FromDirectory(DirectoryInfo directory)
             {
-                string name = directory.Name;
-                string author = string.Empty;
-                long authorID = 0;
-                ulong itemID = 0;
-                string intro = string.Empty;
-                int gameVer = 0;
-                int ver = 0;
-                HashSet<string> tag = new HashSet<string>();
+                //info.lps 的解析走共享后端, 与 CoreMOD 那边是同一份实现
+                var meta = ModInfoReader.Parse(directory);
+                if (meta == null || meta.Warnings.Count != 0)
+                    return new ModInfo(null, int.MaxValue, directory.Name, string.Empty, 0, 0, string.Empty,
+                        directory, 0, 0, new HashSet<string>());
 
-                foreach (var di in directory.EnumerateDirectories())
-                    tag.Add(di.Name.ToLowerInvariant());
-
-                string infoFile = System.IO.Path.Combine(directory.FullName, "info.lps");
-                if (File.Exists(infoFile))
-                {
-                    try
-                    {
-                        var modlps = new LpsDocument(File.ReadAllText(infoFile));
-                        name = modlps.FindLine("vupmod")?.Info ?? name;
-                        intro = modlps.FindLine("intro")?.Info ?? string.Empty;
-                        gameVer = modlps.FindSub("gamever")?.InfoToInt ?? 0;
-                        ver = modlps.FindSub("ver")?.InfoToInt ?? 0;
-                        author = modlps.FindSub("author")?.Info.Split('[').FirstOrDefault() ?? string.Empty;
-                        authorID = modlps.FindLine("authorid")?.InfoToInt64 ?? 0;
-                        var itemStr = modlps.FindLine("itemid")?.info;
-                        if (!string.IsNullOrWhiteSpace(itemStr))
-                            ulong.TryParse(itemStr, out itemID);
-                    }
-                    catch
-                    {
-                    }
-                }
-
-                return new ModInfo(null, int.MaxValue, name, author, authorID, itemID, intro, directory, gameVer, ver, tag);
+                //没写 vupmod 的话退回目录名, 与原来一致
+                var name = string.IsNullOrEmpty(meta.Name) ? directory.Name : meta.Name;
+                return new ModInfo(null, int.MaxValue, name, meta.Author, meta.AuthorID, meta.ItemID,
+                    meta.Intro, directory, meta.GameVer, meta.Ver, new HashSet<string>(meta.ContentTags));
             }
         }
 
@@ -804,6 +770,15 @@ namespace VPet_Simulator.Windows
                     }
                     finally { }
                 }
+                //统一契约插件: 同样是覆盖了 Setting 才显示入口
+                foreach (var up in mw.UnifiedPlugins)
+                    if (up.PluginName == mod.Name
+                        && up.GetType().GetMethod("Setting")!.DeclaringType != typeof(UnifiedPlugin)
+                        && up.GetType().Assembly.Location.Contains(mod.Path.FullName))
+                    {
+                        ButtonSetting.Visibility = Visibility.Visible;
+                        return;
+                    }
             }
             ButtonSetting.Visibility = Visibility.Collapsed;
         }
@@ -1528,6 +1503,15 @@ namespace VPet_Simulator.Windows
                 }
                 finally { }
             }
+            //统一契约插件
+            foreach (var up in mw.UnifiedPlugins)
+                if (up.PluginName == mod.Name
+                    && up.GetType().GetMethod("Setting")!.DeclaringType != typeof(UnifiedPlugin)
+                    && up.GetType().Assembly.Location.Contains(mod.Path.FullName))
+                {
+                    up.Setting();
+                    return;
+                }
         }
 
         private void StartPlace_Checked(object sender, RoutedEventArgs e)

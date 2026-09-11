@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using SkiaSharp;
@@ -22,10 +22,6 @@ public class Picture : IAvaloniaImageGraph, IPictureGraphBase
         Length = length;
         _graphCore = graphCore;
         Path = path;
-        if (!_graphCore.CommUIElements.ContainsKey("Image.Picture"))
-        {
-            _graphCore.CommUIElements["Image.Picture"] = new Image { Width = 500, Height = 500 };
-        }
         IsReady = true;
     }
 
@@ -92,16 +88,16 @@ public class Picture : IAvaloniaImageGraph, IPictureGraphBase
 
         Dispatcher.UIThread.Post(() =>
         {
-            var image = parent.Child as Image;
-            if (image == null)
+            if (!ReferenceEquals(parent.Tag, this))
             {
-                image = (_graphCore?.CommUIElements["Image.Picture"] as Image) ?? new Image();
-                parent.Child = image;
-            }
-            image.Width = 500;
-            if (Path != null)
-            {
-                image.Source = new Bitmap(Path);
+                var image = GraphImagePool.Attach(parent, _graphCore!, "Picture");
+                image.Width = 500;
+                if (Path != null)
+                {
+                    image.Source = new Bitmap(Path);
+                }
+                // Tag 是双缓冲判断"这一层正在放哪个动画"的依据, 必须回写
+                parent.Tag = this;
             }
             Task.Run(() => RunCore(ControlState));
         });
@@ -181,10 +177,15 @@ public class Picture : IAvaloniaImageGraph, IPictureGraphBase
     {
     }
 
-    public bool Equals(object? other)
-    {
-        return ReferenceEquals(this, other);
-    }
+    /// <summary>
+    /// 动画的相等性一律按引用判断
+    /// </summary>
+    /// 双缓冲靠 graph.Equals(层的 Tag) 判断"这一层是不是正在放同一个动画",
+    /// 必须是引用相等. 写成 override 而不是新方法, 免得从 object 静态类型调用时
+    /// 走到不同的实现上去.
+    public override bool Equals(object? other) => ReferenceEquals(this, other);
+
+    public override int GetHashCode() => System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(this);
 
     public void Dispose()
     {

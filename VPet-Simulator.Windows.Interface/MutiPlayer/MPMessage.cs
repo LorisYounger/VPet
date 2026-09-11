@@ -1,6 +1,7 @@
 ﻿using LinePutScript;
 using LinePutScript.Converter;
 using System.Text;
+using VPet_Simulator.Unified.Services;
 
 namespace VPet_Simulator.Windows.Interface;
 
@@ -49,8 +50,9 @@ public struct MPMessage
     /// </summary>
     [Line] public ulong To { get; set; }
 
-    public static byte[] ConverTo(MPMessage data) => Encoding.UTF8.GetBytes(LPSConvert.SerializeObject(data).ToString());
-    public static MPMessage ConverTo(byte[] data) => LPSConvert.DeserializeObject<MPMessage>(new LPS(Encoding.UTF8.GetString(data)));
+    //封装方式在共享后端里: 两端发出去的字节必须一模一样, 否则能连上但看不到动作
+    public static byte[] ConverTo(MPMessage data) => MPProtocol.Encode(LPSConvert.SerializeObject(data));
+    public static MPMessage ConverTo(byte[] data) => LPSConvert.DeserializeObject<MPMessage>(MPProtocol.Decode(data));
     /// <summary>
     /// 设置消息内容(类)
     /// </summary>

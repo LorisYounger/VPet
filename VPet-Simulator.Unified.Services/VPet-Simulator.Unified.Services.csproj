@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!--
+	统一后端: Windows 版和跨平台版加载的是**同一个 dll**.
+
+	存在的理由是"一份后端两边用": 存档管理、备份恢复、存档索引、MOD 元数据、
+	资源查找、统计汇总这些业务逻辑以前只有 Windows 版有, 跨平台版要用就得抄一遍,
+	抄完两边就开始各自演化. 以后加新功能(比如新的存档管理)只写一份, 两个界面都能用.
+
+	因此这里有一条硬约束: **只依赖 BCL 和 LinePutScript**.
+	不能引用 VPet_Simulator.Core.Base / Windows.Interface.Base —— 那两个是"共享源码"
+	而不是共享程序集, GameSave_v2 / Food 这些类型在 Core.dll 和 Base.dll 里是两个
+	不同的 CLR 类型, 后端一旦引用其中一份就只能给一边用了.
+	所以所有服务只操作 ILPS / ILine / 路径 / 自己定义的 DTO.
+
+	也不能引用 Avalonia 或任何 WPF 程序集: 这里是纯业务, 界面在各自宿主里.
+	-->
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>VPet_Simulator.Unified.Services</RootNamespace>
+		<AssemblyName>VPet-Simulator.Unified.Services</AssemblyName>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<!-- 与 Core.Base 一致: Core 没开隐式 using, 共享代码的行为必须一致 -->
+		<ImplicitUsings>disable</ImplicitUsings>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>CS1591</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="LinePutScript" Version="1.11.9" />
+	</ItemGroup>
+
+</Project>

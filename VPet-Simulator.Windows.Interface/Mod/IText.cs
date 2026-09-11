@@ -57,16 +57,6 @@ public class IText
     /// 将文本转换成实际值 (注意: 会和 Trainslate({0}) 冲突), 先 Trainslate, 再 Convert 最后再 Format
     /// </summary>
     public static string ConverText(string text, Main m)
-    {
-        if (text.Contains('{') && text.Contains('}'))
-        {
-            return text.Replace("{name}", m.Core.Save!.Name).Replace("{food}", m.Core.Save!.StrengthFood.ToString("f0"))
-                .Replace("{drink}", m.Core.Save!.StrengthDrink.ToString("f0")).Replace("{feel}", m.Core.Save!.Feeling.ToString("f0")).
-                Replace("{strength}", m.Core.Save!.Strength.ToString("f0")).Replace("{money}", m.Core.Save!.Money.ToString("f0"))
-                .Replace("{level}", m.Core.Save!.Level.ToString("f0")).Replace("{health}", m.Core.Save!.Health.ToString("f0"))
-                .Replace("{hostname}", m.Core.Save!.HostName);
-        }
-        else
-            return text;
-    }
+        //占位符表在共享源码里, 两个平台认得出同一批
+        => SaveTextTemplate.Convert(text, m.Core.Save!);
 }

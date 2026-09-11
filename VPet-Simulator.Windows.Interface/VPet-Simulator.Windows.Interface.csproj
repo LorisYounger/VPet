@@ -15,6 +15,22 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\VPet-Simulator.Core\VPet-Simulator.Core.csproj" />
+    <ProjectReference Include="..\VPet-Simulator.Unified.Services\VPet-Simulator.Unified.Services.csproj" />
+  </ItemGroup>
+
+  <!--
+  刻意使用 Compile 而不是 ProjectReference: 这些类型必须仍然编译在
+  VPet-Simulator.Windows.Interface.dll 里, 否则已编译的 MOD 会在 JIT 期抛
+  MissingFieldException / TypeLoadException. 详见 ABI-Compatibility.md 的 N5.
+
+  只 glob 具体的源码子目录, 绝不能写 **\*.cs 全量 —— 否则会把 Base 的 obj\ 下
+  生成的 AssemblyInfo.cs 也编进来, 产生重复特性错误.
+  Platform\ 目录刻意不 glob: 那里放的是各平台各一份的适配垫片.
+  -->
+  <ItemGroup>
+    <Compile Include="..\VPet-Simulator.Windows.Interface.Base\Save\**\*.cs" LinkBase="Shared\Save" />
+    <Compile Include="..\VPet-Simulator.Windows.Interface.Base\Mod\**\*.cs" LinkBase="Shared\Mod" />
+    <Compile Include="..\VPet-Simulator.Windows.Interface.Base\Data\**\*.cs" LinkBase="Shared\Data" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LinePutScript" Version="1.11.9" />

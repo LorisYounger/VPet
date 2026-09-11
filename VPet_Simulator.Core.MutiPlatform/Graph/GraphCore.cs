@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,11 +17,6 @@ public partial class GraphCore : IDisposable, IGraphCoreBase<IAvaloniaGraph>
 
     public GraphCore(int resolution)
     {
-        if (!Directory.Exists(CachePath))
-        {
-            Directory.CreateDirectory(CachePath);
-        }
-
         CommConfig["Cache"] = new List<string>();
         Resolution = resolution;
         CleanTimer = new Timer(_ =>
@@ -34,8 +29,10 @@ public partial class GraphCore : IDisposable, IGraphCoreBase<IAvaloniaGraph>
         }, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
     }
 
-    public static string CachePath = Path.Combine(new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName!, "cache");
-    public static readonly ConcurrentDictionary<string, SemaphoreSlim> SpriteSheetBuildLocks = new();
+    // Windows 版会把每个动画的帧合成一张雪碧图缓存到磁盘, 再用 CroppedBitmap 切片.
+    // 跨平台侧改成按帧惰性解码(见 PNGAnimation 的注释), 所以没有雪碧图, 也就不需要
+    // 缓存目录和构建锁 —— 之前这里留着 CachePath / SpriteSheetBuildLocks 两个从没被
+    // 读过的成员, 每次启动还白建一个空目录. 将来若要把雪碧图加回来, 一并恢复.
 
     public Dictionary<GraphInfo.GraphType, HashSet<string>> GraphsName { get; } = new();
     public Dictionary<string, Dictionary<GraphInfo.AnimatType, List<IAvaloniaGraph>>> GraphsList { get; } = new();
@@ -75,7 +72,7 @@ public partial class GraphCore : IDisposable, IGraphCoreBase<IAvaloniaGraph>
     {
         if (GraphsName.TryGetValue(type, out var gl) && gl.Count > 0)
         {
-            return gl.ElementAt(Random.Shared.Next(gl.Count));
+            return gl.ElementAt(Function.Rnd.Next(gl.Count));
         }
         return null;
     }
@@ -90,7 +87,7 @@ public partial class GraphCore : IDisposable, IGraphCoreBase<IAvaloniaGraph>
             var list = graphs.FindAll(x => x.GraphInfo.ModeType == mode);
             if (list.Count > 0)
             {
-                return list.Count == 1 ? list[0] : list[Random.Shared.Next(list.Count)];
+                return list.Count == 1 ? list[0] : list[Function.Rnd.Next(list.Count)];
             }
 
             if (mode == IGameSave.ModeType.Ill)
@@ -101,7 +98,7 @@ public partial class GraphCore : IDisposable, IGraphCoreBase<IAvaloniaGraph>
             {
                 list = graphs.FindAll(x => x.GraphInfo.ModeType == (IGameSave.ModeType)down);
                 if (list.Count > 0)
-                    return list[Random.Shared.Next(list.Count)];
+                    return list[Function.Rnd.Next(list.Count)];
             }
 
             int up = (int)mode - 1;
@@ -109,12 +106,12 @@ public partial class GraphCore : IDisposable, IGraphCoreBase<IAvaloniaGraph>
             {
                 list = graphs.FindAll(x => x.GraphInfo.ModeType == (IGameSave.ModeType)up);
                 if (list.Count > 0)
-                    return list[Random.Shared.Next(list.Count)];
+                    return list[Function.Rnd.Next(list.Count)];
             }
 
             list = graphs.FindAll(x => x.GraphInfo.ModeType != IGameSave.ModeType.Ill);
             if (list.Count > 0)
-                return list[Random.Shared.Next(list.Count)];
+                return list[Function.Rnd.Next(list.Count)];
         }
 
         return null;

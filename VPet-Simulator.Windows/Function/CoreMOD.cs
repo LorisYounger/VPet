@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
 using VPet_Simulator.Core;
+using VPet_Simulator.Unified.Services;
 using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows
@@ -20,17 +21,23 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 自动启用MOD名称
         /// </summary>
-        public static readonly string[] OnModDefList = new string[] { "Core", "PCat" };
+        public static readonly string[] OnModDefList = ModSwitchStore.AlwaysOn.ToArray();
 
         public static HashSet<string> LoadedDLL { get; } = new HashSet<string>()
         {
             "Panuon.WPF.dll","steam_api.dll","Panuon.WPF.UI.dll","steam_api64.dll",
             "LinePutScript.dll","Facepunch.Steamworks.Win32.dll", "Facepunch.Steamworks.Win64.dll",
             "VPet-Simulator.Core.dll","VPet-Simulator.Windows.Interface.dll","LinePutScript.Localization.WPF.dll",
+            "VPet-Simulator.Unified.Interface.dll","VPet-Simulator.Unified.Services.dll",
             "NAudio.Asio.dll", "libSkiaSharp.dll","NAudio.Core.dll","NAudio.dll", "SkiaSharp.dll","NAudio.Midi.dll",
             "NAudio.Wasapi.dll","NAudio.WinForms.dll", "NAudio.WinMM.dll", "WpfAnimatedGif.dll"
         };
         public static Dictionary<string, Type> LoadPlug { get; } = new Dictionary<string, Type>();
+        /// <summary>
+        /// 已加载的统一契约插件类型
+        /// </summary>
+        /// 与 LoadPlug 分开放: 一个 dll 里同时有旧插件和新插件时两边都要认得出来
+        internal static Dictionary<string, Type> LoadUnifiedPlug { get; } = new Dictionary<string, Type>();
         public static string? NowLoading = null;
         public string Name { get; set; } = string.Empty;
         public string Author { get; set; } = string.Empty;
@@ -53,38 +60,29 @@ namespace VPet_Simulator.Windows
         public static string INTtoVER(int ver) => ver < 10000 ? $"{ver / 100}.{ver % 100:00}" : $"{ver / 10000}.{ver % 10000 / 100}.{ver % 100:00}";
         public static void LoadImage(MainWindow mw, DirectoryInfo di, string pre = "")
         {
-            //加载其他放在文件夹的图片
-            foreach (FileInfo fi in di.EnumerateFiles("*.png"))
+            //目录遍历、键名拼法、覆盖顺序都走共享后端
+            var index = new ResourceIndex();
+            var settings = new List<string>();
+            index.AddImages(di, pre, settings);
+            foreach (var source in index.Sources)
             {
-                mw.ImageSources.AddSource(pre + fi.Name.ToLowerInvariant().Substring(0, fi.Name.Length - 4), fi.FullName);
+                mw.ImageSources.AddSource(source.Key, source.Value);
             }
-            //加载其他放在文件夹中文件夹的图片
-            foreach (DirectoryInfo fordi in di.EnumerateDirectories())
+            //图片设置(定位锚点之类)是 Resources 自己的存储, 后端不碰界面相关的东西
+            foreach (var path in settings)
             {
-                LoadImage(mw, fordi, pre + fordi.Name + "_");
-            }
-            //加载标志好的图片和图片设置
-            foreach (FileInfo fi in di.EnumerateFiles("*.lps"))
-            {
-                var tmp = new LpsDocument(File.ReadAllText(fi.FullName));
-                if (fi.Name.ToLowerInvariant().StartsWith("set_"))
-                    foreach (var line in tmp)
-                        mw.ImageSources.ImageSetting.AddorReplaceLine(line);
-                else
-                    mw.ImageSources.AddImages(tmp, di.FullName);
+                foreach (var line in new LpsDocument(File.ReadAllText(path)))
+                    mw.ImageSources.ImageSetting.AddorReplaceLine(line);
             }
         }
         public static void LoadFile(MainWindow mw, DirectoryInfo di, string pre = "")
         {
-            //加载其他放在文件夹的文件
-            foreach (FileInfo fi in di.EnumerateFiles())
+            //与图片同一套遍历规则, 只是文件的键**带**扩展名
+            var index = new ResourceIndex();
+            index.AddFiles(di, pre);
+            foreach (var source in index.Sources)
             {
-                mw.FileSources.AddSource(pre + fi.Name, fi.FullName);
-            }
-            //加载其他放在文件夹中文件夹的文件
-            foreach (DirectoryInfo fordi in di.EnumerateDirectories())
-            {
-                LoadFile(mw, fordi, pre + fordi.Name + "_");
+                mw.FileSources.AddSource(source.Key, source.Value);
             }
         }
         public CoreMOD(DirectoryInfo directory, MainWindow mw)
@@ -94,40 +92,37 @@ namespace VPet_Simulator.Windows
             {
 #endif
             Path = directory;
-            LpsDocument modlps = new LpsDocument(File.ReadAllText(directory.FullName + @"\info.lps"));
-            Name = modlps.FindLine("vupmod")!.Info;
+            //info.lps 的解析走共享后端, 跨平台版读出来的 MOD 列表与这边逐字一致
+            var meta = ModInfoReader.Parse(directory)
+                ?? throw new FileNotFoundException("找不到 info.lps", directory.FullName + @"\info.lps");
+            if (meta.Warnings.Count != 0)
+                throw new Exception(string.Join("\n", meta.Warnings));
+            if (string.IsNullOrEmpty(meta.Name))
+                throw new Exception("info.lps 里没有 vupmod 行");
+
+            Name = meta.Name;
             NowLoading = Name;
-            Intro = modlps.FindLine("intro")!.Info;
-            GameVer = modlps.FindSub("gamever")!.InfoToInt;
-            Ver = modlps.FindSub("ver")!.InfoToInt;
-            Author = modlps.FindSub("author")!.Info.Split('[').First();
-            if (modlps.FindLine("authorid") != null)
-                AuthorID = modlps.FindLine("authorid")!.InfoToInt64;
-            else
-                AuthorID = 0;
-            if (modlps.FindLine("itemid") != null)
-                ItemID = Convert.ToUInt64(modlps.FindLine("itemid")!.info);
-            else
-                ItemID = 0;
-            CacheDate = modlps.GetDateTime("cachedate", DateTime.MinValue);
-            foreach (var skip in modlps["dllskip"])
+            Intro = meta.Intro;
+            GameVer = meta.GameVer;
+            Ver = meta.Ver;
+            Author = meta.Author;
+            AuthorID = meta.AuthorID;
+            ItemID = meta.ItemID;
+            CacheDate = meta.CacheDate;
+            foreach (var skip in meta.DllSkip)
             {
-                LoadedDLL.Add(skip.Name);
-            }
-            if (CacheDate > DateTime.Now)
-            {//去掉不合理的清理缓存日期
-                CacheDate = DateTime.MinValue;
+                LoadedDLL.Add(skip);
             }
 
             //MOD未加载时支持翻译
-            foreach (var line in modlps.FindAllLine("lang"))
+            foreach (var (culture, line) in meta.PreTranslations)
             {
                 List<ILine> ls = new List<ILine>();
                 foreach (var sub in line)
                 {
                     ls.Add(new Line(sub.Name, sub.info));
                 }
-                LocalizeCore.AddCulture(line.info, ls);
+                LocalizeCore.AddCulture(culture, ls);
             }
 
             if (mw.CoreMODs.FirstOrDefault(x => x.Name == Name) != null)
@@ -140,8 +135,8 @@ namespace VPet_Simulator.Windows
             if (!IsOnMOD(mw))
             {
                 Tag.Add("该模组已停用");
-                foreach (DirectoryInfo di in Path.EnumerateDirectories())
-                    Tag.Add(di.Name.ToLowerInvariant());
+                foreach (var tag in meta.ContentTags)
+                    Tag.Add(tag);
                 return;
             }
 
@@ -315,31 +310,22 @@ namespace VPet_Simulator.Windows
                         string authtype = "";
                         foreach (FileInfo tmpfi in di.EnumerateFiles("*.dll"))
                         {
-#if X64
-                            if (tmpfi.Name.Contains("x86"))
-                            {
+                            //x86/x64 标记与 load.lps 的 skip/cpu 都走共享后端, 设置窗口那边核对
+                            //证书时用的是同一份规则, 免得两处对不上
+                            if (PluginClassifier.ShouldSkip(tmpfi.Name, loadfile))
                                 continue;
-                            }
-                            string cputype = "x64";
-#else
-                            if (tmpfi.Name.Contains("x64"))
-                            {
-                                continue;
-                            }
-                             string cputype = "x86";
-#endif
-                            if (loadfile[tmpfi.Name][(gbol)"skip"])
-                                continue;
-
-                            string? dllcpu = loadfile[tmpfi.Name].GetString("cpu", "anycpu")?.ToLowerInvariant();
-                            if (dllcpu != "anycpu" && dllcpu != cputype)
-                            {
-                                continue;
-                            }
 
                             try
                             {
                                 var path = tmpfi.Name;
+                                //统一契约的插件: 给第二个及以后的窗口补出各自的实例
+                                if (LoadUnifiedPlug.TryGetValue(path, out var unifiedType))
+                                {
+                                    UnifiedPluginHost.Create(mw, this, unifiedType);
+                                    //同一个 dll 里还有旧插件的话, 接着往下走那条老路
+                                    if (!LoadPlug.ContainsKey(path))
+                                        continue;
+                                }
                                 if (LoadPlug.ContainsKey(path))
                                 {
                                     var Instance = (MainPlugin?)Activator.CreateInstance(LoadPlug[path], mw);
@@ -379,7 +365,7 @@ namespace VPet_Simulator.Windows
                                     if (!IsPassMOD(mw))
                                     {//不是通过模组,不加载
                                         SuccessLoad = false;
-                                        Author = modlps.FindSub("author")!.Info.Split('[').First();
+                                        //Author 在构造函数开头就已经按同样的规则取过了, 这里不用再读一遍
                                         continue;
                                     }
                                 }
@@ -398,6 +384,17 @@ namespace VPet_Simulator.Windows
                                         var Instance = (MainPlugin?)Activator.CreateInstance(exportedType!, mw!);
                                         if (Instance == null) continue;
                                         mw.Plugins.Add(Instance);
+                                    }
+                                    //统一契约的插件: 同一个 dll 在跨平台版上也能加载.
+                                    //旧的 MainPlugin 那条路一字未动, 这里纯属新增.
+                                    else if (exportedType.BaseType == typeof(VPet_Simulator.Unified.Interface.UnifiedPlugin))
+                                    {
+                                        if (exportedType.FullName == null) continue;
+                                        var n = exportedType.FullName.ToLowerInvariant();
+                                        if (!(n.Contains("modmaker") || n.Contains("dlc")))
+                                            App.MODType.Add(exportedType.FullName);
+                                        LoadUnifiedPlug.Add(path, exportedType);
+                                        UnifiedPluginHost.Create(mw, this, exportedType);
                                     }
                                 }
                             }
@@ -461,50 +458,20 @@ namespace VPet_Simulator.Windows
                                         certificate.Issuer == "CN=Certum Extended Validation Code Signing 2021 CA, O=Asseco Data Systems S.A., C=PL";
         }
     }
+    /// <summary>
+    /// MOD 开关
+    /// </summary>
+    /// 键名和取值方式都在共享后端 ModSwitchStore 里, 这里只留调用起来顺手的壳.
+    /// 两个平台共用同一份规则, 所以 Setting.lps 可以在两边直接拷来拷去.
     public static class ExtensionSetting
     {
 
-        internal static bool IsOnMod(this Setting t, string ModName)
-        {
-            if (CoreMOD.OnModDefList.Contains(ModName))
-                return true;
-            var line = t.FindLine("onmod");
-            if (line == null)
-                return false;
-            return line.Find(ModName.ToLowerInvariant()) != null;
-        }
-        internal static bool IsPassMOD(this Setting t, string ModName)
-        {
-            var line = t.FindLine("passmod");
-            if (line == null)
-                return false;
-            return line.Find(ModName.ToLowerInvariant()) != null;
-        }
-        internal static bool IsMSGMOD(this Setting t, string ModName)
-        {
-            var line = t.FindorAddLine("msgmod");
-            if (line.GetBool(ModName))
-                return false;
-            line.SetBool(ModName, true);
-            return true;
-        }
-        internal static void OnMod(this Setting t, string ModName)
-        {
-            if (string.IsNullOrWhiteSpace(ModName))
-                return;
-            t.FindorAddLine("onmod").AddorReplaceSub(new Sub(ModName.ToLowerInvariant()));
-        }
-        internal static void OnModRemove(this Setting t, string ModName)
-        {
-            t.FindorAddLine("onmod").Remove(ModName.ToLowerInvariant());
-        }
-        internal static void PassMod(this Setting t, string ModName)
-        {
-            t.FindorAddLine("passmod").AddorReplaceSub(new Sub(ModName.ToLowerInvariant()));
-        }
-        internal static void PassModRemove(this Setting t, string ModName)
-        {
-            t.FindorAddLine("passmod").Remove(ModName.ToLowerInvariant());
-        }
+        internal static bool IsOnMod(this Setting t, string ModName) => ModSwitchStore.IsOn(t, ModName);
+        internal static bool IsPassMOD(this Setting t, string ModName) => ModSwitchStore.IsPassed(t, ModName);
+        internal static bool IsMSGMOD(this Setting t, string ModName) => ModSwitchStore.ShouldNotice(t, ModName);
+        internal static void OnMod(this Setting t, string ModName) => ModSwitchStore.On(t, ModName);
+        internal static void OnModRemove(this Setting t, string ModName) => ModSwitchStore.Off(t, ModName);
+        internal static void PassMod(this Setting t, string ModName) => ModSwitchStore.Pass(t, ModName);
+        internal static void PassModRemove(this Setting t, string ModName) => ModSwitchStore.PassRemove(t, ModName);
     }
 }

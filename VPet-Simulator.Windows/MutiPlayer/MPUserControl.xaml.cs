@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using VPet_Simulator.Unified.Services;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -49,6 +50,6 @@ public partial class MPUserControl : Border
 
     private void Kick_Click(object sender, RoutedEventArgs e)
     {
-        lb.SetData("kick", friend.Id.Value.ToString());
+        lb.SetData(MPProtocol.LobbyKickKey, friend.Id.Value.ToString());
     }
 }

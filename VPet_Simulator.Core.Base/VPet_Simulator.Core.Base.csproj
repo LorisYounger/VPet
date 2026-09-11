@@ -1,13 +1,42 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<!--
+	跨平台共享源码层.
 
-  <ItemGroup>
-    <PackageReference Include="LinePutScript" Version="1.11.9" />
-  </ItemGroup>
+	这个目录里的源码有两个消费者:
+	  - VPet-Simulator.Core (WPF/Windows) 用 Compile Include 直接编译它们,
+	    不引用本程序集 —— 这样 Core.dll 里这些类型的 ABI 才能逐字节不变
+	  - VPet_Simulator.Core.MutiPlatform (Avalonia) 正常 ProjectReference 本程序集
+
+	因此这里的编译设置必须和 VPet-Simulator.Core 对齐, 否则同一份源码在两边的
+	行为会不一致. 尤其是 ImplicitUsings: 必须关闭, 因为 Core 也没开.
+
+	本项目能在不装 Windows Desktop SDK 的 Linux 上编译通过, 这是"真的平台无关"
+	的客观证据. 这一条由仓库外的门禁脚本检查(见 ABI-Compatibility.md), 仓库里没有
+	CI 配置.
+	-->
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>VPet_Simulator.Core</RootNamespace>
+		<AssemblyName>VPet_Simulator.Core.Base</AssemblyName>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<Product>VPet_Simulator.Core.Base</Product>
+		<Copyright>Copyright ©  2022</Copyright>
+		<NoWarn>CS1591</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="LinePutScript" Version="1.11.9" />
+	</ItemGroup>
 
 </Project>

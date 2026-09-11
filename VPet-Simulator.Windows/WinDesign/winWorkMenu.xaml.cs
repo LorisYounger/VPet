@@ -14,6 +14,7 @@ using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Windows.Interface.ScheduleTask;
+using VPet_Simulator.Unified.Services;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -401,9 +402,9 @@ public partial class winWorkMenu : WindowX
         runScheduleWork.Text = sworkTime.ToString();
         runScheduleRest.Text = srestTime.ToString();
 
-        double ps = sworkTime / (double)(sworkTime + srestTime);
+        double ps = SchedulePackageRules.WorkRatio(sworkTime, srestTime);
         runSchedulePercentage.Text = ps.ToString("p0");
-        if (ps > 0.71)
+        if (ps > SchedulePackageRules.WorkRatioWarning)
             runSchedulePercentage.Foreground = new SolidColorBrush(Colors.OrangeRed);
         else
             runSchedulePercentage.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimary);
@@ -511,47 +512,29 @@ public partial class winWorkMenu : WindowX
             MessageBoxX.Show("金钱不足".Translate(), "签署失败".Translate());
             return;
         }
-        if (nowselefull.WorkType == Work.WorkType.Work)
+        bool isWork = nowselefull.WorkType == Work.WorkType.Work;
+        var current = isWork ? mw.ScheduleTask.PackageWork : mw.ScheduleTask.PackageStudy;
+        if (current?.IsActive() == true)
         {
-            if (mw.ScheduleTask.PackageWork?.IsActive() == true)
+            if (MessageBoxX.Show((isWork ? "工作套餐已激活,是否替换?" : "学习套餐已激活,是否替换?").Translate(),
+                "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
+            //计算价格,给剩下的退款
+            double lefttime = SchedulePackageRules.RemainingDays(current.EndTime, DateTime.Now);
+            var pw = mw.SchedulePackage.Find(x => x.WorkType == (isWork ? Work.WorkType.Work : Work.WorkType.Study) && x.Name == current.Name);
+            if (pw != null)
             {
-                if (MessageBoxX.Show("工作套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-                    return;
-                //计算价格,给剩下的退款
-                double lefttime = (mw.ScheduleTask.PackageWork.EndTime - DateTime.Now).TotalDays / 2;
-                if (lefttime > 0.5)
-                {
-                    var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Work && x.Name == mw.ScheduleTask.PackageWork.Name);
-                    var p = new Package(pw!, mw.ScheduleTask.PackageWork.Level);
-                    refound = p.Price * (pw!.Duration - lefttime) / pw.Duration;
-                    if (refound < 0 || refound > p.Price)
-                    {
-                        refound = 0;
-                    }
-                }
+                var p = new Package(pw, current.Level);
+                refound = SchedulePackageRules.Refund(p.Price, pw.Duration, lefttime);
             }
+        }
+        if (isWork)
+        {
             mw.ScheduleTask.PackageWork = package;
             rpnDisplay(mw.ScheduleTask.PackageWork, nowselefull.WorkType);
         }
         else
         {
-            if (mw.ScheduleTask.PackageStudy?.IsActive() == true)
-            {
-                if (MessageBoxX.Show("学习套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-                    return;
-                //计算价格,给剩下的退款
-                double lefttime = (mw.ScheduleTask.PackageStudy.EndTime - DateTime.Now).TotalDays / 2;
-                if (lefttime > 0.5)
-                {
-                    var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Study && x.Name == mw.ScheduleTask.PackageStudy.Name);
-                    var p = new Package(pw!, mw.ScheduleTask.PackageStudy.Level);
-                    refound = p.Price * (pw!.Duration - lefttime) / pw.Duration;
-                    if (refound < 0 || refound > p.Price)
-                    {
-                        refound = 0;
-                    }
-                }
-            }
             mw.ScheduleTask.PackageStudy = package;
             rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull.WorkType);
         }

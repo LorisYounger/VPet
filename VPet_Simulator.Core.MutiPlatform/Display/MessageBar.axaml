@@ -1,22 +1,26 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="VPet_Simulator.Core.MutiPlatform.Display.MessageBar">
-  <Border x:Name="RootBorder"
-          Background="#CC1F1F1F"
-          CornerRadius="8"
-          Padding="12"
-          Margin="12"
-          HorizontalAlignment="Left"
-          VerticalAlignment="Bottom">
-    <StackPanel Spacing="8">
-      <TextBlock x:Name="NameText"
-                 FontWeight="Bold"
-                 FontSize="14"/>
-      <TextBlock x:Name="MessageText"
-                 TextWrapping="Wrap"
-                 MaxWidth="520"/>
-      <ContentControl x:Name="MessageContentHost"
-                      IsVisible="False"/>
-    </StackPanel>
-  </Border>
+             x:Class="VPet_Simulator.Core.MutiPlatform.Display.MessageBar"
+             Height="500" Width="500">
+    <!--
+    与 Windows 版 VPet-Simulator.Core/Display/MessageBar.xaml 的结构和配色一致:
+    浅蓝底 + 深蓝 5px 边框 + 5 圆角, 贴在桌宠下方.
+    Windows 版正文用的是只读 TextBox(为了能选中复制), Avalonia 里 SelectableTextBlock
+    更合适, 少一层输入框的样式包袱.
+    -->
+    <Border x:Name="BorderMain"
+            PointerEntered="BorderMain_PointerEntered" PointerExited="BorderMain_PointerExited" Background="{DynamicResource Primary}"
+            BorderBrush="{DynamicResource DARKPrimaryDark}"
+            BorderThickness="5" VerticalAlignment="Bottom" Padding="10" Margin="5" CornerRadius="5">
+        <StackPanel>
+            <TextBlock x:Name="LName" Text="虚拟桌宠名字:" Foreground="{DynamicResource PrimaryText}"
+                       HorizontalAlignment="Left" FontWeight="Bold" Margin="0,0,0,6" FontSize="32" />
+            <ScrollViewer x:Name="sv" MaxHeight="400">
+                <SelectableTextBlock x:Name="TText" Text=""
+                                     TextWrapping="WrapWithOverflow" FontSize="24"
+                                     Foreground="{DynamicResource PrimaryText}" />
+            </ScrollViewer>
+            <Grid x:Name="MessageBoxContent" />
+        </StackPanel>
+    </Border>
 </UserControl>

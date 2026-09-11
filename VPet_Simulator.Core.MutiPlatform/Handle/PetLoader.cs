@@ -35,7 +35,9 @@ public class PetLoader
         Name = lps.First()!.Info;
         Intor = lps.First()!["intor"].Info;
         PetName = lps.First()!["petname"].Info;
-        path.Add(directory.FullName + "\\" + lps.First()!["path"].Info);
+        // 不能像 Windows 版那样直接拼 "\": 在 Linux/macOS 上反斜杠不是分隔符,
+        // 会变成文件名的一部分, 而且是静默失败(找不到目录, 不报错)
+        path.Add(Path.Combine(directory.FullName, NormalizeRelativePath(lps.First()!["path"].Info)));
         Config = new Config(lps);
     }
 
@@ -56,9 +58,10 @@ public class PetLoader
 
         int graphCount = 0;
         var list = di.EnumerateDirectories();
-        if (File.Exists(di.FullName + @"\info.lps"))
+        var infoPath = Path.Combine(di.FullName, "info.lps");
+        if (File.Exists(infoPath))
         {
-            LpsDocument lps = new(File.ReadAllText(di.FullName + @"\info.lps"));
+            LpsDocument lps = new(File.ReadAllText(infoPath));
             foreach (ILine line in lps)
             {
                 if (IGraphConvert.TryGetValue(line.Name.ToLowerInvariant(), out var func))
@@ -67,7 +70,7 @@ public class PetLoader
                     var str = line.GetString("path");
                     if (!string.IsNullOrEmpty(str))
                     {
-                        var p = Path.Combine(di.FullName, str);
+                        var p = Path.Combine(di.FullName, NormalizeRelativePath(str));
                         if (Directory.Exists(p))
                             func.Invoke(graph, new DirectoryInfo(p), line);
                         else if (File.Exists(p))
@@ -108,5 +111,18 @@ public class PetLoader
         }
 
         return graphCount;
+    }
+
+    /// <summary>
+    /// 把 MOD 数据里声明的相对路径转换成当前平台的写法
+    /// </summary>
+    /// MOD 的 info.lps 里路径是按 Windows 习惯写的, 例如 path#Happy\back_lay.
+    /// 这些是数据不是代码, 没法要求 MOD 作者改, 只能在读取时统一转换 ——
+    /// 否则在 Linux/macOS 上反斜杠会被当成文件名的一部分, 目录直接找不到.
+    private static string NormalizeRelativePath(string path)
+    {
+        if (Path.DirectorySeparatorChar == '\\')
+            return path;
+        return path.Replace('\\', Path.DirectorySeparatorChar);
     }
 }

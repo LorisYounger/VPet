@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using VPet_Simulator.Unified.Services;
 using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows
@@ -66,24 +67,21 @@ namespace VPet_Simulator.Windows
                 }
             }
             //没钱了,宠物给你私房钱 (开罗传统)
-            if (mw.Core.Save!.Money <= 1)
+            switch (PurchaseRules.CheckLoan(mw.Core.Save!.Money, mw.GameSavesData[(gbol)"self"]))
             {
-                if (mw.GameSavesData[(gbol)"self"])
-                {
+                case PurchaseRules.LoanAction.RemindCredit:
                     MessageBoxX.Show("更好买老顾客大优惠!桌宠的食物钱我来出!\n更好买提示您:$1000以下的食物/药品等随便赊账\n(不包括大于1000经验值的食物或礼品)".Translate());
-                }
-                else
-                {
+                    break;
+                case PurchaseRules.LoanAction.Give:
                     MessageBoxX.Show("看到您囊中羞涩,{0}拿出了1000块私房钱出来给你".Translate(mw.Core.Save!.Name));
                     mw.GameSavesData[(gbol)"self"] = true;
-                    mw.Core.Save!.Money += 1000;
-                }
-            }
-            else if (mw.Core.Save!.Money >= 11000 && mw.GameSavesData[(gbol)"self"])
-            {
-                mw.Core.Save!.Money -= 1000;
-                mw.GameSavesData[(gbol)"self"] = false;
-                MessageBoxX.Show("{0}偷偷藏了1000块私房钱".Translate(mw.Core.Save!.Name));
+                    mw.Core.Save!.Money += PurchaseRules.LoanAmount;
+                    break;
+                case PurchaseRules.LoanAction.TakeBack:
+                    mw.Core.Save!.Money -= PurchaseRules.LoanAmount;
+                    mw.GameSavesData[(gbol)"self"] = false;
+                    MessageBoxX.Show("{0}偷偷藏了1000块私房钱".Translate(mw.Core.Save!.Name));
+                    break;
             }
 
             Show();
@@ -223,7 +221,8 @@ namespace VPet_Simulator.Windows
             {//$1000以内的食物允许赊账
                 for (int i = 0; i < (int)(nibuytimes.Value ?? 0); i++)
                 {                        
-                    if ((item!.Price >= 1000 || item.Exp >= 1000) && item.Price >= mw.Core.Save!.Money)
+                    //赊账规则在共享后端里: 便宜东西买不起也能买
+                    if (!PurchaseRules.CanAfford(item!.Price, item.Exp, mw.Core.Save!.Money))
                     {//买不起
                         MessageBoxX.Show("您没有足够金钱来购买 {0}\n您需要 {1:f2} 金钱来购买\n您当前 {2:f2} 拥有金钱"
                             .Translate(item.TranslateName, item.Price, mw.Core.Save!.Money)
@@ -367,7 +366,7 @@ namespace VPet_Simulator.Windows
         }
         private void Switch_AutoBuy_Checked(object sender, RoutedEventArgs e)
         {
-            if (_puswitchautobuy?.IsChecked == true && mw.Core.Save!.Money < 100)
+            if (_puswitchautobuy?.IsChecked == true && mw.Core.Save!.Money < PurchaseRules.AutoBuyMinMoney)
             {
                 _puswitchautobuy.IsChecked = false;
                 MessageBoxX.Show(mw, "余额不足100，无法开启自动购买".Translate(), "更好买".Translate());
