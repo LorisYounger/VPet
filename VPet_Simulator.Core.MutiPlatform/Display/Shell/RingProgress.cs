@@ -1,41 +1,45 @@
 using Avalonia;
-using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using System;
+using System.Globalization;
 
 namespace VPet_Simulator.Core.MutiPlatform.Display.Shell;
 
 /// <summary>
 /// 环形进度
 /// </summary>
-/// 对应 Windows 版角色面板里那几个 Panuon 的环形进度条(体力/饱腹/心情).
+/// 对应 Panuon 的 pu:RingProgressBar, 属性名照它的取: Foreground 是已完成那段, BorderBrush/BorderThickness 是底环,
+/// Minimum/Maximum/Value 与 ProgressBar 同, IsPercentVisible 决定中间画不画百分比.
 /// 自己画而不是找控件库: 就是两段弧, 引一整个库不划算。
-public class RingProgress : Control
+public class RingProgress : TemplatedControl
 {
     /// <summary>当前值</summary>
     public static readonly StyledProperty<double> ValueProperty =
         AvaloniaProperty.Register<RingProgress, double>(nameof(Value));
 
+    /// <summary>最小值</summary>
+    public static readonly StyledProperty<double> MinimumProperty =
+        AvaloniaProperty.Register<RingProgress, double>(nameof(Minimum));
+
     /// <summary>最大值</summary>
     public static readonly StyledProperty<double> MaximumProperty =
         AvaloniaProperty.Register<RingProgress, double>(nameof(Maximum), 100d);
 
-    /// <summary>环的粗细</summary>
-    public static readonly StyledProperty<double> ThicknessProperty =
-        AvaloniaProperty.Register<RingProgress, double>(nameof(Thickness), 8d);
-
-    /// <summary>已完成那段的颜色</summary>
-    public static readonly StyledProperty<IBrush?> ForegroundProperty =
-        AvaloniaProperty.Register<RingProgress, IBrush?>(nameof(Foreground));
-
-    /// <summary>底环的颜色</summary>
-    public static readonly StyledProperty<IBrush?> BackgroundProperty =
-        AvaloniaProperty.Register<RingProgress, IBrush?>(nameof(Background));
+    /// <summary>中间要不要写百分比</summary>
+    public static readonly StyledProperty<bool> IsPercentVisibleProperty =
+        AvaloniaProperty.Register<RingProgress, bool>(nameof(IsPercentVisible), true);
 
     public double Value
     {
         get => GetValue(ValueProperty);
         set => SetValue(ValueProperty, value);
+    }
+
+    public double Minimum
+    {
+        get => GetValue(MinimumProperty);
+        set => SetValue(MinimumProperty, value);
     }
 
     public double Maximum
@@ -44,29 +48,17 @@ public class RingProgress : Control
         set => SetValue(MaximumProperty, value);
     }
 
-    public double Thickness
+    public bool IsPercentVisible
     {
-        get => GetValue(ThicknessProperty);
-        set => SetValue(ThicknessProperty, value);
-    }
-
-    public IBrush? Foreground
-    {
-        get => GetValue(ForegroundProperty);
-        set => SetValue(ForegroundProperty, value);
-    }
-
-    public IBrush? Background
-    {
-        get => GetValue(BackgroundProperty);
-        set => SetValue(BackgroundProperty, value);
+        get => GetValue(IsPercentVisibleProperty);
+        set => SetValue(IsPercentVisibleProperty, value);
     }
 
     static RingProgress()
     {
         // 这几个属性一变就得重画
-        AffectsRender<RingProgress>(ValueProperty, MaximumProperty, ThicknessProperty,
-            ForegroundProperty, BackgroundProperty);
+        AffectsRender<RingProgress>(ValueProperty, MinimumProperty, MaximumProperty, BorderThicknessProperty,
+            ForegroundProperty, BorderBrushProperty, IsPercentVisibleProperty, FontSizeProperty);
     }
 
     public override void Render(DrawingContext context)
@@ -74,20 +66,26 @@ public class RingProgress : Control
         var size = Math.Min(Bounds.Width, Bounds.Height);
         if (size <= 0)
             return;
-        var thickness = Math.Min(Thickness, size / 2);
+        var thickness = Math.Min(BorderThickness.Left, size / 2);
         var radius = (size - thickness) / 2;
         var center = new Point(Bounds.Width / 2, Bounds.Height / 2);
 
-        if (Background != null)
+        if (BorderBrush != null)
         {
-            var pen = new Pen(Background, thickness);
+            var pen = new Pen(BorderBrush, thickness);
             context.DrawEllipse(null, pen, center, radius, radius);
         }
 
-        if (Foreground == null || Maximum <= 0)
-            return;
-        var ratio = Math.Clamp(Value / Maximum, 0, 1);
-        if (ratio <= 0)
+        var range = Maximum - Minimum;
+        var ratio = range <= 0 ? 0 : Math.Clamp((Value - Minimum) / range, 0, 1);
+        if (IsPercentVisible)
+        {
+            var text = new FormattedText(ratio.ToString("p0", CultureInfo.CurrentCulture), CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight, new Typeface(FontFamily, FontStyle, FontWeight), FontSize, Foreground);
+            context.DrawText(text, new Point(center.X - text.Width / 2, center.Y - text.Height / 2));
+        }
+
+        if (Foreground == null || ratio <= 0)
             return;
 
         var foreground = new Pen(Foreground, thickness) { LineCap = PenLineCap.Round };

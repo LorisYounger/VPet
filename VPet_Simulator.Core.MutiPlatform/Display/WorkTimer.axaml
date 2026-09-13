@@ -1,5 +1,6 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
              x:Class="VPet_Simulator.Core.MutiPlatform.Display.WorkTimer"
              Opacity="0.8" HorizontalAlignment="Left" VerticalAlignment="Top"
              Width="300" Height="180">
@@ -44,7 +45,7 @@
                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                             Foreground="{DynamicResource WorkButtonForeground}"
                             Background="{DynamicResource WorkButtonBackground}"
-                            Content="停止工作" FontSize="24" Click="btnStop_Click" />
+                            Content="{ll:Str 停止工作}" FontSize="24" Click="btnStop_Click" />
                 </Grid>
             </Border>
             <Button x:Name="btnSwitch" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5,5,8,7"

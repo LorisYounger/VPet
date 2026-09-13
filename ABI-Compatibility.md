@@ -124,8 +124,78 @@ CLR 类型. 因为代码型 MOD 不需要跨平台, 两侧永不同时加载、�
    存档拷过去认不出物品类型, 而且不报错, 只是东西没了.
 
 拆不动的就别硬拆. `ScheduleTask` 本体通篇拿着 `IMainWindow`, `PackageFull` 有个
-`WorkType` 属性而 `GraphHelper.Work` 在两个 Core 里是两个类型 —— 这些留在 Windows
-半, 等跨平台界面真要用时连宿主抽象一起处理, 现在硬拆只会拆出一个没人用的壳.
+`WorkType` 属性而 `GraphHelper.Work` 在两个 Core 里是两个类型 —— 这种就不拆,
+而是在 `Interface.Base/Platform/` 下放一份**原文复制**的跨平台半 (只换命名空间和
+`Visibility→bool` / `ImageSource→Bitmap` 这几行), 与 Windows 半逐行可对照.
+
+## 跨平台目录对照
+
+跨平台宿主的原则只有一条: **Windows 版原样搬到 Avalonia 上 —— 同样的文件、类名、
+`x:Name`、事件处理器、菜单、文案; 只有"Windows 独有的那一行"允许不同, 且必须在原位
+留中文注释说明换成了什么** (`//跨平台: …` / `<!-- 跨平台: … -->`). 不新增功能, 不删
+功能, 不改文案.
+
+### 文件与工程
+
+| Windows 版 | 跨平台版 | 说明 |
+|---|---|---|
+| `VPet-Simulator.Core` | `VPet_Simulator.Core.MutiPlatform` | `Display/Main.axaml(.cs)` + `MainDisplay.cs` + `MainLogic.cs`, `ToolBar` / `MessageBar` / `WorkTimer` 同名; 逻辑半在 `VPet_Simulator.Core.Base` 共享 |
+| `VPet-Simulator.Windows.Interface` | `VPet-Simulator.Windows.Interface.Base` | `Save/` `Mod/` `Data/` `MutiPlayer/` 四个目录是共享源码 (Windows.Interface 用 `Compile Include` 卷入, 所以 `Interface.dll` 的 ABI 不变); `Platform/` 是跨平台半 (`IMainWindow` / `Resources` / `ScheduleTask` / `Mod/Food` / `MutiPlayer/IMPWindows` …), Windows 构建永远碰不到 |
+| `VPet-Simulator.Windows` | `VPet-Simulator.MutiPlatform` | `MainWindow.axaml(.cs)` / `MainWindow.cs` / `MainWindow_Function.cs` / `MainWindow_Property.cs` 四文件切法相同; `Function/` `WinDesign/` `MutiPlayer/` `Design/` 逐文件同名 |
+| `Core/Display/Theme.xaml` `basestyle.xaml`, `Interface/ResourceStyle.xaml` | `Core.MutiPlatform/Display/Theme.axaml` `basestyle.axaml` `ResourceStyle.axaml` | 键名不变; Windows 里带 `x:Key` 的 `Style` 在这边是同 Key 的 `ControlTheme` |
+| `Panuon.WPF.UI` | (无) | 不做替身工程. `pu:` 用法按下面的映射表机械替换成原生控件 + 预设样式, `Display/Shell/` 下补几个 Panuon 独有的控件 (`VPetWindow` / `Switch` / `Pagination` / `RingProgress` / `MessageBoxX`) |
+| `Facepunch.Steamworks` (Win64/Win32) | `aelsi2.Facepunch.Steamworks` (Posix 分支) | 托管 API 相同, `SteamCapability` / `SteamMultiplayer` / 访客表全部原文复制 |
+| `Set.DeBug` + `winConsole` | 同名, 另加 `DevTools/UiWalk.cs` | `--ui-walk <脚本> <输出目录>` 是仓库外门禁用的走查开关, 见"怎么验证" |
+
+命名空间**不改** (`VPet_Simulator.Core.MutiPlatform` / `VPet_Simulator.MutiPlatform`), 所以每个文件
+里 `using` / `x:Class` 那一行是允许不同的"Windows 独有行". 旧式 WPF MOD (`MainPlugin`) 不在跨平台跑,
+跨平台 MOD 走上面的统一契约.
+
+### `pu:` 映射表
+
+XAML 的移植是机械的 (仓库外有个转换脚本做第一遍, 剩下的手工按同一张表改), 每一行都能与 Windows 版逐行对照:
+
+| Panuon 用法 | 跨平台写法 |
+|---|---|
+| `pu:WindowX` 根元素, `pu:WindowXCaption.Height/Background/Foreground/Buttons/HeaderTemplate`, `pu:WindowX.IsDragMoveArea` | `shell:VPetWindow` + `CaptionHeight/CaptionBackground/CaptionForeground/CaptionButtons/CaptionHeaderTemplate`, `shell:VPetWindow.IsDragMoveArea` |
+| `pu:WindowXCaption.CloseButtonStyle` 等 | `CaptionCloseButtonTheme` / `CaptionMinimizeButtonTheme` / `CaptionMaximizeButtonTheme` |
+| `Style="{DynamicResource K}"` | `Theme="{DynamicResource K}"` (同 Key 的 `ControlTheme`) |
+| `pu:*Helper.CornerRadius` | 原生 `CornerRadius` |
+| `pu:TextBoxHelper.Watermark` / `pu:ComboBoxHelper.Watermark` / `pu:TextBoxHelper.Icon` | `Watermark` / `PlaceholderText` / `InnerLeftContent` |
+| `pu:ListBoxHelper.Items*` / `pu:TabControlHelper.Items*` | `ItemContainerTheme="{StaticResource StandardListBoxItemStyle / StandardTabItemStyle}"`, 每控件不同的 Padding/CornerRadius 用基于它的内联 `ControlTheme` 再给 |
+| `pu:TabControlHelper.FrontControl` | 写进 TabControl 的模板里 (只有访客表用到), 里面的控件在 `TemplateApplied` 时从命名域取 |
+| `pu:ToggleButtonHelper.CheckedContent/CheckedBackground/…` | `:checked` 样式 (Content 也写在样式里, 本地值会盖过样式) |
+| `pu:Switch` | `shell:Switch` (属性同名: `BoxWidth/BoxHeight/ToggleSize/CheckedBackground/CheckedForeground/…`) |
+| `pu:RingProgressBar` / `pu:Pagination` / `pu:CarouselPanel` / `pu:NumberInput` / `pu:DateTimePicker` | `shell:RingProgress` / `shell:Pagination` / `Carousel` / `NumericUpDown` / `DatePicker` |
+| `pu:FormGroup` / `pu:ToggleButtonGroup` | `HeaderedContentControl Theme=FormGroupStyle` / `ListBox SelectionMode="Multiple,Toggle"` |
+| `pu:Spin` | `Arc Classes="Spin"` (App.axaml 里带旋转动画的样式) |
+| `pu:Converters.*` | `local:Converters.*` (同名转换器) |
+| `pu:GlobalSettings.Setting` 的 `FontSize` (含 `DoublePlus/MinusConverter`) | 字面量 (全局字号 14 ± N) |
+| `Visibility="Collapsed"` / `{Binding X, Converter=TrueToCollapse}` | `IsVisible="False"` / `{Binding !X}` |
+| `ElementName=foo, Path=Bar` | `#foo.Bar` |
+| `ToolTip="…"` | `ToolTip.Tip="…"` |
+| `Checked=` + `Unchecked=` | `IsCheckedChanged=` 一个处理器, 代码里按 `IsChecked` 分流 |
+| `PreviewKeyDown=` / `PreviewMouse*=` | 构造函数里 `AddHandler(…, RoutingStrategies.Tunnel)` |
+| `Mouse*` 事件 / `MouseDoubleClick` | `Pointer*` / `DoubleTapped` |
+| `Hyperlink` | `<InlineUIContainer><HyperlinkButton/></InlineUIContainer>` |
+| `DataTemplateSelector` | 多个 `DataTemplate` 各带 `x:DataType` (子类排前面) |
+| `DataGrid` (WPF) | `Avalonia.Controls.DataGrid` 包, `ElementStyle` → `CellTheme` |
+| WpfAnimatedGif 的 `ImageBehavior.SetAnimatedSource` | 同名 (`Display/Shell/ImageBehavior.cs`), 帧由 SkiaSharp 解, `AnimatedBitmap` 轮播 |
+| `GridSplitter` | 同名, 但要写 `HorizontalAlignment="Right" Width="5"` (WPF 默认靠右, Avalonia 默认撑满整格) |
+| `pack://application:,,,/Res/` | `avares://VPet-Simulator.MutiPlatform/Res/` (扩展名区分大小写) |
+| `FontFamily="…/#remixicon"` | `FontFamily="{StaticResource RemixIcon}"` |
+| MOD 字体 `new FontFamily("目录\#字体名")` | ttf 登记进 `FontLoader` 字体集, `FontFamily("fonts:vpetmod#字体名")`; 全局字体仍是 `MainFont` 资源 |
+| `MessageBoxX.Show` / `NoticeBox.Show` / `winInputBox.Show` | 同名 (`Display/Shell/MessageBoxX.cs`), 同步语义靠 `PushFrame` |
+| `Dispatcher.Invoke` | 同名: 宿主上有 `Dispatcher => Dispatcher.UIThread` 属性, 各窗口直接用 `AvaloniaObject.Dispatcher` |
+
+code-behind 里 WPF 独有的那几行 (`Visibility` / `ImageSource→Bitmap` / `IGraph→IAvaloniaGraph` /
+`ActualWidth→Bounds.Width` / `Run` 没有 `Loaded` 等) 每处都带 `//跨平台:` 注释, 其余逐行相同.
+
+几个值得记住的 Avalonia 坑, 都在代码里有注释:
+`Run` 没有 `Loaded` (挂在外层 `TextBlock` 上按名字找); 嵌套 `DataTemplate` 里 `ElementName` 找不到
+(用 `$parent[ItemsControl]`); `SelectionChanged` 在 XAML 加载期就会触发且会从内层 ComboBox 冒上来
+(判 `e.Source`); `x:DataType` 是编译绑定的前提; SimpleTheme 的页签底色只画三成 (`StandardTabItemStyle`
+自带模板); TextBox 的 `HorizontalContentAlignment=Left` 是"内容不撑满"而不是"文字靠左".
 
 ## 跨平台侧的线程约定
 
@@ -211,7 +281,7 @@ Windows 版 `Item.Creators` 的文档说在 `LoadPlugin` 里注册, 而存档反
 ## 怎么验证没有破坏
 
 本仓库没有测试工程, 也不打算加. 验证是靠仓库外的一次性工具做的, 迁移期间用到了
-五种手段, 记录在这里以便需要时重建:
+七道门禁, 记录在这里以便需要时重建:
 
 **1. 公开 API 表面比对**
 
@@ -277,7 +347,7 @@ MOD 的动画悄悄不播.
 | 统一契约的 `UnifiedItem` 写出 `ItemType` 而 Windows 写 `itemtype` | 存档拷到另一平台, 物品认不出类型, 东西直接没了 |
 | 联机包把三个字段包成一行的子项, 而 Windows 是三个顶层行 | 能连上, 但对面收到的全是默认值 |
 | Steam 云存档用十进制解析十六进制文件名 | "删最旧的"实际删任意一个 |
-| 跨平台没钉 InvariantCulture | 德语环境下 `12.5` 写成 `12,5`, 存档哈希当场失效 |
+| 跨平台一度把进程区域钉成 InvariantCulture | 区域名成了空串, 语言匹配不到, 中文用户开出来是英文; 正确做法与 Windows 版相同: 只把 `NumberFormat` 换成 en-US, 区域名保留 (德语环境下 `12.5` 才不会写成 `12,5`) |
 | 备份文件名用 `string.GetHashCode()` | .NET Core 的字符串哈希每进程不同, 每次启动堆一份新备份 |
 | `info.lps` 里 `authorid` 是行不是子项 | `FindSub` 读出来恒为 0 |
 
@@ -285,12 +355,24 @@ MOD 的动画悄悄不播.
 跨平台↔跨平台的往返 —— 那当然自洽。改成拿 Windows 版的真类型去拆跨平台造的包
 才抓出来。凡是声称"两边一致"的地方, 门禁必须真的把两边都拉进来比。
 
-**渲染探针**
+**6. 字符串对齐门禁**
 
-`--probe <名字> [输出.png]` 把某个界面渲染成图然后退出, 不用把桌宠启动起来。
-没有 Linux/macOS 机器可以实机验证, 这是唯一能看到"界面画出来是什么样"的办法。
+跨平台侧每个用户可见字符串 (`{ll:Str …}`、`Header/Content/Text/Title/Watermark/ToolTip.Tip`
+字面量、`.Translate()` / `Say(` / `LabelDisplayShow(` 的实参) 必须逐字节出现在 "Windows 三工程
+的字面量 ∪ `mod/*/lang` 的键" 里, 目标 0 未匹配、无白名单. 第一版跨平台界面里 233 处文案有
+115 处是移植时自己编的, lang 里没有键, 永远翻不出来 —— 这道门禁就是为它立的.
 
-它画的必须是**真的**控件(例如商店的格子走 `Windows.ShopCell`), 照着样子另写一份
-的话探针就只是在检查探针自己。迁移期间它当场抓到过: 脱离可视树的控件模板不展开
-(画出来一片空白)、输入框深色底浅色字、TextBlock 和 CheckBox 前景色太浅、开关旁边
-的 On/Off 是英文、卡片不等高导致一排按钮参差不齐。
+**7. 菜单对齐门禁**
+
+跨平台宿主用 `--ui-walk <脚本> <输出目录>` 启动真实程序 (真 `mod/0000_core`), 脚本里的 `menutree`
+命令把工具栏五个菜单 + 托盘的树按源语言导出, 与手工从 Windows 源码推导的 golden 逐行 diff.
+
+**界面走查**
+
+`--ui-walk` 还带 `open <窗口>` / `select` / `winclick` / `shotwindows` 这类命令, 用进程内注入的指针
+事件走遍每个窗口每个页签并 `RenderTargetBitmap` 截图, 与 Windows 构建并排对照. 它不动真鼠标, 所以
+指针路由类的缺陷 (菜单叶子项按下被宿主抢走捕获之类) 要靠手工清单; 截图里翻倍的文字是透明窗口
+渲染到位图的假象, 不是缺陷. 访客表用同一个 Steam 账号开两个进程 (主持人 + `--prefix guest` 的访客)
+互相进房间来验 (`open winMutiPlayer <房间号>`), 好友桌宠窗口/访客条/给好友买的商店拿自己当访客画出来看.
+
+以前的 `--probe` 渲染探针画的是手搓的样例控件, 从没画过真实工具栏/菜单/桌宠, 已经删掉.

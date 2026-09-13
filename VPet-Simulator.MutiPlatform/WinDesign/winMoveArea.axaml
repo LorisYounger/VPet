@@ -1,0 +1,43 @@
+<shell:VPetWindow x:Class="VPet_Simulator.MutiPlatform.winMoveArea"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Foreground="{StaticResource PrimaryText}"
+        xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell" CaptionHeight="0"
+        xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+        Topmost="True" TransparencyLevelHint="Transparent"
+        xmlns:local="using:VPet_Simulator.MutiPlatform" Title="winMoveArea"
+        Height="450" Width="450" Background="{DynamicResource PrimaryTrans4}" CanResize="True">
+    <!-- 跨平台: WindowStyle=None/AllowsTransparency 由 VPetWindow (无系统边框) 与 TransparencyLevelHint 承担;
+         PreviewMouseDown 换成 PointerPressed (隧道路由在构造函数里挂) -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height=".3*" />
+            <RowDefinition Height=".7*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width=".7*" />
+            <ColumnDefinition Width=".3*" />
+        </Grid.ColumnDefinitions>
+        <Border x:Name="BorderDrag" Background="{DynamicResource PrimaryTrans4}"
+                Grid.ColumnSpan="4" Grid.RowSpan="6" BorderBrush="{DynamicResource DARKPrimary}" BorderThickness="4" />
+        <Viewbox x:Name="ViewboxDrag1" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center">
+            <Label Content="{ll:Str '桌宠移动范围'}" Background="{x:Null}" />
+        </Viewbox>
+        <Viewbox x:Name="ViewboxDrag2" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Label Content="{ll:Str '鼠标左键拖动范围\&#13;调整边框调整大小'}" Background="{x:Null}" />
+        </Viewbox>
+        <Viewbox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Button Theme="{DynamicResource ThemedButtonStyle}" Content="{ll:Str '设置当前范围为移动范围'}" MinWidth="120"
+                    Click="Save_Click" />
+        </Viewbox>
+        <Viewbox Grid.Column="3" HorizontalAlignment="Right">
+            <Button Theme="{DynamicResource ThemedButtonStyle}" Content="X" Click="Close_Click" />
+        </Viewbox>
+    </Grid>
+</shell:VPetWindow>

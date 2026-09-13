@@ -24,6 +24,47 @@ public static class Function
         }
         return null;
     }
+    /// <summary>
+    /// 获取资源笔刷
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public static IBrush? ResourcesBrush(BrushType name) => ResourcesBrush(name.ToString());
+    public enum BrushType
+    {
+        Primary,
+        PrimaryTrans,
+        PrimaryTrans4,
+        PrimaryTransA,
+        PrimaryTransE,
+        PrimaryLight,
+        PrimaryLighter,
+        PrimaryDark,
+        PrimaryDarker,
+        PrimaryText,
+
+        Secondary,
+        SecondaryTrans,
+        SecondaryTrans4,
+        SecondaryTransA,
+        SecondaryTransE,
+        SecondaryLight,
+        SecondaryLighter,
+        SecondaryDark,
+        SecondaryDarker,
+        SecondaryText,
+
+        DARKPrimary,
+        DARKPrimaryTrans,
+        DARKPrimaryTrans4,
+        DARKPrimaryTransA,
+        DARKPrimaryTransE,
+        DARKPrimaryLight,
+        DARKPrimaryLighter,
+        DARKPrimaryDark,
+        DARKPrimaryDarker,
+        DARKPrimaryText,
+    }
 
     public class LPSConvertToLower : LPSConvert.ConvertFunction
     {

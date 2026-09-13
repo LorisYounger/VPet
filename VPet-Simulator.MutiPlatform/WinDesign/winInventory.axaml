@@ -1,0 +1,355 @@
+<shell:VPetWindow x:Class="VPet_Simulator.MutiPlatform.winInventory"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell"
+        xmlns:local="using:VPet_Simulator.MutiPlatform"
+        xmlns:vi="using:VPet_Simulator.Windows.Interface"
+        xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+        Title="{ll:Str 物品栏}" Icon="avares://VPet-Simulator.MutiPlatform/Res/Inventory.png" Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}"
+        Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}" FontSize="14" WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource PrimaryLighter}" CaptionHeight="45"
+        CaptionBackground="{DynamicResource DARKPrimary}" CaptionForeground="#FFFFFF"
+        CaptionButtons="Close" CaptionShadowColor="{DynamicResource ShadowColor}">
+    <!-- 跨平台: pu:WindowXCaption.* 换成 VPetWindow 的 Caption* 属性; pu:ButtonHelper.* 换成原生 CornerRadius + 伪类样式 -->
+    <shell:VPetWindow.CaptionCloseButtonTheme>
+        <ControlTheme TargetType="Button" BasedOn="{StaticResource WindowXCaptionButtonStyle}">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Margin" Value="0,0,7,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimary}" />
+            </Style>
+            <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="White" />
+            </Style>
+        </ControlTheme>
+    </shell:VPetWindow.CaptionCloseButtonTheme>
+    <shell:VPetWindow.CaptionHeaderTemplate>
+        <DataTemplate>
+            <Grid Margin="10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="ImageWHY" Width="28" Height="28" Source="avares://VPet-Simulator.MutiPlatform/Res/Inventory.png"
+                            VerticalAlignment="Center" Margin="30,0,0,0" />
+                    <TextBlock Text="{ll:Str 物品栏}" Foreground="{DynamicResource DARKPrimaryText}"
+                            VerticalAlignment="Center" FontSize="20" Margin="10,0,0,0" />
+                    <Grid Grid.Column="1" Margin="15,0,0,0" shell:VPetWindow.IsDragMoveArea="False" Width="200">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TbTitleSearch" Grid.ColumnSpan="2" VerticalAlignment="Center" Padding="7,0"
+                                Watermark="{ll:Str 搜索物品}" FontSize="14" Background="#33FFFFFF"
+                                Height="30" BorderThickness="0" CornerRadius="5"
+                                Loaded="TbTitleSearch_Loaded" Foreground="{DynamicResource DARKPrimaryText}" />
+                        <Button Grid.Column="1" Margin="0,0,3,0" VerticalAlignment="Center" Height="28" Width="28"
+                                IsDefault="{Binding #TbTitleSearch.IsKeyboardFocusWithin}"
+                                BorderThickness="0" CornerRadius="0,5,5,0" Background="Transparent"
+                                FontFamily="{StaticResource RemixIcon}" Content="&#xF0D1;" Padding="0"
+                                Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" Cursor="Hand"
+                                Click="BtnSearch_Click" />
+                    </Grid>
+                </StackPanel>
+                <!-- 跨平台: Avalonia 的 Run 没有 Loaded, 挂在外面的 TextBlock 上, 处理器里按名字找 Run -->
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="20,0,10,0"
+                        Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" FontWeight="Bold" Loaded="rTotalValue_Loaded">
+                    <Run Text="{ll:Str 总价值}" />: $ <Run x:Name="rTotalValue" Text="" />
+                </TextBlock>
+            </Grid>
+        </DataTemplate>
+    </shell:VPetWindow.CaptionHeaderTemplate>
+
+    <!-- 物品详情遮罩层：套用更好买最终确认版（无遮罩悬浮、但打开详情有遮罩） -->
+    <shell:VPetWindow.Overlayer>
+        <Grid>
+            <!-- 详情打开时：需要遮罩/拦截背景点击，并支持点空白关闭 -->
+            <Border Background="Transparent" PointerPressed="BorderOutDetail_MouseLeftButtonDown" />
+            <Grid x:Name="ItemDetailGrid" Margin="120, 90">
+                <!-- 跨平台: DropShadowEffect 换成 BoxShadow -->
+                <Border Background="White" CornerRadius="15" BoxShadow="5 5 30 0 #eaeaea" />
+                <Grid Margin="18">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="{ll:Str 物品详情}" FontSize="18" Margin="0,5"
+                            Foreground="{DynamicResource DARKPrimary}" />
+                    <Button Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Content="&#xEB99;"
+                            Padding="0" Width="36" Height="36"
+                            FontFamily="{StaticResource RemixIcon}" FontSize="28"
+                            Theme="{DynamicResource ThemedButtonStyle}" Click="ButtonCloseDetail_Click" />
+                    <!-- 跨平台: pu:ToggleButtonHelper.CheckedContent 换成 :checked 样式; Content 也得写在样式里, 不然本地值会压过样式 -->
+                    <ToggleButton x:Name="TbtnStar" Grid.ColumnSpan="3" Margin="0,2,45,0" HorizontalAlignment="Right"
+                            VerticalAlignment="Top" Width="30" Height="30" Padding="0" FontSize="22"
+                            Foreground="#FFB300" Background="Transparent" ToolTip.Tip="{ll:Str 收藏物品}"
+                            Theme="{DynamicResource IconToggleButtonStyle}"
+                            IsCheckedChanged="TbtnStar_Checked">
+                        <ToggleButton.Styles>
+                            <Style Selector="ToggleButton">
+                                <Setter Property="Content" Value="&#xF18B;" />
+                            </Style>
+                            <Style Selector="ToggleButton:checked">
+                                <Setter Property="Content" Value="&#xF186;" />
+                            </Style>
+                        </ToggleButton.Styles>
+                    </ToggleButton>
+                    <!-- 左侧：图片 -->
+                    <Border Grid.Row="1" CornerRadius="10" Background="{DynamicResource SecondaryTrans4}">
+                        <Grid>
+                            <Image x:Name="ImageItemDetail" Stretch="Uniform" />
+                            <Border x:Name="BorderIsSingle" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="8" Background="#2000"
+                                    ToolTip.Tip="{ll:Str 该物品不会因为使用而消耗}" CornerRadius="16">
+                                <TextBlock VerticalAlignment="Center" Foreground="#AFFF"
+                                        FontFamily="{StaticResource RemixIcon}" FontSize="32" Text="&#xEB81;" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- 右侧：文本信息 -->
+                    <Grid Grid.Row="1" Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="TextItemName" FontSize="20" FontWeight="Bold"
+                                Foreground="{DynamicResource DARKPrimary}" TextTrimming="CharacterEllipsis" />
+
+                        <ScrollViewer Grid.Row="2" Margin="0,10,0,0" HorizontalScrollBarVisibility="Disabled"
+                                VerticalScrollBarVisibility="Auto">
+                            <!-- ScrollViewer 会导致子元素按“无限宽”测量，从而 Wrap 失效；这里强制按可视宽度约束 -->
+                            <TextBlock x:Name="TextItemDesc" TextWrapping="Wrap"
+                                    Width="{Binding $parent[ScrollViewer].Bounds.Width}" />
+                        </ScrollViewer>
+
+                        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0">
+                            <TextBlock Text="{ll:Str 价值}" VerticalAlignment="Center" />
+                            <TextBlock x:Name="TextItemPrice" Margin="10,0,0,0" VerticalAlignment="Center"
+                                    Foreground="{DynamicResource Primary}" FontWeight="SemiBold" FontSize="16" />
+                        </StackPanel>
+
+                        <!-- 数量：减/输入/加 -->
+                        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,10,0,0" VerticalAlignment="Center"
+                                x:Name="spUseEnter">
+                            <TextBlock Text="{ll:Str 数量}" VerticalAlignment="Center"/>
+                            <Border Margin="10,0,0,0" CornerRadius="6" Background="{DynamicResource Secondary}">
+                                <StackPanel Orientation="Horizontal">
+                                    <RepeatButton VerticalAlignment="Center" Content="-" Width="28" Height="32"
+                                            Theme="{DynamicResource IconInvertedForegroundRepeatButtonStyle}"
+                                            Click="RbtnDetailDecrease_Click" />
+                                    <!-- 跨平台: pu:TextBoxHelper.InputLimit="Digit" 没有对应物, 非数字由 ApplyDetailCountFromText 兜住 -->
+                                    <TextBox x:Name="TbDetailCount" Width="40" Height="32"
+                                            VerticalContentAlignment="Center"
+                                            HorizontalContentAlignment="Center" BorderThickness="0"
+                                            Background="#CDFFFFFF" KeyDown="TbDetailCount_PreviewKeyDown"
+                                            LostFocus="TbDetailCount_LostFocus" />
+                                    <RepeatButton VerticalAlignment="Center" Content="+" Width="28" Height="32"
+                                            Theme="{DynamicResource IconInvertedForegroundRepeatButtonStyle}"
+                                            Click="RbtnDetailIncrease_Click" />
+                                </StackPanel>
+                            </Border>
+                            <TextBlock Grid.Column="1" VerticalAlignment="Bottom" FontSize="16">
+                                <Run Text=" / " />
+                                <Run Text="100" x:Name="runMax" />
+                            </TextBlock>
+                        </StackPanel>
+
+                        <Button Grid.Row="5" x:Name="BtnDetailUse" Margin="0,14,0,0" Padding="16,8"
+                                HorizontalAlignment="Left" Cursor="Hand" Theme="{DynamicResource ThemedButtonStyle}"
+                                Content="{ll:Str 使用}" Background="{DynamicResource Primary}" Foreground="White"
+                                Click="BtnDetailUse_Click" />
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </shell:VPetWindow.Overlayer>
+
+    <Window.Resources>
+        <!-- 网格格子：图标 + 标题 + 数量 + 悬浮“使用”(不加遮罩层) -->
+        <!-- 跨平台: Avalonia 默认编译绑定, 模板要标 x:DataType -->
+        <DataTemplate x:Key="InventoryGridCellTemplate" x:DataType="vi:Item">
+            <Grid Width="100" Height="100">
+                <!-- 跨平台: IsMouseOver 触发器换成 :pointerover 样式 -->
+                <Grid.Styles>
+                    <Style Selector="Border#CellRoot:pointerover Grid#grdCellbtn">
+                        <Setter Property="IsVisible" Value="True" />
+                    </Style>
+                </Grid.Styles>
+                <Border x:Name="CellRoot" Cursor="Hand" CornerRadius="6" Background="{DynamicResource SecondaryTrans4}"
+                        BorderBrush="{DynamicResource DARKPrimaryTrans4}" BorderThickness="1"
+                        PointerReleased="CellRoot_MouseLeftButtonUp">
+                    <Grid>
+                        <Border CornerRadius="4" Margin="6,15,6,0">
+                            <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
+                        </Border>
+
+                        <Border VerticalAlignment="Top" Height="22" CornerRadius="6,6,0,0" Background="#66000000">
+                            <TextBlock Margin="6,0" VerticalAlignment="Center"
+                                    Foreground="{DynamicResource DARKPrimaryText}" FontSize="14"
+                                    TextTrimming="CharacterEllipsis" Text="{Binding TranslateName}" />
+                        </Border>
+
+                        <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="4" Background="#2000"
+                                ToolTip.Tip="{ll:Str 该物品不会因为使用而消耗}" CornerRadius="8"
+                                IsVisible="{Binding IsSingle}">
+                            <TextBlock VerticalAlignment="Center" Foreground="#AFFF"
+                                    FontFamily="{StaticResource RemixIcon}" FontSize="16" Text="&#xEB81;" />
+                        </Border>
+                        <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" CornerRadius="6"
+                                Background="#66000000"
+                                IsVisible="{Binding !IsSingle}">
+                            <TextBlock Margin="6,3" VerticalAlignment="Center" Foreground="white" FontSize="16"
+                                    Text="{Binding Count, StringFormat=x{0}}" />
+                        </Border>
+
+                        <!-- Hover：仅显示按钮，不叠加整块遮罩 -->
+                        <Grid x:Name="grdCellbtn" IsVisible="False">
+                            <Button x:Name="BtnCellUse" Cursor="Hand" Padding="3,1" Content="{ll:Str 使用}"
+                                    IsVisible="{Binding CanUse}"
+                                    HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="8,8,8,36" Height="24"
+                                    Theme="{DynamicResource ThemedButtonStyle}" Background="{DynamicResource Primary}"
+                                    Foreground="White" Click="BtnHoverUse_Click" />
+                            <Button x:Name="BtnCellView" Cursor="Hand" Padding="3,1" Content="{ll:Str 详细}"
+                                    HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="24" Margin="8"
+                                    Theme="{DynamicResource ThemedButtonStyle}" Background="{DynamicResource Primary}"
+                                    Foreground="White" Click="BtnHoverView_Click" />
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid Margin="12,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!-- 分类 Tab -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{ll:Str 物品分类}" FontSize="18" Margin="5,6,10,6" Foreground="{DynamicResource DARKPrimary}"
+                    VerticalAlignment="Center" />
+            <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+                <!-- 跨平台: pu:ListBoxHelper.Items* 换成 ItemContainerTheme (选中色在 StandardListBoxItemStyle 里) -->
+                <ListBox x:Name="LsbCategory" Background="Transparent" BorderThickness="0" SelectedIndex="0"
+                        SelectionChanged="LsbSortRule_SelectionChanged">
+                    <ListBox.ItemContainerTheme>
+                        <ControlTheme TargetType="ListBoxItem" BasedOn="{StaticResource StandardListBoxItemStyle}">
+                            <Setter Property="Padding" Value="15,8" />
+                            <Setter Property="CornerRadius" Value="6" />
+                        </ControlTheme>
+                    </ListBox.ItemContainerTheme>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBoxItem Content="{ll:Str 全部}" />
+                </ListBox>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- 排序 Tab -->
+        <Border Grid.Row="1" Margin="0,6,0,10" CornerRadius="6" Background="{DynamicResource SecondaryTrans4}">
+            <Grid Margin="8,6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{ll:Str 排序方式}" FontSize="16" Margin="5,0,10,0"
+                        Foreground="{DynamicResource DARKPrimary}" VerticalAlignment="Center" />
+                <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Hidden"
+                        VerticalScrollBarVisibility="Disabled">
+                    <ListBox x:Name="LsbSortRule" Background="Transparent" BorderThickness="0"
+                            SelectedIndex="0" SelectionChanged="LsbSortRule_SelectionChanged">
+                        <ListBox.ItemContainerTheme>
+                            <ControlTheme TargetType="ListBoxItem" BasedOn="{StaticResource StandardListBoxItemStyle}">
+                                <Setter Property="Padding" Value="10,6" />
+                                <Setter Property="CornerRadius" Value="6" />
+                            </ControlTheme>
+                        </ListBox.ItemContainerTheme>
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBoxItem Content="{ll:Str 默认}" />
+                        <ListBoxItem Content="{ll:Str 名称}" />
+                        <ListBoxItem Content="{ll:Str 数量}" />
+                        <ListBoxItem Content="{ll:Str 价值}" />
+                    </ListBox>
+                </ScrollViewer>
+                <!-- 跨平台: pu:CheckBoxHelper.* 换成 ThemedCheckBoxStyle -->
+                <CheckBox Content="{ll:Str 收藏}" Grid.Column="3" FontSize="14" Margin="10,0,5,0" Height="20"
+                        VerticalAlignment="Center" HorizontalAlignment="Left"
+                        Theme="{DynamicResource ThemedCheckBoxStyle}"
+                        Background="{DynamicResource PrimaryLighter}"
+                        shell:VPetWindow.IsDragMoveArea="False" Loaded="Switch_Loaded" IsCheckedChanged="CheckBox_Checked" />
+                <ListBox x:Name="LsbSortAsc" Grid.Column="2" Background="Transparent" BorderThickness="0"
+                        SelectedIndex="0"
+                        SelectionChanged="LsbSortRule_SelectionChanged">
+                    <ListBox.ItemContainerTheme>
+                        <ControlTheme TargetType="ListBoxItem" BasedOn="{StaticResource StandardListBoxItemStyle}">
+                            <Setter Property="Padding" Value="10,6" />
+                            <Setter Property="CornerRadius" Value="6" />
+                        </ControlTheme>
+                    </ListBox.ItemContainerTheme>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBoxItem Content="{ll:Str 升序}" />
+                    <ListBoxItem Content="{ll:Str 降序}" />
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <!-- 网格背包 -->
+        <Grid Grid.Row="2">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
+                <ItemsControl x:Name="IcCommodity">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <local:AutoUniformGrid VerticalAlignment="Top" ItemsMinWidth="120" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl Margin="0,0,10,10" Content="{Binding}"
+                                    ContentTemplate="{StaticResource InventoryGridCellTemplate}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <TextBlock x:Name="TbNone" Text="{ll:Str 暂无物品}" IsVisible="False" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" FontSize="20" Foreground="{DynamicResource PrimaryText}" />
+        </Grid>
+    </Grid>
+</shell:VPetWindow>

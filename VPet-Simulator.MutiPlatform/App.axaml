@@ -1,56 +1,85 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="VPet_Simulator.MutiPlatform.App">
+             x:Class="VPet_Simulator.MutiPlatform.App"
+             RequestedThemeVariant="Light">
+    <!--
+    颜色全由 Theme.axaml 定, 与 Windows 版一样不跟系统深浅色走, 所以钉死 Light
+    (不钉的话原生控件 (NumericUpDown/滚动条…) 会在深色系统上变黑).
+    对应 Windows 版 VPet-Simulator.Windows/App.xaml: 全局字体、图标字体, 再合并
+    Windows.Interface 的 ResourceStyle (那边由 Panuon 的 GlobalSettings 定全局字号 14).
+    -->
     <Application.Styles>
         <SimpleTheme />
-        <StyleInclude Source="avares://VPet_Simulator.Core.MutiPlatform/Display/Shell/VPetStyles.axaml" />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Simple.xaml" />
+        <!-- 全局默认: 字号 14、正文黑字, 对应 pu:GlobalSettings FontSize=14 -->
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+        </Style>
+        <Style Selector="Window">
+            <Setter Property="FontFamily" Value="{DynamicResource MainFont}" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <!-- Label 的字符串内容默认走 AccessText, 多行文案会叠在一起画; WPF 那边没这问题, 这里换成普通 TextBlock 来显示 -->
+        <Style Selector="Label">
+            <Setter Property="ContentTemplate">
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                </DataTemplate>
+            </Setter>
+        </Style>
+        <!--
+        SimpleTheme 的默认观感与 Windows 版差得远的几处, 全局拉回来 (Panuon 那边这些都是库的默认样式):
+        输入框深色底浅色字、勾选框旁的字太浅、进度条配色
+        -->
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Secondary}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="6,4" />
+        </Style>
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+        </Style>
+        <Style Selector="CheckBox">
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+        </Style>
+        <Style Selector="ProgressBar">
+            <Setter Property="Foreground" Value="{DynamicResource DARKPrimary}" />
+            <Setter Property="Background" Value="{DynamicResource PrimaryTrans4}" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="MinHeight" Value="6" />
+        </Style>
+        <!-- pu:Spin 的对应物: 一段转圈的弧 -->
+        <Style Selector="Arc.Spin">
+            <Style.Animations>
+                <Animation Duration="0:0:1" IterationCount="INFINITE">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="RotateTransform.Angle" Value="0" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="RotateTransform.Angle" Value="360" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
     </Application.Styles>
     <Application.Resources>
-        <!--
-        色板逐字取自 Windows 版的 VPet-Simulator.Core/Display/Theme.xaml, 键名和值都
-        一样, 这样两边的界面代码可以用同一套资源名, MOD 主题换过来也是同一批键.
-
-        这三十一个是默认值: 装了主题 MOD 之后 ThemeLoader 会按 ThemeRules 展开出来的
-        结果整套覆盖上去. 默认值必须齐全 —— 主题里缺哪个键就退回这里的, 缺了会变成
-        透明底色而不是报错.
-        -->
         <ResourceDictionary>
-            <SolidColorBrush x:Key="Primary" Color="#FF81d4fa" />
-            <SolidColorBrush x:Key="PrimaryTrans" Color="#DD81d4fa" />
-            <SolidColorBrush x:Key="PrimaryTrans4" Color="#4481d4fa" />
-            <SolidColorBrush x:Key="PrimaryTransA" Color="#AA81d4fa" />
-            <SolidColorBrush x:Key="PrimaryTransE" Color="#EE81d4fa" />
-            <SolidColorBrush x:Key="PrimaryLight" Color="#FFA3E2FF" />
-            <SolidColorBrush x:Key="PrimaryLighter" Color="#FFC1EBFF" />
-            <SolidColorBrush x:Key="PrimaryDark" Color="#FF5CBEEA" />
-            <SolidColorBrush x:Key="PrimaryDarker" Color="#FF3CA9DB" />
-            <SolidColorBrush x:Key="PrimaryText" Color="#FF000000" />
-            <SolidColorBrush x:Key="Secondary" Color="#FF90caf9" />
-            <SolidColorBrush x:Key="SecondaryTrans" Color="#DD90caf9" />
-            <SolidColorBrush x:Key="SecondaryTrans4" Color="#4490caf9" />
-            <SolidColorBrush x:Key="SecondaryTransA" Color="#AA90caf9" />
-            <SolidColorBrush x:Key="SecondaryTransE" Color="#EE90caf9" />
-            <SolidColorBrush x:Key="SecondaryLight" Color="#FFADD7F9" />
-            <SolidColorBrush x:Key="SecondaryLighter" Color="#FFCBE4F9" />
-            <SolidColorBrush x:Key="SecondaryDark" Color="#FF6BB1E9" />
-            <SolidColorBrush x:Key="SecondaryDarker" Color="#FF4999DA" />
-            <SolidColorBrush x:Key="SecondaryText" Color="#FF000000" />
-            <SolidColorBrush x:Key="DARKPrimary" Color="#FF039be5" />
-            <SolidColorBrush x:Key="DARKPrimaryTrans" Color="#DD039be5" />
-            <SolidColorBrush x:Key="DARKPrimaryTrans4" Color="#44039be5" />
-            <SolidColorBrush x:Key="DARKPrimaryTransA" Color="#AA039be5" />
-            <SolidColorBrush x:Key="DARKPrimaryTransE" Color="#EE039be5" />
-            <SolidColorBrush x:Key="DARKPrimaryLight" Color="#FF1FA9EC" />
-            <SolidColorBrush x:Key="DARKPrimaryLighter" Color="#FF3DB8F4" />
-            <SolidColorBrush x:Key="DARKPrimaryDark" Color="#FF0290D5" />
-            <SolidColorBrush x:Key="DARKPrimaryDarker" Color="#FF0286C6" />
-            <SolidColorBrush x:Key="DARKPrimaryText" Color="#FFffffff" />
-            <Color x:Key="ShadowColor">#90caf9</Color>
-            <!--
-            字体: 启动时 FontLoader 会按设置里的 font 键换掉它.
-            默认留空表示系统默认字体 —— 三个平台各自的默认中文字体都是合适的.
-            -->
-            <FontFamily x:Key="VPetFont">$Default</FontFamily>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <!--
+                    字体: 启动时 FontLoader 会按设置里的 font 键换掉 MainFont.
+                    默认留空表示系统默认字体 —— 三个平台各自的默认中文字体都是合适的.
+                    (Windows 版内嵌 OPPOSans R; 跨平台版 MOD 自带的 ttf 装不上, 见 FontLoader)
+                    -->
+                    <FontFamily x:Key="MainFont">$Default</FontFamily>
+                    <FontFamily x:Key="VPetFont">$Default</FontFamily>
+                    <FontFamily x:Key="RemixIcon">avares://VPet-Simulator.MutiPlatform/Res/remixicon.ttf#remixicon</FontFamily>
+                </ResourceDictionary>
+                <ResourceInclude Source="avares://VPet_Simulator.Core.MutiPlatform/Display/ResourceStyle.axaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

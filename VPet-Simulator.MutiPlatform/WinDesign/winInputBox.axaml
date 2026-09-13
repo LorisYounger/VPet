@@ -1,0 +1,24 @@
+<shell:VPetWindow x:Class="VPet_Simulator.MutiPlatform.winInputBox"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Foreground="{StaticResource PrimaryText}"
+        xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell" MinWidth="300"
+        Title="winInputBox" CanResize="False"
+        WindowStartupLocation="CenterScreen" Topmost="True" Theme="{DynamicResource BaseWindowXStyle}" Background="{DynamicResource SecondaryLighter}"
+        Closing="Window_Closing" Closed="Window_Closed" SizeToContent="WidthAndHeight">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <TextBlock x:Name="Text" Text="文本消息内容就显示在这里,无论你是否接受,你也没法接受这样的弹窗?" Margin="20,5,20,5" VerticalAlignment="Top"
+                TextWrapping="Wrap" />
+        <TextBox x:Name="TextBoxInput" Grid.Row="1" Margin="20,0,20,10" VerticalAlignment="Top" FontSize="14" Theme="{DynamicResource StandardTextBoxStyle}"
+                KeyDown="TextBoxInput_PreviewKeyDown" />
+        <Button Grid.Row="2" x:Name="ButtonOK" Content="确定" HorizontalAlignment="Right" Margin="5,0,0,0"
+                VerticalAlignment="Bottom" Height="30" Width="75" Foreground="{DynamicResource DARKPrimaryText}"
+                Background="{DynamicResource PrimaryDarker}" Click="ButtonYes_Click" FontSize="12"
+                CornerRadius="5" />
+    </Grid>
+</shell:VPetWindow>

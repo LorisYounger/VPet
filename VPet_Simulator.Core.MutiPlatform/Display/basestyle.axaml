@@ -1,0 +1,489 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell">
+    <!--
+    对应 Windows 版 VPet-Simulator.Core/Display/basestyle.xaml.
+    那边的样式建立在 Panuon.WPF.UI 之上 (pu:XxxHelper 附加属性), 这边没有 Panuon, 同样的键改成
+    Avalonia 的 ControlTheme, 观感照着原来的配色和圆角做. XAML 里 Style="{DynamicResource K}"
+    机械替换成 Theme="{DynamicResource K}" 就能用.
+    -->
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://VPet_Simulator.Core.MutiPlatform/Display/Theme.axaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--
+    进度条的斜纹画刷: 8×22 的贴片, 左边 5.5 实色 + 右边 2.5 半透明.
+    Windows 版还整体旋转了 2 度, Avalonia 的画刷没有 RelativeTransform, 这点纯装饰的差异不还原.
+    -->
+    <DrawingBrush x:Key="ProgressBarForeground" TileMode="Tile" Stretch="None"
+                  SourceRect="0,0,8,22" DestinationRect="0,0,8,22">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{DynamicResource DARKPrimaryTransA}" Geometry="M5.5,0 L8,0 L8,22 L5.5,22 Z" />
+                <GeometryDrawing Brush="{DynamicResource DARKPrimary}" Geometry="M0,0 L5.5,0 L5.5,22 L0,22 Z" />
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <SolidColorBrush x:Key="SuccessBrush">#AACC6C</SolidColorBrush>
+    <DrawingBrush x:Key="SuccessProgressBarForeground" TileMode="Tile" Stretch="None"
+                  SourceRect="0,0,8,22" DestinationRect="0,0,8,22">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#AAAACC6C" Geometry="M5.5,0 L8,0 L8,22 L5.5,22 Z" />
+                <GeometryDrawing Brush="#AACC6C" Geometry="M0,0 L5.5,0 L5.5,22 L0,22 Z" />
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <SolidColorBrush x:Key="WarningBrush">#FFCC4C</SolidColorBrush>
+    <DrawingBrush x:Key="WarningProgressBarForeground" TileMode="Tile" Stretch="None"
+                  SourceRect="0,0,8,22" DestinationRect="0,0,8,22">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#AAFFCC4C" Geometry="M5.5,0 L8,0 L8,22 L5.5,22 Z" />
+                <GeometryDrawing Brush="#FFCC4C" Geometry="M0,0 L5.5,0 L5.5,22 L0,22 Z" />
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <SolidColorBrush x:Key="DangerBrush">#FF4C4C</SolidColorBrush>
+    <DrawingBrush x:Key="DangerProgressBarForeground" TileMode="Tile" Stretch="None"
+                  SourceRect="0,0,8,22" DestinationRect="0,0,8,22">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#AAFF4C4C" Geometry="M5.5,0 L8,0 L8,22 L5.5,22 Z" />
+                <GeometryDrawing Brush="#FF4C4C" Geometry="M0,0 L5.5,0 L5.5,22 L0,22 Z" />
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <!-- WindowX 的标题栏: 深蓝底白字, 只有关闭按钮, 悬停不变色 -->
+    <ControlTheme x:Key="BaseWindowXStyle" TargetType="shell:VPetWindow" BasedOn="{StaticResource {x:Type shell:VPetWindow}}">
+        <Setter Property="CaptionBackground" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="CaptionForeground" Value="{DynamicResource DARKPrimaryText}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="ThemedButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryLight}" />
+        </Style>
+        <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryDarker}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="TextButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryDarker}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="12" />
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="DARKPrimaryTextButtonStyle" TargetType="Button" BasedOn="{StaticResource TextButtonStyle}">
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="IconInvertedForegroundRepeatButtonStyle" TargetType="RepeatButton" BasedOn="{StaticResource {x:Type RepeatButton}}">
+        <Setter Property="Width" Value="25" />
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontFamily" Value="{DynamicResource RemixIcon}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="LinkButtonStyle" TargetType="Button" BasedOn="{StaticResource TextButtonStyle}">
+        <Setter Property="ContentTemplate">
+            <DataTemplate>
+                <TextBlock Text="{Binding}" TextDecorations="Underline" />
+            </DataTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="StandardToggleButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryLighter}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        </Style>
+        <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="ThemedToggleButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+        <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryDarker}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="TextToggleButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryDarker}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="14" />
+        <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="LinkToggleButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource TextToggleButtonStyle}">
+        <Setter Property="ContentTemplate">
+            <DataTemplate>
+                <TextBlock Text="{Binding}" TextDecorations="Underline" />
+            </DataTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- 翻页条的默认模板: 一排页码按钮, 按钮由控件自己按 Items* 属性造 -->
+    <ControlTheme x:Key="{x:Type shell:Pagination}" TargetType="shell:Pagination">
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Name="PART_Items" Orientation="Horizontal" HorizontalAlignment="Center" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+    <ControlTheme x:Key="StandardPaginationStyle" TargetType="shell:Pagination" BasedOn="{StaticResource {x:Type shell:Pagination}}">
+        <Setter Property="Height" Value="25" />
+        <Setter Property="ItemsPadding" Value="7,0" />
+        <Setter Property="ItemsBackground" Value="{DynamicResource DARKPrimaryTrans4}" />
+        <Setter Property="ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="ItemsSelectedBackground" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="ItemsCornerRadius" Value="2" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="StandardComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+        <Setter Property="BorderThickness" Value="1.5" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="Padding" Value="7,0,15,0" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="PlaceholderForeground" Value="#DCDCDC" />
+        <Setter Property="ItemContainerTheme" Value="{StaticResource StandardComboBoxItemStyle}" />
+    </ControlTheme>
+    <ControlTheme x:Key="StandardComboBoxItemStyle" TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+        <Setter Property="Padding" Value="22,0" />
+        <Setter Property="MinHeight" Value="26" />
+        <Style Selector="^:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
+        </Style>
+        <Style Selector="^:selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="StandardTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+        <Setter Property="BorderThickness" Value="1.5" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="Padding" Value="7,0,15,0" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="5" />
+        <!-- 单行框在 30 高度下会冒出一根竖滚动条, 藏掉; 多行的 (tb_log 那种) 在 XAML 里自己设 Visible -->
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+        <Style Selector="^ /template/ TextBlock#placeholder">
+            <Setter Property="Foreground" Value="#AAAAAA" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#border">
+            <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+        </Style>
+        <Style Selector="^:focus /template/ Border#border">
+            <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimaryDarker}" />
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="StandardSliderStyle" TargetType="Slider" BasedOn="{StaticResource {x:Type Slider}}">
+        <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimary}" />
+        <Style Selector="^ /template/ Thumb#thumb">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+            <Setter Property="BorderThickness" Value="2.5" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="StandardRadioButtonStyle" TargetType="RadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+        <Style Selector="^ /template/ Ellipse#border">
+            <Setter Property="Stroke" Value="{DynamicResource DARKPrimary}" />
+        </Style>
+        <Style Selector="^ /template/ Ellipse#checkMark">
+            <Setter Property="Fill" Value="{DynamicResource DARKPrimary}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="SideMenuListBoxStyle" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ItemContainerTheme" Value="{StaticResource SideMenuListBoxItemStyle}" />
+    </ControlTheme>
+    <ControlTheme x:Key="SideMenuListBoxItemStyle" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Padding" Value="15,0" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Style Selector="^:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:selected /template/ ContentPresenter, ^:selected:focus /template/ ContentPresenter, ^:selected:pointerover /template/ ContentPresenter, ^:selected:focus:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+    工具栏菜单: Windows 版是 Menu 上一大串 pu:MenuHelper.*, 这里拆成顶层项与二级项两个主题
+    (Avalonia 的 Menu 顶层项与子项本来就是两个 ControlTheme).
+    -->
+    <ControlTheme x:Key="ToolBarMenuStyle" TargetType="Menu" BasedOn="{StaticResource {x:Type Menu}}">
+        <Setter Property="Height" Value="55" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimaryDarker}" />
+        <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="ItemContainerTheme" Value="{StaticResource ToolBarTopLevelMenuItemStyle}" />
+    </ControlTheme>
+    <ControlTheme x:Key="ToolBarTopLevelMenuItemStyle" TargetType="MenuItem" BasedOn="{StaticResource SimpleTopLevelMenuItem}">
+        <Setter Property="Padding" Value="15,0" />
+        <Setter Property="Height" Value="55" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="ItemContainerTheme" Value="{StaticResource ToolBarSubmenuItemStyle}" />
+        <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#root, ^:selected /template/ Border#root, ^:open /template/ Border#root">
+            <Setter Property="Background" Value="{DynamicResource SecondaryLighter}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+    </ControlTheme>
+    <ControlTheme x:Key="ToolBarSubmenuItemStyle" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+        <Setter Property="Padding" Value="15,0" />
+        <Setter Property="Height" Value="55" />
+        <Setter Property="MinWidth" Value="200" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="BorderBrush" Value="#CCCECF" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="ItemContainerTheme" Value="{StaticResource ToolBarSubmenuItemStyle}" />
+        <Style Selector="^:selected /template/ Border#root, ^:open /template/ Border#root">
+            <Setter Property="Background" Value="{DynamicResource SecondaryLighter}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="ThemedCheckBoxStyle" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Style Selector="^:checked /template/ Border#border">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="^:checked /template/ Path#checkMark">
+            <Setter Property="Fill" Value="{DynamicResource DARKPrimaryText}" />
+            <Setter Property="Stroke" Value="{DynamicResource DARKPrimaryText}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+    WPF 的 Hyperlink 是行内文字, 这里用 InlineUIContainer 包一个 HyperlinkButton 顶替, 主题去掉内边距和底色,
+    让它在一行文字里不突兀
+    -->
+    <ControlTheme x:Key="{x:Type HyperlinkButton}" TargetType="HyperlinkButton" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDarker}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ContentTemplate">
+            <DataTemplate>
+                <TextBlock Text="{Binding}" TextDecorations="Underline" />
+            </DataTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+    pu:ListBoxHelper.Items* 的对应物: 选中项底色 DARKPrimary、文字 DARKPrimaryText.
+    Windows 版每个 ListBox 各自写 ItemsPadding/ItemsCornerRadius, 这边在 XAML 里用
+    ItemContainerTheme 基于本主题再给 Padding/CornerRadius, 与原文逐个对照.
+    -->
+    <ControlTheme x:Key="StandardListBoxItemStyle" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Style Selector="^:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
+        </Style>
+        <Style Selector="^:selected /template/ ContentPresenter, ^:selected:focus /template/ ContentPresenter, ^:selected:pointerover /template/ ContentPresenter, ^:selected:focus:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+    pu:ToggleButtonHelper.CornerRadius/CheckedContent 的对应物: 字符图标做的收藏/详情开关.
+    CheckedContent 各处不同, 在 XAML 里用 ^:checked 的 Style 给 Content.
+    -->
+    <ControlTheme x:Key="IconToggleButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="FontFamily" Value="{DynamicResource RemixIcon}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
+        </Style>
+        <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+    pu:TabControlHelper.Items* 的对应物: 页签选中底色 PrimaryDark、文字 DARKPrimaryText、悬停 PrimaryLight.
+    每个 TabControl 的 ItemsPadding/ItemsCornerRadius 在 XAML 里用 ItemContainerTheme 基于本主题再给.
+    -->
+    <ControlTheme x:Key="StandardTabItemStyle" TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
+        <Setter Property="Padding" Value="10,7" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+        <!-- SimpleTheme 的页签模板把底色画成半透明的 (选中项只剩三成), 与 Panuon 的实底不一样, 模板自己画 -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="PART_LayoutRoot" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      TextElement.Foreground="{TemplateBinding Foreground}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_LayoutRoot">
+            <Setter Property="Background" Value="{DynamicResource PrimaryLight}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Background" Value="{DynamicResource PrimaryDark}" />
+            <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_LayoutRoot">
+            <Setter Property="Background" Value="{DynamicResource PrimaryDark}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+    pu:FormGroup 的对应物: 表头在左 (Header), 内容在右, 对应 Orientation=Horizontal 的那种用法
+    -->
+    <ControlTheme x:Key="FormGroupStyle" TargetType="HeaderedContentControl">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DockPanel>
+                    <ContentPresenter DockPanel.Dock="Left" Content="{TemplateBinding Header}" Padding="10,0,10,0"
+                                      VerticalAlignment="Center" TextElement.Foreground="{TemplateBinding Foreground}" />
+                    <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+    pu:Switch 的样子: 左边一个圆角底座 + 圆形滑块, 右边是 Content.
+    尺寸与颜色都从 shell:Switch 的属性读 (BoxWidth/BoxHeight/ToggleSize/CheckedBackground…), XAML 原文不用改.
+    -->
+    <ControlTheme x:Key="{x:Type shell:Switch}" TargetType="shell:Switch">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CheckedBackground" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="CheckedBorderBrush" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="ToggleBrush" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="CheckedToggleBrush" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Orientation="Horizontal" Background="Transparent">
+                    <Border Name="PART_Box" Width="{TemplateBinding BoxWidth}" Height="{TemplateBinding BoxHeight}"
+                            Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" VerticalAlignment="Center"
+                            CornerRadius="{Binding $parent[shell:Switch].BoxHeight, Converter={x:Static shell:Switch.HalfCornerRadius}}">
+                        <Ellipse Name="PART_Toggle" Width="{TemplateBinding ToggleSize}" Height="{TemplateBinding ToggleSize}"
+                                Fill="{TemplateBinding ToggleBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,0" />
+                    </Border>
+                    <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5,0,0,0"
+                                      VerticalAlignment="Center" TextElement.Foreground="{TemplateBinding Foreground}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:checked /template/ Border#PART_Box">
+            <Setter Property="Background" Value="{Binding $parent[shell:Switch].CheckedBackground}" />
+            <Setter Property="BorderBrush" Value="{Binding $parent[shell:Switch].CheckedBorderBrush}" />
+        </Style>
+        <Style Selector="^:checked /template/ Ellipse#PART_Toggle">
+            <Setter Property="Fill" Value="{Binding $parent[shell:Switch].CheckedToggleBrush}" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <!-- CheckedForeground 没给 (null) 时沿用 Foreground (伪类由 Switch 按属性有没有值打上) -->
+        <Style Selector="^:checked:checkedforeground /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="TextElement.Foreground" Value="{Binding $parent[shell:Switch].CheckedForeground}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

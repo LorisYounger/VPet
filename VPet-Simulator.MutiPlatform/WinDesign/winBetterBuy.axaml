@@ -1,0 +1,392 @@
+<shell:VPetWindow x:Class="VPet_Simulator.MutiPlatform.winBetterBuy"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Topmost="True"
+        Foreground="{StaticResource PrimaryText}"
+        xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell" xmlns:local="using:VPet_Simulator.MutiPlatform"
+        xmlns:vi="using:VPet_Simulator.Windows.Interface"
+        Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}"
+        Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}" FontSize="14" WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource PrimaryLighter}" CaptionHeight="45"
+        CaptionBackground="{DynamicResource DARKPrimary}" CaptionForeground="#FFFFFF"
+        CaptionButtons="Close" Icon="avares://VPet-Simulator.MutiPlatform/Res/BetterBuy.png"
+        CaptionShadowColor="{DynamicResource ShadowColor}" Closing="WindowX_Closing">
+    <!-- 跨平台: pu:WindowXCaption.* 换成 VPetWindow 的 Caption* 属性; pu:ButtonHelper.* 换成原生 CornerRadius + 伪类样式 -->
+    <shell:VPetWindow.CaptionCloseButtonTheme>
+        <ControlTheme TargetType="Button" BasedOn="{StaticResource WindowXCaptionButtonStyle}">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Margin" Value="0,0,7,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimary}" />
+            </Style>
+            <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="White" />
+            </Style>
+        </ControlTheme>
+    </shell:VPetWindow.CaptionCloseButtonTheme>
+    <shell:VPetWindow.CaptionHeaderTemplate>
+        <DataTemplate>
+            <Grid Margin="10,0">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="ImageWHY" Width="28" Height="28" Source="avares://VPet-Simulator.MutiPlatform/Res/BetterBuy.png"
+                            VerticalAlignment="Center" Margin="30,0,0,0" />
+                    <Button Theme="{DynamicResource TextButtonStyle}" Foreground="{DynamicResource DARKPrimaryText}"
+                            VerticalAlignment="Center" FontSize="20" Click="BtnTitle_Click"
+                            shell:VPetWindow.IsDragMoveArea="False" Margin="10,0,0,0" Loaded="Button_Loaded" />
+                    <Grid Grid.Column="1" Margin="15,0,0,0" shell:VPetWindow.IsDragMoveArea="False" Width="200">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TbTitleSearch" Grid.ColumnSpan="2" VerticalAlignment="Center" Padding="7,0"
+                                Watermark="{ll:Str 搜索商品}" FontSize="14" Background="#33FFFFFF"
+                                Height="30" BorderThickness="0" CornerRadius="5"
+                                Loaded="TbTitleSearch_Loaded" Foreground="{DynamicResource DARKPrimaryText}" />
+                        <Button Grid.Column="1" Margin="0,0,3,0" VerticalAlignment="Center" Height="28" Width="28"
+                                IsDefault="{Binding #TbTitleSearch.IsKeyboardFocusWithin}"
+                                BorderThickness="0" CornerRadius="0,5,5,0" Background="Transparent"
+                                FontFamily="{StaticResource RemixIcon}" Content="&#xF0D1;" Padding="0"
+                                Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" Cursor="Hand"
+                                Click="BtnSearch_Click" />
+                    </Grid>
+                    <!-- 跨平台: Avalonia 的 Run 没有 Loaded, 挂在外面的 TextBlock 上, 处理器里按名字找 Run -->
+                    <TextBlock VerticalAlignment="Center" Margin="20,0,0,0" FontSize="16" FontWeight="Bold" Loaded="rMoney_Loaded">
+                            <Run Text="{ll:Str 金钱}" />: $ <Run x:Name="rMoney" Text="" />
+                    </TextBlock>
+                </StackPanel>
+                <Viewbox HorizontalAlignment="Right">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <shell:Switch Content="{ll:Str 购买后不自动关闭窗口}" Grid.Column="2" FontSize="14" Margin="10,0,5,0"
+                                Height="20" VerticalAlignment="Center" HorizontalAlignment="Left" BoxHeight="14"
+                                ToggleSize="10" CheckedBackground="{DynamicResource Primary}"
+                                CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
+                                ToggleShadowColor="{x:Null}" CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                                ToggleBrush="{DynamicResource DARKPrimaryText}" shell:VPetWindow.IsDragMoveArea="False"
+                                BoxWidth="24" Loaded="Switch_Loaded" />
+                        <shell:Switch Content="{ll:Str 让宠物自己买东西吃}" Grid.Column="2" FontSize="14" Margin="10,0,5,0"
+                                Height="20" VerticalAlignment="Center" HorizontalAlignment="Left" BoxHeight="14"
+                                ToggleSize="10" CheckedBackground="{DynamicResource Primary}"
+                                CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
+                                ToggleShadowColor="{x:Null}" CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                                Grid.Row="1" ToggleBrush="{DynamicResource DARKPrimaryText}"
+                                shell:VPetWindow.IsDragMoveArea="False" BoxWidth="24"
+                                ToolTip.Tip="{ll:Str '当宠物口渴或者饥饿的时候会自己买东西吃\&#13;请注意,宠物可能会乱花钱和吃错误的东西\&#13;额外加收20%外卖运送费用'}"
+                                Loaded="Switch_Loaded_1" />
+                        <shell:Switch Content="{ll:Str 让宠物自己买礼物}" Grid.Column="2" FontSize="14" Margin="10,0,5,0"
+                                Height="20" VerticalAlignment="Center" HorizontalAlignment="Left" BoxHeight="14"
+                                ToggleSize="10" CheckedBackground="{DynamicResource Primary}"
+                                CheckedBorderBrush="{DynamicResource Primary}" Background="Transparent"
+                                ToggleShadowColor="{x:Null}" CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                                Grid.Row="2" ToggleBrush="{DynamicResource DARKPrimaryText}"
+                                shell:VPetWindow.IsDragMoveArea="False" BoxWidth="24" IsVisible="False"
+                                ToolTip.Tip="{ll:Str '当宠物不开心的时候会自己给自己买礼物\&#13;请注意,宠物可能会乱花钱,而且礼物一般都非常贵\&#13;额外加收20%运送费用'}"
+                                Loaded="Switch_Loaded_2" />
+                    </Grid>
+                </Viewbox>
+            </Grid>
+        </DataTemplate>
+    </shell:VPetWindow.CaptionHeaderTemplate>
+    <Window.Resources>
+        <local:BoolToIntConverter x:Key="BoolToIntConverter" />
+        <local:DiscountPriceConverter x:Key="DiscountPriceConverter" />
+
+        <!-- 跨平台: Avalonia 默认编译绑定, 模板要标 x:DataType -->
+        <DataTemplate x:Key="CommodityDataTemplate" x:DataType="vi:Food">
+            <Grid>
+                <!-- 跨平台: pu:CarouselPanel 换成原生 Carousel, 翻页动画用 CrossFade -->
+                <Carousel Grid.Column="1"
+                        SelectedIndex="{Binding #TbtnDetail.IsChecked, Converter={StaticResource BoolToIntConverter}, Mode=OneWay}">
+                    <Carousel.PageTransition>
+                        <CrossFade Duration="0:0:0.3" />
+                    </Carousel.PageTransition>
+                    <Border Background="{DynamicResource SecondaryTrans4}" CornerRadius="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Border Margin="25,0,0,0" Width="{Binding #BdrImage.Bounds.Height}" />
+                            <TextBlock Grid.ColumnSpan="2" Margin="10,7,0,0" FontWeight="Bold"
+                                    TextTrimming="CharacterEllipsis" FontSize="18" Text="{Binding TranslateName}" />
+                            <Grid Grid.Column="1" Margin="0,40,0,10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                    <TextBlock x:Name="TxtPrice" VerticalAlignment="Bottom"
+                                            Text="{Binding Price, StringFormat='$ 0.0'}" FontWeight="Bold" FontSize="18"
+                                            Foreground="{DynamicResource DARKPrimary}" />
+                                    <!--<TextBlock x:Name="TxtDiscountPrice" Margin="5,0,0,0" FontWeight="Bold"
+                                            FontSize="18" Foreground="{DynamicResource DARKPrimary}">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource DiscountPriceConverter}">
+                                                <Binding Path="Price" />
+                                                <Binding Path="Discount" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>-->
+                                </StackPanel>
+                                <!--<Border Grid.Row="3" Margin="0,5,0,0" HorizontalAlignment="Left"
+                                        Background="{DynamicResource SecondaryTrans}" CornerRadius="2">
+                                    <StackPanel Orientation="Horizontal">
+                                        <RepeatButton VerticalAlignment="Center" Content="-" Padding="0,0,0,5"
+                                                Theme="{DynamicResource IconInvertedForegroundRepeatButtonStyle}"
+                                                Click="RbtnDecrease_Click" />
+                                        <TextBox Grid.Column="1" Cursor="IBeam" Background="#CDFFFFFF"
+                                                BorderThickness="0" HorizontalContentAlignment="Center"
+                                                Text="{Binding Quantity}" MinWidth="30" />
+                                        <RepeatButton Grid.Column="2" VerticalAlignment="Center" Content="+"
+                                                Padding="0,0,0,5"
+                                                Theme="{DynamicResource IconInvertedForegroundRepeatButtonStyle}"
+                                                Click="RbtnIncrease_Click" />
+                                    </StackPanel>
+                                </Border>-->
+                                <!-- 跨平台: pu:ButtonHelper.Icon 换成内容里前置一个图标字符 -->
+                                <Button Grid.Row="4" Margin="0,7,0,0" Padding="7,5" Cursor="Hand"
+                                        HorizontalAlignment="Left"
+                                        Theme="{DynamicResource ThemedButtonStyle}"
+                                        Click="BtnBuy_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock FontFamily="{StaticResource RemixIcon}" Text="&#xF11A;" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="{ll:Str 购买}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <Border Background="{DynamicResource DARKPrimary}" CornerRadius="5">
+                        <Grid>
+                            <Grid Grid.Column="1" Margin="10,10,10,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="16"
+                                        Foreground="{DynamicResource DARKPrimaryText}" Text="{Binding TranslateName}" />
+                                <ScrollViewer Grid.Row="1" Grid.RowSpan="4" Margin="0,7,0,0"
+                                        PointerWheelChanged="ScrollViewer_PreviewMouseWheel">
+                                    <StackPanel x:Name="StkContainer">
+                                        <!-- 跨平台: 关掉布局取整, 不然两个半宽加起来会比整宽多出半个像素而换行 -->
+                                        <ItemsControl ItemsSource="{Binding DescriptionValues}" UseLayoutRounding="False">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:CompileBindings="False">
+                                                    <!-- 跨平台: 模板里 ElementName 找不到外层的 StkContainer, 改取同宽的 ItemsControl (逻辑树上的父级) -->
+                                                    <StackPanel Orientation="Horizontal"
+                                                            Width="{Binding $parent[ItemsControl].Bounds.Width, Converter={x:Static local:Converters.DoubleDivideByConverter},ConverterParameter=2}">
+                                                        <TextBlock Foreground="{DynamicResource DARKPrimaryText}"
+                                                                FontSize="12" Width="37" Padding="0"
+                                                                VerticalAlignment="Center" Text="{Binding Key}" />
+                                                        <TextBlock Text="："
+                                                                Foreground="{DynamicResource DARKPrimaryText}"
+                                                                FontSize="12" />
+                                                        <TextBlock Foreground="{DynamicResource DARKPrimaryText}"
+                                                                FontSize="12" Padding="0" VerticalAlignment="Center"
+                                                                Text="{Binding Value}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock TextWrapping="Wrap" Background="Transparent" FontSize="12"
+                                                Padding="0" Foreground="{DynamicResource DARKPrimaryText}"
+                                                Text="{Binding Description}" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Carousel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="BdrImage" Margin="10,35,0,10" CornerRadius="5"
+                            IsVisible="{Binding !#TbtnDetail.IsChecked}">
+                        <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
+                    </Border>
+                    <!-- 跨平台: pu:ToggleButtonHelper.CheckedContent/CheckedForeground 换成 :checked 样式;
+                         Content/Foreground 也得写在样式里, 不然本地值会压过样式 -->
+                    <ToggleButton x:Name="TbtnStar" Grid.ColumnSpan="2" Margin="0,5,32,0" HorizontalAlignment="Right"
+                            VerticalAlignment="Top" Width="30" Height="30" Padding="0" FontSize="22"
+                            Foreground="#FFB300" Background="Transparent" ToolTip.Tip="{ll:Str 收藏食物}"
+                            Theme="{DynamicResource IconToggleButtonStyle}"
+                            IsChecked="{Binding Star}">
+                        <ToggleButton.Styles>
+                            <Style Selector="ToggleButton">
+                                <Setter Property="Content" Value="&#xF18B;" />
+                            </Style>
+                            <Style Selector="ToggleButton:checked">
+                                <Setter Property="Content" Value="&#xF186;" />
+                            </Style>
+                        </ToggleButton.Styles>
+                    </ToggleButton>
+                    <ToggleButton x:Name="TbtnDetail" Grid.ColumnSpan="2" Margin="0,5,8,0" HorizontalAlignment="Right"
+                            VerticalAlignment="Top" Width="30" Height="30" Padding="0" FontSize="22"
+                            Background="Transparent"
+                            ToolTip.Tip="{ll:Str 物品详情}" Theme="{DynamicResource IconToggleButtonStyle}">
+                        <ToggleButton.Styles>
+                            <Style Selector="ToggleButton">
+                                <Setter Property="Content" Value="&#xEF3E;" />
+                                <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDarker}" />
+                            </Style>
+                            <Style Selector="ToggleButton:checked">
+                                <Setter Property="Content" Value="&#xEF3D;" />
+                                <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+                            </Style>
+                        </ToggleButton.Styles>
+                    </ToggleButton>
+                </Grid>
+            </Grid>
+            <!--<DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Discount}" Value="100">
+                    <Setter TargetName="TxtPrice" Property="Foreground" Value="{DynamicResource DARKPrimary}" />
+                    <Setter TargetName="TxtPrice" Property="FontSize" Value="18" />
+                    <Setter TargetName="TxtPrice" Property="TextDecorations" Value="None" />
+                    -->
+            <!--<Setter TargetName="TxtDiscountPrice" Property="Visibility" Value="Collapsed" />-->
+            <!--
+                </DataTrigger>
+            </DataTemplate.Triggers>-->
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Border Background="{DynamicResource DARKPrimaryText}" />
+        <Grid Margin="12, 10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="2*" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="{ll:Str 商品分类}" FontSize="18" Margin="5" Foreground="{DynamicResource DARKPrimary}" />
+            <!-- 跨平台: pu:ListBoxHelper.Items* 换成 ItemContainerTheme (选中色在 StandardListBoxItemStyle 里) -->
+            <ListBox x:Name="LsbCategory" Grid.Row="1" Margin="-12,10,-12,0" Background="Transparent"
+                    BorderThickness="0" SelectedIndex="0"
+                    SelectionChanged="LsbSortRule_SelectionChanged">
+                <ListBox.ItemContainerTheme>
+                    <ControlTheme TargetType="ListBoxItem" BasedOn="{StaticResource StandardListBoxItemStyle}">
+                        <Setter Property="Padding" Value="15,8" />
+                    </ControlTheme>
+                </ListBox.ItemContainerTheme>
+                <ListBoxItem Content="{ll:Str 全部}" />
+                <ListBoxItem Content="{ll:Str 收藏}" />
+                <ListBoxItem Content="{ll:Str 正餐}" />
+                <ListBoxItem Content="{ll:Str 零食}" />
+                <ListBoxItem Content="{ll:Str 饮料}" />
+                <ListBoxItem Content="{ll:Str 功能性}" />
+                <ListBoxItem Content="{ll:Str 药品}" />
+                <ListBoxItem Content="{ll:Str 礼品}" />
+            </ListBox>
+            <TextBlock Grid.Row="2" Text="{ll:Str 排序方式}" Margin="5" FontSize="18"
+                    Foreground="{DynamicResource DARKPrimary}" />
+            <Border Grid.Row="3" Margin="0,10,0,0" MinHeight="100" CornerRadius="5">
+                <Grid VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ListBox x:Name="LsbSortRule" Background="Transparent" BorderThickness="0"
+                            SelectedIndex="0" SelectionChanged="LsbSortRule_SelectionChanged">
+                        <ListBox.ItemContainerTheme>
+                            <ControlTheme TargetType="ListBoxItem" BasedOn="{StaticResource StandardListBoxItemStyle}">
+                                <Setter Property="Padding" Value="10,5" />
+                                <Setter Property="CornerRadius" Value="4" />
+                            </ControlTheme>
+                        </ListBox.ItemContainerTheme>
+                        <ListBoxItem Content="{ll:Str 按名字}" />
+                        <ListBoxItem Content="{ll:Str 按价格}" />
+                        <ListBoxItem Content="{ll:Str 按饱腹度}" />
+                        <ListBoxItem Content="{ll:Str 按口渴度}" />
+                        <ListBoxItem Content="{ll:Str 按体力}" />
+                        <ListBoxItem Content="{ll:Str 按心情}" />
+                        <ListBoxItem Content="{ll:Str 按健康}" />
+                        <ListBoxItem Content="{ll:Str 按经验值}" />
+                        <ListBoxItem Content="{ll:Str 按好感度}" />
+                    </ListBox>
+                    <Rectangle Grid.Column="1" Margin="10,0,10,0" Width="1" Fill="{DynamicResource DARKPrimaryTrans4}" />
+                    <ListBox x:Name="LsbSortAsc" Grid.Column="2" Background="Transparent" BorderThickness="0"
+                            SelectedIndex="0" SelectionChanged="LsbSortRule_SelectionChanged">
+                        <ListBox.ItemContainerTheme>
+                            <ControlTheme TargetType="ListBoxItem" BasedOn="{StaticResource StandardListBoxItemStyle}">
+                                <Setter Property="Padding" Value="10,5" />
+                                <Setter Property="CornerRadius" Value="4" />
+                            </ControlTheme>
+                        </ListBox.ItemContainerTheme>
+                        <ListBoxItem Content="{ll:Str 升序}" />
+                        <ListBoxItem Content="{ll:Str 降序}" />
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Margin="10" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ItemsControl x:Name="IcCommodity" SizeChanged="AutoUniformGrid_SizeChanged">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <local:AutoUniformGrid VerticalAlignment="Top" ItemsMinWidth="250"
+                                Changed="AutoUniformGrid_Changed" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl Height="140" Margin="0,0,10,10" Content="{Binding}"
+                                ContentTemplate="{StaticResource CommodityDataTemplate}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <shell:Pagination x:Name="pagination" Theme="{DynamicResource StandardPaginationStyle}"
+                        CurrentPageChanged="pagination_CurrentPageChanged" />
+                <StackPanel Grid.Column="1" Margin="5,0,0,0" Orientation="Horizontal">
+                    <TextBox x:Name="TbPage" MinWidth="50" Theme="{DynamicResource StandardTextBoxStyle}"
+                            KeyDown="TbPage_PreviewKeyDown" />
+                    <TextBlock Margin="3,0,0,0" Text="{ll:Str 页}" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Column="3" Margin="5,0,0,0" Orientation="Horizontal">
+                    <TextBlock Margin="3" Text="{ll:Str 一次购买}" VerticalAlignment="Center" />
+                    <!-- 跨平台: pu:NumberInput 换成原生 NumericUpDown -->
+                    <NumericUpDown x:Name="nibuytimes" Value="1" Minimum="1" CornerRadius="5,5,5,5" BorderThickness="1.5"
+                            BorderBrush="{DynamicResource DARKPrimary}" MinWidth="50" FormatString="0"
+                            ValueChanged="nibuytimes_ValueChanged" />
+                    <TextBlock Margin="3" Text="{ll:Str 个}" VerticalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</shell:VPetWindow>

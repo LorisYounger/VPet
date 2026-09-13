@@ -31,6 +31,7 @@
     <Compile Include="..\VPet-Simulator.Windows.Interface.Base\Save\**\*.cs" LinkBase="Shared\Save" />
     <Compile Include="..\VPet-Simulator.Windows.Interface.Base\Mod\**\*.cs" LinkBase="Shared\Mod" />
     <Compile Include="..\VPet-Simulator.Windows.Interface.Base\Data\**\*.cs" LinkBase="Shared\Data" />
+    <Compile Include="..\VPet-Simulator.Windows.Interface.Base\MutiPlayer\**\*.cs" LinkBase="Shared\MutiPlayer" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LinePutScript" Version="1.11.9" />

@@ -18,7 +18,7 @@ namespace VPet_Simulator.Core.MutiPlatform.Display;
 /// 右键桌宠弹出, 4 秒无操作自动收起.
 public partial class ToolBar : UserControl, IDisposable
 {
-    private readonly PetMain m;
+    private readonly Main m;
     public Timer CloseTimer;
     bool onFocus = false;
     Timer closePanelTimer;
@@ -30,7 +30,7 @@ public partial class ToolBar : UserControl, IDisposable
     {
     }
 
-    public ToolBar(PetMain m)
+    public ToolBar(Main m)
     {
         InitializeComponent();
         this.m = m;
@@ -41,11 +41,33 @@ public partial class ToolBar : UserControl, IDisposable
             Enabled = false
         };
         CloseTimer.Elapsed += Closetimer_Elapsed;
-        closePanelTimer = new Timer();
+        // Windows 版这里是 new Timer() (100ms, AutoReset), 面板藏起来之后它还会一直空转;
+        // 这边给它定死间隔, 藏完就停 (见 ClosePanelTimer_Tick)
+        closePanelTimer = new Timer(100);
         closePanelTimer.Elapsed += ClosePanelTimer_Tick;
+        // WPF 的 Menu 打开时会把鼠标捕获到菜单子树里, 指针进弹出层不算离开工具栏;
+        // Avalonia 的弹出层是独立窗口, 指针一进去主窗口就收到 PointerExited, 4 秒计时
+        // 就把工具栏藏了, 菜单却还留在屏幕上. 所以菜单开着的时候不计时
+        ToolBarMenu.AddHandler(MenuItem.SubmenuOpenedEvent, (_, _) => CloseTimer.Enabled = false);
+        ToolBarMenu.Closed += (_, _) =>
+        {
+            if (IsVisible && !IsPointerOver)
+                CloseTimer.Start();
+        };
         if (m != null)
             m.TimeUIHandle += M_TimeUIHandle;
         LoadDIY();
+    }
+
+    /// <summary>
+    /// 收起工具栏
+    /// </summary>
+    /// WPF 里把工具栏 Collapsed 掉, 它的 Popup 会跟着关; Avalonia 不会, 得先把菜单关掉
+    public void Hide()
+    {
+        ToolBarMenu.Close();
+        CloseTimer.Enabled = false;
+        IsVisible = false;
     }
 
     public void LoadClean()
@@ -140,9 +162,6 @@ public partial class ToolBar : UserControl, IDisposable
                 MenuPlay.Items.Add(mi);
             }
         }
-        // 投喂菜单是宿主用 AddMenuButton 填的, 跨平台版还没有食物 MOD, 空着就先藏起来:
-        // 留个点不开的空菜单只会让人以为功能坏了
-        MenuFeed.IsVisible = MenuFeed.Items.Count > 0;
     }
 
     /// <summary>
@@ -182,13 +201,13 @@ public partial class ToolBar : UserControl, IDisposable
     public void StartWork(GraphHelper.Work? w)
     {
         if (m.StartWork(w))
-            IsVisible = false;
+            Hide();
     }
 
     /// <summary>
     /// 刷新显示UI
     /// </summary>
-    public void M_TimeUIHandle(PetMain m)
+    public void M_TimeUIHandle(Main m)
     {
         if (BdrPanel.IsVisible)
         {
@@ -268,7 +287,7 @@ public partial class ToolBar : UserControl, IDisposable
 
     private void ClosePanelTimer_Tick(object? sender, EventArgs e)
     {
-        PetMain.RunOnUi(() =>
+        Main.RunOnUi(() =>
         {
             if (BdrPanel.IsPointerOver
                 || MenuPanel.IsPointerOver)
@@ -277,6 +296,7 @@ public partial class ToolBar : UserControl, IDisposable
                 return;
             }
             BdrPanel.IsVisible = false;
+            closePanelTimer.Stop();
         });
     }
 
@@ -288,7 +308,14 @@ public partial class ToolBar : UserControl, IDisposable
             CloseTimer.Start();
         }
         else
-            PetMain.RunOnUi(() => IsVisible = false);
+            Main.RunOnUi(() =>
+            {
+                //菜单还开着 (指针在弹出层里) 就再等一轮
+                if (ToolBarMenu.IsOpen)
+                    CloseTimer.Start();
+                else
+                    Hide();
+            });
     }
 
     /// <summary>
@@ -310,14 +337,22 @@ public partial class ToolBar : UserControl, IDisposable
             CloseTimer.Start();
     }
 
-    private void UserControl_PointerEntered(object? sender, PointerEventArgs e)
+    private void UserControl_MouseEnter(object? sender, PointerEventArgs e)
     {
         CloseTimer.Enabled = false;
     }
 
-    private void UserControl_PointerExited(object? sender, PointerEventArgs e)
+    private void UserControl_MouseLeave(object? sender, PointerEventArgs e)
     {
+        //进了弹出层不算离开
+        if (ToolBarMenu.IsOpen)
+            return;
         CloseTimer.Start();
+    }
+
+    private void MenuPanel_Click(object? sender, RoutedEventArgs e)
+    {
+        m.Core.Controller!.ShowPanel();
     }
 
     /// <summary>
@@ -437,14 +472,14 @@ public partial class ToolBar : UserControl, IDisposable
     /// </summary>
     public event Action? EventMenuPanelShow;
 
-    private void MenuPanel_PointerEntered(object? sender, PointerEventArgs e)
+    private void MenuPanel_MouseEnter(object? sender, PointerEventArgs e)
     {
         BdrPanel.IsVisible = true;
         M_TimeUIHandle(m);
         EventMenuPanelShow?.Invoke();
     }
 
-    private void MenuPanel_PointerExited(object? sender, PointerEventArgs e)
+    private void MenuPanel_MouseLeave(object? sender, PointerEventArgs e)
     {
         closePanelTimer.Start();
     }
@@ -458,14 +493,14 @@ public partial class ToolBar : UserControl, IDisposable
 
     private void Sleep_Click(object? sender, RoutedEventArgs e)
     {
-        if (m.State == PetMain.WorkingState.Sleep)
+        if (m.State == Main.WorkingState.Sleep)
         {
             if (m.Core.Save!.Mode == IGameSave.ModeType.Ill)
                 return;
-            m.State = PetMain.WorkingState.Nomal;
+            m.State = Main.WorkingState.Nomal;
             m.Display(GraphType.Sleep, AnimatType.C_End, m.DisplayNomal);
         }
-        else if (m.State == PetMain.WorkingState.Nomal)
+        else if (m.State == Main.WorkingState.Nomal)
             m.DisplaySleep(true);
         else
         {

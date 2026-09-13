@@ -1,78 +1,77 @@
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.Fonts;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace VPet_Simulator.Core.MutiPlatform.Display;
 
 /// <summary>
-/// 字体
+/// MOD 自带的字体
 /// </summary>
-/// Windows 版是这样用 MOD 字体的: `new FontFamily("file:///<目录>/#<字体名>")`,
-/// WPF 认这种写法, 会去那个目录里找同名的 ttf.
-///
-/// **Avalonia 不认**. 它的 FontFamily 只接受 avares:// 这类程序集内资源, 磁盘上的
-/// ttf 要自己实现 IFontCollection 才装得上. 那是一整套活儿, 而且装不上的后果只是
-/// "字体不是 MOD 作者选的那个", 不影响任何玩法 —— 所以这里按 D-14 的默认走:
-/// 先只认系统已装的字体, MOD 自带的 ttf 记一条提示告诉玩家怎么手动装.
-///
-/// 字体名照样从设置里读, 与 Windows 版同一个 font 键, 设置文件可以两边互拷.
-public static class FontLoader
+/// 跨平台: Windows 版是 `new FontFamily("<目录>\#<字体名>")`, WPF 会去那个目录找同名的 ttf.
+/// Avalonia 的 FontFamily 只认登记过的字体集 (avares:// 是内置的一套), 磁盘上的 ttf 要自己登记:
+/// 这里把 MOD 的 ttf 收进一个键为 fonts:vpetmod 的字体集, 每个文件按"文件名(不带扩展名)"登记一遍,
+/// 与 Windows 版 IFont.Name 的取法一致, 于是 `new FontFamily("fonts:vpetmod#<字体名>")` 就能用.
+public sealed class FontLoader : FontCollectionBase
 {
     /// <summary>
-    /// 资源字典里字体的键名
+    /// 字体集的键, FontFamily 写成 fonts:vpetmod#字体名
     /// </summary>
-    public const string ResourceKey = "VPetFont";
+    public static readonly Uri CollectionKey = new Uri("fonts:vpetmod");
+
+    private static FontLoader? instance;
+    private static readonly object locker = new();
+    private readonly HashSet<string> loaded = new(StringComparer.OrdinalIgnoreCase);
+
+    public override Uri Key => CollectionKey;
 
     /// <summary>
-    /// 找不到指定字体时用的
+    /// 登记一个 ttf, 之后可以按文件名当字体名用
     /// </summary>
-    /// 空的 FontFamily 表示"系统默认", 在三个平台上各自是合理的中文字体
-    public static FontFamily Fallback => FontFamily.Default;
-
-    /// <summary>
-    /// 按名字取一个系统字体
-    /// </summary>
-    /// <param name="name">字体名</param>
-    /// <returns>系统里没有就返回默认字体</returns>
-    public static FontFamily Resolve(string? name)
+    /// <param name="file">ttf 文件</param>
+    /// <returns>登记上了返回 true; 文件坏了或不是字体返回 false</returns>
+    public static bool Register(FileInfo file)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            return Fallback;
-        var installed = FontManager.Current.SystemFonts
-            .FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
-        return installed ?? Fallback;
+        lock (locker)
+        {
+            if (instance == null)
+            {
+                instance = new FontLoader();
+                FontManager.Current.AddFontCollection(instance);
+            }
+            var name = Path.GetFileNameWithoutExtension(file.Name);
+            if (instance.loaded.Contains(name))
+                return true;
+            try
+            {
+                using var stream = file.OpenRead();
+                if (!instance.TryAddGlyphTypeface(stream, out var glyphTypeface))
+                    return false;
+                //文件名与字体内部的族名往往不一样 (OPPOSans R.ttf 里叫 OPPOSans), 再按文件名登记一遍
+                var key = new FontCollectionKey(glyphTypeface.Style, glyphTypeface.Weight, glyphTypeface.Stretch);
+                instance.TryAddGlyphTypeface(name, key, glyphTypeface);
+                instance.loaded.Add(name);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 
     /// <summary>
-    /// 把字体写进资源字典
+    /// 这个名字登记上了没有
     /// </summary>
-    /// <param name="name">设置里记的字体名</param>
-    /// <returns>真的用上了这个名字返回 true</returns>
-    public static bool Apply(string? name, IResourceDictionary resources)
+    public static bool IsRegistered(string name)
     {
-        var font = Resolve(name);
-        resources[ResourceKey] = font;
-        return !string.IsNullOrWhiteSpace(name) && font != Fallback;
+        lock (locker)
+            return instance != null && instance.loaded.Contains(name);
     }
 
     /// <summary>
-    /// 找出 MOD 自带但装不上的字体
+    /// 按字体名取 FontFamily (要先 Register)
     /// </summary>
-    /// <param name="themeDirectory">MOD 的 theme 目录</param>
-    /// <returns>那些 ttf 的字体名</returns>
-    /// 与 Windows 版一致: MOD 把 ttf 放在 theme/fonts 下
-    public static List<string> FindModFonts(DirectoryInfo themeDirectory)
-    {
-        var result = new List<string>();
-        var fonts = new DirectoryInfo(Path.Combine(themeDirectory.FullName, "fonts"));
-        if (!fonts.Exists)
-            return result;
-        foreach (var file in fonts.EnumerateFiles("*.ttf"))
-            result.Add(Path.GetFileNameWithoutExtension(file.Name));
-        return result;
-    }
+    public static FontFamily Family(string name) => new FontFamily(CollectionKey + "#" + name);
 }

@@ -1,0 +1,39 @@
+<UserControl x:Class="VPet_Simulator.MutiPlatform.WinDesign.Gallery.UnLockedGalleryItemUc"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:VPet_Simulator.MutiPlatform.WinDesign.Gallery"
+        xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+        xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell" Height="160"
+        Width="185" Margin="0,0,10,10" x:Name="This" Loaded="this_Loaded">
+    <!-- 跨平台: 根元素的 x:Name 不能叫 this (会生成同名字段), 改成 This -->
+    <Border Background="White">
+        <Grid Margin="7">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Image x:Name="displayimage" Margin="0, 0, 0, 7" />
+            <CheckBox x:Name="cbDesc" Grid.Row="1" Theme="{DynamicResource ThemedCheckBoxStyle}"
+                    IsChecked="{Binding #This.IsSelected, Mode=TwoWay}">
+                <TextBlock x:Name="tbTitle" TextTrimming="CharacterEllipsis" />
+            </CheckBox>
+            <Border Background="Transparent" PointerPressed="Border_MouseLeftButtonDown" x:Name="bbd"/>
+            <!-- 跨平台: pu:ToggleButtonHelper.CheckedContent 换成 :checked 样式 (Content 也得写在样式里); 阴影效果略去 -->
+            <ToggleButton x:Name="tbStar" Theme="{DynamicResource TextToggleButtonStyle}"
+                    FontFamily="{StaticResource RemixIcon}" FontSize="22"
+                    Foreground="HotPink"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right"
+                    IsCheckedChanged="ToggleButtonStar_CheckChanged">
+                <ToggleButton.Styles>
+                    <Style Selector="ToggleButton">
+                        <Setter Property="Content" Value="&#xee0b;" />
+                    </Style>
+                    <Style Selector="ToggleButton:checked">
+                        <Setter Property="Content" Value="&#xee0a;" />
+                    </Style>
+                </ToggleButton.Styles>
+            </ToggleButton>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,271 @@
+<shell:VPetWindow x:Class="VPet_Simulator.MutiPlatform.winGallery"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell"
+        xmlns:local="using:VPet_Simulator.MutiPlatform" Title="{ll:Str 照片图库}" MinWidth="450"
+        MinHeight="300" Height="{ll:Dbe GalleryHeight_625, DefValue=625}"
+        Width="{ll:Dbe GalleryWidth_1000, DefValue=1000}" FontSize="14" WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource PrimaryLighter}" CaptionHeight="45"
+        CaptionBackground="{DynamicResource DARKPrimary}" CaptionForeground="#FFFFFF"
+        Icon="avares://VPet-Simulator.MutiPlatform/Res/Gallery.png" CaptionShadowColor="{DynamicResource ShadowColor}" Closing="Window_Closed">
+    <!-- 跨平台: 标签样式拆成两份同样观感的 ControlTheme —— ToggleButton 给上面四个开关, ListBoxItem 给下面的标签组
+         (pu:ToggleButtonGroup 换成多选的 ListBox, 选中即勾选); pu:ToggleButtonHelper.* 换成伪类样式 -->
+    <Window.Resources>
+        <ControlTheme x:Key="TagToggleButtonStyle" TargetType="ToggleButton"
+                BasedOn="{StaticResource {x:Type ToggleButton}}">
+            <Setter Property="Margin" Value="0,0,3,3" />
+            <Setter Property="Padding" Value="5,3" />
+            <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimaryDark}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDark}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
+            </Style>
+            <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimaryText}" />
+            </Style>
+        </ControlTheme>
+        <ControlTheme x:Key="TagListBoxItemStyle" TargetType="ListBoxItem"
+                BasedOn="{StaticResource {x:Type ListBoxItem}}">
+            <Setter Property="Margin" Value="0,0,3,3" />
+            <Setter Property="Padding" Value="5,3" />
+            <Setter Property="BorderBrush" Value="{DynamicResource DARKPrimaryDark}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDark}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Style Selector="^:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
+            </Style>
+            <Style Selector="^:selected /template/ ContentPresenter, ^:selected:focus /template/ ContentPresenter, ^:selected:pointerover /template/ ContentPresenter, ^:selected:focus:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimaryText}" />
+            </Style>
+        </ControlTheme>
+    </Window.Resources>
+    <shell:VPetWindow.CaptionMinimizeButtonTheme>
+        <ControlTheme TargetType="Button" BasedOn="{StaticResource WindowXCaptionButtonStyle}">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Margin" Value="0,0,7,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimary}" />
+            </Style>
+            <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="White" />
+            </Style>
+        </ControlTheme>
+    </shell:VPetWindow.CaptionMinimizeButtonTheme>
+    <shell:VPetWindow.CaptionMaximizeButtonTheme>
+        <ControlTheme TargetType="Button" BasedOn="{StaticResource WindowXCaptionButtonStyle}">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Margin" Value="0,0,7,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimary}" />
+            </Style>
+            <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="White" />
+            </Style>
+        </ControlTheme>
+    </shell:VPetWindow.CaptionMaximizeButtonTheme>
+    <shell:VPetWindow.CaptionCloseButtonTheme>
+        <ControlTheme TargetType="Button" BasedOn="{StaticResource WindowXCaptionButtonStyle}">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Margin" Value="0,0,7,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource DARKPrimary}" />
+            </Style>
+            <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="White" />
+            </Style>
+        </ControlTheme>
+    </shell:VPetWindow.CaptionCloseButtonTheme>
+    <shell:VPetWindow.CaptionHeaderTemplate>
+        <DataTemplate>
+            <Grid Margin="10,0">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="ImageWHY" Width="28" Height="28" Source="avares://VPet-Simulator.MutiPlatform/Res/Gallery.png" VerticalAlignment="Center"
+                            Margin="30,0,0,0" />
+                    <Button Theme="{DynamicResource TextButtonStyle}" Foreground="{DynamicResource DARKPrimaryText}"
+                            VerticalAlignment="Center" FontSize="22" shell:VPetWindow.IsDragMoveArea="False" Margin="10,0,0,0"
+                            Loaded="Button_Loaded" />
+                    <Grid Grid.Column="1" Margin="40,0,0,0" shell:VPetWindow.IsDragMoveArea="False" Width="300">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TbTitleSearch" Grid.ColumnSpan="2" VerticalAlignment="Center" Padding="7,0"
+                                Watermark="{ll:Str 搜索图片}" FontSize="14" Background="#33FFFFFF"
+                                Height="30" BorderThickness="0" CornerRadius="5"
+                                Loaded="TbTitleSearch_Loaded" Foreground="{DynamicResource DARKPrimaryText}" />
+                        <Button Grid.Column="1" Margin="0,0,3,0" VerticalAlignment="Center" Height="28" Width="28"
+                                IsDefault="{Binding #TbTitleSearch.IsKeyboardFocusWithin}"
+                                BorderThickness="0" CornerRadius="0,5,5,0" Background="Transparent"
+                                FontFamily="{StaticResource RemixIcon}" Content="&#xF0D1;" Padding="0"
+                                Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" Cursor="Hand"
+                                Click="BtnSearch_Click" />
+                    </Grid>
+                    <Label Content="{ll:Str '注: 照片图库内容禁止商用'}" Background="{x:Null}" Margin="30,0,0,0"
+                            Foreground="{DynamicResource DARKPrimaryText}" VerticalAlignment="Center" FontSize="16" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </shell:VPetWindow.CaptionHeaderTemplate>
+    <shell:VPetWindow.Overlayer>
+        <Grid HorizontalAlignment="Center">
+            <Border Background="Transparent" PointerPressed="BorderOutDetail_MouseLeftButtonDown" />
+            <Grid x:Name="DisplayGrid" Margin="100, 80">
+                <!-- 跨平台: DropShadowEffect 换成 BoxShadow -->
+                <Border Background="White" CornerRadius="15" Grid.RowSpan="2" Grid.ColumnSpan="2" BoxShadow="5 5 30 0 #eaeaea" />
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{ll:Str 图片详情}" FontSize="18" Margin="0, 5"
+                            Foreground="{DynamicResource DARKPrimary}" />
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <Button Margin="7,0,0,0" VerticalAlignment="Center" Content="{ll:Str 复制到剪贴板}"
+                                Theme="{DynamicResource ThemedButtonStyle}" Click="ButtonCopy_Click" />
+                        <Button Margin="7,0,0,0" VerticalAlignment="Center" Content="{ll:Str 保存}"
+                                Theme="{DynamicResource ThemedButtonStyle}" Click="ButtonSave_Click" />
+                        <Button Margin="7,0,0,0" VerticalAlignment="Center" Content="&#xEB99;" Padding="0"
+                                FontFamily="{StaticResource RemixIcon}" FontSize="28"
+                                Theme="{DynamicResource ThemedButtonStyle}" Click="ButtonClose_Click" />
+                    </StackPanel>
+                    <Image x:Name="ImagePhotoDetail" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Center"
+                            Margin="0,7,0,0" />
+                    <Label x:Name="LablePhotoLoading" Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch"
+                            Margin="0,7,0,0" VerticalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center" FontSize="20" Content="Loading ..."
+                            Foreground="{DynamicResource DARKPrimaryText}"
+                            Background="{DynamicResource DARKPrimaryLighter}" />
+
+                    <!-- 跨平台: 全局字号 14 + 2 -->
+                    <TextBlock x:Name="TextBlockPhotoDetailTitle" FontWeight="Bold"
+                            FontSize="16"
+                            Grid.Row="2" />
+                    <ScrollViewer Grid.Row="3" Grid.ColumnSpan="3" HorizontalScrollBarVisibility="Disabled"
+                            VerticalScrollBarVisibility="Auto">
+                        <TextBlock x:Name="TextBlockPhotoDetailDescription" TextWrapping="Wrap" />
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+        </Grid>
+    </shell:VPetWindow.Overlayer>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Border Grid.RowSpan="2" Background="{DynamicResource DARKPrimaryText}" />
+        <Grid Grid.RowSpan="2" Margin="12, 10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <TextBlock Text="{ll:Str 筛选条件}" FontSize="18" Margin="0, 5" Foreground="{DynamicResource DARKPrimary}" />
+
+                <TextBlock Text="{ll:Str 类型}" Margin="0, 3, 0, 0" />
+                <StackPanel Margin="0, 3, 0, 0" Orientation="Horizontal">
+                    <ToggleButton x:Name="ToggleButtonIllustration" Content="{ll:Str 插图}"
+                            Theme="{DynamicResource TagToggleButtonStyle}" IsCheckedChanged="ToggleButtonSearchParameters_CheckChanged" />
+                    <ToggleButton x:Name="ToggleButtonThumbnail" Content="{ll:Str 小图}"
+                            Theme="{DynamicResource TagToggleButtonStyle}" IsCheckedChanged="ToggleButtonSearchParameters_CheckChanged" />
+                    <!--<ToggleButton x:Name="ToggleButtonGIF"
+                                 Content="GIF"
+                                 Theme="{DynamicResource TagToggleButtonStyle}" IsCheckedChanged="ToggleButtonSearchParameters_CheckChanged" />-->
+                </StackPanel>
+                <TextBlock Text="{ll:Str 是否解锁}" Margin="0, 3, 0, 0" />
+                <StackPanel Margin="0, 3, 0, 0" Orientation="Horizontal">
+                    <ToggleButton x:Name="ToggleButtonUnlocked" Content="{ll:Str 已解锁}"
+                            Theme="{DynamicResource TagToggleButtonStyle}" IsChecked="True" IsCheckedChanged="ToggleButtonSearchParameters_CheckChanged" />
+                    <ToggleButton x:Name="ToggleButtonLocked" Content="{ll:Str 未解锁}"
+                            Theme="{DynamicResource TagToggleButtonStyle}" IsCheckedChanged="ToggleButtonSearchParameters_CheckChanged" />
+                </StackPanel>
+                <TextBlock Text="{ll:Str 排序方式}" Margin="0, 3, 0, 0" />
+                <!-- 跨平台: Avalonia 的 ComboBox 不认子项上的 IsSelected, 加 SelectedIndex="0" 达到同样的默认选中 -->
+                <ComboBox x:Name="OrderBox" Margin="0,3,0,2" FontSize="16" SelectedIndex="0"
+                        SelectionChanged="ToggleButtonSearchParameters_CheckChanged"
+                        Theme="{DynamicResource StandardComboBoxStyle}">
+                    <ComboBoxItem IsSelected="True" Content="{ll:Str 默认}" />
+                    <ComboBoxItem Content="{ll:Str 名称}" />
+                    <ComboBoxItem Content="{ll:Str 解锁日期}" />
+                </ComboBox>
+                <TextBlock Margin="0, 3, 0, 0" Text="{ll:Str 收藏}" />
+                <CheckBox x:Name="CheckBoxFavorite" Margin="0, 3, 0, 0" Theme="{DynamicResource ThemedCheckBoxStyle}"
+                        Content="{ll:Str 只看我收藏的}" IsCheckedChanged="ToggleButtonSearchParameters_CheckChanged" />
+                <TextBlock Text="{ll:Str 标签}" Margin="0, 5, 0, 0" />
+            </StackPanel>
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <ListBox x:Name="ToggleButtonGroupTags" Margin="5,3,5,0" Background="Transparent" BorderThickness="0"
+                        SelectionMode="Multiple,Toggle" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ItemContainerTheme="{DynamicResource TagListBoxItemStyle}"
+                        SelectionChanged="ToggleButtonGroupTags_SelectionChanged">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </ScrollViewer>
+        </Grid>
+
+        <local:AutoUniformGrid x:Name="AutoUniformGridImages" x:FieldModifier="public" Grid.Column="1"
+                Margin="10, 10, 0, 0" ItemsMinWidth="195" ItemsMinHeight="170" Changed="AutoUniformGridImages_Changed" />
+
+        <Border x:Name="BorderEmpty" Grid.Column="1" IsVisible="False">
+            <TextBlock Text="{ll:Str '这里什么都没有, 修改搜索条件试试?'}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </Border>
+        <Border Grid.Row="1" Grid.Column="1" Height="40" Background="#fff">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <shell:Pagination x:Name="pagination" HorizontalAlignment="Left"
+                        Theme="{DynamicResource StandardPaginationStyle}"
+                        CurrentPageChanged="Pagination_CurrentPageChanged" />
+                <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+                    <CheckBox x:Name="CheckBoxALL" Margin="7, 0, 7, 0" Theme="{DynamicResource ThemedCheckBoxStyle}"
+                            Content="{ll:Str 全选}" IsCheckedChanged="CheckBoxALL_Checked" />
+                    <Button Margin="7,0,7,0" VerticalAlignment="Center" Content="{ll:Str 导出选中项}"
+                            Theme="{DynamicResource ThemedButtonStyle}" Click="ButtonExportSele_Click" />
+                    <Button Margin="7,0,7,0" VerticalAlignment="Center" Content="{ll:Str 导出全部已解锁}"
+                            Theme="{DynamicResource ThemedButtonStyle}" Click="ButtonExportAll_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</shell:VPetWindow>

@@ -1,0 +1,47 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--
+  对应 Windows 版 VPet-Simulator.Core/Display/Theme.xaml: 键名和值逐字相同, 两边的界面
+  代码用同一套资源名, MOD 主题换过来也是同一批键.
+  这三十一个是默认值: 装了主题 MOD 之后 ThemeLoader 会按 ThemeRules 展开出来的结果整套
+  覆盖上去. 默认值必须齐全, 主题里缺哪个键就退回这里的.
+  -->
+  <SolidColorBrush x:Key="Primary" Color="#FF81d4fa" />
+  <SolidColorBrush x:Key="PrimaryTrans" Color="#DD81d4fa" />
+  <SolidColorBrush x:Key="PrimaryTrans4" Color="#4481d4fa" />
+  <SolidColorBrush x:Key="PrimaryTransA" Color="#AA81d4fa" />
+  <SolidColorBrush x:Key="PrimaryTransE" Color="#EE81d4fa" />
+
+  <SolidColorBrush x:Key="PrimaryLight" Color="#FFA3E2FF" />
+  <SolidColorBrush x:Key="PrimaryLighter" Color="#FFC1EBFF" />
+  <SolidColorBrush x:Key="PrimaryDark" Color="#FF5CBEEA" />
+  <SolidColorBrush x:Key="PrimaryDarker" Color="#FF3CA9DB" />
+  <SolidColorBrush x:Key="PrimaryText" Color="#FF000000" />
+
+  <SolidColorBrush x:Key="Secondary" Color="#FF90caf9" />
+  <SolidColorBrush x:Key="SecondaryTrans" Color="#DD90caf9" />
+  <SolidColorBrush x:Key="SecondaryTrans4" Color="#4490caf9" />
+  <SolidColorBrush x:Key="SecondaryTransA" Color="#AA90caf9" />
+  <SolidColorBrush x:Key="SecondaryTransE" Color="#EE90caf9" />
+
+  <SolidColorBrush x:Key="SecondaryLight" Color="#FFADD7F9" />
+  <SolidColorBrush x:Key="SecondaryLighter" Color="#FFCBE4F9" />
+  <SolidColorBrush x:Key="SecondaryDark" Color="#FF6BB1E9" />
+  <SolidColorBrush x:Key="SecondaryDarker" Color="#FF4999DA" />
+  <SolidColorBrush x:Key="SecondaryText" Color="#FF000000" />
+
+  <SolidColorBrush x:Key="DARKPrimary" Color="#FF039be5" />
+  <SolidColorBrush x:Key="DARKPrimaryTrans" Color="#DD039be5" />
+  <SolidColorBrush x:Key="DARKPrimaryTrans4" Color="#44039be5" />
+  <SolidColorBrush x:Key="DARKPrimaryTransA" Color="#AA039be5" />
+  <SolidColorBrush x:Key="DARKPrimaryTransE" Color="#EE039be5" />
+
+  <SolidColorBrush x:Key="DARKPrimaryLight" Color="#FF1FA9EC" />
+  <SolidColorBrush x:Key="DARKPrimaryLighter" Color="#FF3DB8F4" />
+  <SolidColorBrush x:Key="DARKPrimaryDark" Color="#FF0290D5" />
+  <SolidColorBrush x:Key="DARKPrimaryDarker" Color="#FF0286C6" />
+  <SolidColorBrush x:Key="DARKPrimaryText" Color="#FFffffff" />
+
+  <Color x:Key="ShadowColor">#90caf9</Color>
+</ResourceDictionary>

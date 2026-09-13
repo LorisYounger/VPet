@@ -1,0 +1,30 @@
+<UserControl x:Class="VPet_Simulator.MutiPlatform.DIYViewer"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization" xmlns:local="using:VPet_Simulator.MutiPlatform"
+        xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell"
+        Background="{DynamicResource SecondaryTrans4}">
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="{ll:Str 置于顶层}" Click="Send_Top_Click" />
+            <MenuItem Header="{ll:Str 置于底层}" Click="Send_Botton_Click" />
+            <Separator />
+            <MenuItem Header="{ll:Str '快捷方式: 选择文件位置'}" Click="SelectFilePath_Click" />
+            <MenuItem Header="{ll:Str '快捷键: 捕获按键'}" ToggleType="CheckBox" Click="MenuItem_Click" />
+            <Separator />
+            <MenuItem Header="{ll:Str 删除}" Click="del_this_Click" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="8*" />
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="TextName" Margin="2" Theme="{DynamicResource StandardTextBoxStyle}"
+                Watermark="{ll:Str 显示名称}" />
+        <TextBox x:Name="TextContent" Margin="2" Theme="{DynamicResource StandardTextBoxStyle}"
+                Watermark="{ll:Str 快捷键或文件位置或网站链接}"
+                Grid.Column="1" KeyDown="TextBox_PreviewKeyDown" />
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,40 @@
+<Border x:Class="VPet_Simulator.MutiPlatform.MPUserControl" xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell"
+        xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization" xmlns:local="using:VPet_Simulator.MutiPlatform" Margin="5" Background="{DynamicResource SecondaryTrans4}" CornerRadius="5">
+    <Grid>
+        <Grid Margin="7">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Image x:Name="uimg" Height="50" Source="avares://VPet-Simulator.MutiPlatform/Res/TopLogo2019.png" />
+            <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                <TextBlock>
+                     <Run Text="{ll:Str 访客}"
+                            FontSize="12" />                
+                    : <Run x:Name="rPetName" Text="萝莉斯" FontWeight="Bold"
+                            FontSize="16" />
+                </TextBlock>
+                <TextBlock>
+                   <Run Text="{ll:Str 来自}"
+                            FontSize="12" />
+                    : <Run x:Name="hostName" Text="XXX"
+                            FontSize="12" />
+                </TextBlock>
+                <TextBlock x:Name="info" VerticalAlignment="Center"
+                        FontSize="12">Lv ??</TextBlock>
+         
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Button Padding="7,5" Theme="{DynamicResource ThemedButtonStyle}" Content="{ll:Str 重置位置}"
+                        Click="btn_ReSetLocal" />
+                <Button x:Name="Kick" Padding="7,5" Click="Kick_Click" IsVisible="False"
+                        HorizontalAlignment="Center" Background="Transparent"
+                        FontSize="12">
+                    <TextBlock TextDecorations="Underline" Text="{ll:Str 送客}" />
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Border>

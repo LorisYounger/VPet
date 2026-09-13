@@ -1,0 +1,112 @@
+<ResourceDictionary
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell">
+  <!--
+  对应 Windows 版 VPet-Simulator.Windows.Interface/ResourceStyle.xaml: 各功能窗口共用的样式入口,
+  合并 Theme 与 basestyle. 那边在这里又重复定义了一遍 StandardComboBoxStyle 等 (与 basestyle
+  逐字相同), 这边不重复; 只多一样 —— VPetWindow (WindowX 的对应物) 的默认模板, 因为 Panuon
+  的 WindowX 模板在它自己的库里, 这边得自己画标题栏.
+  -->
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="avares://VPet_Simulator.Core.MutiPlatform/Display/basestyle.axaml" />
+  </ResourceDictionary.MergedDictionaries>
+
+  <!-- 标题栏按钮: 字符图标, 悬停不变色 (BaseWindowXStyle 里 HoverBackground 是 null) -->
+  <ControlTheme x:Key="WindowXCaptionButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+    <Setter Property="Width" Value="40" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Foreground" Value="{Binding $parent[shell:VPetWindow].CaptionForeground}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Stretch" />
+    <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#22FFFFFF" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#44FFFFFF" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type shell:VPetWindow}" TargetType="shell:VPetWindow" BasedOn="{StaticResource {x:Type Window}}">
+    <Setter Property="Background" Value="{DynamicResource SecondaryLighter}" />
+    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+    <!-- 全局字体: 对应 Panuon GlobalSettings 的 FontFamily=MainFont (App 里 Window 的样式按 StyleKey 匹配, 落不到 VPetWindow 上) -->
+    <Setter Property="FontFamily" Value="{DynamicResource MainFont}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="CaptionBackground" Value="{DynamicResource DARKPrimary}" />
+    <Setter Property="CaptionForeground" Value="{DynamicResource DARKPrimaryText}" />
+    <Setter Property="MaskBrush" Value="#66000000" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Border Name="PART_TransparencyFallback" IsHitTestVisible="False" />
+          <Border Background="{TemplateBinding Background}" IsHitTestVisible="False" />
+          <VisualLayerManager Name="PART_VisualLayerManager">
+            <Panel>
+              <DockPanel>
+                <Border Name="PART_Caption" DockPanel.Dock="Top"
+                        Height="{TemplateBinding CaptionHeight}"
+                        Background="{TemplateBinding CaptionBackground}">
+                  <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                      <Button Name="PART_MinimizeButton" Theme="{StaticResource WindowXCaptionButtonStyle}" Content="&#x2013;" />
+                      <Button Name="PART_MaximizeButton" Theme="{StaticResource WindowXCaptionButtonStyle}" Content="&#x25A1;" />
+                      <Button Name="PART_CloseButton" Theme="{StaticResource WindowXCaptionButtonStyle}" Content="&#x2715;" />
+                    </StackPanel>
+                    <ContentPresenter Name="PART_CaptionHeader"
+                                      Content="{TemplateBinding Title}"
+                                      ContentTemplate="{TemplateBinding CaptionHeaderTemplate}"
+                                      TextElement.Foreground="{TemplateBinding CaptionForeground}"
+                                      Margin="10,0" VerticalContentAlignment="Center" />
+                  </DockPanel>
+                </Border>
+                <ContentPresenter Name="PART_ContentPresenter"
+                                  Margin="{TemplateBinding Padding}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  Content="{TemplateBinding Content}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+              </DockPanel>
+              <Border Name="PART_Mask" Background="{TemplateBinding MaskBrush}" IsVisible="{TemplateBinding IsMaskVisible}" />
+              <ContentPresenter Name="PART_Overlayer" Content="{TemplateBinding Overlayer}" IsVisible="{TemplateBinding IsOverlayerVisible}" />
+            </Panel>
+          </VisualLayerManager>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+    <!-- 按 CaptionButtons 决定哪几个按钮露出来 -->
+    <Style Selector="^ /template/ Button#PART_MinimizeButton">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="^ /template/ Button#PART_MaximizeButton">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="^[CaptionButtons=None] /template/ Button#PART_CloseButton">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="^[CaptionButtons=MinimizeClose] /template/ Button#PART_MinimizeButton">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^[CaptionButtons=MaximizeClose] /template/ Button#PART_MaximizeButton">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^[CaptionButtons=All] /template/ Button#PART_MinimizeButton">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^[CaptionButtons=All] /template/ Button#PART_MaximizeButton">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <!-- 不可调大小的窗口 (WPF 的 ResizeMode=CanMinimize/NoResize) 没有最大化按钮, 与 WindowX 一致 -->
+    <Style Selector="^[CanResize=False] /template/ Button#PART_MaximizeButton">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <!-- 标题栏文字: Title 是字符串时直接显示, 与 WindowX 的默认标题模板一样 -->
+    <Style Selector="^ /template/ ContentPresenter#PART_CaptionHeader">
+      <Setter Property="FontSize" Value="14" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

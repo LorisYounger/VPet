@@ -159,7 +159,7 @@ public class FoodAnimation : IAvaloniaRunImageGraph, IFoodAnimationGraphBase
     /// 刻意不写成静态字段初始化器: 静态构造会在第一次碰到 FoodAnimation 这个类型时
     /// 触发, 而那通常是扫描动画的后台线程(FoodAnimation.LoadGraph). Avalonia 的
     /// 控件在构造时就记下了创建它的 Dispatcher —— 这一层目前在后台线程建出来也能跑,
-    /// 但同一类问题在 MessageBar 的描述小字上已经真炸过一次(见 PetMainSay 的注释),
+    /// 但同一类问题在 MessageBar 的描述小字上已经真炸过一次(见 MainLogic 的注释),
     /// 这里加上 VerifyAccess 把线程约定写死, 将来谁改坏了会当场报错而不是留个暗雷.
     public static Grid FoodGrid
     {

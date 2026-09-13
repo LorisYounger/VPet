@@ -1,0 +1,53 @@
+<UserControl x:Class="VPet_Simulator.MutiPlatform.WinDesign.Gallery.LockedGalleryItemUc"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:VPet_Simulator.MutiPlatform.WinDesign.Gallery" Height="160" Width="185" Margin="0,0,10,10"
+        xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+        xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell"
+        x:Name="This" Loaded="this_Loaded">
+    <!-- 跨平台: 根元素的 x:Name 不能叫 this (会生成同名字段), 改成 This -->
+    <Border Background="White">
+
+        <Grid Margin="7">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Image x:Name="displayimage" Stretch="UniformToFill" />
+            <TextBlock x:Name="tbTitle" Grid.Row="1" Margin="0, 3, 0, 0" TextTrimming="CharacterEllipsis" />
+            <Border x:Name="bbd" Background="#88F3F4F5" />
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{ll:Str 解锁条件}" FontWeight="Bold" />
+                <ScrollViewer Grid.Row="1">
+                    <TextBlock x:Name="unlocktext" TextWrapping="Wrap" />
+                </ScrollViewer>
+                <Button x:Name="btnCan" Grid.Row="3" HorizontalAlignment="Center"
+                        Theme="{DynamicResource ThemedButtonStyle}" Click="Button_Click" IsVisible="False"
+                        Margin="0,7,0,0">
+                    <TextBlock>
+                        <Run x:Name="rAnd" Text="并" /> 
+                        <Run Text="{ll:Str 花费}" />
+                        <Run x:Name="clmoney" />
+                        <Run Text="{ll:Str 解锁}" />
+                    </TextBlock>
+                </Button>
+                <!-- 跨平台: pu:ButtonHelper.Hover/ClickBackground=null 由 IsHitTestVisible=False 达到同样效果 (不响应) -->
+                <Button x:Name="btnCannot" Grid.Row="3" Cursor="No" IsHitTestVisible="False"
+                        Background="#7e7e7e" HorizontalAlignment="Center"
+                        Theme="{DynamicResource ThemedButtonStyle}" IsVisible="False" Margin="0,7,0,0">
+                    <TextBlock>
+                         <Run Text="{ll:Str 并}" /> 
+                         <Run Text="{ll:Str 花费}" />
+                              <Run x:Name="nlmoney" />
+                           <Run Text="{ll:Str 解锁}" />
+                    </TextBlock>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

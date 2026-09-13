@@ -1,15 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<!--
-	跨平台桌宠宿主.
+	跨平台桌宠宿主 (Avalonia).
 
-	对应 Windows 版的 VPet-Simulator.Windows, 但只负责三件事:
-	  1. 提供一个无边框透明置顶窗口承载桌宠
-	  2. 实现 IController (窗口位置/屏幕距离等桌宠需要的宿主能力)
-	  3. 加载 MOD 目录里的宠物动画并把桌宠跑起来
+	对应 Windows 版的 VPet-Simulator.Windows, 目录与文件切法照搬那边:
+	  MainWindow.axaml(.cs) / MainWindow.cs / MainWindow_Function.cs / MainWindow_Property.cs  宿主主窗口
+	  Function\   Setting / CoreMOD / MWController / UnifiedPluginHost / SteamCapability / SteamMultiplayer / Win32
+	  WinDesign\  各 winXxx 窗口, 同名 XAML + code-behind 逐文件移植
+	  MutiPlayer\ 访客表 (winMutiPlayer / MPFriends / MPUserControl / winMPBetterBuy / MPController / MPMOD), 联机走真实 Steam
+	  Design\     AutoUniformGrid 与转换器
+	  DevTools\   界面走查开关 (启动参数 ui-walk, 与 Windows 的 Set.DeBug / winConsole 同性质)
 
-	设置界面、商店、图鉴、多人联机等重界面功能不在这里 —— 那些在 Windows 版里
-	是靠 Panuon.WPF.UI 实现的, 没有 Avalonia 移植版, 需要重新设计.
+	Windows 版靠 Panuon.WPF.UI 的地方, 这里由 Core.MutiPlatform\Display 下的样式表提供同 Key 的预设样式,
+	XAML 里的 pu: 用法按固定映射表机械替换; 每处平台差异都在原位留中文注释.
+	老式 WPF MOD (MainPlugin) 不在这里跑, 跨平台 MOD 走统一契约 VPet-Simulator.Unified.Interface.
 	-->
 
 	<PropertyGroup>
@@ -33,10 +37,21 @@
 		<PackageReference Include="Avalonia" Version="12.1.1" />
 		<PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
 		<PackageReference Include="Avalonia.Themes.Simple" Version="12.1.1" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.1" />
+		<!-- Steam: 官方 Facepunch.Steamworks 只发了 Win64/Win32 的 NuGet 包, Posix 版只在 GitHub 发布;
+		     这个分支包托管 API 一样, 并带 win/linux/osx 的原生库. 所有者若想换官方 dll, 改这一行即可 -->
+		<PackageReference Include="aelsi2.Facepunch.Steamworks" Version="2.3.4" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\VPet_Simulator.Core.MutiPlatform\VPet_Simulator.Core.MutiPlatform.csproj" />
+		<ProjectReference Include="..\VPet-Simulator.Windows.Interface.Base\VPet-Simulator.Windows.Interface.Base.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="vpeticon.ico" />
+		<AvaloniaResource Include="Res/remixicon.ttf" />
+		<AvaloniaResource Include="Res/**/*.png" />
 	</ItemGroup>
 
 </Project>

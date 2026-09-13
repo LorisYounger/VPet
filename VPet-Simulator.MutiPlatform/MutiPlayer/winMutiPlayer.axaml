@@ -1,0 +1,131 @@
+<shell:VPetWindow x:Class="VPet_Simulator.MutiPlatform.winMutiPlayer"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:VPet_Simulator.MutiPlatform"
+        xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell" Foreground="{StaticResource PrimaryText}"
+        xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+        Title="{ll:Str 访客表}" MinHeight="400" Height="{ll:Dbe MutiPlayerHeight_400, DefValue=400}"
+        Width="{ll:Dbe MutiPlayerWidth_660, DefValue=660}" Closed="Window_Closed"
+        Theme="{DynamicResource BaseWindowXStyle}" Background="{DynamicResource PrimaryLighter}"
+        FontSize="14" MaxHeight="400"
+        CanResize="False" Closing="Window_Closing">
+    <!-- 跨平台: pu:TabControlHelper.Items* 换成 ItemContainerTheme; pu:TabControlHelper.FrontControl (页签上方的那块) 没有对应物,
+         把它写进 TabControl 的模板里, 页签列 (PART_ItemsPresenter) 排在它下面. 里面的控件在模板套上时由代码从命名域里取 -->
+    <TabControl x:Name="tabControl" TabStripPlacement="Left" TemplateApplied="tabControl_TemplateApplied">
+        <TabControl.ItemContainerTheme>
+            <ControlTheme TargetType="TabItem" BasedOn="{StaticResource StandardTabItemStyle}">
+                <Setter Property="Padding" Value="15,8" />
+                <Setter Property="Width" Value="{ll:Dbe MutiPlayerItemsWidth_240, DefValue=240}" />
+                <Setter Property="Height" Value="34" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Style Selector="^:selected">
+                    <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+                    <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+                </Style>
+                <Style Selector="^:selected /template/ Border#PART_LayoutRoot">
+                    <Setter Property="Background" Value="{DynamicResource DARKPrimary}" />
+                </Style>
+            </ControlTheme>
+        </TabControl.ItemContainerTheme>
+        <TabControl.Theme>
+            <ControlTheme TargetType="TabControl" BasedOn="{StaticResource {x:Type TabControl}}">
+                <!-- WPF 的页内容是撑满的 -->
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding Background}">
+                            <DockPanel>
+                                <StackPanel DockPanel.Dock="Left">
+                                    <Grid Margin="7">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Border x:Name="HostHeadBorder" CornerRadius="5" Width="60" Height="60" BorderBrush="LightGray" BorderThickness="1">
+                                            <Border.Background>
+                                                <ImageBrush Source="avares://VPet-Simulator.MutiPlatform/Res/TopLogo2019.png" />
+                                            </Border.Background>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Margin="7,0,0,0">
+                                            <TextBlock x:Name="tbHostPet">
+                                                    <Run x:Name="hostPet" Text="萝莉斯" FontWeight="Bold"
+                                                        FontSize="18" />
+                                                    <Run Text="{ll:Str '的访客表'}"
+                                                        FontSize="16" />
+                                            </TextBlock>
+                                            <TextBlock x:Name="tbHostName">
+                                                    <Run Text="{ll:Str 主持人}"
+                                                        FontSize="16" />:
+                                                    <Run x:Name="hostName"
+                                                        FontSize="16" />
+                                            </TextBlock>
+                                            <StackPanel Orientation="Horizontal" Opacity="0.7">
+                                                <TextBlock VerticalAlignment="Center"
+                                                        FontSize="14">ID:</TextBlock>
+                                                <TextBox x:Name="lbLid" VerticalAlignment="Center"
+                                                        Background="{DynamicResource SecondaryTrans4}" BorderThickness="0"
+                                                        FontSize="14"
+                                                        Margin="5,0,0,0" />
+                                            </StackPanel>
+                                            <StackPanel x:Name="panFixID" Orientation="Horizontal" Opacity="0.7" IsVisible="False"
+                                                    ToolTip.Tip="{ll:Str '可以通过固定ID让其他人始终能够加入到你的房间'}">
+                                                <TextBlock VerticalAlignment="Center" Text="{ll:Str 固定ID}"
+                                                        FontSize="14" />
+                                                <TextBlock VerticalAlignment="Center" Text=":"
+                                                        FontSize="14" />
+                                                <TextBox x:Name="lbLFix" VerticalAlignment="Center"
+                                                        Background="{DynamicResource SecondaryTrans4}" BorderThickness="0"
+                                                        FontSize="14"
+                                                        Margin="5,0,0,0" />
+                                                <Button x:Name="btnRels" Content="&#xF064;" Margin="5,0,0,0" Padding="1"
+                                                        FontFamily="{StaticResource RemixIcon}" ToolTip.Tip="{ll:Str 刷新固定ID}"
+                                                        Theme="{DynamicResource ThemedButtonStyle}"
+                                                        FontSize="14" />
+                                            </StackPanel>
+                                            <shell:Switch x:Name="swAllowJoin"
+                                                    FontSize="16"
+                                                    BorderBrush="#AFAFAF" ToggleBrush="#AFAFAF" Padding="2,0,0,0" BoxHeight="13" BoxWidth="21"
+                                                    Foreground="#AFAFAF" CheckedForeground="{DynamicResource PrimaryText}"
+                                                    CheckedBackground="{DynamicResource PrimaryDarker}"
+                                                    CheckedBorderBrush="{DynamicResource PrimaryDarker}" Content="{ll:Str 允许好友加入}"
+                                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToggleShadowColor="{x:Null}"
+                                                    ToggleSize="9" IsChecked="True"
+                                                    HorizontalAlignment="Left" />
+                                            <shell:Switch x:Name="swAllowTouch" HorizontalAlignment="Left"
+                                                    FontSize="16"
+                                                    BorderBrush="#AFAFAF" ToggleBrush="#AFAFAF" Padding="2,0,0,0" BoxHeight="13" BoxWidth="21"
+                                                    Foreground="#AFAFAF" CheckedForeground="{DynamicResource PrimaryText}"
+                                                    CheckedBackground="{DynamicResource PrimaryDarker}"
+                                                    CheckedBorderBrush="{DynamicResource PrimaryDarker}" Content="{ll:Str 允许好友交互}"
+                                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToggleShadowColor="{x:Null}"
+                                                    ToggleSize="9" IsChecked="True" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                </StackPanel>
+                                <ContentPresenter Name="PART_SelectedContentHost" Margin="{TemplateBinding Padding}"
+                                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                        Content="{TemplateBinding SelectedContent}"
+                                        ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+                            </DockPanel>
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+        </TabControl.Theme>
+        <TabItem Header="{ll:Str 访客列表}">
+            <ScrollViewer>
+                <StackPanel x:Name="MUUCList" />
+            </ScrollViewer>
+        </TabItem>
+        <TabItem Header="{ll:Str 消息日志}">
+            <!-- 跨平台: Avalonia 的 TextBox 把 HorizontalContentAlignment=Left 当成"内容不撑满", 文字靠左本来就是默认, 这一项去掉 -->
+            <TextBox x:Name="tbLog" Margin="0" Padding="7" VerticalContentAlignment="Stretch" BorderThickness="0"
+                    Background="Transparent" Foreground="{DynamicResource DARKPrimaryDarker}" IsReadOnly="True" TextWrapping="Wrap"
+                    ScrollViewer.VerticalScrollBarVisibility="Visible" />
+        </TabItem>
+    </TabControl>
+</shell:VPetWindow>

@@ -6,7 +6,7 @@ namespace VPet_Simulator.Core.MutiPlatform.Graph;
 /// <summary>
 /// 动画共用的 Image 控件池
 /// </summary>
-/// 桌宠用两层 Decorator 做双缓冲(见 PetMainDisplay.Display), 切换动画时新动画要先
+/// 桌宠用两层 Decorator 做双缓冲(见 MainDisplay.Display), 切换动画时新动画要先
 /// 在隐藏的那一层上渲染出首帧, 旧动画才停. 也就是说同一时刻可能有两层各自需要一个
 /// Image 控件, 只准备一个是不够的 —— 而且 Avalonia 里一个控件只能有一个父级,
 /// 把已挂在 PetGrid 上的 Image 再设给 PetGrid2 会直接抛异常.

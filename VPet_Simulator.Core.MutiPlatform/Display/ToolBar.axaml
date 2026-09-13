@@ -3,7 +3,7 @@
              xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
              x:Class="VPet_Simulator.Core.MutiPlatform.Display.ToolBar"
              Width="500" Height="500" VerticalAlignment="Top"
-             PointerEntered="UserControl_PointerEntered" PointerExited="UserControl_PointerExited">
+             PointerEntered="UserControl_MouseEnter" PointerExited="UserControl_MouseLeave">
     <!--
     与 Windows 版 VPet-Simulator.Core/Display/ToolBar.xaml 对应: 底部一排菜单,
     悬停"面板"时在菜单上方弹出数值面板.
@@ -106,19 +106,24 @@
 
     <!-- 公开给宿主: 选项式聊天框挂在这里, 与 Windows 版 MainGrid 的用法一致 -->
     <Grid x:Name="MainGrid" x:FieldModifier="public">
-        <Border x:Name="BdrPanel" Margin="0,0,0,55" VerticalAlignment="Bottom" IsVisible="False"
+        <Border x:Name="BdrPanel" x:FieldModifier="public" Margin="0,0,0,55" VerticalAlignment="Bottom" IsVisible="False"
                 Background="{DynamicResource DARKPrimaryText}"
                 BorderBrush="{DynamicResource DARKPrimaryDarker}" BorderThickness="1" CornerRadius="5"
-                PointerExited="MenuPanel_PointerExited">
-            <Grid x:Name="gdPanel" Margin="15"
+                PointerExited="MenuPanel_MouseLeave">
+            <Grid x:Name="gdPanel" x:FieldModifier="public" Margin="15"
                   ColumnDefinitions="Auto,5,*,5,Auto"
                   RowDefinitions="30,Auto,30,30,30,30,30,30">
-                <TextBlock x:Name="Tlv" Grid.ColumnSpan="3" Foreground="{DynamicResource DARKPrimary}" Text="Lv 14" />
-
-                <TextBlock x:Name="till" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#FF4C4C"
-                           Text="宠物已经生病, 通过服用药物可以恢复" TextWrapping="Wrap" IsVisible="False" />
-                <TextBlock x:Name="tfun" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#4caf50"
-                           Text="已关闭数据计算, 可放心挂机" TextWrapping="Wrap" IsVisible="False" />
+                <TextBlock x:Name="Tlv" x:FieldModifier="public" Grid.ColumnSpan="3" Foreground="{DynamicResource DARKPrimary}" Text="Lv 14" />
+                <!-- 详细: 打开角色面板. Windows 版是个下划线文字按钮 -->
+                <Button Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Background="Transparent" BorderThickness="0" Padding="0" Click="MenuPanel_Click" Cursor="Hand"
+                        Foreground="{DynamicResource DARKPrimary}" Grid.Row="2">
+                    <TextBlock Text="{ll:Str 详细}" TextDecorations="Underline" FontSize="24" />
+                </Button>
+                <TextBlock x:Name="till" x:FieldModifier="public" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#FF4C4C"
+                           Text="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}" ToolTip.Tip="{ll:Str 宠物已经生病\, 通过服用药物可以恢复}" TextWrapping="Wrap" IsVisible="False" />
+                <TextBlock x:Name="tfun" x:FieldModifier="public" Grid.Row="1" Grid.ColumnSpan="5" Foreground="#4caf50"
+                           Text="{ll:Str 已关闭数据计算\, 可放心挂机}" ToolTip.Tip="{ll:Str 已关闭数据计算\, 可放心挂机}" TextWrapping="Wrap" IsVisible="False" />
 
                 <TextBlock Grid.Row="2" Text="{ll:Str 金钱}" />
                 <TextBlock x:Name="tMoney" Grid.Row="2" Grid.Column="2"
@@ -150,7 +155,7 @@
                              Maximum="100" Value="60" />
                 <TextBlock x:Name="tStrengthFoodValue" Grid.Row="6" Grid.Column="2" Classes="barText" />
                 <TextBlock x:Name="tStrengthFood" Grid.Row="6" Grid.Column="4" HorizontalAlignment="Right"
-                           Foreground="{DynamicResource DARKPrimary}" Text="-1/t" />
+                           Foreground="{DynamicResource DARKPrimary}" Text="+1/t" />
 
                 <TextBlock Grid.Row="7" Text="{ll:Str 口渴度}" />
                 <ProgressBar x:Name="pStrengthDrinkMax" Grid.Row="7" Grid.Column="2" Background="#FFDDDDDD"
@@ -159,7 +164,7 @@
                              Maximum="100" Value="60" />
                 <TextBlock x:Name="tStrengthDrinkValue" Grid.Row="7" Grid.Column="2" Classes="barText" />
                 <TextBlock x:Name="tStrengthDrink" Grid.Row="7" Grid.Column="4" HorizontalAlignment="Right"
-                           Foreground="{DynamicResource DARKPrimary}" Text="-1/t" />
+                           Foreground="{DynamicResource DARKPrimary}" Text="+1/t" />
             </Grid>
         </Border>
 
@@ -173,17 +178,19 @@
                     <UniformGrid Rows="1" />
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
-            <MenuItem x:Name="MenuFeed" Header="{ll:Str 投喂}" />
+            <MenuItem x:Name="MenuFeed" x:FieldModifier="public" Header="{ll:Str 投喂}" />
             <MenuItem x:Name="MenuPanel" Header="{ll:Str 面板}"
-                      PointerEntered="MenuPanel_PointerEntered" PointerExited="MenuPanel_PointerExited" />
-            <MenuItem x:Name="MenuInteract" Header="{ll:Str 互动}">
+                      PointerEntered="MenuPanel_MouseEnter" PointerExited="MenuPanel_MouseLeave" />
+            <MenuItem x:Name="MenuInteract" x:FieldModifier="public" Header="{ll:Str 互动}">
                 <MenuItem x:Name="MenuSleep" Header="{ll:Str 睡觉}" Click="Sleep_Click" />
-                <MenuItem x:Name="MenuStudy" Header="{ll:Str 学习}" />
-                <MenuItem x:Name="MenuPlay" Header="{ll:Str 玩耍}" />
-                <MenuItem x:Name="MenuWork" Header="{ll:Str 工作}" />
+                <MenuItem x:Name="MenuStudy" x:FieldModifier="public" Header="{ll:Str 学习}" />
+                <MenuItem x:Name="MenuPlay" x:FieldModifier="public" Header="{ll:Str 玩耍}" />
+                <MenuItem x:Name="MenuWork" x:FieldModifier="public" Header="{ll:Str 工作}" />
             </MenuItem>
-            <MenuItem x:Name="MenuDIY" Header="{ll:Str 自定}" IsVisible="False" />
-            <MenuItem x:Name="MenuSetting" Header="{ll:Str 系统}" />
+            <MenuItem x:Name="MenuDIY" x:FieldModifier="public" Header="{ll:Str 自定}" IsVisible="False" />
+            <MenuItem x:Name="MenuSetting" x:FieldModifier="public" Header="{ll:Str 系统}">
+                <MenuItem x:Name="MenuMODConfig" x:FieldModifier="public" Header="{ll:Str MOD设置}" IsVisible="False" />
+            </MenuItem>
         </Menu>
     </Grid>
 </UserControl>

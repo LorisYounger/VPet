@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using LinePutScript;
 using System;
 using System.Collections.Generic;
 using VPet_Simulator.Unified.Services;
@@ -17,14 +18,14 @@ public static class ThemeLoader
     /// <summary>
     /// 应用一套主题
     /// </summary>
-    /// <param name="theme">主题</param>
+    /// <param name="themeColor">主题</param>
     /// <param name="resources">要写进去的资源字典, 一般是 Application.Current.Resources</param>
     /// <returns>实际写进去了几个键</returns>
     /// 必须在 UI 线程上调用: 资源字典的变更会立刻触发重新绑定。
-    public static int Apply(ThemeInfo theme, IResourceDictionary resources)
+    public static int Apply(ILPS themeColor, IResourceDictionary resources)
     {
         int count = 0;
-        foreach (var color in ThemeRules.Expand(theme.ThemeColor))
+        foreach (var color in ThemeRules.Expand(themeColor))
         {
             var c = Color.FromArgb(color.A, color.R, color.G, color.B);
             resources[color.Key] = color.IsRawColor ? c : (object)new SolidColorBrush(c);
@@ -36,12 +37,12 @@ public static class ThemeLoader
     /// <summary>
     /// 应用当前应用的资源字典
     /// </summary>
-    public static int Apply(ThemeInfo theme)
+    public static int Apply(ILPS themeColor)
     {
         var app = Application.Current;
         if (app == null)
             return 0;
-        return Apply(theme, app.Resources);
+        return Apply(themeColor, app.Resources);
     }
 
     /// <summary>
@@ -63,10 +64,10 @@ public static class ThemeLoader
     /// <summary>
     /// 找出主题没提供的键
     /// </summary>
-    public static List<string> MissingKeys(ThemeInfo theme)
+    public static List<string> MissingKeys(ILPS themeColor)
     {
         var have = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var color in ThemeRules.Expand(theme.ThemeColor))
+        foreach (var color in ThemeRules.Expand(themeColor))
             have.Add(color.Key);
         var missing = new List<string>();
         foreach (var key in ExpectedKeys)

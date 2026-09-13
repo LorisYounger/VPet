@@ -4,23 +4,59 @@ using Avalonia.Markup.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinePutScript.Localization;
 using VPet_Simulator.Core.MutiPlatform;
+using VPet_Simulator.Core.MutiPlatform.Display.Shell;
 
 namespace VPet_Simulator.MutiPlatform;
 
 public partial class App : Application
 {
     /// <summary>
-    /// 现在开着的桌宠
+    /// 现在开着的桌宠 (与 Windows 版 App.MainWindows 同名)
     /// </summary>
     /// 多开是进程内的: 一个进程里几个窗口, 各自一套设置和存档。开新进程的话
     /// MOD 会被加载好几遍, 内存和启动时间都是白花的。
-    internal static List<PetWindow> OpenPets { get; } = new List<PetWindow>();
+    public static List<MainWindow> MainWindows { get; } = new List<MainWindow>();
+
+    /// <summary>
+    /// 所有存档的前缀 (与 Windows 版 App.MutiSaves 同名)
+    /// </summary>
+    public static List<string> MutiSaves => MultiPetStore.List(AppPaths.DataRoot);
+
+    /// <summary>
+    /// 已加载的 MOD 插件类型名 (与 Windows 版同名, 反馈中心用)
+    /// </summary>
+    public static HashSet<string> MODType { get; set; } = new HashSet<string>();
 
     /// <summary>
     /// 命令行参数
     /// </summary>
     internal static string[] Args { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    /// --ui-walk 脚本 与 输出目录; 没给这个参数时为 null
+    /// </summary>
+    internal static (string Script, string Output)? UiWalk { get; set; }
+
+    /// <summary>
+    /// --language 指定的语言; 只在界面走查时生效, 不写进设置
+    /// </summary>
+    internal static string? LanguageOverride { get; set; }
+
+    public App() : base()
+    {
+        //跨平台: WPF 的 DispatcherUnhandledException 对应 Avalonia 的 Dispatcher.UIThread.UnhandledException; 与 Windows 版一样只在发布构建挂
+#if !DEBUG
+        Avalonia.Threading.Dispatcher.UIThread.UnhandledException += (s, e) => { e.Handled = true; UnhandledException(e.Exception, false); };
+        AppDomain.CurrentDomain.UnhandledException += (s, e) => { UnhandledException((e.ExceptionObject as Exception)!, true); };
+#endif
+    }
+
+    /// <summary>
+    /// 第一只桌宠 (Windows 版是 Application.MainWindow)
+    /// </summary>
+    private static MainWindow? MainWindow => MainWindows.FirstOrDefault();
 
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
@@ -49,14 +85,85 @@ public partial class App : Application
         window.Show();
     }
 
-    private static PetWindow CreatePet(string prefix)
+    HashSet<string> ErrorReport = new HashSet<string>();
+    private void UnhandledException(Exception e, bool isFatality)
     {
-        var window = new PetWindow(prefix);
-        OpenPets.Add(window);
+        var expt = e.ToString();
+        if (ErrorReport.Contains(expt))
+            return;//防止重复报错
+        ErrorReport.Add(expt);
+        if (expt.Contains("MainWindow.Close") || expt.Contains("System.Windows.Window.DragMove") ||
+            expt.Contains("winConsole"))
+            return;
+        else if ((!isFatality && MainWindow != null && MainWindow.GameSavesData?.GameSave != null &&
+            (MainWindow.GameSavesData.GameSave.Money > int.MaxValue || MainWindow.GameSavesData.GameSave.Exp > int.MaxValue)
+            ) && ((expt.ToLowerInvariant().Contains("value") && expt.ToLowerInvariant().Contains("nan")) ||
+            expt.Contains("System.OverflowException") || expt.Contains("System.DivideByZeroException")))
+        {
+            MessageBoxX.Show("由于修改游戏数据导致数据溢出,存档可能会出错\n开发者提醒您请不要使用过于超模的MOD".Translate());
+            return;
+        }
+        else if (expt.Contains("System.IO.FileNotFoundException") && expt.Contains("cache"))
+        {
+            MessageBoxX.Show("缓存被其他软件删除,游戏无法继续运行\n请重启游戏重新生成缓存".Translate());
+            return;
+        }
+        else if (expt.Contains("0x80070008"))
+        {
+            MessageBoxX.Show("游戏内存不足,请修改设置中渲染分辨率以便降低内存使用".Translate());
+            return;
+        }
+        else if (expt.Contains("UnauthorizedAccessException"))
+        {
+            MessageBoxX.Show("游戏权限不足,无法写入游戏存档和设置,请检查设置文件是否被其他软件占用".Translate());
+            return;
+        }
+        else if (expt.Contains("VPet.Plugin"))
+        {
+            var exptin = expt.Split('\n').First(x => x.Contains("VPet.Plugin"));
+            exptin = exptin.Substring(exptin.IndexOf("VPet.Plugin") + 12).Split('.')[0];
+            MessageBoxX.Show("游戏发生错误,可能是".Translate() + $"MOD({exptin.Translate()})" +
+                "导致的\n如有可能请发送 错误信息截图和引发错误之前的操作给相应MOD作者\n感谢您对MOD开发的支持\n".Translate()
+                 + expt, "游戏发生错误,可能是".Translate() + exptin);
+            return;
+        }
+
+        foreach (var modname in MODType)
+        {
+            if (expt.Contains(modname))
+            {
+                var exptin = modname.Split('.').Last();
+                MessageBoxX.Show("游戏发生错误,可能是".Translate() + $"MOD({modname})" +
+                    "导致的\n如有可能请发送 错误信息截图和引发错误之前的操作给相应MOD作者\n感谢您对MOD开发的支持\n".Translate()
+                     + expt, "游戏发生错误,可能是".Translate() + exptin);
+                return;
+            }
+        }
+
+
+        string errstr = "游戏发生错误,可能是".Translate() + (string.IsNullOrWhiteSpace(CoreMOD.NowLoading) ?
+            "游戏或者MOD".Translate() : $"MOD({CoreMOD.NowLoading})") +
+            "导致的\n如有可能请发送 错误信息截图和引发错误之前的操作 给开发者:service@exlb.net\n感谢您对游戏开发的支持\n".Translate()
+            + expt;
+        if (isFatality || MainWindow == null)
+        {
+            MessageBoxX.Show(errstr, "游戏致命性错误".Translate());
+            return;
+        }
+        else
+        {
+            new winReport(MainWindow, errstr).Show();
+            return;
+        }
+    }
+
+    private static MainWindow CreatePet(string prefix)
+    {
+        var window = new MainWindow(prefix);
         window.Closed += (_, _) =>
         {
-            OpenPets.Remove(window);
-            if (OpenPets.Count == 0
+            MainWindows.Remove(window);
+            if (MainWindows.Count == 0
                 && Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.Shutdown();

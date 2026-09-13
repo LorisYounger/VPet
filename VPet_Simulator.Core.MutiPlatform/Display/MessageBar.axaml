@@ -1,26 +1,32 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="VPet_Simulator.Core.MutiPlatform.Display.MessageBar"
-             Height="500" Width="500">
-    <!--
-    与 Windows 版 VPet-Simulator.Core/Display/MessageBar.xaml 的结构和配色一致:
-    浅蓝底 + 深蓝 5px 边框 + 5 圆角, 贴在桌宠下方.
-    Windows 版正文用的是只读 TextBox(为了能选中复制), Avalonia 里 SelectableTextBlock
-    更合适, 少一层输入框的样式包袱.
-    -->
-    <Border x:Name="BorderMain"
-            PointerEntered="BorderMain_PointerEntered" PointerExited="BorderMain_PointerExited" Background="{DynamicResource Primary}"
-            BorderBrush="{DynamicResource DARKPrimaryDark}"
-            BorderThickness="5" VerticalAlignment="Bottom" Padding="10" Margin="5" CornerRadius="5">
+<UserControl x:Class="VPet_Simulator.Core.MutiPlatform.Display.MessageBar" xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:VPet_Simulator.Core.MutiPlatform.Display" Height="500" Width="500"
+        xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+        DoubleTapped="UserControl_MouseDoubleClick">
+    <!-- 跨平台: 原文对应 VPet-Simulator.Core/Display/MessageBar.xaml; Theme.xaml 由 App 级资源提供, 不用在这里再引;
+         MouseDoubleClick→DoubleTapped, MouseEnter/Leave→PointerEntered/Exited -->
+    <UserControl.ContextMenu>
+        <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
+            <MenuItem Header="{ll:Str 复制全文}" Click="MenuItemCopy_Click" />
+            <MenuItem Header="{ll:Str 关闭}" Click="MenuItemClose_Click" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
+    <Border x:Name="BorderMain" Background="{DynamicResource Primary}" BorderBrush="{DynamicResource DARKPrimaryDark}"
+            BorderThickness="5" VerticalAlignment="Bottom" Padding="10" Margin="5" CornerRadius="5"
+            PointerEntered="Border_MouseEnter" PointerExited="Border_MouseLeave">
         <StackPanel>
-            <TextBlock x:Name="LName" Text="虚拟桌宠名字:" Foreground="{DynamicResource PrimaryText}"
-                       HorizontalAlignment="Left" FontWeight="Bold" Margin="0,0,0,6" FontSize="32" />
+            <Label x:Name="LName" Content="虚拟桌宠名字:" Foreground="{DynamicResource PrimaryText}"
+                    HorizontalAlignment="Left" Padding="0" FontWeight="Bold" Margin="0,0,0,6" FontSize="32"
+                    Background="{x:Null}" />
             <ScrollViewer x:Name="sv" MaxHeight="400">
-                <SelectableTextBlock x:Name="TText" Text=""
-                                     TextWrapping="WrapWithOverflow" FontSize="24"
-                                     Foreground="{DynamicResource PrimaryText}" />
+                <TextBox x:Name="TText" Text="我说话长这样,这是我说的话巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉" IsReadOnly="True"
+                        TextWrapping="WrapWithOverflow" FontSize="24" x:FieldModifier="public" Background="{x:Null}"
+                        BorderBrush="{x:Null}" BorderThickness="0" Foreground="{DynamicResource PrimaryText}"
+                        SizeChanged="TText_SizeChanged" />
             </ScrollViewer>
-            <Grid x:Name="MessageBoxContent" />
+            <Grid x:Name="MessageBoxContent" x:FieldModifier="public">
+
+            </Grid>
         </StackPanel>
     </Border>
 </UserControl>

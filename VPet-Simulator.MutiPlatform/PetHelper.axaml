@@ -1,0 +1,18 @@
+<shell:VPetWindow x:Class="VPet_Simulator.MutiPlatform.PetHelper" xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="using:VPet_Simulator.Core.MutiPlatform.Display.Shell" ShowInTaskbar="False" CaptionHeight="0" CanResize="False" Opacity=".6"
+        xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+        xmlns:local="using:VPet_Simulator.MutiPlatform" Topmost="True" Title="PetHelper" Height="40"
+        Width="40" Loaded="Window_Loaded" PointerPressed="Image_MouseLeftButtonDown"
+        PointerReleased="Image_MouseLeftButtonUp" TransparencyLevelHint="Transparent">
+    <!-- 跨平台: WindowStyle=None/WindowChrome 由 VPetWindow (无系统边框) 承担; 右键在 PointerPressed 里按按钮分流 -->
+    <shell:VPetWindow.Background>
+        <ImageBrush Source="avares://VPet-Simulator.MutiPlatform/Res/vpeticon.png" />
+    </shell:VPetWindow.Background>
+    <!--<pu:WindowX.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="{ll:Str '设置'}" />
+        </ContextMenu>
+    </pu:WindowX.ContextMenu>-->
+
+</shell:VPetWindow>

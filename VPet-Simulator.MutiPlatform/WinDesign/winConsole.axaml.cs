@@ -1,0 +1,265 @@
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Threading;
+using LinePutScript;
+using LinePutScript.Localization;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
+using VPet_Simulator.Core;
+using VPet_Simulator.Core.MutiPlatform;
+using VPet_Simulator.Core.MutiPlatform.Graph;
+using static VPet_Simulator.Core.GraphInfo;
+
+namespace VPet_Simulator.MutiPlatform
+{
+    /// <summary>
+    /// winConsole.xaml 的交互逻辑
+    /// </summary>
+    /// 跨平台: 原文复制自 VPet-Simulator.Windows/WinDesign/winConsole.xaml.cs; IGraph→IAvaloniaGraph, MouseDoubleClick→DoubleTapped,
+    /// ComboBox.Text→选中项, Dispatcher→Dispatcher.UIThread, 其余逐行相同
+    public partial class winConsole : Window
+    {
+        MainWindow mw;
+        public winConsole(MainWindow mw)
+        {
+            mw.Windows.Add(this);
+            InitializeComponent();
+            Title = "桌宠管理开发控制台".Translate() + ' ' + mw.PrefixSave;
+            this.mw = mw;
+            foreach (var v in mw.Core.Graph!.GraphsList)
+            {
+                foreach (AnimatType k in v.Value.Keys)
+                {
+                    var str = v.Key.ToString() + "++" + k.ToString();
+                    GraphListBox.Items.Add(str);
+                    GraphListPlayerBox.Items.Add(str);
+                }
+            }
+            if (mw.Core.Graph!.GraphsName.TryGetValue(GraphType.Say, out var gl))
+                foreach (string v in gl)
+                {
+                    CombSay.Items.Add(v);
+                }
+            DestanceTimer.Elapsed += DestanceTimer_Elapsed;
+        }
+
+        private void DestanceTimer_Elapsed(object? sender, ElapsedEventArgs e)
+        {
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                RLeft.Text = mw.Core.Controller!.GetWindowsDistanceLeft().ToString("f2");
+                RRight.Text = mw.Core.Controller!.GetWindowsDistanceRight().ToString("f2");
+                RTop.Text = mw.Core.Controller!.GetWindowsDistanceUp().ToString("f2");
+                RDown.Text = mw.Core.Controller!.GetWindowsDistanceDown().ToString("f2");
+            });
+        }
+        public void DisplayLoop(IAvaloniaGraph graph)
+        {
+            mw.Main.Display(graph, () => DisplayLoop(graph));
+        }
+        private void GraphListBox_MouseDoubleClick(object? sender, TappedEventArgs? e)
+        {
+            if (GraphListBox.SelectedItem == null)
+                return;
+            var kv = Sub.Split((string)GraphListBox.SelectedItem, "++");
+            var graph = mw.Main.Core.Graph!.FindGraph(kv[0], (AnimatType)Enum.Parse(typeof(AnimatType), kv[1]), (IGameSave.ModeType)ComboxMode.SelectedIndex);
+            if (graph == null)
+            {
+                LabelNowPlay.Content = "未找到对应类型图像资源".Translate();
+                return;
+            }
+            LabelNowPlay.Content = "当前正在播放".Translate() + ": " + GraphListBox.SelectedItem;
+            DisplayLoop(graph);
+        }
+
+        private void DisplayListBox_MouseDoubleClick(object? sender, TappedEventArgs? e)
+        {
+            if (DisplayListBox.SelectedItem == null)
+                return;
+            LabelSuccess.Content = "当前正在运行".Translate() + ": " + (string)((ListBoxItem)DisplayListBox.SelectedItem).Content;
+            mw.RunAction((string)((ListBoxItem)DisplayListBox.SelectedItem).Content);
+        }
+
+        private void Say_Click(object? sender, RoutedEventArgs e)
+        {
+            //跨平台: Avalonia 的 ComboBox 没有 Text, 取选中项
+            var saytype = CombSay.SelectedItem as string;
+            if (string.IsNullOrWhiteSpace(saytype))
+                mw.Main.SayRnd(SayTextBox.Text ?? "", true);
+            else
+                mw.Main.Say(SayTextBox.Text ?? "", saytype, true);
+        }
+        private void SaySteam_Click(object? sender, RoutedEventArgs e)
+        {
+            var sayinfosteam = new SayInfoWithStream();
+            if (string.IsNullOrWhiteSpace(CombSay.SelectedItem as string))
+                mw.Main.SayRnd(sayinfosteam);
+            else
+                mw.Main.Say(sayinfosteam);
+
+            // 将 SayTextBox.Text 按每段3-5个字切分到 str 里
+            List<string> str = new List<string>();
+            string text = SayTextBox.Text ?? "";
+            Random rand = new Random();
+            int idx = 0;
+            while (idx < text.Length)
+            {
+                int len = rand.Next(3, 6); // 3-5个字
+                if (idx + len > text.Length)
+                    len = text.Length - idx;
+                str.Add(text.Substring(idx, len));
+                idx += len;
+            }
+
+            Task.Run(() =>
+            {
+                foreach (var v in str)
+                {
+                    sayinfosteam.UpdateText(v);
+                    System.Threading.Thread.Sleep(rand.Next(30, 300));
+                }
+                sayinfosteam.FinishGenerate();
+            });
+        }
+        Timer DestanceTimer = new Timer()
+        {
+            AutoReset = true,
+            Interval = 100,
+        };
+
+
+        //跨平台: Avalonia 的 CheckBox 只有 IsCheckedChanged, 在入口按 IsChecked 分流
+        private void CheckBox_Checked(object? sender, RoutedEventArgs e)
+        {
+            if ((sender as CheckBox)?.IsChecked != true)
+            {
+                CheckBox_Unchecked(sender, e);
+                return;
+            }
+            DestanceTimer.Start();
+        }
+
+        private void CheckBox_Unchecked(object? sender, RoutedEventArgs e)
+        {
+            DestanceTimer.Stop();
+        }
+        List<Tuple<string, IGameSave.ModeType>> playlist = new List<Tuple<string, IGameSave.ModeType>>();
+        private void GraphListPlayerBox_MouseDoubleClick(object? sender, TappedEventArgs? e)
+        {
+            playlist.Add(new Tuple<string, IGameSave.ModeType>((string)GraphListPlayerBox.SelectedItem,
+                (IGameSave.ModeType)Enum.Parse(typeof(IGameSave.ModeType), (string)(((ComboBoxItem)ComboxPlayMode.SelectedItem).Content))));
+            GraphListWillPlayBox.Items.Add((string)GraphListPlayerBox.SelectedItem + "_" + (string)((ComboBoxItem)ComboxPlayMode.SelectedItem).Content);
+        }
+
+        private void Play_Click(object? sender, RoutedEventArgs e)
+        {
+            DisplayList(new Queue<Tuple<string, IGameSave.ModeType>>(playlist));
+        }
+        public void DisplayList(Queue<Tuple<string, IGameSave.ModeType>> list)
+        {
+            if (list.Count == 0)
+            {
+                mw.Main.DisplayToNomal();
+                return;
+            }
+            var v = list.Dequeue();
+            var kv = Sub.Split(v.Item1, "++");
+            var graph = mw.Main.Core.Graph!.FindGraph(kv[0], (AnimatType)Enum.Parse(typeof(AnimatType), kv[1]), v.Item2);
+            if (graph != null)
+            {
+                mw.Main.Display(graph, () => DisplayList(list));
+            }
+            else
+            {
+                DisplayList(list);
+            }
+        }
+
+        private void GraphListWillPlayBox_MouseDoubleClick(object? sender, TappedEventArgs? e)
+        {
+            playlist.RemoveAt(GraphListWillPlayBox.SelectedIndex);
+            GraphListWillPlayBox.Items.RemoveAt(GraphListWillPlayBox.SelectedIndex);
+        }
+
+        private void PlayADD_Click(object? sender, RoutedEventArgs e) => GraphListPlayerBox_MouseDoubleClick(sender, null);
+
+        private void Local_SelectAll_Click(object? sender, PointerPressedEventArgs e)
+        {
+            LocalTextBox.SelectAll();
+        }
+
+        private void Output_No_Local(object? sender, RoutedEventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var v in LocalizeCore.StoreTranslationList)
+            {
+                sb.AppendLine(v.Replace("\n", @"\n").Replace("\r", @"\r"));
+            }
+            LocalTextBox.Text = sb.ToString();
+        }
+
+        private void Button_MoveToLeft_Click(object? sender, RoutedEventArgs e)
+        {
+            mw.Core.Graph!.GraphConfig.Moves.Find(x => x.SpeedX < 0 && x.Checked(mw.MWController))?.Display(mw.Main);
+        }
+
+        private void Button_MoveToUp_Click(object? sender, RoutedEventArgs e)
+        {
+            mw.Core.Graph!.GraphConfig.Moves.Find(x => x.SpeedY < 0 && x.Checked(mw.MWController))?.Display(mw.Main);
+        }
+
+        private void Button_MoveToButton_Click(object? sender, RoutedEventArgs e)
+        {
+            mw.Core.Graph!.GraphConfig.Moves.Find(x => x.SpeedY > 0 && x.Checked(mw.MWController))?.Display(mw.Main);
+        }
+
+        private void Button_MoveToRight_Click(object? sender, RoutedEventArgs e)
+        {
+            mw.Core.Graph!.GraphConfig.Moves.Find(x => x.SpeedX > 0 && x.Checked(mw.MWController))?.Display(mw.Main);
+        }
+
+        private void Window_Closed(object? sender, EventArgs e)
+        {
+            mw.Windows.Remove(this);
+        }
+
+        private void Output_Graph(object? sender, RoutedEventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var gfs in mw.Core.Graph!.GraphsList.Values)
+            {
+                foreach (List<IAvaloniaGraph> gf in gfs.Values)
+                {
+                    foreach (IAvaloniaGraph g in gf)
+                    {
+                        sb.AppendLine(g.GraphInfo.ToString());
+                        sb.AppendLine("path: " + g.Path);
+                        //跨平台: 共享的 IGraphBase 里 Control 是 object, 播放状态在 GraphTaskControl 上
+                        sb.AppendLine($"PlayState:{(g.Control as GraphTaskControl)?.PlayState} ready:{g.IsReady} loop:{g.IsLoop} fail:{g.IsFail} {g.FailMessage}");
+                    }
+                }
+            }
+            LocalTextBox.Text = sb.ToString();
+        }
+
+
+        //private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //   switch(((TabControl)sender).SelectedIndex)
+        //    {
+        //        case 0:
+        //        case 1:
+        //        case 2:
+        //            ComboxMode.Visibility = Visibility.Visible;
+        //            break;
+        //        default:
+        //            ComboxMode.Visibility = Visibility.Collapsed;
+        //            break;
+        //    }
+        //}
+    }
+}

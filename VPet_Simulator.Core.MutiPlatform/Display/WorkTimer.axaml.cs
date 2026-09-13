@@ -14,7 +14,7 @@ namespace VPet_Simulator.Core.MutiPlatform.Display;
 /// 数值结算不在这里, 在两个平台共用的 PetStatLogic 里; 这里只负责显示和起止.
 public partial class WorkTimer : UserControl
 {
-    private readonly PetMain m;
+    private readonly Main m;
 
     /// <summary>
     /// 无参构造仅供 Avalonia 设计器使用
@@ -23,11 +23,11 @@ public partial class WorkTimer : UserControl
     {
     }
 
-    public WorkTimer(PetMain m)
+    public WorkTimer(Main m)
     {
         InitializeComponent();
         this.m = m;
-        //数据相关计算挪到 PetMainLogic
+        //数据相关计算挪到 MainLogic
         //这里只显示UI
         if (m != null)
             m.TimeUIHandle += M_TimeUIHandle;
@@ -123,7 +123,7 @@ public partial class WorkTimer : UserControl
     /// <summary>
     /// UI相关显示
     /// </summary>
-    private void M_TimeUIHandle(PetMain m)
+    private void M_TimeUIHandle(Main m)
     {
         if (!IsVisible || m.NowWork == null) return;
         TimeSpan ts = DateTime.Now - StartTime;
@@ -232,7 +232,7 @@ public partial class WorkTimer : UserControl
     public void Start(GraphHelper.Work work)
     {
         IsVisible = true;
-        m.State = PetMain.WorkingState.Work;
+        m.State = Main.WorkingState.Work;
         m.NowWork = work;
         StartTime = DateTime.Now;
         GetCount = 0;
@@ -251,13 +251,13 @@ public partial class WorkTimer : UserControl
     /// <param name="then">停止后接着做什么</param>
     public void Stop(Action? then = null, StopReason reason = StopReason.MenualStop)
     {
-        if (m.State == PetMain.WorkingState.Work && m.NowWork != null)
+        if (m.State == Main.WorkingState.Work && m.NowWork != null)
         {
             FinishWorkInfo fwi = new FinishWorkInfo(m.NowWork, GetCount, StartTime, reason);
             E_FinishWork?.Invoke(fwi);
         }
         IsVisible = false;
-        m.State = PetMain.WorkingState.Nomal;
+        m.State = Main.WorkingState.Nomal;
         m.Display(m.NowWork?.Graph, AnimatType.C_End, then ?? m.DisplayNomal);
     }
 

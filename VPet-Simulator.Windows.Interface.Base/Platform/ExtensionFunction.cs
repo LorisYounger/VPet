@@ -1,0 +1,146 @@
+﻿//跨平台: 原文复制自 VPet-Simulator.Windows.Interface/ExtensionFunction.cs 里要 Work 类型的那一半
+//(Get / Spend / IsOverLoad / FixOverLoad / Double); 不要 Work 的那半在共享源码 Save/ExtensionFunction.Shared.cs 里
+using System;
+using VPet_Simulator.Core.MutiPlatform;
+using static VPet_Simulator.Core.MutiPlatform.GraphHelper;
+
+namespace VPet_Simulator.Windows.Interface;
+
+public static partial class ExtensionFunction
+{
+    /// <summary>
+    /// 工作获取效率
+    /// </summary>
+    /// <param name="work">工作</param>
+    /// <returns>工作获取效率</returns>
+    public static double Get(this Work work)
+    {
+        if (work.Type == Work.WorkType.Work)
+            return MathPow(Math.Abs(work.MoneyBase) * (1 + work.FinishBonus / 2) + 1, 1.25);
+        else
+            return MathPow((Math.Abs(work.MoneyBase) * (1 + work.FinishBonus / 2) + 1) / 10, 1.25);
+    }
+    /// <summary>
+    /// 工作花费效率
+    /// </summary>
+    /// <param name="work">工作</param>
+    /// <returns>工作花费效率</returns>
+    public static double Spend(this Work work)
+    {
+        return (MathPow(work.StrengthFood, 1.5) / 3 + MathPow(work.StrengthDrink, 1.5) / 4 + MathPow(work.Feeling, 1.5) / 4 +
+            work.LevelLimit / 10.0 + MathPow(work.StrengthFood + work.StrengthDrink + work.Feeling, 1.5) / 10) * 3;
+    }
+    /// <summary>
+    /// 判断这个工作是否超模
+    /// </summary>
+    /// <param name="work">工作</param>
+    /// <returns>是否超模</returns>
+    public static bool IsOverLoad(this Work work)
+    {//判断这个工作是否超模
+        if (work.LevelLimit < 0)
+            work.LevelLimit = 0;
+        if (work.FinishBonus < 0)
+            work.FinishBonus = 0;
+        if (work.Type == Work.WorkType.Play && work.Feeling > 0)
+            work.Feeling *= -1;//旧版本代码兼容
+        if (work.Time < 10)
+            work.Time = 10;
+        if (work.FinishBonus > 2)
+            work.FinishBonus = 2;
+
+        var spend = work.Spend();
+        var get = work.Get();
+        var rel = get / spend;
+        if (rel < 0)
+            return true;
+        var lvlimit = 1.1 * work.LevelLimit + 10;
+        if (work.Type != Work.WorkType.Work)
+            lvlimit *= 10;
+        if (Math.Abs(work.MoneyBase) > lvlimit) //等级获取速率限制
+            return true;
+        return rel > 1.4; // 推荐rel为1左右 超过1.3就是超模
+    }
+    /// <summary>
+    /// 为所有工作进行1.2倍效率修正
+    /// </summary>
+    /// <param name="work"></param>
+    public static void FixOverLoad(this Work work)
+    {
+        if (work.LevelLimit < 0)
+            work.LevelLimit = 0;
+        if (work.FinishBonus < 0)
+            work.FinishBonus = 0;
+        if (work.Type == Work.WorkType.Play && work.Feeling > 0)
+            work.Feeling *= -1;//旧版本代码兼容
+        if (work.Time < 10)
+            work.Time = 10;
+        if (work.FinishBonus > 2)
+            work.FinishBonus = 2;
+
+        var spend = work.Spend();
+        if (spend > 0)
+        {
+            work.MoneyBase = 2 * (1.15 * Math.Pow(spend, 0.8) - 1) / (2 + work.FinishBonus);
+
+            var lvlimit = 1.1 * work.LevelLimit + 10;
+            if (work.Type != Work.WorkType.Work)
+                lvlimit *= 10;
+
+            if (work.Type == Work.WorkType.Work)
+            {
+                work.MoneyBase = Math.Round(work.MoneyBase, 1);
+            }
+            else
+            {
+                work.MoneyBase = Math.Round(work.MoneyBase * 10, 1);
+            }
+            work.MoneyBase = Math.Min(work.MoneyBase, lvlimit);
+        }
+
+        // 如果仍然不合理，设定一个默认值
+        if (work.IsOverLoad())
+        {
+            switch (work.Type)
+            {
+                case Work.WorkType.Play:
+                    work.FinishBonus = 0.2;
+                    work.MoneyBase = 18;
+                    work.StrengthFood = 1;
+                    work.StrengthDrink = 1.5;
+                    work.Feeling = -1;
+                    work.LevelLimit = 0;
+                    break;
+                case Work.WorkType.Work:
+                    work.FinishBonus = 0.1;
+                    work.MoneyBase = 8;
+                    work.StrengthFood = 3.5;
+                    work.StrengthDrink = 2.5;
+                    work.Feeling = 1;
+                    work.LevelLimit = 0;
+                    break;
+                case Work.WorkType.Study:
+                    work.FinishBonus = 0.2;
+                    work.MoneyBase = 80;
+                    work.StrengthFood = 2;
+                    work.StrengthDrink = 2;
+                    work.Feeling = 3;
+                    work.LevelLimit = 0;
+                    break;
+            }
+        }
+    }
+    /// <summary>
+    /// 将工作的属性值翻倍
+    /// </summary>
+    public static Work Double(this Work work, int value)
+    {
+        if (value == 1) return work;
+        Work w = (Work)work.Clone();
+        w.StrengthFood *= 0.5 + 0.4 * value;
+        w.StrengthDrink *= 0.5 + 0.4 * value;
+        w.Feeling *= 0.5 + 0.4 * value;
+        w.LevelLimit = (work.LevelLimit + 10) * value;
+        FixOverLoad(w);
+        return w;
+    }
+}
