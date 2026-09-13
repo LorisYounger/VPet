@@ -2,9 +2,6 @@
 using System.Windows.Controls;
 using HKW.HKWUtils.Extensions;
 using LinePutScript.Localization.WPF;
-using ReactiveUI;
-using ReactiveUI.Primitives;
-using ReactiveUI.Primitives.Disposables;
 using VPet.Solution.ViewModels.SettingEditor;
 
 namespace VPet.Solution.Views.SettingEditor;

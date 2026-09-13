@@ -1,16 +1,17 @@
 ﻿using System.Collections.Immutable;
 using System.IO;
 using System.Runtime.InteropServices;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.FrameworkDialogs;
-using HKW.HKWReactiveUI;
 using HKW.HKWUtils;
 using HKW.HKWUtils.Collections;
 using HKW.HKWUtils.Extensions;
 using HKW.HKWUtils.Observable;
+using HKW.MVVM;
+using HKW.MVVM.SourceGenerator;
 using LinePutScript.Localization.WPF;
-using ReactiveUI;
-using ReactiveUI.Primitives;
 using VPet.Solution.Models.SettingEditor;
 
 namespace VPet.Solution.ViewModels.SettingEditor;
@@ -60,13 +61,13 @@ public partial class SettingViewModel : CloseableViewModel
     }
 
     #region Property
-    [ReactiveProperty]
+    [ObservableProperty]
     public SettingModel? CurrentSetting { get; set; }
 
     public static ImmutableArray<EnumInfo<SubSettingModelType>> SubSettingTypes =>
         EnumInfo<SubSettingModelType>.StaticInfos;
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public EnumInfo<SubSettingModelType> CurrentSubSettingType { get; set; } =
         SubSettingModelType.Graphics.GetInfo();
 
@@ -79,17 +80,17 @@ public partial class SettingViewModel : CloseableViewModel
         ObservableList<SettingModel>
     > Settings { get; }
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public string SearchSetting { get; set; } = string.Empty;
     #endregion
     #region Command
-    [ReactiveCommand]
+    [RelayCommand]
     private static void SaveSetting(SettingModel parameter)
     {
         parameter.Save();
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private void ResetSetting(SettingModel parameter)
     {
         var result = DialogService.ShowMessageBox(
@@ -107,14 +108,14 @@ public partial class SettingViewModel : CloseableViewModel
         CurrentSetting?.Reset();
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private void SaveAllSetting()
     {
         foreach (var setting in Settings)
             setting.Save();
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private void ResetAllSetting()
     {
         var result = DialogService.ShowMessageBox(
@@ -133,13 +134,13 @@ public partial class SettingViewModel : CloseableViewModel
         }
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private static void OpenFileFromExplorer(SettingModel parameter)
     {
         NativeUtils.OpenFileFromExplorer(parameter.FilePath);
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private static void OpenFile(SettingModel parameter)
     {
         NativeUtils.OpenLink(parameter.FilePath);
@@ -208,7 +209,7 @@ public partial class SettingViewModel : CloseableViewModel
         return vm;
     }
 
-    partial class SettingViewModelReactiveObjectHelper
+    partial class SettingViewModelObservableObjectHelper
     {
         partial void OnCurrentSettingChanging(
             SettingModel oldValue,

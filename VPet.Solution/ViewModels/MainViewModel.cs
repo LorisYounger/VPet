@@ -1,14 +1,12 @@
 ﻿using System.Text;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
-using HKW.HKWReactiveUI;
 using HKW.HKWUtils;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
-using ReactiveUI;
-using ReactiveUI.Builder;
-using ReactiveUI.Primitives;
 using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.ViewModels.SettingEditor;
 
@@ -31,9 +29,6 @@ public partial class MainViewModel : CloseableViewModel
 
         LocalizeCore.StoreTranslation = true;
         LocalizeCore.LoadDefaultCulture();
-        //_mainSetting = SettingViewModel.Current.ShowSettings.FirstOrDefault(m =>
-        //    m.Name == nameof(Setting)
-        //);
         if (string.IsNullOrWhiteSpace(_mainSetting?.GraphicsSetting?.Language))
             CurrentCulture = LocalizeCore.CurrentCulture;
         else
@@ -41,24 +36,22 @@ public partial class MainViewModel : CloseableViewModel
     }
 
     #region Property
-    public static string[] AvailableCultures => LocalizeCore.AvailableCultures;
+    public string[] AvailableCultures => LocalizeCore.AvailableCultures;
 
-    //{ get; set; }
-
-    [ReactiveProperty]
+    [ObservableProperty]
     public string CurrentCulture { get; set; }
     #endregion
 
     #region Command
 
 
-    [ReactiveCommand()]
+    [RelayCommand]
     private void OpenSetting()
     {
         DialogService.ShowInstance<SettingViewModel>(this, null);
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private void OpenLocalText()
     {
         var sb = new StringBuilder();
@@ -67,7 +60,7 @@ public partial class MainViewModel : CloseableViewModel
         DialogService.ShowMessageBox(this, sb.ToString());
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private void FirstStartFailed()
     {
         if (LocalizeCore.CurrentCulture == "zh-Hans")
@@ -85,7 +78,7 @@ public partial class MainViewModel : CloseableViewModel
         base.OnClosed();
     }
 
-    partial class MainViewModelReactiveObjectHelper
+    partial class MainViewModelObservableObjectHelper
     {
         partial void OnCurrentCultureChanged(string oldValue, string newValue)
         {

@@ -1,23 +1,23 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using HKW.HKWMapper;
-using HKW.HKWReactiveUI;
-using ReactiveUI;
+using HKW.MVVM;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-public partial class DiagnosticSettingModel : ReactiveObject, ISubSettingModel
+public partial class DiagnosticSettingModel : ObservableObjectEx, ISubSettingModel
 {
     [MapIgnoreProperty]
     public SubSettingModelType ModelType => SubSettingModelType.Diagnostic;
 
-    [ReactiveProperty]
+    [ObservableProperty]
     /// <summary>
     /// 自动修复超模
     /// </summary>
     public bool AutoCal { get; set; }
 
-    [ReactiveProperty]
+    [ObservableProperty]
     /// <summary>
     /// 是否启用数据收集
     /// </summary>
@@ -26,7 +26,7 @@ public partial class DiagnosticSettingModel : ReactiveObject, ISubSettingModel
     /// <summary>
     /// 数据收集频率
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     [DefaultValue(500)]
     public int DiagnosisInterval { get; set; }
     public static ObservableCollection<int> DiagnosisIntervals { get; } =

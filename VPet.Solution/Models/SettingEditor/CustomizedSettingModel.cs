@@ -1,12 +1,12 @@
 ﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using HKW.HKWMapper;
-using HKW.HKWReactiveUI;
+using HKW.MVVM;
 using LinePutScript;
-using ReactiveUI;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-public partial class CustomizedSettingModel : ReactiveObject, ISubSettingModel
+public partial class CustomizedSettingModel : ObservableObjectEx, ISubSettingModel
 {
     public SubSettingModelType ModelType => SubSettingModelType.Customized;
     public const string TargetName = "diy";
@@ -34,15 +34,15 @@ public partial class CustomizedSettingModel : ReactiveObject, ISubSettingModel
     }
 }
 
-public partial class LinkModel : ReactiveObject
+public partial class LinkModel : ObservableObjectEx
 {
-    [ReactiveProperty]
+    [ObservableProperty]
     /// <summary>
     /// 名称
     /// </summary>
     public string Name { get; set; }
 
-    [ReactiveProperty]
+    [ObservableProperty]
     /// <summary>
     /// 链接
     /// </summary>

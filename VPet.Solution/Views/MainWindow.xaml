@@ -35,11 +35,20 @@
       MinWidth="150"
       HorizontalAlignment="Right"
       VerticalAlignment="Top"
+      ItemsSource="{Binding AvailableCultures}"
+      SelectedItem="{Binding CurrentCulture}"
       Style="{DynamicResource ComboBox_BaseStyle}"
     >
       <ComboBox.ContextMenu>
-        <ContextMenu>
-          <MenuItem x:Name="OpenLocalText" Header="{ll:Str 打开翻译文本}" />
+        <ContextMenu
+          d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
+          DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+        >
+          <MenuItem
+            x:Name="OpenLocalText"
+            Header="{ll:Str 打开翻译文本}"
+            Command="{Binding OpenLocalTextCommand}"
+          />
         </ContextMenu>
       </ComboBox.ContextMenu>
     </ComboBox>
@@ -54,6 +63,7 @@
           MinWidth="150"
           Content="{ll:Str 打开设置编辑器}"
           FontSize="16"
+          Command="{Binding OpenSettingCommand}"
           Style="{DynamicResource Button_BaseStyle}"
         />
         <!--<Button
@@ -69,6 +79,7 @@
         x:Name="FirstStartFailed"
         Grid.Row="1"
         Height="30"
+        Command="{Binding FirstStartFailedCommand}"
         Style="{DynamicResource LinkButtonStyle}"
         Content="{ll:Str '第一次启动桌宠打不开?'}"
         FontSize="16"

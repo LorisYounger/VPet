@@ -1,12 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
+using HKW.MVVM;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
-using ReactiveUI;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-public partial class ModSettingModel : ReactiveObject, ISubSettingModel
+public partial class ModSettingModel : ObservableObjectEx, ISubSettingModel
 {
     public SubSettingModelType ModelType => SubSettingModelType.Mod;
     public const string ModLineName = "onmod";

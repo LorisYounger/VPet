@@ -1,9 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using HKW.HKWUtils.Extensions;
-using ReactiveUI;
-using ReactiveUI.Primitives;
-using ReactiveUI.Primitives.Disposables;
 using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.ViewModels.SettingEditor;
 

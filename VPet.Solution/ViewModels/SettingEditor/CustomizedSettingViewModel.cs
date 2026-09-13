@@ -1,11 +1,11 @@
-﻿using HanumanInstitute.MvvmDialogs;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.FrameworkDialogs;
-using HKW.HKWReactiveUI;
 using HKW.HKWUtils.Collections;
 using HKW.HKWUtils.Observable;
+using HKW.MVVM;
 using LinePutScript.Localization.WPF;
-using ReactiveUI;
-using ReactiveUI.Primitives;
 using VPet.Solution.Models.SettingEditor;
 
 namespace VPet.Solution.ViewModels.SettingEditor;
@@ -20,22 +20,22 @@ public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettin
             .DisposeWith(Disposables);
     }
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public SettingModel Setting { get; set; } = null!;
 
     public CustomizedSettingModel CustomizedSetting => Setting.CustomizedSetting;
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public string SearchLink { get; set; } = string.Empty;
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public FilteredListWrapper<
         LinkModel,
         List<LinkModel>,
         ObservableList<LinkModel>
     > Links { get; set; } = null!;
 
-    [ReactiveCommand]
+    [RelayCommand]
     private void ClearLinks()
     {
         var result = DialogService.ShowMessageBox(
@@ -53,7 +53,7 @@ public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettin
         Setting.IsChanged = true;
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private void AddLink()
     {
         SearchLink = string.Empty;
@@ -61,13 +61,13 @@ public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettin
         Setting.IsChanged = true;
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private void RemoveLink(LinkModel parameter)
     {
         Links.Remove(parameter);
     }
 
-    partial class CustomizedSettingViewModelReactiveObjectHelper
+    partial class CustomizedSettingViewModelObservableObjectHelper
     {
         partial void OnSettingChanged(SettingModel oldValue, SettingModel newValue)
         {

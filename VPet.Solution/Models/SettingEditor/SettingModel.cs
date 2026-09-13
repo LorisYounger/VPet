@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel;
 using System.IO;
-using HKW.HKWReactiveUI;
+using CommunityToolkit.Mvvm.ComponentModel;
+using HKW.MVVM;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
-using ReactiveUI;
-using ReactiveUI.Primitives;
-using ReactiveUI.Primitives.Disposables;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-public partial class SettingModel : ReactiveObject
+public partial class SettingModel : ObservableObjectEx
 {
     /// <summary>
     /// 名称
@@ -24,7 +22,7 @@ public partial class SettingModel : ReactiveObject
     /// <summary>
     /// 已更改
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool IsChanged { get; set; }
 
     public GraphicsSettingModel GraphicsSetting { get; } = new();
@@ -55,7 +53,7 @@ public partial class SettingModel : ReactiveObject
         DiagnosticSetting.Changed.Subscribe(_ => IsChanged = true).DisposeWith(Disposables);
         InteractiveSetting.Changed.Subscribe(_ => IsChanged = true).DisposeWith(Disposables);
         CustomizedSetting.Changed.Subscribe(_ => IsChanged = true).DisposeWith(Disposables);
-        //ModSetting.Changed.Subscribe(_ => IsChanged = true);
+        ModSetting.Changed.Subscribe(_ => IsChanged = true);
     }
 
     /// <summary>

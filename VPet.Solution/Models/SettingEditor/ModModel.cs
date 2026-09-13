@@ -1,30 +1,31 @@
 ﻿using System.ComponentModel;
 using System.Windows.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
 using HKW.HKWMapper;
-using HKW.HKWReactiveUI;
+using HKW.MVVM;
+using HKW.MVVM.SourceGenerator;
 using LinePutScript.Localization.WPF;
-using ReactiveUI;
 
 namespace VPet.Solution.Models.SettingEditor;
 
 [MapTo(typeof(ModLoader), ScrutinyMode = true)]
 [MapFrom(typeof(ModLoader), ScrutinyMode = true)]
-public partial class ModModel : ReactiveObject
+public partial class ModModel : ObservableObjectEx
 {
-    [ReactiveProperty]
+    [ObservableProperty]
     [MapIgnoreProperty]
     public string ID { get; set; } = string.Empty;
 
     /// <summary>
     /// 名称
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// 描述
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     [ModModelMapToModLoaderProperty(nameof(ModLoader.Intro))]
     [ModModelMapFromModLoaderProperty(nameof(ModLoader.Intro))]
     public string Description { get; set; } = string.Empty;
@@ -32,13 +33,13 @@ public partial class ModModel : ReactiveObject
     /// <summary>
     /// 作者
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public string Author { get; set; } = string.Empty;
 
     /// <summary>
     /// 模组版本
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     [ModModelMapToModLoaderProperty(nameof(ModLoader.Ver))]
     [ModModelMapFromModLoaderProperty(nameof(ModLoader.Ver))]
     public int ModVersion { get; set; }
@@ -46,7 +47,7 @@ public partial class ModModel : ReactiveObject
     /// <summary>
     /// 游戏版本
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     [ModModelMapToModLoaderProperty(nameof(ModLoader.GameVer))]
     [ModModelMapFromModLoaderProperty(nameof(ModLoader.GameVer))]
     public int GameVersion { get; set; }
@@ -54,19 +55,19 @@ public partial class ModModel : ReactiveObject
     /// <summary>
     /// 功能
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public HashSet<string> Tags { get; set; } = null!;
 
     /// <summary>
     /// 图像
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public BitmapImage Image { get; set; } = null!;
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public ulong ItemID { get; set; }
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public string ModPath { get; set; } = string.Empty;
 
     /// <summary>
@@ -75,21 +76,21 @@ public partial class ModModel : ReactiveObject
     /// 已启用为 <see langword="true"/> 已禁用为 <see langword="false"/> 已失效为 <see langword="null"/>
     /// </para>
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     [MapIgnoreProperty]
     public bool? IsEnabled { get; set; } = true;
 
     /// <summary>
     /// 是通过检查的代码模组
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     [MapIgnoreProperty]
     public bool IsPass { get; set; }
 
     /// <summary>
     /// 是含有代码的模组
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     [MapIgnoreProperty]
     public bool IsMsg { get; set; }
 

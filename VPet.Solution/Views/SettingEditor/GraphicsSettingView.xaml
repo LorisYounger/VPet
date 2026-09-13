@@ -81,7 +81,10 @@
           <StackPanel>
             <Border Height="50" Style="{StaticResource Border_SettingGroupItem}">
               <Grid ColumnDefinitions="*,Auto" Height="40" ToolTip="{ll:Str '将桌宠置于顶层'}">
-                <TextBlock Text="{ll:Str '将桌宠置于顶层'}" VerticalAlignment="Center" />
+                <TextBlock
+                  Text="{ll:Str '将桌宠置于顶层'}"
+                  Style="{DynamicResource TextBlock_SettingName}"
+                />
                 <pu:Switch
                   x:Name="TopMost"
                   Grid.Column="1"
@@ -96,7 +99,10 @@
                 Height="40"
                 ToolTip="{ll:Str '鼠标将会穿过桌宠到下方内容,不打扰操作\&#13;该选项'}"
               >
-                <TextBlock Text="{ll:Str '鼠标穿透'}" VerticalAlignment="Center" />
+                <TextBlock
+                  Text="{ll:Str '鼠标穿透'}"
+                  Style="{DynamicResource TextBlock_SettingName}"
+                />
                 <pu:Switch
                   x:Name="HitThrough"
                   Grid.Column="1"
@@ -111,7 +117,10 @@
                 Height="40"
                 ToolTip="{ll:Str '添加快速切换小标,切换顶层或穿透'}"
               >
-                <TextBlock Text="{ll:Str '快速切换'}" VerticalAlignment="Center" />
+                <TextBlock
+                  Text="{ll:Str '快速切换'}"
+                  Style="{DynamicResource TextBlock_SettingName}"
+                />
                 <pu:Switch
                   x:Name="PetHelper"
                   Grid.Column="1"
