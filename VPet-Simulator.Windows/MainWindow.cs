@@ -847,7 +847,11 @@ namespace VPet_Simulator.Windows
         {
             if (name.StartsWith("stat_") && value != null)
             {
-                SteamUserStats.SetStat(name, Convert.ToInt32(value.Value));
+                try
+                {
+                    SteamUserStats.SetStat(name, Convert.ToInt32(value.Value));
+                }
+                finally { }
             }
         }
         /// <summary>
@@ -973,6 +977,8 @@ namespace VPet_Simulator.Windows
                 tmp.Data[(gbol)"round"] = false;
             }
             GameSavesData = tmp;
+            if (evaluationStatisticsInitialized)
+                ResetEvaluationSessionStatistics();
             Core.Save = tmp.GameSave;
             Items.Clear();
             foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("item")))
@@ -2114,6 +2120,7 @@ namespace VPet_Simulator.Windows
                   };
                   Main.PlayVoiceVolume = Set.VoiceVolume;
                   Main.FunctionSpendHandle += StatisticsCalHandle;
+                  InitializeEvaluationStatistics();
                   DisplayGrid.Child = Main;
                   Task.Run(async () =>
                   {
