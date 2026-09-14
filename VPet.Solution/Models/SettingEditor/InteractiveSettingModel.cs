@@ -1,10 +1,10 @@
 ﻿using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using HKW.HKWMapper;
-using HKW.HKWReactiveUI;
 using HKW.HKWUtils;
-using ReactiveUI;
+using HKW.MVVM;
 using VPet_Simulator.Core;
 
 namespace VPet.Solution.Models.SettingEditor;
@@ -12,7 +12,7 @@ namespace VPet.Solution.Models.SettingEditor;
 [MapTo(typeof(Setting), ScrutinyMode = true)]
 [MapFrom(typeof(Setting), ScrutinyMode = true)]
 [MapFrom(typeof(InteractiveSettingModel), ScrutinyMode = true)]
-public partial class InteractiveSettingModel : ReactiveObject, ISubSettingModel
+public partial class InteractiveSettingModel : ObservableObjectEx, ISubSettingModel
 {
     [MapIgnoreProperty]
     public SubSettingModelType ModelType => SubSettingModelType.Interactive;
@@ -20,19 +20,19 @@ public partial class InteractiveSettingModel : ReactiveObject, ISubSettingModel
     /// <summary>
     /// 播放声音大小
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public double VoiceVolume { get; set; }
 
     /// <summary>
     /// 启用计算等数据功能
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool EnableFunction { get; set; }
 
     /// <summary>
     /// 非计算模式下默认模式
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public IGameSave.ModeType CalFunState { get; set; }
 
     public static ImmutableArray<IGameSave.ModeType> CalFunStates { get; } =
@@ -41,49 +41,49 @@ public partial class InteractiveSettingModel : ReactiveObject, ISubSettingModel
     /// <summary>
     /// 上次清理缓存日期
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public DateTime LastCacheDate { get; set; }
 
     /// <summary>
     /// 储存顺序次数
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public int SaveTimes { get; set; }
 
     /// <summary>
     /// 按多久视为长按 单位毫秒
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public int PressLength { get; set; }
 
     /// <summary>
     /// 互动周期
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public int InteractionCycle { get; set; }
 
     /// <summary>
     /// 计算间隔 (秒)
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public double LogicInterval { get; set; }
 
     /// <summary>
     /// 允许移动事件
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool AllowMove { get; set; }
 
     /// <summary>
     /// 智能移动
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool SmartMove { get; set; }
 
     /// <summary>
     /// 智能移动周期 (秒)
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     [DefaultValue(1)]
     public int SmartMoveInterval { get; set; }
 
@@ -92,13 +92,13 @@ public partial class InteractiveSettingModel : ReactiveObject, ISubSettingModel
     /// <summary>
     /// 桌宠选择内容
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public string PetGraph { get; set; } = string.Empty;
 
     /// <summary>
     /// 当实时播放音量达到该值时运行音乐动作
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     [InteractiveSettingModelMapToSettingProperty(typeof(PercentageConverter))]
     [InteractiveSettingModelMapFromSettingProperty(typeof(PercentageConverter))]
     public int MusicCatch { get; set; }
@@ -106,7 +106,7 @@ public partial class InteractiveSettingModel : ReactiveObject, ISubSettingModel
     /// <summary>
     /// 当实时播放音量达到该值时运行特殊音乐动作
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     [InteractiveSettingModelMapToSettingProperty(typeof(PercentageConverter))]
     [InteractiveSettingModelMapFromSettingProperty(typeof(PercentageConverter))]
     public int MusicMax { get; set; }
@@ -114,19 +114,19 @@ public partial class InteractiveSettingModel : ReactiveObject, ISubSettingModel
     /// <summary>
     /// 允许桌宠自动购买食品
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool AutoBuy { get; set; }
 
     /// <summary>
     /// 允许桌宠自动购买礼物
     /// </summary>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool AutoGift { get; set; }
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool MoveAreaDefault { get; set; }
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public System.Drawing.Rectangle MoveArea { get; set; }
 
     public void Load(Setting setting)

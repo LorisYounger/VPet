@@ -5,8 +5,6 @@ using HanumanInstitute.MvvmDialogs;
 using HKW.HKWUtils;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
-using ReactiveUI;
-using ReactiveUI.Primitives;
 using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.ViewModels.SettingEditor;
 
@@ -15,17 +13,12 @@ namespace VPet.Solution.Views.SettingEditor;
 /// <summary>
 /// MainWindow.xaml 的交互逻辑
 /// </summary>
-public partial class SettingWindow : WindowX, IViewFor<SettingViewModel>
+public partial class SettingWindow : WindowX
 {
     public SettingViewModel? ViewModel
     {
         get => (SettingViewModel)DataContext!;
         set => DataContext = value;
-    }
-    object? IViewFor.ViewModel
-    {
-        get => ViewModel;
-        set => ViewModel = (SettingViewModel)value!;
     }
 
     public SettingWindow()

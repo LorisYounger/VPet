@@ -12,10 +12,9 @@ using System.Windows.Threading;
 using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.Wpf;
 using HKW.WPF.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Panuon.WPF.UI;
-using ReactiveUI.Builder;
-using Splat;
 using VPet.Solution.ViewModels;
 using VPet.Solution.ViewModels.SettingEditor;
 using VPet.Solution.Views;
@@ -23,81 +22,26 @@ using VPet.Solution.Views.SettingEditor;
 
 namespace VPet.Solution;
 
-internal sealed class ViewModelInitializer : IDisposable
+internal static class IOCInitializer
 {
-    public static ViewModelInitializer Instance { get; } = new();
-
-    public ViewModelInitializer()
+    public static IServiceProvider ConfigureServices()
     {
-        Resolver = new ModernDependencyResolver();
-        try
-        {
-            RxAppBuilder.EnsureInitialized();
-        }
-        catch
-        {
-            RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
-            ModeDetector.OverrideModeDetector(Splat.ModeDetection.Mode.Run);
-        }
-        ViewLocator = new();
-    }
+        var services = new ServiceCollection();
+        var viewLocator = new ViewLocator(services);
+        services.AddSingleton<IDialogService>(sp => new DialogService(
+            new DialogManagerX(viewLocator: viewLocator, dialogFactory: new DialogFactory()),
+            viewModelFactory: x => sp.GetService(x)
+        ));
+        viewLocator.Register<MainViewModel, MainWindow>();
+        viewLocator.Register<SettingViewModel, SettingWindow>();
+        viewLocator.Register<GraphicsSettingViewModel, GraphicsSettingView>();
+        viewLocator.Register<SystemSettingViewModel, SystemSettingView>();
+        viewLocator.Register<DiagnosticSettingViewModel, DiagnosticSettingView>();
+        viewLocator.Register<InteractiveSettingViewModel, InteractiveSettingView>();
+        viewLocator.Register<CustomizedSettingViewModel, CustomizedSettingView>();
+        viewLocator.Register<ModSettingViewModel, ModSettingView>();
 
-    private ViewLocator ViewLocator { get; }
-
-    private ModernDependencyResolver Resolver { get; }
-
-    public IReadonlyDependencyResolver Initialize()
-    {
-        //Directory.CreateDirectory(NativeData.ProgramBaseDirectory);
-        //NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration(
-        //    NativeResources.CreateFileWhenNotExists(NativeResources.NLogConfig)
-        //);
-        Resolver.RegisterLazySingleton<IDialogService>(() =>
-            new DialogService(
-                new DialogManagerX(viewLocator: ViewLocator, dialogFactory: new DialogFactory()),
-                viewModelFactory: x => Resolver.GetService(x)
-            )
-        );
-
-        ViewLocator.Register<MainViewModel, MainWindow>();
-        SplatRegistrations.Register<MainViewModel>();
-
-        ViewLocator.Register<SettingViewModel, SettingWindow>();
-        SplatRegistrations.Register<SettingViewModel>();
-        ViewLocator.Register<GraphicsSettingViewModel, GraphicsSettingView>();
-        SplatRegistrations.Register<GraphicsSettingViewModel>();
-        ViewLocator.Register<SystemSettingViewModel, SystemSettingView>();
-        SplatRegistrations.Register<SystemSettingViewModel>();
-        ViewLocator.Register<DiagnosticSettingViewModel, DiagnosticSettingView>();
-        SplatRegistrations.Register<DiagnosticSettingViewModel>();
-        ViewLocator.Register<InteractiveSettingViewModel, InteractiveSettingView>();
-        SplatRegistrations.Register<InteractiveSettingViewModel>();
-        ViewLocator.Register<CustomizedSettingViewModel, CustomizedSettingView>();
-        SplatRegistrations.Register<CustomizedSettingViewModel>();
-        ViewLocator.Register<ModSettingViewModel, ModSettingView>();
-        SplatRegistrations.Register<ModSettingViewModel>();
-
-        SplatRegistrations.SetupIOC(Resolver);
-        return Resolver;
-    }
-
-    private bool _isDisposed;
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    private void Dispose(bool disposing)
-    {
-        if (_isDisposed)
-            return;
-        if (disposing)
-        {
-            Resolver.Dispose();
-        }
-        _isDisposed = true;
+        return services.BuildServiceProvider();
     }
 }
 
@@ -127,7 +71,16 @@ public class DialogManagerX : DialogManager
     }
 }
 
-public class ViewLocator : StrongViewLocator { }
+public class ViewLocator(IServiceCollection services) : StrongViewLocator
+{
+    public new void Register<TViewModel, TView>()
+        where TViewModel : class, INotifyPropertyChanged
+        where TView : System.Windows.Controls.Control, new()
+    {
+        base.Register<TViewModel, TView>();
+        services.AddTransient<TViewModel>();
+    }
+}
 
 public static class MVVMDialogExtensions
 {

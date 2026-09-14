@@ -1,19 +1,18 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 using HKW.HKWMapper;
-using HKW.HKWReactiveUI;
 using HKW.HKWUtils;
 using HKW.HKWUtils.Observable;
+using HKW.MVVM;
 using LinePutScript.Localization.WPF;
-using ReactiveUI;
-using ReactiveUI.Primitives;
 
 namespace VPet.Solution.Models.SettingEditor;
 
 [MapTo(typeof(Setting), ScrutinyMode = true)]
 [MapFrom(typeof(Setting), ScrutinyMode = true)]
 [MapFrom(typeof(GraphicsSettingModel), ScrutinyMode = true)]
-public partial class GraphicsSettingModel : ReactiveObject, ISubSettingModel
+public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
 {
     public GraphicsSettingModel()
     {
@@ -25,76 +24,76 @@ public partial class GraphicsSettingModel : ReactiveObject, ISubSettingModel
     public SubSettingModelType ModelType => SubSettingModelType.Graphics;
 
     /// <inheritdoc cref="Setting.ZoomLevel"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     [DefaultValue(1)]
     public double ZoomLevel { get; set; } = 1;
 
-    [ReactiveProperty]
+    [ObservableProperty]
     [DefaultValue(0.5)]
     [MapIgnoreProperty]
     public double ZoomLevelMinimum { get; set; } = 0.5;
 
-    [ReactiveProperty]
+    [ObservableProperty]
     [DefaultValue(3)]
     [MapIgnoreProperty]
     public double ZoomLevelMaximum { get; set; } = 3;
 
     /// <inheritdoc cref="Setting.Resolution"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     [DefaultValue(1000)]
     public int Resolution { get; set; } = 1000;
 
-    [ReactiveProperty]
+    [ObservableProperty]
     [DefaultValue(1920)]
     [MapIgnoreProperty]
     public int ResolutionMaximum { get; set; } = 1920;
 
-    [ReactiveProperty]
+    [ObservableProperty]
     [DefaultValue(200)]
     [MapIgnoreProperty]
     public int ResolutionMinimum { get; set; } = 200;
 
     /// <inheritdoc cref="Setting.IsBiggerScreen"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool IsBiggerScreen { get; set; }
 
     /// <inheritdoc cref="Setting.TopMost"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool TopMost { get; set; }
 
     /// <inheritdoc cref="Setting.HitThrough"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool HitThrough { get; set; }
 
     /// <inheritdoc cref="Setting.Language"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public string Language { get; set; }
 
     public static string[] Languages => LocalizeCore.AvailableCultures;
 
     /// <inheritdoc cref="Setting.Font"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public string Font { get; set; }
 
     /// <inheritdoc cref="Setting.Theme"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public string Theme { get; set; }
 
     /// <inheritdoc cref="Setting.StartUPBoot"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool StartUPBoot { get; set; }
 
     /// <inheritdoc cref="Setting.StartUPBootSteam"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool StartUPBootSteam { get; set; }
 
     /// <inheritdoc cref="Setting.StartRecordLast"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     [DefaultValue(true)]
     public bool StartRecordLast { get; set; } = true;
 
     /// <inheritdoc cref="Setting.StartRecordPoint"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     [GraphicsSettingModelMapFromGraphicsSettingModelProperty(
         typeof(ObservablePointToObservablePointConverter)
     )]
@@ -103,23 +102,23 @@ public partial class GraphicsSettingModel : ReactiveObject, ISubSettingModel
     public ObservablePoint<double> StartRecordPoint { get; set; } = new();
 
     /// <inheritdoc cref="Setting.HideFromTaskControl"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool HideFromTaskControl { get; set; }
 
     /// <inheritdoc cref="Setting.MessageBarOutside"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool MessageBarOutside { get; set; }
 
     /// <inheritdoc cref="Setting.PetHelper"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public bool PetHelper { get; set; }
 
     /// <inheritdoc cref="Setting.PetHelpLeft"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public double PetHelpLeft { get; set; }
 
     /// <inheritdoc cref="Setting.PetHelpTop"/>
-    [ReactiveProperty]
+    [ObservableProperty]
     public double PetHelpTop { get; set; }
 
     public void Load(Setting setting)

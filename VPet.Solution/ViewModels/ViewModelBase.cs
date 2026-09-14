@@ -1,11 +1,10 @@
-﻿using HanumanInstitute.MvvmDialogs;
-using ReactiveUI;
-using ReactiveUI.Primitives.Disposables;
-using Splat;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HanumanInstitute.MvvmDialogs;
+using HKW.MVVM;
 
 namespace VPet.Solution;
 
-public partial class ViewModelBase : ReactiveObject
+public partial class ViewModelBase : ObservableObjectEx
 {
     public ViewModelBase(IDialogService dialogService)
     {

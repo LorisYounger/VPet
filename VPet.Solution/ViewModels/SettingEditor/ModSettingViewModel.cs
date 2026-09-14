@@ -1,13 +1,13 @@
-﻿using HanumanInstitute.MvvmDialogs;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.FrameworkDialogs;
-using HKW.HKWReactiveUI;
 using HKW.HKWUtils;
 using HKW.HKWUtils.Collections;
 using HKW.HKWUtils.Extensions;
 using HKW.HKWUtils.Observable;
+using HKW.MVVM;
 using LinePutScript.Localization.WPF;
-using ReactiveUI;
-using ReactiveUI.Primitives;
 using VPet.Solution.Models.SettingEditor;
 
 namespace VPet.Solution.ViewModels.SettingEditor;
@@ -22,25 +22,25 @@ public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewMo
             .DisposeWith(Disposables);
     }
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public SettingModel Setting { get; set; }
 
     public ModSettingModel ModSetting => Setting.ModSetting;
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public string SearchMod { get; set; } = string.Empty;
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public FilteredListWrapper<
         ModModel,
         List<ModModel>,
         ObservableList<ModModel>
     > Mods { get; set; }
 
-    [ReactiveProperty]
+    [ObservableProperty]
     public ModModel CurrentMod { get; set; } = null!;
 
-    [ReactiveCommand]
+    [RelayCommand]
     private void ClearMods()
     {
         var result = DialogService.ShowMessageBox(
@@ -60,7 +60,7 @@ public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewMo
         Setting.IsChanged = true;
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private void ClearFailMods()
     {
         var result = DialogService.ShowMessageBox(
@@ -84,7 +84,7 @@ public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewMo
         Setting.IsChanged = true;
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private static void OpenSteamCommunity(ModModel parameter)
     {
         NativeUtils.OpenLink(
@@ -92,7 +92,7 @@ public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewMo
         );
     }
 
-    [ReactiveCommand]
+    [RelayCommand]
     private void OpenModPath(ModModel parameter)
     {
         try
@@ -108,7 +108,7 @@ public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewMo
         }
     }
 
-    partial class ModSettingViewModelReactiveObjectHelper
+    partial class ModSettingViewModelObservableObjectHelper
     {
         partial void OnSettingChanged(SettingModel oldValue, SettingModel newValue)
         {

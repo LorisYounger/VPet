@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using HanumanInstitute.MvvmDialogs;
+using Microsoft.Extensions.DependencyInjection;
 using VPet.Solution.ViewModels;
 
 namespace VPet.Solution;
@@ -11,13 +12,17 @@ namespace VPet.Solution;
 /// </summary>
 public partial class App : Application
 {
+    public IServiceProvider Services { get; private set; } = null!;
+
     protected override void OnStartup(StartupEventArgs e)
     {
         if (e.Args == null || e.Args.Length <= 0)
         {
             base.OnStartup(e);
-            var server = ViewModelInitializer.Instance.Initialize();
-            server.GetService<IDialogService>()!.Show(null, server.GetService<MainViewModel>()!);
+            Services = IOCInitializer.ConfigureServices();
+            Services
+                .GetService<IDialogService>()!
+                .Show(null, Services.GetService<MainViewModel>()!);
             return;
         }
 
@@ -45,10 +50,5 @@ public partial class App : Application
                 break;
         }
         Application.Current.Shutdown();
-    }
-
-    protected override void OnExit(ExitEventArgs e)
-    {
-        ViewModelInitializer.Instance?.Dispose();
     }
 }

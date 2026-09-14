@@ -3,9 +3,6 @@ using System.Windows.Controls;
 using HKW.HKWUtils.Drawing;
 using HKW.HKWUtils.Extensions;
 using HKW.WPF.Extensions;
-using ReactiveUI;
-using ReactiveUI.Primitives;
-using ReactiveUI.Primitives.Disposables;
 using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.ViewModels.SettingEditor;
 
