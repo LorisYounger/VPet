@@ -39,12 +39,16 @@ public partial class MPFriends : Window, IMPFriend
     {
         get
         {
+            if (PlatformImpl == null)
+                return lastScaling;
             var scaling = Screens.ScreenFromWindow(this)?.Scaling ?? 0;
             if (scaling <= 0)
                 scaling = RenderScaling;
-            return scaling > 0 ? scaling : 1;
+            lastScaling = scaling > 0 ? scaling : 1;
+            return lastScaling;
         }
     }
+    private double lastScaling = 1;
     public double Left
     {
         get => Position.X / Scaling;

@@ -265,7 +265,12 @@ internal static class UiWalk
                     case "quit":
                         Note("结束");
                         File.WriteAllText(Path.Combine(outputDirectory, "walk.log"), log.ToString());
+                        // 走查刻意不走存档 (Environment.Exit 不触发 Closed), 走查机是 Windows, 这里不用顾 macOS
                         Environment.Exit(0);
+                        break;
+                    case "exit":
+                        // 走正常退出 (关闭动画 → Closed → 存档 → 生命周期 Shutdown), 验证退出路径用
+                        window.Close();
                         return;
                     default:
                         Note($"  不认识的命令 {command}");

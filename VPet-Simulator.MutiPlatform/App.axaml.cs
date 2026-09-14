@@ -46,6 +46,9 @@ public partial class App : Application
 
     public App() : base()
     {
+        //没处理的异常先记进日志, 桌宠常驻后台, 不记的话崩了也不知道为什么
+        AppDomain.CurrentDomain.UnhandledException += (s, e) => MainWindow.Log("未处理的异常: " + e.ExceptionObject);
+        Avalonia.Threading.Dispatcher.UIThread.UnhandledExceptionFilter += (s, e) => MainWindow.Log("未处理的异常: " + e.Exception);
         //跨平台: WPF 的 DispatcherUnhandledException 对应 Avalonia 的 Dispatcher.UIThread.UnhandledException; 与 Windows 版一样只在发布构建挂
 #if !DEBUG
         Avalonia.Threading.Dispatcher.UIThread.UnhandledException += (s, e) => { e.Handled = true; UnhandledException(e.Exception, false); };
@@ -159,16 +162,7 @@ public partial class App : Application
 
     private static MainWindow CreatePet(string prefix)
     {
-        var window = new MainWindow(prefix);
-        window.Closed += (_, _) =>
-        {
-            MainWindows.Remove(window);
-            if (MainWindows.Count == 0
-                && Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                desktop.Shutdown();
-            }
-        };
-        return window;
+        //退出由 MainWindow.Exit 负责: 最后一只关掉时它会 desktop.Shutdown(), 多开时只把自己摘掉 (与 Windows 版同一套流程)
+        return new MainWindow(prefix);
     }
 }

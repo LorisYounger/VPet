@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -1303,22 +1304,28 @@ public partial class MainWindow : Window
     /// 跨平台: WPF 的 Left/Top/ActualWidth 都是设备无关单位, Avalonia 的 Window.Position 是物理像素,
     /// 这四个属性把两边接起来, MWController 与各窗口的代码才能与 Windows 版逐字相同.
     /// 优先取屏幕自己的缩放而不是 RenderScaling: 窗口刚 Opened 时 RenderScaling 还可能是 1 (尚未落到具体屏幕上)
+    /// 窗口关掉之后 (Closed 里的 Save 还要读 Left/Top 记退出位置) 原生窗口已经没了, 用最后一次记下的值 —— WPF 关了窗口 Left/Top 照样能读
     private double Scaling
     {
         get
         {
+            if (PlatformImpl == null)
+                return lastScaling;
             var scaling = Screens.ScreenFromWindow(this)?.Scaling ?? 0;
             if (scaling <= 0)
                 scaling = RenderScaling;
-            return scaling > 0 ? scaling : 1;
+            lastScaling = scaling > 0 ? scaling : 1;
+            return lastScaling;
         }
     }
+    private double lastScaling = 1;
+    private PixelPoint lastPosition;
     /// <summary>
     /// 窗口左边缘的屏幕坐标 (设备无关单位), 对应 WPF 的 Window.Left
     /// </summary>
     public double Left
     {
-        get => Position.X / Scaling;
+        get => (PlatformImpl == null ? lastPosition : Position).X / Scaling;
         set => Position = new PixelPoint((int)Math.Round(value * Scaling), Position.Y);
     }
     /// <summary>
@@ -1326,7 +1333,7 @@ public partial class MainWindow : Window
     /// </summary>
     public double Top
     {
-        get => Position.Y / Scaling;
+        get => (PlatformImpl == null ? lastPosition : Position).Y / Scaling;
         set => Position = new PixelPoint(Position.X, (int)Math.Round(value * Scaling));
     }
     /// <summary>
@@ -1510,10 +1517,12 @@ public partial class MainWindow : Window
             }
             finally
             {
-                Environment.Exit(0);
+                //跨平台: Windows 版这里是 Environment.Exit(0). 这个方法跑在窗口 Closed 回调里, 即 Cocoa 事件循环的调用栈上,
+                //macOS 上在这儿直接 Environment.Exit 会在收拾原生对象时 abort() (退出时弹"意外退出"). 改走 Avalonia 的生命周期:
+                //等这次 Closed 回调走完再 desktop.Shutdown() (它会结束主循环, 进程随之退出); 上面 10 秒的看门狗照旧兜底
+                App.MainWindows.Remove(this);
+                Dispatcher.Post(() => (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown());
             }
-            while (true)
-                Environment.Exit(0);
         }
         else
         {
@@ -1612,6 +1621,7 @@ public partial class MainWindow : Window
 
     private void WindowX_LocationChanged(object? sender, PixelPointEventArgs e)
     {
+        lastPosition = e.Point;
         petHelper?.SetLocation();
     }
 
