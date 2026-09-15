@@ -1,5 +1,5 @@
 //跨平台: 对应 VPet-Simulator.Windows.Interface/ExtensionFunction.cs 里的 ExtensionValue (Windows 半).
-//BaseDirectory 那边是 exe 所在目录; 这边是可写的数据目录 (AppPaths.DataRoot), 因为 Linux/macOS 的安装目录通常只读.
+//BaseDirectory 与 Windows 版一样, 统一使用运行文件所在目录.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,9 +12,9 @@ namespace VPet_Simulator.Windows.Interface
     public static partial class ExtensionValue
     {
         /// <summary>
-        /// 当前数据目录
+        /// 当前运行目录
         /// </summary>
-        public static string BaseDirectory = VPet_Simulator.Core.MutiPlatform.AppPaths.DataRoot;
+        public static string BaseDirectory = VPet_Simulator.Core.MutiPlatform.AppPaths.InstallDirectory;
         /// <summary>
         /// 获取MOD存储目录 (会自动创建)
         /// 但是还是建议以LPS形式存在Setting/Save里 不保证完整可靠性(可能会因为切换电脑等导致数据丢失)

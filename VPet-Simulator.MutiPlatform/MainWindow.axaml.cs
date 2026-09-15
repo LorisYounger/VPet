@@ -123,7 +123,7 @@ public partial class MainWindow : Window
         //多开时只认第一只, 免得后开的那只把属主抢走
         DialogService.DefaultOwner ??= this;
         ImageResources.Cache.OnError = Log;
-        Log($"窗口已打开. 桌宠={(string.IsNullOrEmpty(PrefixSave) ? "默认" : MultiPetStore.DisplayName(PrefixSave))} 安装目录={AppPaths.InstallDirectory} 数据目录={AppPaths.DataRoot} MOD目录={AppPaths.ModRoot}");
+        Log($"窗口已打开. 桌宠={(string.IsNullOrEmpty(PrefixSave) ? "默认" : MultiPetStore.DisplayName(PrefixSave))} 运行目录={ExtensionValue.BaseDirectory} MOD目录={ModPath}");
         ApplyWindowSettings();
         if (Set.OpacityMain)
             this.Opacity = Set.Opacity;
@@ -180,9 +180,8 @@ public partial class MainWindow : Window
         }
 
         //不存在就关掉
-        //跨平台: MOD 目录不止一个 (安装目录 + 数据目录), 哪个里有 Core 都算
-        var modpath = AppPaths.ModRoots.Select(x => new DirectoryInfo(System.IO.Path.Combine(x, "0000_core", "pet", "vup"))).FirstOrDefault(x => x.Exists);
-        if (modpath == null)
+        var modpath = new DirectoryInfo(System.IO.Path.Combine(ModPath, "0000_core", "pet", "vup"));
+        if (!modpath.Exists)
         {
             MessageBoxX.Show("缺少模组Core,无法启动桌宠\nMissing module Core, can't start up", "启动错误 boot error", MessageBoxIcon.Error);
             Close();
@@ -192,12 +191,9 @@ public partial class MainWindow : Window
         try
         {
             //加载所有MOD
-            //跨平台: 用户数据目录优先于安装目录 —— 安装目录在 Linux(/usr) 和 macOS(.app 包内)
-            //通常是只读的, 只能放随程序分发的内容, 用户自己装的 MOD 在数据目录
             List<DirectoryInfo> Path = new List<DirectoryInfo>();
-            foreach (var root in AppPaths.ModRoots)
-                if (Directory.Exists(root))
-                    Path.AddRange(new DirectoryInfo(root).EnumerateDirectories());
+            if (Directory.Exists(ModPath))
+                Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
 
             bool NOCancel = true;
             CancellationTokenSource source = new CancellationTokenSource();
@@ -308,8 +304,7 @@ public partial class MainWindow : Window
                 //COD Check
                 if (!Set["v"][(gbol)"CODC"])
                 {
-                    //跨平台: 安装目录才是 Steam 库里的位置 (ExtensionValue.BaseDirectory 在这边是数据目录)
-                    var di = new DirectoryInfo(AppPaths.InstallDirectory).Parent!;
+                    var di = new DirectoryInfo(ExtensionValue.BaseDirectory).Parent!;
                     if (di.Exists && di.GetDirectories("*Call of Duty*").Length != 0)
                     {
                         Dispatcher.Invoke(() => NoticeBox.Show("检测到游戏库中包含使命召唤,建议不要在运行COD时运行桌宠\n根据社区反馈, COD可能会误报桌宠为作弊软件".Translate(),
@@ -1628,7 +1623,7 @@ public partial class MainWindow : Window
     /// <summary>
     /// 保存设置
     /// </summary>
-    /// 跨平台: 原文复制自 Windows 版 MainWindow.cs 的 Save; 没有老式 MainPlugin, 存档目录按 ExtensionValue.BaseDirectory (数据目录)
+    /// 跨平台: 原文复制自 Windows 版 MainWindow.cs 的 Save; 没有老式 MainPlugin, 存档目录按 ExtensionValue.BaseDirectory (运行目录)
     public void Save()
     {
         //保存日程表

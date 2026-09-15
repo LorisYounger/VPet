@@ -11,10 +11,10 @@ dotnet run --project VPet-Simulator.MutiPlatform
 ```
 
 - 第一次启动前把 `mod/0000_core` (Windows 版仓库里的 `VPet-Simulator.Windows/mod/0000_core`) 放到 MOD 目录下.
-- MOD / 存档 / 设置的位置: Windows 上与 Windows 版一样在 exe 旁边 (便携); Linux 在 `$XDG_DATA_HOME/vpet`
-  (默认 `~/.local/share/vpet`), macOS 在 `~/Library/Application Support/VPet`. 在安装目录旁放一个
-  `portable.txt` 且该目录可写时, 其他平台也按便携方式放在 exe 旁边. 安装目录下的 `mod/` 只读不写,
-  用户自己装的 MOD 放数据目录的 `mod/`.
+- 所有平台统一使用 `VPet-Simulator.MutiPlatform` 运行文件所在目录: 本地 MOD 在 `mod/`,
+  存档在 `Saves/`, 备份在 `Saves_BKP/`, 设置为根目录的 `Setting.lps` (多开为 `Setting-名字.lps`),
+  缓存在 `cache/`. 路径与启动时的工作目录无关.
+- 旧版本保存在用户目录的数据, 需要手动复制到运行文件所在目录才能继续使用.
 - 多开: `--prefix <存档名>`; 加入访客表: `+connect_lobby <房间号>` (与 Windows 版相同).
 
 ## 已知差异与手工修法
@@ -61,4 +61,4 @@ dotnet publish VPet-Simulator.MutiPlatform -c Release -r osx-arm64 --self-contai
 - `--ui-walk <脚本> <输出目录> [--language zh-Hans]`: 界面走查 (与 Windows 版 `Set.DeBug` / `winConsole`
   同性质). 脚本每行一条命令 (`open winGameSetting 1` / `select` / `winclick` / `shotwindows` / `menutree` /
   `getprop` / `dumpwin` / `quit` …), 见 `DevTools/UiWalk.cs`. 仓库外的门禁脚本用它导出菜单树和截图.
-- 运行日志在数据目录的 `vpet.log`.
+- 运行日志在运行文件所在目录的 `vpet.log`.

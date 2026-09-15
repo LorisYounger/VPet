@@ -644,7 +644,7 @@ namespace VPet_Simulator.MutiPlatform
 
         // ---- 跨平台: 设置文件的读写 ----
         // Windows 版在 MainWindow.xaml.cs 里直接 File.ReadAllText/WriteAllText; 这里把"读哪份、写哪份"
-        // 收在一处, 因为数据目录三个平台不一样 (见 AppPaths), 而且多开时文件名带前缀.
+        // 收在一处, 设置统一放在运行目录, 多开时文件名带前缀.
 
         /// <summary>
         /// 多开前缀, 空表示默认那只

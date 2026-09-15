@@ -164,11 +164,10 @@ public partial class MPFriends : Window, IMPFriend
 
 
             //加载所有MOD
-            //跨平台: MOD 目录与 MainWindow 一样按 AppPaths.ModRoots 找
+            //本地 MOD 与 MainWindow 一样从运行目录下的 mod 文件夹加载
             List<DirectoryInfo> Path = new List<DirectoryInfo>();
-            foreach (var root in AppPaths.ModRoots)
-                if (Directory.Exists(root))
-                    Path.AddRange(new DirectoryInfo(root).EnumerateDirectories());
+            if (Directory.Exists(MainWindow.ModPath))
+                Path.AddRange(new DirectoryInfo(MainWindow.ModPath).EnumerateDirectories());
 
             var workshop = mw.Set["workshop"];
             foreach (Sub ws in workshop)

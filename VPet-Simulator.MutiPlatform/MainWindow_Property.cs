@@ -70,7 +70,7 @@ public partial class MainWindow : IMainWindow
     /// <summary>
     /// MOD目录
     /// </summary>
-    /// 跨平台: 用户数据目录优先于安装目录 (安装目录在 Linux/macOS 上通常是只读的), 见 AppPaths.ModRoots
+    /// 本地 MOD 统一放在运行目录下的 mod 文件夹。
     public static readonly string ModPath = AppPaths.ModRoot;
     /// <summary>
     /// 是否为Steam用户
