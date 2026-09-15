@@ -1,5 +1,5 @@
 ﻿//跨平台: 原文复制自 VPet-Simulator.Windows/Function/SteamCapability.cs, 只换了命名空间. Facepunch.Steamworks 的托管 API 三个平台一样,
-//这边引的是带全平台原生库的 aelsi2.Facepunch.Steamworks 包 (官方没有发 Posix 版的 NuGet 包)
+//这边按目标 RID 引用官方 Facepunch.Steamworks 2.5.2: Windows x64 用 Win64, Linux/macOS 用 Posix.
 using Steamworks;
 using Steamworks.Data;
 using System;

@@ -18,7 +18,7 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<RootNamespace>VPet_Simulator.MutiPlatform</RootNamespace>
 		<AssemblyName>VPet-Simulator.MutiPlatform</AssemblyName>
 		<Nullable>enable</Nullable>
@@ -27,6 +27,13 @@
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<!-- 桌宠窗口自己画, 不需要 Avalonia 的默认标题栏 -->
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+		<!-- Steam 原生绑定随发布目标选择; 未指定 RID 时按当前系统构建, Windows 只支持 x64. -->
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">win-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+		<PlatformTarget Condition="'$(RuntimeIdentifier)' != 'osx-arm64'">x64</PlatformTarget>
+		<PlatformTarget Condition="'$(RuntimeIdentifier)' == 'osx-arm64'">ARM64</PlatformTarget>
+		<SteamworksBinding Condition="'$(RuntimeIdentifier)' == 'win-x64'">Win64</SteamworksBinding>
+		<SteamworksBinding Condition="'$(RuntimeIdentifier)' == 'linux-x64' or '$(RuntimeIdentifier)' == 'osx-x64' or '$(RuntimeIdentifier)' == 'osx-arm64'">Posix</SteamworksBinding>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -38,10 +45,22 @@
 		<PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
 		<PackageReference Include="Avalonia.Themes.Simple" Version="12.1.1" />
 		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.1" />
-		<!-- Steam: 官方 Facepunch.Steamworks 只发了 Win64/Win32 的 NuGet 包, Posix 版只在 GitHub 发布;
-		     这个分支包托管 API 一样, 并带 win/linux/osx 的原生库. 所有者若想换官方 dll, 改这一行即可 -->
-		<PackageReference Include="aelsi2.Facepunch.Steamworks" Version="2.3.4" />
 	</ItemGroup>
+
+	<!-- 官方 Facepunch.Steamworks 2.5.2 的 net6.0 程序集也可由 net8.0 宿主引用. -->
+	<ItemGroup>
+		<Reference Include="Facepunch.Steamworks.$(SteamworksBinding)" Condition="'$(SteamworksBinding)' != ''">
+			<HintPath>Lib/Steamworks/2.5.2/net6.0/Facepunch.Steamworks.$(SteamworksBinding).dll</HintPath>
+			<Private>true</Private>
+		</Reference>
+		<None Update="Lib/Steamworks/2.5.2/runtimes/win-x64/steam_api64.dll" Condition="'$(RuntimeIdentifier)' == 'win-x64'" Link="steam_api64.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+		<None Update="Lib/Steamworks/2.5.2/runtimes/linux-x64/libsteam_api.so" Condition="'$(RuntimeIdentifier)' == 'linux-x64'" Link="libsteam_api.so" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+		<None Update="Lib/Steamworks/2.5.2/runtimes/osx/libsteam_api.dylib" Condition="'$(RuntimeIdentifier)' == 'osx-x64' or '$(RuntimeIdentifier)' == 'osx-arm64'" Link="libsteam_api.dylib" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<Target Name="ValidateSteamworksPlatform" BeforeTargets="PrepareForBuild">
+		<Error Condition="'$(SteamworksBinding)' == '' or '$(Platform)' == 'x86' or '$(PlatformTarget)' == 'x86'" Text="Steamworks 仅支持 win-x64、linux-x64、osx-x64 和 osx-arm64; 不再支持 Windows 32 位. 请使用 -r 指定支持的目标平台." />
+	</Target>
 
 	<ItemGroup>
 		<ProjectReference Include="..\VPet_Simulator.Core.MutiPlatform\VPet_Simulator.Core.MutiPlatform.csproj" />

@@ -37,9 +37,21 @@ dotnet run --project VPet-Simulator.MutiPlatform
 跨平台版实际没有引用 Panuon —— 它的样式由 `Core.MutiPlatform/Display/basestyle.axaml` 等样式表提供.
 要不要在跨平台版把这一条改掉由所有者决定.
 
-**Steam.** 用的是 `aelsi2.Facepunch.Steamworks` (Posix 分支, 托管 API 与官方 `Facepunch.Steamworks`
-相同, 自带 win/linux/osx 的原生库). 成就、云存档、创意工坊、访客表 (联机) 都是真实现, 没有 Steam 客户端时
-按 Windows 版同样的路径降级 (`IsSteamUser = false`). Linux/macOS 上的原生库加载还没有实机验证过.
+**Steam.** 引用项目内 `Lib/Steamworks/2.5.2/net6.0` 中的官方 Facepunch.Steamworks DLL.
+Windows x64 使用 `Facepunch.Steamworks.Win64.dll` 和 `steam_api64.dll`, 不再支持 Windows 32 位;
+Linux x64 和 macOS (x64 / arm64) 使用 `Facepunch.Steamworks.Posix.dll`, 分别携带 `libsteam_api.so`
+和 `libsteam_api.dylib`. 原生库来自同版本发布包的 `Release/Unity/redistributable_bin`, macOS 库包含 x64 / arm64.
+构建和发布时自动复制对应库; 未指定 RID 时按当前系统选择, 跨平台发布请明确指定目标:
+
+```bash
+dotnet publish VPet-Simulator.MutiPlatform -c Release -r win-x64 --self-contained false
+dotnet publish VPet-Simulator.MutiPlatform -c Release -r linux-x64 --self-contained false
+dotnet publish VPet-Simulator.MutiPlatform -c Release -r osx-x64 --self-contained false
+dotnet publish VPet-Simulator.MutiPlatform -c Release -r osx-arm64 --self-contained false
+```
+
+成就、云存档、创意工坊、访客表 (联机) 都是真实现, 没有 Steam 客户端时按 Windows 版同样的路径降级
+(`IsSteamUser = false`). Linux/macOS 上的原生库加载还没有实机验证过.
 
 **旧式 WPF MOD (`MainPlugin`) 不在这里跑.** 跨平台 MOD 走统一契约 `VPet-Simulator.Unified.Interface`,
 同一个 dll 两个宿主都认; Windows 版的旧 MOD 不受影响.
