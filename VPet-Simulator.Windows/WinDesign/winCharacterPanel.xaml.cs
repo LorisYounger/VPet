@@ -27,6 +27,256 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public partial class winCharacterPanel : WindowX
     {
+        /// <summary>
+        /// 提供给 AI 生成评价的统计摘要。
+        /// 仅包含经过筛选的游戏统计和派生值，不包含完整存档或用户的应用使用记录。
+        /// </summary>
+        public sealed class EvaluationSummary
+        {
+            public EvaluationSummary(MainWindow mw)
+            {
+                ArgumentNullException.ThrowIfNull(mw);
+
+                var gameSavesData = mw.GameSavesData;
+                var save = gameSavesData.GameSave;
+                var statistics = gameSavesData.Statistics;
+                GeneratedAt = DateTime.Now;
+
+                PetName = save.Name;
+                IsSaveVerified = gameSavesData.HashCheck;
+                Level = save.Level;
+                LevelMax = save.LevelMax;
+                TotalExpGained = save.TotalExpGained();
+                Money = save.Money;
+                Likability = save.Likability;
+                LikabilityMax = save.LikabilityMax;
+                LikabilityShare = SafeRatio(Likability, LikabilityMax);
+
+                var birthday = gameSavesData[(gdat)"birthday"];
+                if (birthday != default)
+                {
+                    Birthday = birthday;
+                    DaysTogether = Math.Max(0, (GeneratedAt - birthday).TotalDays);
+                }
+
+                var totalSeconds = statistics[(gi64)"stat_total_time"];
+                var workSeconds = statistics[(gi64)"stat_work_time"];
+                var studySeconds = statistics[(gi64)"stat_study_time"];
+                var sleepSeconds = statistics[(gi64)"stat_sleep_time"];
+                var otherSeconds = Math.Max(0, totalSeconds - workSeconds - studySeconds - sleepSeconds);
+
+                TotalHours = totalSeconds / 3600.0;
+                WorkHours = workSeconds / 3600.0;
+                StudyHours = studySeconds / 3600.0;
+                SleepHours = sleepSeconds / 3600.0;
+                OtherHours = otherSeconds / 3600.0;
+                WorkShare = SafeRatio(workSeconds, totalSeconds);
+                StudyShare = SafeRatio(studySeconds, totalSeconds);
+                SleepShare = SafeRatio(sleepSeconds, totalSeconds);
+                OtherShare = SafeRatio(otherSeconds, totalSeconds);
+                AverageDailyHours = SafeRatio(TotalHours, DaysTogether);
+
+                OpenCount = statistics[(gint)"stat_open_times"];
+                AverageSessionMinutes = SafeRatio(totalSeconds / 60.0, OpenCount);
+
+                TouchHeadCount = statistics[(gint)"stat_touch_head"];
+                TouchBodyCount = statistics[(gint)"stat_touch_body"];
+                TouchCount = TouchHeadCount + TouchBodyCount;
+                TouchHeadShare = SafeRatio(TouchHeadCount, TouchCount);
+                SayCount = statistics[(gint)"stat_say_times"];
+                DanceCount = statistics[(gint)"stat_music"];
+                MoveDistanceMeters = statistics[(gi64)"stat_move_length"] * 2.54 / 9600.0;
+
+                PositiveExpDialogueCount = statistics[(gint)"stat_say_exp_p"];
+                NegativeExpDialogueCount = statistics[(gint)"stat_say_exp_d"];
+                PositiveLikabilityDialogueCount = statistics[(gint)"stat_say_like_p"];
+                NegativeLikabilityDialogueCount = statistics[(gint)"stat_say_like_d"];
+                PositiveMoneyDialogueCount = statistics[(gint)"stat_say_money_p"];
+                NegativeMoneyDialogueCount = statistics[(gint)"stat_say_money_d"];
+                PositiveDialogueCount = PositiveExpDialogueCount
+                    + PositiveLikabilityDialogueCount
+                    + PositiveMoneyDialogueCount;
+                NegativeDialogueCount = NegativeExpDialogueCount
+                    + NegativeLikabilityDialogueCount
+                    + NegativeMoneyDialogueCount;
+                DialogueOutcomeCount = PositiveDialogueCount + NegativeDialogueCount;
+                PositiveDialogueShare = SafeRatio(PositiveDialogueCount, DialogueOutcomeCount);
+                DialogueOutcomeShare = SafeRatio(DialogueOutcomeCount, SayCount);
+
+                PurchaseCount = statistics[(gint)"stat_buytimes"];
+                TotalPurchaseAmount = statistics[(gdbe)"stat_betterbuy"];
+                AveragePurchaseAmount = SafeRatio(TotalPurchaseAmount, PurchaseCount);
+                AutoBuyCount = statistics[(gint)"stat_autobuy"];
+                AutoGiftCount = statistics[(gint)"stat_autogift"];
+                AutoPurchaseShare = SafeRatio(AutoBuyCount + AutoGiftCount, PurchaseCount);
+                GiftLikabilityGained = statistics[(gdbe)"stat_bb_gift_like"];
+                DrugExpGained = statistics[(gdbe)"stat_bb_drug_exp"];
+
+                SpendingByCategory = new Dictionary<string, double>
+                {
+                    ["special"] = statistics[(gdbe)"stat_bb_food"],
+                    ["drink"] = statistics[(gdbe)"stat_bb_drink"],
+                    ["drug"] = statistics[(gdbe)"stat_bb_drug"],
+                    ["functional"] = statistics[(gdbe)"stat_bb_functional"],
+                    ["gift"] = statistics[(gdbe)"stat_bb_gift"],
+                    ["meal"] = statistics[(gdbe)"stat_bb_meal"],
+                    ["snack"] = statistics[(gdbe)"stat_bb_snack"],
+                };
+                SpendingShareByCategory = SpendingByCategory.ToDictionary(
+                    x => x.Key,
+                    x => SafeRatio(x.Value, TotalPurchaseAmount)
+                );
+                var favoriteSpendingCategory = SpendingByCategory.MaxBy(x => x.Value);
+                if (favoriteSpendingCategory.Value > 0)
+                {
+                    FavoriteSpendingCategory = favoriteSpendingCategory.Key;
+                    FavoriteSpendingCategoryShare = SafeRatio(
+                        favoriteSpendingCategory.Value,
+                        TotalPurchaseAmount
+                    );
+                }
+
+                var mostUsedItemCount = 0;
+                foreach (var pair in statistics.Data.Where(x =>
+                    x.Key.StartsWith("buy_", StringComparison.Ordinal) && x.Value != null
+                ))
+                {
+                    var count = pair.Value!.GetInteger();
+                    if (count <= 0)
+                        continue;
+
+                    var itemName = pair.Key.Substring(4);
+                    var food = mw.Foods.FirstOrDefault(x => x.Name == itemName);
+                    if (food == null)
+                        continue;
+
+                    DistinctPurchasedItemCount++;
+                    if (count > mostUsedItemCount)
+                    {
+                        mostUsedItemCount = count;
+                        MostPurchasedItem = food.TranslateName;
+                    }
+                }
+                MostPurchasedItemCount = mostUsedItemCount;
+
+                if (mw.IsSteamUser)
+                {
+                    SingleWorkMoneyMax = SteamUserStats.GetStatInt("stat_single_profit_money");
+                    SingleStudyExpMax = SteamUserStats.GetStatInt("stat_single_profit_exp");
+                }
+                else
+                {
+                    SingleWorkMoneyMax = statistics[(gint)"stat_single_profit_money"];
+                    SingleStudyExpMax = statistics[(gint)"stat_single_profit_exp"];
+                }
+
+                LogicIntervalSeconds = mw.Set.LogicInterval;
+                FullStateHours = statistics[(gint)"stat_100_all"] * LogicIntervalSeconds / 3600.0;
+                FullStateShare = SafeRatio(FullStateHours, TotalHours);
+                EverFeelingEmpty = statistics[(gbol)"stat_0_feel"];
+                EverHungry = statistics[(gbol)"stat_0_strengthfood"];
+                EverThirsty = statistics[(gbol)"stat_0_strengthdrink"];
+                EverHungryAndThirsty = statistics[(gbol)"stat_0_sd_sf"];
+                EverAllNeedsEmpty = statistics[(gbol)"stat_0_all"];
+                EverIllWithoutMoney = statistics[(gbol)"stat_ill_nomoney"];
+
+                UnlockedPhotoCount = mw.Photos.Count(x => x.IsUnlock);
+                FavoritePhotoCount = mw.Photos.Count(x => x.IsUnlock && x.IsStar);
+
+                var workshopMods = mw.CoreMODs.FindAll(x =>
+                    x.Path.FullName.Contains("workshop", StringComparison.OrdinalIgnoreCase)
+                );
+                WorkshopModCount = workshopMods.Count;
+                EnabledWorkshopModCount = workshopMods.Count(x => x.IsOnMOD(mw));
+            }
+
+            private static double SafeRatio(double numerator, double denominator)
+            {
+                return denominator > 0 ? numerator / denominator : 0;
+            }
+
+            public DateTime GeneratedAt { get; }
+            public string PetName { get; }
+            public bool IsSaveVerified { get; }
+            public DateTime? Birthday { get; }
+            public double DaysTogether { get; }
+
+            public int Level { get; }
+            public int LevelMax { get; }
+            public double TotalExpGained { get; }
+            public double Money { get; }
+            public double Likability { get; }
+            public double LikabilityMax { get; }
+            public double LikabilityShare { get; }
+
+            public double TotalHours { get; }
+            public double AverageDailyHours { get; }
+            public double WorkHours { get; }
+            public double StudyHours { get; }
+            public double SleepHours { get; }
+            public double OtherHours { get; }
+            public double WorkShare { get; }
+            public double StudyShare { get; }
+            public double SleepShare { get; }
+            public double OtherShare { get; }
+            public int OpenCount { get; }
+            public double AverageSessionMinutes { get; }
+
+            public int TouchHeadCount { get; }
+            public int TouchBodyCount { get; }
+            public int TouchCount { get; }
+            public double TouchHeadShare { get; }
+            public int SayCount { get; }
+            public int DanceCount { get; }
+            public double MoveDistanceMeters { get; }
+
+            public int PositiveExpDialogueCount { get; }
+            public int NegativeExpDialogueCount { get; }
+            public int PositiveLikabilityDialogueCount { get; }
+            public int NegativeLikabilityDialogueCount { get; }
+            public int PositiveMoneyDialogueCount { get; }
+            public int NegativeMoneyDialogueCount { get; }
+            public int PositiveDialogueCount { get; }
+            public int NegativeDialogueCount { get; }
+            public int DialogueOutcomeCount { get; }
+            public double PositiveDialogueShare { get; }
+            public double DialogueOutcomeShare { get; }
+
+            public int PurchaseCount { get; }
+            public double TotalPurchaseAmount { get; }
+            public double AveragePurchaseAmount { get; }
+            public int AutoBuyCount { get; }
+            public int AutoGiftCount { get; }
+            public double AutoPurchaseShare { get; }
+            public double GiftLikabilityGained { get; }
+            public double DrugExpGained { get; }
+            public Dictionary<string, double> SpendingByCategory { get; }
+            public Dictionary<string, double> SpendingShareByCategory { get; }
+            public string? FavoriteSpendingCategory { get; }
+            public double FavoriteSpendingCategoryShare { get; }
+            public int DistinctPurchasedItemCount { get; private set; }
+            public string? MostPurchasedItem { get; private set; }
+            public int MostPurchasedItemCount { get; }
+
+            public int SingleWorkMoneyMax { get; }
+            public int SingleStudyExpMax { get; }
+
+            public double LogicIntervalSeconds { get; }
+            public double FullStateHours { get; }
+            public double FullStateShare { get; }
+            public bool EverFeelingEmpty { get; }
+            public bool EverHungry { get; }
+            public bool EverThirsty { get; }
+            public bool EverHungryAndThirsty { get; }
+            public bool EverAllNeedsEmpty { get; }
+            public bool EverIllWithoutMoney { get; }
+
+            public int UnlockedPhotoCount { get; }
+            public int FavoritePhotoCount { get; }
+            public int WorkshopModCount { get; }
+            public int EnabledWorkshopModCount { get; }
+        }
+
         MainWindow mw;
 
         public winCharacterPanel(MainWindow mw)
@@ -80,7 +330,25 @@ namespace VPet_Simulator.Windows
             {
                 StatId = statId;
                 StatCount = statCount;
-                if (statId.StartsWith("buy_"))
+                if (statId.StartsWith("eval_day_", StringComparison.Ordinal))
+                {
+                    StatName = "eval_day".Translate() + '_' + statId.Substring(9);
+                }
+                else if (statId.StartsWith("eval_month_", StringComparison.Ordinal))
+                {
+                    StatName = "eval_month".Translate() + '_' + statId.Substring(11);
+                }
+                else if (statId.StartsWith("eval_work_project_", StringComparison.Ordinal))
+                {
+                    StatName = "eval_work_project".Translate() + '_'
+                        + Uri.UnescapeDataString(statId.Substring(18)).Translate();
+                }
+                else if (statId.StartsWith("eval_study_project_", StringComparison.Ordinal))
+                {
+                    StatName = "eval_study_project".Translate() + '_'
+                        + Uri.UnescapeDataString(statId.Substring(19)).Translate();
+                }
+                else if (statId.StartsWith("buy_"))
                 {
                     StatName = "购买次数".Translate() + '_' + statId.Substring(4).Translate();
                 }

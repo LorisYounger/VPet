@@ -48,3 +48,22 @@ total_time#Total time (sec):|
 touch_body#Number of times you touch your body:|
 touch_head#Number of times you touch your head:|
 work_time#Working time (sec):|
+eval_active_days#Active days:|
+eval_active_streak#Current active streak (days):|
+eval_longest_active_streak#Longest active streak (days):|
+eval_last_active_day#Last active date:|
+eval_longest_session_seconds#Longest session (sec):|
+eval_recent_7_days_seconds#Time together in the last 7 days (sec):|
+eval_recent_30_days_seconds#Time together in the last 30 days (sec):|
+eval_work_started#Work sessions started:|
+eval_work_completed#Work sessions completed:|
+eval_work_completion_rate#Work completion rate (0-1):|
+eval_work_total_money#Total work earnings:|
+eval_study_started#Study sessions started:|
+eval_study_completed#Study sessions completed:|
+eval_study_completion_rate#Study completion rate (0-1):|
+eval_study_total_exp#Total study EXP:|
+eval_day#Daily time together (sec):|
+eval_month#Monthly time together (sec):|
+eval_work_project#Work project count:|
+eval_study_project#Study project count:|

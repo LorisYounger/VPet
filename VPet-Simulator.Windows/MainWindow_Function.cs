@@ -612,4 +612,132 @@ public partial class MainWindow : IMainWindow
         LastTakeItemTime = DateTime.Now;
     }
 
+    #region 本地评价统计
+
+    private bool evaluationStatisticsInitialized;
+    private long evaluationSessionSeconds;
+
+    /// <summary>
+    /// 初始化 eval_* 本地统计。eval_* 不会被同步到 Steam 排行榜。
+    /// </summary>
+    private void InitializeEvaluationStatistics()
+    {
+        if (evaluationStatisticsInitialized)
+            return;
+
+        evaluationStatisticsInitialized = true;
+        ResetEvaluationSessionStatistics();
+        Main.FunctionSpendHandle += EvaluationStatisticsCalHandle;
+        Main.Event_WorkStart += EvaluationStatistics_WorkStart;
+        Main.Event_WorkEnd += EvaluationStatistics_WorkEnd;
+    }
+
+    private void ResetEvaluationSessionStatistics()
+    {
+        evaluationSessionSeconds = 0;
+        RegisterEvaluationActiveDay(DateTime.Now.Date);
+    }
+
+    /// <summary>
+    /// 累计会话时长，以及每日、每月、最近 7/30 天的陪伴时长。
+    /// </summary>
+    private void EvaluationStatisticsCalHandle()
+    {
+        var statistics = GameSavesData.Statistics;
+        var seconds = Math.Max(1, (int)Set.LogicInterval);
+        var today = DateTime.Now.Date;
+
+        RegisterEvaluationActiveDay(today);
+
+        evaluationSessionSeconds += seconds;
+        if (evaluationSessionSeconds > statistics[(gi64)"eval_longest_session_seconds"])
+            statistics[(gi64)"eval_longest_session_seconds"] = evaluationSessionSeconds;
+
+        statistics[(gi64)($"eval_day_{today:yyyyMMdd}")] += seconds;
+        statistics[(gi64)($"eval_month_{today:yyyyMM}")] += seconds;
+        statistics[(gi64)"eval_recent_7_days_seconds"] = SumEvaluationDailySeconds(today, 7);
+        statistics[(gi64)"eval_recent_30_days_seconds"] = SumEvaluationDailySeconds(today, 30);
+    }
+
+    private long SumEvaluationDailySeconds(DateTime today, int days)
+    {
+        long result = 0;
+        for (var i = 0; i < days; i++)
+            result += GameSavesData.Statistics[(gi64)($"eval_day_{today.AddDays(-i):yyyyMMdd}")];
+        return result;
+    }
+
+    private void RegisterEvaluationActiveDay(DateTime today)
+    {
+        var statistics = GameSavesData.Statistics;
+        var todayValue = int.Parse($"{today:yyyyMMdd}");
+        if (statistics[(gint)"eval_last_active_day"] == todayValue)
+            return;
+
+        var yesterdayValue = int.Parse($"{today.AddDays(-1):yyyyMMdd}");
+        var streak = statistics[(gint)"eval_last_active_day"] == yesterdayValue
+            ? statistics[(gint)"eval_active_streak"] + 1
+            : 1;
+
+        statistics[(gint)"eval_last_active_day"] = todayValue;
+        statistics[(gint)"eval_active_days"]++;
+        statistics[(gint)"eval_active_streak"] = streak;
+        statistics[(gint)"eval_longest_active_streak"] = Math.Max(
+            statistics[(gint)"eval_longest_active_streak"],
+            streak
+        );
+
+        // 日统计只用于最近 7/30 天，月统计则长期保留用于年度趋势。
+        var cutoff = int.Parse($"{today.AddDays(-30):yyyyMMdd}");
+        foreach (var key in statistics.Data.Keys
+            .Where(x => x.StartsWith("eval_day_", StringComparison.Ordinal))
+            .ToList())
+        {
+            if (int.TryParse(key.Substring("eval_day_".Length), out var date) && date < cutoff)
+                statistics.Data.Remove(key);
+        }
+    }
+
+    private void EvaluationStatistics_WorkStart(Work work)
+    {
+        var statistics = GameSavesData.Statistics;
+        var type = work.Type == Work.WorkType.Work ? "work" : "study";
+        statistics[(gint)($"eval_{type}_started")]++;
+        statistics[(gint)($"eval_{type}_project_{Uri.EscapeDataString(work.Name)}")]++;
+        UpdateEvaluationCompletionRate(type);
+    }
+
+    private void EvaluationStatistics_WorkEnd(WorkTimer.FinishWorkInfo info)
+    {
+        var statistics = GameSavesData.Statistics;
+        var type = info.work.Type == Work.WorkType.Work ? "work" : "study";
+
+        if (info.Reason == WorkTimer.FinishWorkInfo.StopReason.TimeFinish)
+            statistics[(gint)($"eval_{type}_completed")]++;
+        UpdateEvaluationCompletionRate(type);
+
+        var totalYield = info.count;
+        if (info.Reason != WorkTimer.FinishWorkInfo.StopReason.TimeFinish)
+        {
+            var finishMultiplier = 1 + info.work.FinishBonus;
+            if (finishMultiplier > 0)
+                totalYield /= finishMultiplier;
+        }
+
+        var yieldName = type == "work" ? "eval_work_total_money" : "eval_study_total_exp";
+        statistics[(gdbe)yieldName] += totalYield;
+    }
+
+    private void UpdateEvaluationCompletionRate(string type)
+    {
+        var statistics = GameSavesData.Statistics;
+        var started = statistics[(gint)($"eval_{type}_started")];
+        var completed = statistics[(gint)($"eval_{type}_completed")];
+        statistics[(gdbe)($"eval_{type}_completion_rate")] = started > 0
+            ? (double)completed / started
+            : 0;
+    }
+
+    #endregion
+
 }

@@ -372,7 +372,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         private void DisplayRaising(string? name = null)
         {
-            Console.WriteLine(rasetype);
+            //Console.WriteLine(rasetype);
             switch (rasetype)
             {
                 case int.MinValue:
