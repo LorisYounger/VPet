@@ -20,9 +20,10 @@ public partial class App : Application
     public static List<MainWindow> MainWindows { get; } = new List<MainWindow>();
 
     /// <summary>
-    /// 所有存档的前缀 (与 Windows 版 App.MutiSaves 同名)
+    /// 多存档系统名称
     /// </summary>
-    public static List<string> MutiSaves => MultiPetStore.List(AppPaths.DataRoot);
+    /// 与 Windows 版一样是启动时扫一遍 Setting*.lps 得到的名字表 (不带 "-", 默认那只是空串), 设置面板新建/删除存档时会往里加减
+    public static List<string> MutiSaves { get; set; } = new List<string>();
 
     /// <summary>
     /// 已加载的 MOD 插件类型名 (与 Windows 版同名, 反馈中心用)
@@ -67,6 +68,14 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            //跨平台: 前缀表由共享的 MultiPetStore 扫, 它给的是带 "-" 的文件名后缀, 这里按 Windows 版的样子去掉
+            foreach (var name in MultiPetStore.List(AppPaths.DataRoot))
+                MutiSaves.Add(name.Trim('-'));
+            if (MutiSaves.Count == 0)
+            {
+                MutiSaves.Add("");
+            }
+
             // 开哪一只: 命令行说了算, 没说就看 startup_ 标记, 都没有就开默认那只
             var prefix = MultiPetStore.ReadPrefixArgument(Args)
                 ?? MultiPetStore.ReadStartupMarker(AppPaths.DataRoot)
@@ -77,15 +86,6 @@ public partial class App : Application
             desktop.ShutdownMode = Avalonia.Controls.ShutdownMode.OnExplicitShutdown;
         }
         base.OnFrameworkInitializationCompleted();
-    }
-
-    /// <summary>
-    /// 再开一只桌宠
-    /// </summary>
-    internal static void OpenPet(string prefix)
-    {
-        var window = CreatePet(prefix);
-        window.Show();
     }
 
     HashSet<string> ErrorReport = new HashSet<string>();

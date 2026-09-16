@@ -380,9 +380,9 @@
                 </StackPanel>
                 <StackPanel Grid.Column="3" Margin="5,0,0,0" Orientation="Horizontal">
                     <TextBlock Margin="3" Text="{ll:Str 一次购买}" VerticalAlignment="Center" />
-                    <!-- 跨平台: pu:NumberInput 换成原生 NumericUpDown -->
+                    <!-- 跨平台: pu:NumberInput 换成原生 NumericUpDown; 它默认 38 高, 比 WPF 那个高出的 8px 会让商品少显示一行, 钉成 30 -->
                     <NumericUpDown x:Name="nibuytimes" Value="1" Minimum="1" CornerRadius="5,5,5,5" BorderThickness="1.5"
-                            BorderBrush="{DynamicResource DARKPrimary}" MinWidth="50" FormatString="0"
+                            BorderBrush="{DynamicResource DARKPrimary}" MinWidth="50" FormatString="0" Height="30" MinHeight="30" Padding="4,0"
                             ValueChanged="nibuytimes_ValueChanged" />
                     <TextBlock Margin="3" Text="{ll:Str 个}" VerticalAlignment="Center" />
                 </StackPanel>

@@ -630,15 +630,18 @@ namespace VPet_Simulator.MutiPlatform
             runMODAuthor.Text = modInfo.Author;
             runMODGameVer.Text = CoreMOD.INTtoVER(modInfo.GameVer);
             runMODGameVer.Foreground = Function.ResourcesBrush(Function.BrushType.PrimaryText);
-            //跨平台: BitmapImage 换成 Bitmap.DecodeToWidth
-            if (ImageMOD.Source is Bitmap oldBitmap)
+            //跨平台: BitmapImage 换成 Bitmap.DecodeToWidth. 只释放自己解出来的那张: 没图标时挂的 TopLogo 是 ImageResources 缓存里
+            //大家共用的, 释放了别处再画它就会在排版时抛 ObjectDisposedException
+            if (modIconBitmap != null)
             {
-                oldBitmap.Dispose();
+                modIconBitmap.Dispose();
+                modIconBitmap = null;
             }
             if (File.Exists(Path.Combine(modInfo.Path.FullName, "icon.png")))
             {
                 using var stream = new MemoryStream(File.ReadAllBytes(Path.Combine(modInfo.Path.FullName, "icon.png")));
-                ImageMOD.Source = Bitmap.DecodeToWidth(stream, 250);
+                modIconBitmap = Bitmap.DecodeToWidth(stream, 250);
+                ImageMOD.Source = modIconBitmap;
             }
             else
                 ImageMOD.Source = ImageResources.NewSafeBitmapImage("avares://VPet-Simulator.MutiPlatform/Res/TopLogo2019.png");
@@ -827,6 +830,7 @@ namespace VPet_Simulator.MutiPlatform
             mw.Set.DiagnosisInterval = cbDiagnosis[CBDiagnosis.SelectedIndex];
         }
 
+        private Bitmap? modIconBitmap;
         private void ListMod_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (!AllowChange || ListMod.SelectedItem is not ListBoxItem item || item.Tag is not ModInfo modInfo)

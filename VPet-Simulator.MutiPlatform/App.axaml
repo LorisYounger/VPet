@@ -1,7 +1,9 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="VPet_Simulator.MutiPlatform.App"
+             Name="VPet"
              RequestedThemeVariant="Light">
+    <!-- Name 是 macOS 菜单栏左上角显示的应用名 (不设就是 "Avalonia Application"); 打成 .app 包之后以 Info.plist 的 CFBundleName 为准 -->
     <!--
     颜色全由 Theme.axaml 定, 与 Windows 版一样不跟系统深浅色走, 所以钉死 Light
     (不钉的话原生控件 (NumericUpDown/滚动条…) 会在深色系统上变黑).

@@ -73,6 +73,17 @@
               </DockPanel>
               <Border Name="PART_Mask" Background="{TemplateBinding MaskBrush}" IsVisible="{TemplateBinding IsMaskVisible}" />
               <ContentPresenter Name="PART_Overlayer" Content="{TemplateBinding Overlayer}" IsVisible="{TemplateBinding IsOverlayerVisible}" />
+              <!-- 自己画标题栏 (WindowDecorations=None) 之后系统不再给拉边框, 这八条透明边就是 WindowX 那样的拉伸把手, 代码里接 BeginResizeDrag -->
+              <Panel Name="PART_ResizeGrips" IsVisible="{TemplateBinding CanResize}">
+                <Border Name="PART_ResizeLeft" Width="5" HorizontalAlignment="Left" Margin="0,5" Background="Transparent" Cursor="SizeWestEast" />
+                <Border Name="PART_ResizeRight" Width="5" HorizontalAlignment="Right" Margin="0,5" Background="Transparent" Cursor="SizeWestEast" />
+                <Border Name="PART_ResizeTop" Height="5" VerticalAlignment="Top" Margin="5,0" Background="Transparent" Cursor="SizeNorthSouth" />
+                <Border Name="PART_ResizeBottom" Height="5" VerticalAlignment="Bottom" Margin="5,0" Background="Transparent" Cursor="SizeNorthSouth" />
+                <Border Name="PART_ResizeTopLeft" Width="5" Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" Cursor="TopLeftCorner" />
+                <Border Name="PART_ResizeTopRight" Width="5" Height="5" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" Cursor="TopRightCorner" />
+                <Border Name="PART_ResizeBottomLeft" Width="5" Height="5" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="Transparent" Cursor="BottomLeftCorner" />
+                <Border Name="PART_ResizeBottomRight" Width="5" Height="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Transparent" Cursor="BottomRightCorner" />
+              </Panel>
             </Panel>
           </VisualLayerManager>
         </Panel>

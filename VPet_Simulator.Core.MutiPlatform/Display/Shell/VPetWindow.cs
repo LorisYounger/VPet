@@ -240,6 +240,22 @@ public partial class VPetWindow : Window
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        //拉边框改大小: 自己画标题栏之后系统不再给, 模板里八条透明边接到 BeginResizeDrag
+        foreach (var (name, edge) in new[]
+        {
+            ("PART_ResizeLeft", WindowEdge.West), ("PART_ResizeRight", WindowEdge.East),
+            ("PART_ResizeTop", WindowEdge.North), ("PART_ResizeBottom", WindowEdge.South),
+            ("PART_ResizeTopLeft", WindowEdge.NorthWest), ("PART_ResizeTopRight", WindowEdge.NorthEast),
+            ("PART_ResizeBottomLeft", WindowEdge.SouthWest), ("PART_ResizeBottomRight", WindowEdge.SouthEast),
+        })
+        {
+            if (e.NameScope.Find<Control>(name) is { } grip)
+                grip.PointerPressed += (_, args) =>
+                {
+                    if (CanResize && WindowState == WindowState.Normal && args.GetCurrentPoint(grip).Properties.IsLeftButtonPressed)
+                        BeginResizeDrag(edge, args);
+                };
+        }
         //标题栏: 按住拖动, 三个按钮
         if (e.NameScope.Find<Control>("PART_Caption") is { } caption)
             caption.PointerPressed += (s, args) =>

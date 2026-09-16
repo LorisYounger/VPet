@@ -87,16 +87,24 @@ public partial class MainWindow : Window
         //跨平台: 自动存档跑在线程池线程上, 那边的数字格式也要跟着 (Windows 版的存档计时器在 UI 线程, 不用管)
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CurrentCulture;
 
-        //判断是不是Steam用户,因为本软件会发布到Steam
-        //在 https://store.steampowered.com/app/1920960/VPet
-        try
+        if (App.MainWindows[0] != this)
         {
-            SteamClient.Init(1920960, true);
-            IsSteamUser = true;
+            //多开的桌宠: Steam 已经由第一只连上了, 不再 Init (Windows 版的多开构造函数也是直接取第一只的)
+            IsSteamUser = App.MainWindows[0].IsSteamUser;
         }
-        catch
+        else
         {
-            IsSteamUser = false;
+            //判断是不是Steam用户,因为本软件会发布到Steam
+            //在 https://store.steampowered.com/app/1920960/VPet
+            try
+            {
+                SteamClient.Init(1920960, true);
+                IsSteamUser = true;
+            }
+            catch
+            {
+                IsSteamUser = false;
+            }
         }
 
         if (!string.IsNullOrEmpty(PrefixSave))
@@ -195,11 +203,14 @@ public partial class MainWindow : Window
             if (Directory.Exists(ModPath))
                 Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
 
+            //跨平台: Windows 版第一只桌宠和多开的桌宠是两个构造函数, 这边共用一个 Opened 处理器, 用 first 区分:
+            //多开的那只只按设置里记的创意工坊目录加载, 不查 Steam、不改 CGPT 设置、不重复登记物品使用方法和访客表菜单
+            bool first = App.MainWindows[0] == this;
             bool NOCancel = true;
             CancellationTokenSource source = new CancellationTokenSource();
             var tsk = Task.Run(async () =>
             {
-                if (IsSteamUser)//如果是steam用户,尝试加载workshop
+                if (IsSteamUser && first)//如果是steam用户,尝试加载workshop
                 {
                     //Leaderboard? leaderboard = await SteamUserStats.FindLeaderboardAsync("chatgpt_auth");
                     //leaderboard?.ReplaceScore(Function.Rnd.Next());
@@ -272,7 +283,10 @@ public partial class MainWindow : Window
 
             //旧版本设置兼容
             var cgpte = Set.FindLine("CGPT");
-            if (cgpte != null)
+            if (!first)
+            {
+            }
+            else if (cgpte != null)
             {
                 var cgpteb = cgpte.Find("enable");
                 if (cgpteb != null)
@@ -298,6 +312,8 @@ public partial class MainWindow : Window
             await GameLoad(Path);
             //跨平台: GameLoad 在找不到宠物/动画时会停在加载提示上 (Windows 版没有这条路), 后面的都依赖 Main
             if (Main == null)
+                return;
+            if (!first)
                 return;
             if (IsSteamUser)
             {
@@ -1223,7 +1239,8 @@ public partial class MainWindow : Window
             ActivityLogs.CollectionChanged += ActivityLogs_WriteFile;
 
         // 界面走查 (调试参数): 桌宠跑起来之后再按脚本注入输入. 走查本身跑在 UI 线程上 (中间用 await 让出)
-        if (App.UiWalk is { } walk)
+        //走查脚本只由第一只桌宠跑 (脚本里多开出来的那只不能再跑一遍, 否则会一直多开下去)
+        if (App.UiWalk is { } walk && App.MainWindows[0] == this)
             _ = Dispatcher.InvokeAsync(async () =>
             {
                 await Task.Delay(1000);

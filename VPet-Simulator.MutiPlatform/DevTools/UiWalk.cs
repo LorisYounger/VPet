@@ -254,6 +254,10 @@ internal static class UiWalk
                         gallery.DisplayDetail(photo);
                         break;
                     }
+                    case "multiopen":
+                        // 多开一只 (走 桌宠多开 菜单同一条路)
+                        new MainWindow(argument, window).Show();
+                        break;
                     case "say":
                         // 让桌宠说一句, 看消息栏
                         window.Main.Say(argument);

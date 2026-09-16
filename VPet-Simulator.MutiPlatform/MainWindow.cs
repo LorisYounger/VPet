@@ -667,7 +667,7 @@ public partial class MainWindow
                     {
                         if (App.MainWindows.FirstOrDefault(x => x.PrefixSave.Trim('-') == win) == null)
                         {
-                            App.OpenPet(win);
+                            new MainWindow(win, this).Show();
                         }
                         menuItem.Items.Remove(s!);
                     };
