@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Security.Policy;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HKW.HKWMapper;
@@ -6,6 +7,7 @@ using HKW.HKWUtils;
 using HKW.HKWUtils.Observable;
 using HKW.MVVM;
 using LinePutScript.Localization.WPF;
+using VPet.Solution.Views;
 
 namespace VPet.Solution.Models.SettingEditor;
 
@@ -26,6 +28,8 @@ public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
     /// <inheritdoc cref="Setting.ZoomLevel"/>
     [ObservableProperty]
     [DefaultValue(1)]
+    [GraphicsSettingModelMapFromSettingProperty(typeof(ZoomLevelToStorageZoomLevel))]
+    [GraphicsSettingModelMapToSettingProperty(typeof(ZoomLevelToStorageZoomLevel))]
     public double ZoomLevel { get; set; } = 1;
 
     [ObservableProperty]
@@ -75,9 +79,19 @@ public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
     [ObservableProperty]
     public string Font { get; set; }
 
+    public static List<string> Fonts => ModSettingModel.Fonts;
+
     /// <inheritdoc cref="Setting.Theme"/>
     [ObservableProperty]
     public string Theme { get; set; }
+
+    public static List<string> Themes => ModSettingModel.Themes;
+
+    /// <inheritdoc cref="Setting.PetGraph"/>
+    [ObservableProperty]
+    public string PetGraph { get; set; }
+
+    public static List<string> PetGraphs => ModSettingModel.PetGraphs;
 
     /// <inheritdoc cref="Setting.StartUPBoot"/>
     [ObservableProperty]
@@ -121,6 +135,19 @@ public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
     [ObservableProperty]
     public double PetHelpTop { get; set; }
 
+    /// <inheritdoc cref="Setting.Opacity"/>
+    [ObservableProperty]
+    [DefaultValue(1)]
+    public double Opacity { get; set; } = 1;
+
+    /// <inheritdoc cref="Setting.OpacityMain"/>
+    [ObservableProperty]
+    public bool OpacityMain { get; set; }
+
+    /// <inheritdoc cref="Setting.OpacityHitThrough"/>
+    [ObservableProperty]
+    public bool OpacityHitThrough { get; set; }
+
     public void Load(Setting setting)
     {
         this.MapFromSetting(setting);
@@ -159,5 +186,17 @@ public class ObservablePointToObservablePointConverter
     )
     {
         return new(value.X, value.Y);
+    }
+}
+
+public class ZoomLevelToStorageZoomLevel : MapConverter<double, double>
+{
+    public override double Convert(object source, double value)
+    {
+        return value / 2;
+    }
+    public override double ConvertBack(object source, double value)
+    {
+        return value * 2;
     }
 }

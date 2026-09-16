@@ -17,6 +17,13 @@ public partial class ModSettingModel : ObservableObjectEx, ISubSettingModel
     public static Dictionary<string, ModLoader> LocalMods { get; private set; } = null!;
 
     public List<ModModel> Mods { get; } = [];
+
+    public static List<string> Fonts { get; } = [];
+
+    public static List<string> Themes { get; } = [];
+
+    public static List<string> PetGraphs { get; } = [];
+
     public List<string> Errors { get; } = [];
 
     public ModSettingModel()
@@ -35,6 +42,21 @@ public partial class ModSettingModel : ObservableObjectEx, ISubSettingModel
             {
                 var loader = new ModLoader(dir);
                 dic.TryAdd(loader.Name, loader);
+                foreach (var font in loader.Fonts)
+                {
+                    if (Fonts.Contains(font.Translate()) is false)
+                        Fonts.Add(font.Translate());
+                }
+                foreach(var theme in loader.Themes)
+                {
+                    if (Themes.Contains(theme.Translate()) is false)
+                        Themes.Add(theme.Translate());
+                }
+                foreach(var petGraph in loader.PetGraphs)
+                {
+                    if (PetGraphs.Contains(petGraph.Translate()) is false)
+                        PetGraphs.Add(petGraph.Translate());
+                }
             }
             catch (Exception ex)
             {

@@ -1,123 +1,95 @@
-﻿<UserControl
-  x:Class="VPet.Solution.Views.SettingEditor.InteractiveSettingView"
-  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-  xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-  xmlns:local="clr-namespace:VPet.Solution.Views.SettingEditor"
-  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  xmlns:pu="https://opensource.panuon.com/wpf-ui"
-  xmlns:sys="clr-namespace:System;assembly=mscorlib"
-  xmlns:vm="clr-namespace:VPet.Solution.ViewModels.SettingEditor"
-  xmlns:m="clr-namespace:VPet.Solution.Models.SettingEditor"
-  d:DataContext="{d:DesignInstance Type=vm:InteractiveSettingViewModel}"
-  d:DesignHeight="800"
-  d:DesignWidth="800"
-  mc:Ignorable="d"
-  d:Background="White"
->
-  <Grid>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-      <StackPanel>
-        <GroupBox
-          Margin="0,5,0,0"
-          Style="{StaticResource GroupBox_SettingGroup}"
-          Header="{ll:Str '桌宠设置'}"
-        >
-          <StackPanel>
-            <Border Height="100" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid RowDefinitions="*,*">
-                <Grid
-                  ColumnDefinitions="*,Auto"
-                  ToolTip="{ll:Str '启用数据计算,桌宠会有状态变化,需要按时投喂等.\&#13;如果嫌麻烦可以关掉'}"
-                >
-                  <TextBlock
-                    Text="{ll:Str 启用数据计算}"
-                    Style="{DynamicResource  TextBlock_SettingName}"
-                  />
-                  <pu:Switch
-                    x:Name="EnableFunction"
-                    IsChecked="{Binding InteractiveSetting.EnableFunction}"
-                    Grid.Column="1"
-                    Style="{DynamicResource Switch_SwitchOnly}"
-                  />
-                </Grid>
-                <Grid
-                  Grid.Row="1"
-                  ColumnDefinitions="*,Auto"
-                  ToolTip="{ll:Str '关闭数据计算时桌宠显示的状态'}"
-                >
-                  <TextBlock
-                    Text="{ll:Str '固定桌宠状态'}"
-                    Style="{DynamicResource TextBlock_SettingName}"
-                  />
-                  <ComboBox
-                    x:Name="CalFunStates"
-                    Grid.Column="2"
-                    Width="200"
-                    ItemsSource="{Binding Source={x:Static m:InteractiveSettingModel.CalFunStates}}"
-                    SelectedItem="{Binding InteractiveSetting.CalFunState}"
-                    IsEnabled="{Binding IsChecked,ElementName=EnableFunction,Converter={StaticResource BoolInverter}}"
-                    Style="{DynamicResource ComboBox_BaseStyle}"
-                  />
-                </Grid>
-              </Grid>
-            </Border>
-            <Border Height="50" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid ColumnDefinitions="*,Auto">
-                <TextBlock
-                  Text="{ll:Str '长按间隔(秒)'}"
-                  Style="{DynamicResource TextBlock_SettingName}"
-                />
-                <pu:NumberInput
-                  x:Name="PressLength"
-                  Grid.Column="2"
-                  Width="100"
-                  Interval="0.1"
-                  Maximum="5"
-                  Minimum="0.05"
-                  Value="{Binding InteractiveSetting.PressLength}"
-                  Style="{DynamicResource NumberInput_BaseStyle}"
-                />
-              </Grid>
-            </Border>
-            <Border Height="50" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid
-                ColumnDefinitions="*,Auto"
-                ToolTip="{ll:Str '数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.\&#13;间隔越大越不容易打扰到当前工作'}"
-              >
-                <TextBlock
-                  Text="{ll:Str '计算间隔(秒)'}"
-                  Style="{DynamicResource TextBlock_SettingName}"
-                />
-                <pu:NumberInput
-                  x:Name="LogicInterval"
-                  Grid.Column="2"
-                  Width="100"
-                  Interval="0.5"
-                  Minimum="5"
-                  Value="{Binding InteractiveSetting.LogicInterval}"
-                  Style="{DynamicResource NumberInput_BaseStyle}"
-                />
-              </Grid>
-            </Border>
+﻿<UserControl x:Class="VPet.Solution.Views.SettingEditor.InteractiveSettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+             xmlns:local="clr-namespace:VPet.Solution.Views.SettingEditor"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pu="https://opensource.panuon.com/wpf-ui"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:vm="clr-namespace:VPet.Solution.ViewModels.SettingEditor"
+             xmlns:m="clr-namespace:VPet.Solution.Models.SettingEditor"
+             d:DataContext="{d:DesignInstance Type=vm:InteractiveSettingViewModel}"
+             d:DesignHeight="800"
+             d:DesignWidth="800"
+             mc:Ignorable="d"
+             d:Background="White">
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <GroupBox Margin="0,5,0,0"
+                          Style="{StaticResource GroupBox_SettingGroup}"
+                          Header="{ll:Str '桌宠设置'}">
+                    <StackPanel>
+                        <Border Height="100"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid RowDefinitions="*,*">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ToolTip="{ll:Str '启用数据计算,桌宠会有状态变化,需要按时投喂等.\&#13;如果嫌麻烦可以关掉'}">
+                                    <TextBlock Text="{ll:Str 启用数据计算}"
+                                               Style="{DynamicResource  TextBlock_SettingName}" />
+                                    <pu:Switch x:Name="EnableFunction"
+                                               IsChecked="{Binding InteractiveSetting.EnableFunction}"
+                                               Grid.Column="1"
+                                               Style="{DynamicResource Switch_SwitchOnly}" />
+                                </Grid>
+                                <Grid Grid.Row="1"
+                                      ColumnDefinitions="*,Auto"
+                                      ToolTip="{ll:Str '关闭数据计算时桌宠显示的状态'}">
+                                    <TextBlock Text="{ll:Str '固定桌宠状态'}"
+                                               Style="{DynamicResource TextBlock_SettingName}" />
+                                    <ComboBox x:Name="CalFunStates"
+                                              Grid.Column="2"
+                                              Width="200"
+                                              ItemsSource="{Binding Source={x:Static m:InteractiveSettingModel.CalFunStates}}"
+                                              SelectedItem="{Binding InteractiveSetting.CalFunState}"
+                                              IsEnabled="{Binding IsChecked,ElementName=EnableFunction,Converter={StaticResource BoolInverter}}"
+                                              Style="{DynamicResource ComboBox_BaseStyle}" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Text="{ll:Str '长按间隔(毫秒)'}"
+                                           Style="{DynamicResource TextBlock_SettingName}" />
+                                <pu:NumberInput x:Name="PressLength"
+                                                Grid.Column="2"
+                                                Width="100"
+                                                Interval="1"
+                                                Maximum="5000"
+                                                Minimum="50"
+                                                Value="{Binding InteractiveSetting.PressLength}"
+                                                Style="{DynamicResource NumberInput_BaseStyle}" />
+                            </Grid>
+                        </Border>
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ToolTip="{ll:Str '数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.\&#13;间隔越大越不容易打扰到当前工作'}">
+                                <TextBlock Text="{ll:Str '计算间隔(秒)'}"
+                                           Style="{DynamicResource TextBlock_SettingName}" />
+                                <pu:NumberInput x:Name="LogicInterval"
+                                                Grid.Column="2"
+                                                Width="100"
+                                                Interval="0.5"
+                                                Minimum="5"
+                                                Value="{Binding InteractiveSetting.LogicInterval}"
+                                                Style="{DynamicResource NumberInput_BaseStyle}" />
+                            </Grid>
+                        </Border>
 
-            <Border Height="50" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid
-                ColumnDefinitions="*,Auto"
-                ToolTip="{ll:Str '互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动'}"
-              >
-                <Grid RowDefinitions="*,*">
-                  <TextBlock
-                    Text="{ll:Str '互动周期(秒)'}"
-                    Style="{DynamicResource TextBlock_SettingName}"
-                  />
-                  <TextBlock
-                    Grid.Row="1"
-                    HorizontalAlignment="Left"
-                    Margin="0"
-                    Style="{DynamicResource TextBlock_BaseStyle}"
-                  >
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ToolTip="{ll:Str '互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动'}">
+                                <Grid RowDefinitions="*,*">
+                                    <TextBlock Text="{ll:Str '互动周期(秒)'}"
+                                               Style="{DynamicResource TextBlock_SettingName}" />
+                                    <TextBlock Grid.Row="1"
+                                               HorizontalAlignment="Left"
+                                               Margin="0"
+                                               Style="{DynamicResource TextBlock_BaseStyle}">
                     <!--TODO: 这怎么不更新-->
                     <Run Text="{ll:Str 每分钟计算}" />
                     <Run x:Name="rTimeMinute">4</Run>
@@ -125,129 +97,111 @@
                     <Run Text="{ll:Str 大约}" />
                     <Run x:Name="RInter">4</Run>
                     <Run Text="{ll:Str '分钟左右主动进行一次互动 (走路发呆爬墙等) '}" />
-                  </TextBlock>
-                </Grid>
-                <pu:NumberInput
-                  x:Name="InteractionCycle"
-                  Grid.Column="1"
-                  Width="100"
-                  Interval="1"
-                  Maximum="1000"
-                  Minimum="30"
-                  Value="{Binding InteractiveSetting.InteractionCycle}"
-                  Style="{DynamicResource NumberInput_BaseStyle}"
-                />
-              </Grid>
-            </Border>
-            <Border Height="50" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid
-                ColumnDefinitions="*,Auto"
-                ToolTip="{ll:Str '启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.\&#13;如果嫌麻烦可以关掉'}"
-              >
-                <TextBlock
-                  Text="{ll:Str 启用桌宠移动}"
-                  Style="{DynamicResource TextBlock_SettingName}"
-                />
-                <pu:Switch
-                  x:Name="AllowMove"
-                  Grid.Column="1"
-                  IsChecked="{Binding InteractiveSetting.AllowMove}"
-                  Style="{DynamicResource Switch_SwitchOnly}"
-                />
-              </Grid>
-            </Border>
-            <Border Height="100" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid RowDefinitions="*,*">
-                <Grid
-                  ColumnDefinitions="*,Auto"
-                  ToolTip="{ll:Str '当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能\&#13;将在下次交互时解除'}"
-                >
-                  <TextBlock
-                    Text="{ll:Str 启用桌宠智能移动}"
-                    Style="{DynamicResource TextBlock_SettingName}"
-                  />
-                  <pu:Switch
-                    x:Name="SmartMove"
-                    Grid.Column="1"
-                    IsChecked="{Binding InteractiveSetting.SmartMove}"
-                    IsEnabled="{Binding IsChecked, ElementName=AllowMove}"
-                    Style="{DynamicResource Switch_SwitchOnly}"
-                  />
-                </Grid>
-                <Grid
-                  Grid.Row="1"
-                  ColumnDefinitions="*,Auto"
-                  ToolTip="{ll:Str 智能移动判断时间间隔}"
-                >
-                  <TextBlock
-                    Text="{ll:Str 智能移动时间间隔}"
-                    Style="{DynamicResource TextBlock_SettingName}"
-                  />
-                  <ComboBox
-                    x:Name="SmartMoveIntervals"
-                    Grid.Column="1"
-                    Width="200"
-                    ItemsSource="{Binding Source={x:Static m:InteractiveSettingModel.SmartMoveIntervals}}"
-                    SelectedItem="{Binding InteractiveSetting.SmartMoveInterval}"
-                    IsEnabled="{Binding IsChecked, ElementName=SmartMove}"
-                    Style="{DynamicResource StandardComboBoxStyle}"
-                  />
-                </Grid>
-              </Grid>
-            </Border>
-          </StackPanel>
-        </GroupBox>
-        <GroupBox
-          Margin="0,5,0,0"
-          Style="{StaticResource GroupBox_SettingGroup}"
-          Header="{ll:Str '音乐识别设置'}"
-        >
-          <StackPanel>
-            <Border Height="50" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid
-                ColumnDefinitions="*,Auto"
-                ToolTip="{ll:Str 当实时播放音量达到该值时运行音乐动作}"
-              >
-                <TextBlock
-                  Text="{ll:Str 触发音量}"
-                  Style="{DynamicResource TextBlock_SettingName}"
-                />
-                <pu:NumberInput
-                  Grid.Column="1"
-                  Width="100"
-                  Interval="1"
-                  Maximum="100"
-                  Minimum="0"
-                  x:Name="MusicCatch"
-                  Value="{Binding InteractiveSetting.MusicCatch}"
-                  Style="{DynamicResource NumberInput_BaseStyle}"
-                />
-              </Grid>
-            </Border>
-            <Border Height="50" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid
-                ColumnDefinitions="*,Auto"
-                ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}"
-              >
-                <TextBlock
-                  Text="{ll:Str 高潮音量}"
-                  Style="{DynamicResource TextBlock_SettingName}"
-                />
-                <pu:NumberInput
-                  x:Name="MusicMax"
-                  Grid.Column="2"
-                  Width="100"
-                  Interval="1"
-                  Value="{Binding InteractiveSetting.MusicMax}"
-                  Maximum="100"
-                  Style="{DynamicResource NumberInput_BaseStyle}"
-                />
-              </Grid>
-            </Border>
-          </StackPanel>
-        </GroupBox>
-        <!--  存档才有这个设置  -->
-        <!--<Grid MinHeight="40">
+                                    </TextBlock>
+                                </Grid>
+                                <pu:NumberInput x:Name="InteractionCycle"
+                                                Grid.Column="1"
+                                                Width="100"
+                                                Interval="1"
+                                                Maximum="1000"
+                                                Minimum="30"
+                                                Value="{Binding InteractiveSetting.InteractionCycle}"
+                                                Style="{DynamicResource NumberInput_BaseStyle}" />
+                            </Grid>
+                        </Border>
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ToolTip="{ll:Str '启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.\&#13;如果嫌麻烦可以关掉'}">
+                                <TextBlock Text="{ll:Str 启用桌宠移动}"
+                                           Style="{DynamicResource TextBlock_SettingName}" />
+                                <pu:Switch x:Name="AllowMove"
+                                           Grid.Column="1"
+                                           IsChecked="{Binding InteractiveSetting.AllowMove}"
+                                           Style="{DynamicResource Switch_SwitchOnly}" />
+                            </Grid>
+                        </Border>
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ToolTip="{ll:Str '启动窗口切换，桌宠将能自动切换窗口'}">
+                                <TextBlock Text="{ll:Str 自动切换窗口}"
+                                           Style="{DynamicResource TextBlock_SettingName}" />
+                                <pu:Switch x:Name="AutoChangeWindow"
+                                           Grid.Column="1"
+                                           IsChecked="{Binding InteractiveSetting.AutoChangeWindow}"
+                                           Style="{DynamicResource Switch_SwitchOnly}" />
+                            </Grid>
+                        </Border>
+                        <Border Height="100"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid RowDefinitions="*,*">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ToolTip="{ll:Str '当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能\&#13;将在下次交互时解除'}">
+                                    <TextBlock Text="{ll:Str 启用桌宠智能移动}"
+                                               Style="{DynamicResource TextBlock_SettingName}" />
+                                    <pu:Switch x:Name="SmartMove"
+                                               Grid.Column="1"
+                                               IsChecked="{Binding InteractiveSetting.SmartMove}"
+                                               IsEnabled="{Binding IsChecked, ElementName=AllowMove}"
+                                               Style="{DynamicResource Switch_SwitchOnly}" />
+                                </Grid>
+                                <Grid Grid.Row="1"
+                                      ColumnDefinitions="*,Auto"
+                                      ToolTip="{ll:Str 智能移动判断时间间隔}">
+                                    <TextBlock Text="{ll:Str 智能移动时间间隔}"
+                                               Style="{DynamicResource TextBlock_SettingName}" />
+                                    <ComboBox x:Name="SmartMoveIntervals"
+                                              Grid.Column="1"
+                                              Width="200"
+                                              ItemsSource="{Binding Source={x:Static m:InteractiveSettingModel.SmartMoveIntervals}}"
+                                              SelectedItem="{Binding InteractiveSetting.SmartMoveInterval}"
+                                              IsEnabled="{Binding IsChecked, ElementName=SmartMove}"
+                                              Style="{DynamicResource StandardComboBoxStyle}" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Margin="0,5,0,0"
+                          Style="{StaticResource GroupBox_SettingGroup}"
+                          Header="{ll:Str '音乐识别设置'}">
+                    <StackPanel>
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ToolTip="{ll:Str 当实时播放音量达到该值时运行音乐动作}">
+                                <TextBlock Text="{ll:Str 触发音量}"
+                                           Style="{DynamicResource TextBlock_SettingName}" />
+                                <pu:NumberInput Grid.Column="1"
+                                                Width="100"
+                                                Interval="1"
+                                                Maximum="100"
+                                                Minimum="0"
+                                                x:Name="MusicCatch"
+                                                Value="{Binding InteractiveSetting.MusicCatch}"
+                                                Style="{DynamicResource NumberInput_BaseStyle}" />
+                            </Grid>
+                        </Border>
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}">
+                                <TextBlock Text="{ll:Str 高潮音量}"
+                                           Style="{DynamicResource TextBlock_SettingName}" />
+                                <pu:NumberInput x:Name="MusicMax"
+                                                Grid.Column="2"
+                                                Width="100"
+                                                Interval="1"
+                                                Value="{Binding InteractiveSetting.MusicMax}"
+                                                Maximum="100"
+                                                Style="{DynamicResource NumberInput_BaseStyle}" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </GroupBox>
+                <!--  存档才有这个设置  -->
+                <!--<Grid MinHeight="40">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
@@ -259,8 +213,8 @@
             Style="{DynamicResource StandardTextBoxStyle}"
             Text="{Binding InteractiveSetting.PetName}" />
         </Grid>-->
-        <!--  TODO: 移动范围设置  -->
-        <!--<Grid MinHeight="40">
+                <!--  TODO: 移动范围设置  -->
+                <!--<Grid MinHeight="40">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
@@ -305,7 +259,7 @@
               ToolTip="{ll:Str '手动设置桌宠可移动范围'}" />
           </Grid>
         </Grid>-->
-      </StackPanel>
-    </ScrollViewer>
-  </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

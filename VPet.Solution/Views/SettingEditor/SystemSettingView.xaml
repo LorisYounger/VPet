@@ -1,156 +1,143 @@
-﻿<UserControl
-  x:Class="VPet.Solution.Views.SettingEditor.SystemSettingView"
-  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-  xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-  xmlns:local="clr-namespace:VPet.Solution.Views.SettingEditor"
-  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  xmlns:pu="https://opensource.panuon.com/wpf-ui"
-  xmlns:sys="clr-namespace:System;assembly=mscorlib"
-  xmlns:vm="clr-namespace:VPet.Solution.ViewModels.SettingEditor"
-  xmlns:m="clr-namespace:VPet.Solution.Models.SettingEditor"
-  d:DataContext="{d:DesignInstance Type=vm:SystemSettingViewModel}"
-  d:DesignHeight="450"
-  d:DesignWidth="800"
-  mc:Ignorable="d"
-  d:Background="White"
->
-  <Grid>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-      <StackPanel>
-        <GroupBox Header="{ll:Str 保存设置}" Style="{DynamicResource GroupBox_SettingGroup}">
-          <StackPanel>
-            <Border Height="50" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid ColumnDefinitions="*,Auto">
-                <TextBlock
-                  Text="{ll:Str '自动保存频率(分钟)'}"
-                  Style="{DynamicResource TextBlock_SettingName}"
-                  ToolTip="{ll:Str 在指定时间后自动保存游戏数据}"
-                />
-                <ComboBox
-                  x:Name="AutoSaveIntervals"
-                  ItemsSource="{Binding Source={x:Static m:SystemSettingModel.AutoSaveIntervals}}"
-                  Grid.Column="1"
-                  Width="200"
-                  SelectedItem="{Binding SystemSetting.AutoSaveInterval}"
-                  Style="{DynamicResource ComboBox_BaseStyle}"
-                />
-              </Grid>
-            </Border>
-            <Border Height="50" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid ColumnDefinitions="*,Auto">
-                <TextBlock
-                  Style="{DynamicResource TextBlock_SettingName}"
-                  Text="{ll:Str 备份数量}"
-                />
-                <pu:NumberInput
-                  x:Name="BackupSaveMaxNum"
-                  Grid.Column="1"
-                  Minimum="1"
-                  Width="100"
-                  Style="{DynamicResource NumberInput_BaseStyle}"
-                />
-              </Grid>
-            </Border>
-          </StackPanel>
-        </GroupBox>
-        <GroupBox
-          Margin="0,5,0,0"
-          Header="{ll:Str 聊天设置}"
-          Style="{StaticResource GroupBox_SettingGroup}"
-        >
-          <!-- TODO: SystemSettingModel数据不全-->
-          <StackPanel>
-            <Border Height="120" Style="{StaticResource Border_SettingGroupItem}">
-              <StackPanel>
-                <Grid ColumnDefinitions="*,Auto">
-                  <TextBlock
-                    Style="{StaticResource TextBlock_SettingName}"
-                    Text="{ll:Str '关闭聊天框'}"
-                  />
-                  <RadioButton
-                    x:Name="RBCGPTClose"
-                    Grid.Column="1"
-                    GroupName="cgpttype"
-                    Margin="10"
-                    Padding="0"
-                    Style="{DynamicResource StandardRadioButtonStyle}"
-                  />
-                </Grid>
-                <Grid ColumnDefinitions="*,Auto">
-                  <TextBlock
-                    Style="{StaticResource TextBlock_SettingName}"
-                    Text="{ll:Str '使用桌宠选项式聊天功能'}"
-                  />
-                  <RadioButton
-                    Margin="10"
-                    x:Name="RBCGPTUseLB"
-                    GroupName="cgpttype"
-                    Grid.Column="1"
-                    Padding="0"
-                    HorizontalAlignment="Right"
-                    Style="{DynamicResource StandardRadioButtonStyle}"
-                    ToolTip="{ll:Str 支持MOD与创意工坊添加聊天内容}"
-                  />
-                </Grid>
-                <Grid ColumnDefinitions="*,Auto">
-                  <TextBlock
-                    Style="{StaticResource TextBlock_SettingName}"
-                    Text="{ll:Str '自定义聊天接口'}"
-                  />
-                  <RadioButton
-                    x:Name="RBCGPTDIY"
-                    Padding="0"
-                    Margin="10"
-                    GroupName="cgpttype"
-                    Grid.Column="1"
-                    Style="{DynamicResource StandardRadioButtonStyle}"
-                  />
-                </Grid>
-              </StackPanel>
-            </Border>
-            <Border Height="50" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid
-                ColumnDefinitions="*,Auto"
-                IsEnabled="{Binding IsChecked,ElementName=RBCGPTDIY}"
-              >
-                <TextBlock
-                  Style="{StaticResource TextBlock_SettingName}"
-                  Text="{ll:Str '聊天接口'}"
-                />
-                <ComboBox
-                  Width="200"
-                  x:Name="cbChatAPISelect"
-                  Grid.Column="1"
-                  d:SelectionChanged="cbChatAPISelect_SelectionChanged"
-                  Style="{DynamicResource ComboBox_BaseStyle}"
-                />
-              </Grid>
-            </Border>
-            <Border Height="50" Style="{StaticResource Border_SettingGroupItem}">
-              <Grid
-                ColumnDefinitions="*,Auto"
-                IsEnabled="{Binding IsChecked,ElementName=RBCGPTDIY}"
-              >
-                <TextBlock
-                  Style="{StaticResource TextBlock_SettingName}"
-                  Text="{ll:Str '初始化桌宠聊天程序'}"
-                />
-                <Button
-                  x:Name="BtnCGPTReSet"
-                  Grid.Column="2"
-                  HorizontalAlignment="Right"
-                  Width="100"
-                  Background="{DynamicResource SecondaryLight}"
-                  Content="{ll:Str 初始化桌宠聊天程序}"
-                  Style="{DynamicResource Button_BaseStyle}"
-                />
-              </Grid>
-            </Border>
-          </StackPanel>
-        </GroupBox>
-        <!--<Grid Margin="0,5,0,0">
+﻿<UserControl x:Class="VPet.Solution.Views.SettingEditor.SystemSettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+             xmlns:local="clr-namespace:VPet.Solution.Views.SettingEditor"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pu="https://opensource.panuon.com/wpf-ui"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:vm="clr-namespace:VPet.Solution.ViewModels.SettingEditor"
+             xmlns:m="clr-namespace:VPet.Solution.Models.SettingEditor"
+             d:DataContext="{d:DesignInstance Type=vm:SystemSettingViewModel}"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             mc:Ignorable="d"
+             d:Background="White">
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <GroupBox Header="{ll:Str 保存设置}"
+                          Style="{DynamicResource GroupBox_SettingGroup}">
+                    <StackPanel>
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Text="{ll:Str '自动保存频率(分钟)'}"
+                                           Style="{DynamicResource TextBlock_SettingName}"
+                                           ToolTip="{ll:Str 在指定时间后自动保存游戏数据}" />
+                                <ComboBox x:Name="AutoSaveIntervals"
+                                          ItemsSource="{Binding Source={x:Static m:SystemSettingModel.AutoSaveIntervals}}"
+                                          Grid.Column="1"
+                                          Width="200"
+                                          SelectedItem="{Binding SystemSetting.AutoSaveInterval}"
+                                          Style="{DynamicResource ComboBox_BaseStyle}" />
+                            </Grid>
+                        </Border>
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Style="{DynamicResource TextBlock_SettingName}"
+                                           Text="{ll:Str 备份数量}" />
+                                <pu:NumberInput x:Name="BackupSaveMaxNum"
+                                                Grid.Column="1"
+                                                Minimum="1"
+                                                Width="100"
+                                                Style="{DynamicResource NumberInput_BaseStyle}"
+                                                Value="{Binding SystemSetting.BackupSaveMaxNum}"/>
+                            </Grid>
+                        </Border>
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Style="{StaticResource TextBlock_SettingName}"
+                                           Text="{ll:Str '清理缓存'}" />
+                                <Button x:Name="CacheClear"
+                                        Grid.Column="2"
+                                        HorizontalAlignment="Right"
+                                        Width="150"
+                                        Background="{DynamicResource SecondaryLight}"
+                                        Content="{ll:Str 清理}"
+                                        Style="{DynamicResource Button_BaseStyle}"
+                                        ToolTip="{ll:Str '清理缓存的动画，声音文件'}"
+                                        Command="{Binding CacheCleanCommand}"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Margin="0,5,0,0"
+                          Header="{ll:Str 聊天设置}"
+                          Style="{StaticResource GroupBox_SettingGroup}">
+                    <!-- TODO: SystemSettingModel数据不全-->
+                    <StackPanel>
+                        <Border Height="120"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <StackPanel>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Style="{StaticResource TextBlock_SettingName}"
+                                               Text="{ll:Str '关闭聊天框'}" />
+                                    <RadioButton x:Name="RBCGPTClose"
+                                                 Grid.Column="1"
+                                                 GroupName="cgpttype"
+                                                 Margin="10"
+                                                 Padding="0"
+                                                 Style="{DynamicResource StandardRadioButtonStyle}" />
+                                </Grid>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Style="{StaticResource TextBlock_SettingName}"
+                                               Text="{ll:Str '使用桌宠选项式聊天功能'}" />
+                                    <RadioButton Margin="10"
+                                                 x:Name="RBCGPTUseLB"
+                                                 GroupName="cgpttype"
+                                                 Grid.Column="1"
+                                                 Padding="0"
+                                                 HorizontalAlignment="Right"
+                                                 Style="{DynamicResource StandardRadioButtonStyle}"
+                                                 ToolTip="{ll:Str 支持MOD与创意工坊添加聊天内容}" />
+                                </Grid>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Style="{StaticResource TextBlock_SettingName}"
+                                               Text="{ll:Str '自定义聊天接口'}" />
+                                    <RadioButton x:Name="RBCGPTDIY"
+                                                 Padding="0"
+                                                 Margin="10"
+                                                 GroupName="cgpttype"
+                                                 Grid.Column="1"
+                                                 Style="{DynamicResource StandardRadioButtonStyle}" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  IsEnabled="{Binding IsChecked,ElementName=RBCGPTDIY}">
+                                <TextBlock Style="{StaticResource TextBlock_SettingName}"
+                                           Text="{ll:Str '聊天接口'}" />
+                                <ComboBox Width="200"
+                                          x:Name="cbChatAPISelect"
+                                          Grid.Column="1"
+                                          d:SelectionChanged="cbChatAPISelect_SelectionChanged"
+                                          Style="{DynamicResource ComboBox_BaseStyle}" />
+                            </Grid>
+                        </Border>
+                        <Border Height="50"
+                                Style="{StaticResource Border_SettingGroupItem}">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  IsEnabled="{Binding IsChecked,ElementName=RBCGPTDIY}">
+                                <TextBlock Style="{StaticResource TextBlock_SettingName}"
+                                           Text="{ll:Str '初始化桌宠聊天程序'}" />
+                                <Button x:Name="BtnCGPTReSet"
+                                        Grid.Column="2"
+                                        HorizontalAlignment="Right"
+                                        Width="150"
+                                        Background="{DynamicResource SecondaryLight}"
+                                        Content="{ll:Str 初始化桌宠聊天程序}"
+                                        Style="{DynamicResource Button_BaseStyle}" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </GroupBox>
+                <!--<Grid Margin="0,5,0,0">
           <Grid.RowDefinitions>
             <RowDefinition Height="35" />
             <RowDefinition Height="35" />
@@ -197,7 +184,7 @@
             SelectedIndex="3"
             Style="{DynamicResource StandardComboBoxStyle}" />
         </Grid>-->
-        <!--<Grid>
+                <!--<Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="15" />
@@ -226,14 +213,14 @@
               <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
         -->
-        <!--<RadioButton x:Name="RBCGPTUseAPI" Grid.Column="1" Checked="CGPType_Checked"
+                <!--<RadioButton x:Name="RBCGPTUseAPI" Grid.Column="1" Checked="CGPType_Checked"
                         Content="{ll:Str '使用从ChatGPT\&#13;申请的的API'}" GroupName="cgpttype"
                         Style="{DynamicResource StandardRadioButtonStyle}"
                         ToolTip="{ll:Str 需要去OpenAI官网申请}" />-->
-        <!--
+                <!--
           </Grid>
         </Grid>-->
-        <!--<Grid MinHeight="40">
+                <!--<Grid MinHeight="40">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
@@ -263,7 +250,7 @@
             Style="{DynamicResource Button_BaseStyle}"
             ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
         </Grid>-->
-        <!--<Grid MinHeight="40">
+                <!--<Grid MinHeight="40">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
@@ -276,8 +263,8 @@
             Style="{DynamicResource Label_BaseStyle}"
             ToolTip="{ll:Str '支持多开多个桌宠, 这些桌宠将会有独立的设置与存档\&#13;如果画师能够足够勤奋,未来可以看到这些多开的桌宠之间的互动'}" />
         -->
-        <!--  新建要弹个窗写入存档名称  -->
-        <!--
+                <!--  新建要弹个窗写入存档名称  -->
+                <!--
           <Button
             Grid.Column="1"
             d:Click="btn_mutinew_click"
@@ -291,8 +278,8 @@
             Style="{DynamicResource Button_BaseStyle}"
             ToolTip="{ll:Str 打开当前选择的多开存档}" />
         -->
-        <!--  存档列表, 或许应该用个大一点的  -->
-        <!--
+                <!--  存档列表, 或许应该用个大一点的  -->
+                <!--
           <ComboBox Grid.Column="3" Style="{DynamicResource ComboBox_BaseStyle}" />
           <Button
             x:Name="btn_mutidel"
@@ -302,7 +289,7 @@
             Style="{DynamicResource Button_BaseStyle}"
             ToolTip="{ll:Str 删除当前选择的多开存档}" />
         </Grid>-->
-      </StackPanel>
-    </ScrollViewer>
-  </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

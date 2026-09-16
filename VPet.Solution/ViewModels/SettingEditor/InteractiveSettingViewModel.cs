@@ -11,4 +11,6 @@ public partial class InteractiveSettingViewModel : ViewModelBase, ISubSettingVie
     public SettingModel Setting { get; set; } = null!;
 
     public InteractiveSettingModel InteractiveSetting => Setting.InteractiveSetting;
+
+
 }

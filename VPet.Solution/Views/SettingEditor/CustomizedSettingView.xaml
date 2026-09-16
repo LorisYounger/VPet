@@ -29,8 +29,7 @@
       <Run Text="{ll:Str '在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能'}" />
       <LineBreak />
       <Run Text="{ll:Str '键盘快捷键编写方法请参考'}" />
-      <!--TODO: 这个超链接没用-->
-      <Hyperlink>
+      <Hyperlink Command="{Binding SendKeyCommand}">
         <Run Text="{ll:Str '键盘快捷键 通用注解'}" />
       </Hyperlink>
       <LineBreak />

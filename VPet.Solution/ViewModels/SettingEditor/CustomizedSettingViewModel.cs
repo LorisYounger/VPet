@@ -7,6 +7,7 @@ using HKW.HKWUtils.Observable;
 using HKW.MVVM;
 using LinePutScript.Localization.WPF;
 using VPet.Solution.Models.SettingEditor;
+using VPet_Simulator.Windows.Interface;
 
 namespace VPet.Solution.ViewModels.SettingEditor;
 
@@ -65,6 +66,17 @@ public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettin
     private void RemoveLink(LinkModel parameter)
     {
         Links.Remove(parameter);
+    }
+
+    [RelayCommand]
+    private void SendKey()
+    {
+        if (Setting.GraphicsSetting.Language.StartsWith("zh"))
+            ExtensionFunction.StartURL("https://www.exlb.net/SendKeys");
+        else if (Setting.GraphicsSetting.Language == "null")
+            ExtensionFunction.StartURL("https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks");
+        else
+            ExtensionFunction.StartURL($"https://learn.microsoft.com/{Setting.GraphicsSetting.Language}/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks");
     }
 
     partial class CustomizedSettingViewModelObservableObjectHelper

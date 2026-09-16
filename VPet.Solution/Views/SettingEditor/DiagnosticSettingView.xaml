@@ -64,8 +64,7 @@
                   <Run Text="{ll:Str '选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.'}" />
                   <LineBreak />
                   <Run Text="{ll:Str '无论选择哪个选项,游戏都可以安全正常地运行.'}" />
-                  <!--TODO: 没链接-->
-                  <Hyperlink d:Click="hyper_moreInfo">
+                  <Hyperlink Command="{Binding hyper_moreInfoCommand}">
                     <Run Text="{ll:Str 获取有关这些设置的更多信息}" />
                   </Hyperlink>
                   <LineBreak />

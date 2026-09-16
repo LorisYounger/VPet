@@ -69,6 +69,21 @@ public class ModLoader
     /// </summary>
     public bool IsSuccesses { get; set; } = true;
 
+    /// <summary>
+    /// 主题
+    /// </summary>
+    public List<string> Themes { get; set; } = new();
+
+    /// <summary>
+    /// 字体
+    /// </summary>
+    public List<string> Fonts { get; set; } = new();
+
+    /// <summary>
+    /// 桌宠
+    /// </summary>
+    public List<string> PetGraphs { get; set; } = new();
+
     public ModLoader(string path)
     {
         ModPath = path;
@@ -116,6 +131,10 @@ public class ModLoader
                 case "pet":
                     //宠物模型
                     Tags.Add("pet");
+                    foreach (var petFile in Directory.EnumerateFiles(dir, "*.lps"))
+                    {
+                        PetGraphs.Add(Path.GetFileNameWithoutExtension(petFile));
+                    }   
                     break;
                 case "food":
                     Tags.Add("food");
@@ -125,6 +144,34 @@ public class ModLoader
                     break;
                 case "text":
                     Tags.Add("text");
+                    break;
+                case "theme":
+                    bool themeTagAdded = false;
+
+                    foreach (var themeFile in Directory.EnumerateFiles(dir, "*.lps"))
+                    {
+                        if (!themeTagAdded)
+                        {
+                            if (!Tags.Contains("theme"))
+                            {
+                                Tags.Add("theme");
+                            }
+                            themeTagAdded = true;
+                        }
+
+                        Themes.Add(Path.GetFileNameWithoutExtension(themeFile));
+                    }
+
+                    string fontsDir = Path.Combine(dir, "fonts");
+
+                    if (Directory.Exists(fontsDir))
+                    {
+                        foreach (var fontFile in Directory.EnumerateFiles(fontsDir))
+                        {
+                            Fonts.Add(Path.GetFileNameWithoutExtension(fontFile));
+                        }
+                    }
+
                     break;
                 case "lang":
                     Tags.Add("lang");

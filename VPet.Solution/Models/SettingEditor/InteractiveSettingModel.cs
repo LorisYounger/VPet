@@ -39,12 +39,6 @@ public partial class InteractiveSettingModel : ObservableObjectEx, ISubSettingMo
         EnumInfo<IGameSave.ModeType>.StaticValues;
 
     /// <summary>
-    /// 上次清理缓存日期
-    /// </summary>
-    [ObservableProperty]
-    public DateTime LastCacheDate { get; set; }
-
-    /// <summary>
     /// 储存顺序次数
     /// </summary>
     [ObservableProperty]
@@ -86,6 +80,11 @@ public partial class InteractiveSettingModel : ObservableObjectEx, ISubSettingMo
     [ObservableProperty]
     [DefaultValue(1)]
     public int SmartMoveInterval { get; set; }
+    /// <summary>
+    /// 自动切换屏幕
+    /// </summary>
+    [ObservableProperty]
+    public bool AutoChangeWindow { get; set; }
 
     public static int[] SmartMoveIntervals { get; } = [1, 2, 5, 10, 20, 30, 40, 50, 60];
 
