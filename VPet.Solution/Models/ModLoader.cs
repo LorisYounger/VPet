@@ -146,11 +146,12 @@ public class ModLoader
                     Tags.Add("text");
                     break;
                 case "theme":
-                    Tags.Add("theme");
                     foreach (var themeFile in Directory.EnumerateFiles(dir, "*.lps"))
                     {
                         Themes.Add(Path.GetFileNameWithoutExtension(themeFile));
                     }
+                    if (Themes.Count > 0)
+                        Tags.Add("theme");
 
                     string fontsDir = Path.Combine(dir, "fonts");
 
@@ -161,7 +162,8 @@ public class ModLoader
                             Fonts.Add(Path.GetFileNameWithoutExtension(fontFile));
                         }
                     }
-
+                    if (Fonts.Count > 0)
+                        Tags.Add("theme");
                     break;
                 case "lang":
                     Tags.Add("lang");
