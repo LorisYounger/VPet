@@ -460,7 +460,7 @@ public partial class ScheduleTask
         public override int RestTime { get => _restTime; set => Set(ref _restTime, value); }
         private int _restTime;
     }
-    //套餐本体(Package)在共享源码 (Interface.Base/Save/Package.cs) 里, 两个平台读得出同一份.
+    //套餐本体(Package)在共享源码 (Windows.Interface/Base/Save/Package.cs) 里, 两个平台读得出同一份.
     //PackageFull 在两边各一份: 它有个 WorkType 属性, 而 GraphHelper.Work 在两个 Core 里是两个类型.
     /// <summary>
     /// 套餐详细

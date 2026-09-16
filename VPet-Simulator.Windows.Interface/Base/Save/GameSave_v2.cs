@@ -69,7 +69,7 @@ namespace VPet_Simulator.Windows.Interface
 
             if (nohashcheck)
             {
-                // 哈希算法搬到了 VPet-Simulator.Unified.Services 的 SaveHash:
+                // 哈希算法搬到了 VPet-Simulator.Unified 的 SaveHash:
                 // Windows 版和跨平台版加载同一个 dll, 存档在哪边算出来的结果都一样.
                 // 算法本身(含 ver2 之前那条 MD5 回退)一字未改.
                 try

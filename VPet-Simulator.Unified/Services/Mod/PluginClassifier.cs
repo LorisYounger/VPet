@@ -35,7 +35,7 @@ public static class PluginClassifier
     /// <summary>
     /// 统一契约的程序集名
     /// </summary>
-    public const string UnifiedInterfaceName = "VPet-Simulator.Unified.Interface";
+    public const string UnifiedInterfaceName = "VPet-Simulator.Unified";
 
     /// <summary>
     /// 引用了这些就说明是 Windows 专用的

@@ -15,24 +15,18 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\VPet-Simulator.Core\VPet-Simulator.Core.csproj" />
-    <ProjectReference Include="..\VPet-Simulator.Unified.Services\VPet-Simulator.Unified.Services.csproj" />
+    <ProjectReference Include="..\VPet-Simulator.Unified\VPet-Simulator.Unified.csproj" />
   </ItemGroup>
 
   <!--
-  刻意使用 Compile 而不是 ProjectReference: 这些类型必须仍然编译在
-  VPet-Simulator.Windows.Interface.dll 里, 否则已编译的 MOD 会在 JIT 期抛
+  Base\ 目录是与跨平台宿主共享的源码 (Save / Mod / MutiPlayer): 本工程按默认通配正常编译它们,
+  VPet-Simulator.MutiPlatform 用 Compile Include 把同一份源码链接进去. 刻意不做成独立程序集:
+  这些类型必须仍然编译在 VPet-Simulator.Windows.Interface.dll 里, 否则已编译的 MOD 会在 JIT 期抛
   MissingFieldException / TypeLoadException. 详见 ABI-Compatibility.md 的 N5.
 
-  只 glob 具体的源码子目录, 绝不能写 **\*.cs 全量 —— 否则会把 Base 的 obj\ 下
-  生成的 AssemblyInfo.cs 也编进来, 产生重复特性错误.
-  Platform\ 目录刻意不 glob: 那里放的是各平台各一份的适配垫片.
+  Base\ 里的文件不能用 WPF / Panuon —— 跨平台宿主一编译就会暴露. 每个类型的 Windows 半
+  (ImageSource / Visibility 那几行) 留在本目录根下的同名文件里, 跨平台半在 MutiPlatform\Interface\ 下.
   -->
-  <ItemGroup>
-    <Compile Include="..\VPet-Simulator.Windows.Interface.Base\Save\**\*.cs" LinkBase="Shared\Save" />
-    <Compile Include="..\VPet-Simulator.Windows.Interface.Base\Mod\**\*.cs" LinkBase="Shared\Mod" />
-    <Compile Include="..\VPet-Simulator.Windows.Interface.Base\Data\**\*.cs" LinkBase="Shared\Data" />
-    <Compile Include="..\VPet-Simulator.Windows.Interface.Base\MutiPlayer\**\*.cs" LinkBase="Shared\MutiPlayer" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LinePutScript" Version="1.11.9" />
     <PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.7" />

@@ -125,7 +125,7 @@ CLR 类型. 因为代码型 MOD 不需要跨平台, 两侧永不同时加载、�
 
 拆不动的就别硬拆. `ScheduleTask` 本体通篇拿着 `IMainWindow`, `PackageFull` 有个
 `WorkType` 属性而 `GraphHelper.Work` 在两个 Core 里是两个类型 —— 这种就不拆,
-而是在 `Interface.Base/Platform/` 下放一份**原文复制**的跨平台半 (只换命名空间和
+而是在跨平台宿主的 `Interface/` 下放一份**原文复制**的跨平台半 (只换命名空间和
 `Visibility→bool` / `ImageSource→Bitmap` 这几行), 与 Windows 半逐行可对照.
 
 ## 跨平台目录对照
@@ -140,7 +140,7 @@ CLR 类型. 因为代码型 MOD 不需要跨平台, 两侧永不同时加载、�
 | Windows 版 | 跨平台版 | 说明 |
 |---|---|---|
 | `VPet-Simulator.Core` | `VPet_Simulator.Core.MutiPlatform` | `Display/Main.axaml(.cs)` + `MainDisplay.cs` + `MainLogic.cs`, `ToolBar` / `MessageBar` / `WorkTimer` 同名; 逻辑半在 `VPet_Simulator.Core.Base` 共享 |
-| `VPet-Simulator.Windows.Interface` | `VPet-Simulator.Windows.Interface.Base` | `Save/` `Mod/` `Data/` `MutiPlayer/` 四个目录是共享源码 (Windows.Interface 用 `Compile Include` 卷入, 所以 `Interface.dll` 的 ABI 不变); `Platform/` 是跨平台半 (`IMainWindow` / `Resources` / `ScheduleTask` / `Mod/Food` / `MutiPlayer/IMPWindows` …), Windows 构建永远碰不到 |
+| `VPet-Simulator.Windows.Interface` | `VPet-Simulator.MutiPlatform/Interface/` (编进宿主, 命名空间照旧) | `Windows.Interface/Base/` (`Save/` `Mod/` `MutiPlayer/`) 是共享源码: Windows.Interface 按默认通配编译, 跨平台宿主用 `Compile Include` 链接进来, 所以 `Interface.dll` 的 ABI 不变、跨平台侧也不多一个 dll; 宿主的 `Interface/` 是跨平台半 (`IMainWindow` / `Resources` / `ScheduleTask` / `Mod/Food` / `MutiPlayer/IMPWindows` …), Windows 构建永远碰不到 |
 | `VPet-Simulator.Windows` | `VPet-Simulator.MutiPlatform` | `MainWindow.axaml(.cs)` / `MainWindow.cs` / `MainWindow_Function.cs` / `MainWindow_Property.cs` 四文件切法相同; `Function/` `WinDesign/` `MutiPlayer/` `Design/` 逐文件同名 |
 | `Core/Display/Theme.xaml` `basestyle.xaml`, `Interface/ResourceStyle.xaml` | `Core.MutiPlatform/Display/Theme.axaml` `basestyle.axaml` `ResourceStyle.axaml` | 键名不变; Windows 里带 `x:Key` 的 `Style` 在这边是同 Key 的 `ControlTheme` |
 | `Panuon.WPF.UI` | (无) | 不做替身工程. `pu:` 用法按下面的映射表机械替换成原生控件 + 预设样式, `Display/Shell/` 下补几个 Panuon 独有的控件 (`VPetWindow` / `Switch` / `Pagination` / `RingProgress` / `MessageBoxX`) |
@@ -230,8 +230,10 @@ Avalonia 的控件在**构造时**就记下了创建它的那个 Dispatcher, 之
 | 旧 | 继承 `MainPlugin` | 只有 Windows | 上面三条铁律, 老 dll 不重编译也能跑 |
 | 新 | 继承 `UnifiedPlugin` | Windows + 跨平台 | 同一个 dll 两边都加载 |
 
-`VPet-Simulator.Unified.Interface` 是这套新契约, 只引用 BCL 和 `LinePutScript`,
-不含任何 WPF / Avalonia 类型 —— 照着它写出来的 MOD 编一次, 两个宿主都认.
+`VPet-Simulator.Unified` 里的 `Interface/` 目录 (命名空间 `VPet_Simulator.Unified.Interface`) 是这套新契约,
+整个 dll 只引用 BCL 和 `LinePutScript`, 不含任何 WPF / Avalonia 类型 —— 照着它写出来的 MOD 编一次, 两个宿主都认.
+同一个 dll 里的 `Services/` 目录 (命名空间 `VPet_Simulator.Unified.Services`) 是两个宿主共用的后端,
+**不是契约**: MOD 不许引用它 (统一契约门禁检查示范 MOD 的类型引用表), 所以它可以随宿主一起改.
 
 ### 旧 MOD 的兼容范围
 
@@ -321,7 +323,7 @@ MOD 的动画悄悄不播.
 
 "一份后端两边用"的抽取(存档哈希、存档命名与轮换、MOD 元数据、资源索引)必须是纯粹的
 搬家, 不能顺手改行为. 做法是同时加载 `VPet-Simulator.Windows.Interface` 和
-`VPet-Simulator.Unified.Services`, 喂同一份输入让两边各算一遍, 逐字节比对.
+`VPet-Simulator.Unified` (后端在它的 `Services/` 目录), 喂同一份输入让两边各算一遍, 逐字节比对.
 
 这里抓到过两个真问题: 备份文件名原本用 `string.GetHashCode()`, 而 .NET Core 的字符串
 哈希每个进程都不一样, 每次启动都会堆出新的备份文件 —— 改成用 `LPS_D.GetHashCode()`

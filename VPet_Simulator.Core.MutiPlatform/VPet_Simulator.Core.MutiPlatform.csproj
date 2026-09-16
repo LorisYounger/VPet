@@ -21,8 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VPet_Simulator.Core.Base\VPet_Simulator.Core.Base.csproj" />
-		<ProjectReference Include="..\VPet-Simulator.Unified.Services\VPet-Simulator.Unified.Services.csproj" />
-		<ProjectReference Include="..\VPet-Simulator.Unified.Interface\VPet-Simulator.Unified.Interface.csproj" />
+		<ProjectReference Include="..\VPet-Simulator.Unified\VPet-Simulator.Unified.csproj" />
   </ItemGroup>
 
   <!--

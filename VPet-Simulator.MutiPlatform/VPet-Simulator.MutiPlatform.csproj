@@ -10,10 +10,14 @@
 	  MutiPlayer\ 访客表 (winMutiPlayer / MPFriends / MPUserControl / winMPBetterBuy / MPController / MPMOD), 联机走真实 Steam
 	  Design\     AutoUniformGrid 与转换器
 	  DevTools\   界面走查开关 (启动参数 ui-walk, 与 Windows 的 Set.DeBug / winConsole 同性质)
+	  Interface\  VPet-Simulator.Windows.Interface 的跨平台半 (IMainWindow / Resources / ScheduleTask / Mod/Food / TalkBox …),
+	              与那边根目录下的 "Windows 半" 逐文件对应; 共享半 (那边的 Base\ 目录) 用 Compile Include 链接进来.
+	              跨平台没有旧式 MOD 要引用独立的 Interface 程序集, 所以这一层直接编进宿主, 命名空间照旧
+	              VPet_Simulator.Windows.Interface.
 
 	Windows 版靠 Panuon.WPF.UI 的地方, 这里由 Core.MutiPlatform\Display 下的样式表提供同 Key 的预设样式,
 	XAML 里的 pu: 用法按固定映射表机械替换; 每处平台差异都在原位留中文注释.
-	老式 WPF MOD (MainPlugin) 不在这里跑, 跨平台 MOD 走统一契约 VPet-Simulator.Unified.Interface.
+	老式 WPF MOD (MainPlugin) 不在这里跑, 跨平台 MOD 走统一契约 VPet-Simulator.Unified (命名空间 VPet_Simulator.Unified.Interface).
 	-->
 
 	<PropertyGroup>
@@ -64,7 +68,17 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\VPet_Simulator.Core.MutiPlatform\VPet_Simulator.Core.MutiPlatform.csproj" />
-		<ProjectReference Include="..\VPet-Simulator.Windows.Interface.Base\VPet-Simulator.Windows.Interface.Base.csproj" />
+	</ItemGroup>
+
+	<!-- 与 Windows.Interface 共享的源码 (与 Windows 版 Core 链接 Core.Base\Logic 是同一种做法);
+	     那边的 obj\ 不在 Base\ 下, 所以可以整目录链接 -->
+	<ItemGroup>
+		<Compile Include="..\VPet-Simulator.Windows.Interface\Base\**\*.cs" LinkBase="Interface\Base" />
+		<!-- 共享源码里的 "文本".Translate() 不带任何 Localization 的 using (Windows 用的是 .WPF 包, 那边由
+		     Windows.Interface\Localize.cs 这个同命名空间的 internal 垫片转发). 这边整个宿主本来就用
+		     LinePutScript.Localization, 直接全局 using 就够了, 不需要垫片 (垫片放进宿主会和各文件自己的
+		     using LinePutScript.Localization 撞成二义性) -->
+		<Using Include="LinePutScript.Localization" />
 	</ItemGroup>
 
 	<ItemGroup>

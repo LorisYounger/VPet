@@ -24,11 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet_Simulator.Core.MutiPla
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.MutiPlatform", "VPet-Simulator.MutiPlatform\VPet-Simulator.MutiPlatform.csproj", "{6042DC2C-7547-43A9-B77B-11A6C33DBADE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Unified.Services", "VPet-Simulator.Unified.Services\VPet-Simulator.Unified.Services.csproj", "{98C0288E-588D-4DA2-A522-B74178F71370}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Windows.Interface.Base", "VPet-Simulator.Windows.Interface.Base\VPet-Simulator.Windows.Interface.Base.csproj", "{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Unified.Interface", "VPet-Simulator.Unified.Interface\VPet-Simulator.Unified.Interface.csproj", "{3A32FA4C-A134-49B9-A32C-741819C88735}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Unified", "VPet-Simulator.Unified\VPet-Simulator.Unified.csproj", "{3A32FA4C-A134-49B9-A32C-741819C88735}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -136,30 +132,6 @@ Global
 		{6042DC2C-7547-43A9-B77B-11A6C33DBADE}.Release|x64.Build.0 = Release|Any CPU
 		{6042DC2C-7547-43A9-B77B-11A6C33DBADE}.Release|x86.ActiveCfg = Release|Any CPU
 		{6042DC2C-7547-43A9-B77B-11A6C33DBADE}.Release|x86.Build.0 = Release|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Debug|x64.Build.0 = Debug|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Debug|x86.Build.0 = Debug|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Release|x64.ActiveCfg = Release|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Release|x64.Build.0 = Release|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Release|x86.ActiveCfg = Release|Any CPU
-		{98C0288E-588D-4DA2-A522-B74178F71370}.Release|x86.Build.0 = Release|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Debug|x64.Build.0 = Debug|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Debug|x86.Build.0 = Debug|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Release|x64.ActiveCfg = Release|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Release|x64.Build.0 = Release|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Release|x86.ActiveCfg = Release|Any CPU
-		{D446AC1F-553E-4E12-B8CD-95E7D2476F1D}.Release|x86.Build.0 = Release|Any CPU
 		{3A32FA4C-A134-49B9-A32C-741819C88735}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3A32FA4C-A134-49B9-A32C-741819C88735}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A32FA4C-A134-49B9-A32C-741819C88735}.Debug|x64.ActiveCfg = Debug|Any CPU

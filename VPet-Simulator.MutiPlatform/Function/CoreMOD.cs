@@ -32,8 +32,8 @@ namespace VPet_Simulator.MutiPlatform
         {
             "steam_api.dll","steam_api64.dll","libsteam_api.so","libsteam_api.dylib",
             "LinePutScript.dll","Facepunch.Steamworks.dll","Facepunch.Steamworks.Win32.dll", "Facepunch.Steamworks.Win64.dll",
-            "VPet_Simulator.Core.Base.dll","VPet_Simulator.Core.MutiPlatform.dll","VPet-Simulator.Windows.Interface.Base.dll","LinePutScript.Localization.dll",
-            "VPet-Simulator.Unified.Interface.dll","VPet-Simulator.Unified.Services.dll",
+            "VPet_Simulator.Core.Base.dll","VPet_Simulator.Core.MutiPlatform.dll","LinePutScript.Localization.dll",
+            "VPet-Simulator.Unified.dll",
             "libSkiaSharp.dll","SkiaSharp.dll","HarfBuzzSharp.dll","libHarfBuzzSharp.dll",
         };
         /// <summary>

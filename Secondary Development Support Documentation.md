@@ -64,7 +64,7 @@ VPet-Simulator.Tool (MOD制作工具)
    | 继承 `MainPlugin` | 只有 Windows | 老路, 一字未动, 已有的 MOD 不用改 |
    | 继承 `UnifiedPlugin` | Windows + 跨平台 | 统一契约, 同一个 dll 两边都加载 |
 
-   统一契约在 `VPet-Simulator.Unified.Interface`, 只引用 BCL 和 LinePutScript,
+   统一契约在 `VPet-Simulator.Unified` (命名空间 `VPet_Simulator.Unified.Interface`), 只引用 BCL 和 LinePutScript,
    不含任何 WPF / Avalonia 类型. 详见 `ABI-Compatibility.md` 的"统一 MOD 契约"一章 ——
    那里写了两个宿主的接入方式、线程约定、以及旧 MOD 的兼容范围到底保证到哪。
 

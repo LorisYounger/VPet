@@ -38,11 +38,9 @@ namespace VPet_Simulator.Windows.Interface
             {
                 ["VPet-Simulator.Core"] = "License: Apache-2.0 | Copyright © VPet Group",
                 ["VPet-Simulator.Windows.Interface"] = "License: Apache-2.0 | Copyright © VPet Group",
-                ["VPet-Simulator.Windows.Interface.Base"] = "License: Apache-2.0 | Copyright © VPet Group",
                 ["VPet_Simulator.Core.MutiPlatform"] = "License: Apache-2.0 | Copyright © VPet Group",
                 ["VPet_Simulator.Core.Base"] = "License: Apache-2.0 | Copyright © VPet Group",
-                ["VPet-Simulator.Unified.Interface"] = "License: Apache-2.0 | Copyright © VPet Group",
-                ["VPet-Simulator.Unified.Services"] = "License: Apache-2.0 | Copyright © VPet Group",
+                ["VPet-Simulator.Unified"] = "License: Apache-2.0 | Copyright © VPet Group",
                 ["VPet.ModMaker"] = "License: Apache-2.0 | Copyright © VPet Group",
                 ["VPet.Plugin.VPetTTS"] = "License: Apache-2.0 | Copyright © VPet Group",
                 ["VPet.Plugin.ChatGPTPlus.x64"] = "License: Apache-2.0 | Copyright © VPet Group",

@@ -53,7 +53,7 @@ dotnet publish VPet-Simulator.MutiPlatform -c Release -r osx-arm64 --self-contai
 成就、云存档、创意工坊、访客表 (联机) 都是真实现, 没有 Steam 客户端时按 Windows 版同样的路径降级
 (`IsSteamUser = false`). Linux/macOS 上的原生库加载还没有实机验证过.
 
-**旧式 WPF MOD (`MainPlugin`) 不在这里跑.** 跨平台 MOD 走统一契约 `VPet-Simulator.Unified.Interface`,
+**旧式 WPF MOD (`MainPlugin`) 不在这里跑.** 跨平台 MOD 走统一契约 `VPet-Simulator.Unified` (命名空间 `VPet_Simulator.Unified.Interface`),
 同一个 dll 两个宿主都认; Windows 版的旧 MOD 不受影响.
 
 ## 调试开关

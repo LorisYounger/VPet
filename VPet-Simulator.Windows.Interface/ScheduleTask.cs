@@ -458,7 +458,7 @@ public partial class ScheduleTask
         public override int RestTime { get => _restTime; set => Set(ref _restTime, value); }
         private int _restTime;
     }
-    //套餐本体(Package)搬进了共享源码 (Interface.Base/Save/Package.cs):
+    //套餐本体(Package)搬进了共享源码 (Base/Save/Package.cs):
     //它是要存进存档的数据, 两个平台必须读得出同一份.
     //PackageFull 留在这里 —— 它有个 WorkType 属性, 而 GraphHelper.Work 在
     //Core.dll 和跨平台 Core 里是两个不同的类型, 改属性类型会破坏已编译的 MOD.

@@ -150,7 +150,7 @@ namespace VPet_Simulator.Windows.Interface
 
 
         //MathPow / FoodToDescription / ValueToPlusPlus / StartURL / EatFood 都搬进了
-        //共享源码 (Interface.Base/Save/ExtensionFunction.Shared.cs 与 EatFoodBuff.cs).
+        //共享源码 (Base/Save/ExtensionFunction.Shared.cs 与 EatFoodBuff.cs).
         //留在这里的是要 Work 类型的那几个: Work 在 Core.dll 和 Base.dll 里是两个类型.
     }
     /// <summary>
