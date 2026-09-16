@@ -6,8 +6,8 @@ using HKW.HKWUtils.Collections;
 using HKW.HKWUtils.Observable;
 using HKW.MVVM;
 using LinePutScript.Localization.WPF;
-using VPet.Solution.Models.SettingEditor;
 using VPet_Simulator.Windows.Interface;
+using VPet.Solution.Models.SettingEditor;
 
 namespace VPet.Solution.ViewModels.SettingEditor;
 
@@ -17,6 +17,9 @@ public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettin
         : base(dialogService)
     {
         this.WhenAnyValue(x => x.SearchLink)
+            .Throttle(TimeSpan.FromSeconds(0.5), ObservableSchedulers.ThreadPool)
+            .DistinctUntilChanged()
+            .ObserveOn(ObservableSchedulers.Current)
             .Subscribe(_ => Links?.Refresh())
             .DisposeWith(Disposables);
     }
@@ -74,9 +77,13 @@ public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettin
         if (Setting.GraphicsSetting.Language.StartsWith("zh"))
             ExtensionFunction.StartURL("https://www.exlb.net/SendKeys");
         else if (Setting.GraphicsSetting.Language == "null")
-            ExtensionFunction.StartURL("https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks");
+            ExtensionFunction.StartURL(
+                "https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks"
+            );
         else
-            ExtensionFunction.StartURL($"https://learn.microsoft.com/{Setting.GraphicsSetting.Language}/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks");
+            ExtensionFunction.StartURL(
+                $"https://learn.microsoft.com/{Setting.GraphicsSetting.Language}/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks"
+            );
     }
 
     partial class CustomizedSettingViewModelObservableObjectHelper

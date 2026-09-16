@@ -11,16 +11,16 @@ public partial class DiagnosticSettingModel : ObservableObjectEx, ISubSettingMod
     [MapIgnoreProperty]
     public SubSettingModelType ModelType => SubSettingModelType.Diagnostic;
 
-    [ObservableProperty]
     /// <summary>
     /// 自动修复超模
     /// </summary>
+    [ObservableProperty]
     public bool AutoCal { get; set; }
 
-    [ObservableProperty]
     /// <summary>
     /// 是否启用数据收集
     /// </summary>
+    [ObservableProperty]
     public bool Diagnosis { get; set; }
 
     /// <summary>

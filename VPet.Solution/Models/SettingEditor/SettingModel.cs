@@ -41,7 +41,7 @@ public partial class SettingModel : ObservableObjectEx
     internal MultipleDisposable Disposables { get; } = [];
 
     public SettingModel()
-        : this(new("Setting#VPET:|\n")) { }
+        : this(Setting.Default) { }
 
     public SettingModel(Setting setting)
     {
@@ -53,7 +53,7 @@ public partial class SettingModel : ObservableObjectEx
         DiagnosticSetting.Changed.Subscribe(_ => IsChanged = true).DisposeWith(Disposables);
         InteractiveSetting.Changed.Subscribe(_ => IsChanged = true).DisposeWith(Disposables);
         CustomizedSetting.Changed.Subscribe(_ => IsChanged = true).DisposeWith(Disposables);
-        ModSetting.Changed.Subscribe(_ => IsChanged = true);
+        ModSetting.Changed.Subscribe(_ => IsChanged = true).DisposeWith(Disposables);
     }
 
     /// <summary>

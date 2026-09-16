@@ -1,9 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using HKW.HKWMapper;
-using HKW.MVVM;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using HKW.HKWMapper;
+using HKW.MVVM;
 
 namespace VPet.Solution.Models.SettingEditor;
 
@@ -20,23 +20,17 @@ public partial class SystemSettingModel : ObservableObjectEx, ISubSettingModel
     ///// </summary>
     //public bool DiagnosisDayEnable { get; set; }
 
+    /// <inheritdoc cref="Setting.AutoSaveInterval"/>
     [ObservableProperty]
-    /// <summary>
-    /// 自动保存频率 (min)
-    /// </summary>
     public int AutoSaveInterval { get; set; }
 
     public static ObservableCollection<int> AutoSaveIntervals { get; } = [10, 20, 30, 60];
 
+    /// <inheritdoc cref="Setting.BackupSaveMaxNum"/>
     [ObservableProperty]
-    /// <summary>
-    /// 备份保存最大数量
-    /// </summary>
     public int BackupSaveMaxNum { get; set; }
-    
-    /// <summary>
-    /// 上次清理缓存日期
-    /// </summary>
+
+    /// <inheritdoc cref="Setting.LastCacheDate"/>
     [ObservableProperty]
     public DateTime LastCacheDate { get; set; }
 

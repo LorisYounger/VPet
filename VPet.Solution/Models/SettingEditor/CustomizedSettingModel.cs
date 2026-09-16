@@ -36,16 +36,16 @@ public partial class CustomizedSettingModel : ObservableObjectEx, ISubSettingMod
 
 public partial class LinkModel : ObservableObjectEx
 {
-    [ObservableProperty]
     /// <summary>
     /// 名称
     /// </summary>
+    [ObservableProperty]
     public string Name { get; set; }
 
-    [ObservableProperty]
     /// <summary>
     /// 链接
     /// </summary>
+    [ObservableProperty]
     public string Link { get; set; }
 
     public LinkModel() { }

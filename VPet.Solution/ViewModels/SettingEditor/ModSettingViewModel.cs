@@ -18,6 +18,9 @@ public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewMo
         : base(dialogService)
     {
         this.WhenAnyValue(x => x.SearchMod)
+            .Throttle(TimeSpan.FromSeconds(0.5), ObservableSchedulers.ThreadPool)
+            .DistinctUntilChanged()
+            .ObserveOn(ObservableSchedulers.Current)
             .Subscribe(_ => Mods?.Refresh())
             .DisposeWith(Disposables);
     }

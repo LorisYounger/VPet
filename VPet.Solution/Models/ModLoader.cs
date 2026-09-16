@@ -134,7 +134,7 @@ public class ModLoader
                     foreach (var petFile in Directory.EnumerateFiles(dir, "*.lps"))
                     {
                         PetGraphs.Add(Path.GetFileNameWithoutExtension(petFile));
-                    }   
+                    }
                     break;
                 case "food":
                     Tags.Add("food");
@@ -146,19 +146,9 @@ public class ModLoader
                     Tags.Add("text");
                     break;
                 case "theme":
-                    bool themeTagAdded = false;
-
+                    Tags.Add("theme");
                     foreach (var themeFile in Directory.EnumerateFiles(dir, "*.lps"))
                     {
-                        if (!themeTagAdded)
-                        {
-                            if (!Tags.Contains("theme"))
-                            {
-                                Tags.Add("theme");
-                            }
-                            themeTagAdded = true;
-                        }
-
                         Themes.Add(Path.GetFileNameWithoutExtension(themeFile));
                     }
 

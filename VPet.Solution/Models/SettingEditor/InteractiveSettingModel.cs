@@ -17,114 +17,85 @@ public partial class InteractiveSettingModel : ObservableObjectEx, ISubSettingMo
     [MapIgnoreProperty]
     public SubSettingModelType ModelType => SubSettingModelType.Interactive;
 
-    /// <summary>
-    /// 播放声音大小
-    /// </summary>
+    /// <inheritdoc cref="Setting.VoiceVolume"/>
     [ObservableProperty]
     public double VoiceVolume { get; set; }
 
-    /// <summary>
-    /// 启用计算等数据功能
-    /// </summary>
+    /// <inheritdoc cref="Setting.EnableFunction"/>
     [ObservableProperty]
     public bool EnableFunction { get; set; }
 
-    /// <summary>
-    /// 非计算模式下默认模式
-    /// </summary>
+    /// <inheritdoc cref="Setting.CalFunState"/>
     [ObservableProperty]
     public IGameSave.ModeType CalFunState { get; set; }
 
     public static ImmutableArray<IGameSave.ModeType> CalFunStates { get; } =
         EnumInfo<IGameSave.ModeType>.StaticValues;
 
-    /// <summary>
-    /// 储存顺序次数
-    /// </summary>
+    /// <inheritdoc cref="Setting.SaveTimes"/>
     [ObservableProperty]
     public int SaveTimes { get; set; }
 
-    /// <summary>
-    /// 按多久视为长按 单位毫秒
-    /// </summary>
+    /// <inheritdoc cref="Setting.PressLength"/>
     [ObservableProperty]
     public int PressLength { get; set; }
 
-    /// <summary>
-    /// 互动周期
-    /// </summary>
+    /// <inheritdoc cref="Setting.InteractionCycle"/>
     [ObservableProperty]
     public int InteractionCycle { get; set; }
 
-    /// <summary>
-    /// 计算间隔 (秒)
-    /// </summary>
+    /// <inheritdoc cref="Setting.LogicInterval"/>
     [ObservableProperty]
     public double LogicInterval { get; set; }
 
-    /// <summary>
-    /// 允许移动事件
-    /// </summary>
+    /// <inheritdoc cref="Setting.AllowMove"/>
     [ObservableProperty]
     public bool AllowMove { get; set; }
 
-    /// <summary>
-    /// 智能移动
-    /// </summary>
+    /// <inheritdoc cref="Setting.SmartMove"/>
     [ObservableProperty]
     public bool SmartMove { get; set; }
 
-    /// <summary>
-    /// 智能移动周期 (秒)
-    /// </summary>
+    /// <inheritdoc cref="Setting.SmartMoveInterval"/>
     [ObservableProperty]
     [DefaultValue(1)]
     public int SmartMoveInterval { get; set; }
-    /// <summary>
-    /// 自动切换屏幕
-    /// </summary>
+
+    /// <inheritdoc cref="Setting.AutoChangeWindow"/>
     [ObservableProperty]
     public bool AutoChangeWindow { get; set; }
 
     public static int[] SmartMoveIntervals { get; } = [1, 2, 5, 10, 20, 30, 40, 50, 60];
 
-    /// <summary>
-    /// 桌宠选择内容
-    /// </summary>
+    /// <inheritdoc cref="Setting.PetGraph"/>
     [ObservableProperty]
     public string PetGraph { get; set; } = string.Empty;
 
-    /// <summary>
-    /// 当实时播放音量达到该值时运行音乐动作
-    /// </summary>
+    /// <inheritdoc cref="Setting.MusicCatch"/>
     [ObservableProperty]
     [InteractiveSettingModelMapToSettingProperty(typeof(PercentageConverter))]
     [InteractiveSettingModelMapFromSettingProperty(typeof(PercentageConverter))]
     public int MusicCatch { get; set; }
 
-    /// <summary>
-    /// 当实时播放音量达到该值时运行特殊音乐动作
-    /// </summary>
+    /// <inheritdoc cref="Setting.MusicMax"/>
     [ObservableProperty]
     [InteractiveSettingModelMapToSettingProperty(typeof(PercentageConverter))]
     [InteractiveSettingModelMapFromSettingProperty(typeof(PercentageConverter))]
     public int MusicMax { get; set; }
 
-    /// <summary>
-    /// 允许桌宠自动购买食品
-    /// </summary>
+    /// <inheritdoc cref="Setting.AutoBuy"/>
     [ObservableProperty]
     public bool AutoBuy { get; set; }
 
-    /// <summary>
-    /// 允许桌宠自动购买礼物
-    /// </summary>
+    /// <inheritdoc cref="Setting.AutoGift"/>
     [ObservableProperty]
     public bool AutoGift { get; set; }
 
+    /// <inheritdoc cref="Setting.MoveAreaDefault"/>
     [ObservableProperty]
     public bool MoveAreaDefault { get; set; }
 
+    /// <inheritdoc cref="Setting.MoveArea"/>
     [ObservableProperty]
     public System.Drawing.Rectangle MoveArea { get; set; }
 

@@ -195,6 +195,7 @@ public class ZoomLevelToStorageZoomLevel : MapConverter<double, double>
     {
         return value / 2;
     }
+
     public override double ConvertBack(object source, double value)
     {
         return value * 2;
