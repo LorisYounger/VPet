@@ -13,3 +13,19 @@ Steam 作者不一致#The Steam author does not match:|
 无法完成创意工坊校验：{0}#Unable to complete Workshop verification: {0}:|
 以下创意工坊 MOD 未通过完整性或风险验证，已阻止加载：\n{0}#The following Workshop MODs failed integrity or risk verification and were blocked:\n{0}:|
 创意工坊 MOD 验证失败#Workshop MOD verification failed:|
+{0} 创建WorkShop私有草稿失败\n请检查网络后重试\n失败原因:{1}#Failed to create a private Workshop draft for {0}.\nPlease check your network connection and try again.\nReason: {1}:|
+\nSteam 中已保留一个仅自己可见的私有草稿。#\nA private draft visible only to you has been kept on Steam.:|
+创意工坊校验失败#Workshop verification failed:|
+当前 Steam 账号未通过游戏拥有验证#The current Steam account could not be verified as owning the game.:|
+当前游戏版本过旧，无法完成上传验证#The current game version is too old to complete upload verification.:|
+非代码插件MOD检测出代码#Code was detected in a MOD that is not declared as a code plugin.:|
+该 MOD 记录的作者与当前 Steam 账号不一致，无法更新#The author recorded in this MOD does not match the current Steam account, so it cannot be updated.:|
+该创意工坊作品已绑定其他作者，不能覆盖上传#This Workshop item is linked to another author and cannot be overwritten.:|
+上传验证未通过#Upload verification failed.:|
+无法连接创意工坊验证服务，已取消上传。\n{0}{1}#Unable to connect to the Workshop verification service. The upload has been canceled.\n{0}{1}:|
+正在创建私有草稿#Creating private draft:|
+正在验证#Verifying:|
+MOD上传验证失败#MOD upload verification failed:|
+Steam 身份验证失败，请稍后重试#Steam authentication failed. Please try again later.:|
+Steam 验证服务暂时不可用，请稍后重试#The Steam verification service is temporarily unavailable. Please try again later.:|
+Steam 游戏时长不足，暂不能上传包含代码的 MOD#Steam playtime is insufficient to upload a MOD containing code at this time.:|
