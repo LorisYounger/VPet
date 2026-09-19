@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -1568,13 +1569,14 @@ namespace VPet_Simulator.Windows
 
 
             //加载所有MOD
-            List<DirectoryInfo> Path = new List<DirectoryInfo>();
-            Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
+            List<(long, long, DirectoryInfo)> Path = new();
+            Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories()
+                .Select(directory => (-2L, -2L, directory)));
 
             var workshop = Set["workshop"];
             foreach (ISub ws in workshop)
             {
-                Path.Add(new DirectoryInfo(ws.Name));
+                Path.Add(GetWorkshopModPath(ws));
             }
 
 
@@ -1593,20 +1595,68 @@ namespace VPet_Simulator.Windows
         /// 加载游戏
         /// </summary>
         /// <param name="Path">MOD地址</param>
-        public async Task GameLoad(List<DirectoryInfo> Path)
+        public async Task GameLoad(List<(long, long, DirectoryInfo)> Path)
         {
-            MODPath = Path.GroupBy(x => x.FullName).Select(group => group.First()).ToList();
+            Path = Path.GroupBy(x => x.Item3.FullName, StringComparer.OrdinalIgnoreCase)
+                .Select(group => group.First()).ToList();
+            MODPath = Path.Select(x => x.Item3).ToList();
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading MOD"));
+            var blockedWorkshopMods = new List<string>();
+            bool workshopVerificationAvailable = true;
             //加载mod
-            foreach (DirectoryInfo di in MODPath)
+            foreach (var modPath in Path)
             {
+                long sItemID = modPath.Item1;
+                long sAuthorID = modPath.Item2;
+                DirectoryInfo di = modPath.Item3;
                 if (!File.Exists(di.FullName + @"\info.lps"))
                     continue;
                 await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = $"Loading MOD: {di.Name}"));
-                CoreMODs.Add(new CoreMOD(di, this));
+
+                // 本地 MOD(-2)、旧版工坊缓存(0)、未登录 Steam 或验证服务不可用时跳过校验。
+                if (sItemID > 0 && sAuthorID > 0 && IsSteamUser && workshopVerificationAvailable
+                    && SteamClient.IsValid && SteamClient.IsLoggedOn
+                    && WorkshopVerificationClient.HasCodePlugin(di))
+                {
+                    string modName = WorkshopVerificationClient.GetModDisplayName(di);
+                    try
+                    {
+                        WorkshopVerifyResponse verification = await WorkshopVerificationClient.VerifyAsync(
+                            di, sItemID, sAuthorID);
+                        string? reason = WorkshopVerificationClient.GetVerificationErrorMessage(verification);
+                        if (reason != null)
+                        {
+                            blockedWorkshopMods.Add($"{modName}: {reason}");
+                            continue;
+                        }
+                    }
+                    catch (Exception ex) when (ex is HttpRequestException or OperationCanceledException or InvalidDataException)
+                    {
+                        // 服务异常不代表 MOD 校验失败；当前及后续 MOD 继续正常加载。
+                        workshopVerificationAvailable = false;
+                        Trace.TraceWarning($"Workshop verification unavailable; skipping verification for this load: {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        blockedWorkshopMods.Add($"{modName}: {"无法完成创意工坊校验：{0}".Translate(ex.Message)}");
+                        continue;
+                    }
+                }
+
+                CoreMODs.Add(new CoreMOD(di, this, sItemID, sAuthorID));
             }
 
             CoreMOD.NowLoading = null;
+
+            if (blockedWorkshopMods.Count > 0)
+            {
+                await Dispatcher.InvokeAsync(() => MessageBoxX.Show(
+                    "以下创意工坊 MOD 未通过完整性或风险验证，已阻止加载：\n{0}"
+                        .Translate(string.Join("\n", blockedWorkshopMods)),
+                    "创意工坊 MOD 验证失败".Translate(),
+                    MessageBoxButton.OK,
+                    Panuon.WPF.UI.MessageBoxIcon.Warning));
+            }
 
             //判断是否需要清空缓存
             if (App.MainWindows.Count == 1 && Set.LastCacheDate < CoreMODs.Max(x => x.CacheDate))
@@ -2701,6 +2751,20 @@ namespace VPet_Simulator.Windows
                     Main.Display("like520", AnimatType.Single, Main.DisplayNomal);
                 });
             }
+        }
+
+        private static (long, long, DirectoryInfo) GetWorkshopModPath(ISub workshop)
+        {
+            string[] infos = workshop.GetInfos();
+            if (infos.Length >= 2
+                && ulong.TryParse(infos[0], out ulong itemId)
+                && ulong.TryParse(infos[1], out ulong authorId))
+            {
+                return (unchecked((long)itemId), unchecked((long)authorId), new DirectoryInfo(workshop.Name));
+            }
+
+            // 旧版本保存的 workshop 项只有目录信息。
+            return (0L, 0L, new DirectoryInfo(workshop.Name));
         }
 
 

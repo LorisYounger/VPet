@@ -963,6 +963,19 @@
                                 </TextBlock>
                             </StackPanel>
                         </Grid>
+                        <Border x:Name="WorkshopVerificationError" MaxHeight="80" Margin="0,5,0,0" Padding="8,5"
+                                Background="#18D32F2F" BorderBrush="#FFD32F2F" BorderThickness="1"
+                                CornerRadius="3" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold" Foreground="#FFD32F2F"
+                                        Text="{ll:Str 创意工坊校验失败}" />
+                                <ScrollViewer MaxHeight="45" Margin="0,2,0,0"
+                                        VerticalScrollBarVisibility="Auto">
+                                    <TextBlock x:Name="WorkshopVerificationErrorText" Foreground="#FFD32F2F"
+                                            TextWrapping="Wrap" />
+                                </ScrollViewer>
+                            </StackPanel>
+                        </Border>
                         <Label Margin="-5,0,0,0" Padding="5,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Center"
                                 Background="{x:Null}" Content="{ll:Str MOD介绍}" FontSize="18" FontWeight="Bold" />
                         <ScrollViewer Height="80" HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -978,7 +991,7 @@
                             <StackPanel>
                                 <Label Margin="-5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"
                                         Background="{x:Null}" Content="{ll:Str 内容}" FontSize="18" FontWeight="Bold" />
-                                <ScrollViewer Height="140" Margin="0,0,0,0" HorizontalAlignment="Left"
+                                <ScrollViewer Margin="0,0,0,0" HorizontalAlignment="Left"
                                         VerticalAlignment="Top" pu:ScrollViewerHelper.ScrollBarThickness="10"
                                         VerticalScrollBarVisibility="Auto">
                                     <TextBlock x:Name="GameHave" HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -990,6 +1003,8 @@
                             <StackPanel Grid.Column="1">
                                 <Label Margin="-5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                         Background="{x:Null}" Content="{ll:Str 操作}" FontSize="18" FontWeight="Bold" />
+                                <ScrollViewer>
+                                    <StackPanel>
                                 <TextBlock x:Name="ButtonOpenModFolder" Margin="0,0,0,0" HorizontalAlignment="Left"
                                         VerticalAlignment="Top" Cursor="Hand" FontSize="14"
                                         Foreground="{DynamicResource DARKPrimaryDarker}"
@@ -1028,6 +1043,8 @@
                                         Margin="0,4,0,0" Background="#FFFF2C2C" Click="ButtonAllow_Click"
                                         Content="{ll:Str 启用代码插件}" FontSize="12" Foreground="White"
                                         ToolTip="{ll:Str '启用该模组的代码内容,不能保证系统安全性'}" />
+                                    </StackPanel>
+                                </ScrollViewer>
                             </StackPanel>                            
                         </Grid>
                     </StackPanel>

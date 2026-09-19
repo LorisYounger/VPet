@@ -1,0 +1,15 @@
+MOD 信息或文件与作者上传的版本不一致#The MOD information or files do not match the version uploaded by the author:|
+检测到已确认的风险样本#A confirmed risk sample was detected:|
+MOD 已通过历史兼容验证#The MOD passed legacy compatibility verification:|
+MOD 完整性验证通过#The MOD integrity check passed:|
+该创意工坊作品已绑定其他作者#This Workshop item is linked to another author:|
+检测到风险内容#Risky content was detected:|
+MOD 标识不一致#The MOD identifier does not match:|
+MOD 英文名称不一致#The English MOD name does not match:|
+MOD 简体中文名称不一致#The Simplified Chinese MOD name does not match:|
+MOD 文件内容不一致#The MOD files do not match:|
+Steam 作者不一致#The Steam author does not match:|
+创意工坊校验未通过#Workshop verification failed:|
+无法完成创意工坊校验：{0}#Unable to complete Workshop verification: {0}:|
+以下创意工坊 MOD 未通过完整性或风险验证，已阻止加载：\n{0}#The following Workshop MODs failed integrity or risk verification and were blocked:\n{0}:|
+创意工坊 MOD 验证失败#Workshop MOD verification failed:|

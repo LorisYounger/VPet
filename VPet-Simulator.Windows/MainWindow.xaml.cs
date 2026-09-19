@@ -130,8 +130,9 @@ namespace VPet_Simulator.Windows
             Task.Run(async () =>
             {
                 //加载所有MOD
-                List<DirectoryInfo> Path = new List<DirectoryInfo>();
-                Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
+                List<(long, long, DirectoryInfo)> Path = new();
+                Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories()
+                    .Select(directory => (-2L, -2L, directory)));
 
                 bool NOCancel = true;
                 CancellationTokenSource source = new CancellationTokenSource();
@@ -165,10 +166,13 @@ namespace VPet_Simulator.Windows
                                     {
                                         return;
                                     }
-                                    if (entry.Directory != null)
+                                    if (entry.Directory != null && entry.IsBanned == false)
                                     {
-                                        Path.Add(new DirectoryInfo(entry.Directory));
-                                        workshop.Add(new Sub(entry.Directory, ""));
+                                        Path.Add((
+                                            unchecked((long)entry.Id.Value),
+                                            unchecked((long)entry.Owner.Id.Value),
+                                            new DirectoryInfo(entry.Directory)));
+                                        workshop.Add(new Sub(entry.Directory, entry.Id.Value.ToString(), entry.Owner.Id.Value.ToString()));
                                     }
                                 }
                             }
@@ -185,7 +189,7 @@ namespace VPet_Simulator.Windows
                         var workshop = Set["workshop"];
                         foreach (Sub ws in workshop)
                         {
-                            Path.Add(new DirectoryInfo(ws.Name));
+                            Path.Add(GetWorkshopModPath(ws));
                         }
                     }
                 }, source.Token);
@@ -200,7 +204,7 @@ namespace VPet_Simulator.Windows
                     var workshop = Set["workshop"];
                     foreach (Sub ws in workshop)
                     {
-                        Path.Add(new DirectoryInfo(ws.Name));
+                        Path.Add(GetWorkshopModPath(ws));
                     }
                 }
 

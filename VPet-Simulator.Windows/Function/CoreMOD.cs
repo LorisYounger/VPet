@@ -42,6 +42,14 @@ namespace VPet_Simulator.Windows
         /// 上传至Steam的ItemID
         /// </summary>
         public ulong ItemID { get; set; } = 0;
+        /// <summary>
+        /// Steam 工坊查询返回的作者 ID，仅在当前进程中使用，不写入 MOD 文件。
+        /// </summary>
+        public long sAuthorID { get; set; }
+        /// <summary>
+        /// Steam 工坊查询返回的作品 ID，仅在当前进程中使用，不写入 MOD 文件。
+        /// </summary>
+        public long sItemID { get; set; }
         public string Intro { get; set; } = string.Empty;
         public DirectoryInfo Path { get; set; } = null!;
         public int GameVer { get; set; }
@@ -87,13 +95,15 @@ namespace VPet_Simulator.Windows
                 LoadFile(mw, fordi, pre + fordi.Name + "_");
             }
         }
-        public CoreMOD(DirectoryInfo directory, MainWindow mw)
+        public CoreMOD(DirectoryInfo directory, MainWindow mw, long steamItemId = 0, long steamAuthorId = 0)
         {
 #if !DEBUG
             try
             {
 #endif
             Path = directory;
+            sItemID = steamItemId;
+            sAuthorID = steamAuthorId;
             LpsDocument modlps = new LpsDocument(File.ReadAllText(directory.FullName + @"\info.lps"));
             Name = modlps.FindLine("vupmod")!.Info;
             NowLoading = Name;
