@@ -303,14 +303,15 @@ public class PNGAnimation : IAvaloniaImageGraph, IFrameSequenceGraphBase
         // 只丢弃解码后的位图, 帧路径和时长留着 —— 它们很轻, 而且丢了就得重新扫目录.
         // 注意这里不能像之前那样把 IsReady 置回 false: 调用方看到未就绪会立刻回调
         // 结束动作, 而结束动作往往又是"重新显示默认动画", 于是同步递归到栈溢出.
+        // 位图不能在这里直接 Dispose: 最后一帧可能还挂在隐藏层的 Image 上, 交给
+        // GraphImagePool.ReleaseBitmaps 先摘再放 (见那边的注释).
+        List<Bitmap> old;
         lock (_framesLock)
         {
-            foreach (var frame in _frames.Values)
-            {
-                frame.Dispose();
-            }
+            old = new List<Bitmap>(_frames.Values);
             _frames.Clear();
         }
+        GraphImagePool.ReleaseBitmaps(_graphCore, old);
     }
 
     /// <summary>

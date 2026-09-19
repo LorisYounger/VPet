@@ -1,5 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using System.Collections.Generic;
 
 namespace VPet_Simulator.Core.MutiPlatform.Graph;
 
@@ -56,5 +58,39 @@ internal static class GraphImagePool
         var created = new Image { Width = 500 };
         core.CommUIElements[key] = created;
         return created;
+    }
+
+    /// <summary>
+    /// 释放一批不再用的位图
+    /// </summary>
+    /// 空闲回收 (CleanupIdleCache) 要释放的帧可能还挂在某个 Image 的 Source 上: 隐藏的那一层
+    /// 双缓冲、食物动画的前后层都会留着上一次的最后一帧. 之后这一层被重新显示 (MainDisplay 是先翻
+    /// 可见性再让新动画写首帧) 时, Avalonia 会去画一张已经 Dispose 的位图, 在渲染线程抛
+    /// ObjectDisposedException (Ref&lt;IBitmapImpl&gt;) 把整个程序带崩. Source 只会在 UI 线程上改,
+    /// 所以先在 UI 线程上把池里 (含食物动画那一层) 还指着这些位图的 Image 摘干净, 再 Dispose;
+    /// 摘掉的 Image 顶多空一帧, 新动画的首帧马上就会补上.
+    public static void ReleaseBitmaps(GraphCore core, IReadOnlyCollection<Bitmap> bitmaps)
+    {
+        if (bitmaps.Count == 0)
+            return;
+        var set = new HashSet<Bitmap>(bitmaps);
+        Dispatcher.UIThread.Post(() =>
+        {
+            foreach (var element in core.CommUIElements.Values)
+            {
+                if (element is Image image && image.Source is Bitmap b && set.Contains(b))
+                    image.Source = null;
+            }
+            if (FoodAnimation.FoodGridIfCreated is Grid foodGrid)
+            {
+                foreach (var child in foodGrid.Children)
+                {
+                    if (child is Image image && image.Source is Bitmap b && set.Contains(b))
+                        image.Source = null;
+                }
+            }
+            foreach (var bitmap in set)
+                bitmap.Dispose();
+        });
     }
 }

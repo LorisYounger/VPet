@@ -330,8 +330,12 @@ public class APNGAnimation : IAvaloniaRunImageGraph, IFrameSequenceGraphBase
         if (LastUseTimeTicks >= nowTicks || ControlState?.PlayState == true)
             return;
 
-        _bitmap?.Dispose();
-        _bitmap = null;
+        // 与 PNGAnimation 一样, 静态图可能还挂在隐藏层的 Image 上, 先摘再放
+        if (_bitmap != null)
+        {
+            GraphImagePool.ReleaseBitmaps(_graphCore, new[] { _bitmap });
+            _bitmap = null;
+        }
         IsReady = false;
     }
 

@@ -152,6 +152,11 @@ public class FoodAnimation : IAvaloniaRunImageGraph, IFoodAnimationGraphBase
     private static Grid? foodGrid;
 
     /// <summary>
+    /// 已经建出来的那一层 (没建就是 null, 不会顺手建)
+    /// </summary>
+    internal static Grid? FoodGridIfCreated => foodGrid;
+
+    /// <summary>
     /// 所有食物动画共用的那一层可视树
     /// </summary>
     /// 与 Windows 版一样只建一份, 谁播就挂到谁下面.
