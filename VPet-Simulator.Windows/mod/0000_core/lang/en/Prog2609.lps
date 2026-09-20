@@ -17,8 +17,7 @@ Steam 作者不一致#The Steam author does not match:|
 启用模组失败#Failed to enable MOD:|
 该 MOD 未通过创意工坊校验，无法启用代码插件：\n{0}#This MOD failed Workshop verification and its code plugin cannot be enabled:\n{0}:|
 启用代码插件失败#Failed to enable code plugin:|
-{0} 创建WorkShop私有草稿失败\n请检查网络后重试\n失败原因:{1}#Failed to create a private Workshop draft for {0}.\nPlease check your network connection and try again.\nReason: {1}:|
-\nSteam 中已保留一个仅自己可见的私有草稿。#\nA private draft visible only to you has been kept on Steam.:|
+{0} 准备WorkShop上传失败\n请检查网络后重试\n失败原因:{1}#Failed to prepare the Workshop upload for {0}.\nPlease check your network connection and try again.\nReason: {1}:|
 创意工坊校验失败#Workshop verification failed:|
 当前 Steam 账号未通过游戏拥有验证#The current Steam account could not be verified as owning the game.:|
 当前游戏版本过旧，无法完成上传验证#The current game version is too old to complete upload verification.:|
@@ -26,8 +25,8 @@ Steam 作者不一致#The Steam author does not match:|
 该 MOD 记录的作者与当前 Steam 账号不一致，无法更新#The author recorded in this MOD does not match the current Steam account, so it cannot be updated.:|
 该创意工坊作品已绑定其他作者，不能覆盖上传#This Workshop item is linked to another author and cannot be overwritten.:|
 上传验证未通过#Upload verification failed.:|
-无法连接创意工坊验证服务，已取消上传。\n{0}{1}#Unable to connect to the Workshop verification service. The upload has been canceled.\n{0}{1}:|
-正在创建私有草稿#Creating private draft:|
+无法连接创意工坊验证服务，已取消上传。\n{0}#Unable to connect to the Workshop verification service. The upload has been canceled.\n{0}:|
+正在准备上传#Preparing upload:|
 正在验证#Verifying:|
 MOD上传验证失败#MOD upload verification failed:|
 Steam 身份验证失败，请稍后重试#Steam authentication failed. Please try again later.:|

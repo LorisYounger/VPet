@@ -1095,6 +1095,24 @@ namespace VPet_Simulator.Windows
             return $"{message}\n{conflicts}";
         }
 
+        private static async Task DeleteWorkshopDraftAsync(CoreMOD mods, ulong draftItemId, long originalAuthorId)
+        {
+            try
+            {
+                if (!await SteamUGC.DeleteFileAsync(draftItemId) || mods.ItemID != draftItemId)
+                    return;
+
+                mods.ItemID = 0;
+                mods.AuthorID = originalAuthorId;
+                mods.WriteFile();
+            }
+            catch (Exception ex)
+            {
+                // 草稿清理不应打断上传流程或向用户显示额外提示；保留 ID 以便下次复用。
+                Debug.WriteLine($"Failed to delete workshop draft {draftItemId}: {ex}");
+            }
+        }
+
         private async void ButtonPublish_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var mods = mod;
@@ -1138,6 +1156,7 @@ namespace VPet_Simulator.Windows
             ProgressBarUpload.Visibility = Visibility.Visible;
             ProgressBarUpload.Value = 0;
             bool createdPrivateDraft = false;
+            bool publishSubmissionStarted = false;
             long originalAuthorId = mods.AuthorID;
 
             try
@@ -1149,7 +1168,7 @@ namespace VPet_Simulator.Windows
                 {
                     // Steam 只有创建物品后才会分配 workshopId。先创建不可见草稿，
                     // 完成服务端身份/名称绑定后再公开提交实际内容。
-                    ButtonPublish.Text = "正在创建私有草稿".Translate();
+                    ButtonPublish.Text = "正在准备上传".Translate();
                     var draft = Editor.NewCommunityFile
                         .WithTitle(mods.Name)
                         .WithDescription(mods.Intro)
@@ -1164,7 +1183,7 @@ namespace VPet_Simulator.Windows
                     {
                         mods.AuthorID = originalAuthorId;
                         mods.WriteFile();
-                        MessageBoxX.Show("{0} 创建WorkShop私有草稿失败\n请检查网络后重试\n失败原因:{1}"
+                        MessageBoxX.Show("{0} 准备WorkShop上传失败\n请检查网络后重试\n失败原因:{1}"
                             .Translate(mods.Name, draftResult.Result), "MOD上传失败 {0}".Translate(draftResult.Result));
                         return;
                     }
@@ -1184,10 +1203,9 @@ namespace VPet_Simulator.Windows
 
                 if (!verification.Ok || !verification.CanUpload)
                 {
-                    string draftNotice = createdPrivateDraft
-                        ? "\nSteam 中已保留一个仅自己可见的私有草稿。".Translate()
-                        : string.Empty;
-                    MessageBoxX.Show(GetWorkshopUploadVerificationMessage(verification) + draftNotice,
+                    if (createdPrivateDraft)
+                        await DeleteWorkshopDraftAsync(mods, mods.ItemID, originalAuthorId);
+                    MessageBoxX.Show(GetWorkshopUploadVerificationMessage(verification),
                         "MOD上传验证失败".Translate(), MessageBoxIcon.Warning);
                     return;
                 }
@@ -1217,30 +1235,38 @@ namespace VPet_Simulator.Windows
 
                 foreach (string tag in mods.Tag)
                     result = result.WithTag(tag);
+                publishSubmissionStarted = true;
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
+                publishSubmissionStarted = false;
                 if (r.Success)
                 {
+                    bool isNewUpload = createdPrivateDraft;
+                    createdPrivateDraft = false;
                     mods.AuthorID = currentAuthorId;
                     mods.ItemID = r.FileId.Value;
                     mods.WriteFile();
-                    string title = createdPrivateDraft ? "MOD上传成功".Translate() : "MOD更新成功".Translate();
-                    string prompt = createdPrivateDraft
+                    string title = isNewUpload ? "MOD上传成功".Translate() : "MOD更新成功".Translate();
+                    string prompt = isNewUpload
                         ? "{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑详细介绍和图标?".Translate(mods.Name)
                         : "{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑新内容?".Translate(mods.Name);
                     if (MessageBoxX.Show(prompt, title, MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
                         ExtensionFunction.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
                 }
                 else
+                {
+                    if (createdPrivateDraft)
+                        await DeleteWorkshopDraftAsync(mods, mods.ItemID, originalAuthorId);
                     MessageBoxX.Show("{0} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{1}"
                         .Translate(mods.Name, r.Result), "MOD上传失败 {0}".Translate(r.Result));
+                }
             }
             catch (Exception ex)
             {
-                string draftNotice = createdPrivateDraft
-                    ? "\nSteam 中已保留一个仅自己可见的私有草稿。".Translate()
-                    : string.Empty;
-                MessageBoxX.Show("无法连接创意工坊验证服务，已取消上传。\n{0}{1}"
-                    .Translate(ex.Message, draftNotice), "MOD上传验证失败".Translate(), MessageBoxIcon.Error);
+                // 若公开提交已发出但结果不明，保留物品 ID，避免误删已上传的作品。
+                if (createdPrivateDraft && !publishSubmissionStarted)
+                    await DeleteWorkshopDraftAsync(mods, mods.ItemID, originalAuthorId);
+                MessageBoxX.Show("无法连接创意工坊验证服务，已取消上传。\n{0}"
+                    .Translate(ex.Message), "MOD上传验证失败".Translate(), MessageBoxIcon.Error);
             }
             finally
             {

@@ -25,7 +25,7 @@ namespace VPet_Simulator.Windows
 
         private static readonly HttpClient Client = new()
         {
-            //BaseAddress = new Uri("http://localhost:5213/")
+            //BaseAddress = new Uri("http://localhost:5830/")
             BaseAddress = new Uri("https://wsv.exlb.net/")
         };
 
