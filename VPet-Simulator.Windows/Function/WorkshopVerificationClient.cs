@@ -262,7 +262,7 @@ namespace VPet_Simulator.Windows
             byte[] separator = [0];
             byte[] buffer = new byte[81920];
 
-            foreach (FileInfo file in directory.EnumerateFiles("*", SearchOption.AllDirectories)
+            foreach (FileInfo file in directory.EnumerateFiles("*.dll", SearchOption.AllDirectories)
                          .OrderBy(file => Path.GetRelativePath(directory.FullName, file.FullName), StringComparer.Ordinal))
             {
                 string relativePath = Path.GetRelativePath(directory.FullName, file.FullName).Replace('\\', '/');
