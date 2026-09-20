@@ -25,7 +25,7 @@ namespace VPet_Simulator.Windows
 
         private static readonly HttpClient Client = new()
         {
-            //BaseAddress = new Uri("http://localhost:5830/")
+            // BaseAddress = new Uri("http://localhost:5830/")
             BaseAddress = new Uri("https://wsv.exlb.net/")
         };
 
@@ -63,11 +63,13 @@ namespace VPet_Simulator.Windows
             ulong workshopId,
             ulong steamId,
             int checkKey,
+            int version,
             CancellationToken cancellationToken = default)
         {
             WorkshopMetadata metadata = ReadMetadata(directory, workshopId, steamId);
             var request = new UploadWorkshopRequest
             {
+                Version = version,
                 CheckKey = checkKey,
                 SteamId = metadata.SteamId,
                 WorkshopId = metadata.WorkshopId,
@@ -88,6 +90,7 @@ namespace VPet_Simulator.Windows
             DirectoryInfo directory,
             long workshopId,
             long steamId,
+            int version,
             CancellationToken cancellationToken = default)
         {
             WorkshopMetadata metadata = ReadMetadata(
@@ -96,6 +99,7 @@ namespace VPet_Simulator.Windows
                 steamId > 0 ? ToFullSteamId(steamId) : null);
             var request = new VerifyWorkshopRequest
             {
+                Version = version,
                 SteamId = metadata.SteamId,
                 WorkshopId = metadata.WorkshopId,
                 ModId = metadata.ModId,
@@ -300,6 +304,11 @@ namespace VPet_Simulator.Windows
     public sealed class UploadWorkshopRequest
     {
         /// <summary>
+        /// 客户端版本。默认值 0 表示该客户端不支持基于版本的文件哈希校验。
+        /// </summary>
+        public int Version { get; init; }
+
+        /// <summary>
         /// 客户端校验标记，当前暂不参与校验。
         /// </summary>
         public int CheckKey { get; init; }
@@ -415,6 +424,11 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public sealed class VerifyWorkshopRequest
     {
+        /// <summary>
+        /// 客户端版本。版本为 0 或低于上传会话版本时，文件哈希不参与校验。
+        /// </summary>
+        public int Version { get; init; }
+
         /// <summary>
         /// Steam 创意工坊项目标识。
         /// </summary>

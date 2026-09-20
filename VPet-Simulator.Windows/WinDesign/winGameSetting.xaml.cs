@@ -927,7 +927,7 @@ namespace VPet_Simulator.Windows
             {
                 WorkshopVerifyResponse response = await Task.Run(() =>
                     WorkshopVerificationClient.VerifyAsync(
-                        modInfo.Path, checked((long)modInfo.ItemID), modInfo.AuthorID));
+                        modInfo.Path, checked((long)modInfo.ItemID), modInfo.AuthorID, mw.version));
                 string? error = WorkshopVerificationClient.GetVerificationErrorMessage(response);
                 return error == null ? null : $"{WorkshopVerificationClient.GetModDisplayName(modInfo.Path)}: {error}";
             }
@@ -1199,7 +1199,8 @@ namespace VPet_Simulator.Windows
                     mods.Path,
                     mods.ItemID,
                     SteamClient.SteamId.Value,
-                    checkKey);
+                    checkKey,
+                    mw.version);
 
                 if (!verification.Ok || !verification.CanUpload)
                 {

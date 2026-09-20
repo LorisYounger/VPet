@@ -1622,7 +1622,7 @@ namespace VPet_Simulator.Windows
                     try
                     {
                         WorkshopVerifyResponse verification = await WorkshopVerificationClient.VerifyAsync(
-                            di, sItemID, sAuthorID);
+                            di, sItemID, sAuthorID, version);
                         string? reason = WorkshopVerificationClient.GetVerificationErrorMessage(verification);
                         if (reason != null)
                         {
