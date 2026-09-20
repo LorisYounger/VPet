@@ -459,7 +459,10 @@ namespace VPet_Simulator.Windows
                     mod.Path, mod.GameVer, mod.Ver, new HashSet<string>(mod.Tag));
             }
 
-            public static ModInfo FromDirectory(DirectoryInfo directory)
+            public static ModInfo FromDirectory(
+                DirectoryInfo directory,
+                long workshopAuthorId = 0,
+                ulong workshopItemId = 0)
             {
                 string name = directory.Name;
                 string author = string.Empty;
@@ -494,6 +497,11 @@ namespace VPet_Simulator.Windows
                     }
                 }
 
+                if (workshopAuthorId > 0)
+                    authorID = workshopAuthorId;
+                if (workshopItemId > 0)
+                    itemID = workshopItemId;
+
                 return new ModInfo(null, int.MaxValue, name, author, authorID, itemID, intro, directory, gameVer, ver, tag);
             }
         }
@@ -526,6 +534,25 @@ namespace VPet_Simulator.Windows
         {
             modInfos.Clear();
             var modInfoByPath = new Dictionary<string, ModInfo>(StringComparer.OrdinalIgnoreCase);
+            var workshopIdsByPath = new Dictionary<string, (long AuthorId, ulong ItemId)>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (Sub workshop in mw.Set["workshop"])
+            {
+                try
+                {
+                    string[] infos = workshop.GetInfos();
+                    if (infos.Length >= 2
+                        && ulong.TryParse(infos[0], out ulong itemId)
+                        && ulong.TryParse(infos[1], out ulong authorId))
+                    {
+                        workshopIdsByPath[new DirectoryInfo(workshop.Name).FullName] =
+                            (unchecked((long)authorId), itemId);
+                    }
+                }
+                catch
+                {
+                }
+            }
 
             for (int i = 0; i < mw.CoreMODs.Count; i++)
             {
@@ -538,7 +565,11 @@ namespace VPet_Simulator.Windows
                 if (!File.Exists(Path.Combine(di.FullName, "info.lps")))
                     continue;
                 if (!modInfoByPath.ContainsKey(di.FullName))
-                    modInfoByPath[di.FullName] = ModInfo.FromDirectory(di);
+                {
+                    workshopIdsByPath.TryGetValue(di.FullName, out var workshopIds);
+                    modInfoByPath[di.FullName] = ModInfo.FromDirectory(
+                        di, workshopIds.AuthorId, workshopIds.ItemId);
+                }
             }
 
             modInfos.AddRange(modInfoByPath.Values
@@ -790,7 +821,7 @@ namespace VPet_Simulator.Windows
             else
             {
                 ButtonSteam.IsEnabled = false;
-                ButtonPublish.Text = modInfo.IsLoaded ? "未登录".Translate() : "重启后可用".Translate();
+                ButtonPublish.Text = modInfo.IsLoaded ? "未登录".Translate() : "重启进行重新校验".Translate();
                 ButtonPublish.IsEnabled = false;
                 ButtonPublish.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
                 ButtonSteam.Foreground = new SolidColorBrush(Color.FromRgb(100, 100, 100));
@@ -849,30 +880,8 @@ namespace VPet_Simulator.Windows
             WorkshopVerificationError.Visibility = Visibility.Collapsed;
             WorkshopVerificationErrorText.Text = string.Empty;
 
-            if (!IsWorkshopMod(modInfo.Path) || !WorkshopVerificationClient.HasCodePlugin(modInfo.Path))
-                return;
-
             string path = modInfo.Path.FullName;
-            if (!workshopVerificationErrors.TryGetValue(path, out string? error))
-            {
-                if (!workshopVerificationTasks.TryGetValue(path, out Task<string?>? verificationTask))
-                {
-                    verificationTask = VerifyWorkshopModAsync(modInfo);
-                    workshopVerificationTasks[path] = verificationTask;
-                }
-
-                try
-                {
-                    error = await verificationTask;
-                    workshopVerificationErrors[path] = error;
-                }
-                finally
-                {
-                    if (workshopVerificationTasks.TryGetValue(path, out Task<string?>? currentTask) &&
-                        ReferenceEquals(currentTask, verificationTask))
-                        workshopVerificationTasks.Remove(path);
-                }
-            }
+            string? error = await GetWorkshopVerificationErrorAsync(modInfo);
 
             if (requestId != workshopVerificationRequestId ||
                 selectedModInfo?.Path.FullName.Equals(path, StringComparison.OrdinalIgnoreCase) != true ||
@@ -881,6 +890,35 @@ namespace VPet_Simulator.Windows
 
             WorkshopVerificationErrorText.Text = error;
             WorkshopVerificationError.Visibility = Visibility.Visible;
+        }
+
+        private async Task<string?> GetWorkshopVerificationErrorAsync(ModInfo modInfo)
+        {
+            if (!IsWorkshopMod(modInfo.Path) || !WorkshopVerificationClient.HasCodePlugin(modInfo.Path))
+                return null;
+
+            string path = modInfo.Path.FullName;
+            if (workshopVerificationErrors.TryGetValue(path, out string? cachedError))
+                return cachedError;
+
+            if (!workshopVerificationTasks.TryGetValue(path, out Task<string?>? verificationTask))
+            {
+                verificationTask = VerifyWorkshopModAsync(modInfo);
+                workshopVerificationTasks[path] = verificationTask;
+            }
+
+            try
+            {
+                string? error = await verificationTask;
+                workshopVerificationErrors[path] = error;
+                return error;
+            }
+            finally
+            {
+                if (workshopVerificationTasks.TryGetValue(path, out Task<string?>? currentTask) &&
+                    ReferenceEquals(currentTask, verificationTask))
+                    workshopVerificationTasks.Remove(path);
+            }
         }
 
         private async Task<string?> VerifyWorkshopModAsync(ModInfo modInfo)
@@ -984,11 +1022,24 @@ namespace VPet_Simulator.Windows
             Process.Start(psi);
         }
 
-        private void ButtonEnable_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void ButtonEnable_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (selectedModInfo == null)
+            ModInfo? modInfo = selectedModInfo;
+            if (modInfo == null)
                 return;
-            mw.Set.OnMod(selectedModInfo.Name);
+
+            string? verificationError = await GetWorkshopVerificationErrorAsync(modInfo);
+            if (selectedModInfo?.Path.FullName.Equals(modInfo.Path.FullName, StringComparison.OrdinalIgnoreCase) != true)
+                return;
+            if (!string.IsNullOrWhiteSpace(verificationError))
+            {
+                MessageBoxX.Show(
+                    "该 MOD 未通过创意工坊校验，无法启用：\n{0}".Translate(verificationError),
+                    "启用模组失败".Translate(), MessageBoxIcon.Warning);
+                return;
+            }
+
+            mw.Set.OnMod(modInfo.Name);
             ButtonRestart.Visibility = Visibility.Visible;
             ShowModList();
         }
@@ -1206,15 +1257,28 @@ namespace VPet_Simulator.Windows
             ExtensionFunction.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + selectedModInfo.ItemID);
         }
 
-        private void ButtonAllow_Click(object sender, RoutedEventArgs e)
+        private async void ButtonAllow_Click(object sender, RoutedEventArgs e)
         {
-            if (selectedModInfo == null)
+            ModInfo? modInfo = selectedModInfo;
+            if (modInfo == null)
                 return;
-            if (MessageBoxX.Show("是否启用 {0} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查".Translate(selectedModInfo.Name),
-                "启用 {0} 的代码插件?".Translate(selectedModInfo.Name), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
+
+            string? verificationError = await GetWorkshopVerificationErrorAsync(modInfo);
+            if (selectedModInfo?.Path.FullName.Equals(modInfo.Path.FullName, StringComparison.OrdinalIgnoreCase) != true)
+                return;
+            if (!string.IsNullOrWhiteSpace(verificationError))
             {
-                mw.Set.PassMod(selectedModInfo.Name);
-                ShowMod(selectedModInfo);
+                MessageBoxX.Show(
+                    "该 MOD 未通过创意工坊校验，无法启用代码插件：\n{0}".Translate(verificationError),
+                    "启用代码插件失败".Translate(), MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBoxX.Show("是否启用 {0} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查".Translate(modInfo.Name),
+                "启用 {0} 的代码插件?".Translate(modInfo.Name), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
+            {
+                mw.Set.PassMod(modInfo.Name);
+                ShowMod(modInfo);
                 ButtonRestart.Visibility = Visibility.Visible;
             }
         }
