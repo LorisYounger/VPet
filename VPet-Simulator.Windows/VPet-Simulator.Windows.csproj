@@ -35,6 +35,9 @@
 		<Copyright>Copyright © exLB.org 2022</Copyright>
 		<StartupObject>VPet_Simulator.Windows.App</StartupObject>
 		<Nullable>enable</Nullable>
+		<!-- Work around CoreCLR startup failures on Windows 10 systems whose CET
+		     shadow-stack implementation is incompatible with the .NET 9+ apphost. -->
+		<CETCompat>false</CETCompat>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
 		<PlatformTarget>x64</PlatformTarget>
