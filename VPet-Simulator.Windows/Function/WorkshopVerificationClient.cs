@@ -29,6 +29,10 @@ namespace VPet_Simulator.Windows
             BaseAddress = new Uri("https://wsv.exlb.net/")
         };
 
+        private static ILine fileHashCache = null!;
+
+        internal static void Initialize(MainWindow mw) => fileHashCache = mw.Set["filehash"];
+
         /// <summary>
         /// 从 MOD 的 info.lps、目录名和文件内容生成校验元数据。
         /// </summary>
@@ -86,7 +90,7 @@ namespace VPet_Simulator.Windows
         /// <summary>
         /// 使用 Steam 提供的作品/作者 ID 与本地 MOD 内容向验证服务校验创意工坊项目。
         /// </summary>
-        internal static Task<WorkshopVerifyResponse> VerifyAsync(
+        internal static async Task<WorkshopVerifyResponse> VerifyAsync(
             DirectoryInfo directory,
             long workshopId,
             long steamId,
@@ -109,7 +113,17 @@ namespace VPet_Simulator.Windows
                 DllFiles = metadata.DllFiles
             };
 
-            return PostAsync<WorkshopVerifyResponse>("workshop/verify", request, cancellationToken);
+            string cacheKey = metadata.WorkshopId.ToString();
+            if (fileHashCache[(gi64)cacheKey] == metadata.FileHash)
+                return new WorkshopVerifyResponse { Ok = true, Consistent = true };
+
+            WorkshopVerifyResponse response = await PostAsync<WorkshopVerifyResponse>(
+                "workshop/verify", request, cancellationToken).ConfigureAwait(false);
+
+            if (response.Ok && response.Consistent && !response.Risk)
+                fileHashCache[(gi64)cacheKey] = metadata.FileHash;
+
+            return response;
         }
 
         /// <summary>

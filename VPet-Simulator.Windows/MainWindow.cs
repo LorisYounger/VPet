@@ -1445,6 +1445,7 @@ namespace VPet_Simulator.Windows
                 }
 
                 Set ??= new Setting(this, "Setting#VPET:|\n");
+                WorkshopVerificationClient.Initialize(this);
 
                 var visualTree = new FrameworkElementFactory(typeof(Border));
                 visualTree.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(BackgroundProperty));
