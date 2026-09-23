@@ -848,11 +848,12 @@ namespace VPet_Simulator.Windows
         {
             if (name.StartsWith("stat_") && value != null)
             {
-                try
-                {
-                    SteamUserStats.SetStat(name, Convert.ToInt32(value.Value));
-                }
-                finally { }
+                double number = value.GetDouble();
+                if (double.IsNaN(number) || double.IsInfinity(number))
+                    return;
+                if (number < int.MinValue || number > int.MaxValue)
+                    return;
+                SteamUserStats.SetStat(name, (int)number);
             }
         }
         /// <summary>
