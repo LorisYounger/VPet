@@ -181,6 +181,8 @@ namespace VPet_Simulator.Windows
                 {
                     var totalCount = ordered.Count();
                     var pageSize = _rows * _columns;
+                    if (pageSize <= 0)
+                        return;
                     pagination.MaxPage = (int)Math.Ceiling(totalCount * 1.0 / pageSize);
                     var currentPage = Math.Max(0, Math.Min(pagination.MaxPage, pagination.CurrentPage) - 1);
                     pagination.CurrentPage = currentPage + 1;
