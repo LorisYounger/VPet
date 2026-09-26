@@ -50,6 +50,8 @@ public partial class App : Application
         //没处理的异常先记进日志, 桌宠常驻后台, 不记的话崩了也不知道为什么
         AppDomain.CurrentDomain.UnhandledException += (s, e) => MainWindow.Log("未处理的异常: " + e.ExceptionObject);
         Avalonia.Threading.Dispatcher.UIThread.UnhandledExceptionFilter += (s, e) => MainWindow.Log("未处理的异常: " + e.Exception);
+        //每次启动先记一行运行环境: 用户从 macOS/Linux 发来的日志只看内容分不出是哪个系统、哪种架构、怎么启动的
+        MainWindow.Log($"==== 启动 系统={System.Runtime.InteropServices.RuntimeInformation.OSDescription} 架构={System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture} .NET={Environment.Version} 参数={string.Join(' ', Args)}");
         //跨平台: WPF 的 DispatcherUnhandledException 对应 Avalonia 的 Dispatcher.UIThread.UnhandledException; 与 Windows 版一样只在发布构建挂
 #if !DEBUG
         Avalonia.Threading.Dispatcher.UIThread.UnhandledException += (s, e) => { e.Handled = true; UnhandledException(e.Exception, false); };

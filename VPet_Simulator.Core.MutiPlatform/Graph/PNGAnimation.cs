@@ -53,7 +53,10 @@ public class PNGAnimation : IAvaloniaImageGraph, IFrameSequenceGraphBase
             return;
         }
 
-        var files = dir.GetFiles("*.png");
+        //跨平台: macOS 往不支持扩展属性的盘 (exFAT/FAT 移动硬盘、网络共享) 上写文件, 或解压在 mac 上打的包时, 会给每个文件
+        //配一个 "._原名" 的隐藏附属文件 (AppleDouble). 它也叫 *.png 却不是图片, 按文件名排序还会排在正常帧前面当成第一帧.
+        //Windows 上不会出现这种文件, 这里跳过
+        var files = dir.GetFiles("*.png").Where(f => !f.Name.StartsWith("._", StringComparison.Ordinal)).ToArray();
         if (files.Length == 0)
             return;
         if (files.Length == 1)
@@ -128,7 +131,8 @@ public class PNGAnimation : IAvaloniaImageGraph, IFrameSequenceGraphBase
     public void Run(Decorator parent, IImage? image, Action? endAction = null)
     {
         Touch();
-        if (!IsReady)
+        //播放中途发现有帧解不出来的动画 (IsFail, 见 GetFrame) 已经从动画表里摘掉了, 手上还拿着它的调用方也按没就绪处理
+        if (!IsReady || IsFail)
         {
             // 用后台线程回调而不是就地调用: 结束动作往往是"重新显示默认动画",
             // 就地调用会同步递归回到这里, 动画迟迟不就绪时会直接栈溢出
@@ -209,6 +213,12 @@ public class PNGAnimation : IAvaloniaImageGraph, IFrameSequenceGraphBase
 
         var index = _nowId;
         var frame = GetFrame(index);
+        if (frame == null)
+        {//这一帧解不出来: 整个动画已标记失败并摘掉 (见 GetFrame), 本次播放按结束处理, 桌宠会换别的动画
+            control.Type = GraphTaskControl.ControlType.Status_Stoped;
+            control.EndAction?.Invoke();
+            return;
+        }
         //先显示该帧
         Dispatcher.UIThread.Post(() => image.Source = frame);
         //然后等待这一帧自己的时长
@@ -271,28 +281,45 @@ public class PNGAnimation : IAvaloniaImageGraph, IFrameSequenceGraphBase
     }
 
     /// <summary>
-    /// 取得指定帧, 没解码过就现解并缓存
+    /// 取得指定帧, 没解码过就现解并缓存; 解不出来返回 null
     /// </summary>
-    private Bitmap GetFrame(int index)
+    /// 跨平台: Windows 版启动时就把整组帧解码拼成雪碧图, 坏帧 (0 字节 / 不是图片 / 头部损坏) 在那一步被 catch 住,
+    /// 整组动画 IsFail, Main.Load_2_WaitGraph 把它从动画表里摘掉并记进 ErrorMessage, 宿主弹 "动画加载错误", 桌宠换别的动画接着跑.
+    /// 这边按帧惰性解码, 坏帧要到播放时才暴露 —— 以前是在 UI 线程上直接抛 NullReferenceException (Skia 认不出格式时解码器为 null)
+    /// 把程序带崩. 现在照 Windows 的结果处理: 标记失败 (FailMessage 格式相同, 多记一个文件名), 从动画表里摘掉并通知宿主提示
+    private Bitmap? GetFrame(int index)
     {
         lock (_framesLock)
         {
             if (_frames.TryGetValue(index, out var cached))
                 return cached;
-            // 按渲染分辨率降采样解码, 而不是把原图整张读进来.
-            // 素材是 1000x1000 的, 而桌宠实际只显示几百像素, 直接解原图既慢又占内存.
-            // Windows 版是通过预先合成缩放后的雪碧图达到同样目的.
-            using var stream = File.OpenRead(_framePaths[index]);
-            var width = _graphCore.Resolution > 0 ? _graphCore.Resolution : 500;
-            var frame = Bitmap.DecodeToWidth(stream, width);
-            _frames[index] = frame;
-            if (FrameWidth == 0)
+            if (IsFail)
+                return null;
+            try
             {
-                FrameWidth = frame.PixelSize.Width;
-                FrameHeight = frame.PixelSize.Height;
+                // 按渲染分辨率降采样解码, 而不是把原图整张读进来.
+                // 素材是 1000x1000 的, 而桌宠实际只显示几百像素, 直接解原图既慢又占内存.
+                // Windows 版是通过预先合成缩放后的雪碧图达到同样目的.
+                using var stream = File.OpenRead(_framePaths[index]);
+                var width = _graphCore.Resolution > 0 ? _graphCore.Resolution : 500;
+                var frame = Bitmap.DecodeToWidth(stream, width);
+                _frames[index] = frame;
+                if (FrameWidth == 0)
+                {
+                    FrameWidth = frame.PixelSize.Width;
+                    FrameHeight = frame.PixelSize.Height;
+                }
+                return frame;
             }
-            return frame;
+            catch (Exception e)
+            {
+                IsFail = true;
+                FailMessage = $"--PNGAnimation--{GraphInfo}--\nPath: {Path}\n{System.IO.Path.GetFileName(_framePaths[index])}: {e.Message}";
+            }
         }
+        // 出了帧锁再通知: 宿主那边会写日志、弹窗
+        _graphCore.RemoveFailedGraph(this);
+        return null;
     }
 
     public void CleanupIdleCache(long nowTicks)

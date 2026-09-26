@@ -131,7 +131,7 @@ public partial class MainWindow : Window
         //多开时只认第一只, 免得后开的那只把属主抢走
         DialogService.DefaultOwner ??= this;
         ImageResources.Cache.OnError = Log;
-        Log($"窗口已打开. 桌宠={(string.IsNullOrEmpty(PrefixSave) ? "默认" : MultiPetStore.DisplayName(PrefixSave))} 运行目录={ExtensionValue.BaseDirectory} MOD目录={ModPath}");
+        Log($"窗口已打开. 版本={Version} Steam={IsSteamUser} 桌宠={(string.IsNullOrEmpty(PrefixSave) ? "默认" : MultiPetStore.DisplayName(PrefixSave))} 运行目录={ExtensionValue.BaseDirectory} MOD目录={ModPath}");
         ApplyWindowSettings();
         if (Set.OpacityMain)
             this.Opacity = Set.Opacity;
@@ -704,6 +704,9 @@ public partial class MainWindow : Window
         //跨平台: 跨平台的 PetLoader.Graph 没有 Dispatcher 参数; 解码宽度按设置里的渲染分辨率, 与 Windows 版同
         Core.Graph = await Task.Run(() => petloader.Graph(Set.Resolution));
         Log($"动画扫描完成, 耗时={(DateTime.Now - started).TotalSeconds:0.0}秒 个数={petloader.GraphCount}");
+        //跨平台: 这边按帧惰性解码, 坏帧要到播放时才暴露 (Windows 版在上面这一步就解码完了, 坏的在下面 Load_2_WaitGraph 里记进
+        //ErrorMessage, 游戏加载完弹 "动画加载错误"); 播放时才摘掉的动画在这里补上同样的提示
+        Core.Graph.GraphFailed += Graph_GraphFailed;
 
         Main = new Main(Core);
         //插件可能在桌宠建好之前就登记了语音播放器
@@ -1532,6 +1535,8 @@ public partial class MainWindow : Window
                 //跨平台: Windows 版这里是 Environment.Exit(0). 这个方法跑在窗口 Closed 回调里, 即 Cocoa 事件循环的调用栈上,
                 //macOS 上在这儿直接 Environment.Exit 会在收拾原生对象时 abort() (退出时弹"意外退出"). 改走 Avalonia 的生命周期:
                 //等这次 Closed 回调走完再 desktop.Shutdown() (它会结束主循环, 进程随之退出); 上面 10 秒的看门狗照旧兜底
+                //日志里有这一行就是正常退出的; 没有就是中途崩了 (原生层的崩溃进不了托管代码, 只能看系统的崩溃报告)
+                Log("==== 正常退出");
                 App.MainWindows.Remove(this);
                 Dispatcher.Post(() => (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown());
             }
@@ -1905,6 +1910,27 @@ public partial class MainWindow : Window
         {
             // 日志写不了也不能影响桌宠运行
         }
+    }
+
+    /// <summary>
+    /// 播放时才发现坏掉的动画: 提示与游戏加载完时的 "动画错误" 那段相同
+    /// </summary>
+    private void Graph_GraphFailed(VPet_Simulator.Core.MutiPlatform.Graph.IAvaloniaGraph graph)
+    {
+        Log($"加载失败: {graph.FailMessage}");
+        Dispatcher.Post(() =>
+        {
+            var errstr = graph.FailMessage;
+            if (errstr.Contains("0000_core"))
+            {
+                MessageBoxX.Show("动画加载错误,请尝试以下解决方法修复问题:\n\t1. 删除游戏根目录`Cache`文件夹\n\t2. 删除游戏根目录`mod\\0000_core\\pet`文件夹,并在Steam验证游戏完整性".Translate(), "动画加载错误".Translate());
+                var winrep = new winReport(this, errstr);
+                winrep.tDescription.Text = "动画加载错误".Translate();
+                winrep.Show();
+            }
+            else
+                MessageBoxX.Show("动画加载错误\n虚拟桌宠模拟器未能成功加载该动画\n请联系MOD作者修复该问题".Translate() + '\n' + errstr, "动画加载错误".Translate());
+        });
     }
 
     private void ShowLoading(string text) => Dispatcher.Post(() =>

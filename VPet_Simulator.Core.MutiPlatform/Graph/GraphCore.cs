@@ -68,6 +68,30 @@ public partial class GraphCore : IDisposable, IGraphCoreBase<IAvaloniaGraph>
         GraphsALL.Add(graph);
     }
 
+    /// <summary>
+    /// 播放时才发现坏掉的动画 (有帧解不出来) 被摘掉时触发, 宿主据此提示 "动画加载错误"; 可能在后台线程上触发
+    /// </summary>
+    public event Action<IAvaloniaGraph>? GraphFailed;
+
+    /// <summary>
+    /// 把播放时才发现坏掉的动画从 GraphsList 里摘掉
+    /// </summary>
+    /// 跨平台: Windows 版启动时就解码全部帧, 坏的由 Main.Load_2_WaitGraph 从 GraphsList 里摘掉并记进 ErrorMessage;
+    /// 这边按帧惰性解码 (见 PNGAnimation.GetFrame), 坏帧到播放时才暴露, 所以在这里补上同样的摘除, 再交给宿主提示.
+    /// 换一份新列表而不是原地 Remove: FindGraphs 随时在后台线程上读这些列表. GraphsALL 与 Windows 版一样不动
+    internal void RemoveFailedGraph(IAvaloniaGraph graph)
+    {
+        lock (GraphsList)
+        {
+            if (!GraphsList.TryGetValue(graph.GraphInfo.Name, out var byAnimat)
+                || !byAnimat.TryGetValue(graph.GraphInfo.Animat, out var list)
+                || !list.Contains(graph))
+                return;
+            byAnimat[graph.GraphInfo.Animat] = list.Where(x => !ReferenceEquals(x, graph)).ToList();
+        }
+        GraphFailed?.Invoke(graph);
+    }
+
     public string? FindName(GraphInfo.GraphType type)
     {
         if (GraphsName.TryGetValue(type, out var gl) && gl.Count > 0)

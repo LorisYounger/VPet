@@ -56,6 +56,12 @@ namespace VPet_Simulator.MutiPlatform
 
             mod = mw.CoreMODs[0];
 
+            //跨平台: Windows 版这三个滑块在 XAML 里挂的是 PreviewMouseUp, 对应隧道阶段的 PointerReleased;
+            //Avalonia 的 XAML 属性只挂冒泡阶段, 而滑块的拇指会把抬起事件标成已处理, 所以在这里按隧道挂
+            ZoomSlider.AddHandler(PointerReleasedEvent, ZoomSlider_MouseUp, RoutingStrategies.Tunnel, true);
+            SliderResolution.AddHandler(PointerReleasedEvent, SliderResolution_MouseUp, RoutingStrategies.Tunnel, true);
+            OpacitySlider.AddHandler(PointerReleasedEvent, OpacitySlider_PreviewMouseUp, RoutingStrategies.Tunnel, true);
+
             Title = "设置".Translate() + ' ' + mw.PrefixSave;
             //跨平台: ColumnDefinition 不进名字域, 拿不到 SettingMenuWidth 字段, 按位置取
             ((Grid)Content!).ColumnDefinitions[0].Width = new GridLength(LocalizeCore.GetDouble("SettingMenuWidth", 150));
@@ -1113,7 +1119,7 @@ namespace VPet_Simulator.MutiPlatform
             mw.NotifyIcon_TopMost.IsChecked = false;
         }
 
-        private void ZoomSlider_MouseUp(object? sender, PointerPressedEventArgs e)
+        private void ZoomSlider_MouseUp(object? sender, PointerReleasedEventArgs e)
         {
             if (!AllowChange)
                 return;
@@ -1696,7 +1702,7 @@ namespace VPet_Simulator.MutiPlatform
             MessageBoxX.Show("清理指令已下达,下次启动桌宠时生效".Translate());
         }
 
-        private void SliderResolution_MouseUp(object? sender, PointerPressedEventArgs e)
+        private void SliderResolution_MouseUp(object? sender, PointerReleasedEventArgs e)
         {
             mw.Set.Resolution = (int)SliderResolution.Value;
             ButtonRestartGraph.IsVisible = true;
@@ -1963,7 +1969,7 @@ namespace VPet_Simulator.MutiPlatform
             }
         }
 
-        private void OpacitySlider_PreviewMouseUp(object? sender, PointerPressedEventArgs e)
+        private void OpacitySlider_PreviewMouseUp(object? sender, PointerReleasedEventArgs e)
         {
             mw.Set.Opacity = OpacitySlider.Value;
             if (mw.Set.OpacityMain)
