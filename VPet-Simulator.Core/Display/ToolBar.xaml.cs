@@ -444,7 +444,7 @@ namespace VPet_Simulator.Core
                 m.State = WorkingState.Nomal;
                 m.Display(GraphType.Sleep, AnimatType.C_End, m.DisplayNomal);
             }
-            else if (m.State == Main.WorkingState.Nomal)
+            else if (m.State is Main.WorkingState.Nomal or Main.WorkingState.Travel)
                 m.DisplaySleep(true);
             else
             {

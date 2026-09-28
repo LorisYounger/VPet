@@ -3,6 +3,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPet_Simulator.Core"
         mc:Ignorable="d" d:DesignHeight="250" d:DesignWidth="250">
+    <!-- ContentControlX's default ClippingBorder cuts off scene subjects outside the
+         normal 500-unit pet area. Scene graphs supply their own viewport clipping. -->
+    <pu:ContentControlX.Template>
+        <ControlTemplate TargetType="{x:Type pu:ContentControlX}">
+            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+            </Border>
+        </ControlTemplate>
+    </pu:ContentControlX.Template>
     <Viewbox>
         <Grid x:Name="MainGrid" Width="500" MouseLeftButtonDown="MainGrid_MouseLeftButtonDown" x:FieldModifier="public"
                 MouseLeftButtonUp="MainGrid_MouseLeftButtonUp" MouseRightButtonDown="MainGrid_MouseRightButtonDown"
