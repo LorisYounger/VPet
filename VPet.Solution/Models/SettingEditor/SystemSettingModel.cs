@@ -7,9 +7,8 @@ using HKW.MVVM;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-[MapTo(typeof(Setting), ScrutinyMode = true)]
-[MapFrom(typeof(Setting), ScrutinyMode = true)]
-[MapFrom(typeof(SystemSettingModel), ScrutinyMode = true)]
+[MapTarget(typeof(Setting))]
+[MapTarget(typeof(SystemSettingModel))]
 public partial class SystemSettingModel : ObservableObjectEx, ISubSettingModel
 {
     [MapIgnoreProperty]
@@ -36,11 +35,11 @@ public partial class SystemSettingModel : ObservableObjectEx, ISubSettingModel
 
     public void Load(Setting setting)
     {
-        this.MapFromSetting(setting);
+        this.MapFrom(setting);
     }
 
     public void Save(Setting setting)
     {
-        this.MapToSetting(setting);
+        this.MapTo(setting);
     }
 }

@@ -30,7 +30,7 @@ public partial class DiagnosticSettingModel : ObservableObjectEx, ISubSettingMod
     [DefaultValue(500)]
     public int DiagnosisInterval { get; set; }
     public static ObservableCollection<int> DiagnosisIntervals { get; } =
-        new() { 200, 500, 1000, 2000, 5000, 10000, 20000 };
+    [200, 500, 1000, 2000, 5000, 10000, 20000];
 
     public void Load(Setting setting)
     {

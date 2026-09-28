@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Globalization;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -16,8 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Panuon.WPF.UI;
 using VPet.Solution.ViewModels;
+using VPet.Solution.ViewModels.SaveViewer;
 using VPet.Solution.ViewModels.SettingEditor;
 using VPet.Solution.Views;
+using VPet.Solution.Views.SaveViewer;
 using VPet.Solution.Views.SettingEditor;
 
 namespace VPet.Solution;
@@ -40,6 +38,8 @@ internal static class IOCInitializer
         viewLocator.Register<InteractiveSettingViewModel, InteractiveSettingView>();
         viewLocator.Register<CustomizedSettingViewModel, CustomizedSettingView>();
         viewLocator.Register<ModSettingViewModel, ModSettingView>();
+
+        viewLocator.Register<SaveViewModel, SaveWindow>();
 
         return services.BuildServiceProvider();
     }
@@ -335,5 +335,80 @@ public static class NativeUtils
         System
             .Diagnostics.Process.Start("Explorer", $"/select,{Path.GetFullPath(filePath)}")
             ?.Close();
+    }
+}
+
+/// <summary>
+///
+/// </summary>
+public static class PanelHelper
+{
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="control"></param>
+    /// <returns></returns>
+    public static int GetShowChildByIndex(Panel control)
+    {
+        return (int)control.GetValue(ShowChildByIndexProperty);
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    public static void SetShowChildByIndex(Panel control, int value)
+    {
+        throw new Exception(
+            "This property is read-only. To bind to it you must use 'Mode=OneWay'."
+        );
+    }
+
+    /// <summary>
+    /// 已选中项目属性
+    /// </summary>
+    public static readonly DependencyProperty ShowChildByIndexProperty =
+        DependencyProperty.RegisterAttached(
+            "ShowChildByIndex",
+            typeof(int),
+            typeof(PanelHelper),
+            new FrameworkPropertyMetadata(default(int), ShowChildByIndexPropertyChanged)
+        );
+
+    private static void ShowChildByIndexPropertyChanged(
+        DependencyObject obj,
+        DependencyPropertyChangedEventArgs e
+    )
+    {
+        if (obj is not Panel panel)
+            return;
+        var index = GetShowChildByIndex(panel);
+        for (var i = 0; i < panel.Children.Count; i++)
+        {
+            if (panel.Children[i] is not UIElement element)
+                continue;
+            if (i == index)
+            {
+                element.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                element.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
+}
+
+public class LPSTranslateConverter : System.Windows.Data.IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value?.ToString() is string str)
+            return str;
+        return null!;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

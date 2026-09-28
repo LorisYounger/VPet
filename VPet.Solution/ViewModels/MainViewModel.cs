@@ -8,14 +8,13 @@ using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using VPet.Solution.Models.SettingEditor;
+using VPet.Solution.ViewModels.SaveViewer;
 using VPet.Solution.ViewModels.SettingEditor;
 
 namespace VPet.Solution.ViewModels;
 
 public partial class MainViewModel : CloseableViewModel
 {
-    private readonly SettingModel? _mainSetting;
-
     public MainViewModel(IDialogService dialogService)
         : base(dialogService)
     {
@@ -29,26 +28,28 @@ public partial class MainViewModel : CloseableViewModel
 
         LocalizeCore.StoreTranslation = true;
         LocalizeCore.LoadDefaultCulture();
-        if (string.IsNullOrWhiteSpace(_mainSetting?.GraphicsSetting?.Language))
-            CurrentCulture = LocalizeCore.CurrentCulture;
-        else
-            CurrentCulture = _mainSetting.GraphicsSetting.Language;
     }
 
     #region Property
     public string[] AvailableCultures => LocalizeCore.AvailableCultures;
 
     [ObservableProperty]
-    public string CurrentCulture { get; set; }
+    public string CurrentCulture { get; set; } = string.Empty;
     #endregion
 
     #region Command
 
 
     [RelayCommand]
-    private void OpenSetting()
+    private void OpenSettingEditor()
     {
         DialogService.ShowInstance<SettingViewModel>(this, null);
+    }
+
+    [RelayCommand]
+    private void OpenSaveViewer()
+    {
+        DialogService.ShowInstance<SaveViewModel>(this, null);
     }
 
     [RelayCommand]
@@ -71,26 +72,4 @@ public partial class MainViewModel : CloseableViewModel
             );
     }
     #endregion
-
-    public override void OnClosed()
-    {
-        //DialogService.CloseInstance<SettingViewModel>();
-        base.OnClosed();
-    }
-
-    partial class MainViewModelObservableObjectHelper
-    {
-        partial void OnCurrentCultureChanged(string oldValue, string newValue)
-        {
-            LocalizeCore.LoadCulture(newValue);
-            if (
-                _source._mainSetting is not null
-                && _source._mainSetting.GraphicsSetting.Language != newValue
-            )
-            {
-                _source._mainSetting.GraphicsSetting.Language = newValue;
-                _source._mainSetting.Save();
-            }
-        }
-    }
 }

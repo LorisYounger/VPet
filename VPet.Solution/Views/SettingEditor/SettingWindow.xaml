@@ -43,7 +43,7 @@
       </Style.Triggers>
     </Style>
   </Window.Resources>
-  <Grid Margin="10">
+  <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="200" />
       <ColumnDefinition Width="Auto" />
@@ -62,25 +62,7 @@
         FontSize="16"
         FontWeight="Bold"
         Style="{DynamicResource Label_BaseStyle}"
-      >
-        <Label.ContextMenu>
-          <ContextMenu
-            d:DataContext="{d:DesignInstance Type=vm:SettingViewModel}"
-            DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
-          >
-            <MenuItem
-              x:Name="SaveAllSetting"
-              Header="{ll:Str 全部保存}"
-              Command="{Binding SaveAllSettingCommand}"
-            />
-            <MenuItem
-              x:Name="ResetAllSetting"
-              Header="{ll:Str 全部重置}"
-              Command="{Binding ResetAllSettingCommand}"
-            />
-          </ContextMenu>
-        </Label.ContextMenu>
-      </Label>
+      />
       <TextBox
         Grid.Row="1"
         x:Name="SearchSetting"
@@ -101,39 +83,36 @@
           <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
             <Setter
               Property="Tag"
-              Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
+              Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox}}"
             />
             <Setter Property="Content" Value="{Binding Name}" />
             <Setter Property="ToolTip" Value="{Binding FilePath}" />
+            <Setter Property="ContextMenu">
+              <Setter.Value>
+                <ContextMenu>
+                  <MenuItem
+                    x:Name="SaveAllSetting"
+                    Header="{ll:Str 打开文件}"
+                    Command="{Binding PlacementTarget.Tag.OpenFileCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                    CommandParameter="{Binding}"
+                  />
+                  <MenuItem
+                    x:Name="ResetAllSetting"
+                    Header="{ll:Str 从资源管理器打开文件}"
+                    Command="{Binding PlacementTarget.Tag.OpenFileFromExplorerCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                    CommandParameter="{Binding}"
+                  />
+                </ContextMenu>
+              </Setter.Value>
+            </Setter>
           </Style>
         </ListBox.ItemContainerStyle>
       </ListBox>
-      <StackPanel
-        Grid.Row="3"
-        IsEnabled="{Binding SelectedItem, ElementName=Settings, Converter={StaticResource NullToFalseConverter}}"
-      >
-        <Button
-          Margin="1"
-          x:Name="OpenFile"
-          HorizontalAlignment="Stretch"
-          Content="{ll:Str 打开文件}"
-          Style="{StaticResource Button_BaseStyle}"
-          Command="{Binding OpenFileCommand}"
-          CommandParameter="{Binding CurrentSetting}"
-        />
-        <Button
-          Grid.Column="1"
-          Margin="1"
-          x:Name="OpenFileFromExplorer"
-          HorizontalAlignment="Stretch"
-          Content="{ll:Str 从资源管理器打开文件}"
-          Style="{StaticResource Button_BaseStyle}"
-          Command="{Binding OpenFileFromExplorerCommand}"
-          CommandParameter="{Binding CurrentSetting}"
-        />
+      <StackPanel Grid.Row="3">
         <Button
           Grid.Column="2"
           Margin="1"
+          IsEnabled="{Binding SelectedItem, ElementName=Settings, Converter={StaticResource NullToFalseConverter}}"
           HorizontalAlignment="Stretch"
           x:Name="SaveSetting"
           Content="{ll:Str 保存}"
@@ -145,12 +124,30 @@
         <Button
           Grid.Column="3"
           Margin="1"
+          IsEnabled="{Binding SelectedItem, ElementName=Settings, Converter={StaticResource NullToFalseConverter}}"
           x:Name="ResetSetting"
           HorizontalAlignment="Stretch"
           Content="{ll:Str 重置}"
           Style="{StaticResource Button_BaseStyle}"
           Command="{Binding ResetSettingCommand}"
           CommandParameter="{Binding CurrentSetting}"
+        />
+        <Button
+          Margin="1"
+          x:Name="OpenFile"
+          HorizontalAlignment="Stretch"
+          Content="{ll:Str 全部保存}"
+          Style="{StaticResource Button_BaseStyle}"
+          Command="{Binding SaveAllSettingCommand}"
+        />
+        <Button
+          Grid.Column="1"
+          Margin="1"
+          x:Name="OpenFileFromExplorer"
+          HorizontalAlignment="Stretch"
+          Content="{ll:Str 全部重置}"
+          Style="{StaticResource Button_BaseStyle}"
+          Command="{Binding ResetAllSettingCommand}"
         />
       </StackPanel>
     </Grid>

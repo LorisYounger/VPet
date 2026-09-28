@@ -11,9 +11,8 @@ using VPet.Solution.Views;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-[MapTo(typeof(Setting), ScrutinyMode = true)]
-[MapFrom(typeof(Setting), ScrutinyMode = true)]
-[MapFrom(typeof(GraphicsSettingModel), ScrutinyMode = true)]
+[MapTarget(typeof(Setting))]
+[MapTarget(typeof(GraphicsSettingModel))]
 public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
 {
     public GraphicsSettingModel()
@@ -28,8 +27,7 @@ public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
     /// <inheritdoc cref="Setting.ZoomLevel"/>
     [ObservableProperty]
     [DefaultValue(1)]
-    [GraphicsSettingModelMapFromSettingProperty(typeof(ZoomLevelToStorageZoomLevel))]
-    [GraphicsSettingModelMapToSettingProperty(typeof(ZoomLevelToStorageZoomLevel))]
+    [MapProperty(typeof(Setting), nameof(ZoomLevel), typeof(ZoomLevelToStorageZoomLevel))]
     public double ZoomLevel { get; set; } = 1;
 
     [ObservableProperty]
@@ -71,25 +69,25 @@ public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
 
     /// <inheritdoc cref="Setting.Language"/>
     [ObservableProperty]
-    public string Language { get; set; }
+    public string Language { get; set; } = default!;
 
     public static string[] Languages => LocalizeCore.AvailableCultures;
 
     /// <inheritdoc cref="Setting.Font"/>
     [ObservableProperty]
-    public string Font { get; set; }
+    public string Font { get; set; } = default!;
 
     public static List<string> Fonts => ModSettingModel.Fonts;
 
     /// <inheritdoc cref="Setting.Theme"/>
     [ObservableProperty]
-    public string Theme { get; set; }
+    public string Theme { get; set; } = default!;
 
     public static List<string> Themes => ModSettingModel.Themes;
 
     /// <inheritdoc cref="Setting.PetGraph"/>
     [ObservableProperty]
-    public string PetGraph { get; set; }
+    public string PetGraph { get; set; } = default!;
 
     public static List<string> PetGraphs => ModSettingModel.PetGraphs;
 
@@ -108,11 +106,7 @@ public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
 
     /// <inheritdoc cref="Setting.StartRecordPoint"/>
     [ObservableProperty]
-    [GraphicsSettingModelMapFromGraphicsSettingModelProperty(
-        typeof(ObservablePointToObservablePointConverter)
-    )]
-    [GraphicsSettingModelMapFromSettingProperty(typeof(ObservablePointToPointConverter))]
-    [GraphicsSettingModelMapToSettingProperty(typeof(ObservablePointToPointConverter))]
+    [MapProperty(typeof(Setting), typeof(ObservablePointToPointConverter))]
     public ObservablePoint<double> StartRecordPoint { get; set; } = new();
 
     /// <inheritdoc cref="Setting.HideFromTaskControl"/>
@@ -150,53 +144,36 @@ public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
 
     public void Load(Setting setting)
     {
-        this.MapFromSetting(setting);
+        this.MapFrom(setting);
     }
 
     public void Save(Setting setting)
     {
-        this.MapToSetting(setting);
+        this.MapTo(setting);
     }
 }
 
-public class ObservablePointToPointConverter : MapConverter<ObservablePoint<double>, Point>
+public class ObservablePointToPointConverter : IMapConverter<ObservablePoint<double>, Point>
 {
-    public override Point Convert(object source, ObservablePoint<double> value)
+    public Point Convert(object source, ObservablePoint<double> value)
     {
         return new(value.X, value.Y);
     }
 
-    public override ObservablePoint<double> ConvertBack(object source, Point value)
-    {
-        return new(value.X, value.Y);
-    }
-}
-
-public class ObservablePointToObservablePointConverter
-    : MapConverter<ObservablePoint<double>, ObservablePoint<double>>
-{
-    public override ObservablePoint<double> Convert(object source, ObservablePoint<double> value)
-    {
-        return new(value.X, value.Y);
-    }
-
-    public override ObservablePoint<double> ConvertBack(
-        object source,
-        ObservablePoint<double> value
-    )
+    public ObservablePoint<double> ConvertBack(object source, Point value)
     {
         return new(value.X, value.Y);
     }
 }
 
-public class ZoomLevelToStorageZoomLevel : MapConverter<double, double>
+public class ZoomLevelToStorageZoomLevel : IMapConverter<double, double>
 {
-    public override double Convert(object source, double value)
+    public double Convert(object source, double value)
     {
         return value / 2;
     }
 
-    public override double ConvertBack(object source, double value)
+    public double ConvertBack(object source, double value)
     {
         return value * 2;
     }

@@ -9,9 +9,8 @@ using VPet_Simulator.Core;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-[MapTo(typeof(Setting), ScrutinyMode = true)]
-[MapFrom(typeof(Setting), ScrutinyMode = true)]
-[MapFrom(typeof(InteractiveSettingModel), ScrutinyMode = true)]
+[MapTarget(typeof(Setting))]
+[MapTarget(typeof(InteractiveSettingModel))]
 public partial class InteractiveSettingModel : ObservableObjectEx, ISubSettingModel
 {
     [MapIgnoreProperty]
@@ -73,14 +72,12 @@ public partial class InteractiveSettingModel : ObservableObjectEx, ISubSettingMo
 
     /// <inheritdoc cref="Setting.MusicCatch"/>
     [ObservableProperty]
-    [InteractiveSettingModelMapToSettingProperty(typeof(PercentageConverter))]
-    [InteractiveSettingModelMapFromSettingProperty(typeof(PercentageConverter))]
+    [MapProperty(typeof(Setting), typeof(PercentageConverter))]
     public int MusicCatch { get; set; }
 
     /// <inheritdoc cref="Setting.MusicMax"/>
     [ObservableProperty]
-    [InteractiveSettingModelMapToSettingProperty(typeof(PercentageConverter))]
-    [InteractiveSettingModelMapFromSettingProperty(typeof(PercentageConverter))]
+    [MapProperty(typeof(Setting), typeof(PercentageConverter))]
     public int MusicMax { get; set; }
 
     /// <inheritdoc cref="Setting.AutoBuy"/>
@@ -101,23 +98,23 @@ public partial class InteractiveSettingModel : ObservableObjectEx, ISubSettingMo
 
     public void Load(Setting setting)
     {
-        this.MapFromSetting(setting);
+        this.MapFrom(setting);
     }
 
     public void Save(Setting setting)
     {
-        this.MapToSetting(setting);
+        this.MapTo(setting);
     }
 }
 
-public class SecondToMinuteConverter : MapConverter<int, double>
+public class SecondToMinuteConverter : IMapConverter<int, double>
 {
-    public override double Convert(object source, int value)
+    public double Convert(object source, int value)
     {
         return value * 60;
     }
 
-    public override int ConvertBack(object source, double value)
+    public int ConvertBack(object source, double value)
     {
         if (value == 30d)
             return 1;
@@ -126,14 +123,14 @@ public class SecondToMinuteConverter : MapConverter<int, double>
     }
 }
 
-public class PercentageConverter : MapConverter<int, double>
+public class PercentageConverter : IMapConverter<int, double>
 {
-    public override double Convert(object source, int value)
+    public double Convert(object source, int value)
     {
         return value / 100d;
     }
 
-    public override int ConvertBack(object source, double value)
+    public int ConvertBack(object source, double value)
     {
         return System.Convert.ToInt32(value * 100);
     }

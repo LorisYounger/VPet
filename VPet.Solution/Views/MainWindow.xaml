@@ -63,17 +63,17 @@
           MinWidth="150"
           Content="{ll:Str 打开设置编辑器}"
           FontSize="16"
-          Command="{Binding OpenSettingCommand}"
+          Command="{Binding OpenSettingEditorCommand}"
           Style="{DynamicResource Button_BaseStyle}"
         />
-        <!--<Button
+        <Button
           x:Name="OpenSaveViewer"
           MinWidth="150"
-          Click="OpenSaveViewer_Click"
           Content="{ll:Str 打开存档查看器}"
+          Command="{Binding OpenSaveViewerCommand}"
           FontSize="16"
           Style="{DynamicResource Button_BaseStyle}"
-        />-->
+        />
       </StackPanel>
       <Button
         x:Name="FirstStartFailed"

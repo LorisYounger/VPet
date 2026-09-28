@@ -8,8 +8,7 @@ using LinePutScript.Localization.WPF;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-[MapTo(typeof(ModLoader), ScrutinyMode = true)]
-[MapFrom(typeof(ModLoader), ScrutinyMode = true)]
+[MapTarget(typeof(ModLoader))]
 public partial class ModModel : ObservableObjectEx
 {
     [ObservableProperty]
@@ -26,8 +25,7 @@ public partial class ModModel : ObservableObjectEx
     /// 描述
     /// </summary>
     [ObservableProperty]
-    [ModModelMapToModLoaderProperty(nameof(ModLoader.Intro))]
-    [ModModelMapFromModLoaderProperty(nameof(ModLoader.Intro))]
+    [MapProperty(typeof(ModLoader), nameof(ModLoader.Intro))]
     public string Description { get; set; } = string.Empty;
 
     /// <summary>
@@ -40,16 +38,14 @@ public partial class ModModel : ObservableObjectEx
     /// 模组版本
     /// </summary>
     [ObservableProperty]
-    [ModModelMapToModLoaderProperty(nameof(ModLoader.Ver))]
-    [ModModelMapFromModLoaderProperty(nameof(ModLoader.Ver))]
+    [MapProperty(typeof(ModLoader), nameof(ModLoader.Ver))]
     public int ModVersion { get; set; }
 
     /// <summary>
     /// 游戏版本
     /// </summary>
     [ObservableProperty]
-    [ModModelMapToModLoaderProperty(nameof(ModLoader.GameVer))]
-    [ModModelMapFromModLoaderProperty(nameof(ModLoader.GameVer))]
+    [MapProperty(typeof(ModLoader), nameof(ModLoader.GameVer))]
     public int GameVersion { get; set; }
 
     /// <summary>
@@ -62,6 +58,7 @@ public partial class ModModel : ObservableObjectEx
     /// 图像
     /// </summary>
     [ObservableProperty]
+    [MapProperty(typeof(ModLoader), MapType = MapPropertyType.Reference)]
     public BitmapImage Image { get; set; } = null!;
 
     [ObservableProperty]
@@ -104,7 +101,7 @@ public partial class ModModel : ObservableObjectEx
         ID = Name;
         Name = Name.Translate();
         Description = Description.Translate();
-        this.MapFromModLoader(loader);
+        this.MapFrom(loader);
     }
 
     /// <summary>

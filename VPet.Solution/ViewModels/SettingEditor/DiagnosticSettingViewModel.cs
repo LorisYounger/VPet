@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
-using VPet.Solution.Models.SettingEditor;
 using VPet_Simulator.Windows.Interface;
+using VPet.Solution.Models.SettingEditor;
 
 namespace VPet.Solution.ViewModels.SettingEditor;
 
@@ -15,7 +15,7 @@ public partial class DiagnosticSettingViewModel : ViewModelBase, ISubSettingView
     public DiagnosticSettingModel DiagnosticSetting => Setting.DiagnosticSetting;
 
     [RelayCommand]
-    public void hyper_moreInfo()
+    public static void HyperMoreInfo()
     {
         ExtensionFunction.StartURL("https://www.exlb.net/Diagnosis");
     }

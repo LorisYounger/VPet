@@ -48,7 +48,8 @@ public partial class LinkModel : ObservableObjectEx
     [ObservableProperty]
     public string Link { get; set; }
 
-    public LinkModel() { }
+    public LinkModel()
+        : this(default!, default!) { }
 
     public LinkModel(string name, string link)
     {
