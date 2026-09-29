@@ -12,6 +12,7 @@ using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
+using static VPet_Simulator.Windows.Win32;
 
 namespace VPet_Simulator.Windows
 {
@@ -358,11 +359,16 @@ namespace VPet_Simulator.Windows
                                 }
                                 if (LoadedDLL.Contains(path))
                                     continue;
-                                LoadedDLL.Add(path);
                                 X509Certificate2? certificate;
                                 try
                                 {
-                                    certificate = new X509Certificate2(tmpfi.FullName);
+                                    if (AuthenticodeHelper.Verify(tmpfi.FullName))
+#pragma warning disable SYSLIB0057 // 类型或成员已过时
+                                        certificate = new X509Certificate2(tmpfi.FullName);
+#pragma warning restore SYSLIB0057 // 类型或成员已过时
+
+                                    else
+                                        certificate = null;
                                 }
                                 catch
                                 {
@@ -370,17 +376,13 @@ namespace VPet_Simulator.Windows
                                 }
                                 if (certificate != null)
                                 {
-                                    if (IsLBGameCertificate(certificate))
-                                    {//LBGame 信任的证书
-                                        if (authtype != "FAIL")
+                                    //LBGame 信任的证书
+                                    if (authtype != "FAIL" && authtype != "[V]")
+                                        if (IsLBGameCertificate(certificate))
                                             authtype = "[认证]".Translate();
-                                    }
-                                    else if (!IsTrustedCertificate(certificate)
-                                        && !IsPassMOD(mw))
-                                    {//不是通过模组,不加载
-                                        SuccessLoad = false;
-                                        continue;
-                                    }
+                                        else
+                                            authtype = "[V]";
+                                    certificate.Dispose();
                                 }
                                 else
                                 {
@@ -392,6 +394,7 @@ namespace VPet_Simulator.Windows
                                         continue;
                                     }
                                 }
+                                LoadedDLL.Add(path);
                                 Assembly dll = Assembly.LoadFrom(tmpfi.FullName);
                                 var v = dll.GetExportedTypes();
                                 foreach (Type exportedType in v)
@@ -461,13 +464,6 @@ namespace VPet_Simulator.Windows
                                         && certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US")
                                         || (certificate.Subject == "CN=\"Shenzhen Zero Edition Computer Technology Co., Ltd.\", O=\"Shenzhen Zero Edition Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong, OID.1.3.6.1.4.1.311.60.2.1.3=CN, OID.2.5.4.15=Private Organization"
                                         && certificate.Issuer == "CN=Certum Extended Validation Code Signing 2021 CA, O=Asseco Data Systems S.A., C=PL");
-        }
-        public static bool IsTrustedCertificate(X509Certificate2 certificate)
-        {
-            return certificate.Issuer.Contains("Microsoft Corporation") ||
-                                        certificate.Issuer.Contains(".NET Foundation Projects") ||
-                                        certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US" ||
-                                        certificate.Issuer == "CN=Certum Extended Validation Code Signing 2021 CA, O=Asseco Data Systems S.A., C=PL";
         }
     }
     public static class ExtensionSetting

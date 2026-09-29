@@ -382,12 +382,12 @@ namespace VPet_Simulator.Windows
                 GameVer = gameVer;
                 Ver = ver;
                 Tag = tag;
-                HasTrustedCertificate = !IsPlugin || HasTrustedPluginCertificate(path);
+                HasTrustedCertificate = !IsPlugin || HasValidPluginSignatures(path);
             }
 
 
 
-            private static bool HasTrustedPluginCertificate(DirectoryInfo directory)
+            private static bool HasValidPluginSignatures(DirectoryInfo directory)
             {
                 string dllPath = System.IO.Path.Combine(directory.FullName, "plugin");
                 var loadfile = new LpsDocument();
@@ -415,8 +415,7 @@ namespace VPet_Simulator.Windows
 
                     try
                     {
-                        var certificate = new X509Certificate2(tmpfi.FullName);
-                        if (!(CoreMOD.IsTrustedCertificate(certificate) || CoreMOD.IsLBGameCertificate(certificate)))
+                        if (!AuthenticodeHelper.Verify(tmpfi.FullName))
                             return false;
                     }
                     catch
