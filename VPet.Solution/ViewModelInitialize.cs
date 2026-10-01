@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.Wpf;
+using HKW.MVVM.SourceGenerator;
 using HKW.WPF.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -20,28 +21,35 @@ using VPet.Solution.Views.SettingEditor;
 
 namespace VPet.Solution;
 
-internal static class IOCInitializer
+internal partial class AppServices : DIConfigurationBase
 {
-    public static IServiceProvider ConfigureServices()
+    public StrongViewLocator ViewLocator { get; } = new StrongViewLocator();
+
+    protected override void Configure(IServiceCollection services)
     {
-        var services = new ServiceCollection();
-        var viewLocator = new ViewLocator(services);
         services.AddSingleton<IDialogService>(sp => new DialogService(
-            new DialogManagerX(viewLocator: viewLocator, dialogFactory: new DialogFactory()),
+            new DialogManagerX(ViewLocator, dialogFactory: new DialogFactory()),
             viewModelFactory: x => sp.GetService(x)
         ));
-        viewLocator.Register<MainViewModel, MainWindow>();
-        viewLocator.Register<SettingViewModel, SettingWindow>();
-        viewLocator.Register<GraphicsSettingViewModel, GraphicsSettingView>();
-        viewLocator.Register<SystemSettingViewModel, SystemSettingView>();
-        viewLocator.Register<DiagnosticSettingViewModel, DiagnosticSettingView>();
-        viewLocator.Register<InteractiveSettingViewModel, InteractiveSettingView>();
-        viewLocator.Register<CustomizedSettingViewModel, CustomizedSettingView>();
-        viewLocator.Register<ModSettingViewModel, ModSettingView>();
 
-        viewLocator.Register<SaveViewModel, SaveWindow>();
+        RegisterMVVM<MainViewModel, MainWindow>();
+        RegisterMVVM<SettingViewModel, SettingWindow>();
+        RegisterMVVM<GraphicsSettingViewModel, GraphicsSettingView>();
+        RegisterMVVM<SystemSettingViewModel, SystemSettingView>();
+        RegisterMVVM<DiagnosticSettingViewModel, DiagnosticSettingView>();
+        RegisterMVVM<InteractiveSettingViewModel, InteractiveSettingView>();
+        RegisterMVVM<CustomizedSettingViewModel, CustomizedSettingView>();
+        RegisterMVVM<ModSettingViewModel, ModSettingView>();
 
-        return services.BuildServiceProvider();
+        RegisterMVVM<SaveViewModel, SaveWindow>();
+    }
+
+    [DICustomServiceRegistrar(nameof(TViewModel))]
+    public void RegisterMVVM<TViewModel, TView>()
+        where TViewModel : class, INotifyPropertyChanged
+        where TView : System.Windows.Controls.Control, new()
+    {
+        ViewLocator.Register<TViewModel, TView>();
     }
 }
 

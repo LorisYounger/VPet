@@ -13,8 +13,7 @@ namespace VPet.Solution.ViewModels.SettingEditor;
 
 public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettingViewModel
 {
-    public CustomizedSettingViewModel(IDialogService dialogService)
-        : base(dialogService)
+    public CustomizedSettingViewModel()
     {
         this.WhenAnyValue(x => x.SearchLink)
             .Throttle(TimeSpan.FromSeconds(0.5), ObservableSchedulers.ThreadPool)
@@ -26,6 +25,19 @@ public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettin
 
     [ObservableProperty]
     public SettingModel Setting { get; set; } = null!;
+
+    partial void OnSettingChanged(SettingModel oldValue, SettingModel newValue)
+    {
+        if (newValue is not null)
+        {
+            Links = new(
+                newValue.CustomizedSetting.Links,
+                [],
+                x => x.Name.Contains(SearchLink, StringComparison.CurrentCultureIgnoreCase)
+            );
+        }
+        SearchLink = string.Empty;
+    }
 
     public CustomizedSettingModel CustomizedSetting => Setting.CustomizedSetting;
 
@@ -84,25 +96,5 @@ public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettin
             ExtensionFunction.StartURL(
                 $"https://learn.microsoft.com/{Setting.GraphicsSetting.Language}/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks"
             );
-    }
-
-    partial class CustomizedSettingViewModelObservableObjectHelper
-    {
-        partial void OnSettingChanged(SettingModel oldValue, SettingModel newValue)
-        {
-            if (newValue is not null)
-            {
-                _source.Links = new(
-                    newValue.CustomizedSetting.Links,
-                    [],
-                    x =>
-                        x.Name.Contains(
-                            _source.SearchLink,
-                            StringComparison.CurrentCultureIgnoreCase
-                        )
-                );
-            }
-            _source.SearchLink = string.Empty;
-        }
     }
 }

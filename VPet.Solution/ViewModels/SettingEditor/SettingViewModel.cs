@@ -18,8 +18,7 @@ namespace VPet.Solution.ViewModels.SettingEditor;
 
 public partial class SettingViewModel : CloseableViewModel
 {
-    public SettingViewModel(IDialogService dialogService)
-        : base(dialogService)
+    public SettingViewModel()
     {
         Settings = new(
             [],
@@ -36,20 +35,6 @@ public partial class SettingViewModel : CloseableViewModel
             .DisposeWith(Disposables);
 
         CurrentSetting = Settings.FirstOrDefault();
-
-        _subSettingViewModelDictionary = new()
-        {
-            [SubSettingModelType.Graphics] =
-                DialogService.CreateViewModel<GraphicsSettingViewModel>(),
-            [SubSettingModelType.System] = DialogService.CreateViewModel<SystemSettingViewModel>(),
-            [SubSettingModelType.Diagnostic] =
-                DialogService.CreateViewModel<DiagnosticSettingViewModel>(),
-            [SubSettingModelType.Interactive] =
-                DialogService.CreateViewModel<InteractiveSettingViewModel>(),
-            [SubSettingModelType.Customized] =
-                DialogService.CreateViewModel<CustomizedSettingViewModel>(),
-            [SubSettingModelType.Mod] = DialogService.CreateViewModel<ModSettingViewModel>(),
-        };
     }
 
     public override void OnClosed()
@@ -63,6 +48,35 @@ public partial class SettingViewModel : CloseableViewModel
     #region Property
     [ObservableProperty]
     public SettingModel? CurrentSetting { get; set; }
+
+    partial void OnCurrentSettingChanging(
+        SettingModel? oldValue,
+        SettingModel? newValue,
+        ref bool cancel
+    )
+    {
+        if (oldValue is null || oldValue.IsChanged is false)
+            return;
+        var result = DialogService.ShowMessageBox(
+            this,
+            "当前设置未保存 确定要保存吗".Translate(),
+            "",
+            MessageBoxButton.YesNoCancel,
+            MessageBoxImage.Warning
+        );
+        if (result is true)
+        {
+            oldValue.Save();
+        }
+        else if (result is false)
+        {
+            oldValue.IsChanged = false;
+        }
+        else
+        {
+            cancel = true;
+        }
+    }
 
     public static ImmutableArray<EnumInfo<SubSettingModelType>> SubSettingTypes =>
         EnumInfo<SubSettingModelType>.StaticInfos;
@@ -195,49 +209,27 @@ public partial class SettingViewModel : CloseableViewModel
             );
     }
 
-    private readonly Dictionary<
-        SubSettingModelType,
-        ISubSettingViewModel
-    > _subSettingViewModelDictionary;
+    private Dictionary<SubSettingModelType, ISubSettingViewModel> SubSettingViewModelDictionary =>
+        field ??= new()
+        {
+            [SubSettingModelType.Graphics] =
+                DialogService.CreateViewModel<GraphicsSettingViewModel>(),
+            [SubSettingModelType.System] = DialogService.CreateViewModel<SystemSettingViewModel>(),
+            [SubSettingModelType.Diagnostic] =
+                DialogService.CreateViewModel<DiagnosticSettingViewModel>(),
+            [SubSettingModelType.Interactive] =
+                DialogService.CreateViewModel<InteractiveSettingViewModel>(),
+            [SubSettingModelType.Customized] =
+                DialogService.CreateViewModel<CustomizedSettingViewModel>(),
+            [SubSettingModelType.Mod] = DialogService.CreateViewModel<ModSettingViewModel>(),
+        };
 
     private ISubSettingViewModel? GetSubSettingViewModel()
     {
         if (CurrentSetting is null)
             return null;
-        var vm = _subSettingViewModelDictionary[CurrentSubSettingType];
+        var vm = SubSettingViewModelDictionary[CurrentSubSettingType];
         vm.Setting = CurrentSetting;
         return vm;
-    }
-
-    partial class SettingViewModelObservableObjectHelper
-    {
-        partial void OnCurrentSettingChanging(
-            SettingModel oldValue,
-            SettingModel newValue,
-            ref bool cancel
-        )
-        {
-            if (oldValue is null || oldValue.IsChanged is false)
-                return;
-            var result = _source.DialogService.ShowMessageBox(
-                _source,
-                "当前设置未保存 确定要保存吗".Translate(),
-                "",
-                MessageBoxButton.YesNoCancel,
-                MessageBoxImage.Warning
-            );
-            if (result is true)
-            {
-                oldValue.Save();
-            }
-            else if (result is false)
-            {
-                oldValue.IsChanged = false;
-            }
-            else
-            {
-                cancel = true;
-            }
-        }
     }
 }

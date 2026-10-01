@@ -14,8 +14,7 @@ namespace VPet.Solution.ViewModels.SaveViewer;
 
 public partial class SaveViewModel : ViewModelBase
 {
-    public SaveViewModel(IDialogService dialogService)
-        : base(dialogService)
+    public SaveViewModel()
     {
         Saves = new(
             [],
@@ -61,6 +60,23 @@ public partial class SaveViewModel : ViewModelBase
     [ObservableProperty]
     public SaveModel? CurrentSave { get; set; }
 
+    partial void OnCurrentSaveChanged(SaveModel oldValue, SaveModel newValue)
+    {
+        if (newValue is null)
+        {
+            Statistics.Clear();
+        }
+        else
+        {
+            Statistics.BatchUpdate(l =>
+            {
+                l.Clear();
+                l.AddRange(newValue.Statistics);
+            });
+        }
+        SearchStatistic = string.Empty;
+    }
+
     public FilteredListWrapper<
         SaveModel,
         List<SaveModel>,
@@ -89,25 +105,5 @@ public partial class SaveViewModel : ViewModelBase
     private static void OpenFile(SaveModel parameter)
     {
         NativeUtils.OpenLink(parameter.FilePath);
-    }
-
-    partial class SaveViewModelObservableObjectHelper
-    {
-        partial void OnCurrentSaveChanged(SaveModel oldValue, SaveModel newValue)
-        {
-            if (newValue is null)
-            {
-                _source.Statistics.Clear();
-            }
-            else
-            {
-                _source.Statistics.BatchUpdate(l =>
-                {
-                    l.Clear();
-                    l.AddRange(newValue.Statistics);
-                });
-            }
-            _source.SearchStatistic = string.Empty;
-        }
     }
 }
