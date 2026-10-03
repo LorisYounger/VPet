@@ -9,7 +9,7 @@ namespace VPet.Solution.Models.SettingEditor;
 public partial class ModSettingModel : ObservableObjectEx, ISubSettingModel
 {
     public SubSettingModelType ModelType => SubSettingModelType.Mod;
-    public const string ModLineName = "onmod";
+    public const string OnModLineName = "onmod";
     public const string PassModLineName = "passmod";
     public const string MsgModLineName = "msgmod";
     public const string WorkShopLineName = "workshop";
@@ -68,27 +68,53 @@ public partial class ModSettingModel : ObservableObjectEx, ISubSettingModel
 
     public void Load(Setting setting)
     {
-        foreach (var item in setting[ModLineName])
+        //foreach (var item in setting[OnModLineName])
+        //{
+        //    var modID = item.Name;
+        //    if (LocalMods.TryGetValue(modID, out var loader) && loader.IsSuccesses)
+        //    {
+        //        var modModel = new ModModel(loader);
+        //        modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
+        //        modModel.IsPass = setting[PassModLineName].Contains(modID);
+        //        Mods.Add(modModel);
+        //    }
+        //    else
+        //    {
+        //        Mods.Add(
+        //            new()
+        //            {
+        //                Name = modID,
+        //                ModPath = "未知, 可能是{0}".Translate(Path.Combine(ModDirectory, modID)),
+        //            }
+        //        );
+        //    }
+        //}
+        foreach (var dir in Directory.GetDirectories(ModDirectory))
         {
-            var modID = item.Name;
-            if (LocalMods.TryGetValue(modID, out var loader) && loader.IsSuccesses)
+            var loader = new ModLoader(dir);
+            if (loader.IsSuccesses)
             {
                 var modModel = new ModModel(loader);
                 modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
-                modModel.IsPass = setting[PassModLineName].Contains(modID);
+                modModel.IsPass = setting[PassModLineName].Contains(modModel.ID.ToLowerInvariant());
+                if (modModel.Name.Equals("Core"))
+                {
+                    modModel.IsEnabled = true;
+                }
+                else
+                {
+                    modModel.IsEnabled = setting[OnModLineName].Contains(modModel.Name.ToLowerInvariant());
+                }
+                
                 Mods.Add(modModel);
             }
             else
             {
-                Mods.Add(
-                    new()
-                    {
-                        Name = modID,
-                        ModPath = "未知, 可能是{0}".Translate(Path.Combine(ModDirectory, modID)),
-                    }
-                );
+                Mods.Add(new() { Name = loader.Name, ModPath = loader.ModPath });
             }
+
         }
+        
         foreach (var modPath in setting[WorkShopLineName])
         {
             var loader = new ModLoader(modPath.Name);
@@ -97,6 +123,7 @@ public partial class ModSettingModel : ObservableObjectEx, ISubSettingModel
                 var modModel = new ModModel(loader);
                 modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
                 modModel.IsPass = setting[PassModLineName].Contains(modModel.ID.ToLowerInvariant());
+                modModel.IsEnabled = setting[OnModLineName].Contains(modModel.Name.ToLowerInvariant());
                 Mods.Add(modModel);
             }
             else
@@ -108,14 +135,14 @@ public partial class ModSettingModel : ObservableObjectEx, ISubSettingModel
 
     public void Save(Setting setting)
     {
-        setting.Remove(ModLineName);
+        setting.Remove(OnModLineName);
         setting.Remove(PassModLineName);
         setting.Remove(MsgModLineName);
         foreach (var mod in Mods)
         {
             if (mod.IsEnabled is false)
                 continue;
-            setting[ModLineName].Add(new Sub(mod.ID.ToLowerInvariant()));
+            setting[OnModLineName].Add(new Sub(mod.ID.ToLowerInvariant()));
             setting[MsgModLineName].Add(new Sub(mod.ID, "True"));
             if (mod.IsPass)
                 setting[PassModLineName].Add(new Sub(mod.ID.ToLowerInvariant()));
