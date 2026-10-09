@@ -1,17 +1,22 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Core.GraphInfo;
+using static VPet_Simulator.Windows.Interface.Buff;
 using static VPet_Simulator.Windows.Interface.Photo.UnlockCondition;
 
 namespace VPet_Simulator.Windows;
@@ -19,6 +24,53 @@ namespace VPet_Simulator.Windows;
 // 一些桌宠功能的实现函数
 public partial class MainWindow : IMainWindow
 {
+    /// <summary>
+    /// 场景布局的所有权。统一处理图层顺序、宠物周围留白及桌面位置补偿。
+    /// 所有方法在 UI 线程调用；同一个 PetGrid 同时只能挂载一个场景。
+    /// </summary>
+    public class PetSceneAttachment : IPetSceneAttachment
+    {
+        private readonly Grid host;
+        private readonly Grid petGrid;
+        private readonly UIElement?[] layers;
+        private double padding;
+        public Thickness OriginalMargin { get; }
+
+        public PetSceneAttachment(Grid host, Grid petGrid, UIElement background, UIElement foreground, UIElement? overlay = null)
+        {
+            layers = new[] { background, foreground, overlay };
+            this.host = host;
+            this.petGrid = petGrid;
+            OriginalMargin = petGrid.Margin;
+            for (int i = 0; i < layers.Length; i++)
+            {
+                if (layers[i] is not { } layer) continue;
+                host.Children.Add(layer);
+                Panel.SetZIndex(layer, Panel.GetZIndex(petGrid) + (i == 0 ? -1 : i));
+            }
+        }
+
+        /// <summary>设置宠物四周额外的 WPF 像素边距，保持宠物在桌面上的位置。</summary>
+        public void SetPadding(double value)
+        {
+            var margin = petGrid.Margin;
+            double delta = value - padding;
+            petGrid.Margin = new Thickness(margin.Left + delta, margin.Top + delta, margin.Right + delta, margin.Bottom + delta);
+            if (Window.GetWindow(host) is { } window)
+            {
+                window.Left -= delta;
+                window.Top -= delta;
+            }
+            padding = value;
+        }
+
+        public void Dispose()
+        {
+            SetPadding(0);
+            foreach (var layer in layers) if (layer != null) host.Children.Remove(layer);
+        }
+    }
+
     /// <summary>
     /// 上次吃食物的时间
     /// </summary>
@@ -611,6 +663,25 @@ public partial class MainWindow : IMainWindow
 
         LastTakeItemTime = DateTime.Now;
     }
+
+    /// <summary>
+    /// 当前宠物状态
+    /// </summary> 
+    public PetActivity Activity => Main.State switch
+    {
+        Main.WorkingState.Nomal => PetActivity.Idle,
+        Main.WorkingState.Sleep => PetActivity.Sleep,
+        Main.WorkingState.Travel => PetActivity.Travel,
+        Main.WorkingState.Work => Main.NowWork?.Type switch
+        {
+            Work.WorkType.Study => PetActivity.Study,
+            Work.WorkType.Work => PetActivity.Work,
+            Work.WorkType.Play => PetActivity.Play,
+            _ => PetActivity.Other
+        },
+        _ => PetActivity.Other
+    };
+
 
     #region 本地评价统计
 

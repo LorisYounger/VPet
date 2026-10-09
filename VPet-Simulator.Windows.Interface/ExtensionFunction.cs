@@ -212,28 +212,6 @@ namespace VPet_Simulator.Windows.Interface
             }
         }
 
-        /// <summary>
-        /// 吃食物 附带倍率
-        /// </summary>
-        /// <param name="save">存档</param>
-        /// <param name="food">食物</param>
-        /// <param name="buff">默认1倍</param>
-        public static void EatFood(this IGameSave save, IFood food, double buff)
-        {
-            save.Exp += food.Exp * buff;
-            var tmp = food.Strength / 2 * buff;
-            save.StrengthChange(tmp);
-            save.StoreStrength += tmp;
-            tmp = food.StrengthFood / 2 * buff;
-            save.StrengthChangeFood(tmp);
-            save.StoreStrengthFood += tmp;
-            tmp = food.StrengthDrink / 2 * buff;
-            save.StrengthChangeDrink(tmp);
-            save.StoreStrengthDrink += tmp;
-            save.FeelingChange(food.Feeling * buff);
-            save.Health += food.Health * buff;
-            save.Likability += food.Likability * buff;
-        }
     }
     /// <summary>
     /// 扩展值

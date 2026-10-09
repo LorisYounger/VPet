@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Converter;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF;
@@ -25,7 +25,38 @@ public class ScheduleTask
     public ObservableCollection<ScheduleItemBase> ScheduleItems { get; set; } = [];
     private IMainWindow mw;
     public int NowIndex { get; set; } = 0;
-    public bool IsOn { get; set; } = false;
+    private bool isOn;
+    public bool IsOn
+    {
+        get => isOn;
+        set
+        {
+            if (isOn == value) return;
+            isOn = value;
+            mw.Buff.IsScheduleOn = value;
+        }
+    }
+
+    // 套餐变化时更新效果；日程开关和到期由 Buff 的活动范围及 EndTime 处理。
+    private void RefreshCommissions()
+    {
+        var work = PackageWork?.IsActive() == true ? PackageWork : null;
+        var study = PackageStudy?.IsActive() == true ? PackageStudy : null;
+
+        var effects = new List<Buff.Effect>();
+        if (work != null && work.Commissions != 0)
+            effects.Add(new Buff.Effect { SourceKey = "schedule.commissions", Activity = PetActivity.ScheduleWork,
+                Reward = 1 - work.Commissions, EndTime = work.EndTime,
+                Source = work.NameTrans, Description = "工作中介抽成".Translate() });
+        if (study != null && study.Commissions != 0)
+            effects.Add(new Buff.Effect { SourceKey = "schedule.commissions", Activity = PetActivity.ScheduleStudy,
+                Reward = 1 - study.Commissions, EndTime = study.EndTime,
+                Source = study.NameTrans, Description = "培训机构学习效率".Translate() });
+        if (effects.Count == 0)
+            mw.Buff.Remove("schedule.commissions");
+        else
+            mw.Buff.Update(effects);
+    }
     /// <summary>
     /// 根据设置获取日程表
     /// </summary>
@@ -72,17 +103,19 @@ public class ScheduleTask
             }
             if (mw.GameSavesData.Data.ContainsLine("schedule_work"))
             {
-                PackageWork = LPSConvert.DeserializeObject<Package>(mw.GameSavesData.Data["schedule_work"]);
+                packageWork = LPSConvert.DeserializeObject<Package>(mw.GameSavesData.Data["schedule_work"]);
             }
             if (mw.GameSavesData.Data.ContainsLine("schedule_study"))
             {
-                PackageStudy = LPSConvert.DeserializeObject<Package>(mw.GameSavesData.Data["schedule_study"]);
+                packageStudy = LPSConvert.DeserializeObject<Package>(mw.GameSavesData.Data["schedule_study"]);
             }
             NowIndex = schedule[(gint)"now"];
-            IsOn = schedule[(gbol)"ison"];
+            isOn = schedule[(gbol)"ison"];
         }
 
         imw.Main.WorkTimer!.E_FinishWork += WorkTimer_E_FinishWork;
+        imw.Buff.IsScheduleOn = IsOn;
+        RefreshCommissions();
         RestTimer.Elapsed += RestTimer_Elapsed;
         if (IsOn)
             RestTimer.Start();
@@ -254,6 +287,7 @@ public class ScheduleTask
     {
         IsOn = false;
         RestTime = -100;
+        RestTimer.Stop();
     }
     private int RestTime = 2;
     private Timer RestTimer = new Timer()
@@ -264,6 +298,7 @@ public class ScheduleTask
 
     private void WorkTimer_E_FinishWork(Core.WorkTimer.FinishWorkInfo obj)
     {
+        if (!IsOn) return;
         if (obj.spendtime < obj.work.Time / 2)
             Stop();
         else
@@ -273,8 +308,18 @@ public class ScheduleTask
         }
     }
 
-    public Package? PackageWork { get; set; }
-    public Package? PackageStudy { get; set; }
+    private Package? packageWork;
+    public Package? PackageWork
+    {
+        get => packageWork;
+        set { packageWork = value; RefreshCommissions(); }
+    }
+    private Package? packageStudy;
+    public Package? PackageStudy
+    {
+        get => packageStudy;
+        set { packageStudy = value; RefreshCommissions(); }
+    }
     /// <summary>
     /// 添加工作到日程表
     /// </summary>
@@ -506,9 +551,14 @@ public class ScheduleTask
         }
         private string? describetrans;
         /// <summary>
-        /// 抽成
+        /// 扣除比例，工作金钱和学习经验的实际收益倍率为 1 - Commissions，限制在 10%～1000%。
         /// </summary>
-        [Line] public double Commissions { get; set; }
+        private double commissions;
+        [Line] public double Commissions
+        {
+            get => commissions;
+            set => commissions = Math.Clamp(value, -9, 0.9);
+        }
         /// <summary>
         /// 办理费用
         /// </summary>
@@ -576,10 +626,6 @@ public class ScheduleTask
             if (LevelInNeed < 1)
             {
                 LevelInNeed = 1.25;
-            }
-            if (Commissions < 0)
-            {
-                Commissions = 0.2;
             }
             var use = Math.Sign(Commissions - 0.15) * Math.Pow(Math.Abs(Commissions * 100 - 15), 1.5) +
                 Math.Sign(LevelInNeed - 1.2) * Math.Pow(Math.Abs(LevelInNeed * 100 - 120), 1.5) +

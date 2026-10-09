@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Converter;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
@@ -126,9 +126,15 @@ public class GameSave_VPet : IGameSave
     /// <summary>
     /// 体力 0-100
     /// </summary>
-    public double Strength { get => strength; set => strength = Math.Min(StrengthMax, Math.Max(0, value)); }
+    // 上限下降时保留已有超额值，允许消耗，但恢复不能继续增加超额值。
+    public double Strength { get => strength; set => strength = Math.Min(Math.Max(StrengthMax, strength), Math.Max(0, value)); }
 
-    public double StrengthMax => 100 + (int)(Math.Pow(Level * (1 + LevelMax), 0.75) * 4);
+    /// <summary>
+    /// 运行时上限调整
+    /// </summary>
+    public (double Strength, double Feeling) AttributeLimits { get; set; }
+    public double StrengthMax => Math.Max(1, 100 + (int)(Math.Pow(Level * (1 + LevelMax), 0.75) * 4)
+        + AttributeLimits.Strength);
 
     [Line(Type = LPSConvert.ConvertType.ToFloat, IgnoreCase = true)]
     protected double strength { get; set; }
@@ -153,7 +159,7 @@ public class GameSave_VPet : IGameSave
     {
         get => strengthFood; set
         {
-            value = Math.Min(StrengthMax, value);
+            value = Math.Min(Math.Max(StrengthMax, strengthFood), value);
             if (value <= 0)
             {
                 Health += value;
@@ -186,7 +192,7 @@ public class GameSave_VPet : IGameSave
     {
         get => strengthDrink; set
         {
-            value = Math.Min(StrengthMax, value);
+            value = Math.Min(Math.Max(StrengthMax, strengthDrink), value);
             if (value <= 0)
             {
                 Health += value;
@@ -221,7 +227,7 @@ public class GameSave_VPet : IGameSave
         get => feeling; set
         {
 
-            value = Math.Min(FeelingMax, value);
+            value = Math.Min(Math.Max(FeelingMax, feeling), value);
             if (value <= 0)
             {
                 Health += value / 2;
@@ -339,7 +345,8 @@ public class GameSave_VPet : IGameSave
     [Line]
     public double LikabilityMax { get; set; } = 100;
 
-    public double FeelingMax => 100 + (int)(Math.Pow(Level * (1 + LevelMax), 0.75) * 2);
+    public double FeelingMax => Math.Max(1, 100 + (int)(Math.Pow(Level * (1 + LevelMax), 0.75) * 2)
+        + AttributeLimits.Feeling);
     /// <summary>
     /// 经验值加成 TODO
     /// </summary>

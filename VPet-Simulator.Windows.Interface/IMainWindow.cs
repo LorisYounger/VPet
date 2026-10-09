@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Windows.Interface.ScheduleTask;
@@ -18,6 +19,7 @@ namespace VPet_Simulator.Windows.Interface
     /// </summary>
     public interface IMainWindow
     {
+
         /// <summary>
         /// 存档前缀, 用于多开游戏, 为空时使用默认存档, 不为空时前缀的前缀一般为'-'
         /// </summary>
@@ -62,6 +64,10 @@ namespace VPet_Simulator.Windows.Interface
         /// 桌宠主要部件
         /// </summary>
         Main Main { get; }
+        /// <summary>
+        /// 效果管理器。
+        /// </summary>
+        Buff Buff { get; }
         /// <summary>
         /// 版本号
         /// </summary>
@@ -297,5 +303,19 @@ namespace VPet_Simulator.Windows.Interface
         /// 上次吃食物的时间
         /// </summary>
         public DateTime LastTakeItemTime { get; }
+        /// <summary>
+        /// 宠物当前活动
+        /// </summary>
+        public PetActivity Activity { get; }
     }
+
+    /// <summary>
+    /// 场景句柄；UI 线程设置边距及释放，具体布局由本体实现。
+    /// </summary>
+    public interface IPetSceneAttachment : IDisposable
+    {
+        Thickness OriginalMargin { get; }
+        void SetPadding(double value);
+    }
+
 }

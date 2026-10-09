@@ -580,48 +580,32 @@ public class Photo
     /// <summary>
     /// 获得当前图片图片
     /// </summary>
-    public BitmapImage GetImage(IMainWindow imw)
-    {
-        //解压zip
-        string? zippath = imw.FileSources.FindSource(Zip + ".zlps");
-        if (zippath == null)
-        {
-            zippath = imw.FileSources.FindSource(Zip + ".zip");
-        }
-        if (zippath == null)
-        {
-            return ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
-        }
-        using (ZipArchive archive = ZipFile.OpenRead(zippath))
-        {
-            // 找到指定的文件
-            ZipArchiveEntry? entry = archive.GetEntry(Path);
-            if (entry != null)
-            {
-                using (Stream stream = entry.Open())
-                {
-                    // 将流内容复制到内存流中
-                    using (MemoryStream memoryStream = new MemoryStream())
-                    {
-                        stream.CopyTo(memoryStream);
-                        memoryStream.Position = 0; // 重置内存流的位置
+    public BitmapImage GetImage(IMainWindow imw) =>
+        LoadImage(imw) ?? ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
 
-                        // 创建 BitmapImage
-                        BitmapImage bitmap = new BitmapImage();
-                        bitmap.BeginInit();
-                        bitmap.StreamSource = memoryStream; // 使用内存流
-                        bitmap.CacheOption = BitmapCacheOption.OnLoad; // 立即加载
-                        bitmap.EndInit();
-                        bitmap.Freeze(); // 使 BitmapImage 可以在不同线程中使用
-                        return bitmap;
-                    }
-                }
-            }
-            else
-            {
-                return ImageResources.NewSafeBitmapImage("pack://application:,,,/Res/img/error.png");
-            }
-        }
+
+    /// <summary>
+    /// 获得当前图片图片 若无图片则返回null
+    /// </summary>
+    public BitmapImage? LoadImage(IMainWindow imw)
+    {
+        string? zippath = imw.FileSources.FindSource(Zip + ".zlps")
+            ?? imw.FileSources.FindSource(Zip + ".zip");
+        if (zippath == null) return null;
+        using var archive = ZipFile.OpenRead(zippath);
+        var entry = archive.GetEntry(Path);
+        if (entry == null) return null;
+        using var stream = entry.Open();
+        using var memoryStream = new MemoryStream();
+        stream.CopyTo(memoryStream);
+        memoryStream.Position = 0;
+        var bitmap = new BitmapImage();
+        bitmap.BeginInit();
+        bitmap.StreamSource = memoryStream;
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.EndInit();
+        bitmap.Freeze();
+        return bitmap;
     }
     /// <summary>
     /// 获取适用于GIF的图片

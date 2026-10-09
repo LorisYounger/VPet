@@ -525,11 +525,6 @@ namespace VPet_Simulator.Core
         /// <param name="EndAction">结束操作</param>
         public void Display(IGraph? graph, Action? EndAction = null)
         {
-            if (!Dispatcher.CheckAccess())
-            {
-                Dispatcher.Invoke(() => Display(graph, EndAction));
-                return;
-            }
             if (graph == null)
             {
                 if (nodisplayLoop++ > 20)

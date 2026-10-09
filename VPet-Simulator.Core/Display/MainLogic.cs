@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
@@ -226,6 +226,25 @@ namespace VPet_Simulator.Core
                 labeldisplaytimer.Start();
             });
         }
+        /// <summary>当前活动的属性变化倍率；默认不调整本体变化。</summary>
+        public AttributeModifiers? AttributeModifier { get; set; }
+
+        /// <summary>本体属性变化或物品收益的倍率，默认均为 1。</summary>
+        public class AttributeModifiers
+        {
+            /// <summary>工作金钱或学习、娱乐经验收益倍率。</summary>
+            public double Reward { get; set; } = 1;
+            public double Strength { get; set; } = 1;
+            public double Food { get; set; } = 1;
+            public double Drink { get; set; } = 1;
+            public double Feeling { get; set; } = 1;
+            public double Health { get; set; } = 1;
+            public double Money { get; set; } = 1;
+            public double Experience { get; set; } = 1;
+            public double Likability { get; set; } = 1;
+
+        }
+
         public Work? NowWork;
         /// <summary>
         /// 根据消耗计算相关数据
@@ -233,6 +252,7 @@ namespace VPet_Simulator.Core
         /// <param name="TimePass">过去时间倍率</param>
         public void FunctionSpend(double TimePass)
         {
+            var attributes = AttributeModifier ?? new AttributeModifiers();
             Core.Save!.CleanChange();
             Core.Save!.StoreTake();
             double freedrop = (DateTime.Now - LastInteractionTime).TotalMinutes;
@@ -240,10 +260,11 @@ namespace VPet_Simulator.Core
                 freedrop = 0;
             else
                 freedrop = Math.Min(Math.Sqrt(freedrop) * TimePass / 4, Core.Save!.FeelingMax / 800);
-            double sm25 = Core.Save!.StrengthMax * 0.25;
-            double sm50 = Core.Save!.StrengthMax * 0.5;
-            double sm60 = Core.Save!.StrengthMax * 0.6;
-            double sm75 = Core.Save!.StrengthMax * 0.75;
+            double strengthMax = Core.Save!.StrengthMax;
+            double sm25 = strengthMax * 0.25;
+            double sm50 = strengthMax * 0.5;
+            double sm60 = strengthMax * 0.6;
+            double sm75 = strengthMax * 0.75;
 
             switch (State)
             {
@@ -251,21 +272,21 @@ namespace VPet_Simulator.Core
                     break;
                 case WorkingState.Sleep:
                     //睡觉 缓慢恢复所有(除了心情,但是心情不会下降)
-                    Core.Save!.StrengthChange(TimePass * 2);
-                    Core.Save!.StrengthChangeFood(TimePass);
+                    Core.Save!.StrengthChange(TimePass * 2 * attributes.Strength);
+                    Core.Save!.StrengthChangeFood(TimePass * attributes.Food);
                     if (Core.Save!.StrengthFood <= sm25)
                     {//低状态2倍恢复速度
-                        Core.Save!.StrengthChangeFood(TimePass);
+                        Core.Save!.StrengthChangeFood(TimePass * attributes.Food);
                     }
                     else if (Core.Save!.StrengthFood >= sm75)
-                        Core.Save!.Health += TimePass * 2;
-                    Core.Save!.StrengthChangeDrink(TimePass);
+                        Core.Save!.Health += TimePass * 2 * attributes.Health;
+                    Core.Save!.StrengthChangeDrink(TimePass * attributes.Drink);
                     if (Core.Save!.StrengthDrink >= sm25)
                     {
-                        Core.Save!.StrengthChangeDrink(TimePass);
+                        Core.Save!.StrengthChangeDrink(TimePass * attributes.Drink);
                     }
                     else if (Core.Save!.StrengthDrink >= sm75)
-                        Core.Save!.Health += TimePass * 2;
+                        Core.Save!.Health += TimePass * 2 * attributes.Health;
                     LastInteractionTime = DateTime.Now;
                     break;
                 case WorkingState.Work:
@@ -282,7 +303,7 @@ namespace VPet_Simulator.Core
                     var nsdrink = needdrink * .3;
                     if (Core.Save!.Strength > sm25 + nsfood + nsdrink)
                     {//可以用体力减少一些消耗,并且增加效率
-                        Core.Save!.StrengthChange(-nsfood - nsdrink);
+                        Core.Save!.StrengthChange((-nsfood - nsdrink) * attributes.Strength);
                         efficiency += 0.1;
                         needfood -= nsfood;
                         needdrink -= nsdrink;
@@ -290,18 +311,18 @@ namespace VPet_Simulator.Core
 
                     if (Core.Save!.StrengthFood <= sm25)
                     {//低状态低效率
-                        Core.Save!.StrengthChangeFood(-needfood / 2);
+                        Core.Save!.StrengthChangeFood(-needfood / 2 * attributes.Food);
                         efficiency += 0.2;
                         if (Core.Save!.Strength >= needfood)
                         {
-                            Core.Save!.StrengthChange(-needfood);
+                            Core.Save!.StrengthChange(-needfood * attributes.Strength);
                             efficiency += 0.1;
                         }
                         addhealth -= 2;
                     }
                     else
                     {
-                        Core.Save!.StrengthChangeFood(-needfood);
+                        Core.Save!.StrengthChangeFood(-needfood * attributes.Food);
                         efficiency += 0.4;
                         if (Core.Save!.StrengthFood >= sm60)
                         {
@@ -311,18 +332,18 @@ namespace VPet_Simulator.Core
                     }
                     if (Core.Save!.StrengthDrink <= sm25)
                     {//低状态低效率
-                        Core.Save!.StrengthChangeDrink(-needdrink / 2);
+                        Core.Save!.StrengthChangeDrink(-needdrink / 2 * attributes.Drink);
                         efficiency += 0.2;
                         if (Core.Save!.Strength >= needdrink)
                         {
-                            Core.Save!.StrengthChange(-needdrink);
+                            Core.Save!.StrengthChange(-needdrink * attributes.Strength);
                             efficiency += 0.1;
                         }
                         addhealth -= 2;
                     }
                     else
                     {
-                        Core.Save!.StrengthChangeDrink(-needdrink);
+                        Core.Save!.StrengthChangeDrink(-needdrink * attributes.Drink);
                         efficiency += 0.4;
                         if (Core.Save!.StrengthDrink >= sm60)
                         {
@@ -331,8 +352,9 @@ namespace VPet_Simulator.Core
                         }
                     }
                     if (addhealth > 0)
-                        Core.Save!.Health += addhealth * TimePass;
-                    var addmoney = Math.Max(0, TimePass * NowWork.MoneyBase * (2 * efficiency - 0.5));
+                        Core.Save!.Health += addhealth * TimePass * attributes.Health;
+                    var addmoney = Math.Max(0, TimePass * NowWork.MoneyBase * (2 * efficiency - 0.5)) * attributes.Reward
+                        * (NowWork.Type == Work.WorkType.Work ? attributes.Money : attributes.Experience);
                     if (NowWork.Type == Work.WorkType.Work)
                         Core.Save!.Money += addmoney;
                     else
@@ -342,43 +364,43 @@ namespace VPet_Simulator.Core
                     if (NowWork.Type == Work.WorkType.Play)
                     {
                         LastInteractionTime = DateTime.Now;
-                        Core.Save!.FeelingChange(-NowWork.Feeling * TimePass);
+                        Core.Save!.FeelingChange(-NowWork.Feeling * TimePass * attributes.Feeling);
                     }
                     else
-                        Core.Save!.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2));
+                        Core.Save!.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2) * attributes.Feeling);
                     break;
                 default://默认
                     //饮食等乱七八糟的消耗
                     addhealth = -2;
                     if (Core.Save!.StrengthFood >= sm50)
                     {
-                        Core.Save!.StrengthChangeFood(-TimePass);
-                        Core.Save!.StrengthChange(TimePass);
+                        Core.Save!.StrengthChangeFood(-TimePass * attributes.Food);
+                        Core.Save!.StrengthChange(TimePass * attributes.Strength);
                         if (Core.Save!.StrengthFood >= sm75)
                             addhealth += Function.Rnd.Next(1, 3);
                     }
                     else if (Core.Save!.StrengthFood <= sm25)
                     {
-                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass;
+                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass * attributes.Health;
                         addhealth -= 2;
                     }
                     if (Core.Save!.StrengthDrink >= sm50)
                     {
-                        Core.Save!.StrengthChangeDrink(-TimePass);
-                        Core.Save!.StrengthChange(TimePass);
+                        Core.Save!.StrengthChangeDrink(-TimePass * attributes.Drink);
+                        Core.Save!.StrengthChange(TimePass * attributes.Strength);
                         if (Core.Save!.StrengthDrink >= sm75)
                             addhealth += Function.Rnd.Next(1, 3);
                     }
                     else if (Core.Save!.StrengthDrink <= sm25)
                     {
-                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass;
+                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass * attributes.Health;
                         addhealth -= 2;
                     }
                     if (addhealth > 0)
-                        Core.Save!.Health += addhealth * TimePass;
-                    Core.Save!.StrengthChangeFood(-TimePass);
-                    Core.Save!.StrengthChangeDrink(-TimePass);
-                    Core.Save!.FeelingChange(-freedrop);
+                        Core.Save!.Health += addhealth * TimePass * attributes.Health;
+                    Core.Save!.StrengthChangeFood(-TimePass * attributes.Food);
+                    Core.Save!.StrengthChangeDrink(-TimePass * attributes.Drink);
+                    Core.Save!.FeelingChange(-freedrop * attributes.Feeling);
                     break;
             }
 
@@ -386,29 +408,29 @@ namespace VPet_Simulator.Core
             //{
             //    Core.GameSave.Health -= Function.Rnd.Next(0, 1);
             //}
-            Core.Save!.Exp += TimePass;
+            Core.Save!.Exp += TimePass * attributes.Experience;
             //感受提升好感度
             if (Core.Save!.Feeling >= Core.Save!.FeelingMax * 0.75)
             {
                 if (Core.Save!.Feeling >= Core.Save!.FeelingMax * 0.90)
                 {
-                    Core.Save!.Likability += TimePass;
+                    Core.Save!.Likability += TimePass * attributes.Likability;
                 }
-                Core.Save!.Exp += TimePass * 2;
-                Core.Save!.Health += TimePass;
+                Core.Save!.Exp += TimePass * 2 * attributes.Experience;
+                Core.Save!.Health += TimePass * attributes.Health;
             }
             else if (Core.Save!.Feeling <= 25) //这个就不乘倍率了, 给上限高一些好处
             {
-                Core.Save!.Likability -= TimePass;
-                Core.Save!.Exp -= TimePass;
+                Core.Save!.Likability -= TimePass * attributes.Likability;
+                Core.Save!.Exp -= TimePass * attributes.Experience;
             }
             if (Core.Save!.StrengthDrink <= sm25)
             {
-                Core.Save!.Health -= Function.Rnd.Next(0, 1) * TimePass;
-                Core.Save!.Exp -= TimePass;
+                Core.Save!.Health -= Function.Rnd.Next(0, 1) * TimePass * attributes.Health;
+                Core.Save!.Exp -= TimePass * attributes.Experience;
             }
             else if (Core.Save!.StrengthDrink >= sm75)
-                Core.Save!.Health += Function.Rnd.Next(0, 1) * TimePass;
+                Core.Save!.Health += Function.Rnd.Next(0, 1) * TimePass * attributes.Health;
 
             FunctionSpendHandle?.Invoke();
             var newmod = Core.Save!.CalMode();
