@@ -2806,8 +2806,10 @@ namespace VPet_Simulator.Windows
         {
             if (Main.ToolBar!.BdrPanel.Visibility == Visibility.Visible)
             {
-                if (GameSavesData.GameSave.LevelMax != 0)
-                    tlvplus.Text = $" / {1000 + GameSavesData.GameSave.LevelMax * 100} x{GameSavesData.GameSave.LevelMax}";
+                int levelMax = GameSavesData.GameSave.LevelMax;
+                if (tlvplus.Tag is int previous && previous == levelMax) return;
+                tlvplus.Tag = levelMax;
+                tlvplus.Text = levelMax == 0 ? "" : $" / {1000 + levelMax * 100} x{levelMax}";
             }
         }
 
