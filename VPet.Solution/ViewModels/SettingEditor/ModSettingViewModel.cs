@@ -14,8 +14,7 @@ namespace VPet.Solution.ViewModels.SettingEditor;
 
 public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewModel
 {
-    public ModSettingViewModel(IDialogService dialogService)
-        : base(dialogService)
+    public ModSettingViewModel()
     {
         this.WhenAnyValue(x => x.SearchMod)
             .Throttle(TimeSpan.FromSeconds(0.5), ObservableSchedulers.ThreadPool)
@@ -27,6 +26,19 @@ public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewMo
 
     [ObservableProperty]
     public SettingModel Setting { get; set; }
+
+    partial void OnSettingChanged(SettingModel oldValue, SettingModel newValue)
+    {
+        if (newValue is not null)
+        {
+            Mods = new(
+                newValue.ModSetting.Mods,
+                [],
+                x => x.Name.Contains(SearchMod, StringComparison.CurrentCultureIgnoreCase)
+            );
+        }
+        SearchMod = string.Empty;
+    }
 
     public ModSettingModel ModSetting => Setting.ModSetting;
 
@@ -108,26 +120,6 @@ public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewMo
                 this,
                 "未找到模组\n路径: {0}".Translate(parameter.ModPath)
             );
-        }
-    }
-
-    partial class ModSettingViewModelObservableObjectHelper
-    {
-        partial void OnSettingChanged(SettingModel oldValue, SettingModel newValue)
-        {
-            if (newValue is not null)
-            {
-                _source.Mods = new(
-                    newValue.ModSetting.Mods,
-                    [],
-                    x =>
-                        x.Name.Contains(
-                            _source.SearchMod,
-                            StringComparison.CurrentCultureIgnoreCase
-                        )
-                );
-            }
-            _source.SearchMod = string.Empty;
         }
     }
 }

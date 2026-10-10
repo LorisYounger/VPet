@@ -5,9 +5,6 @@ namespace VPet.Solution.ViewModels.SettingEditor;
 
 public partial class GraphicsSettingViewModel : ViewModelBase, ISubSettingViewModel
 {
-    public GraphicsSettingViewModel(IDialogService dialogService)
-        : base(dialogService) { }
-
     public SettingModel Setting { get; set; } = null!;
 
     public GraphicsSettingModel GraphicsSetting => Setting.GraphicsSetting;

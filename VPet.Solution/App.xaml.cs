@@ -19,7 +19,7 @@ public partial class App : Application
         if (e.Args == null || e.Args.Length <= 0)
         {
             base.OnStartup(e);
-            Services = IOCInitializer.ConfigureServices();
+            Services = new AppServices().Build().BuildServiceProvider();
             Services
                 .GetService<IDialogService>()!
                 .Show(null, Services.GetService<MainViewModel>()!);

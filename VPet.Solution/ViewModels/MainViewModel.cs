@@ -15,8 +15,7 @@ namespace VPet.Solution.ViewModels;
 
 public partial class MainViewModel : CloseableViewModel
 {
-    public MainViewModel(IDialogService dialogService)
-        : base(dialogService)
+    public MainViewModel()
     {
         EnumInfo.DefaultToString = x =>
             x.IsFlaggable

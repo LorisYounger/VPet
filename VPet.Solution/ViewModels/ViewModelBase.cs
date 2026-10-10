@@ -1,24 +1,18 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HanumanInstitute.MvvmDialogs;
 using HKW.MVVM;
+using HKW.MVVM.SourceGenerator;
 
 namespace VPet.Solution;
 
 public partial class ViewModelBase : ObservableObjectEx
 {
-    public ViewModelBase(IDialogService dialogService)
-    {
-        DialogService = dialogService;
-    }
-
-    internal IDialogService DialogService { get; }
+    [DIProperty]
+    public required IDialogService DialogService { get; init; }
 }
 
 public partial class CloseableViewModel : ViewModelBase, IDisposable, IViewClosed
 {
-    public CloseableViewModel(IDialogService dialogService)
-        : base(dialogService) { }
-
     /// <summary>
     /// 一次性关闭事件
     /// </summary>
