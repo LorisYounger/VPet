@@ -45,13 +45,31 @@ public class ScheduleTask
 
         var effects = new List<Buff.Effect>();
         if (work != null && work.Commissions != 0)
-            effects.Add(new Buff.Effect { SourceKey = "schedule.commissions", Activity = PetActivity.ScheduleWork,
-                Reward = 1 - work.Commissions, EndTime = work.EndTime,
-                Source = work.NameTrans, Description = "工作中介抽成".Translate() });
+            effects.Add(new Buff.Effect
+            {
+                SourceKey = "schedule.commissions",
+                Activity = PetActivity.ScheduleWork,
+                Reward = 1 - work.Commissions,
+                EndTime = work.EndTime,
+                IsDebuff = work.Commissions > 0,
+                Icon= "\uF2AC",
+                Source = work.NameTrans,
+                Name = "工作中介抽成".Translate(),
+                Description = work.DescribeTrans
+            });
         if (study != null && study.Commissions != 0)
-            effects.Add(new Buff.Effect { SourceKey = "schedule.commissions", Activity = PetActivity.ScheduleStudy,
-                Reward = 1 - study.Commissions, EndTime = study.EndTime,
-                Source = study.NameTrans, Description = "培训机构学习效率".Translate() });
+            effects.Add(new Buff.Effect
+            {
+                SourceKey = "schedule.commissions",
+                Activity = PetActivity.ScheduleStudy,
+                Reward = 1 - study.Commissions,
+                EndTime = study.EndTime,
+                IsDebuff = study.Commissions > 0,
+                Icon= "\uED3D",
+                Source = study.NameTrans,
+                Name = "培训机构学习效率".Translate(),
+                Description = study.DescribeTrans
+            });
         if (effects.Count == 0)
             mw.Buff.Remove("schedule.commissions");
         else
@@ -70,11 +88,11 @@ public class ScheduleTask
             while (schedule.Contains(i.ToString()))
             {
                 var sub = schedule[(gstr)i.ToString()]?.Split(',');
-                if(sub == null)
+                if (sub == null)
                 {
                     i++;
                     continue;
-                }   
+                }
                 if (sub[0] == "rest")
                 {
                     ScheduleItems.Add(new RestScheduleItem(this, int.Parse(sub[1])));
@@ -554,7 +572,8 @@ public class ScheduleTask
         /// 扣除比例，工作金钱和学习经验的实际收益倍率为 1 - Commissions，限制在 10%～1000%。
         /// </summary>
         private double commissions;
-        [Line] public double Commissions
+        [Line]
+        public double Commissions
         {
             get => commissions;
             set => commissions = Math.Clamp(value, -9, 0.9);

@@ -22,7 +22,7 @@ namespace VPet_Simulator.Core
         Main m;
         public Timer CloseTimer;
         bool onFocus = false;
-        Timer closePanelTimer;
+        public Timer closePanelTimer;
 
         public ToolBar(Main m)
         {

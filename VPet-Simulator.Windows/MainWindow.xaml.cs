@@ -575,6 +575,7 @@ namespace VPet_Simulator.Windows
                         w.Close();
                         Windows.Remove(w);
                     }
+                    buffViewer?.Dispose();
                     Buff?.Dispose();
                     Main?.Dispose();
                     AutoSaveTimer?.Stop();
@@ -626,6 +627,7 @@ namespace VPet_Simulator.Windows
                 {
                     Windows[0].Close();
                 }
+                buffViewer?.Dispose();
                 Buff?.Dispose();
                 Main?.Dispose();
                 AutoSaveTimer?.Stop();

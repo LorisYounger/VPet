@@ -53,7 +53,7 @@ namespace VPet_Simulator.Windows.Interface
             /// <summary>效果的 Remix Icon 字符
             /// </summary>
             [Line(name: "eicon", ignoreCase: true)]
-            public string Icon { get; init; } = "";
+            public string Icon { get; init; } = "\uEC7A";
             /// <summary>
             /// 效果是否显示为减益
             /// </summary>

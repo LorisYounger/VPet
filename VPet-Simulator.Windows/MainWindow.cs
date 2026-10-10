@@ -153,7 +153,7 @@ namespace VPet_Simulator.Windows
             return list[Function.Rnd.Next(list.Count)];
         }
         private Image? hashcheckimg;
-        private BuffLabel? buffLabel;
+        private BuffViewer? buffViewer;
 
         /// <summary>
         /// 关闭该玩家的HashCheck检查
@@ -177,14 +177,14 @@ namespace VPet_Simulator.Windows
                 }
                 Main?.Dispatcher.Invoke(() =>
                 {
-                    if (Main.ToolBar != null && buffLabel == null)
+                    if (Main.ToolBar != null && buffViewer == null)
                     {
-                        buffLabel = new BuffLabel(this, Buff);
-                        Main.ToolBar.gdPanel.Children.Add(buffLabel);
+                        buffViewer = new BuffViewer(this);
+                        Main.ToolBar.gdPanel.Children.Add(buffViewer.Entry);
                     }
                     // HashCheck 图标隐藏后，增减益移到面板最右侧。
-                    if (buffLabel != null)
-                        buffLabel.Margin = new Thickness(0, 0, GameSavesData.HashCheck ? 70 : 0, 0);
+                    if (buffViewer != null)
+                        buffViewer.Entry.Margin = new Thickness(0, 0, GameSavesData.HashCheck ? 70 : 0, 0);
                     if (GameSavesData.HashCheck)
                     {
                         if (hashcheckimg == null)

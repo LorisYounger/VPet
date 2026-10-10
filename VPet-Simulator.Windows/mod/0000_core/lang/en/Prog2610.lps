@@ -1,0 +1,54 @@
+当前不生效#Currently inactive:|
+生活状态#Life Status:|
+增益#Buffs:|
+减益#Debuffs:|
+特殊#Special:|
+暂无 Buff#No Buffs:|
+增减益：{0}#Buffs/Debuffs: {0}:|
+未命名效果#Unnamed Effect:|
+来源：{0}#Source: {0}:|
+未知来源#Unknown Source:|
+适用活动：{0}#Applicable Activity: {0}:|
+体力消耗倍率#Stamina Consumption Multiplier:|
+物品体力收益倍率#Item Stamina Gain Multiplier:|
+体力变化倍率#Stamina Change Multiplier:|
+物品饱腹度收益倍率#Item Fullness Gain Multiplier:|
+饱腹度变化倍率#Fullness Change Multiplier:|
+物品口渴值收益倍率#Item Thirst Gain Multiplier:|
+口渴值变化倍率#Thirst Change Multiplier:|
+物品心情收益倍率#Item Mood Gain Multiplier:|
+心情变化倍率#Mood Change Multiplier:|
+物品健康收益倍率#Item Health Gain Multiplier:|
+健康变化倍率#Health Change Multiplier:|
+金钱收益倍率#Money Gain Multiplier:|
+物品经验收益倍率#Item Experience Gain Multiplier:|
+经验变化倍率#Experience Change Multiplier:|
+物品好感度收益倍率#Item Favorability Gain Multiplier:|
+好感度变化倍率#Favorability Change Multiplier:|
+工作金钱收益倍率#Work Money Gain Multiplier:|
+学习经验收益倍率#Study Experience Gain Multiplier:|
+娱乐经验收益倍率#Entertainment Experience Gain Multiplier:|
+工作／学习／娱乐收益倍率#Work/Study/Entertainment Gain Multiplier:|
+体力／饱腹度／口渴值上限#Max Stamina / Fullness / Thirst:|
+心情上限#Max Mood:|
+全部({0})#All ({0}):|
+增益({0})#Buff ({0}):|
+减益({0})#Debuff ({0}):|
+特殊({0})#Special ({0}):|
+当前：{0}#Current: {0}:|
+永久#Permanent:|
+{0}天{1}小时#{0} days {1} hours:|
+{0}小时{1}分#{0} hours {1} minutes:|
+{0}分{1}秒#{0} minutes {1} seconds:|
+{0}秒#{0} seconds:|
+无活动#No Activity:|
+所有活动#All Activities:|
+空闲#Idle:|
+娱乐#Entertainment:|
+旅行#Travel:|
+其他#Other:|
+使用物品#Use Item:|
+日程表开启期间#While the schedule is active:|
+日程表开启期间的{0}#{0} while the schedule is active:|
+工作中介抽成#Job agency commission:|
+培训机构学习效率#Training institution learning efficiency:|
