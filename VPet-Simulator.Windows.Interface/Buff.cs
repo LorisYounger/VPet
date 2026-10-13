@@ -36,7 +36,7 @@ namespace VPet_Simulator.Windows.Interface
             public bool IsWorkActivity => (Activity & PetActivity.All) != PetActivity.None
                 && ((Activity & PetActivity.All) & ~(PetActivity.Work | PetActivity.Study | PetActivity.Play)) == PetActivity.None;
             /// <summary>
-            /// 描述来源
+            /// 描述
             /// </summary>
             [Line(name: "edescription", ignoreCase: true)]
             public string Description { get; init; } = "";

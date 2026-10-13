@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Media.Imaging;
 using VPet_Simulator.Core;
 using static LinePutScript.Converter.LPSConvert;
+using static VPet_Simulator.Windows.Interface.Photo.UnlockCondition;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -56,7 +57,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Line(type: ConvertType.ToEnum, ignoreCase: true)]
         public FoodType Type { get; set; } = FoodType.Food;
-      
+
         [Line(ignoreCase: true)]
         public int Exp { get; set; }
         [Line(ignoreCase: true)]
@@ -72,6 +73,8 @@ namespace VPet_Simulator.Windows.Interface
         [Line(ignoreCase: true)]
         public double Likability { get; set; }
 
+        [Line(ignoreCase: true, name: "lholiday")]
+        public HolidayType Holiday { get; set; } = HolidayType.None;
         /// <summary>
         /// 描述(ToBetterBuy)
         /// </summary>
@@ -103,12 +106,12 @@ namespace VPet_Simulator.Windows.Interface
             }
         }
 
-       
+
         /// <summary>
         /// 是否已收藏
         /// </summary>
         public override bool Star { get; set; }
-       
+
         public bool? isoverload = null;
         /// <summary>
         /// 当前物品推荐价格

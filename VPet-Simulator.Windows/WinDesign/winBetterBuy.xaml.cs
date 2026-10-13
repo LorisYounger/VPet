@@ -118,6 +118,7 @@ namespace VPet_Simulator.Windows
                 {
                     foods = foods.FindAll(x => x.TranslateName.Contains(searchtext));
                 }
+                foods.RemoveAll(x => !Photo.UnlockCondition.GetHolidayCheck(x.Holiday, 30, mw.GameSavesData));
                 IOrderedEnumerable<Food> ordered;
                 switch (sortrule)
                 {
@@ -224,7 +225,7 @@ namespace VPet_Simulator.Windows
             if (mw.Set.EnableFunction)
             {//$1000以内的食物允许赊账
                 for (int i = 0; i < (int)(nibuytimes.Value ?? 0); i++)
-                {                        
+                {
                     if ((item!.Price >= 1000 || item.Exp >= 1000) && item.Price >= mw.Core.Save!.Money)
                     {//买不起
                         MessageBoxX.Show("您没有足够金钱来购买 {0}\n您需要 {1:f2} 金钱来购买\n您当前 {2:f2} 拥有金钱"
@@ -359,7 +360,7 @@ namespace VPet_Simulator.Windows
             rMoney!.Text = mw.Core.Save!.Money.ToString("f2");
         }
 
- 
+
         private Switch? _puswitchautobuy;
         private void Switch_Loaded_1(object sender, RoutedEventArgs e)
         {
@@ -425,6 +426,6 @@ namespace VPet_Simulator.Windows
             mw.GameSavesData["betterbuysetting"][(gint)"double"] = (int)(nibuytimes.Value ?? 0);
         }
 
- 
+
     }
 }

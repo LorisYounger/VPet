@@ -251,40 +251,9 @@ public class Photo
                     return false;
                 }
             }
-            if (Holiday != HolidayType.None)
+            if (!GetHolidayCheck(Holiday, DateOffset, save))
             {
-                switch (Holiday)
-                {
-                    case HolidayType.Mid_Autumn_Festival:
-                        if (!CheckDate(GetLunarDate(8, 15)))
-                            return false;
-                        break;
-                    case HolidayType.Dragon_Boat_Festival:
-                        if (!CheckDate(GetLunarDate(5, 5)))
-                            return false;
-                        break;
-                    case HolidayType.New_Years_Day:
-                        if (!CheckDate(new DateTime(now.Year, 1, 1)))
-                            return false;
-                        break;
-                    case HolidayType.Spring_Festival:
-                        if (!CheckDate(GetLunarDate(1, 1)))
-                            return false;
-                        break;
-                    case HolidayType.Christmas:
-                        if (!CheckDate(new DateTime(now.Year, 12, 25)))
-                            return false;
-                        break;
-                    case HolidayType.Qixi_Festival:
-                        if (!CheckDate(GetLunarDate(7, 7)))
-                            return false;
-                        break;
-                    case HolidayType.Player_Birthday: //玩家生日
-                        var bdt = save.GetDateTime("HostBDay");
-                        if (now.Month != bdt.Month || now.Day != bdt.Day)
-                            return false;
-                        break;
-                }
+                return false;
             }
             //统计数据检查
             foreach (var (stat, value) in StatCheck)
@@ -295,6 +264,47 @@ public class Photo
             }
             return true;
         }
+
+        public static bool GetHolidayCheck(HolidayType holiday, int dateOffset, GameSave_v2 save)
+        {
+            DateTime now = DateTime.Now;
+            switch (holiday)
+            {
+                case HolidayType.Mid_Autumn_Festival:
+                    if (CheckDate(GetLunarDate(8, 15), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.Dragon_Boat_Festival:
+                    if (CheckDate(GetLunarDate(5, 5), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.New_Years_Day:
+                    if (CheckDate(new DateTime(now.Year, 1, 1), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.Spring_Festival:
+                    if (CheckDate(GetLunarDate(1, 1), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.Christmas:
+                    if (CheckDate(new DateTime(now.Year, 12, 25), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.Qixi_Festival:
+                    if (CheckDate(GetLunarDate(7, 7), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.Player_Birthday: //玩家生日
+                    var bdt = save.GetDateTime("HostBDay");
+                    if (now.Month == bdt.Month && now.Day == bdt.Day)
+                        return true;
+                    break;
+                case HolidayType.None:
+                    return true;
+            }
+            return false;
+        }
+
         public string CheckReason(GameSave_v2 gamesave)
         {
             if (None) return string.Empty;
@@ -426,13 +436,14 @@ public class Photo
         /// </summary>
         public HolidayType Holiday { get; set; } = HolidayType.None;
 
+        public bool CheckDate(DateTime date) => CheckDate(date, DateOffset);
         /// <summary>
         /// 检查日期是否符合
         /// </summary>
-        public bool CheckDate(DateTime date)
+        public static bool CheckDate(DateTime date, int dateOffset)
         {
             var now = DateTime.Now;
-            return date < now && date.AddDays(DateOffset) > now;
+            return date < now && date.AddDays(dateOffset) > now;
         }
         /// <summary>
         /// 检查农历日期偏差
