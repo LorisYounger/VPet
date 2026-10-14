@@ -3121,5 +3121,64 @@ namespace VPet_Simulator.Windows
                 Items.Add(item);
             }
         }
+
+        /// <summary>
+        /// 添加效果；同一 SourceKey 只保留到期时间最晚的效果。
+        /// </summary>
+        /// <param name="sourcekey">效果来源的稳定标识，使用逗号添加多个效果</param>
+        /// <param name="time">持续时间（小时）；小于等于 0 时不添加</param>
+        public void AddEffect(string sourcekey, int time)
+        {
+            if (string.IsNullOrWhiteSpace(sourcekey) || time <= 0) return;
+
+            var endTime = DateTime.Now.AddHours(time);
+            var effects = new List<Buff.Effect>();
+            foreach (var key in sourcekey.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Distinct())
+            {
+                var template = BuffEffects.Find(effect => effect.SourceKey == key);
+                if (template == null) continue;
+
+                Buff.Effect? existing = null;
+                int count = 0;
+                for (int i = 0; i < Buff.Effects.Count; i++)
+                {
+                    var effect = Buff.Effects[i];
+                    if (effect.SourceKey != key) continue;
+                    count++;
+                    if (existing == null || effect.EndTime > existing.EndTime)
+                        existing = effect;
+                }
+                if (existing != null && existing.EndTime >= endTime)
+                {
+                    if (count > 1) effects.Add(existing);
+                    continue;
+                }
+
+                effects.Add(new Buff.Effect
+                {
+                    SourceKey = template.SourceKey,
+                    EndTime = endTime,
+                    Description = template.Description,
+                    Source = template.Source,
+                    Name = template.Name,
+                    Icon = template.Icon,
+                    IsDebuff = template.IsDebuff,
+                    Activity = template.Activity,
+                    Reward = template.Reward,
+                    Strength = template.Strength,
+                    Food = template.Food,
+                    Drink = template.Drink,
+                    Feeling = template.Feeling,
+                    Health = template.Health,
+                    Money = template.Money,
+                    Experience = template.Experience,
+                    Likability = template.Likability,
+                    StrengthMax = template.StrengthMax,
+                    FeelingMax = template.FeelingMax,
+                    EmptyString = template.EmptyString
+                });
+            }
+            if (effects.Count > 0) Buff.Update(effects);
+        }
     }
 }

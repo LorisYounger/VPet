@@ -432,7 +432,7 @@ public class Photo
             Qixi_Festival
         }
         /// <summary>
-        /// 节假日
+        /// 节假日限定
         /// </summary>
         public HolidayType Holiday { get; set; } = HolidayType.None;
 

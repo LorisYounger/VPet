@@ -41,24 +41,33 @@ namespace VPet_Simulator.Windows.Interface
             [Line(name: "edescription", ignoreCase: true)]
             public string Description { get; init; } = "";
             /// <summary>
-            /// 显示来源；稳定标识使用 SourceKey
+            /// 文本显示来源；稳定标识使用 SourceKey
             /// </summary>
             [Line(name: "esource", ignoreCase: true)]
             public string Source { get; init; } = "";
             /// <summary>
-            /// 效果的显示名称
+            /// 显示名称
             /// </summary>
             [Line(name: "ename", ignoreCase: true)]
             public string Name { get; init; } = "";
-            /// <summary>效果的 Remix Icon 字符
+            /// <summary>
+            /// Remix Icon 字符
             /// </summary>
             [Line(name: "eicon", ignoreCase: true)]
             public string Icon { get; init; } = "\uEC7A";
             /// <summary>
-            /// 效果是否显示为减益
+            /// 效果显示分类：true 为减益，false 为增益，null 为特殊效果。
             /// </summary>
-            [Line(name: "edebuff", ignoreCase: true)]
-            public bool IsDebuff { get; init; }
+            [Line(converter: typeof(DebuffConverter), name: "edebuff", ignoreCase: true)]
+            public bool? IsDebuff { get; init; }
+
+            // LinePutScript 不能直接反序列化 bool?，保留 edebuff 原有的布尔文本格式。
+            private class DebuffConverter : LPSConvert.ConvertFunction
+            {
+                public DebuffConverter() { }
+                public override string Convert(dynamic value) => value.ToString();
+                public override dynamic ConvertBack(string info) => bool.Parse(info);
+            }
             /// <summary>
             /// 限定条件/范围
             /// </summary>
@@ -102,10 +111,9 @@ namespace VPet_Simulator.Windows.Interface
             /// <summary>心情上限的点数调整量，正数增加、负数减少。</summary>
             [Line(name: "efeelingmax", ignoreCase: true)]
             public double FeelingMax { get; init; }
-            /// <summary>没有内置数值效果，可用于展示由代码插件实现的效果。</summary>
-            public bool IsEmpty => Reward == 1 && Strength == 1 && Food == 1 && Drink == 1 && Feeling == 1
-                && Health == 1 && Money == 1 && Experience == 1 && Likability == 1
-                && StrengthMax == 0 && FeelingMax == 0;
+            /// <summary>没有可显示的内置数值效果时展示的文本；自定义效果由 MOD 自行实现，不影响显示分类。</summary>
+            [Line(name: "eemptystring", ignoreCase: true)]
+            public string EmptyString { get; init; } = "";
         }
 
         private readonly IMainWindow mw;

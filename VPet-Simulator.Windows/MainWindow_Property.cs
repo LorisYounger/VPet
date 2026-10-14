@@ -48,7 +48,7 @@ public partial class MainWindow
     public List<Photo> Photos { get; } = new List<Photo>();
 
     public GameSave_v2 GameSavesData { get; set; } = new GameSave_v2("VPET");
-
+    public List<Buff.Effect> BuffEffects { get; set; } = new List<Buff.Effect>();
     public static readonly string ModPath = ExtensionValue.BaseDirectory + @"\mod";
     public bool IsSteamUser { get; }
     public LPS_D Args { get; }
@@ -80,7 +80,7 @@ public partial class MainWindow
     public UIElement? TalkBox;
     public winGameSetting? winSetting { get; set; }
     public winBetterBuy? winBetterBuy { get; set; }
-    public winGallery? winGallery { get; set; } 
+    public winGallery? winGallery { get; set; }
     public winInventory? winInventory { get; set; }
 
     public winWorkMenu? winWorkMenu { get; set; }

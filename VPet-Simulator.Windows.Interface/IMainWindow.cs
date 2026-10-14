@@ -89,6 +89,10 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         List<Food> Foods { get; }
         /// <summary>
+        /// 预设的Buff效果. 方便其他事件/物品拉取
+        /// </summary>
+        List<Buff.Effect> BuffEffects { get; }
+        /// <summary>
         /// 需要食物时会说的话
         /// </summary>
         List<LowText> LowFoodText { get; }
@@ -307,6 +311,12 @@ namespace VPet_Simulator.Windows.Interface
         /// 宠物当前活动
         /// </summary>
         public PetActivity Activity { get; }
+        /// <summary>
+        /// 添加效果
+        /// </summary>
+        /// <param name="sourcekey">效果来源的稳定标识,使用逗号添加多个效果</param>
+        /// <param name="time">持续时间 (小时)</param>
+        public void AddEffect(string sourcekey, int time);
     }
 
     /// <summary>

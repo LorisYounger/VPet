@@ -237,8 +237,8 @@ public partial class BuffViewer : Border, IDisposable
     private string AccentResource(Buff.Effect effect)
     {
         bool active = mw.Buff.IsActivityActive(effect.Activity);
-        if (effect.IsDebuff) return active ? "BuffDebuff" : "BuffInactiveDebuff";
-        if (effect.IsEmpty) return active ? "PrimaryText" : "BuffInactiveSpecial";
+        if (effect.IsDebuff == true) return active ? "BuffDebuff" : "BuffInactiveDebuff";
+        if (effect.IsDebuff == null) return active ? "PrimaryText" : "BuffInactiveSpecial";
         return active ? "DARKPrimary" : "BuffInactiveBenefit";
     }
 
@@ -251,8 +251,8 @@ public partial class BuffViewer : Border, IDisposable
         {
             var effect = mw.Buff.Effects[i];
             if (effect.IsExpired) continue;
-            if (effect.IsDebuff) debuffs++;
-            else if (effect.IsEmpty) special++;
+            if (effect.IsDebuff == true) debuffs++;
+            else if (effect.IsDebuff == null) special++;
             else benefits++;
             finite |= effect.EndTime != DateTime.MaxValue;
 
@@ -278,7 +278,7 @@ public partial class BuffViewer : Border, IDisposable
                     ? (string.IsNullOrWhiteSpace(effect.Source) ? "未命名效果".Translate() : effect.Source) : effect.Name;
                 ((TextBlock)row.FindName("SourceText")).Text = "来源：{0}".Translate(
                     string.IsNullOrWhiteSpace(effect.Source) ? "未知来源".Translate() : effect.Source);
-                ((TextBlock)row.FindName("TypeText")).Text = (effect.IsDebuff ? "减益" : effect.IsEmpty ? "特殊" : "增益").Translate();
+                ((TextBlock)row.FindName("TypeText")).Text = (effect.IsDebuff == true ? "减益" : effect.IsDebuff == null ? "特殊" : "增益").Translate();
                 ((TextBlock)row.FindName("ActivityText")).Text = "适用活动：{0}".Translate(ActivityName(effect.Activity));
                 var description = (TextBlock)row.FindName("DescriptionText");
                 description.Visibility = string.IsNullOrWhiteSpace(effect.Description) ? Visibility.Collapsed : Visibility.Visible;
@@ -312,8 +312,8 @@ public partial class BuffViewer : Border, IDisposable
                 AddValue("体力／饱腹度／口渴值上限", effect.StrengthMax, false);
                 AddValue("心情上限", effect.FeelingMax, false);
                 var valueText = (TextBlock)row.FindName("ValuesText");
-                valueText.Text = values.ToString();
-                valueText.Visibility = values.Length == 0 ? Visibility.Collapsed : Visibility.Visible;
+                valueText.Text = values.Length == 0 ? effect.EmptyString : values.ToString();
+                valueText.Visibility = string.IsNullOrWhiteSpace(valueText.Text) ? Visibility.Collapsed : Visibility.Visible;
                 Rows.Children.Insert(rowIndex, row);
             }
             string accent = AccentResource(effect);
@@ -321,8 +321,8 @@ public partial class BuffViewer : Border, IDisposable
             if (row.BorderBrush != accentBrush) row.BorderBrush = accentBrush;
             bool active = mw.Buff.IsActivityActive(effect.Activity);
             var background = (Brush)FindResource(active
-                ? effect.IsDebuff ? "BuffDebuffBackground" : effect.IsEmpty ? "BuffSpecialBackground" : "DARKPrimaryTrans4"
-                : effect.IsDebuff ? "BuffInactiveDebuffBackground" : effect.IsEmpty ? "BuffSpecialBackground" : "BuffInactiveBenefitBackground");
+                ? effect.IsDebuff == true ? "BuffDebuffBackground" : effect.IsDebuff == null ? "BuffSpecialBackground" : "DARKPrimaryTrans4"
+                : effect.IsDebuff == true ? "BuffInactiveDebuffBackground" : effect.IsDebuff == null ? "BuffSpecialBackground" : "BuffInactiveBenefitBackground");
             if (row.Background != background) row.Background = background;
             ((TextBlock)row.FindName("InactiveText")).Visibility = active ? Visibility.Collapsed : Visibility.Visible;
             rowIndex++;
@@ -373,7 +373,7 @@ public partial class BuffViewer : Border, IDisposable
         foreach (Expander row in Rows.Children)
         {
             var effect = (Buff.Effect)row.DataContext;
-            int type = effect.IsDebuff ? 2 : effect.IsEmpty ? 3 : 1;
+            int type = effect.IsDebuff == true ? 2 : effect.IsDebuff == null ? 3 : 1;
             bool visible = category == 0 || category == type;
             row.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
             any |= visible;
