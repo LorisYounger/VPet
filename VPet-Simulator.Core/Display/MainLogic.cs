@@ -242,6 +242,11 @@ namespace VPet_Simulator.Core
             public double Money { get; set; } = 1;
             public double Experience { get; set; } = 1;
             public double Likability { get; set; } = 1;
+            public double StrengthCost { get; set; } = 1;
+            public double FoodCost { get; set; } = 1;
+            public double DrinkCost { get; set; } = 1;
+            public double FeelingCost { get; set; } = 1;
+            public double HealthCost { get; set; } = 1;
 
         }
 
@@ -303,7 +308,7 @@ namespace VPet_Simulator.Core
                     var nsdrink = needdrink * .3;
                     if (Core.Save!.Strength > sm25 + nsfood + nsdrink)
                     {//可以用体力减少一些消耗,并且增加效率
-                        Core.Save!.StrengthChange((-nsfood - nsdrink) * attributes.Strength);
+                        Core.Save!.StrengthChange((-nsfood - nsdrink) * attributes.StrengthCost);
                         efficiency += 0.1;
                         needfood -= nsfood;
                         needdrink -= nsdrink;
@@ -311,18 +316,18 @@ namespace VPet_Simulator.Core
 
                     if (Core.Save!.StrengthFood <= sm25)
                     {//低状态低效率
-                        Core.Save!.StrengthChangeFood(-needfood / 2 * attributes.Food);
+                        Core.Save!.StrengthChangeFood(-needfood / 2 * attributes.FoodCost);
                         efficiency += 0.2;
                         if (Core.Save!.Strength >= needfood)
                         {
-                            Core.Save!.StrengthChange(-needfood * attributes.Strength);
+                            Core.Save!.StrengthChange(-needfood * attributes.StrengthCost);
                             efficiency += 0.1;
                         }
                         addhealth -= 2;
                     }
                     else
                     {
-                        Core.Save!.StrengthChangeFood(-needfood * attributes.Food);
+                        Core.Save!.StrengthChangeFood(-needfood * attributes.FoodCost);
                         efficiency += 0.4;
                         if (Core.Save!.StrengthFood >= sm60)
                         {
@@ -332,18 +337,18 @@ namespace VPet_Simulator.Core
                     }
                     if (Core.Save!.StrengthDrink <= sm25)
                     {//低状态低效率
-                        Core.Save!.StrengthChangeDrink(-needdrink / 2 * attributes.Drink);
+                        Core.Save!.StrengthChangeDrink(-needdrink / 2 * attributes.DrinkCost);
                         efficiency += 0.2;
                         if (Core.Save!.Strength >= needdrink)
                         {
-                            Core.Save!.StrengthChange(-needdrink * attributes.Strength);
+                            Core.Save!.StrengthChange(-needdrink * attributes.StrengthCost);
                             efficiency += 0.1;
                         }
                         addhealth -= 2;
                     }
                     else
                     {
-                        Core.Save!.StrengthChangeDrink(-needdrink * attributes.Drink);
+                        Core.Save!.StrengthChangeDrink(-needdrink * attributes.DrinkCost);
                         efficiency += 0.4;
                         if (Core.Save!.StrengthDrink >= sm60)
                         {
@@ -364,43 +369,44 @@ namespace VPet_Simulator.Core
                     if (NowWork.Type == Work.WorkType.Play)
                     {
                         LastInteractionTime = DateTime.Now;
-                        Core.Save!.FeelingChange(-NowWork.Feeling * TimePass * attributes.Feeling);
+                        Core.Save!.FeelingChange(-NowWork.Feeling * TimePass
+                            * (NowWork.Feeling > 0 ? attributes.FeelingCost : attributes.Feeling));
                     }
                     else
-                        Core.Save!.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2) * attributes.Feeling);
+                        Core.Save!.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2) * attributes.FeelingCost);
                     break;
                 default://默认
                     //饮食等乱七八糟的消耗
                     addhealth = -2;
                     if (Core.Save!.StrengthFood >= sm50)
                     {
-                        Core.Save!.StrengthChangeFood(-TimePass * attributes.Food);
+                        Core.Save!.StrengthChangeFood(-TimePass * attributes.FoodCost);
                         Core.Save!.StrengthChange(TimePass * attributes.Strength);
                         if (Core.Save!.StrengthFood >= sm75)
                             addhealth += Function.Rnd.Next(1, 3);
                     }
                     else if (Core.Save!.StrengthFood <= sm25)
                     {
-                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass * attributes.Health;
+                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass * attributes.HealthCost;
                         addhealth -= 2;
                     }
                     if (Core.Save!.StrengthDrink >= sm50)
                     {
-                        Core.Save!.StrengthChangeDrink(-TimePass * attributes.Drink);
+                        Core.Save!.StrengthChangeDrink(-TimePass * attributes.DrinkCost);
                         Core.Save!.StrengthChange(TimePass * attributes.Strength);
                         if (Core.Save!.StrengthDrink >= sm75)
                             addhealth += Function.Rnd.Next(1, 3);
                     }
                     else if (Core.Save!.StrengthDrink <= sm25)
                     {
-                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass * attributes.Health;
+                        Core.Save!.Health -= Function.Rnd.NextDouble() * TimePass * attributes.HealthCost;
                         addhealth -= 2;
                     }
                     if (addhealth > 0)
                         Core.Save!.Health += addhealth * TimePass * attributes.Health;
-                    Core.Save!.StrengthChangeFood(-TimePass * attributes.Food);
-                    Core.Save!.StrengthChangeDrink(-TimePass * attributes.Drink);
-                    Core.Save!.FeelingChange(-freedrop * attributes.Feeling);
+                    Core.Save!.StrengthChangeFood(-TimePass * attributes.FoodCost);
+                    Core.Save!.StrengthChangeDrink(-TimePass * attributes.DrinkCost);
+                    Core.Save!.FeelingChange(-freedrop * attributes.FeelingCost);
                     break;
             }
 
@@ -421,13 +427,13 @@ namespace VPet_Simulator.Core
             }
             else if (Core.Save!.Feeling <= 25) //这个就不乘倍率了, 给上限高一些好处
             {
-                Core.Save!.Likability -= TimePass * attributes.Likability;
-                Core.Save!.Exp -= TimePass * attributes.Experience;
+                Core.Save!.Likability -= TimePass;
+                Core.Save!.Exp -= TimePass;
             }
             if (Core.Save!.StrengthDrink <= sm25)
             {
-                Core.Save!.Health -= Function.Rnd.Next(0, 1) * TimePass * attributes.Health;
-                Core.Save!.Exp -= TimePass * attributes.Experience;
+                Core.Save!.Health -= Function.Rnd.Next(0, 1) * TimePass * attributes.HealthCost;
+                Core.Save!.Exp -= TimePass;
             }
             else if (Core.Save!.StrengthDrink >= sm75)
                 Core.Save!.Health += Function.Rnd.Next(0, 1) * TimePass * attributes.Health;

@@ -79,7 +79,7 @@ namespace VPet_Simulator.Windows.Interface
         [Line(ignoreCase: true)]
         public string Buff { get; set; } = string.Empty;
         /// <summary>
-        /// Buff生效时间
+        /// Buff 生效时间（现实小时）
         /// </summary>
         [Line(ignoreCase: true)]
         public int BuffTime { get; set; } = 0;
@@ -109,8 +109,11 @@ namespace VPet_Simulator.Windows.Interface
                     { LocalizeCore.Translate("健康"), Health },
                     { LocalizeCore.Translate("好感度"), Likability },
                 };
-                return dic.Where(kv => kv.Value != 0)
+                var values = dic.Where(kv => kv.Value != 0)
                     .ToDictionary(kv => kv.Key, kv => $"{(kv.Value > 0 ? "+" : "")}{kv.Value.ToString("f2")}");
+                if (!string.IsNullOrWhiteSpace(Buff) && BuffTime > 0)
+                    values.Add("效果".Translate(), "{0}（{1}小时）".Translate(Buff, BuffTime));
+                return values;
             }
         }
 

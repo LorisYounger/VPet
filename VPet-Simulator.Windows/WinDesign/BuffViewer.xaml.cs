@@ -300,14 +300,19 @@ public partial class BuffViewer : Border, IDisposable
                     values.Append(name.Translate()).Append(' ').Append(multiplier ? "×" : value > 0 ? "+" : "")
                         .Append(value.ToString(multiplier ? "G" : "0.##%"));
                 }
-                AddValue(effect.IsWorkActivity ? "体力消耗倍率" : item ? "物品体力收益倍率" : "体力变化倍率", effect.Strength);
-                AddValue(item ? "物品饱腹度收益倍率" : "饱腹度变化倍率", effect.Food);
-                AddValue(item ? "物品口渴值收益倍率" : "口渴值变化倍率", effect.Drink);
-                AddValue(item ? "物品心情收益倍率" : "心情变化倍率", effect.Feeling);
-                AddValue(item ? "物品健康收益倍率" : "健康变化倍率", effect.Health);
+                AddValue("体力获取倍率", effect.Strength);
+                AddValue("饱腹度获取倍率", effect.Food);
+                AddValue("口渴值获取倍率", effect.Drink);
+                AddValue("心情获取倍率", effect.Feeling);
+                AddValue("健康获取倍率", effect.Health);
+                AddValue("体力消耗倍率", effect.StrengthCost);
+                AddValue("饱腹度消耗倍率", effect.FoodCost);
+                AddValue("口渴值消耗倍率", effect.DrinkCost);
+                AddValue("心情消耗倍率", effect.FeelingCost);
+                AddValue("健康消耗倍率", effect.HealthCost);
                 AddValue("金钱收益倍率", effect.Money);
-                AddValue(item ? "物品经验收益倍率" : "经验变化倍率", effect.Experience);
-                AddValue(item ? "物品好感度收益倍率" : "好感度变化倍率", effect.Likability);
+                AddValue(item ? "物品经验收益倍率" : "经验获取倍率", effect.Experience);
+                AddValue(item ? "物品好感度收益倍率" : "好感度获取倍率", effect.Likability);
                 AddValue(activity == PetActivity.Work ? "工作金钱收益倍率" : activity == PetActivity.Study ? "学习经验收益倍率"
                     : activity == PetActivity.Play ? "娱乐经验收益倍率" : "工作／学习／娱乐收益倍率", effect.Reward);
                 AddValue("体力／饱腹度／口渴值上限", effect.StrengthMax, false);
