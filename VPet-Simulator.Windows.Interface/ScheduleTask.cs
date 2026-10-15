@@ -448,7 +448,8 @@ public class ScheduleTask : IDisposable
             {
                 Image = ImageResources.NewSafeBitmapImage(source);
             }
-
+            // 启动读档在后台线程创建日程，冻结图片后才能由 UI 模板跨线程绑定。
+            Image.Freeze();
         }
 
         public ImageSource Image { get; set; }
