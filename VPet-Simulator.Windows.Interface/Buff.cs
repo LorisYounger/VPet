@@ -105,10 +105,10 @@ namespace VPet_Simulator.Windows.Interface
             [Line(name: "elikability", ignoreCase: true)]
             public double Likability { get; init; } = 1;
 
-            /// <summary>体力、饱腹度和口渴值共用上限的点数调整量，正数增加、负数减少。</summary>
+            /// <summary>体力、饱腹度和口渴值共用基础上限的百分比调整量，0.1 为增加 10%，-0.1 为减少 10%；多个效果相加。</summary>
             [Line(name: "estrengthmax", ignoreCase: true)]
             public double StrengthMax { get; init; }
-            /// <summary>心情上限的点数调整量，正数增加、负数减少。</summary>
+            /// <summary>心情基础上限的百分比调整量，0.1 为增加 10%，-0.1 为减少 10%；多个效果相加。</summary>
             [Line(name: "efeelingmax", ignoreCase: true)]
             public double FeelingMax { get; init; }
             /// <summary>没有可显示的内置数值效果时展示的文本；自定义效果由 MOD 自行实现，不影响显示分类。</summary>

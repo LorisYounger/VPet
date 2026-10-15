@@ -130,11 +130,11 @@ public class GameSave_VPet : IGameSave
     public double Strength { get => strength; set => strength = Math.Min(Math.Max(StrengthMax, strength), Math.Max(0, value)); }
 
     /// <summary>
-    /// 运行时上限调整
+    /// 运行时基础上限的百分比调整量，0 为不调整，0.1 为增加 10%。
     /// </summary>
     public (double Strength, double Feeling) AttributeLimits { get; set; }
-    public double StrengthMax => Math.Max(1, 100 + (int)(Math.Pow(Level * (1 + LevelMax), 0.75) * 4)
-        + AttributeLimits.Strength);
+    public double StrengthMax => Math.Max(1, (100 + (int)(Math.Pow(Level * (1 + LevelMax), 0.75) * 4))
+        * (1 + AttributeLimits.Strength));
 
     [Line(Type = LPSConvert.ConvertType.ToFloat, IgnoreCase = true)]
     protected double strength { get; set; }
@@ -345,8 +345,8 @@ public class GameSave_VPet : IGameSave
     [Line]
     public double LikabilityMax { get; set; } = 100;
 
-    public double FeelingMax => Math.Max(1, 100 + (int)(Math.Pow(Level * (1 + LevelMax), 0.75) * 2)
-        + AttributeLimits.Feeling);
+    public double FeelingMax => Math.Max(1, (100 + (int)(Math.Pow(Level * (1 + LevelMax), 0.75) * 2))
+        * (1 + AttributeLimits.Feeling));
     /// <summary>
     /// 经验值加成 TODO
     /// </summary>

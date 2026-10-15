@@ -297,7 +297,8 @@ public partial class BuffViewer : Border, IDisposable
                 {
                     if (value == (multiplier ? 1 : 0)) return;
                     if (values.Length != 0) values.AppendLine();
-                    values.Append(name.Translate()).Append(' ').Append(multiplier ? "×" : value > 0 ? "+" : "").Append(value.ToString("G"));
+                    values.Append(name.Translate()).Append(' ').Append(multiplier ? "×" : value > 0 ? "+" : "")
+                        .Append(value.ToString(multiplier ? "G" : "0.##%"));
                 }
                 AddValue(effect.IsWorkActivity ? "体力消耗倍率" : item ? "物品体力收益倍率" : "体力变化倍率", effect.Strength);
                 AddValue(item ? "物品饱腹度收益倍率" : "饱腹度变化倍率", effect.Food);

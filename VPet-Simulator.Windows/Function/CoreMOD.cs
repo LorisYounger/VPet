@@ -292,6 +292,9 @@ namespace VPet_Simulator.Windows
                                     case "schedulepackage":
                                         mw.SchedulePackage.Add(LPSConvert.DeserializeObject<ScheduleTask.PackageFull>(li)!);
                                         break;
+                                    case "buff":
+                                        mw.BuffEffects.Add(LPSConvert.DeserializeObject<Buff.Effect>(li)!);
+                                        break;
                                 }
                             }
                         }

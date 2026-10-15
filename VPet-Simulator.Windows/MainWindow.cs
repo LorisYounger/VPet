@@ -765,6 +765,8 @@ namespace VPet_Simulator.Windows
             {
                 eattimes = (eattime - now).TotalHours;
             }
+            //结算Buff
+            AddEffect(item.Buff, item.BuffTime);
             double eatuseps;
             if (item.Type == FoodType.Gift)
                 eatuseps = Math.Max(0.5, 1 - eattimes * eattimes * 0.01);

@@ -75,6 +75,14 @@ namespace VPet_Simulator.Windows.Interface
 
         [Line(ignoreCase: true, name: "lholiday")]
         public HolidayType Holiday { get; set; } = HolidayType.None;
+        
+        [Line(ignoreCase: true)]
+        public string Buff { get; set; } = string.Empty;
+        /// <summary>
+        /// Buff生效时间
+        /// </summary>
+        [Line(ignoreCase: true)]
+        public int BuffTime { get; set; } = 0;
         /// <summary>
         /// 描述(ToBetterBuy)
         /// </summary>
