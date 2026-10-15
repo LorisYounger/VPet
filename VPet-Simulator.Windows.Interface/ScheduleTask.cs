@@ -20,7 +20,7 @@ namespace VPet_Simulator.Windows.Interface;
 /// <summary>
 /// 日程表功能
 /// </summary>
-public class ScheduleTask
+public class ScheduleTask : IDisposable
 {
     public ObservableCollection<ScheduleItemBase> ScheduleItems { get; set; } = [];
     private IMainWindow mw;
@@ -306,6 +306,14 @@ public class ScheduleTask
         IsOn = false;
         RestTime = -100;
         RestTimer.Stop();
+    }
+
+    public void Dispose()
+    {
+        Stop();
+        mw.Main.WorkTimer.E_FinishWork -= WorkTimer_E_FinishWork;
+        RestTimer.Elapsed -= RestTimer_Elapsed;
+        RestTimer.Dispose();
     }
     private int RestTime = 2;
     private Timer RestTimer = new Timer()

@@ -576,6 +576,7 @@ namespace VPet_Simulator.Windows
                         Windows.Remove(w);
                     }
                     buffViewer?.Dispose();
+                    ScheduleTask?.Dispose();
                     Buff?.Dispose();
                     Main?.Dispose();
                     AutoSaveTimer?.Stop();
@@ -628,6 +629,7 @@ namespace VPet_Simulator.Windows
                     Windows[0].Close();
                 }
                 buffViewer?.Dispose();
+                ScheduleTask?.Dispose();
                 Buff?.Dispose();
                 Main?.Dispose();
                 AutoSaveTimer?.Stop();
@@ -687,12 +689,10 @@ namespace VPet_Simulator.Windows
                 }
 
             }
-            GameSavesData = new GameSave_v2(petname.Translate());
-            //看看有没有备份,和备份对比下 (新建游戏)
-            CheckBackupConsistency(GameSavesData, "New Game");
-            Core.Save = GameSavesData.GameSave;
-            HashCheck = HashCheck;
-            GameSavesData.GameSave.Event_LevelUp += LevelUP;
+            var newSave = new GameSave_v2(petname.Translate());
+            // 新建存档与读取已有存档共用 Buff、日程和物品的加载流程。
+            CheckBackupConsistency(newSave, "New Game");
+            SavesLoad(newSave.ToLPS());
         }
 
         /// <summary>

@@ -260,7 +260,8 @@ namespace VPet_Simulator.Windows
         {
             //保存日程表
             ScheduleTask?.Save();
-
+            //保存Buff
+            Buff?.Save();
             //保存物品栏
             foreach (var v in GameSavesData.Data.Assemblage.Keys.Where(x => x.StartsWith("item")))
                 GameSavesData.Data.Remove(v);
@@ -775,19 +776,20 @@ namespace VPet_Simulator.Windows
             //开始加点
             var multipliers = Buff.GetAttributeMultipliers(PetActivity.TakeItem);
             var save = Core.Save!;
-            save.Exp += item.Exp * eatuseps * multipliers.Experience;
-            var strength = item.Strength / 2 * eatuseps * multipliers.Strength;
+            // 食物的负属性保留原值，不参与获取类 Buff；延迟补充部分只在这里计算一次倍率。
+            save.Exp += item.Exp * eatuseps * (item.Exp > 0 ? multipliers.Experience : 1);
+            var strength = item.Strength / 2 * eatuseps * (item.Strength > 0 ? multipliers.Strength : 1);
             save.StrengthChange(strength);
             save.StoreStrength += strength;
-            var food = item.StrengthFood / 2 * eatuseps * multipliers.Food;
+            var food = item.StrengthFood / 2 * eatuseps * (item.StrengthFood > 0 ? multipliers.Food : 1);
             save.StrengthChangeFood(food);
             save.StoreStrengthFood += food;
-            var drink = item.StrengthDrink / 2 * eatuseps * multipliers.Drink;
+            var drink = item.StrengthDrink / 2 * eatuseps * (item.StrengthDrink > 0 ? multipliers.Drink : 1);
             save.StrengthChangeDrink(drink);
             save.StoreStrengthDrink += drink;
-            save.FeelingChange(item.Feeling * eatuseps * multipliers.Feeling);
-            save.Health += item.Health * eatuseps * multipliers.Health;
-            save.Likability += item.Likability * eatuseps * multipliers.Likability;
+            save.FeelingChange(item.Feeling * eatuseps * (item.Feeling > 0 ? multipliers.Feeling : 1));
+            save.Health += item.Health * eatuseps * (item.Health > 0 ? multipliers.Health : 1);
+            save.Likability += item.Likability * eatuseps * (item.Likability > 0 ? multipliers.Likability : 1);
             //吃腻了
             eattimes += Math.Max(0.5, Math.Min(4, 2 - (item.Likability + item.Feeling / 2) / 5));
             GameSavesData["buytime"].SetDateTime(item.Name, now.AddHours(eattimes));
@@ -949,24 +951,7 @@ namespace VPet_Simulator.Windows
                 return false;
             if (string.IsNullOrWhiteSpace(lps.ToString()))
                 return false;
-            GameSave_v2 tmp;
-            if (GameSavesData != null)
-                tmp = new GameSave_v2(lps, GameSavesData);
-            else
-            {
-                var data = new LPS_D();
-                foreach (var item in Set.PetData_OLD)
-                {
-                    if (item.Name.Contains("_"))
-                    {
-                        var strs = Sub.Split(item.Name, "_", 1);
-                        data[strs[0]][(gstr)strs[1]] = item.Info;
-                    }
-                    else
-                        data.Add(new Line(item.Name, item.Info));
-                }
-                tmp = new GameSave_v2(lps, null, olddata: data);
-            }
+            var tmp = new GameSave_v2(lps);
             if (tmp.GameSave == null)
                 return false;
             if (tmp.GameSave.Money == 0 && tmp.GameSave.Likability == 0 && tmp.GameSave.Exp == 0
@@ -1003,10 +988,24 @@ namespace VPet_Simulator.Windows
                 tmp.GameSave.LikabilityMax += totalhour / 10;
                 tmp.Data[(gbol)"round"] = false;
             }
+            if (Main.State != Main.WorkingState.Nomal)
+            {
+                Main.WorkTimer.Dispatcher.Invoke(() => Main.WorkTimer.Visibility = Visibility.Collapsed);
+                Main.State = Main.WorkingState.Nomal;
+            }
+            if (winWorkMenu != null)
+            {
+                Dispatcher.Invoke(() => winWorkMenu.Close());
+                winWorkMenu = null;
+            }
+            ScheduleTask?.Dispose();
+            Buff?.Dispose();
             GameSavesData = tmp;
             if (evaluationStatisticsInitialized)
                 ResetEvaluationSessionStatistics();
             Core.Save = tmp.GameSave;
+            Buff = new Buff(this);
+            ScheduleTask = new ScheduleTask(this);
             Items.Clear();
             foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("item")))
             {
@@ -1722,6 +1721,17 @@ namespace VPet_Simulator.Windows
             ClickTexts.RemoveAll(x => !x.FindTag(tag));
             SelectTexts.RemoveAll(x => !x.FindTag(tag));
 
+            // 读取存档需要动画中的工作配置与 WorkTimer，但此时还不启动游戏时钟。
+            await Dispatcher.InvokeAsync(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate());
+            Core.Save = GameSavesData.GameSave;
+            Core.Graph = petloader.Graph(Set.Resolution, Dispatcher);
+            Main = await Dispatcher.InvokeAsync(() => new Main(Core));
+            Main.Load_0_BaseConsole();
+            Main.Load_2_TouchEvent();
+            Main.Load_2_WaitGraph(c => Dispatcher.Invoke(() => LoadingText.Content =
+                "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()
+                + $"\n  {c} / {petloader.GraphCount}")).Wait();
+
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏存档".Translate()));
             //加载存档
             if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps")) //有老的旧存档,优先旧存档
@@ -1880,23 +1890,10 @@ namespace VPet_Simulator.Windows
             MusicTimer.Elapsed += MusicTimer_Elapsed;
 
 
-            //await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
-            await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()));
-            Core.Graph = petloader.Graph(Set.Resolution, Dispatcher);
-
-            Main = await Dispatcher.InvokeAsync(() => new Main(Core));
-            Buff = new Buff(this);
-
-            Main.LoadALL((c) =>
-            {
-                Dispatcher.Invoke(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()
-                + $"\n  {c} / {petloader.GraphCount}");
-            }
-            //#if NewYear
-            //            , Core.Graph!.FindGraph("newyear", AnimatType.Single, Core.Save!.Mode)
-            //#endif
-            );
+            await Dispatcher.InvokeAsync(() => LoadingText.Content = "尝试启动桌宠".Translate());
             Main.NoFunctionMOD = Set.CalFunState;
+            Main.Load_3_BindingTimer();
+            Main.Load_4_Start();
             await Dispatcher.InvokeAsync(() =>
               {
                   //清空资源
@@ -1907,9 +1904,6 @@ namespace VPet_Simulator.Windows
                       Main.ToolBar.Resources = Application.Current.Resources;
                   Main.ToolBar?.LoadClean();
                   Main.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
-
-                  //日程表加载
-                  ScheduleTask = new ScheduleTask(this);
 
                   if (ws.Count == 0)
                   {
@@ -3175,6 +3169,11 @@ namespace VPet_Simulator.Windows
                     Money = template.Money,
                     Experience = template.Experience,
                     Likability = template.Likability,
+                    StrengthCost = template.StrengthCost,
+                    FoodCost = template.FoodCost,
+                    DrinkCost = template.DrinkCost,
+                    FeelingCost = template.FeelingCost,
+                    HealthCost = template.HealthCost,
                     StrengthMax = template.StrengthMax,
                     FeelingMax = template.FeelingMax,
                     EmptyString = template.EmptyString

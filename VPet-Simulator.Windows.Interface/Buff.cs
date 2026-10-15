@@ -1,4 +1,6 @@
+using LinePutScript;
 using LinePutScript.Converter;
+using LinePutScript.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,7 +85,7 @@ namespace VPet_Simulator.Windows.Interface
             /// </summary>
             [Line(name: "ereward", ignoreCase: true)]
             public double Reward { get; init; } = 1;
-            /// <summary>体力变化倍率，默认 1；工作为消耗倍率，睡眠、空闲和物品为相应变化倍率。</summary>
+            /// <summary>体力获取倍率，默认 1；消耗使用 StrengthCost。</summary>
             [Line(name: "estrength", ignoreCase: true)]
             public double Strength { get; init; } = 1;
             [Line(name: "efood", ignoreCase: true)]
@@ -92,7 +94,7 @@ namespace VPet_Simulator.Windows.Interface
             public double Drink { get; init; } = 1;
             [Line(name: "efeeling", ignoreCase: true)]
             public double Feeling { get; init; } = 1;
-            /// <summary>健康变化倍率，默认 1。</summary>
+            /// <summary>健康获取倍率，默认 1；消耗使用 HealthCost。</summary>
             [Line(name: "ehealth", ignoreCase: true)]
             public double Health { get; init; } = 1;
             /// <summary>金钱收益倍率，默认 1。</summary>
@@ -104,6 +106,18 @@ namespace VPet_Simulator.Windows.Interface
             /// <summary>好感度变化倍率，默认 1。</summary>
             [Line(name: "elikability", ignoreCase: true)]
             public double Likability { get; init; } = 1;
+
+            /// <summary>本体活动的体力消耗倍率，不影响食物的负属性。</summary>
+            [Line(name: "estrengthcost", ignoreCase: true)]
+            public double StrengthCost { get; init; } = 1;
+            [Line(name: "efoodcost", ignoreCase: true)]
+            public double FoodCost { get; init; } = 1;
+            [Line(name: "edrinkcost", ignoreCase: true)]
+            public double DrinkCost { get; init; } = 1;
+            [Line(name: "efeelingcost", ignoreCase: true)]
+            public double FeelingCost { get; init; } = 1;
+            [Line(name: "ehealthcost", ignoreCase: true)]
+            public double HealthCost { get; init; } = 1;
 
             /// <summary>体力、饱腹度和口渴值共用基础上限的百分比调整量，0.1 为增加 10%，-0.1 为减少 10%；多个效果相加。</summary>
             [Line(name: "estrengthmax", ignoreCase: true)]
@@ -120,7 +134,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 效果列表；请使用 Add/Update/Remove 方法修改，避免直接操作列表导致结算不正确。
         /// </summary>
-        public List<Effect> Effects { get; } = [];
+        public List<Effect> Effects { get; }
         private bool isScheduleOn;
         /// <summary>
         /// 日程表是否正在生效
@@ -138,6 +152,9 @@ namespace VPet_Simulator.Windows.Interface
         public Buff(IMainWindow mw)
         {
             this.mw = mw;
+            Effects = LPSConvert.DeserializeObject<List<Effect>>(mw.GameSavesData.Data["buff"]) ?? [];
+            Effects.RemoveAll(effect => effect.IsExpired);
+            RebuildModifiers();
             mw.Main.TimeHandle += OnTime;
         }
 
@@ -230,6 +247,11 @@ namespace VPet_Simulator.Windows.Interface
                 result.Money *= effect.Money;
                 result.Experience *= effect.Experience;
                 result.Likability *= effect.Likability;
+                result.StrengthCost *= effect.StrengthCost;
+                result.FoodCost *= effect.FoodCost;
+                result.DrinkCost *= effect.DrinkCost;
+                result.FeelingCost *= effect.FeelingCost;
+                result.HealthCost *= effect.HealthCost;
             }
             return result;
         }
@@ -239,7 +261,12 @@ namespace VPet_Simulator.Windows.Interface
             Effects.RemoveAll(effect => effect.IsExpired);
             RebuildModifiers();
         }
-
+        public void Save()
+        {
+            mw.GameSavesData.Data["buff"] = LPSConvert.GetObjectLine<Line_D>(Effects
+                .Where(x => !x.IsExpired && x.EndTime != DateTime.MaxValue)
+                .ToList(), "buff");
+        }
         /// <summary>取消定时刷新并清除效果、倍率和上限调整。</summary>
         public void Dispose()
         {
