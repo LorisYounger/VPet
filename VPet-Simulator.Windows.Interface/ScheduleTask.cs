@@ -647,26 +647,29 @@ public class ScheduleTask : IDisposable
             {
                 Duration = 1;
             }
-            if (Price < 0)
-            {
-                Price = 1;
-            }
-            if (LevelInNeed < 1)
+            if (!double.IsFinite(LevelInNeed) || LevelInNeed < 1)
             {
                 LevelInNeed = 1.25;
             }
-            var use = Math.Sign(Commissions - 0.15) * Math.Pow(Math.Abs(Commissions * 100 - 15), 1.5) +
-                Math.Sign(LevelInNeed - 1.2) * Math.Pow(Math.Abs(LevelInNeed * 100 - 120), 1.5) +
-                (Price * LevelInNeed * 100 - 100) / 4;
-            var get = Math.Sqrt(Duration);
-            var realvalue = use / get;
-            if (realvalue < 10)
+            if (!double.IsFinite(Commissions))
             {
                 Commissions = 0.2;
-                LevelInNeed = 1.25;
-                Price = 1;
-                Duration = 7;
             }
+
+            // 基础周价 0.20；第二周按 85%、之后按 70% 折算收费天数。
+            var days = Math.Min(Duration, 7) + 0.85 * Math.Min(Math.Max(Duration - 7, 0), 7)
+                + 0.70 * Math.Max(Duration - 14, 0);
+            // 保留收益不超过 50% 可以免费；低抽成加价，等级限制最多折价 25%。
+            var reward = Math.Pow(Math.Max(0, (1 - Commissions - 0.50) / 0.30), 1.5);
+            var level = Math.Clamp(1.25 / LevelInNeed, 0.75, 1.25);
+            var referencePrice = 0.20 * (days / 7) * reward * level;
+            var minimumPrice = Math.Ceiling(referencePrice * 0.80 * 100 - 1e-9) / 100;
+
+            // 无效价格采用推荐价；超模套餐只补足最低价，保留原有套餐权益。
+            if (!double.IsFinite(Price) || Price < 0)
+                Price = Math.Ceiling(referencePrice * 100 - 1e-9) / 100;
+            else if (Price < minimumPrice)
+                Price = minimumPrice;
         }
 
         public override string ToString() => NameTrans;
