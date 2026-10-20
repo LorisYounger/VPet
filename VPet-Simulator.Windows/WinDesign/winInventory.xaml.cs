@@ -126,7 +126,7 @@ namespace VPet_Simulator.Windows
         /// </summary>
         private void UseItem(Item item, int count = 1)
         {
-            if (item == null) return;
+            if (item == null || !item.CanUse) return;
             while (count-- > 0)
                 item.Use(mw);
             // 没有通知，直接刷新
@@ -232,6 +232,7 @@ namespace VPet_Simulator.Windows
             TbtnStar.IsChecked = item.Star;
             IsMaskVisible = true;
             IsOverlayerVisible = true;
+            BtnDetailUse.Visibility = item.CanUse ? Visibility.Visible : Visibility.Collapsed;
 
             if (item.IsSingle)
             {
@@ -240,7 +241,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                spUseEnter.Visibility = Visibility.Visible;
+                spUseEnter.Visibility = item.CanUse ? Visibility.Visible : Visibility.Collapsed;
                 BorderIsSingle.Visibility = Visibility.Collapsed;
             }
         }
