@@ -180,8 +180,9 @@ public class ScheduleTask : IDisposable
             var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Work && x.Name == PackageWork.Name);
             if (pw != null)
             {
-                var np = new Package(pw, PackageWork.Level);
-                if (np.Price < mw.GameSavesData.GameSave.Money)
+                var np = new Package(pw, Math.Max(1, (int)Math.Ceiling(PackageWork.Level * pw.LevelInNeed)))
+                    { Level = PackageWork.Level, AutoRenew = true };
+                if (np.Price <= mw.GameSavesData.GameSave.Money)
                 {
                     PackageWork = np;
                     mw.GameSavesData.GameSave.Money -= np.Price;
@@ -194,8 +195,9 @@ public class ScheduleTask : IDisposable
             var ps = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Study && x.Name == PackageStudy.Name);
             if (ps != null)
             {
-                var np = new Package(ps, PackageStudy.Level);
-                if (np.Price < mw.GameSavesData.GameSave.Money)
+                var np = new Package(ps, Math.Max(1, (int)Math.Ceiling(PackageStudy.Level * ps.LevelInNeed)))
+                    { Level = PackageStudy.Level, AutoRenew = true };
+                if (np.Price <= mw.GameSavesData.GameSave.Money)
                 {
                     PackageStudy = np;
                     mw.GameSavesData.GameSave.Money -= np.Price;
@@ -204,6 +206,31 @@ public class ScheduleTask : IDisposable
             }
         }
         return isrenew;
+    }
+
+    /// <summary>
+    /// 签约或改签，按当前套餐期限折算退款后结算差价。
+    /// </summary>
+    public bool TrySignPackage(PackageFull template, int level, out double refund)
+    {
+        var package = new Package(template, level);
+        var previous = template.WorkType == WorkType.Work ? PackageWork : PackageStudy;
+        refund = 0;
+        if (previous?.IsActive() == true)
+        {
+            var previousTemplate = mw.SchedulePackage.Find(x => x.WorkType == template.WorkType && x.Name == previous.Name);
+            if (previousTemplate != null)
+                refund = previous.Price * Math.Clamp((previous.EndTime - DateTime.Now).TotalDays / previousTemplate.Duration, 0, 1);
+        }
+        if (package.Price > mw.GameSavesData.GameSave.Money + refund)
+            return false;
+
+        mw.GameSavesData.GameSave.Money += refund - package.Price;
+        if (template.WorkType == WorkType.Work)
+            PackageWork = package;
+        else
+            PackageStudy = package;
+        return true;
     }
 
     private void RestTimer_Elapsed(object? sender, ElapsedEventArgs? e)
