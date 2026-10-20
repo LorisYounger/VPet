@@ -253,8 +253,12 @@
 	  <Resource Include="Res\img\r_worktime_6.png" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Facepunch.Steamworks" Condition="'$(Platform)' == 'x64'" Version="2.3.3" />
-		<PackageReference Include="Facepunch.Steamworks.win32" Condition="'$(Platform)' == 'x86'" Version="2.3.3" />
+		<Reference Include="Facepunch.Steamworks.Win64" Condition="'$(Platform)' == 'x64'">
+			<HintPath>lib\Facepunch.Steamworks.2.5.2\Facepunch.Steamworks.Win64.dll</HintPath>
+		</Reference>
+		<Reference Include="Facepunch.Steamworks.Win32" Condition="'$(Platform)' == 'x86'">
+			<HintPath>lib\Facepunch.Steamworks.2.5.2\Facepunch.Steamworks.Win32.dll</HintPath>
+		</Reference>
 		<PackageReference Include="LinePutScript" Version="1.11.9" />
 		<PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.7" />
 		<PackageReference Include="NAudio" Version="3.0.1" />
