@@ -81,11 +81,13 @@ namespace VPet_Simulator.Windows.Interface
             [Line(name: "eactivity")]
             public int ActivityMask { get => (int)Activity; init => Activity = (PetActivity)value; }
             /// <summary>
-            /// 工作金钱或学习、娱乐经验的收益倍率 (总)
+            /// 工作收益倍率
             /// </summary>
             [Line(name: "ereward", ignoreCase: true)]
             public double Reward { get; init; } = 1;
-            /// <summary>体力获取倍率，默认 1；消耗使用 StrengthCost。</summary>
+            /// <summary>
+            /// 体力获取倍率，默认 1；消耗使用 StrengthCost。
+            /// </summary>
             [Line(name: "estrength", ignoreCase: true)]
             public double Strength { get; init; } = 1;
             [Line(name: "efood", ignoreCase: true)]
@@ -94,20 +96,30 @@ namespace VPet_Simulator.Windows.Interface
             public double Drink { get; init; } = 1;
             [Line(name: "efeeling", ignoreCase: true)]
             public double Feeling { get; init; } = 1;
-            /// <summary>健康获取倍率，默认 1；消耗使用 HealthCost。</summary>
+            /// <summary>
+            /// 健康获取倍率，默认 1；消耗使用 HealthCost。
+            /// </summary>
             [Line(name: "ehealth", ignoreCase: true)]
             public double Health { get; init; } = 1;
-            /// <summary>金钱收益倍率，默认 1。</summary>
+            /// <summary>
+            /// 金钱收益倍率，默认 1。
+            /// </summary>
             [Line(name: "emoney", ignoreCase: true)]
             public double Money { get; init; } = 1;
-            /// <summary>经验变化倍率，默认 1。</summary>
+            /// <summary>
+            /// 经验变化倍率，默认 1。
+            /// </summary>
             [Line(name: "eexperience", ignoreCase: true)]
             public double Experience { get; init; } = 1;
-            /// <summary>好感度变化倍率，默认 1。</summary>
+            /// <summary>
+            /// 好感度变化倍率，默认 1。
+            /// </summary>
             [Line(name: "elikability", ignoreCase: true)]
             public double Likability { get; init; } = 1;
 
-            /// <summary>本体活动的体力消耗倍率，不影响食物的负属性。</summary>
+            /// <summary>
+            /// 本体活动的体力消耗倍率，不影响食物的负属性。
+            /// </summary>
             [Line(name: "estrengthcost", ignoreCase: true)]
             public double StrengthCost { get; init; } = 1;
             [Line(name: "efoodcost", ignoreCase: true)]
@@ -119,18 +131,26 @@ namespace VPet_Simulator.Windows.Interface
             [Line(name: "ehealthcost", ignoreCase: true)]
             public double HealthCost { get; init; } = 1;
 
-            /// <summary>体力、饱腹度和口渴值共用基础上限的百分比调整量，0.1 为增加 10%，-0.1 为减少 10%；多个效果相加。</summary>
+            /// <summary>
+            /// 体力、饱腹度和口渴值共用基础上限的百分比调整量，0.1 为 +10%；倍率限制在 0.5～20。
+            /// </summary>
             [Line(name: "estrengthmax", ignoreCase: true)]
             public double StrengthMax { get; init; }
-            /// <summary>心情基础上限的百分比调整量，0.1 为增加 10%，-0.1 为减少 10%；多个效果相加。</summary>
+            /// <summary>
+            /// 心情基础上限的百分比调整量，0.1 为 +10%；倍率限制在 0.5～20。
+            /// </summary>
             [Line(name: "efeelingmax", ignoreCase: true)]
             public double FeelingMax { get; init; }
-            /// <summary>没有可显示的内置数值效果时展示的文本；自定义效果由 MOD 自行实现，不影响显示分类。</summary>
+            /// <summary>
+            /// 没有可显示的内置数值效果时展示的文本；自定义效果由 MOD 自行实现，不影响显示分类。
+            /// </summary>
             [Line(name: "eemptystring", ignoreCase: true)]
             public string EmptyString { get; init; } = "";
         }
 
+        private const double MaxMultiplier = 20;
         private readonly IMainWindow mw;
+        private PetActivity appliedActivity;
         /// <summary>
         /// 效果列表；请使用 Add/Update/Remove 方法修改，避免直接操作列表导致结算不正确。
         /// </summary>
@@ -144,6 +164,7 @@ namespace VPet_Simulator.Windows.Interface
             get => isScheduleOn;
             set
             {
+                if (isScheduleOn == value) return;
                 isScheduleOn = value;
                 RebuildModifiers();
             }
@@ -199,15 +220,14 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         public void Remove(string sourceKey)
         {
-            Effects.RemoveAll(effect => effect.SourceKey == sourceKey);
-            RebuildModifiers();
+            if (Effects.RemoveAll(effect => effect.SourceKey == sourceKey) > 0)
+                RebuildModifiers();
         }
 
         public bool Remove(Effect effect)
         {
-            bool removed;
-            removed = Effects.Remove(effect);
-            RebuildModifiers();
+            bool removed = Effects.Remove(effect);
+            if (removed) RebuildModifiers();
             return removed;
         }
 
@@ -215,22 +235,24 @@ namespace VPet_Simulator.Windows.Interface
         public void RebuildModifiers()
         {
             var activity = mw.Activity;
+            appliedActivity = activity;
             mw.Main.AttributeModifier = GetAttributeMultipliers(activity);
             var save = mw.GameSavesData.GameSave;
             var limits = (Strength: 0d, Feeling: 0d);
+            for (int i = 0; i < Effects.Count; i++)
             {
-                for (int i = 0; i < Effects.Count; i++)
-                {
-                    var effect = Effects[i];
-                    if (effect.IsExpired || !IsActivityActive(effect.Activity, activity)) continue;
-                    limits.Strength += effect.StrengthMax;
-                    limits.Feeling += effect.FeelingMax;
-                }
+                var effect = Effects[i];
+                if (effect.IsExpired || !IsActivityActive(effect.Activity, activity)) continue;
+                limits.Strength += effect.StrengthMax;
+                limits.Feeling += effect.FeelingMax;
             }
-            save.AttributeLimits = limits;
+            // GameSave 接收百分比调整量，继续沿用其最低 0.5 点与超额属性规则。
+            save.AttributeLimits = (
+                Math.Clamp(1 + limits.Strength, 0.5, MaxMultiplier) - 1,
+                Math.Clamp(1 + limits.Feeling, 0.5, MaxMultiplier) - 1);
         }
 
-        /// <summary>读取指定活动下的属性变化倍率；多个效果相乘，不推进时间。</summary>
+        /// <summary>读取指定活动下的倍率；获取与收益按增减量加算，Cost 连乘，汇总后限制在 0～20。配置方保证倍率有效，不推进时间。</summary>
         public AttributeModifiers GetAttributeMultipliers(PetActivity activity)
         {
             var result = new AttributeModifiers();
@@ -238,28 +260,42 @@ namespace VPet_Simulator.Windows.Interface
             {
                 var effect = Effects[i];
                 if (effect.IsExpired || !IsActivityActive(effect.Activity, activity)) continue;
-                result.Reward *= effect.Reward;
-                result.Strength *= effect.Strength;
-                result.Food *= effect.Food;
-                result.Drink *= effect.Drink;
-                result.Feeling *= effect.Feeling;
-                result.Health *= effect.Health;
-                result.Money *= effect.Money;
-                result.Experience *= effect.Experience;
-                result.Likability *= effect.Likability;
+                result.Strength += effect.Strength - 1;
+                result.Food += effect.Food - 1;
+                result.Drink += effect.Drink - 1;
+                result.Feeling += effect.Feeling - 1;
+                result.Health += effect.Health - 1;
+                result.Money += (effect.Money - 1) + (effect.Reward - 1);
+                result.Experience += (effect.Experience - 1) + (effect.Reward - 1);
+                result.Likability += effect.Likability - 1;
                 result.StrengthCost *= effect.StrengthCost;
                 result.FoodCost *= effect.FoodCost;
                 result.DrinkCost *= effect.DrinkCost;
                 result.FeelingCost *= effect.FeelingCost;
                 result.HealthCost *= effect.HealthCost;
             }
+
+            // 全部贡献收集完成后再封顶，避免加入顺序影响增减抵消的结果。
+            result.Strength = Math.Clamp(result.Strength, 0, MaxMultiplier);
+            result.Food = Math.Clamp(result.Food, 0, MaxMultiplier);
+            result.Drink = Math.Clamp(result.Drink, 0, MaxMultiplier);
+            result.Feeling = Math.Clamp(result.Feeling, 0, MaxMultiplier);
+            result.Health = Math.Clamp(result.Health, 0, MaxMultiplier);
+            result.Money = Math.Clamp(result.Money, 0, MaxMultiplier);
+            result.Experience = Math.Clamp(result.Experience, 0, MaxMultiplier);
+            result.Likability = Math.Clamp(result.Likability, 0, MaxMultiplier);
+            result.StrengthCost = Math.Clamp(result.StrengthCost, 0, MaxMultiplier);
+            result.FoodCost = Math.Clamp(result.FoodCost, 0, MaxMultiplier);
+            result.DrinkCost = Math.Clamp(result.DrinkCost, 0, MaxMultiplier);
+            result.FeelingCost = Math.Clamp(result.FeelingCost, 0, MaxMultiplier);
+            result.HealthCost = Math.Clamp(result.HealthCost, 0, MaxMultiplier);
             return result;
         }
 
         private void OnTime(Main value)
         {
-            Effects.RemoveAll(effect => effect.IsExpired);
-            RebuildModifiers();
+            if (Effects.RemoveAll(effect => effect.IsExpired) > 0 || appliedActivity != mw.Activity)
+                RebuildModifiers();
         }
         public void Save()
         {

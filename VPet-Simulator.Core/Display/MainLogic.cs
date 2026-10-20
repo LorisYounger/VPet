@@ -232,8 +232,6 @@ namespace VPet_Simulator.Core
         /// <summary>本体属性变化或物品收益的倍率，默认均为 1。</summary>
         public class AttributeModifiers
         {
-            /// <summary>工作金钱或学习、娱乐经验收益倍率。</summary>
-            public double Reward { get; set; } = 1;
             public double Strength { get; set; } = 1;
             public double Food { get; set; } = 1;
             public double Drink { get; set; } = 1;
@@ -247,7 +245,6 @@ namespace VPet_Simulator.Core
             public double DrinkCost { get; set; } = 1;
             public double FeelingCost { get; set; } = 1;
             public double HealthCost { get; set; } = 1;
-
         }
 
         public Work? NowWork;
@@ -358,7 +355,7 @@ namespace VPet_Simulator.Core
                     }
                     if (addhealth > 0)
                         Core.Save!.Health += addhealth * TimePass * attributes.Health;
-                    var addmoney = Math.Max(0, TimePass * NowWork.MoneyBase * (2 * efficiency - 0.5)) * attributes.Reward
+                    var addmoney = Math.Max(0, TimePass * NowWork.MoneyBase * (2 * efficiency - 0.5))
                         * (NowWork.Type == Work.WorkType.Work ? attributes.Money : attributes.Experience);
                     if (NowWork.Type == Work.WorkType.Work)
                         Core.Save!.Money += addmoney;
