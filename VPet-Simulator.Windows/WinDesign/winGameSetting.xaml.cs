@@ -1193,7 +1193,7 @@ namespace VPet_Simulator.Windows
                 }
 
                 ButtonPublish.Text = "正在验证".Translate();
-                int checkKey = await mw.GenerateAuthKey();
+                string checkKey = await mw.GenerateAuthKey();
                 WorkshopUploadResponse verification = await WorkshopVerificationClient.RegisterUploadAsync(
                     mods.Path,
                     mods.ItemID,
@@ -2274,14 +2274,16 @@ namespace VPet_Simulator.Windows
             UpdateMoveAreaText();
         }
 
-        private void BC_Click(object sender, RoutedEventArgs e)
+        private async void BC_Click(object sender, RoutedEventArgs e)
         {
-            Task.Run(() => ExtensionFunction.StartURL($"https://bettercontribution.exlb.net/shop#steamid={mw.SteamID}&checkkey={mw.GenerateAuthKey().Result}&lang={LocalizeCore.CurrentCulture}"));
+            string checkKey = await mw.GenerateAuthKey();
+            ExtensionFunction.StartURL($"https://bettercontribution.exlb.net/shop#steamid={mw.SteamID}&checkkey={Uri.EscapeDataString(checkKey)}&lang={LocalizeCore.CurrentCulture}");
         }
 
-        private void VV_Click(object sender, RoutedEventArgs e)
+        private async void VV_Click(object sender, RoutedEventArgs e)
         {
-            Task.Run(() => ExtensionFunction.StartURL($"https://vpetvote.exlb.net/#steamid={mw.SteamID}&checkkey={mw.GenerateAuthKey().Result}&lang={LocalizeCore.CurrentCulture}"));
+            string checkKey = await mw.GenerateAuthKey();
+            ExtensionFunction.StartURL($"https://vpetvote.exlb.net/#steamid={mw.SteamID}&checkkey={Uri.EscapeDataString(checkKey)}&lang={LocalizeCore.CurrentCulture}");
         }
 
         private void ButtonReLS_Click(object sender, RoutedEventArgs e)

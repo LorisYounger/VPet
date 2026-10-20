@@ -3041,64 +3041,34 @@ namespace VPet_Simulator.Windows
             NoticeBox.Show(string.Concat(sb.ToString().AsSpan(2), "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate()
             , Panuon.WPF.UI.MessageBoxIcon.Info, true, 5000));
         }
-        static readonly DateTime StartDate = new(2023, 8, 14, 0, 0, 0, DateTimeKind.Utc);
-        static int authheycache;
-        static DateTime GetDateFromAuthKey(int authKey)
-        {
-            // 从验证键中解析出小时数
-            int hoursSince2020 = authKey / 10000;
+        static readonly SemaphoreSlim authKeyLock = new(1, 1);
+        static AuthTicket? authKeyTicket;
 
-            // 计算日期和时间
-            DateTime date = StartDate.AddHours(hoursSince2020);
-
-            return date;
-        }
-        public async Task<int> GenerateAuthKey()
+        /// <summary>
+        /// 获取当前 Steam 会话的十六进制 Web API 票证；失败或非 Steam 用户返回空字符串
+        /// </summary>
+        public async Task<string> GenerateAuthKey()
         {
             if (!IsSteamUser)
-                return 0;
+                return string.Empty;
 
-            bool genck = false;
-            long steamId = (long)SteamClient.SteamId.Value;
-
-            while (true)
+            await authKeyLock.WaitAsync().ConfigureAwait(false);
+            try
             {
-                if (authheycache != 0)
-                {
-                    DateTime dt = GetDateFromAuthKey(authheycache);
-                    if (!(dt > DateTime.UtcNow.AddDays(1) || dt < DateTime.UtcNow.AddHours(-2)))
-                    {
-                        return authheycache;
-                    }
-                }
-
-                // 加 ConfigureAwait(false)
-                Leaderboard? leaderboard = await SteamUserStats
-                    .FindLeaderboardAsync("chatgpt_auth")
-                    .ConfigureAwait(false);
-
-                if (!leaderboard.HasValue)
-                    return 0;
-
-                var lb = leaderboard.Value;
-
-                // 加 ConfigureAwait(false)
-                LeaderboardEntry[] key = await lb
-                    .GetScoresAroundUserAsync(0, 0)
-                    .ConfigureAwait(false);
-
-                if (key == null || key.Length == 0 || genck)
-                {
-                    int hoursSince2020 = (int)(DateTime.UtcNow - StartDate).TotalHours;
-                    authheycache = hoursSince2020 * 10000 + Function.Rnd.Next(10000);
-                    await lb.ReplaceScore(authheycache).ConfigureAwait(false);
-                    return authheycache;
-                }
-                else
-                {
-                    authheycache = key.First().Score;
-                    genck = true;
-                }
+                // 保留句柄，避免生成后立即 Dispose 导致服务端收到已取消的票证。
+                if (authKeyTicket == null || authKeyTicket.Handle == 0)
+                    authKeyTicket = await SteamUser.GetAuthTicketForWebApiAsync("VPet").ConfigureAwait(false);
+                return authKeyTicket?.Data is { Length: > 0 } data
+                    ? Convert.ToHexString(data) : string.Empty;
+            }
+            catch
+            {   //网不好拿不到Steam验证,就返回空加日志报错
+                Dispatcher.Invoke(() => MessageBoxX.Show("Steam 身份验证失败，请稍后重试".Translate()));
+                return string.Empty;
+            }
+            finally
+            {
+                authKeyLock.Release();
             }
         }
         /// <summary>

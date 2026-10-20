@@ -140,8 +140,6 @@ namespace VPet_Simulator.Windows
                 {
                     if (IsSteamUser)//如果是steam用户,尝试加载workshop
                     {
-                        //Leaderboard? leaderboard = await SteamUserStats.FindLeaderboardAsync("chatgpt_auth");
-                        //leaderboard?.ReplaceScore(Function.Rnd.Next());
                         var workshop = new Line_D("workshop");
                         await Dispatcher.InvokeAsync(new Action(() =>
                         {
@@ -594,7 +592,11 @@ namespace VPet_Simulator.Windows
                     }
 
                     if (IsSteamUser)
+                    {
+                        authKeyTicket?.Cancel();
+                        authKeyTicket = null;
                         SteamClient.Shutdown();//关掉和Steam的连线
+                    }
                     if (notifyIcon != null)
                     {
                         notifyIcon.Visible = false;
@@ -925,11 +927,11 @@ namespace VPet_Simulator.Windows
         public async Task<string> GetVPetRoom(string action, int fixID = 0, ulong lobbyid = 0)
         {
             var checkkey = await GenerateAuthKey();
-            string RequestURL = $"https://report.exlb.net/VPET/{action}?hoststeamid={SteamID}&fixid={fixID}&lobbyid={lobbyid}&checkkey={checkkey}";
+            string RequestURL = $"https://report.exlb.net/VPET/{action}?hoststeamid={SteamID}&fixid={fixID}&lobbyid={lobbyid}&checkkey={Uri.EscapeDataString(checkkey)}";
             using System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
             try
             {
-                return client.GetStringAsync(RequestURL).Result;
+                return await client.GetStringAsync(RequestURL);
             }
             catch (Exception e)
             {

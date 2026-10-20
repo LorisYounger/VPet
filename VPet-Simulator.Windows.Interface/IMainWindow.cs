@@ -275,10 +275,10 @@ namespace VPet_Simulator.Windows.Interface
         Dictionary<string, object> DynamicResources { get; }
 
         /// <summary>
-        /// 生成授权码(仅用于LB相关服务验证)
+        /// 获取当前 Steam 会话的十六进制 Web API 票证(仅用于LB相关服务验证)
         /// </summary>
-        /// <returns></returns>
-        Task<int> GenerateAuthKey();
+        /// <returns>Web API 票证；失败或非 Steam 用户返回空字符串。</returns>
+        Task<string> GenerateAuthKey();
 
         /// <summary>
         /// 呼叫事件 Event_TakeItemHandle

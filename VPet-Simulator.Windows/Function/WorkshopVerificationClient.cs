@@ -66,7 +66,7 @@ namespace VPet_Simulator.Windows
             DirectoryInfo directory,
             ulong workshopId,
             ulong steamId,
-            int checkKey,
+            string checkKey,
             int version,
             CancellationToken cancellationToken = default)
         {
@@ -323,9 +323,9 @@ namespace VPet_Simulator.Windows
         public int Version { get; init; }
 
         /// <summary>
-        /// 客户端校验标记，当前暂不参与校验。
+        /// 十六进制编码的 Steam Web API 票证。
         /// </summary>
-        public int CheckKey { get; init; }
+        public string CheckKey { get; init; } = string.Empty;
 
         /// <summary>
         /// Steam 作者标识。
