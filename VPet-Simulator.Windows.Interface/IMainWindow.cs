@@ -316,7 +316,8 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         /// <param name="sourcekey">效果来源的稳定标识,使用逗号添加多个效果</param>
         /// <param name="time">持续时间 (小时)</param>
-        public void AddEffect(string sourcekey, int time);
+        /// <param name="source">效果来源描述</param>
+        public void AddEffect(string sourcekey, int time, string? source);
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -811,4 +812,131 @@ public partial class MainWindow : IMainWindow
 
     #endregion
 
+    public void CheckGalleryUnlock()
+    {
+        var ps = Photos.FindAll(x => !x.IsUnlock && !x.UnlockAble.SellBoth && x.UnlockAble.Check(GameSavesData));
+        if (ps.Count == 0) return;
+        StringBuilder sb = new StringBuilder();
+        foreach (Photo p in ps)
+        {
+            sb.Append(", ");
+            p.Unlock(this);
+            sb.Append(p.TranslateName);
+        }
+        ActivityLogs.Add(new ActivityLog("photo_unlock", sb.ToString().AsSpan(2).ToString()));
+        Dispatcher.Invoke(() =>
+        NoticeBox.Show(string.Concat(sb.ToString().AsSpan(2), "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate()
+        , Panuon.WPF.UI.MessageBoxIcon.Info, true, 5000));
+    }
+    static readonly SemaphoreSlim authKeyLock = new(1, 1);
+    static AuthTicket? authKeyTicket;
+
+    /// <summary>
+    /// 获取当前 Steam 会话的十六进制 Web API 票证；失败或非 Steam 用户返回空字符串
+    /// </summary>
+    public async Task<string> GenerateAuthKey()
+    {
+        if (!IsSteamUser)
+            return string.Empty;
+
+        await authKeyLock.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            // 保留句柄，避免生成后立即 Dispose 导致服务端收到已取消的票证。
+            if (authKeyTicket == null || authKeyTicket.Handle == 0)
+                authKeyTicket = await SteamUser.GetAuthTicketForWebApiAsync("VPet").ConfigureAwait(false);
+            return authKeyTicket?.Data is { Length: > 0 } data
+                ? Convert.ToHexString(data) : string.Empty;
+        }
+        catch
+        {   //网不好拿不到Steam验证,就返回空加日志报错
+            Dispatcher.Invoke(() => MessageBoxX.Show("Steam 身份验证失败，请稍后重试".Translate()));
+            return string.Empty;
+        }
+        finally
+        {
+            authKeyLock.Release();
+        }
+    }
+    /// <summary>
+    /// 添加物品到物品栏 (自动合并)
+    /// </summary>
+    /// <param name="item">物品</param>
+    public void ItemsAdd(Item item)
+    {
+        var sameitem = Items.Find(x => x.Name == item.Name);
+        if (sameitem != null)
+        {
+            sameitem.Count += item.Count;
+        }
+        else
+        {
+            Items.Add(item);
+        }
+    }
+
+    /// <summary>
+    /// 添加效果；同一 SourceKey 只保留到期时间最晚的效果。
+    /// </summary>
+    /// <param name="sourcekey">效果来源的稳定标识，使用逗号添加多个效果</param>
+    /// <param name="time">持续时间（小时）；小于等于 0 时不添加</param>
+    /// <param name="source">效果来源描述</param>
+    public void AddEffect(string sourcekey, int time, string? source)
+    {
+        if (string.IsNullOrWhiteSpace(sourcekey) || time <= 0) return;
+
+        var endTime = DateTime.Now.AddHours(time);
+        var effects = new List<Buff.Effect>();
+        foreach (var key in sourcekey.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Distinct())
+        {
+            var template = BuffEffects.Find(effect => effect.SourceKey == key);
+            if (template == null) continue;
+
+            Buff.Effect? existing = null;
+            int count = 0;
+            for (int i = 0; i < Buff.Effects.Count; i++)
+            {
+                var effect = Buff.Effects[i];
+                if (effect.SourceKey != key) continue;
+                count++;
+                if (existing == null || effect.EndTime > existing.EndTime)
+                    existing = effect;
+            }
+            if (existing != null && existing.EndTime >= endTime)
+            {
+                if (count > 1) effects.Add(existing);
+                continue;
+            }
+
+            effects.Add(new Buff.Effect
+            {
+                SourceKey = template.SourceKey,
+                EndTime = endTime,
+                Description = template.Description,
+                Source = source ?? template.Source,
+                Name = template.Name,
+                Icon = template.Icon,
+                IsDebuff = template.IsDebuff,
+                Activity = template.Activity,
+                Reward = template.Reward,
+                Strength = template.Strength,
+                Food = template.Food,
+                Drink = template.Drink,
+                Feeling = template.Feeling,
+                Health = template.Health,
+                Money = template.Money,
+                Experience = template.Experience,
+                Likability = template.Likability,
+                StrengthCost = template.StrengthCost,
+                FoodCost = template.FoodCost,
+                DrinkCost = template.DrinkCost,
+                FeelingCost = template.FeelingCost,
+                HealthCost = template.HealthCost,
+                StrengthMax = template.StrengthMax,
+                FeelingMax = template.FeelingMax,
+                EmptyString = template.EmptyString
+            });
+        }
+        if (effects.Count > 0) Buff.Update(effects);
+    }
 }
