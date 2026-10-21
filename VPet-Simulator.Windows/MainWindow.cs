@@ -1754,18 +1754,9 @@ namespace VPet_Simulator.Windows
                 //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
                 LoadLatestSave(petloader.PetName);
 
-            //加载数据合理化:食物
+            //加载数据合理化:文本
             if (!Set["gameconfig"].GetBool("noAutoCal"))
             {
-                foreach (Food f in Foods)
-                {
-                    if (f.IsOverLoad())
-                    {
-                        f.Price = Math.Max((int)f.RealPrice, 1);
-                        f.isoverload = false;
-                    }
-                }
-                //var food = new Food();
                 foreach (var selet in SelectTexts)
                 {
                     selet.Exp = Math.Max(Math.Min(selet.Exp, 1000), -1000);
@@ -2023,6 +2014,18 @@ namespace VPet_Simulator.Windows
                           NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName);
                       }
                   Foods.ForEach(item => item.LoadImageSource(this));
+                  //加载数据合理化:食物
+                  if (!Set["gameconfig"].GetBool("noAutoCal"))
+                  {
+                      foreach (Food f in Foods)
+                      {
+                          if (f.IsOverLoad())
+                          {
+                              f.Price = Math.Max((int)f.RealPrice, 1);
+                              f.isoverload = false;
+                          }
+                      }
+                  }
                   Photos.ForEach(item => item.LoadUserInfo(this));
 
 

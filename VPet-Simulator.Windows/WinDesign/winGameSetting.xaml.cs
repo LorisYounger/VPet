@@ -200,7 +200,7 @@ namespace VPet_Simulator.Windows
                 runUserName.Text = SteamClient.Name;
                 runActivate.Text = "已通过Steam[{0}]激活服务注册".Translate(SteamClient.SteamId.Value.ToString("x").Substring(6));
                 run_BC.Text = "前往 更好买:贡献兑换".Translate();
-                run_VV.Text = "前往 生日会投票 页面".Translate();
+                //run_VV.Text = "前往 生日会投票 页面".Translate();
             }
             else
             {

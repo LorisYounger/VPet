@@ -75,7 +75,7 @@ namespace VPet_Simulator.Windows.Interface
 
         [Line(ignoreCase: true, name: "lholiday")]
         public HolidayType Holiday { get; set; } = HolidayType.None;
-        
+
         [Line(ignoreCase: true)]
         public string Buff { get; set; } = string.Empty;
         /// <summary>
@@ -127,7 +127,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 当前物品推荐价格
         /// </summary>
-        public double RealPrice => ((Exp / 3 + Strength / 5 + StrengthDrink / 3 + StrengthFood / 2 + Feeling / 6) / 3 + Health + Likability * 10);
+        public double RealPrice { get; private set; }
         /// <summary>
         /// 该食物是否超模
         /// </summary>
@@ -135,10 +135,19 @@ namespace VPet_Simulator.Windows.Interface
         {
             if (isoverload == null)
             {
-                double relp = RealPrice;
-                isoverload = Price < (relp - 10) * 0.7;// Price > (relp + 10) * 1.3;// || Price < (relp - 10) * 0.7;//30%容错
+                isoverload = Price < (RealPrice - 10) * 0.7;// Price > (relp + 10) * 1.3;// || Price < (relp - 10) * 0.7;//30%容错
             }
             return isoverload.Value;
+        }
+        public void CalRealPrice(IMainWindow imw)
+        {
+            RealPrice = (Exp / 3 + Strength / 5 + StrengthDrink / 3 + StrengthFood / 2 + Feeling / 6) / 3 + Health + Likability * 10;
+            if (BuffTime > 0)
+            {
+                foreach (var key in Buff.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Distinct())
+                    RealPrice += (imw.BuffEffects.Find(effect => effect.SourceKey == key)?.RealPrice ?? 0) * BuffTime;
+            }
+            isoverload = Price < (RealPrice - 10) * 0.7;
         }
         /// <summary>
         /// 加载物品图片
@@ -148,6 +157,7 @@ namespace VPet_Simulator.Windows.Interface
             ImageSource = imw.ImageSources.FindImage("food_" + (Image ?? Name), "food");
             Star = imw.Set["betterbuy"]["star"].GetInfos().Contains(Name);
             LoadEatTimeSource(imw);
+            CalRealPrice(imw);
         }
         public void LoadEatTimeSource(IMainWindow imw)
         {

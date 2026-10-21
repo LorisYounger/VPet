@@ -4,6 +4,7 @@ using LinePutScript.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Core.GraphHelper;
 using AttributeModifiers = VPet_Simulator.Core.Main.AttributeModifiers;
@@ -146,6 +147,81 @@ namespace VPet_Simulator.Windows.Interface
             /// </summary>
             [Line(name: "eemptystring", ignoreCase: true)]
             public string EmptyString { get; init; } = "";
+
+            private double realPrice = double.NaN;
+            /// <summary>
+            /// 每小时推荐价 (低于此价格75%视为超模)
+            /// </summary>
+            [Line(ignore: true)]
+            public double RealPrice
+            {
+                get
+                {
+                    if (double.IsNaN(realPrice))
+                    {
+                        // Schedule 单独使用表示所有活动。
+                        var activity = Activity == PetActivity.Schedule ? PetActivity.All : Activity & PetActivity.All;
+
+                        // 动占比与每活动小时预算；物品预算独立于活动时间。
+                        double idle = activity.HasFlag(PetActivity.Idle) ? 0.4 : 0;
+                        double sleep = activity.HasFlag(PetActivity.Sleep) ? 0.2 : 0;
+                        double study = activity.HasFlag(PetActivity.Study) ? 0.1 : 0;
+                        double work = activity.HasFlag(PetActivity.Work) ? 0.2 : 0;
+                        double play = activity.HasFlag(PetActivity.Play) ? 0.1 : 0;
+                        double item = activity.HasFlag(PetActivity.TakeItem) ? 1 : 0;
+                        double natural = idle + sleep + study + work + play;
+                        double coverage = Math.Max(natural, item);
+                        double positive = 0, negative = 0;
+                        void Value(double value)
+                        {
+                            positive += Math.Max(value, 0);
+                            negative += Math.Min(value, 0);
+                        }
+
+                        // 各结算项先分开正负价值，Reward 合入金钱和经验后再限幅。
+                        Value((Math.Clamp(Strength, 0, MaxMultiplier) - 1) * 24 * (idle + sleep + item) / 15);
+                        Value((Math.Clamp(Food, 0, MaxMultiplier) - 1) * (12 * sleep + 24 * item) / 6);
+                        Value((Math.Clamp(Drink, 0, MaxMultiplier) - 1) * 24 * (sleep + item) / 9);
+                        Value((Math.Clamp(Feeling, 0, MaxMultiplier) - 1) * 12 * (play + item) / 18);
+                        Value((Math.Clamp(Health, 0, MaxMultiplier) - 1) * 2 * (natural + item));
+                        Value((1 - Math.Clamp(StrengthCost, 0, MaxMultiplier)) * (14.4 * study + 21.6 * work + 9 * play) / 15);
+                        Value((1 - Math.Clamp(FoodCost, 0, MaxMultiplier)) * (24 * idle + 16.8 * study + 29.4 * work + 8.4 * play) / 6);
+                        Value((1 - Math.Clamp(DrinkCost, 0, MaxMultiplier)) * (24 * idle + 16.8 * study + 21 * work + 12.6 * play) / 9);
+                        Value((1 - Math.Clamp(FeelingCost, 0, MaxMultiplier)) * (15 * idle + 30 * study + 15 * work) / 18);
+                        Value((1 - Math.Clamp(HealthCost, 0, MaxMultiplier)) * 5 * idle);
+                        Value((Math.Clamp(Money + Reward - 1, 0, MaxMultiplier) - 1) * 179.52 * work);
+                        double experience = Math.Clamp(Experience + Reward - 1, 0, MaxMultiplier) - 1;
+                        Value(experience * (1958.4 * study + 440.64 * play) / 9);
+                        Value(experience * (24 * natural + 30 * item) / 9);
+                        Value((Math.Clamp(Likability, 0, MaxMultiplier) - 1) * (3 * natural + 0.2 * item) * 10);
+                        Value((Math.Clamp(1 + StrengthMax, 0, MaxMultiplier) - 1) * 104 * (1d / 15 + 1d / 6 + 1d / 9) * 0.15 * natural);
+                        Value((Math.Clamp(1 + FeelingMax, 0, MaxMultiplier) - 1) * 102 / 18 * 0.15 * natural);
+
+                        // 各属性分别计二次强度价后相加：普通1、健康0.2、容量0.1、金钱20、经验/Reward40。
+                        static double Curve(double delta)
+                        {
+                            double x = Math.Max(delta, 0) / 0.1;
+                            return (x + x * x) / 2;
+                        }
+                        double intensity = 40 * coverage * (Curve(Reward - 1) + Curve(Experience - 1))
+                            + coverage * (Curve(Strength - 1) + Curve(Food - 1)
+                                + Curve(Drink - 1) + Curve(Feeling - 1) + Curve(Likability - 1))
+                            + 0.2 * coverage * Curve(Health - 1)
+                            + 20 * work * Curve(Money - 1)
+                            + 0.1 * natural * (3 * Curve(StrengthMax) + Curve(FeelingMax))
+                            + natural * (Curve(1 - StrengthCost) + Curve(1 - FoodCost)
+                                + Curve(1 - DrinkCost) + Curve(1 - FeelingCost))
+                            + 0.2 * natural * Curve(1 - HealthCost);
+
+                        double hourly = Math.Max(0.6 * positive, intensity);
+                        double discount = 0.25 * -negative;
+                        if (hourly > 0) discount = Math.Min(discount, 0.3 * hourly);
+                        realPrice = (hourly - discount) * (Activity.HasFlag(PetActivity.Schedule) ? 0.5 : 1);
+                        realPrice = Math.Floor(realPrice * 1.25 * 4) / 4;
+                    }
+                    return realPrice;
+                }
+            }
         }
 
         private const double MaxMultiplier = 20;

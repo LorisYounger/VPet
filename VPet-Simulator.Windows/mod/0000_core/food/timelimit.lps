@@ -1,17 +1,28 @@
 food:|name#莲蓉蛋黄月饼:|lholiday#Mid_Autumn_Festival:|type#Snack:|Exp#100:|Strength#40:|StrengthDrink#-3:|StrengthFood#80:|Likability#1:|Health#5:|Feeling#40:|price#26:|graph#eat:|desc#海上生明月，天涯共此时。无论近况如何，前途多难，计划如不如意，未来迷不迷茫，萝莉丝都为你做了莲蓉蛋黄月饼，快说谢谢萝莉丝。:|
 food:|name#五仁月饼:|lholiday#Mid_Autumn_Festival:|type#Meal:|Exp#100:|Strength#80:|StrengthDrink#-6:|StrengthFood#160:|Likability#1:|Health#5:|Feeling#0:|price#38:|graph#eat:|desc#举头望明月，低头思故乡。无论身在何处，离家多远，家人在不在身边，心情好不好，萝莉丝都为你做了五仁月饼，快说谢谢萝莉丝。:|
-food:|name#巧克力花生月饼:|lholiday#Mid_Autumn_Festival:|type#Functional:|Exp#400:|Strength#20:|StrengthDrink#0:|StrengthFood#40:|Likability#2:|Health#5:|Feeling#20:|price#62:|graph#eat:|desc#明月几时有，把酒问青天。无论考的如何，作业有多少，老师怎么说，家长怎么批评，萝莉丝都为你做了巧克力花生月饼，快说谢谢萝莉丝。:|
+food:|name#巧克力花生月饼:|lholiday#Mid_Autumn_Festival:|type#Functional:|Exp#400:|Strength#20:|StrengthDrink#0:|StrengthFood#40:|Likability#2:|Health#5:|Feeling#20:|price#114.5:|graph#eat:|desc#明月几时有，把酒问青天。无论考的如何，作业有多少，老师怎么说，家长怎么批评，萝莉丝都为你做了巧克力花生月饼，快说谢谢萝莉丝。:|Buff#Sugar2:|BuffTime#12:|
 food:|name#`金`秋月饼:|image#黄金月饼:|lholiday#Mid_Autumn_Festival:|type#Gift:|Exp#600:|Strength#80:|StrengthDrink#-10:|StrengthFood#80:|Likability#2:|Health#5:|Feeling#20:|price#98:|graph#eat:|desc#不是哥们你真吃啊，你猜为什么这里是礼物商店。:|
 
 food:|name#圣诞帽:|lholiday#Christmas:|type#Gift:|Exp#200:|Likability#4:|Health#5:|Feeling#50:|price#45.0:|graph#gift:|desc#圣诞帽_giftintor:|
 food:|name#礼物盒子:|lholiday#Christmas:|type#Gift:|Exp#1000:|Likability#5:|Feeling#100:|price#150.0:|graph#gift:|desc#礼物盒子_giftintor:|
 food:|name#糖果棒:|lholiday#Christmas:|type#Snack:|Exp#200:|Strength#40:|StrengthFood#40:|Likability#2:|Feeling#40:|price#35:|graph#eat:|desc#糖果棒_giftintor:|
-food:|name#圣诞草莓奶茶:|lholiday#Christmas:|type#Drink:|Exp#200:|StrengthDrink#80:|Likability#2:|Feeling#60:|price#35:|graph#drink:|desc#圣诞草莓奶茶_giftintor:|
+food:|name#圣诞草莓奶茶:|lholiday#Christmas:|type#Drink:|Exp#200:|StrengthDrink#80:|Likability#2:|Feeling#60:|price#119.5:|graph#drink:|desc#圣诞草莓奶茶_giftintor:|Buff#Sugar2:|BuffTime#32:|
 food:|name#萝莉丝姜饼人:|lholiday#Christmas:|type#Snack:|Exp#600:|StrengthFood#80:|Likability#2:|Health#2:|Feeling#50:|price#128.0:|graph#eat:|desc#萝莉丝姜饼人_giftintor:|
 
 
 food:|name#大肉粽:|lholiday#Dragon_Boat_Festival:|type#Meal:|Exp#200:|Strength#40:|StrengthDrink#-5:|StrengthFood#160:|Likability#4:|Health#1:|Feeling#40:|price#85.0:|graph#eat:|desc#朴实无华的大肉粽，由板栗咸蛋黄和大块五花肉包成的粽子，一口咬下去鲜嫩多汁满满肉料，至福！:|
-food:|name#凉粽:|lholiday#Dragon_Boat_Festival:|type#Meal:|Exp#250:|Strength#20:|StrengthDrink#-5:|StrengthFood#120:|Likability#2:|Health#1:|Feeling#30:|price#75.0:|graph#eat:|desc#也叫“灰水粽”，就是把小粽子，放冰箱冻凉了拿出来沾蜂蜜吃，是粽子家族中的甜品。:|
-food:|name#甜粽子:|lholiday#Dragon_Boat_Festival:|type#Meal:|Exp#260:|Strength#60:|StrengthDrink#-25:|StrengthFood#140:|Likability#3:|Health#1:|Feeling#60:|price#87.0:|graph#eat:|desc#顾名思义，就是以甜食为主要馅料的粽子。甜食包括红枣、豆沙、莲蓉、桂花、花生、栗子等等。甜粽永不为奴！:|
+food:|name#凉粽:|lholiday#Dragon_Boat_Festival:|type#Meal:|Exp#250:|Strength#20:|StrengthDrink#-5:|StrengthFood#120:|Likability#2:|Health#1:|Feeling#30:|price#123:|graph#eat:|desc#也叫“灰水粽”，就是把小粽子，放冰箱冻凉了拿出来沾蜂蜜吃，是粽子家族中的甜品。:|Buff#Relaxation3:|BuffTime#24:|
+food:|name#甜粽子:|lholiday#Dragon_Boat_Festival:|type#Meal:|Exp#260:|Strength#60:|StrengthDrink#-25:|StrengthFood#140:|Likability#3:|Health#1:|Feeling#60:|price#135:|graph#eat:|desc#顾名思义，就是以甜食为主要馅料的粽子。甜食包括红枣、豆沙、莲蓉、桂花、花生、栗子等等。甜粽永不为奴！:|Buff#Sugar1:|BuffTime#64:|
 food:|name#咸粽子:|lholiday#Dragon_Boat_Festival:|type#Meal:|Exp#280:|Strength#80:|StrengthDrink#-30:|StrengthFood#150:|Likability#3:|Health#1:|Feeling#50:|price#92.0:|graph#eat:|desc#咸粽，就是以咸食为主要馅料的粽子。咸食包括肉类、蛋类、菌类、海鲜类等等。为了咸粽！:|
 food:|name#粽叶糍粑:|lholiday#Dragon_Boat_Festival:|type#Meal:|Exp#220:|Strength#65:|StrengthDrink#-10:|StrengthFood#130:|Likability#2:|Health#1:|Feeling#40:|price#74.5:|graph#eat:|desc#用芭蕉叶包起来的糯米糍粑，软软糯糯，老少皆宜，就算不是端午节，也经常有人做，是一道亲民的小吃。:|
+
+food:|name#yearmantou:|type#Meal:|Exp#200:|Strength#100:|StrengthDrink#-5:|StrengthFood#200:|Likability#3:|Health#2:|Feeling#120:|price#192:|graph#eat:|desc#大的小的圆的方的长的短的扁的条的都是馒头，甜的咸的牛奶蔬菜杂粮原味都好吃！:|Buff#Satiety3:|BuffTime#48:|lholiday#New_Years_Day:|
+food:|name#yearchicken:|type#Meal:|Exp#100:|Strength#240:|StrengthDrink#-10:|StrengthFood#300:|Likability#2:|Health#1:|Feeling#100:|price#98.0:|graph#eat:|desc#南方必备年菜---鸡，当然不论炒鸡、白切鸡、卤鸡、烧鸡还是大盘鸡都算。同理可得，圣诞节烤鸡也是年菜。:|lholiday#New_Years_Day:|
+food:|name#yearfish:|type#Meal:|Exp#100:|Strength#160:|StrengthDrink#-10:|StrengthFood#180:|Likability#2:|Health#1:|Feeling#100:|price#72.5:|graph#eat:|desc#主人主人，你的红烧鱼确实很香，但还是太吃厨艺了，有没有更加简单又好吃的年菜推荐一下吗？:|lholiday#New_Years_Day:|
+food:|name#yearjiaozi:|type#Meal:|Exp#200:|Strength#100:|StrengthDrink#0:|StrengthFood#220:|Likability#3:|Health#2:|Feeling#120:|price#112:|graph#eat:|desc#《猪肉白菜馅可是经典》 /n《羊肉大葱馅也非常好吃》 /n《三鲜馅也是不错的选择》 /n《什么叫西红柿炒蛋馅？》:|Buff#Vitality1:|BuffTime#24:|lholiday#New_Years_Day:|
+
+food:|name#白切鸡:|type#Meal:|Exp#100:|Strength#240:|StrengthDrink#-20:|StrengthFood#280:|Likability#1.5:|Health#1:|Feeling#120:|graph#eat:|desc#是的，去年也是白切鸡，30吃到15，去年吃到今年，陷入白切鸡的循环循环循环…:|price#236:|Buff#Vitality3:|BuffTime#48:|lholiday#Spring_Festival:|
+food:|name#清蒸鲈鱼:|type#Meal:|Exp#100:|Strength#260:|StrengthDrink#-10:|StrengthFood#180:|Likability#1.5:|Health#1:|Feeling#100:|graph#eat:|desc#看来去年的红烧鱼确实不受欢迎，今年改清蒸了。:|price#53.2:|lholiday#Spring_Festival:|
+food:|name#芋头扣肉:|type#Meal:|Exp#200:|Strength#180:|StrengthDrink#0:|StrengthFood#240:|Likability#2:|Health#1:|Feeling#100:|graph#eat:|desc#龟公咯，你怎么把扣肉打翻了，现在立刻给我滚出村子！:|price#73.2:|lholiday#Spring_Festival:|
+food:|name#油爆大虾:|type#Meal:|Exp#300:|Strength#140:|StrengthDrink#0:|StrengthFood#160:|Likability#2:|Health#0.5:|Feeling#140:|graph#eat:|desc#甜咸之争已经不重要了，现在该来讨论大虾白灼还是爆炒了！:|price#75.2:|lholiday#Spring_Festival:|
+food:|name#为了这碟醋:|type#Meal:|Exp#200:|Strength#200:|StrengthDrink#0:|StrengthFood#260:|Likability#3:|Health#3:|Feeling#120:|graph#eat:|desc#原来饺子醋在这里。:|price#186.5:|Buff#Vitality2:|BuffTime#48:|lholiday#Spring_Festival:|
