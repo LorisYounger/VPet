@@ -91,7 +91,7 @@ namespace VPet_Simulator.Windows.Interface
         {
             get
             {
-                return Data + '\n' + Desc.Translate();
+                return outputdata + '\n' + Desc.Translate();
             }
         }
 
@@ -111,8 +111,11 @@ namespace VPet_Simulator.Windows.Interface
                 };
                 var values = dic.Where(kv => kv.Value != 0)
                     .ToDictionary(kv => kv.Key, kv => $"{(kv.Value > 0 ? "+" : "")}{kv.Value.ToString("f2")}");
-                if (!string.IsNullOrWhiteSpace(Buff) && BuffTime > 0)
-                    values.Add("效果".Translate(), "{0}（{1}小时）".Translate(Buff, BuffTime));
+                if (!string.IsNullOrWhiteSpace(outputbuff))
+                {
+                    values.Add(LocalizeCore.Translate("效果"), outputbuff);
+                    values.Add(LocalizeCore.Translate("持续"), BuffTime.ToString("f1") + 'h');
+                }
                 return values;
             }
         }
@@ -142,11 +145,20 @@ namespace VPet_Simulator.Windows.Interface
         public void CalRealPrice(IMainWindow imw)
         {
             RealPrice = (Exp / 3 + Strength / 5 + StrengthDrink / 3 + StrengthFood / 2 + Feeling / 6) / 3 + Health + Likability * 10;
+            List<string> bufflist = new List<string>();
             if (BuffTime > 0)
             {
                 foreach (var key in Buff.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Distinct())
-                    RealPrice += (imw.BuffEffects.Find(effect => effect.SourceKey == key)?.RealPrice ?? 0) * BuffTime;
+                {
+                    Buff.Effect? bf = imw.BuffEffects.Find(effect => effect.SourceKey == key);
+                    if (bf != null)
+                    {
+                        RealPrice += bf.RealPrice * BuffTime;
+                        bufflist.Add(bf.Name.Translate());
+                    }
+                }
             }
+            outputbuff = string.Join(", ", bufflist);
             isoverload = Price < (RealPrice - 10) * 0.7;
         }
         /// <summary>
@@ -166,24 +178,26 @@ namespace VPet_Simulator.Windows.Interface
             if (eattime <= now)
             {
                 if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)// || Type == FoodType.Limit)
-                    Data = "喜好度".Translate();
+                    outputdata = "喜好度".Translate();
                 else
-                    Data = "有效度".Translate();
-                Data += ":\t100%";
+                    outputdata = "有效度".Translate();
+                outputdata += ":\t100%";
             }
             else
             {
                 if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)// || Type == FoodType.Limit)
-                    Data = "喜好度".Translate();
+                    outputdata = "喜好度".Translate();
                 else
-                    Data = "有效度".Translate();
+                    outputdata = "有效度".Translate();
                 if (Type == FoodType.Gift)
-                    Data += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
+                    outputdata += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
                 else
-                    Data += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.02).ToString("p0");
-                Data += "\t\t" + "恢复".Translate() + ":\t" + (eattime).ToString("MM/dd HH");
+                    outputdata += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.02).ToString("p0");
+                outputdata += "\t\t" + "恢复".Translate() + ":\t" + (eattime).ToString("MM/dd HH");
             }
         }
+        private string outputdata = "";
+        private string outputbuff = "";
         /// <summary>
         /// 食用时显示的动画
         /// </summary>
