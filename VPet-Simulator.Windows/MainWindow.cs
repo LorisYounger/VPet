@@ -3011,7 +3011,8 @@ namespace VPet_Simulator.Windows
             var gf = Core.Graph!.FindGraph("levelup", GraphInfo.AnimatType.Single, GameSavesData.GameSave.Mode);
             if (gf != null)
             {
-                Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name), "levelup", true);
+                Main.Display(gf, Main.DisplayToNomal);
+                Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
             }
             if (args.IsLevelMaxUp)
             {//告知用户上限等级上升
