@@ -470,12 +470,12 @@ namespace VPet_Simulator.Core
                     SmartMoveTimer.Start();
                 }
             }
-            ((UIElement)e.Source).ReleaseMouseCapture();
+            MainGrid.ReleaseMouseCapture();
         }
 
         private void MainGrid_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!((UIElement)e.Source).CaptureMouse() || !isPress)
+            if (!MainGrid.CaptureMouse() || !isPress)
             {
                 MainGrid.MouseMove -= MainGrid_MouseWave;
                 MainGrid.MouseMove -= MainGrid_MouseMove;
