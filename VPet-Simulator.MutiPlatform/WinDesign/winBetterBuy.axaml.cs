@@ -118,6 +118,7 @@ namespace VPet_Simulator.MutiPlatform
                 {
                     foods = foods.FindAll(x => x.TranslateName.Contains(searchtext));
                 }
+                foods.RemoveAll(x => !Photo.UnlockCondition.GetHolidayCheck(x.Holiday, 30, mw.GameSavesData));
                 IOrderedEnumerable<Food> ordered;
                 switch (sortrule)
                 {
@@ -181,6 +182,7 @@ namespace VPet_Simulator.MutiPlatform
                 {
                     var totalCount = ordered.Count();
                     var pageSize = _rows * _columns;
+                    if (pageSize <= 0) return;
                     pagination.MaxPage = (int)Math.Ceiling(totalCount * 1.0 / pageSize);
                     var currentPage = Math.Max(0, Math.Min(pagination.MaxPage, pagination.CurrentPage) - 1);
                     pagination.CurrentPage = currentPage + 1;

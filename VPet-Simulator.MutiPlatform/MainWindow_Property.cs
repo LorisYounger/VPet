@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using LinePutScript;
 using LinePutScript.Dictionary;
@@ -59,6 +59,8 @@ public partial class MainWindow : IMainWindow
     /// 食物
     /// </summary>
     public List<Food> Foods { get; } = new List<Food>();
+    public Buff Buff { get; set; } = null!;
+    public List<Buff.Effect> BuffEffects { get; } = new();
     /// <summary>
     /// 照片
     /// </summary>
@@ -224,6 +226,8 @@ public partial class MainWindow : IMainWindow
             }
             Main?.Dispatcher.Invoke(() =>
             {
+                if (buffViewer != null)
+                    buffViewer.Entry.Margin = new Avalonia.Thickness(0, 0, GameSavesData.HashCheck ? 70 : 0, 0);
                 if (GameSavesData.HashCheck)
                 {
                     if (hashcheckimg == null)

@@ -1,51 +1,120 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows;
+using System.IO;
+using HKW.MVVM;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-public class ModSettingModel : ObservableClass<ModSettingModel>
+public partial class ModSettingModel : ObservableObjectEx, ISubSettingModel
 {
-    public const string ModLineName = "onmod";
+    public SubSettingModelType ModelType => SubSettingModelType.Mod;
+    public const string OnModLineName = "onmod";
     public const string PassModLineName = "passmod";
     public const string MsgModLineName = "msgmod";
     public const string WorkShopLineName = "workshop";
-    public static string ModDirectory = Path.Combine(Environment.CurrentDirectory, "mod");
+    public static readonly string ModDirectory = Path.Combine(Environment.CurrentDirectory, "mod");
     public static Dictionary<string, ModLoader> LocalMods { get; private set; } = null!;
 
-    #region Mods
-    private ObservableCollection<ModModel> _mods = new();
-    public ObservableCollection<ModModel> Mods
-    {
-        get => _mods;
-        set => SetProperty(ref _mods, value);
-    }
+    public List<ModModel> Mods { get; } = [];
 
-    public ModSettingModel(Setting setting)
+    public static List<string> Fonts { get; } = [];
+
+    public static List<string> Themes { get; } = [];
+
+    public static List<string> PetGraphs { get; } = [];
+
+    public List<string> Errors { get; } = [];
+
+    public ModSettingModel()
     {
         LocalMods ??= GetLocalMods();
-        foreach (var item in setting[ModLineName])
+    }
+
+    private Dictionary<string, ModLoader> GetLocalMods()
+    {
+        var dic = new Dictionary<string, ModLoader>(StringComparer.OrdinalIgnoreCase);
+        if (Directory.Exists(ModDirectory) is false)
+            return dic;
+        foreach (var dir in Directory.EnumerateDirectories(ModDirectory))
         {
-            var modID = item.Name;
-            if (LocalMods.TryGetValue(modID, out var loader) && loader.IsSuccesses)
+            try
+            {
+                var loader = new ModLoader(dir);
+                dic.TryAdd(loader.Name, loader);
+                foreach (var font in loader.Fonts)
+                {
+                    if (Fonts.Contains(font.Translate()) is false)
+                        Fonts.Add(font.Translate());
+                }
+                foreach(var theme in loader.Themes)
+                {
+                    if (Themes.Contains(theme.Translate()) is false)
+                        Themes.Add(theme.Translate());
+                }
+                foreach(var petGraph in loader.PetGraphs)
+                {
+                    if (PetGraphs.Contains(petGraph.Translate()) is false)
+                        PetGraphs.Add(petGraph.Translate());
+                }
+            }
+            catch (Exception ex)
+            {
+                Errors.Add("路径:\"{0}\" 异常:\"{1}\"".Translate(dir, ex.Message));
+            }
+        }
+        return dic;
+    }
+
+    public void Load(Setting setting)
+    {
+        //foreach (var item in setting[OnModLineName])
+        //{
+        //    var modID = item.Name;
+        //    if (LocalMods.TryGetValue(modID, out var loader) && loader.IsSuccesses)
+        //    {
+        //        var modModel = new ModModel(loader);
+        //        modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
+        //        modModel.IsPass = setting[PassModLineName].Contains(modID);
+        //        Mods.Add(modModel);
+        //    }
+        //    else
+        //    {
+        //        Mods.Add(
+        //            new()
+        //            {
+        //                Name = modID,
+        //                ModPath = "未知, 可能是{0}".Translate(Path.Combine(ModDirectory, modID)),
+        //            }
+        //        );
+        //    }
+        //}
+        foreach (var dir in Directory.GetDirectories(ModDirectory))
+        {
+            var loader = new ModLoader(dir);
+            if (loader.IsSuccesses)
             {
                 var modModel = new ModModel(loader);
                 modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
-                modModel.IsPass = setting[PassModLineName].Contains(modID);
+                modModel.IsPass = setting[PassModLineName].Contains(modModel.ID.ToLowerInvariant());
+                if (modModel.Name.Equals("Core"))
+                {
+                    modModel.IsEnabled = true;
+                }
+                else
+                {
+                    modModel.IsEnabled = setting[OnModLineName].Contains(modModel.Name.ToLowerInvariant());
+                }
+                
                 Mods.Add(modModel);
             }
             else
             {
-                Mods.Add(
-                    new()
-                    {
-                        Name = modID,
-                        ModPath = "未知, 可能是{0}".Translate(Path.Combine(ModDirectory, modID))
-                    }
-                );
+                Mods.Add(new() { Name = loader.Name, ModPath = loader.ModPath });
             }
+
         }
+        
         foreach (var modPath in setting[WorkShopLineName])
         {
             var loader = new ModLoader(modPath.Name);
@@ -54,6 +123,7 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
                 var modModel = new ModModel(loader);
                 modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
                 modModel.IsPass = setting[PassModLineName].Contains(modModel.ID.ToLowerInvariant());
+                modModel.IsEnabled = setting[OnModLineName].Contains(modModel.Name.ToLowerInvariant());
                 Mods.Add(modModel);
             }
             else
@@ -63,46 +133,19 @@ public class ModSettingModel : ObservableClass<ModSettingModel>
         }
     }
 
-    private static Dictionary<string, ModLoader> GetLocalMods()
-    {
-        var dic = new Dictionary<string, ModLoader>(StringComparer.OrdinalIgnoreCase);
-        foreach (var dir in Directory.EnumerateDirectories(ModDirectory))
-        {
-            try
-            {
-                var loader = new ModLoader(dir);
-                dic.TryAdd(loader.Name, loader);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("模组载入错误\n路径:{0}\n异常:{1}".Translate(dir, ex));
-            }
-        }
-        return dic;
-    }
-
-    public void Close()
-    {
-        foreach (var modLoader in LocalMods)
-        {
-            modLoader.Value.Image.CloseStream();
-        }
-    }
-
     public void Save(Setting setting)
     {
-        setting.Remove(ModLineName);
+        setting.Remove(OnModLineName);
         setting.Remove(PassModLineName);
         setting.Remove(MsgModLineName);
         foreach (var mod in Mods)
         {
             if (mod.IsEnabled is false)
                 continue;
-            setting[ModLineName].Add(new Sub(mod.ID.ToLowerInvariant()));
+            setting[OnModLineName].Add(new Sub(mod.ID.ToLowerInvariant()));
             setting[MsgModLineName].Add(new Sub(mod.ID, "True"));
             if (mod.IsPass)
                 setting[PassModLineName].Add(new Sub(mod.ID.ToLowerInvariant()));
         }
     }
-    #endregion
 }

@@ -1,0 +1,214 @@
+<Border x:Class="VPet_Simulator.Windows.BuffViewer" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Margin="0"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF" mc:Ignorable="d"
+        d:DesignHeight="460" Width="{ll:Dbe BuffViewerWidth_420, DefValue=420}" MaxHeight="640" KeyboardNavigation.TabNavigation="Cycle"
+        Background="{DynamicResource DARKPrimaryText}" BorderBrush="{DynamicResource DARKPrimaryDark}" BorderThickness="1"
+        CornerRadius="12" Padding="18,15,18,12">
+    <Border.Resources>
+        <SolidColorBrush x:Key="BuffBorder" Color="#DCE3EB" />
+        <SolidColorBrush x:Key="BuffRowBackground" Color="#086B8198" />
+        <SolidColorBrush x:Key="BuffDebuff" Color="#CE5862" />
+        <SolidColorBrush x:Key="BuffDebuffBackground" Color="#18CE5862" />
+        <SolidColorBrush x:Key="BuffInactiveBenefit" Color="#718A9A" />
+        <SolidColorBrush x:Key="BuffInactiveBenefitBackground" Color="#0D718A9A" />
+        <SolidColorBrush x:Key="BuffInactiveDebuff" Color="#A58489" />
+        <SolidColorBrush x:Key="BuffInactiveDebuffBackground" Color="#0DA58489" />
+        <SolidColorBrush x:Key="BuffInactiveSpecial" Color="#899096" />
+        <SolidColorBrush x:Key="BuffSpecialBackground" Color="#10899096" />
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{DynamicResource MainFont}" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+        </Style>
+        <Style x:Key="BuffSecondaryText" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Opacity" Value="0.65" />
+        </Style>
+        <Style x:Key="BuffCategory" TargetType="RadioButton">
+            <Setter Property="FontFamily" Value="{DynamicResource MainFont}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Tab" Padding="11,6" CornerRadius="7" Background="Transparent"
+                                BorderBrush="Transparent" BorderThickness="1">
+                            <ContentPresenter TextElement.Foreground="{TemplateBinding Foreground}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Tab" Property="Background"
+                                        Value="{StaticResource BuffRowBackground}" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Tab" Property="Background" Value="{DynamicResource PrimaryTrans4}" />
+                                <Setter Property="Foreground" Value="{DynamicResource DARKPrimary}" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Tab" Property="BorderBrush" Value="{DynamicResource DARKPrimary}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="BuffRowStyle" TargetType="Expander">
+            <Setter Property="FontFamily" Value="{DynamicResource MainFont}" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Expander">
+                        <Border Background="{StaticResource BuffRowBackground}"
+                                BorderBrush="{StaticResource BuffBorder}" BorderThickness="1" CornerRadius="9">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Border Background="{TemplateBinding BorderBrush}" CornerRadius="8,0,0,8" Margin="0,6" />
+                                <StackPanel Grid.Column="1">
+                                    <ToggleButton Content="{TemplateBinding Header}" Padding="11,10"
+                                            HorizontalContentAlignment="Stretch"
+                                            IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                        <ToggleButton.Template>
+                                            <ControlTemplate TargetType="ToggleButton">
+                                                <Border x:Name="HitArea" Padding="{TemplateBinding Padding}"
+                                                        Background="Transparent" BorderBrush="Transparent"
+                                                        BorderThickness="1" CornerRadius="8">
+                                                    <ContentPresenter />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="HitArea" Property="Background"
+                                                                Value="{StaticResource BuffRowBackground}" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                                        <Setter TargetName="HitArea" Property="BorderBrush"
+                                                                Value="{DynamicResource DARKPrimary}" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </ToggleButton.Template>
+                                    </ToggleButton>
+                                    <ContentPresenter x:Name="Details" ContentSource="Content" Margin="51,0,14,12"
+                                            Visibility="Collapsed" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="True">
+                                <Setter TargetName="Details" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="BuffRow">
+            <Expander Style="{StaticResource BuffRowStyle}">
+                <Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="38" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Border Width="30" Height="30" CornerRadius="8" Grid.RowSpan="3" VerticalAlignment="Top"
+                                HorizontalAlignment="Left"
+                                Background="{Binding Background, RelativeSource={RelativeSource AncestorType=Expander}}">
+                            <TextBlock Text="{Binding Icon}" FontFamily="{DynamicResource RemixIcon}" FontSize="26"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Foreground="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Expander}}" />
+                        </Border>
+                        <TextBlock x:Name="NameText" Grid.Column="1" VerticalAlignment="Center"
+                                TextTrimming="CharacterEllipsis" FontWeight="SemiBold" Margin="0,0,10,0" />
+                        <Border Grid.Column="2" CornerRadius="5" Padding="7,2" HorizontalAlignment="Right"
+                                Background="{Binding Background, RelativeSource={RelativeSource AncestorType=Expander}}">
+                            <TextBlock x:Name="TypeText" FontSize="13"
+                                    Foreground="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Expander}}" />
+                        </Border>
+                        <TextBlock x:Name="SummaryText" Grid.Column="1" Grid.Row="1" Text="{Binding Description}"
+                                Margin="0,5,10,0" TextTrimming="CharacterEllipsis"
+                                Style="{StaticResource BuffSecondaryText}" />
+                        <TextBlock x:Name="DurationText" Grid.Column="2" Grid.Row="1" Margin="0,5,0,0"
+                                HorizontalAlignment="Right" Style="{StaticResource BuffSecondaryText}" />
+                        <TextBlock x:Name="SourceText" Grid.Column="1" Grid.Row="2" TextTrimming="CharacterEllipsis"
+                                Margin="0,4,10,0" Style="{StaticResource BuffSecondaryText}" />
+                        <TextBlock x:Name="InactiveText" Grid.Column="2" Grid.Row="2" Text="{ll:Str 当前不生效}"
+                                Margin="0,4,0,0" HorizontalAlignment="Right" Style="{StaticResource BuffSecondaryText}" />
+                    </Grid>
+                </Expander.Header>
+                <StackPanel>
+                    <TextBlock x:Name="DescriptionText" Text="{Binding Description}" TextWrapping="Wrap"
+                            Margin="0,0,0,7" />
+                    <TextBlock x:Name="ActivityText" TextWrapping="Wrap" Style="{StaticResource BuffSecondaryText}" />
+                    <TextBlock x:Name="ValuesText" TextWrapping="Wrap" Margin="0,7,0,0" />
+                </StackPanel>
+            </Expander>
+        </DataTemplate>
+    </Border.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{ll:Str 生活状态}" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center" />
+            <TextBlock x:Name="CurrentActivityText" Grid.Column="1" Margin="16,0,10,0" TextTrimming="CharacterEllipsis"
+                    HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource BuffSecondaryText}" />
+            <Button Grid.Column="2" Content="×" Width="28" Height="28" Click="Close_Click" Padding="0"
+                    FontFamily="{DynamicResource MainFont}" FontSize="26" Foreground="{DynamicResource PrimaryText}"
+                    ToolTip="{ll:Str 关闭}">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="CloseArea" Background="Transparent" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CloseArea" Property="Background"
+                                        Value="{StaticResource BuffRowBackground}" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="CloseArea" Property="Background"
+                                        Value="{DynamicResource PrimaryTrans4}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+            <RadioButton x:Name="AllTab" Tag="0" GroupName="BuffCategory" IsChecked="True" Content="{ll:Str 全部}"
+                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="16" />
+            <RadioButton x:Name="BenefitTab" Tag="1" GroupName="BuffCategory" Content="{ll:Str 增益}"
+                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="16" />
+            <RadioButton x:Name="DebuffTab" Tag="2" GroupName="BuffCategory" Content="{ll:Str 减益}"
+                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="16" />
+            <RadioButton x:Name="SpecialTab" Tag="3" GroupName="BuffCategory" Content="{ll:Str 特殊}"
+                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="16" />
+        </StackPanel>
+        <Grid Grid.Row="2" MinHeight="60">
+            <ScrollViewer x:Name="ListScroll" MaxHeight="480" VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled">
+                <StackPanel x:Name="Rows" />
+            </ScrollViewer>
+            <TextBlock x:Name="EmptyText" Text="{ll:Str 暂无 Buff}" Margin="0,20" HorizontalAlignment="Center"
+                    VerticalAlignment="Top" Visibility="Collapsed" Style="{StaticResource BuffSecondaryText}" />
+        </Grid>
+    </Grid>
+</Border>

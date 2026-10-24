@@ -949,8 +949,10 @@
                         <Label Margin="-5,0,0,0" Padding="5,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Center"
                                 Background="{x:Null}" Content="{ll:Str MOD介绍}" FontSize="18" FontWeight="Bold" />
                         <ScrollViewer Height="80" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalScrollBarVisibility="Auto">
-                            <TextBlock x:Name="GameInfo" VerticalAlignment="Top" FontSize="14"
-                                    Text="这里是MOD的介绍内容,你的介绍就是你的介绍&#xA;" TextWrapping="Wrap" />
+                            <StackPanel><Border x:Name="WorkshopVerificationError" IsVisible="False" Margin="0,4" Padding="8,5" Background="#18D32F2F" BorderBrush="#FFD32F2F" BorderThickness="1" CornerRadius="3">
+        <StackPanel><TextBlock FontWeight="Bold" Foreground="#FFD32F2F" Text="{ll:Str 创意工坊校验失败}" />
+        <TextBlock x:Name="WorkshopVerificationErrorText" Foreground="#FFD32F2F" TextWrapping="Wrap" /></StackPanel></Border><TextBlock x:Name="GameInfo" VerticalAlignment="Top" FontSize="14"
+                                    Text="这里是MOD的介绍内容,你的介绍就是你的介绍&#xA;" TextWrapping="Wrap" /></StackPanel>
                         </ScrollViewer>
                         <Grid>
                             <Grid.ColumnDefinitions>

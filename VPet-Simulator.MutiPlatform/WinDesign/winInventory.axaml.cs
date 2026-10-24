@@ -127,7 +127,7 @@ namespace VPet_Simulator.MutiPlatform
         /// </summary>
         private void UseItem(Item item, int count = 1)
         {
-            if (item == null) return;
+            if (item == null || !item.CanUse) return;
             while (count-- > 0)
                 item.Use(mw);
             // 没有通知，直接刷新
@@ -237,6 +237,7 @@ namespace VPet_Simulator.MutiPlatform
             TbtnStar.IsChecked = item.Star;
             IsMaskVisible = true;
             IsOverlayerVisible = true;
+            BtnDetailUse.IsVisible = item.CanUse;
 
             if (item.IsSingle)
             {
@@ -245,7 +246,7 @@ namespace VPet_Simulator.MutiPlatform
             }
             else
             {
-                spUseEnter.IsVisible = true;
+                spUseEnter.IsVisible = item.CanUse;
                 BorderIsSingle.IsVisible = false;
             }
         }

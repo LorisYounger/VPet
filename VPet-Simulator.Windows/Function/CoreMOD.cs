@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Converter;
 using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
@@ -13,6 +13,7 @@ using System.Security.Cryptography.X509Certificates;
 using VPet_Simulator.Core;
 using VPet_Simulator.Unified.Services;
 using VPet_Simulator.Windows.Interface;
+using static VPet_Simulator.Windows.Win32;
 
 namespace VPet_Simulator.Windows
 {
@@ -49,6 +50,14 @@ namespace VPet_Simulator.Windows
         /// 上传至Steam的ItemID
         /// </summary>
         public ulong ItemID { get; set; } = 0;
+        /// <summary>
+        /// Steam 工坊查询返回的作者 ID，仅在当前进程中使用，不写入 MOD 文件。
+        /// </summary>
+        public long sAuthorID { get; set; }
+        /// <summary>
+        /// Steam 工坊查询返回的作品 ID，仅在当前进程中使用，不写入 MOD 文件。
+        /// </summary>
+        public long sItemID { get; set; }
         public string Intro { get; set; } = string.Empty;
         public DirectoryInfo Path { get; set; } = null!;
         public int GameVer { get; set; }
@@ -85,13 +94,15 @@ namespace VPet_Simulator.Windows
                 mw.FileSources.AddSource(source.Key, source.Value);
             }
         }
-        public CoreMOD(DirectoryInfo directory, MainWindow mw)
+        public CoreMOD(DirectoryInfo directory, MainWindow mw, long steamItemId = 0, long steamAuthorId = 0)
         {
 #if !DEBUG
             try
             {
 #endif
             Path = directory;
+            sItemID = steamItemId;
+            sAuthorID = steamAuthorId;
             //info.lps 的解析走共享后端, 跨平台版读出来的 MOD 列表与这边逐字一致
             var meta = ModInfoReader.Parse(directory)
                 ?? throw new FileNotFoundException("找不到 info.lps", directory.FullName + @"\info.lps");
@@ -276,6 +287,9 @@ namespace VPet_Simulator.Windows
                                     case "schedulepackage":
                                         mw.SchedulePackage.Add(LPSConvert.DeserializeObject<ScheduleTask.PackageFull>(li)!);
                                         break;
+                                    case "buff":
+                                        mw.BuffEffects.Add(LPSConvert.DeserializeObject<Buff.Effect>(li)!);
+                                        break;
                                 }
                             }
                         }
@@ -293,7 +307,6 @@ namespace VPet_Simulator.Windows
                                 LocalizeCore.AddCulture(dis.Name, new LPS_D(File.ReadAllText(fi.FullName)));
                             }
                         }
-
                         if (mw.Set.Language == "null")
                         {
                             LocalizeCore.LoadDefaultCulture();
@@ -335,11 +348,16 @@ namespace VPet_Simulator.Windows
                                 }
                                 if (LoadedDLL.Contains(path))
                                     continue;
-                                LoadedDLL.Add(path);
                                 X509Certificate2? certificate;
                                 try
                                 {
-                                    certificate = new X509Certificate2(tmpfi.FullName);
+                                    if (AuthenticodeHelper.Verify(tmpfi.FullName))
+#pragma warning disable SYSLIB0057 // 类型或成员已过时
+                                        certificate = new X509Certificate2(tmpfi.FullName);
+#pragma warning restore SYSLIB0057 // 类型或成员已过时
+
+                                    else
+                                        certificate = null;
                                 }
                                 catch
                                 {
@@ -347,17 +365,13 @@ namespace VPet_Simulator.Windows
                                 }
                                 if (certificate != null)
                                 {
-                                    if (IsLBGameCertificate(certificate))
-                                    {//LBGame 信任的证书
-                                        if (authtype != "FAIL")
+                                    //LBGame 信任的证书
+                                    if (authtype != "FAIL" && authtype != "[V]")
+                                        if (IsLBGameCertificate(certificate))
                                             authtype = "[认证]".Translate();
-                                    }
-                                    else if (!IsTrustedCertificate(certificate)
-                                        && !IsPassMOD(mw))
-                                    {//不是通过模组,不加载
-                                        SuccessLoad = false;
-                                        continue;
-                                    }
+                                        else
+                                            authtype = "[V]";
+                                    certificate.Dispose();
                                 }
                                 else
                                 {
@@ -369,6 +383,7 @@ namespace VPet_Simulator.Windows
                                         continue;
                                     }
                                 }
+                                LoadedDLL.Add(path);
                                 Assembly dll = Assembly.LoadFrom(tmpfi.FullName);
                                 var v = dll.GetExportedTypes();
                                 foreach (Type exportedType in v)
@@ -449,13 +464,6 @@ namespace VPet_Simulator.Windows
                                         && certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US")
                                         || (certificate.Subject == "CN=\"Shenzhen Zero Edition Computer Technology Co., Ltd.\", O=\"Shenzhen Zero Edition Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong, OID.1.3.6.1.4.1.311.60.2.1.3=CN, OID.2.5.4.15=Private Organization"
                                         && certificate.Issuer == "CN=Certum Extended Validation Code Signing 2021 CA, O=Asseco Data Systems S.A., C=PL");
-        }
-        public static bool IsTrustedCertificate(X509Certificate2 certificate)
-        {
-            return certificate.Issuer.Contains("Microsoft Corporation") ||
-                                        certificate.Issuer.Contains(".NET Foundation Projects") ||
-                                        certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US" ||
-                                        certificate.Issuer == "CN=Certum Extended Validation Code Signing 2021 CA, O=Asseco Data Systems S.A., C=PL";
         }
     }
     /// <summary>

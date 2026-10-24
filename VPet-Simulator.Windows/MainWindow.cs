@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Converter;
 using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -122,6 +123,7 @@ namespace VPet_Simulator.Windows
             return list[Function.Rnd.Next(list.Count)];
         }
         private Image? hashcheckimg;
+        private BuffViewer? buffViewer;
 
         /// <summary>
         /// 关闭该玩家的HashCheck检查
@@ -145,6 +147,14 @@ namespace VPet_Simulator.Windows
                 }
                 Main?.Dispatcher.Invoke(() =>
                 {
+                    if (Main.ToolBar != null && buffViewer == null)
+                    {
+                        buffViewer = new BuffViewer(this);
+                        Main.ToolBar.gdPanel.Children.Add(buffViewer.Entry);
+                    }
+                    // HashCheck 图标隐藏后，增减益移到面板最右侧。
+                    if (buffViewer != null)
+                        buffViewer.Entry.Margin = new Thickness(0, 0, GameSavesData.HashCheck ? 70 : 0, 0);
                     if (GameSavesData.HashCheck)
                     {
                         if (hashcheckimg == null)
@@ -220,7 +230,8 @@ namespace VPet_Simulator.Windows
         {
             //保存日程表
             ScheduleTask?.Save();
-
+            //保存Buff
+            Buff?.Save();
             //保存物品栏
             foreach (var v in GameSavesData.Data.Assemblage.Keys.Where(x => x.StartsWith("item")))
                 GameSavesData.Data.Remove(v);
@@ -490,78 +501,76 @@ namespace VPet_Simulator.Windows
         int lowstrengthAskCountDrink = 20;
         private void lowStrength()
         {
-            var sm = Core.Save!.StrengthMax;
-            var sm75 = sm * PurchaseRules.LowRate;
-            //外层这个余额判断不能省: 开着自动购买但钱不够时, 桌宠还是要照常喊饿
-            if (Set.AutoBuy && Core.Save!.Money >= PurchaseRules.AutoBuyMinMoney)
-            {
-                //买什么、预算多少、看得上哪些食物, 判断都在共享后端里
-                var need = PurchaseRules.WhatToBuy(
-                    Core.Save!.StrengthFood + Core.Save!.StoreStrengthFood,
-                    Core.Save!.StrengthDrink + Core.Save!.StoreStrengthDrink,
-                    sm, Core.Save!.Feeling, Core.Save!.FeelingMax, Core.Save!.Money, Set.AutoGift);
-                if (need != PurchaseRules.AutoBuyNeed.None)
-                {
-                    var havemoney = PurchaseRules.AutoBuyBudget(Core.Save!.Money);
-                    List<Food> food = Foods.FindAll(x => PurchaseRules.IsAutoBuyCandidate(
-                        x.Price, x.Health, x.Exp, x.Likability, havemoney, x.IsOverLoad()));
+            var strengthMax = Core.Save!.StrengthMax;
 
-                    switch (need)
-                    {
-                        case PurchaseRules.AutoBuyNeed.Meal:
-                            food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > PurchaseRules.MealThreshold(sm));
-                            break;
-                        case PurchaseRules.AutoBuyNeed.Drink:
-                            food = food.FindAll(x => x.Type == Food.FoodType.Drink && x.StrengthDrink > PurchaseRules.DrinkThreshold(sm));
-                            break;
-                        case PurchaseRules.AutoBuyNeed.Gift:
-                            food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > PurchaseRules.GiftThreshold(Core.Save!.FeelingMax));
-                            break;
-                        case PurchaseRules.AutoBuyNeed.Snack:
-                            // 没开自动购买礼物的, 买零食能加点是一点
-                            food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.Feeling > PurchaseRules.SnackThreshold(Core.Save!.FeelingMax));
-                            break;
-                    }
+            if (Set.AutoBuy && Core.Save!.Money >= 100)
+            {
+                var havemoney = Core.Save!.Money * 0.8;
+                List<Food> food = Foods.FindAll(x => x.Price >= 2 && x.Health >= -5 && x.Exp >= -10 && x.Likability >= 0 && x.Price < havemoney //桌宠不吃负面的食物
+                 && !x.IsOverLoad() // 不吃超模食物
+                );
+
+                if ((Core.Save!.StrengthFood + Core.Save!.StoreStrengthFood) < strengthMax * 0.70)
+                {//饿了就该吃正餐
+                    food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > Math.Min(strengthMax * 0.20, 100));
                     if (food.Count == 0)
                         return;
-
                     var item = food[Function.Rnd.Next(food.Count)];
-                    Core.Save!.Money -= PurchaseRules.AutoBuyCost(item.Price);
-                    switch (need)
-                    {
-                        case PurchaseRules.AutoBuyNeed.Meal:
-                            TakeItemHandle(item, 1, "autofood");
-                            break;
-                        case PurchaseRules.AutoBuyNeed.Drink:
-                            TakeItemHandle(item, 1, "autodrink");
-                            break;
-                        default:
-                            TakeItemHandle(item, 1, "autofeel");
-                            break;
-                    }
+                    Core.Save!.Money -= item.Price * 1.2;
+                    TakeItemHandle(item, 1, "autofood");
                     TakeItem(item);
-                    if (need == PurchaseRules.AutoBuyNeed.Meal || need == PurchaseRules.AutoBuyNeed.Drink)
-                        GameSavesData.Statistics![(gint)"stat_autobuy"]++;
-                    else
-                        GameSavesData.Statistics![(gint)"stat_autogift"]++;
+                    GameSavesData.Statistics![(gint)"stat_autobuy"]++;
                     Main.Display(item.GetGraph(), item.ImageSource!, Main.DisplayToNomal);
+                }
+                else if ((Core.Save!.StrengthDrink + Core.Save!.StoreStrengthDrink) < strengthMax * 0.70)
+                {
+                    food = food.FindAll(x => x.Type == Food.FoodType.Drink && x.StrengthDrink > Math.Min(strengthMax * 0.20, 50));
+                    if (food.Count == 0)
+                        return;
+                    var item = food[Function.Rnd.Next(food.Count)];
+                    Core.Save!.Money -= item.Price * 1.2;
+                    TakeItemHandle(item, 1, "autodrink");
+                    TakeItem(item);
+                    GameSavesData.Statistics![(gint)"stat_autobuy"]++;
+                    Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
+                }
+                else if (Core.Save!.Feeling < Core.Save!.FeelingMax * 0.50)
+                {
+                    if (Set.AutoGift)
+                    {
+                        food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > Math.Min(Core.Save!.FeelingMax * 0.10, 50));
+                        if (food.Count == 0)
+                            return;
+                    }
+                    else // 没有自动购买礼物的可以试试自动购买零食能加点是一点
+                    {
+                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.Feeling > Math.Min(Core.Save!.FeelingMax * 0.10, 40));
+                        if (food.Count == 0)
+                            return;
+                    }
+                    var item = food[Function.Rnd.Next(food.Count)];
+                    Core.Save!.Money -= item.Price * 1.2;
+                    TakeItemHandle(item, 1, "autofeel");
+                    TakeItem(item);
+                    GameSavesData.Statistics![(gint)"stat_autogift"]++;
+                    Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
                 }
             }
             else if (Core.Save!.Mode == IGameSave.ModeType.Happy || Core.Save!.Mode == IGameSave.ModeType.Nomal)
             {
-                if (Core.Save!.StrengthFood < sm75 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
+                if (Core.Save!.StrengthFood < strengthMax * 0.70 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
                 {
                     lowstrengthAskCountFood = Set.InteractionCycle;
                     var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
                     var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like <= like);
                     if (txt.Count != 0)
-                        if (Core.Save!.StrengthFood > sm * 0.60)
+                        if (Core.Save!.StrengthFood > strengthMax * 0.60)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
                             if (txt.Count != 0)
                                 Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
                         }
-                        else if (Core.Save!.StrengthFood > sm * 0.40)
+                        else if (Core.Save!.StrengthFood > strengthMax * 0.40)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
                             if (txt.Count != 0)
@@ -576,19 +585,19 @@ namespace VPet_Simulator.Windows
                     Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
-                if (Core.Save!.StrengthDrink < sm75 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
+                if (Core.Save!.StrengthDrink < strengthMax * 0.70 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
                 {
                     lowstrengthAskCountDrink = Set.InteractionCycle;
                     var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
                     var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like <= like);
                     if (txt.Count != 0)
-                        if (Core.Save!.StrengthDrink > sm * 0.60)
+                        if (Core.Save!.StrengthDrink > strengthMax * 0.60)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
                             if (txt.Count != 0)
                                 Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
                         }
-                        else if (Core.Save!.StrengthDrink > sm * 0.40)
+                        else if (Core.Save!.StrengthDrink > strengthMax * 0.40)
                         {
                             txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
                             if (txt.Count != 0)
@@ -606,19 +615,19 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                var sm20 = sm * 0.20;
-                if (Core.Save!.StrengthFood < sm * 0.60 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
+
+                if (Core.Save!.StrengthFood < strengthMax * 0.60 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
                 {
                     lowstrengthAskCountFood = Set.InteractionCycle;
                     var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
                     var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
-                    if (Core.Save!.StrengthFood > sm * 0.40)
+                    if (Core.Save!.StrengthFood > strengthMax * 0.40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
                         if (txt.Count != 0)
                             Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
                     }
-                    else if (Core.Save!.StrengthFood > sm20)
+                    else if (Core.Save!.StrengthFood > strengthMax * 0.20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
                         if (txt.Count != 0)
@@ -633,18 +642,18 @@ namespace VPet_Simulator.Windows
                     Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
                     return;
                 }
-                if (Core.Save!.StrengthDrink < sm * 0.60 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
+                if (Core.Save!.StrengthDrink < strengthMax * 0.60 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
                 {
                     lowstrengthAskCountDrink = Set.InteractionCycle;
                     var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
                     var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
-                    if (Core.Save!.StrengthDrink > sm * 0.40)
+                    if (Core.Save!.StrengthDrink > strengthMax * 0.40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
                         if (txt.Count != 0)
                             Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
                     }
-                    else if (Core.Save!.StrengthDrink > sm20)
+                    else if (Core.Save!.StrengthDrink > strengthMax * 0.20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
                         if (txt.Count != 0)
@@ -696,9 +705,25 @@ namespace VPet_Simulator.Windows
             DateTime now = DateTime.Now;
             var buytime = GameSavesData[FeedingRules.BuyTimeLineName];
             double eattimes = FeedingRules.RemainingBoredom(buytime.GetDateTime(item.Name, now), now);
+            AddEffect(item.Buff, item.BuffTime, item.Type.ToString().Translate() + ' ' + item.TranslateName);
             double eatuseps = FeedingRules.Effectiveness(eattimes, item.Type == FoodType.Gift);
             //开始加点
-            Core.Save!.EatFood(item, eatuseps);
+            var multipliers = Buff.GetAttributeMultipliers(PetActivity.TakeItem);
+            var save = Core.Save!;
+            // 食物的负属性保留原值，不参与获取类 Buff；延迟补充部分只在这里计算一次倍率。
+            save.Exp += item.Exp * eatuseps * (item.Exp > 0 ? multipliers.Experience : 1);
+            var strength = item.Strength / 2 * eatuseps * (item.Strength > 0 ? multipliers.Strength : 1);
+            save.StrengthChange(strength);
+            save.StoreStrength += strength;
+            var food = item.StrengthFood / 2 * eatuseps * (item.StrengthFood > 0 ? multipliers.Food : 1);
+            save.StrengthChangeFood(food);
+            save.StoreStrengthFood += food;
+            var drink = item.StrengthDrink / 2 * eatuseps * (item.StrengthDrink > 0 ? multipliers.Drink : 1);
+            save.StrengthChangeDrink(drink);
+            save.StoreStrengthDrink += drink;
+            save.FeelingChange(item.Feeling * eatuseps * (item.Feeling > 0 ? multipliers.Feeling : 1));
+            save.Health += item.Health * eatuseps * (item.Health > 0 ? multipliers.Health : 1);
+            save.Likability += item.Likability * eatuseps * (item.Likability > 0 ? multipliers.Likability : 1);
             //吃腻了
             eattimes += FeedingRules.AddedBoredom(item.Likability, item.Feeling);
             buytime.SetDateTime(item.Name, now.AddHours(eattimes));
@@ -765,7 +790,12 @@ namespace VPet_Simulator.Windows
         {
             if (name.StartsWith("stat_") && value != null)
             {
-                SteamUserStats.SetStat(name, Convert.ToInt32(value.Value));
+                double number = value.GetDouble();
+                if (double.IsNaN(number) || double.IsInfinity(number))
+                    return;
+                if (number < int.MinValue || number > int.MaxValue)
+                    return;
+                SteamUserStats.SetStat(name, (int)number);
             }
         }
         /// <summary>
@@ -781,7 +811,7 @@ namespace VPet_Simulator.Windows
             stat["stat_likability"] = save.Likability;
 
             stat[(gi64)"stat_total_time"] += (int)Set.LogicInterval;
-            switch (Main.State)
+            switch (Main.State)//TODO: 使用
             {
                 case Main.WorkingState.Work:
                     if (Main.NowWork?.Type == Work.WorkType.Work)
@@ -819,7 +849,7 @@ namespace VPet_Simulator.Windows
                     stat["stat_0_sd_sf"] = 1;
             }
             var smm = save.StrengthMax - 1;
-            if (save.Strength > smm && save.Feeling > save.FeelingMax - 1 && save.StrengthFood > smm && save.StrengthDrink > smm)
+            if (save.Strength > smm && save.Feeling > save.FeelingMax - 1 && save.StrengthFood > save.StrengthMax - 1 && save.StrengthDrink > save.StrengthMax - 1)
                 stat[(gint)"stat_100_all"]++;
 
             if (IsSteamUser)
@@ -836,24 +866,7 @@ namespace VPet_Simulator.Windows
                 return false;
             if (string.IsNullOrWhiteSpace(lps.ToString()))
                 return false;
-            GameSave_v2 tmp;
-            if (GameSavesData != null)
-                tmp = new GameSave_v2(lps, GameSavesData);
-            else
-            {
-                var data = new LPS_D();
-                foreach (var item in Set.PetData_OLD)
-                {
-                    if (item.Name.Contains("_"))
-                    {
-                        var strs = Sub.Split(item.Name, "_", 1);
-                        data[strs[0]][(gstr)strs[1]] = item.Info;
-                    }
-                    else
-                        data.Add(new Line(item.Name, item.Info));
-                }
-                tmp = new GameSave_v2(lps, null, olddata: data);
-            }
+            var tmp = new GameSave_v2(lps);
             if (tmp.GameSave == null)
                 return false;
             if (tmp.GameSave.Money == 0 && tmp.GameSave.Likability == 0 && tmp.GameSave.Exp == 0
@@ -890,8 +903,24 @@ namespace VPet_Simulator.Windows
                 tmp.GameSave.LikabilityMax += totalhour / 10;
                 tmp.Data[(gbol)"round"] = false;
             }
+            if (Main.State != Main.WorkingState.Nomal)
+            {
+                Main.WorkTimer.Dispatcher.Invoke(() => Main.WorkTimer.Visibility = Visibility.Collapsed);
+                Main.State = Main.WorkingState.Nomal;
+            }
+            if (winWorkMenu != null)
+            {
+                Dispatcher.Invoke(() => winWorkMenu.Close());
+                winWorkMenu = null;
+            }
+            ScheduleTask?.Dispose();
+            Buff?.Dispose();
             GameSavesData = tmp;
+            if (evaluationStatisticsInitialized)
+                ResetEvaluationSessionStatistics();
             Core.Save = tmp.GameSave;
+            Buff = new Buff(this);
+            ScheduleTask = new ScheduleTask(this);
             Items.Clear();
             foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("item")))
             {
@@ -1356,6 +1385,7 @@ namespace VPet_Simulator.Windows
                 }
 
                 Set ??= new Setting(this, "Setting#VPET:|\n");
+                WorkshopVerificationClient.Initialize(this);
 
                 var visualTree = new FrameworkElementFactory(typeof(Border));
                 visualTree.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(BackgroundProperty));
@@ -1480,13 +1510,14 @@ namespace VPet_Simulator.Windows
 
 
             //加载所有MOD
-            List<DirectoryInfo> Path = new List<DirectoryInfo>();
-            Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
+            List<(long, long, DirectoryInfo)> Path = new();
+            Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories()
+                .Select(directory => (-2L, -2L, directory)));
 
             var workshop = Set["workshop"];
             foreach (ISub ws in workshop)
             {
-                Path.Add(new DirectoryInfo(ws.Name));
+                Path.Add(GetWorkshopModPath(ws));
             }
 
 
@@ -1505,20 +1536,68 @@ namespace VPet_Simulator.Windows
         /// 加载游戏
         /// </summary>
         /// <param name="Path">MOD地址</param>
-        public async Task GameLoad(List<DirectoryInfo> Path)
+        public async Task GameLoad(List<(long, long, DirectoryInfo)> Path)
         {
-            MODPath = Path.GroupBy(x => x.FullName).Select(group => group.First()).ToList();
+            Path = Path.GroupBy(x => x.Item3.FullName, StringComparer.OrdinalIgnoreCase)
+                .Select(group => group.First()).ToList();
+            MODPath = Path.Select(x => x.Item3).ToList();
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "Loading MOD"));
+            var blockedWorkshopMods = new List<string>();
+            bool workshopVerificationAvailable = true;
             //加载mod
-            foreach (DirectoryInfo di in MODPath)
+            foreach (var modPath in Path)
             {
+                long sItemID = modPath.Item1;
+                long sAuthorID = modPath.Item2;
+                DirectoryInfo di = modPath.Item3;
                 if (!File.Exists(di.FullName + @"\info.lps"))
                     continue;
                 await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = $"Loading MOD: {di.Name}"));
-                CoreMODs.Add(new CoreMOD(di, this));
+
+                // 本地 MOD(-2)、旧版工坊缓存(0)、未登录 Steam 或验证服务不可用时跳过校验。
+                if (sItemID > 0 && sAuthorID > 0 && IsSteamUser && workshopVerificationAvailable
+                    && SteamClient.IsValid && SteamClient.IsLoggedOn
+                    && WorkshopVerificationClient.HasCodePlugin(di))
+                {
+                    string modName = WorkshopVerificationClient.GetModDisplayName(di);
+                    try
+                    {
+                        WorkshopVerifyResponse verification = await WorkshopVerificationClient.VerifyAsync(
+                            di, sItemID, sAuthorID, version);
+                        string? reason = WorkshopVerificationClient.GetVerificationErrorMessage(verification);
+                        if (reason != null)
+                        {
+                            blockedWorkshopMods.Add($"{modName}: {reason}");
+                            continue;
+                        }
+                    }
+                    catch (Exception ex) when (ex is HttpRequestException or OperationCanceledException or InvalidDataException)
+                    {
+                        // 服务异常不代表 MOD 校验失败；当前及后续 MOD 继续正常加载。
+                        workshopVerificationAvailable = false;
+                        Trace.TraceWarning($"Workshop verification unavailable; skipping verification for this load: {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        blockedWorkshopMods.Add($"{modName}: {"无法完成创意工坊校验：{0}".Translate(ex.Message)}");
+                        continue;
+                    }
+                }
+
+                CoreMODs.Add(new CoreMOD(di, this, sItemID, sAuthorID));
             }
 
             CoreMOD.NowLoading = null;
+
+            if (blockedWorkshopMods.Count > 0)
+            {
+                await Dispatcher.InvokeAsync(() => MessageBoxX.Show(
+                    "以下创意工坊 MOD 未通过完整性或风险验证，已阻止加载：\n{0}"
+                        .Translate(string.Join("\n", blockedWorkshopMods)),
+                    "创意工坊 MOD 验证失败".Translate(),
+                    MessageBoxButton.OK,
+                    Panuon.WPF.UI.MessageBoxIcon.Warning));
+            }
 
             //判断是否需要清空缓存
             if (App.MainWindows.Count == 1 && Set.LastCacheDate < CoreMODs.Max(x => x.CacheDate))
@@ -1557,6 +1636,17 @@ namespace VPet_Simulator.Windows
             ClickTexts.RemoveAll(x => !x.FindTag(tag));
             SelectTexts.RemoveAll(x => !x.FindTag(tag));
 
+            // 读取存档需要动画中的工作配置与 WorkTimer，但此时还不启动游戏时钟。
+            await Dispatcher.InvokeAsync(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate());
+            Core.Save = GameSavesData.GameSave;
+            Core.Graph = petloader.Graph(Set.Resolution, Dispatcher);
+            Main = await Dispatcher.InvokeAsync(() => new Main(Core));
+            Main.Load_0_BaseConsole();
+            Main.Load_2_TouchEvent();
+            Main.Load_2_WaitGraph(c => Dispatcher.Invoke(() => LoadingText.Content =
+                "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()
+                + $"\n  {c} / {petloader.GraphCount}")).Wait();
+
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏存档".Translate()));
             //加载存档
             if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps")) //有老的旧存档,优先旧存档
@@ -1579,18 +1669,9 @@ namespace VPet_Simulator.Windows
                 //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
                 LoadLatestSave(petloader.PetName);
 
-            //加载数据合理化:食物
+            //加载数据合理化:文本
             if (!Set["gameconfig"].GetBool("noAutoCal"))
             {
-                foreach (Food f in Foods)
-                {
-                    if (f.IsOverLoad())
-                    {
-                        f.Price = Math.Max((int)f.RealPrice, 1);
-                        f.isoverload = false;
-                    }
-                }
-                //var food = new Food();
                 foreach (var selet in SelectTexts)
                 {
                     selet.Exp = Math.Max(Math.Min(selet.Exp, 1000), -1000);
@@ -1715,22 +1796,10 @@ namespace VPet_Simulator.Windows
             MusicTimer.Elapsed += MusicTimer_Elapsed;
 
 
-            //await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏动画".Translate()));
-            await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()));
-            Core.Graph = petloader.Graph(Set.Resolution, Dispatcher);
-
-            Main = await Dispatcher.InvokeAsync(() => new Main(Core));
-
-            Main.LoadALL((c) =>
-            {
-                Dispatcher.Invoke(() => LoadingText.Content = "尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate()
-                + $"\n  {c} / {petloader.GraphCount}");
-            }
-            //#if NewYear
-            //            , Core.Graph!.FindGraph("newyear", AnimatType.Single, Core.Save!.Mode)
-            //#endif
-            );
+            await Dispatcher.InvokeAsync(() => LoadingText.Content = "尝试启动桌宠".Translate());
             Main.NoFunctionMOD = Set.CalFunState;
+            Main.Load_3_BindingTimer();
+            Main.Load_4_Start();
             await Dispatcher.InvokeAsync(() =>
               {
                   //清空资源
@@ -1741,9 +1810,6 @@ namespace VPet_Simulator.Windows
                       Main.ToolBar.Resources = Application.Current.Resources;
                   Main.ToolBar?.LoadClean();
                   Main.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
-
-                  //日程表加载
-                  ScheduleTask = new ScheduleTask(this);
 
                   if (ws.Count == 0)
                   {
@@ -1873,6 +1939,18 @@ namespace VPet_Simulator.Windows
                           NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + uh.Plugin.PluginName);
                       }
                   Foods.ForEach(item => item.LoadImageSource(this));
+                  //加载数据合理化:食物
+                  if (!Set["gameconfig"].GetBool("noAutoCal"))
+                  {
+                      foreach (Food f in Foods)
+                      {
+                          if (f.IsOverLoad())
+                          {
+                              f.Price = Math.Max((int)f.RealPrice, 1);
+                              f.isoverload = false;
+                          }
+                      }
+                  }
                   Photos.ForEach(item => item.LoadUserInfo(this));
 
 
@@ -2042,6 +2120,7 @@ namespace VPet_Simulator.Windows
                   };
                   Main.PlayVoiceVolume = Set.VoiceVolume;
                   Main.FunctionSpendHandle += StatisticsCalHandle;
+                  InitializeEvaluationStatistics();
                   DisplayGrid.Child = Main;
                   Task.Run(async () =>
                   {
@@ -2636,6 +2715,20 @@ namespace VPet_Simulator.Windows
             }
         }
 
+        private static (long, long, DirectoryInfo) GetWorkshopModPath(ISub workshop)
+        {
+            string[] infos = workshop.GetInfos();
+            if (infos.Length >= 2
+                && ulong.TryParse(infos[0], out ulong itemId)
+                && ulong.TryParse(infos[1], out ulong authorId))
+            {
+                return (unchecked((long)itemId), unchecked((long)authorId), new DirectoryInfo(workshop.Name));
+            }
+
+            // 旧版本保存的 workshop 项只有目录信息。
+            return (0L, 0L, new DirectoryInfo(workshop.Name));
+        }
+
 
         TextBlock tlvplus = null!;
 
@@ -2649,8 +2742,10 @@ namespace VPet_Simulator.Windows
         {
             if (Main.ToolBar!.BdrPanel.Visibility == Visibility.Visible)
             {
-                if (GameSavesData.GameSave.LevelMax != 0)
-                    tlvplus.Text = $" / {1000 + GameSavesData.GameSave.LevelMax * 100} x{GameSavesData.GameSave.LevelMax}";
+                int levelMax = GameSavesData.GameSave.LevelMax;
+                if (tlvplus.Tag is int previous && previous == levelMax) return;
+                tlvplus.Tag = levelMax;
+                tlvplus.Text = levelMax == 0 ? "" : $" / {1000 + levelMax * 100} x{levelMax}";
             }
         }
 
@@ -2853,7 +2948,8 @@ namespace VPet_Simulator.Windows
             var gf = Core.Graph!.FindGraph("levelup", GraphInfo.AnimatType.Single, GameSavesData.GameSave.Mode);
             if (gf != null)
             {
-                Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name), "levelup", true);
+                Main.Display(gf, Main.DisplayToNomal);
+                Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
             }
             if (args.IsLevelMaxUp)
             {//告知用户上限等级上升
@@ -2867,101 +2963,6 @@ namespace VPet_Simulator.Windows
                             "桌宠等级突破".Translate());
                     });
                 });
-            }
-        }
-
-        public void CheckGalleryUnlock()
-        {
-            //要花钱的那种不自动解锁, 玩家得自己去图库里买 —— 判断在共享后端里
-            var ps = Photos.FindAll(x => GalleryUnlockRules.ShouldAutoUnlock(
-                x.IsUnlock, x.UnlockAble.SellBoth, x.UnlockAble.Check(GameSavesData)));
-            if (ps.Count == 0) return;
-            StringBuilder sb = new StringBuilder();
-            foreach (Photo p in ps)
-            {
-                sb.Append(", ");
-                p.Unlock(this);
-                sb.Append(p.TranslateName);
-            }
-            ActivityLogs.Add(new ActivityLog("photo_unlock", sb.ToString().AsSpan(2).ToString()));
-            Dispatcher.Invoke(() =>
-            NoticeBox.Show(string.Concat(sb.ToString().AsSpan(2), "\n", "以上照片已解锁".Translate()), "新的照片已解锁".Translate()
-            , Panuon.WPF.UI.MessageBoxIcon.Info, true, 5000));
-        }
-        static readonly DateTime StartDate = new(2023, 8, 14, 0, 0, 0, DateTimeKind.Utc);
-        static int authheycache;
-        static DateTime GetDateFromAuthKey(int authKey)
-        {
-            // 从验证键中解析出小时数
-            int hoursSince2020 = authKey / 10000;
-
-            // 计算日期和时间
-            DateTime date = StartDate.AddHours(hoursSince2020);
-
-            return date;
-        }
-        public async Task<int> GenerateAuthKey()
-        {
-            if (!IsSteamUser)
-                return 0;
-
-            bool genck = false;
-            long steamId = (long)SteamClient.SteamId.Value;
-
-            while (true)
-            {
-                if (authheycache != 0)
-                {
-                    DateTime dt = GetDateFromAuthKey(authheycache);
-                    if (!(dt > DateTime.UtcNow.AddDays(1) || dt < DateTime.UtcNow.AddHours(-2)))
-                    {
-                        return authheycache;
-                    }
-                }
-
-                // 加 ConfigureAwait(false)
-                Leaderboard? leaderboard = await SteamUserStats
-                    .FindLeaderboardAsync("chatgpt_auth")
-                    .ConfigureAwait(false);
-
-                if (!leaderboard.HasValue)
-                    return 0;
-
-                var lb = leaderboard.Value;
-
-                // 加 ConfigureAwait(false)
-                LeaderboardEntry[] key = await lb
-                    .GetScoresAroundUserAsync(0, 0)
-                    .ConfigureAwait(false);
-
-                if (key == null || key.Length == 0 || genck)
-                {
-                    int hoursSince2020 = (int)(DateTime.UtcNow - StartDate).TotalHours;
-                    authheycache = hoursSince2020 * 10000 + Function.Rnd.Next(10000);
-                    await lb.ReplaceScore(authheycache).ConfigureAwait(false);
-                    return authheycache;
-                }
-                else
-                {
-                    authheycache = key.First().Score;
-                    genck = true;
-                }
-            }
-        }
-        /// <summary>
-        /// 添加物品到物品栏 (自动合并)
-        /// </summary>
-        /// <param name="item">物品</param>
-        public void ItemsAdd(Item item)
-        {
-            var sameitem = Items.Find(x => x.Name == item.Name);
-            if (sameitem != null)
-            {
-                sameitem.Count += item.Count;
-            }
-            else
-            {
-                Items.Add(item);
             }
         }
     }

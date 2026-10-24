@@ -32,45 +32,6 @@ public static class SchedulePackageRules
     public static bool IsActive(DateTime endTime, DateTime now) => now < endTime;
 
     /// <summary>
-    /// 算"还剩多久"时要除以的那个数
-    /// </summary>
-    /// Windows 版原样如此, 含义不明但影响退款额, 保持不变
-    public const double RemainingDivisor = 2;
-
-    /// <summary>
-    /// 换套餐时算出的"还剩多少天"
-    /// </summary>
-    public static double RemainingDays(DateTime endTime, DateTime now)
-        => (endTime - now).TotalDays / RemainingDivisor;
-
-    /// <summary>
-    /// 剩余不足这么多天就一分不退
-    /// </summary>
-    public const double MinRefundDays = 0.5;
-
-    /// <summary>
-    /// 提前换套餐能退多少钱
-    /// </summary>
-    /// <param name="price">按当前档次重新算出的套餐价</param>
-    /// <param name="durationDays">套餐总时长(天)</param>
-    /// <param name="remainingDays">RemainingDays 算出的剩余</param>
-    /// <returns>退款额; 算不出合理值时退 0</returns>
-    /// 注意这个算式是按"已用比例"退的(duration - remaining), 也就是越接近到期退得
-    /// 越多. 看着是反的, 但它是 Windows 版一直以来的行为, 改了就是改游戏平衡,
-    /// 不该由迁移工作单方面决定 —— 原样搬过来.
-    public static double Refund(double price, int durationDays, double remainingDays)
-    {
-        if (remainingDays <= MinRefundDays)
-            return 0;
-        if (durationDays == 0)
-            return 0;
-        double refund = price * (durationDays - remainingDays) / durationDays;
-        if (refund < 0 || refund > price)
-            return 0;
-        return refund;
-    }
-
-    /// <summary>
     /// 日程表里工作占比超过这个数就该标红了
     /// </summary>
     public const double WorkRatioWarning = 0.71;

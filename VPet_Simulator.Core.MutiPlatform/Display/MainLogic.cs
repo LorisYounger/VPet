@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using LinePutScript.Localization;
 using LinePutScript;
 using System.Collections.Generic;
@@ -213,6 +213,8 @@ public partial class Main : IPetStatHost
     /// 根据消耗计算相关数据
     /// </summary>
     /// <param name="timePass">过去时间倍率</param>
+    public AttributeModifiers? AttributeModifier { get; set; }
+
     public void FunctionSpend(double timePass) => PetStatLogic.FunctionSpend(this, timePass);
 
     /// <summary>
@@ -377,6 +379,7 @@ public partial class Main : IPetStatHost
     // 全部显式实现, 不占用公开名字
 
     IGameSave IPetStatHost.Save => Core.Save!;
+    AttributeModifiers? IPetStatHost.AttributeModifier => AttributeModifier;
 
     Random IPetStatHost.Rnd => Function.Rnd;
 

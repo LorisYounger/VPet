@@ -1,4 +1,4 @@
-﻿//跨平台: 对应 VPet-Simulator.Windows.Interface/Mod/Photo.cs (照片的 Windows 半). 位图解码、缩略图、灰度化
+//跨平台: 对应 VPet-Simulator.Windows.Interface/Mod/Photo.cs (照片的 Windows 半). 位图解码、缩略图、灰度化
 //这几处是 WPF 的东西, 这里用 Avalonia 的 Bitmap 与 SkiaSharp 做; 解压、另存为、解锁记录逐行相同.
 using Avalonia.Input.Platform;
 using Avalonia.Media.Imaging;
@@ -81,7 +81,9 @@ public partial class Photo
     /// <summary>
     /// 获得当前图片图片
     /// </summary>
-    public Bitmap GetImage(IMainWindow imw)
+    public Bitmap GetImage(IMainWindow imw) => LoadImage(imw) ?? ImageResources.NewSafeBitmapImage("avares://VPet-Simulator.MutiPlatform/Res/img/error.png");
+
+    public Bitmap? LoadImage(IMainWindow imw)
     {
         //解压zip
         string? zippath = imw.FileSources.FindSource(Zip + ".zlps");
@@ -91,7 +93,7 @@ public partial class Photo
         }
         if (zippath == null)
         {
-            return ImageResources.NewSafeBitmapImage(ImageResources.ErrorImage);
+            return null;
         }
         using (ZipArchive archive = ZipFile.OpenRead(zippath))
         {
@@ -114,7 +116,7 @@ public partial class Photo
             }
             else
             {
-                return ImageResources.NewSafeBitmapImage(ImageResources.ErrorImage);
+                return null;
             }
         }
     }

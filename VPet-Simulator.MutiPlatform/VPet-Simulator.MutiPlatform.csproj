@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<!--
 	跨平台桌宠宿主 (Avalonia).
@@ -26,6 +26,7 @@
 		<RootNamespace>VPet_Simulator.MutiPlatform</RootNamespace>
 		<AssemblyName>VPet-Simulator.MutiPlatform</AssemblyName>
 		<Nullable>enable</Nullable>
+        <DefineConstants>$(DefineConstants);VPET_AVALONIA</DefineConstants>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
@@ -87,4 +88,8 @@
 		<AvaloniaResource Include="Res/**/*.png" />
 	</ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="../VPet-Simulator.Windows/Function/WorkshopVerificationClient.cs" Link="Function/WorkshopVerificationClient.cs" />
+    <Compile Include="../VPet-Simulator.Windows/Function/AuthenticodeHelper.cs" Link="Function/AuthenticodeHelper.cs" />
+  </ItemGroup>
 </Project>

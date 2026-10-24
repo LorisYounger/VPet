@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF;
 using Panuon.WPF.UI;
@@ -116,6 +116,7 @@ namespace VPet_Simulator.Windows
                 {
                     foods = foods.FindAll(x => x.TranslateName.Contains(searchtext));
                 }
+                foods.RemoveAll(x => !Photo.UnlockCondition.GetHolidayCheck(x.Holiday, 30, mw.GameSavesData));
                 IOrderedEnumerable<Food> ordered;
                 switch (sortrule)
                 {
@@ -179,6 +180,8 @@ namespace VPet_Simulator.Windows
                 {
                     var totalCount = ordered.Count();
                     var pageSize = _rows * _columns;
+                    if (pageSize <= 0)
+                        return;
                     pagination.MaxPage = (int)Math.Ceiling(totalCount * 1.0 / pageSize);
                     var currentPage = Math.Max(0, Math.Min(pagination.MaxPage, pagination.CurrentPage) - 1);
                     pagination.CurrentPage = currentPage + 1;
@@ -356,7 +359,7 @@ namespace VPet_Simulator.Windows
             rMoney!.Text = mw.Core.Save!.Money.ToString("f2");
         }
 
- 
+
         private Switch? _puswitchautobuy;
         private void Switch_Loaded_1(object sender, RoutedEventArgs e)
         {
@@ -422,6 +425,6 @@ namespace VPet_Simulator.Windows
             mw.GameSavesData["betterbuysetting"][(gint)"double"] = (int)(nibuytimes.Value ?? 0);
         }
 
- 
+
     }
 }

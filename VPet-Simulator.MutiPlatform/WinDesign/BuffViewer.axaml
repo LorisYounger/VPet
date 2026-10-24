@@ -1,0 +1,66 @@
+<Border xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ll="clr-namespace:VPet_Simulator.Core.MutiPlatform.Localization;assembly=VPet_Simulator.Core.MutiPlatform"
+        x:Class="VPet_Simulator.MutiPlatform.BuffViewer" Width="420" MaxHeight="640"
+        Background="{DynamicResource DARKPrimaryText}" BorderBrush="{DynamicResource DARKPrimaryDark}"
+        BorderThickness="1" CornerRadius="12" Padding="18,15,18,12">
+  <Border.Resources>
+    <SolidColorBrush x:Key="BuffDebuff" Color="#CE5862" />
+    <SolidColorBrush x:Key="BuffDebuffBackground" Color="#18CE5862" />
+    <SolidColorBrush x:Key="BuffInactiveBenefit" Color="#718A9A" />
+    <SolidColorBrush x:Key="BuffInactiveBenefitBackground" Color="#0D718A9A" />
+    <SolidColorBrush x:Key="BuffInactiveDebuff" Color="#A58489" />
+    <SolidColorBrush x:Key="BuffInactiveDebuffBackground" Color="#0DA58489" />
+    <SolidColorBrush x:Key="BuffInactiveSpecial" Color="#899096" />
+    <SolidColorBrush x:Key="BuffSpecialBackground" Color="#10899096" />
+    <DataTemplate x:Key="BuffRow" x:CompileBindings="False">
+      <Expander Margin="0,0,0,8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" BorderThickness="1" CornerRadius="8" Padding="10">
+        <Expander.Header>
+          <Grid ColumnDefinitions="28,*,Auto">
+            <TextBlock Text="{Binding Icon}" FontFamily="{StaticResource RemixIcon}" FontSize="22" />
+            <StackPanel Grid.Column="1" Spacing="3">
+              <TextBlock x:Name="NameText" FontWeight="SemiBold" TextWrapping="Wrap" />
+              <TextBlock x:Name="SummaryText" Text="{Binding Description}" TextTrimming="CharacterEllipsis" MaxWidth="230" FontSize="13" Opacity="0.65" />
+              <TextBlock x:Name="InactiveText" Text="{ll:Str 当前未生效}" FontSize="12" Opacity="0.65" />
+            </StackPanel>
+            <TextBlock x:Name="DurationText" Grid.Column="2" FontSize="12" Margin="6,0,0,0" />
+          </Grid>
+        </Expander.Header>
+        <StackPanel Spacing="6" Margin="0,8,0,0">
+          <TextBlock x:Name="TypeText" FontSize="12" Opacity="0.65" />
+          <TextBlock x:Name="SourceText" TextWrapping="Wrap" FontSize="13" />
+          <TextBlock x:Name="ActivityText" TextWrapping="Wrap" FontSize="13" />
+          <TextBlock x:Name="DescriptionText" Text="{Binding Description}" TextWrapping="Wrap" />
+          <TextBlock x:Name="ValuesText" TextWrapping="Wrap" FontSize="13" />
+        </StackPanel>
+      </Expander>
+    </DataTemplate>
+  </Border.Resources>
+  <Border.Styles>
+    <Style Selector="TextBlock">
+      <Setter Property="FontFamily" Value="{DynamicResource MainFont}" />
+      <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+      <Setter Property="FontSize" Value="14" />
+    </Style>
+  </Border.Styles>
+  <Grid RowDefinitions="Auto,Auto,*">
+    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+      <StackPanel Spacing="4">
+        <TextBlock Text="{ll:Str 生活状态}" FontSize="20" FontWeight="SemiBold" />
+        <TextBlock x:Name="CurrentActivityText" FontSize="13" Opacity="0.65" />
+      </StackPanel>
+      <Button Grid.Column="1" Content="×" Click="Close_Click" VerticalAlignment="Top" />
+    </Grid>
+    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
+      <RadioButton x:Name="AllTab" Tag="0" GroupName="BuffCategory" IsChecked="True" Content="{ll:Str 全部}" IsCheckedChanged="Category_Checked" />
+      <RadioButton x:Name="BenefitTab" Tag="1" GroupName="BuffCategory" Content="{ll:Str 增益}" IsCheckedChanged="Category_Checked" />
+      <RadioButton x:Name="DebuffTab" Tag="2" GroupName="BuffCategory" Content="{ll:Str 减益}" IsCheckedChanged="Category_Checked" />
+      <RadioButton x:Name="SpecialTab" Tag="3" GroupName="BuffCategory" Content="{ll:Str 特殊}" IsCheckedChanged="Category_Checked" />
+    </StackPanel>
+    <Grid Grid.Row="2" MinHeight="60">
+      <ScrollViewer x:Name="ListScroll" MaxHeight="480" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel x:Name="Rows" />
+      </ScrollViewer>
+      <TextBlock x:Name="EmptyText" Text="{ll:Str 暂无 Buff}" Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="False" />
+    </Grid>
+  </Grid>
+</Border>

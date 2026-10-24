@@ -1,4 +1,4 @@
-﻿using LinePutScript.Localization.WPF;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF;
 using Panuon.WPF.UI;
 using System;
@@ -14,7 +14,6 @@ using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
 using static VPet_Simulator.Windows.Interface.ScheduleTask;
-using VPet_Simulator.Unified.Services;
 
 namespace VPet_Simulator.Windows;
 /// <summary>
@@ -402,9 +401,9 @@ public partial class winWorkMenu : WindowX
         runScheduleWork.Text = sworkTime.ToString();
         runScheduleRest.Text = srestTime.ToString();
 
-        double ps = SchedulePackageRules.WorkRatio(sworkTime, srestTime);
+        double ps = sworkTime / (double)(sworkTime + srestTime);
         runSchedulePercentage.Text = ps.ToString("p0");
-        if (ps > SchedulePackageRules.WorkRatioWarning)
+        if (ps > 0.71)
             runSchedulePercentage.Foreground = new SolidColorBrush(Colors.OrangeRed);
         else
             runSchedulePercentage.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimary);
@@ -505,43 +504,33 @@ public partial class winWorkMenu : WindowX
     private void btnSignAgency_Click(object sender, RoutedEventArgs e)
     {
         if (nowselefull == null) return;
-        Package package = new Package(nowselefull, (int)sliderTaskLevel.Value);
-        double refound = 0;
-        if (package.Price > mw.Core.Save!.Money)
+        if (nowselefull.WorkType == Work.WorkType.Work)
+        {
+            if (mw.ScheduleTask.PackageWork?.IsActive() == true)
+            {
+                if (MessageBoxX.Show("工作套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                    return;
+            }
+        }
+        else
+        {
+            if (mw.ScheduleTask.PackageStudy?.IsActive() == true)
+            {
+                if (MessageBoxX.Show("学习套餐已激活,是否替换?".Translate(), "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                    return;
+            }
+        }
+        if (!mw.ScheduleTask.TrySignPackage(nowselefull, (int)sliderTaskLevel.Value, out double refund))
         {
             MessageBoxX.Show("金钱不足".Translate(), "签署失败".Translate());
             return;
         }
-        bool isWork = nowselefull.WorkType == Work.WorkType.Work;
-        var current = isWork ? mw.ScheduleTask.PackageWork : mw.ScheduleTask.PackageStudy;
-        if (current?.IsActive() == true)
-        {
-            if (MessageBoxX.Show((isWork ? "工作套餐已激活,是否替换?" : "学习套餐已激活,是否替换?").Translate(),
-                "套餐已激活".Translate(), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-                return;
-            //计算价格,给剩下的退款
-            double lefttime = SchedulePackageRules.RemainingDays(current.EndTime, DateTime.Now);
-            var pw = mw.SchedulePackage.Find(x => x.WorkType == (isWork ? Work.WorkType.Work : Work.WorkType.Study) && x.Name == current.Name);
-            if (pw != null)
-            {
-                var p = new Package(pw, current.Level);
-                refound = SchedulePackageRules.Refund(p.Price, pw.Duration, lefttime);
-            }
-        }
-        if (isWork)
-        {
-            mw.ScheduleTask.PackageWork = package;
-            rpnDisplay(mw.ScheduleTask.PackageWork, nowselefull.WorkType);
-        }
-        else
-        {
-            mw.ScheduleTask.PackageStudy = package;
-            rpnDisplay(mw.ScheduleTask.PackageStudy, nowselefull.WorkType);
-        }
+        var package = nowselefull.WorkType == Work.WorkType.Work
+            ? mw.ScheduleTask.PackageWork! : mw.ScheduleTask.PackageStudy!;
+        rpnDisplay(package, nowselefull.WorkType);
         tbtnCurrentPlan.IsChecked = true;
-        mw.Core.Save!.Money -= package.Price - refound;
-        MessageBoxX.Show("套餐 {0} 签署成功".Translate(package.NameTrans) + (refound == 0 ? "" :
-          '\n' + "获得 {0:f1} 退款".Translate(refound)), "签署成功".Translate());
+        MessageBoxX.Show("套餐 {0} 签署成功".Translate(package.NameTrans) + (refund == 0 ? "" :
+          '\n' + "获得 {0:f1} 退款".Translate(refund)), "签署成功".Translate());
     }
 
     private void btn_addRest_Click(object sender, RoutedEventArgs e)

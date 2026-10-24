@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -40,6 +40,7 @@ namespace VPet_Simulator.MutiPlatform;
 ///   select 类名 控件名 序号                       给某个功能窗口里的下拉框/列表选第几项 (弹出层截不到, 直接设)
 ///   setprop 类名 控件名 属性 值                   直接改某个功能窗口里控件的一个属性 (例如把等级遮罩藏掉好截图)
 ///   additem 序号                                往背包里放一份 Foods[序号] (演示背包用, 走查不写存档)
+///   feed 食物名 | reload | buffs 截图名          投喂、内存存档重载、打开并截图 Buff 面板
 ///   quit
 internal static class UiWalk
 {
@@ -266,6 +267,41 @@ internal static class UiWalk
                         window.ItemsAdd(window.Foods[int.Parse(argument)].Clone());
                         Note($"  背包 {window.Items.Count} 件");
                         break;
+                    case "feed":
+                        window.TakeItem(window.Foods.First(x => x.Name == argument));
+                        Note($"  投喂 {argument}，效果={window.Buff.Effects.Count}");
+                        break;
+                    case "reload":
+                    {
+                        window.Buff.Save();
+                        window.ScheduleTask.Save();
+                        int count = window.Buff.Effects.Count;
+                        var data = window.GameSavesData.ToLPS();
+                        if (!window.SavesLoad(data) || window.Buff.Effects.Count != count)
+                            throw new InvalidOperationException("重载后效果数量不一致");
+                        Note($"  重载成功，效果={count}");
+                        break;
+                    }
+                    case "buffs":
+                    {
+                        toolbar.Show();
+                        await Task.Delay(200);
+                        Inject(window, RawPointerEventType.Move, Center(toolbar.FindControl<MenuItem>("MenuPanel")!, window), RawInputModifiers.None);
+                        var popup = toolbar.gdPanel.Children.OfType<Popup>().Single(x => x.Child is BuffViewer);
+                        var viewer = (BuffViewer)popup.Child!;
+                        // 点击真实入口，覆盖浮层的打开、数据模板及计时器生命周期。
+                        await Task.Delay(200);
+                        Click(window, Center(viewer.Entry, window), right: false);
+                        await Task.Delay(300);
+                        if (!popup.IsOpen) throw new InvalidOperationException("Buff 面板未打开");
+                        var size = new PixelSize((int)viewer.Bounds.Width, (int)viewer.Bounds.Height);
+                        using var bitmap = new RenderTargetBitmap(size);
+                        bitmap.Render(viewer);
+                        bitmap.Save(Path.Combine(outputDirectory, argument + ".png"));
+                        Note($"  Buff 面板 {size.Width}x{size.Height}，效果={window.Buff.Effects.Count}");
+                        popup.IsOpen = false;
+                        break;
+                    }
                     case "quit":
                         Note("结束");
                         File.WriteAllText(Path.Combine(outputDirectory, "walk.log"), log.ToString());

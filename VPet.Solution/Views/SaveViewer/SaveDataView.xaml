@@ -1,0 +1,121 @@
+﻿<UserControl
+  x:Class="VPet.Solution.Views.SaveViewer.SaveDataView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+  xmlns:local="clr-namespace:VPet.Solution.Views.SaveViewer"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:pu="https://opensource.panuon.com/wpf-ui"
+  xmlns:vm="clr-namespace:VPet.Solution.ViewModels.SaveViewer"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d"
+  d:Background="White"
+  d:DataContext="{d:DesignInstance Type=vm:SaveViewModel}"
+>
+  <ScrollViewer HorizontalScrollBarVisibility="Auto">
+    <StackPanel>
+      <Border Height="40" Style="{StaticResource Border_SettingItem}">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 保存日期}" Style="{DynamicResource TextBlock_SettingName}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_LeftCenter}"
+            Text="{Binding CurrentSave.DateSaved, StringFormat='yyyy/MM/dd HH:mm:ss'}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Style="{StaticResource Border_SettingItem}">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 宠物名称}" Style="{DynamicResource TextBlock_SettingName}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_LeftCenter}"
+            Text="{Binding CurrentSave.PetName}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Style="{StaticResource Border_SettingItem}">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 模式}" Style="{DynamicResource TextBlock_SettingName}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_LeftCenter}"
+            Text="{Binding CurrentSave.Mode}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Style="{StaticResource Border_SettingItem}">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 等级}" Style="{DynamicResource TextBlock_SettingName}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_LeftCenter}"
+            Text="{Binding CurrentSave.Exp}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Style="{StaticResource Border_SettingItem}">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 金钱}" Style="{DynamicResource TextBlock_SettingName}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_LeftCenter}"
+            Text="{Binding CurrentSave.Money}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Style="{StaticResource Border_SettingItem}">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 经验}" Style="{DynamicResource TextBlock_SettingName}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_LeftCenter}"
+            Text="{Binding CurrentSave.Level}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Style="{StaticResource Border_SettingItem}">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 体力}" Style="{DynamicResource TextBlock_SettingName}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_LeftCenter}"
+            Text="{Binding CurrentSave.Strength}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Style="{StaticResource Border_SettingItem}">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 心情}" Style="{DynamicResource TextBlock_SettingName}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_LeftCenter}"
+            Text="{Binding CurrentSave.Feeling}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Style="{StaticResource Border_SettingItem}">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 饱腹度}" Style="{DynamicResource TextBlock_SettingName}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_LeftCenter}"
+            Text="{Binding CurrentSave.StrengthFood}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Style="{StaticResource Border_SettingItem}">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 口渴度}" Style="{DynamicResource TextBlock_SettingName}" />
+          <TextBlock
+            Grid.Column="1"
+            Style="{DynamicResource TextBlock_LeftCenter}"
+            Text="{Binding CurrentSave.StrengthDrink}"
+          />
+        </Grid>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

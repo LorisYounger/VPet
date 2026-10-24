@@ -128,7 +128,7 @@ namespace VPet_Simulator.Core
                         }
                         else
                         {
-                            Console.WriteLine(1);
+                            //Console.WriteLine(1);
                         }
                     }
                     else

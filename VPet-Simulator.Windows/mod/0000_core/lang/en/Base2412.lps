@@ -40,4 +40,7 @@ Special_Birthday_Voice_vup#Happy Birthday{0}~\n Wishing you a blessed life with 
 今天是{0}的生日！祝{0}生日快乐！#Today is {0}'s birthday! Happy birthday to {0}!:|
 其他辅助工具#Other Tools:|
 导出动画详情#Export Animation Details:|
+导出创意工坊会话 JSON#Export Workshop Session JSON:|
+导出创意工坊会话失败：{0}#Failed to export workshop sessions: {0}:|
+导出失败#Export Failed:|
 重启桌宠#Restart VPet:|

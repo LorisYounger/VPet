@@ -21,7 +21,7 @@ public partial class ToolBar : UserControl, IDisposable
     private readonly Main m;
     public Timer CloseTimer;
     bool onFocus = false;
-    Timer closePanelTimer;
+    public Timer closePanelTimer;
 
     /// <summary>
     /// 无参构造仅供 Avalonia 设计器使用
@@ -208,82 +208,72 @@ public partial class ToolBar : UserControl, IDisposable
     /// 刷新显示UI
     /// </summary>
     public void M_TimeUIHandle(Main m)
-    {
-        if (BdrPanel.IsVisible)
         {
-            Tlv.Text = "Lv " + m.Core.Save!.Level.ToString();
-            tExp.Text = "x" + m.Core.Save!.ExpBonus.ToString("f2");
-            tMoney.Text = "$ " + m.Core.Save!.Money.ToString("N2");
-            if (m.Core.Controller!.EnableFunction)
+            if (BdrPanel.IsVisible)
             {
-                till.IsVisible = m.Core.Save!.Mode == IGameSave.ModeType.Ill;
-                tfun.IsVisible = false;
+                var save = m.Core.Save!;
+                // Tag 保存控件上次呈现的数值，未变化时不再格式化文本。
+                void UpdateText(TextBlock text, double value, string format)
+                {
+                    if (text.Tag is double previous && previous == value) return;
+                    text.Tag = value;
+                    text.Text = string.Format(format, value);
+                }
+                void UpdateProgress(ProgressBar progress, double value, double maximum, double minimum = 0)
+                {
+                    if (progress.Maximum != maximum || progress.Minimum != minimum)
+                    {
+                        progress.Maximum = maximum;
+                        progress.Minimum = minimum;
+                    }
+                    if (progress.Value != value) progress.Value = value;
+                }
+                UpdateText(Tlv, save.Level, "Lv {0:0}");
+                UpdateText(tExp, save.ExpBonus, "x{0:f2}");
+                UpdateText(tMoney, save.Money, "$ {0:N2}");
+                if (m.Core.Controller!.EnableFunction)
+                {
+                    till.IsVisible = save.Mode == IGameSave.ModeType.Ill;
+                    tfun.IsVisible = false;
+                }
+                else
+                {
+                    till.IsVisible = false;
+                    tfun.IsVisible = true;
+                }
+                double exp = save.Exp;
+                UpdateProgress(pExp, exp, save.LevelUpNeed(), Math.Min(0, exp));
+                double strengthMax = save.StrengthMax;
+                UpdateProgress(pStrength, save.Strength, strengthMax);
+                UpdateProgress(pFeeling, save.Feeling, save.FeelingMax);
+                UpdateProgress(pStrengthFood, save.StrengthFood, strengthMax);
+                UpdateProgress(pStrengthDrink, save.StrengthDrink, strengthMax);
+                UpdateProgress(pStrengthFoodMax, Math.Min(100, (save.StrengthFood + save.StoreStrengthFood) / strengthMax * 100), 100);
+                UpdateProgress(pStrengthDrinkMax, Math.Min(100, (save.StrengthDrink + save.StoreStrengthDrink) / strengthMax * 100), 100);
+
+
+                // Avalonia 的数值文字独立于进度条；只在数值或上限改变时更新。
+                void UpdateValueText(TextBlock text, ProgressBar progress)
+                {
+                    var values = (progress.Value, progress.Maximum);
+                    if (text.Tag is ValueTuple<double, double> previous && previous == values) return;
+                    text.Tag = values;
+                    text.Text = $"{values.Value:f2} / {values.Maximum:f0}";
+                }
+                UpdateValueText(tExpValue, pExp);
+                UpdateValueText(tStrengthValue, pStrength);
+                UpdateValueText(tFeelingValue, pFeeling);
+                UpdateValueText(tStrengthFoodValue, pStrengthFood);
+                UpdateValueText(tStrengthDrinkValue, pStrengthDrink);
+                pFeeling.Foreground = GetForeground(pFeeling.Value / pFeeling.Maximum);
+                pStrengthFood.Foreground = GetForeground(pStrengthFood.Value / pStrengthFood.Maximum);
+                pStrengthDrink.Foreground = GetForeground(pStrengthDrink.Value / pStrengthDrink.Maximum);
+                UpdateText(tStrength, save.ChangeStrength, Math.Abs(save.ChangeStrength) > 1 ? "{0:f1}/t" : "{0:f2}/t");
+                UpdateText(tFeeling, save.ChangeFeeling, Math.Abs(save.ChangeFeeling) > 1 ? "{0:f1}/t" : "{0:f2}/t");
+                UpdateText(tStrengthDrink, save.ChangeStrengthDrink, Math.Abs(save.ChangeStrengthDrink) > 1 ? "{0:f1}/t" : "{0:f2}/t");
+                UpdateText(tStrengthFood, save.ChangeStrengthFood, Math.Abs(save.ChangeStrengthFood) > 1 ? "{0:f1}/t" : "{0:f2}/t");
             }
-            else
-            {
-                till.IsVisible = false;
-                tfun.IsVisible = true;
-            }
-            var max = m.Core.Save!.LevelUpNeed();
-            pExp.Value = 0;
-            pExp.Maximum = max;
-            if (m.Core.Save!.Exp < 0)
-            {
-                pExp.Minimum = m.Core.Save!.Exp;
-            }
-            else
-            {
-                pExp.Minimum = 0;
-            }
-            pExp.Value = m.Core.Save!.Exp;
-
-            pStrengthFood.Value = 0;
-            pStrengthDrink.Value = 0;
-            pStrength.Value = 0;
-            pFeeling.Value = 0;
-
-            pStrengthFood.Maximum = m.Core.Save!.StrengthMax;
-            pStrengthDrink.Maximum = m.Core.Save!.StrengthMax;
-            pStrength.Maximum = m.Core.Save!.StrengthMax;
-            pFeeling.Maximum = m.Core.Save!.FeelingMax;
-
-            pStrength.Value = m.Core.Save!.Strength;
-            pFeeling.Value = m.Core.Save!.Feeling;
-
-            pStrengthFood.Value = m.Core.Save!.StrengthFood;
-            pStrengthDrink.Value = m.Core.Save!.StrengthDrink;
-            pStrengthFoodMax.Value = Math.Min(100, (m.Core.Save!.StrengthFood + m.Core.Save!.StoreStrengthFood) / m.Core.Save!.StrengthMax * 100);
-            pStrengthDrinkMax.Value = Math.Min(100, (m.Core.Save!.StrengthDrink + m.Core.Save!.StoreStrengthDrink) / m.Core.Save!.StrengthMax * 100);
-
-            // Windows 版这几段文字和配色是 Panuon 的 GeneratingPercentText 回调里做的,
-            // Avalonia 没有对应机制, 直接在这里一起算掉
-            tExpValue.Text = $"{pExp.Value:f2} / {pExp.Maximum:f0}";
-            tStrengthValue.Text = $"{pStrength.Value:f2} / {pStrength.Maximum:f0}";
-            tFeelingValue.Text = $"{pFeeling.Value:f2} / {pFeeling.Maximum:f0}";
-            tStrengthFoodValue.Text = $"{pStrengthFood.Value:f2} / {pStrengthFood.Maximum:f0}";
-            tStrengthDrinkValue.Text = $"{pStrengthDrink.Value:f2} / {pStrengthDrink.Maximum:f0}";
-            pFeeling.Foreground = GetForeground(pFeeling.Value / pFeeling.Maximum);
-            pStrengthFood.Foreground = GetForeground(pStrengthFood.Value / pStrengthFood.Maximum);
-            pStrengthDrink.Foreground = GetForeground(pStrengthDrink.Value / pStrengthDrink.Maximum);
-
-            if (Math.Abs(m.Core.Save!.ChangeStrength) > 1)
-                tStrength.Text = $"{m.Core.Save!.ChangeStrength:f1}/t";
-            else
-                tStrength.Text = $"{m.Core.Save!.ChangeStrength:f2}/t";
-            if (Math.Abs(m.Core.Save!.ChangeFeeling) > 1)
-                tFeeling.Text = $"{m.Core.Save!.ChangeFeeling:f1}/t";
-            else
-                tFeeling.Text = $"{m.Core.Save!.ChangeFeeling:f2}/t";
-            if (Math.Abs(m.Core.Save!.ChangeStrengthDrink) > 1)
-                tStrengthDrink.Text = $"{m.Core.Save!.ChangeStrengthDrink:f1}/t";
-            else
-                tStrengthDrink.Text = $"{m.Core.Save!.ChangeStrengthDrink:f2}/t";
-            if (Math.Abs(m.Core.Save!.ChangeStrengthFood) > 1)
-                tStrengthFood.Text = $"{m.Core.Save!.ChangeStrengthFood:f1}/t";
-            else
-                tStrengthFood.Text = $"{m.Core.Save!.ChangeStrengthFood:f2}/t";
         }
-    }
 
     private void ClosePanelTimer_Tick(object? sender, EventArgs e)
     {

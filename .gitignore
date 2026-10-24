@@ -60,6 +60,7 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+/state/
 
 # StyleCop
 StyleCopReport.xml
@@ -367,3 +368,6 @@ VPet-Simulator.Windows/mod/1123_MutiRedEnvelope
 VPet-Simulator.Windows/mod/1130_Performance Monitor
 VPet-Simulator.Windows/mod/1210_ChatVPetProcess
 .DS_Store
+VPet-Simulator.Windows/mod/0001_ModMaker
+/tests
+/VPet-Simulator.Windows/mod/OnlineVPet

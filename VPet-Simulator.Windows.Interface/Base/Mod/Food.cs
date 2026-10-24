@@ -1,9 +1,10 @@
-﻿using LinePutScript.Converter;
+using LinePutScript.Converter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using VPet_Simulator.Core;
 using static LinePutScript.Converter.LPSConvert;
+using static VPet_Simulator.Windows.Interface.Photo.UnlockCondition;
 
 namespace VPet_Simulator.Windows.Interface
 {
@@ -53,7 +54,7 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         [Line(type: ConvertType.ToEnum, ignoreCase: true)]
         public FoodType Type { get; set; } = FoodType.Food;
-      
+
         [Line(ignoreCase: true)]
         public int Exp { get; set; }
         [Line(ignoreCase: true)]
@@ -69,6 +70,16 @@ namespace VPet_Simulator.Windows.Interface
         [Line(ignoreCase: true)]
         public double Likability { get; set; }
 
+        [Line(ignoreCase: true, name: "lholiday")]
+        public HolidayType Holiday { get; set; } = HolidayType.None;
+
+        [Line(ignoreCase: true)]
+        public string Buff { get; set; } = string.Empty;
+        /// <summary>
+        /// Buff 生效时间（现实小时）
+        /// </summary>
+        [Line(ignoreCase: true)]
+        public int BuffTime { get; set; } = 0;
         /// <summary>
         /// 描述(ToBetterBuy)
         /// </summary>
@@ -77,7 +88,7 @@ namespace VPet_Simulator.Windows.Interface
         {
             get
             {
-                return Data + '\n' + Desc.Translate();
+                return outputdata + '\n' + Desc.Translate();
             }
         }
 
@@ -95,23 +106,28 @@ namespace VPet_Simulator.Windows.Interface
                     { "健康".Translate(), Health },
                     { "好感度".Translate(), Likability },
                 };
-                return dic.Where(kv => kv.Value != 0)
+                var values = dic.Where(kv => kv.Value != 0)
                     .ToDictionary(kv => kv.Key, kv => $"{(kv.Value > 0 ? "+" : "")}{kv.Value.ToString("f2")}");
+                if (!string.IsNullOrWhiteSpace(outputbuff))
+                {
+                    values.Add("效果".Translate(), outputbuff);
+                    values.Add("持续".Translate(), BuffTime.ToString("f1") + 'h');
+                }
+                return values;
             }
         }
 
-       
+
         /// <summary>
         /// 是否已收藏
         /// </summary>
         public override bool Star { get; set; }
-       
+
         public bool? isoverload = null;
         /// <summary>
         /// 当前物品推荐价格
         /// </summary>
-        public double RealPrice => VPet_Simulator.Unified.Services.FoodPricing.RealPrice(
-            Exp, Strength, StrengthFood, StrengthDrink, Feeling, Health, Likability);
+        public double RealPrice { get; private set; }
         /// <summary>
         /// 该食物是否超模
         /// </summary>
@@ -119,11 +135,60 @@ namespace VPet_Simulator.Windows.Interface
         {
             if (isoverload == null)
             {
-                double relp = RealPrice;
-                isoverload = VPet_Simulator.Unified.Services.FoodPricing.IsOverLoad(Price, relp);//30%容错
+                isoverload = Price < (RealPrice - 10) * 0.7;// Price > (relp + 10) * 1.3;// || Price < (relp - 10) * 0.7;//30%容错
             }
             return isoverload.Value;
         }
+        public void CalRealPrice(IMainWindow imw)
+        {
+            RealPrice = (Exp / 3 + Strength / 5 + StrengthDrink / 3 + StrengthFood / 2 + Feeling / 6) / 3 + Health + Likability * 10;
+            List<string> bufflist = new List<string>();
+            if (BuffTime > 0)
+            {
+                foreach (var key in Buff.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Distinct())
+                {
+                    Buff.Effect? bf = imw.BuffEffects.Find(effect => effect.SourceKey == key);
+                    if (bf != null)
+                    {
+                        RealPrice += bf.RealPrice * BuffTime;
+                        bufflist.Add(bf.Name.Translate());
+                    }
+                }
+            }
+            outputbuff = string.Join(", ", bufflist);
+            isoverload = Price < (RealPrice - 10) * 0.7;
+        }
+        /// <summary>
+        /// 加载物品图片
+        /// </summary>
+
+        public void LoadEatTimeSource(IMainWindow imw)
+        {
+            DateTime now = DateTime.Now;
+            DateTime eattime = imw.GameSavesData["buytime"].GetDateTime(Name, now);
+            if (eattime <= now)
+            {
+                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)// || Type == FoodType.Limit)
+                    outputdata = "喜好度".Translate();
+                else
+                    outputdata = "有效度".Translate();
+                outputdata += ":\t100%";
+            }
+            else
+            {
+                if (Type == FoodType.Meal || Type == FoodType.Snack || Type == FoodType.Drink || Type == FoodType.Gift)// || Type == FoodType.Limit)
+                    outputdata = "喜好度".Translate();
+                else
+                    outputdata = "有效度".Translate();
+                if (Type == FoodType.Gift)
+                    outputdata += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.01).ToString("p0");
+                else
+                    outputdata += ":\t" + Math.Max(0.5, 1 - Math.Pow((eattime - now).TotalHours, 2) * 0.02).ToString("p0");
+                outputdata += "\t\t" + "恢复".Translate() + ":\t" + (eattime).ToString("MM/dd HH");
+            }
+        }
+        private string outputdata = "";
+        private string outputbuff = "";
         /// <summary>
         /// 食用时显示的动画
         /// </summary>

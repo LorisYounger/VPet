@@ -40,7 +40,8 @@ namespace VPet_Simulator.Core
                     NowWork?.Display(this);
                     return;
                 case WorkingState.Travel:
-                    //TODO
+                    if (DisplayTravel != null) DisplayTravel();
+                    else DisplayNomal();
                     return;
             }
         }
@@ -48,6 +49,10 @@ namespace VPet_Simulator.Core
         /// 显示默认情况, 默认为默认动画
         /// </summary>
         public Action DisplayNomal { get; set; }
+        /// <summary>
+        /// 旅行状态的默认显示。其他动作正常播放，并在结束后通过 DisplayToNomal 返回这里。
+        /// </summary>
+        public Action? DisplayTravel { get; set; }
         /// <summary>
         /// 尝试触发移动
         /// </summary>
@@ -74,7 +79,7 @@ namespace VPet_Simulator.Core
         public void DisplayDefault()
         {
             CountNomal++;
-            Display(GraphType.Default, AnimatType.Single, DisplayNomal);
+            Display(GraphType.Default, AnimatType.Single, DisplayToNomal);
         }
         /// <summary>
         /// 显示结束动画
@@ -372,7 +377,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         private void DisplayRaising(string? name = null)
         {
-            Console.WriteLine(rasetype);
+            //Console.WriteLine(rasetype);
             switch (rasetype)
             {
                 case int.MinValue:
@@ -585,7 +590,7 @@ namespace VPet_Simulator.Core
             if (petgridcrlf)
             {
                 graph.Run(PetGrid2, EndAction);
-                ((IGraph)(PetGridTag)).Stop(true);
+                (PetGridTag as IGraph)?.Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid.Visibility = Visibility.Hidden;
@@ -596,7 +601,7 @@ namespace VPet_Simulator.Core
             else
             {
                 graph.Run(PetGrid, EndAction);
-                ((IGraph)(PetGrid2Tag)).Stop(true);
+                (PetGrid2Tag as IGraph)?.Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid2.Visibility = Visibility.Hidden;
@@ -614,12 +619,13 @@ namespace VPet_Simulator.Core
         public Decorator FindDisplayBorder(IGraph graph)
         {
             DisplayType = graph.GraphInfo;
+            GraphDisplayHandler?.Invoke(graph.GraphInfo);
             var PetGridTag = Dispatcher.Invoke(() => PetGrid.Tag);
             var PetGrid2Tag = Dispatcher.Invoke(() => PetGrid2.Tag);
             if (PetGridTag == graph)
             {
                 petgridcrlf = true;
-                ((IGraph)(PetGrid2Tag)).Stop(true);
+                (PetGrid2Tag as IGraph)?.Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid.Visibility = Visibility.Visible;
@@ -630,7 +636,7 @@ namespace VPet_Simulator.Core
             else if (PetGrid2Tag == graph)
             {
                 petgridcrlf = false;
-                ((IGraph)(PetGridTag)).Stop(true);
+                (PetGridTag as IGraph)?.Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid2.Visibility = Visibility.Visible;
@@ -641,7 +647,7 @@ namespace VPet_Simulator.Core
 
             if (petgridcrlf)
             {
-                ((IGraph)(PetGridTag)).Stop(true);
+                (PetGridTag as IGraph)?.Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid.Visibility = Visibility.Hidden;
@@ -654,7 +660,7 @@ namespace VPet_Simulator.Core
             }
             else
             {
-                ((IGraph)(PetGrid2Tag)).Stop(true);
+                (PetGrid2Tag as IGraph)?.Stop(true);
                 Dispatcher.Invoke(() =>
                 {
                     PetGrid2.Visibility = Visibility.Hidden;

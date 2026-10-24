@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
@@ -24,6 +24,7 @@ namespace VPet_Simulator.Core
         // 与同名公开字段零冲突, 现有字段一个都不用动 —— 一旦把公开字段挪到基类
         // 或改成属性, 已编译的 MOD 就会失效.
         IGameSave IPetStatHost.Save => Core.Save!;
+        AttributeModifiers? IPetStatHost.AttributeModifier => AttributeModifier;
         Random IPetStatHost.Rnd => Function.Rnd;
         PetWorkingState IPetStatHost.WorkingState => (PetWorkingState)State;
         IWorkDefinition? IPetStatHost.CurrentWork => NowWork;
@@ -251,6 +252,12 @@ namespace VPet_Simulator.Core
                 labeldisplaytimer.Start();
             });
         }
+        /// <summary>当前活动的属性变化倍率；默认不调整本体变化。</summary>
+        public AttributeModifiers? AttributeModifier { get; set; }
+
+        /// <summary>本体属性变化或物品收益的倍率，默认均为 1。</summary>
+
+
         public Work? NowWork;
         /// <summary>
         /// 根据消耗计算相关数据

@@ -1,51 +1,55 @@
 ﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using HKW.HKWMapper;
+using HKW.MVVM;
+using LinePutScript;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-public class CustomizedSettingModel : ObservableClass<CustomizedSettingModel>
+public partial class CustomizedSettingModel : ObservableObjectEx, ISubSettingModel
 {
+    public SubSettingModelType ModelType => SubSettingModelType.Customized;
     public const string TargetName = "diy";
 
-    #region Links
-    private ObservableCollection<LinkModel> _links = new();
-    public ObservableCollection<LinkModel> Links
+    public List<LinkModel> Links { get; } = [];
+
+    public void Load(Setting setting)
     {
-        get => _links;
-        set => SetProperty(ref _links, value);
+        if (setting[TargetName] is ILine line && line.Count > 0)
+        {
+            foreach (var sub in line)
+                Links.Add(new(sub.Name, sub.Info));
+        }
+        else
+        {
+            setting.Remove(TargetName);
+        }
     }
-    #endregion
+
+    public void Save(Setting setting)
+    {
+        setting.Remove(TargetName);
+        foreach (var link in Links)
+            setting[TargetName].Add(new Sub(link.Name, link.Link));
+    }
 }
 
-public class LinkModel : ObservableClass<LinkModel>
+public partial class LinkModel : ObservableObjectEx
 {
-    #region Name
-    private string _name;
-
     /// <summary>
     /// 名称
     /// </summary>
-    public string Name
-    {
-        get => _name;
-        set => SetProperty(ref _name, value);
-    }
-    #endregion
-
-
-    #region Link
-    private string _link;
+    [ObservableProperty]
+    public string Name { get; set; }
 
     /// <summary>
     /// 链接
     /// </summary>
-    public string Link
-    {
-        get => _link;
-        set => SetProperty(ref _link, value);
-    }
-    #endregion
+    [ObservableProperty]
+    public string Link { get; set; }
 
-    public LinkModel() { }
+    public LinkModel()
+        : this(default!, default!) { }
 
     public LinkModel(string name, string link)
     {

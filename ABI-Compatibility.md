@@ -1,5 +1,9 @@
 # VPet ABI 兼容性规则
 
+> 2026-10-24：本文记录已发布 Windows 版的历史约束。本次未发布的
+> `MultiPlatform` 合并以最新 main 为准，按项目维护者要求不增加旧 API
+> 兼容层或存档迁移；以下规则不约束本次跨平台接口调整。
+
 > 这份文档是硬性约束, 不是建议. 修改 `VPet-Simulator.Core` 或
 > `VPet-Simulator.Windows.Interface` 之前必须先读完.
 

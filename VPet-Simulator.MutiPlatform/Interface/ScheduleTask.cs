@@ -1,8 +1,6 @@
-﻿//跨平台: 原文复制自 VPet-Simulator.Windows.Interface/ScheduleTask.cs; 只换了本地化/MessageBoxX/Work 的命名空间, Visibility→bool, ImageSource→Bitmap
 using LinePutScript;
 using LinePutScript.Converter;
 using LinePutScript.Localization;
-using VPet_Simulator.Core.MutiPlatform;
 using VPet_Simulator.Core.MutiPlatform.Display;
 using VPet_Simulator.Core.MutiPlatform.Display.Shell;
 using System;
@@ -15,19 +13,67 @@ using System.Timers;
 using Avalonia.Media.Imaging;
 using static VPet_Simulator.Core.MutiPlatform.GraphHelper;
 using static VPet_Simulator.Core.MutiPlatform.GraphHelper.Work;
-using VPet_Simulator.Unified.Services;
 
 namespace VPet_Simulator.Windows.Interface;
 
 /// <summary>
 /// 日程表功能
 /// </summary>
-public partial class ScheduleTask
+public partial class ScheduleTask : IDisposable
 {
     public ObservableCollection<ScheduleItemBase> ScheduleItems { get; set; } = [];
     private IMainWindow mw;
     public int NowIndex { get; set; } = 0;
-    public bool IsOn { get; set; } = false;
+    private bool isOn;
+    public bool IsOn
+    {
+        get => isOn;
+        set
+        {
+            if (isOn == value) return;
+            isOn = value;
+            mw.Buff.IsScheduleOn = value;
+        }
+    }
+
+    // 套餐变化时更新效果；日程开关和到期由 Buff 的活动范围及 EndTime 处理。
+    private void RefreshCommissions()
+    {
+        var work = PackageWork?.IsActive() == true ? PackageWork : null;
+        var study = PackageStudy?.IsActive() == true ? PackageStudy : null;
+
+        var effects = new List<Buff.Effect>();
+        if (work != null && work.Commissions != 0)
+            effects.Add(new Buff.Effect
+            {
+                SourceKey = "schedule.commissions",
+                Activity = PetActivity.ScheduleWork,
+                Reward = 1 - work.Commissions,
+                EndTime = work.EndTime,
+                IsDebuff = work.Commissions > 0,
+                Icon= "\uF2AC",
+                Source = work.NameTrans,
+                Name = "工作中介抽成".Translate(),
+                Description = work.DescribeTrans
+            });
+        if (study != null && study.Commissions != 0)
+            effects.Add(new Buff.Effect
+            {
+                SourceKey = "schedule.commissions",
+                Activity = PetActivity.ScheduleStudy,
+                Reward = 1 - study.Commissions,
+                EndTime = study.EndTime,
+                IsDebuff = study.Commissions > 0,
+                Icon= "\uED3D",
+                Source = study.NameTrans,
+                Name = "培训机构学习效率".Translate(),
+                Description = study.DescribeTrans
+            });
+        if (effects.Count == 0)
+            mw.Buff.Remove("schedule.commissions");
+        else
+            mw.Buff.Update(effects);
+    }
     /// <summary>
     /// 根据设置获取日程表
     /// </summary>
@@ -41,11 +87,11 @@ public partial class ScheduleTask
             while (schedule.Contains(i.ToString()))
             {
                 var sub = schedule[(gstr)i.ToString()]?.Split(',');
-                if(sub == null)
+                if (sub == null)
                 {
                     i++;
                     continue;
-                }   
+                }
                 if (sub[0] == "rest")
                 {
                     ScheduleItems.Add(new RestScheduleItem(this, int.Parse(sub[1])));
@@ -74,17 +120,19 @@ public partial class ScheduleTask
             }
             if (mw.GameSavesData.Data.ContainsLine("schedule_work"))
             {
-                PackageWork = LPSConvert.DeserializeObject<Package>(mw.GameSavesData.Data["schedule_work"]);
+                packageWork = LPSConvert.DeserializeObject<Package>(mw.GameSavesData.Data["schedule_work"]);
             }
             if (mw.GameSavesData.Data.ContainsLine("schedule_study"))
             {
-                PackageStudy = LPSConvert.DeserializeObject<Package>(mw.GameSavesData.Data["schedule_study"]);
+                packageStudy = LPSConvert.DeserializeObject<Package>(mw.GameSavesData.Data["schedule_study"]);
             }
             NowIndex = schedule[(gint)"now"];
-            IsOn = schedule[(gbol)"ison"];
+            isOn = schedule[(gbol)"ison"];
         }
 
         imw.Main.WorkTimer!.E_FinishWork += WorkTimer_E_FinishWork;
+        imw.Buff.IsScheduleOn = IsOn;
+        RefreshCommissions();
         RestTimer.Elapsed += RestTimer_Elapsed;
         if (IsOn)
             RestTimer.Start();
@@ -131,8 +179,9 @@ public partial class ScheduleTask
             var pw = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Work && x.Name == PackageWork.Name);
             if (pw != null)
             {
-                var np = new Package(pw, PackageWork.Level);
-                if (np.Price < mw.GameSavesData.GameSave.Money)
+                var np = new Package(pw, Math.Max(1, (int)Math.Ceiling(PackageWork.Level * pw.LevelInNeed)))
+                    { Level = PackageWork.Level, AutoRenew = true };
+                if (np.Price <= mw.GameSavesData.GameSave.Money)
                 {
                     PackageWork = np;
                     mw.GameSavesData.GameSave.Money -= np.Price;
@@ -145,8 +194,9 @@ public partial class ScheduleTask
             var ps = mw.SchedulePackage.Find(x => x.WorkType == Work.WorkType.Study && x.Name == PackageStudy.Name);
             if (ps != null)
             {
-                var np = new Package(ps, PackageStudy.Level);
-                if (np.Price < mw.GameSavesData.GameSave.Money)
+                var np = new Package(ps, Math.Max(1, (int)Math.Ceiling(PackageStudy.Level * ps.LevelInNeed)))
+                    { Level = PackageStudy.Level, AutoRenew = true };
+                if (np.Price <= mw.GameSavesData.GameSave.Money)
                 {
                     PackageStudy = np;
                     mw.GameSavesData.GameSave.Money -= np.Price;
@@ -155,6 +205,31 @@ public partial class ScheduleTask
             }
         }
         return isrenew;
+    }
+
+    /// <summary>
+    /// 签约或改签，按当前套餐期限折算退款后结算差价。
+    /// </summary>
+    public bool TrySignPackage(PackageFull template, int level, out double refund)
+    {
+        var package = new Package(template, level);
+        var previous = template.WorkType == WorkType.Work ? PackageWork : PackageStudy;
+        refund = 0;
+        if (previous?.IsActive() == true)
+        {
+            var previousTemplate = mw.SchedulePackage.Find(x => x.WorkType == template.WorkType && x.Name == previous.Name);
+            if (previousTemplate != null)
+                refund = previous.Price * Math.Clamp((previous.EndTime - DateTime.Now).TotalDays / previousTemplate.Duration, 0, 1);
+        }
+        if (package.Price > mw.GameSavesData.GameSave.Money + refund)
+            return false;
+
+        mw.GameSavesData.GameSave.Money += refund - package.Price;
+        if (template.WorkType == WorkType.Work)
+            PackageWork = package;
+        else
+            PackageStudy = package;
+        return true;
     }
 
     private void RestTimer_Elapsed(object? sender, ElapsedEventArgs? e)
@@ -256,6 +331,15 @@ public partial class ScheduleTask
     {
         IsOn = false;
         RestTime = -100;
+        RestTimer.Stop();
+    }
+
+    public void Dispose()
+    {
+        Stop();
+        mw.Main.WorkTimer.E_FinishWork -= WorkTimer_E_FinishWork;
+        RestTimer.Elapsed -= RestTimer_Elapsed;
+        RestTimer.Dispose();
     }
     private int RestTime = 2;
     private Timer RestTimer = new Timer()
@@ -264,8 +348,9 @@ public partial class ScheduleTask
         AutoReset = false
     };
 
-    private void WorkTimer_E_FinishWork(WorkTimer.FinishWorkInfo obj)
+    private void WorkTimer_E_FinishWork(VPet_Simulator.Core.MutiPlatform.Display.WorkTimer.FinishWorkInfo obj)
     {
+        if (!IsOn) return;
         if (obj.spendtime < obj.work.Time / 2)
             Stop();
         else
@@ -275,8 +360,18 @@ public partial class ScheduleTask
         }
     }
 
-    public Package? PackageWork { get; set; }
-    public Package? PackageStudy { get; set; }
+    private Package? packageWork;
+    public Package? PackageWork
+    {
+        get => packageWork;
+        set { packageWork = value; RefreshCommissions(); }
+    }
+    private Package? packageStudy;
+    public Package? PackageStudy
+    {
+        get => packageStudy;
+        set { packageStudy = value; RefreshCommissions(); }
+    }
     /// <summary>
     /// 添加工作到日程表
     /// </summary>
@@ -344,7 +439,6 @@ public partial class ScheduleTask
                 return Task.ScheduleItems[Task.NowIndex] == this;
             }
         }
-        //跨平台: Avalonia 的可见性是 bool, 这几个 Visibility 属性都改成 bool, XAML 里绑到 IsVisible
         public bool IsNowVisibility
         {
             get => IsNow;
@@ -380,6 +474,7 @@ public partial class ScheduleTask
             {
                 Image = ImageResources.NewSafeBitmapImage(source);
             }
+            // 启动读档在后台线程创建日程，冻结图片后才能由 UI 模板跨线程绑定。
 
         }
 
@@ -405,7 +500,7 @@ public partial class ScheduleTask
 
         public bool IsOKVisibility
         {
-            get => (Task.PackageWork?.IsActive() != true || Task.PackageWork.Level < Work.LevelLimit);
+            get => Task.PackageWork?.IsActive() != true || Task.PackageWork.Level < Work.LevelLimit;
             set { }
         }
 
@@ -420,7 +515,7 @@ public partial class ScheduleTask
         public StudyScheduleItem(ScheduleTask task, Work work, int dbl) : base(task, work, dbl)
         {
         }
-        public new bool IsOKVisibility => (Task.PackageStudy?.IsActive() != true || Task.PackageStudy.Level < Work.LevelLimit);
+        public new bool IsOKVisibility => Task.PackageStudy?.IsActive() != true || Task.PackageStudy.Level < Work.LevelLimit;
 
     }
     /// <summary>
@@ -460,8 +555,10 @@ public partial class ScheduleTask
         public override int RestTime { get => _restTime; set => Set(ref _restTime, value); }
         private int _restTime;
     }
-    //套餐本体(Package)在共享源码 (Windows.Interface/Base/Save/Package.cs) 里, 两个平台读得出同一份.
-    //PackageFull 在两边各一份: 它有个 WorkType 属性, 而 GraphHelper.Work 在两个 Core 里是两个类型.
+    /// <summary>
+    /// 套餐信息
+    /// </summary>
+
     /// <summary>
     /// 套餐详细
     /// </summary>
@@ -490,30 +587,29 @@ public partial class ScheduleTask
             {
                 Duration = 1;
             }
-            if (Price < 0)
-            {
-                Price = 1;
-            }
-            if (LevelInNeed < 1)
+            if (!double.IsFinite(LevelInNeed) || LevelInNeed < 1)
             {
                 LevelInNeed = 1.25;
             }
-            if (Commissions < 0)
+            if (!double.IsFinite(Commissions))
             {
                 Commissions = 0.2;
             }
-            var use = Math.Sign(Commissions - 0.15) * Math.Pow(Math.Abs(Commissions * 100 - 15), 1.5) +
-                Math.Sign(LevelInNeed - 1.2) * Math.Pow(Math.Abs(LevelInNeed * 100 - 120), 1.5) +
-                (Price * LevelInNeed * 100 - 100) / 4;
-            var get = Math.Sqrt(Duration);
-            var realvalue = use / get;
-            if (realvalue < 10)
-            {
-                Commissions = 0.2;
-                LevelInNeed = 1.25;
-                Price = 1;
-                Duration = 7;
-            }
+
+            // 基础周价 0.20；第二周按 85%、之后按 70% 折算收费天数。
+            var days = Math.Min(Duration, 7) + 0.85 * Math.Min(Math.Max(Duration - 7, 0), 7)
+                + 0.70 * Math.Max(Duration - 14, 0);
+            // 保留收益不超过 50% 可以免费；低抽成加价，等级限制最多折价 25%。
+            var reward = Math.Pow(Math.Max(0, (1 - Commissions - 0.50) / 0.30), 1.5);
+            var level = Math.Clamp(1.25 / LevelInNeed, 0.75, 1.25);
+            var referencePrice = 0.20 * (days / 7) * reward * level;
+            var minimumPrice = Math.Ceiling(referencePrice * 0.80 * 100 - 1e-9) / 100;
+
+            // 无效价格采用推荐价；超模套餐只补足最低价，保留原有套餐权益。
+            if (!double.IsFinite(Price) || Price < 0)
+                Price = Math.Ceiling(referencePrice * 100 - 1e-9) / 100;
+            else if (Price < minimumPrice)
+                Price = minimumPrice;
         }
 
         public override string ToString() => NameTrans;

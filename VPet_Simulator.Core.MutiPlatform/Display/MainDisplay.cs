@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Media;
 using LinePutScript.Localization;
 using System.Linq;
@@ -41,7 +41,8 @@ public partial class Main
                 NowWork?.Display(this);
                 return;
             case WorkingState.Travel:
-                //TODO
+                if (DisplayTravel != null) DisplayTravel();
+                else DisplayNomal();
                 return;
         }
     }
@@ -50,6 +51,7 @@ public partial class Main
     /// 显示默认情况, 默认为默认动画
     /// </summary>
     public Action DisplayNomal { get; set; }
+    public Action? DisplayTravel { get; set; }
 
     /// <summary>
     /// 尝试触发移动
@@ -82,7 +84,7 @@ public partial class Main
     public void DisplayDefault()
     {
         CountNomal++;
-        Display(GraphType.Default, AnimatType.Single, DisplayNomal);
+        Display(GraphType.Default, AnimatType.Single, DisplayToNomal);
     }
 
     /// <summary>
@@ -599,6 +601,7 @@ public partial class Main
     public Decorator FindDisplayBorder(IAvaloniaGraph graph)
     {
         DisplayType = graph.GraphInfo;
+        GraphDisplayHandler?.Invoke(graph.GraphInfo);
         var petGridTag = RunOnUi(() => PetGrid.Tag);
         var petGrid2Tag = RunOnUi(() => PetGrid2.Tag);
         if (ReferenceEquals(petGridTag, graph))

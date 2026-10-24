@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Platform;
 using LinePutScript;
 using LinePutScript.Converter;
@@ -126,79 +126,134 @@ public partial class MainWindow
     int lowstrengthAskCountFood = 20;
     int lowstrengthAskCountDrink = 20;
     private void lowStrength()
-    {
-        var sm = Core.Save!.StrengthMax;
-        var sm75 = sm * PurchaseRules.LowRate;
-        //外层这个余额判断不能省: 开着自动购买但钱不够时, 桌宠还是要照常喊饿
-        if (Set.AutoBuy && Core.Save!.Money >= PurchaseRules.AutoBuyMinMoney)
         {
-            //买什么、预算多少、看得上哪些食物, 判断都在共享后端里
-            var need = PurchaseRules.WhatToBuy(
-                Core.Save!.StrengthFood + Core.Save!.StoreStrengthFood,
-                Core.Save!.StrengthDrink + Core.Save!.StoreStrengthDrink,
-                sm, Core.Save!.Feeling, Core.Save!.FeelingMax, Core.Save!.Money, Set.AutoGift);
-            if (need != PurchaseRules.AutoBuyNeed.None)
+            var strengthMax = Core.Save!.StrengthMax;
+
+            if (Set.AutoBuy && Core.Save!.Money >= 100)
             {
-                var havemoney = PurchaseRules.AutoBuyBudget(Core.Save!.Money);
-                List<Food> food = Foods.FindAll(x => PurchaseRules.IsAutoBuyCandidate(
-                    x.Price, x.Health, x.Exp, x.Likability, havemoney, x.IsOverLoad()));
+                var havemoney = Core.Save!.Money * 0.8;
+                List<Food> food = Foods.FindAll(x => x.Price >= 2 && x.Health >= -5 && x.Exp >= -10 && x.Likability >= 0 && x.Price < havemoney //桌宠不吃负面的食物
+                 && !x.IsOverLoad() // 不吃超模食物
+                );
 
-                switch (need)
-                {
-                    case PurchaseRules.AutoBuyNeed.Meal:
-                        food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > PurchaseRules.MealThreshold(sm));
-                        break;
-                    case PurchaseRules.AutoBuyNeed.Drink:
-                        food = food.FindAll(x => x.Type == Food.FoodType.Drink && x.StrengthDrink > PurchaseRules.DrinkThreshold(sm));
-                        break;
-                    case PurchaseRules.AutoBuyNeed.Gift:
-                        food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > PurchaseRules.GiftThreshold(Core.Save!.FeelingMax));
-                        break;
-                    case PurchaseRules.AutoBuyNeed.Snack:
-                        // 没开自动购买礼物的, 买零食能加点是一点
-                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.Feeling > PurchaseRules.SnackThreshold(Core.Save!.FeelingMax));
-                        break;
-                }
-                if (food.Count == 0)
-                    return;
-
-                var item = food[Function.Rnd.Next(food.Count)];
-                Core.Save!.Money -= PurchaseRules.AutoBuyCost(item.Price);
-                switch (need)
-                {
-                    case PurchaseRules.AutoBuyNeed.Meal:
-                        TakeItemHandle(item, 1, "autofood");
-                        break;
-                    case PurchaseRules.AutoBuyNeed.Drink:
-                        TakeItemHandle(item, 1, "autodrink");
-                        break;
-                    default:
-                        TakeItemHandle(item, 1, "autofeel");
-                        break;
-                }
-                TakeItem(item);
-                if (need == PurchaseRules.AutoBuyNeed.Meal || need == PurchaseRules.AutoBuyNeed.Drink)
+                if ((Core.Save!.StrengthFood + Core.Save!.StoreStrengthFood) < strengthMax * 0.70)
+                {//饿了就该吃正餐
+                    food = food.FindAll(x => x.Type == Food.FoodType.Meal && x.StrengthFood > Math.Min(strengthMax * 0.20, 100));
+                    if (food.Count == 0)
+                        return;
+                    var item = food[Function.Rnd.Next(food.Count)];
+                    Core.Save!.Money -= item.Price * 1.2;
+                    TakeItemHandle(item, 1, "autofood");
+                    TakeItem(item);
                     GameSavesData.Statistics![(gint)"stat_autobuy"]++;
-                else
+                    Main.Display(item.GetGraph(), item.ImageSource!, Main.DisplayToNomal);
+                }
+                else if ((Core.Save!.StrengthDrink + Core.Save!.StoreStrengthDrink) < strengthMax * 0.70)
+                {
+                    food = food.FindAll(x => x.Type == Food.FoodType.Drink && x.StrengthDrink > Math.Min(strengthMax * 0.20, 50));
+                    if (food.Count == 0)
+                        return;
+                    var item = food[Function.Rnd.Next(food.Count)];
+                    Core.Save!.Money -= item.Price * 1.2;
+                    TakeItemHandle(item, 1, "autodrink");
+                    TakeItem(item);
+                    GameSavesData.Statistics![(gint)"stat_autobuy"]++;
+                    Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
+                }
+                else if (Core.Save!.Feeling < Core.Save!.FeelingMax * 0.50)
+                {
+                    if (Set.AutoGift)
+                    {
+                        food = food.FindAll(x => x.Type == Food.FoodType.Gift && x.Feeling > Math.Min(Core.Save!.FeelingMax * 0.10, 50));
+                        if (food.Count == 0)
+                            return;
+                    }
+                    else // 没有自动购买礼物的可以试试自动购买零食能加点是一点
+                    {
+                        food = food.FindAll(x => x.Type == Food.FoodType.Snack && x.Feeling > Math.Min(Core.Save!.FeelingMax * 0.10, 40));
+                        if (food.Count == 0)
+                            return;
+                    }
+                    var item = food[Function.Rnd.Next(food.Count)];
+                    Core.Save!.Money -= item.Price * 1.2;
+                    TakeItemHandle(item, 1, "autofeel");
+                    TakeItem(item);
                     GameSavesData.Statistics![(gint)"stat_autogift"]++;
-                Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
+                    Main.Display(item.GetGraph(), item.ImageSource, Main.DisplayToNomal);
+                }
             }
-        }
-        else if (Core.Save!.Mode == IGameSave.ModeType.Happy || Core.Save!.Mode == IGameSave.ModeType.Nomal)
-        {
-            if (Core.Save!.StrengthFood < sm75 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
+            else if (Core.Save!.Mode == IGameSave.ModeType.Happy || Core.Save!.Mode == IGameSave.ModeType.Nomal)
             {
-                lowstrengthAskCountFood = Set.InteractionCycle;
-                var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
-                var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like <= like);
-                if (txt.Count != 0)
-                    if (Core.Save!.StrengthFood > sm * 0.60)
+                if (Core.Save!.StrengthFood < strengthMax * 0.70 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
+                {
+                    lowstrengthAskCountFood = Set.InteractionCycle;
+                    var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
+                    var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like <= like);
+                    if (txt.Count != 0)
+                        if (Core.Save!.StrengthFood > strengthMax * 0.60)
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
+                        }
+                        else if (Core.Save!.StrengthFood > strengthMax * 0.40)
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
+                        }
+                        else
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
+                        }
+                    Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
+                    return;
+                }
+                if (Core.Save!.StrengthDrink < strengthMax * 0.70 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
+                {
+                    lowstrengthAskCountDrink = Set.InteractionCycle;
+                    var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
+                    var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like <= like);
+                    if (txt.Count != 0)
+                        if (Core.Save!.StrengthDrink > strengthMax * 0.60)
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
+                        }
+                        else if (Core.Save!.StrengthDrink > strengthMax * 0.40)
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
+                        }
+                        else
+                        {
+                            txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
+                            if (txt.Count != 0)
+                                Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
+                        }
+                    Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
+                    return;
+                }
+            }
+            else
+            {
+
+                if (Core.Save!.StrengthFood < strengthMax * 0.60 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
+                {
+                    lowstrengthAskCountFood = Set.InteractionCycle;
+                    var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
+                    var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
+                    if (Core.Save!.StrengthFood > strengthMax * 0.40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
                         if (txt.Count != 0)
                             Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
                     }
-                    else if (Core.Save!.StrengthFood > sm * 0.40)
+                    else if (Core.Save!.StrengthFood > strengthMax * 0.20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
                         if (txt.Count != 0)
@@ -210,22 +265,21 @@ public partial class MainWindow
                         if (txt.Count != 0)
                             Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
                     }
-                Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
-                return;
-            }
-            if (Core.Save!.StrengthDrink < sm75 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
-            {
-                lowstrengthAskCountDrink = Set.InteractionCycle;
-                var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
-                var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.H && (int)x.Like <= like);
-                if (txt.Count != 0)
-                    if (Core.Save!.StrengthDrink > sm * 0.60)
+                    Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
+                    return;
+                }
+                if (Core.Save!.StrengthDrink < strengthMax * 0.60 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
+                {
+                    lowstrengthAskCountDrink = Set.InteractionCycle;
+                    var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
+                    var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
+                    if (Core.Save!.StrengthDrink > strengthMax * 0.40)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
                         if (txt.Count != 0)
                             Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
                     }
-                    else if (Core.Save!.StrengthDrink > sm * 0.40)
+                    else if (Core.Save!.StrengthDrink > strengthMax * 0.20)
                     {
                         txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
                         if (txt.Count != 0)
@@ -237,67 +291,13 @@ public partial class MainWindow
                         if (txt.Count != 0)
                             Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
                     }
-                Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
-                return;
+                    Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
+                    return;
+                }
             }
+
+
         }
-        else
-        {
-            var sm20 = sm * 0.20;
-            if (Core.Save!.StrengthFood < sm * 0.60 && Function.Rnd.Next(lowstrengthAskCountFood--) == 0)
-            {
-                lowstrengthAskCountFood = Set.InteractionCycle;
-                var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
-                var txt = LowFoodText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
-                if (Core.Save!.StrengthFood > sm * 0.40)
-                {
-                    txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                    if (txt.Count != 0)
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
-                }
-                else if (Core.Save!.StrengthFood > sm20)
-                {
-                    txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                    if (txt.Count != 0)
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
-                }
-                else
-                {
-                    txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                    if (txt.Count != 0)
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
-                }
-                Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Hunger, AnimatType.Single, Main.DisplayToNomal));
-                return;
-            }
-            if (Core.Save!.StrengthDrink < sm * 0.60 && Function.Rnd.Next(lowstrengthAskCountDrink--) == 0)
-            {
-                lowstrengthAskCountDrink = Set.InteractionCycle;
-                var like = Core.Save!.Likability < 40 ? 0 : (Core.Save!.Likability < 70 ? 1 : (Core.Save!.Likability < 100 ? 2 : 3));
-                var txt = LowDrinkText.FindAll(x => x.Mode == LowText.ModeType.L && (int)x.Like < like);
-                if (Core.Save!.StrengthDrink > sm * 0.40)
-                {
-                    txt = txt.FindAll(x => x.Strength == LowText.StrengthType.L);
-                    if (txt.Count != 0)
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
-                }
-                else if (Core.Save!.StrengthDrink > sm20)
-                {
-                    txt = txt.FindAll(x => x.Strength == LowText.StrengthType.M);
-                    if (txt.Count != 0)
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
-                }
-                else
-                {
-                    txt = txt.FindAll(x => x.Strength == LowText.StrengthType.S);
-                    if (txt.Count != 0)
-                        Main.Say(txt[Function.Rnd.Next(txt.Count)].TranslateTextConvert(Main));
-                }
-                Main.DisplayStopForce(() => Main.Display(GraphType.Switch_Thirsty, AnimatType.Single, Main.DisplayToNomal));
-                return;
-            }
-        }
-    }
 
     /// <summary>
     /// 呼叫事件 Event_TakeItemHandle
@@ -323,7 +323,24 @@ public partial class MainWindow
         double eattimes = FeedingRules.RemainingBoredom(buytime.GetDateTime(item.Name, now), now);
         double eatuseps = FeedingRules.Effectiveness(eattimes, item.Type == Food.FoodType.Gift);
         //开始加点
-        Core.Save!.EatFood(item, eatuseps);
+        AddEffect(item.Buff, item.BuffTime, item.Type.ToString().Translate() + ' ' + item.TranslateName);
+        var multipliers = Buff.GetAttributeMultipliers(PetActivity.TakeItem);
+            var save = Core.Save!;
+            // 食物的负属性保留原值，不参与获取类 Buff；延迟补充部分只在这里计算一次倍率。
+            save.Exp += item.Exp * eatuseps * (item.Exp > 0 ? multipliers.Experience : 1);
+            var strength = item.Strength / 2 * eatuseps * (item.Strength > 0 ? multipliers.Strength : 1);
+            save.StrengthChange(strength);
+            save.StoreStrength += strength;
+            var food = item.StrengthFood / 2 * eatuseps * (item.StrengthFood > 0 ? multipliers.Food : 1);
+            save.StrengthChangeFood(food);
+            save.StoreStrengthFood += food;
+            var drink = item.StrengthDrink / 2 * eatuseps * (item.StrengthDrink > 0 ? multipliers.Drink : 1);
+            save.StrengthChangeDrink(drink);
+            save.StoreStrengthDrink += drink;
+            save.FeelingChange(item.Feeling * eatuseps * (item.Feeling > 0 ? multipliers.Feeling : 1));
+            save.Health += item.Health * eatuseps * (item.Health > 0 ? multipliers.Health : 1);
+            save.Likability += item.Likability * eatuseps * (item.Likability > 0 ? multipliers.Likability : 1);
+
         //吃腻了
         eattimes += FeedingRules.AddedBoredom(item.Likability, item.Feeling);
         buytime.SetDateTime(item.Name, now.AddHours(eattimes));
@@ -386,14 +403,19 @@ public partial class MainWindow
     /// 加载工具栏菜单与托盘
     /// </summary>
     /// 与 Windows 版 MainWindow.cs 的 GameLoad 后半段逐项对应
+    private BuffViewer? buffViewer;
+
     private void LoadToolBarMenu(Main m)
     {
+        buffViewer = new BuffViewer(this);
+        m.ToolBar.gdPanel.Children.Add(buffViewer.Entry);
+        buffViewer.Entry.Margin = new Avalonia.Thickness(0, 0, GameSavesData.HashCheck ? 70 : 0, 0);
         var toolBar = m.ToolBar;
         toolBar.LoadClean();
         m.WorkList(out List<GraphHelper.Work> ws, out List<GraphHelper.Work> ss, out List<GraphHelper.Work> ps);
 
         //日程表加载
-        ScheduleTask = new ScheduleTask(this);
+
 
         if (ws.Count == 0)
         {
@@ -1276,13 +1298,15 @@ public partial class MainWindow
         MutiPlayerHandle?.Invoke(mp);
     }
 
-    
+
     private void MWUIHandle(Main main)
     {
         if (Main.ToolBar!.BdrPanel.IsVisible)
         {
-            if (GameSavesData.GameSave.LevelMax != 0)
-                tlvplus.Text = $" / {1000 + GameSavesData.GameSave.LevelMax * 100} x{GameSavesData.GameSave.LevelMax}";
+            int levelMax = GameSavesData.GameSave.LevelMax;
+            if (tlvplus.Tag is int previous && previous == levelMax) return;
+            tlvplus.Tag = levelMax;
+            tlvplus.Text = levelMax == 0 ? "" : $" / {1000 + levelMax * 100} x{levelMax}";
         }
     }
 
@@ -1444,64 +1468,34 @@ public partial class MainWindow
         , 5000));
     }
 
-    static readonly DateTime StartDate = new(2023, 8, 14, 0, 0, 0, DateTimeKind.Utc);
-    static int authheycache;
-    static DateTime GetDateFromAuthKey(int authKey)
-    {
-        // 从验证键中解析出小时数
-        int hoursSince2020 = authKey / 10000;
+    static readonly SemaphoreSlim authKeyLock = new(1, 1);
+    static AuthTicket? authKeyTicket;
 
-        // 计算日期和时间
-        DateTime date = StartDate.AddHours(hoursSince2020);
-
-        return date;
-    }
-    public async Task<int> GenerateAuthKey()
+    /// <summary>
+    /// 获取当前 Steam 会话的十六进制 Web API 票证；失败或非 Steam 用户返回空字符串
+    /// </summary>
+    public async Task<string> GenerateAuthKey()
     {
         if (!IsSteamUser)
-            return 0;
+            return string.Empty;
 
-        bool genck = false;
-        long steamId = (long)SteamClient.SteamId.Value;
-
-        while (true)
+        await authKeyLock.WaitAsync().ConfigureAwait(false);
+        try
         {
-            if (authheycache != 0)
-            {
-                DateTime dt = GetDateFromAuthKey(authheycache);
-                if (!(dt > DateTime.UtcNow.AddDays(1) || dt < DateTime.UtcNow.AddHours(-2)))
-                {
-                    return authheycache;
-                }
-            }
-
-            // 加 ConfigureAwait(false)
-            Leaderboard? leaderboard = await SteamUserStats
-                .FindLeaderboardAsync("chatgpt_auth")
-                .ConfigureAwait(false);
-
-            if (!leaderboard.HasValue)
-                return 0;
-
-            var lb = leaderboard.Value;
-
-            // 加 ConfigureAwait(false)
-            LeaderboardEntry[] key = await lb
-                .GetScoresAroundUserAsync(0, 0)
-                .ConfigureAwait(false);
-
-            if (key == null || key.Length == 0 || genck)
-            {
-                int hoursSince2020 = (int)(DateTime.UtcNow - StartDate).TotalHours;
-                authheycache = hoursSince2020 * 10000 + Function.Rnd.Next(10000);
-                await lb.ReplaceScore(authheycache).ConfigureAwait(false);
-                return authheycache;
-            }
-            else
-            {
-                authheycache = key.First().Score;
-                genck = true;
-            }
+            // 保留句柄，避免生成后立即 Dispose 导致服务端收到已取消的票证。
+            if (authKeyTicket == null || authKeyTicket.Handle == 0)
+                authKeyTicket = await SteamUser.GetAuthTicketForWebApiAsync("VPet").ConfigureAwait(false);
+            return authKeyTicket?.Data is { Length: > 0 } data
+                ? Convert.ToHexString(data) : string.Empty;
+        }
+        catch
+        {   //网不好拿不到Steam验证,就返回空加日志报错
+            Dispatcher.Invoke(() => MessageBoxX.Show("Steam 身份验证失败，请稍后重试".Translate()));
+            return string.Empty;
+        }
+        finally
+        {
+            authKeyLock.Release();
         }
     }
     public static object LogsLock = new object();
@@ -1557,7 +1551,8 @@ public partial class MainWindow
         var gf = Core.Graph!.FindGraph("levelup", GraphInfo.AnimatType.Single, GameSavesData.GameSave.Mode);
         if (gf != null)
         {
-            Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name), "levelup", true);
+            Main.Display(gf, Main.DisplayToNomal);
+            Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
         }
         if (args.IsLevelMaxUp)
         {//告知用户上限等级上升
@@ -1634,8 +1629,23 @@ public partial class MainWindow
             tmp.GameSave.LikabilityMax += totalhour / 10;
             tmp.Data[(gbol)"round"] = false;
         }
+        if (Main.State != Main.WorkingState.Nomal)
+        {
+            Dispatcher.Invoke(() => Main.WorkTimer.IsVisible = false);
+            Main.State = Main.WorkingState.Nomal;
+        }
+        if (winWorkMenu != null)
+        {
+            Dispatcher.Invoke(() => winWorkMenu.Close());
+            winWorkMenu = null;
+        }
+        ScheduleTask?.Dispose();
+        Buff?.Dispose();
         GameSavesData = tmp;
+        if (evaluationStatisticsInitialized) ResetEvaluationSessionStatistics();
         Core.Save = tmp.GameSave;
+        Buff = new Buff(this);
+        ScheduleTask = new ScheduleTask(this);
         Items.Clear();
         foreach (var line in GameSavesData.Data.Assemblage.Where(x => x.Key.StartsWith("item")))
         {

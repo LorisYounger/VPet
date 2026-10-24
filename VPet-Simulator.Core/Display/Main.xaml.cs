@@ -347,10 +347,13 @@ namespace VPet_Simulator.Core
         /// </summary>
         public bool PlayingVoice = false;
         private void MediaPlayer_MediaFailed(object? sender, ExceptionRoutedEventArgs e)
-        {
-            windowMediaPlayerAvailable = false;
-            PlayingVoice = false;
-            MessageBoxX.Show("音频播放失败,已尝试自动切换到备用播放器. 如果问题持续,请检查是否已安装WindowsMediaPlayer".Translate(), "音频错误".Translate(), MessageBoxIcon.Warning);
+        {           
+            if (windowMediaPlayerAvailable)
+            {
+                windowMediaPlayerAvailable = false;
+                PlayingVoice = false;
+                MessageBoxX.Show("音频播放失败,已尝试自动切换到备用播放器. 如果问题持续,请检查是否已安装WindowsMediaPlayer".Translate(), "音频错误".Translate(), MessageBoxIcon.Warning);
+            }
         }
         private void Clock_Completed(object? sender, EventArgs e)
         {
@@ -467,12 +470,12 @@ namespace VPet_Simulator.Core
                     SmartMoveTimer.Start();
                 }
             }
-            ((UIElement)e.Source).ReleaseMouseCapture();
+            MainGrid.ReleaseMouseCapture();
         }
 
         private void MainGrid_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!((UIElement)e.Source).CaptureMouse() || !isPress)
+            if (!MainGrid.CaptureMouse() || !isPress)
             {
                 MainGrid.MouseMove -= MainGrid_MouseWave;
                 MainGrid.MouseMove -= MainGrid_MouseMove;

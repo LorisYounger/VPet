@@ -1,3 +1,5 @@
+using Avalonia;
+using Avalonia.Controls;
 using LinePutScript;
 using LinePutScript.Localization;
 using System;
@@ -22,6 +24,48 @@ namespace VPet_Simulator.MutiPlatform;
 // 跨平台: 原文复制自 VPet-Simulator.Windows/MainWindow_Function.cs, 末尾多出的是跨平台独有的语音转发
 public partial class MainWindow : IMainWindow
 {
+    public class PetSceneAttachment : IPetSceneAttachment
+    {
+        private readonly Grid host;
+        private readonly Grid petGrid;
+        private readonly Control?[] layers;
+        private double padding;
+        public Thickness OriginalMargin { get; }
+
+        public PetSceneAttachment(Grid host, Grid petGrid, Control background, Control foreground, Control? overlay = null)
+        {
+            layers = new[] { background, foreground, overlay };
+            this.host = host;
+            this.petGrid = petGrid;
+            OriginalMargin = petGrid.Margin;
+            for (int i = 0; i < layers.Length; i++)
+            {
+                if (layers[i] is not { } layer) continue;
+                host.Children.Add(layer);
+                layer.ZIndex = petGrid.ZIndex + (i == 0 ? -1 : i);
+            }
+        }
+
+        /// <summary>设置宠物四周额外的逻辑像素边距，保持宠物在桌面上的位置。</summary>
+        public void SetPadding(double value)
+        {
+            var margin = petGrid.Margin;
+            double delta = value - padding;
+            petGrid.Margin = new Thickness(margin.Left + delta, margin.Top + delta, margin.Right + delta, margin.Bottom + delta);
+            if (TopLevel.GetTopLevel(host) is Window window)
+            {
+                window.Position -= new PixelPoint((int)Math.Round(delta * window.RenderScaling), (int)Math.Round(delta * window.RenderScaling));
+            }
+            padding = value;
+        }
+
+        public void Dispose()
+        {
+            SetPadding(0);
+            foreach (var layer in layers) if (layer != null) host.Children.Remove(layer);
+        }
+    }
+
     /// <summary>
     /// 上次吃食物的时间
     /// </summary>
@@ -640,5 +684,207 @@ public partial class MainWindow : IMainWindow
     {
         if (Main != null && voicePlayer != null)
             Main.VoicePlayer = voicePlayer;
+    }
+    public PetActivity Activity => Main.State switch
+    {
+        Main.WorkingState.Nomal => PetActivity.Idle,
+        Main.WorkingState.Sleep => PetActivity.Sleep,
+        Main.WorkingState.Travel => PetActivity.Travel,
+        Main.WorkingState.Work => Main.NowWork?.Type switch
+        {
+            Work.WorkType.Study => PetActivity.Study,
+            Work.WorkType.Work => PetActivity.Work,
+            Work.WorkType.Play => PetActivity.Play,
+            _ => PetActivity.Other
+        },
+        _ => PetActivity.Other
+    };
+
+
+    #region 本地评价统计
+
+    private bool evaluationStatisticsInitialized;
+    private long evaluationSessionSeconds;
+
+    /// <summary>
+    /// 初始化 eval_* 本地统计。eval_* 不会被同步到 Steam 排行榜。
+    /// </summary>
+    private void InitializeEvaluationStatistics()
+    {
+        if (evaluationStatisticsInitialized)
+            return;
+
+        evaluationStatisticsInitialized = true;
+        ResetEvaluationSessionStatistics();
+        Main.FunctionSpendHandle += EvaluationStatisticsCalHandle;
+        Main.Event_WorkStart += EvaluationStatistics_WorkStart;
+        Main.Event_WorkEnd += EvaluationStatistics_WorkEnd;
+    }
+
+    private void ResetEvaluationSessionStatistics()
+    {
+        evaluationSessionSeconds = 0;
+        RegisterEvaluationActiveDay(DateTime.Now.Date);
+    }
+
+    /// <summary>
+    /// 累计会话时长，以及每日、每月、最近 7/30 天的陪伴时长。
+    /// </summary>
+    private void EvaluationStatisticsCalHandle()
+    {
+        var statistics = GameSavesData.Statistics;
+        var seconds = Math.Max(1, (int)Set.LogicInterval);
+        var today = DateTime.Now.Date;
+
+        RegisterEvaluationActiveDay(today);
+
+        evaluationSessionSeconds += seconds;
+        if (evaluationSessionSeconds > statistics[(gi64)"eval_longest_session_seconds"])
+            statistics[(gi64)"eval_longest_session_seconds"] = evaluationSessionSeconds;
+
+        statistics[(gi64)($"eval_day_{today:yyyyMMdd}")] += seconds;
+        statistics[(gi64)($"eval_month_{today:yyyyMM}")] += seconds;
+        statistics[(gi64)"eval_recent_7_days_seconds"] = SumEvaluationDailySeconds(today, 7);
+        statistics[(gi64)"eval_recent_30_days_seconds"] = SumEvaluationDailySeconds(today, 30);
+    }
+
+    private long SumEvaluationDailySeconds(DateTime today, int days)
+    {
+        long result = 0;
+        for (var i = 0; i < days; i++)
+            result += GameSavesData.Statistics[(gi64)($"eval_day_{today.AddDays(-i):yyyyMMdd}")];
+        return result;
+    }
+
+    private void RegisterEvaluationActiveDay(DateTime today)
+    {
+        var statistics = GameSavesData.Statistics;
+        var todayValue = int.Parse($"{today:yyyyMMdd}");
+        if (statistics[(gint)"eval_last_active_day"] == todayValue)
+            return;
+
+        var yesterdayValue = int.Parse($"{today.AddDays(-1):yyyyMMdd}");
+        var streak = statistics[(gint)"eval_last_active_day"] == yesterdayValue
+            ? statistics[(gint)"eval_active_streak"] + 1
+            : 1;
+
+        statistics[(gint)"eval_last_active_day"] = todayValue;
+        statistics[(gint)"eval_active_days"]++;
+        statistics[(gint)"eval_active_streak"] = streak;
+        statistics[(gint)"eval_longest_active_streak"] = Math.Max(
+            statistics[(gint)"eval_longest_active_streak"],
+            streak
+        );
+
+        // 日统计只用于最近 7/30 天，月统计则长期保留用于年度趋势。
+        var cutoff = int.Parse($"{today.AddDays(-30):yyyyMMdd}");
+        foreach (var key in statistics.Data.Keys
+            .Where(x => x.StartsWith("eval_day_", StringComparison.Ordinal))
+            .ToList())
+        {
+            if (int.TryParse(key.Substring("eval_day_".Length), out var date) && date < cutoff)
+                statistics.Data.Remove(key);
+        }
+    }
+
+    private void EvaluationStatistics_WorkStart(Work work)
+    {
+        var statistics = GameSavesData.Statistics;
+        var type = work.Type == Work.WorkType.Work ? "work" : "study";
+        statistics[(gint)($"eval_{type}_started")]++;
+        statistics[(gint)($"eval_{type}_project_{Uri.EscapeDataString(work.Name)}")]++;
+        UpdateEvaluationCompletionRate(type);
+    }
+
+    private void EvaluationStatistics_WorkEnd(WorkTimer.FinishWorkInfo info)
+    {
+        var statistics = GameSavesData.Statistics;
+        var type = info.work.Type == Work.WorkType.Work ? "work" : "study";
+
+        if (info.Reason == WorkTimer.FinishWorkInfo.StopReason.TimeFinish)
+            statistics[(gint)($"eval_{type}_completed")]++;
+        UpdateEvaluationCompletionRate(type);
+
+        var totalYield = info.count;
+        if (info.Reason != WorkTimer.FinishWorkInfo.StopReason.TimeFinish)
+        {
+            var finishMultiplier = 1 + info.work.FinishBonus;
+            if (finishMultiplier > 0)
+                totalYield /= finishMultiplier;
+        }
+
+        var yieldName = type == "work" ? "eval_work_total_money" : "eval_study_total_exp";
+        statistics[(gdbe)yieldName] += totalYield;
+    }
+
+    private void UpdateEvaluationCompletionRate(string type)
+    {
+        var statistics = GameSavesData.Statistics;
+        var started = statistics[(gint)($"eval_{type}_started")];
+        var completed = statistics[(gint)($"eval_{type}_completed")];
+        statistics[(gdbe)($"eval_{type}_completion_rate")] = started > 0
+            ? (double)completed / started
+            : 0;
+    }
+
+    #endregion
+
+    public void AddEffect(string sourcekey, int time, string? source)
+    {
+        if (string.IsNullOrWhiteSpace(sourcekey) || time <= 0) return;
+
+        var endTime = DateTime.Now.AddHours(time);
+        var effects = new List<Buff.Effect>();
+        foreach (var key in sourcekey.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Distinct())
+        {
+            var template = BuffEffects.Find(effect => effect.SourceKey == key);
+            if (template == null) continue;
+
+            Buff.Effect? existing = null;
+            int count = 0;
+            for (int i = 0; i < Buff.Effects.Count; i++)
+            {
+                var effect = Buff.Effects[i];
+                if (effect.SourceKey != key) continue;
+                count++;
+                if (existing == null || effect.EndTime > existing.EndTime)
+                    existing = effect;
+            }
+            if (existing != null && existing.EndTime >= endTime)
+            {
+                if (count > 1) effects.Add(existing);
+                continue;
+            }
+
+            effects.Add(new Buff.Effect
+            {
+                SourceKey = template.SourceKey,
+                EndTime = endTime,
+                Description = template.Description,
+                Source = source ?? template.Source,
+                Name = template.Name,
+                Icon = template.Icon,
+                IsDebuff = template.IsDebuff,
+                Activity = template.Activity,
+                Reward = template.Reward,
+                Strength = template.Strength,
+                Food = template.Food,
+                Drink = template.Drink,
+                Feeling = template.Feeling,
+                Health = template.Health,
+                Money = template.Money,
+                Experience = template.Experience,
+                Likability = template.Likability,
+                StrengthCost = template.StrengthCost,
+                FoodCost = template.FoodCost,
+                DrinkCost = template.DrinkCost,
+                FeelingCost = template.FeelingCost,
+                HealthCost = template.HealthCost,
+                StrengthMax = template.StrengthMax,
+                FeelingMax = template.FeelingMax,
+                EmptyString = template.EmptyString
+            });
+        }
+        if (effects.Count > 0) Buff.Update(effects);
     }
 }

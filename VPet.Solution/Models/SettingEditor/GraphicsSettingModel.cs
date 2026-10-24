@@ -1,291 +1,180 @@
-﻿using LinePutScript.Localization.WPF;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Security.Policy;
+using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using HKW.HKWMapper;
+using HKW.HKWUtils;
+using HKW.HKWUtils.Observable;
+using HKW.MVVM;
+using LinePutScript.Localization.WPF;
+using VPet.Solution.Views;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-public class GraphicsSettingModel : ObservableClass<GraphicsSettingModel>
+[MapTarget(typeof(Setting))]
+[MapTarget(typeof(GraphicsSettingModel))]
+public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
 {
-    #region ZoomLevel
-    private double _zoomLevel = 1;
+    public GraphicsSettingModel()
+    {
+        this.WhenAnyValue(x => x.IsBiggerScreen)
+            .Subscribe(value => ZoomLevelMaximum = (value ? 8 : 3));
+    }
 
-    /// <summary>
-    /// 缩放倍率
-    /// </summary>
+    [MapIgnoreProperty]
+    public SubSettingModelType ModelType => SubSettingModelType.Graphics;
+
+    /// <inheritdoc cref="Setting.ZoomLevel"/>
+    [ObservableProperty]
     [DefaultValue(1)]
-    [ReflectionProperty(nameof(Setting.ZoomLevel))]
-    public double ZoomLevel
-    {
-        get => _zoomLevel;
-        set => SetProperty(ref _zoomLevel, value);
-    }
+    [MapProperty(typeof(Setting), nameof(ZoomLevel), typeof(ZoomLevelToStorageZoomLevel))]
+    public double ZoomLevel { get; set; } = 1;
 
-    private double _zoomLevelMinimum = 0.5;
-
+    [ObservableProperty]
     [DefaultValue(0.5)]
-    public double ZoomLevelMinimum
-    {
-        get => _zoomLevelMinimum;
-        set => SetProperty(ref _zoomLevelMinimum, value);
-    }
+    [MapIgnoreProperty]
+    public double ZoomLevelMinimum { get; set; } = 0.5;
 
-    private double _zoomLevelMaximum = 3;
-
+    [ObservableProperty]
     [DefaultValue(3)]
-    public double ZoomLevelMaximum
-    {
-        get => _zoomLevelMaximum;
-        set => SetProperty(ref _zoomLevelMaximum, value);
-    }
-    #endregion
+    [MapIgnoreProperty]
+    public double ZoomLevelMaximum { get; set; } = 3;
 
-    #region Resolution
-    private int _resolution = 1000;
-
-    /// <summary>
-    /// 桌宠图形渲染的分辨率,越高图形越清晰
-    /// </summary>
+    /// <inheritdoc cref="Setting.Resolution"/>
+    [ObservableProperty]
     [DefaultValue(1000)]
-    [ReflectionProperty(nameof(Setting.Resolution))]
-    public int Resolution
-    {
-        get => _resolution;
-        set => SetProperty(ref _resolution, value);
-    }
-    #endregion
+    public int Resolution { get; set; } = 1000;
 
-    #region IsBiggerScreen
-    private bool _isBiggerScreen;
+    [ObservableProperty]
+    [DefaultValue(1920)]
+    [MapIgnoreProperty]
+    public int ResolutionMaximum { get; set; } = 1920;
 
-    /// <summary>
-    /// 是否为更大的屏幕
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.IsBiggerScreen))]
-    public bool IsBiggerScreen
-    {
-        get => _isBiggerScreen;
-        set
-        {
-            SetProperty(ref _isBiggerScreen, value);
-            if (value is true)
-                ZoomLevelMaximum = 8;
-            else
-                ZoomLevelMaximum = 3;
-        }
-    }
-    #endregion
+    [ObservableProperty]
+    [DefaultValue(200)]
+    [MapIgnoreProperty]
+    public int ResolutionMinimum { get; set; } = 200;
 
-    #region TopMost
-    private bool _topMost;
+    /// <inheritdoc cref="Setting.IsBiggerScreen"/>
+    [ObservableProperty]
+    public bool IsBiggerScreen { get; set; }
 
-    /// <summary>
-    /// 是否置于顶层
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.TopMost))]
-    public bool TopMost
-    {
-        get => _topMost;
-        set => SetProperty(ref _topMost, value);
-    }
-    #endregion
+    /// <inheritdoc cref="Setting.TopMost"/>
+    [ObservableProperty]
+    public bool TopMost { get; set; }
 
-    #region HitThrough
-    private bool _hitThrough;
+    /// <inheritdoc cref="Setting.HitThrough"/>
+    [ObservableProperty]
+    public bool HitThrough { get; set; }
 
-    /// <summary>
-    /// 是否鼠标穿透
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.HitThrough))]
-    public bool HitThrough
-    {
-        get => _hitThrough;
-        set => SetProperty(ref _hitThrough, value);
-    }
-    #endregion
+    /// <inheritdoc cref="Setting.Language"/>
+    [ObservableProperty]
+    public string Language { get; set; } = default!;
 
-    #region Language
-    private string _language;
+    public static string[] Languages => LocalizeCore.AvailableCultures;
 
-    /// <summary>
-    /// 语言
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.Language))]
-    public string Language
-    {
-        get => _language;
-        set => SetProperty(ref _language, value);
-    }
+    /// <inheritdoc cref="Setting.Font"/>
+    [ObservableProperty]
+    public string Font { get; set; } = default!;
 
-    public static IEnumerable<string> Languages => LocalizeCore.AvailableCultures;
+    public static List<string> Fonts => ModSettingModel.Fonts;
 
-    #endregion
+    /// <inheritdoc cref="Setting.Theme"/>
+    [ObservableProperty]
+    public string Theme { get; set; } = default!;
 
-    #region Font
-    private string _font;
+    public static List<string> Themes => ModSettingModel.Themes;
 
-    /// <summary>
-    /// 字体
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.Font))]
-    public string Font
-    {
-        get => _font;
-        set => SetProperty(ref _font, value);
-    }
-    #endregion
+    /// <inheritdoc cref="Setting.PetGraph"/>
+    [ObservableProperty]
+    public string PetGraph { get; set; } = default!;
 
-    #region Theme
-    private string _theme;
+    public static List<string> PetGraphs => ModSettingModel.PetGraphs;
 
-    /// <summary>
-    /// 主题
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.Theme))]
-    public string Theme
-    {
-        get => _theme;
-        set => SetProperty(ref _theme, value);
-    }
-    #endregion
+    /// <inheritdoc cref="Setting.StartUPBoot"/>
+    [ObservableProperty]
+    public bool StartUPBoot { get; set; }
 
-    #region StartUPBoot
-    private bool _startUPBoot;
+    /// <inheritdoc cref="Setting.StartUPBootSteam"/>
+    [ObservableProperty]
+    public bool StartUPBootSteam { get; set; }
 
-    /// <summary>
-    /// 开机启动
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.StartUPBoot))]
-    public bool StartUPBoot
-    {
-        get => _startUPBoot;
-        set => SetProperty(ref _startUPBoot, value);
-    }
-    #endregion
-
-    #region StartUPBootSteam
-    private bool _startUPBootSteam;
-
-    /// <summary>
-    /// 开机启动 Steam
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.StartUPBootSteam))]
-    public bool StartUPBootSteam
-    {
-        get => _startUPBootSteam;
-        set => SetProperty(ref _startUPBootSteam, value);
-    }
-    #endregion
-
-    #region StartRecordLast
-    private bool _startRecordLast = true;
-
-    /// <summary>
-    /// 是否记录游戏退出位置
-    /// </summary>
+    /// <inheritdoc cref="Setting.StartRecordLast"/>
+    [ObservableProperty]
     [DefaultValue(true)]
-    [ReflectionProperty(nameof(Setting.StartRecordLast))]
-    public bool StartRecordLast
+    public bool StartRecordLast { get; set; } = true;
+
+    /// <inheritdoc cref="Setting.StartRecordPoint"/>
+    [ObservableProperty]
+    [MapProperty(typeof(Setting), typeof(ObservablePointToPointConverter))]
+    public ObservablePoint<double> StartRecordPoint { get; set; } = new();
+
+    /// <inheritdoc cref="Setting.HideFromTaskControl"/>
+    [ObservableProperty]
+    public bool HideFromTaskControl { get; set; }
+
+    /// <inheritdoc cref="Setting.MessageBarOutside"/>
+    [ObservableProperty]
+    public bool MessageBarOutside { get; set; }
+
+    /// <inheritdoc cref="Setting.PetHelper"/>
+    [ObservableProperty]
+    public bool PetHelper { get; set; }
+
+    /// <inheritdoc cref="Setting.PetHelpLeft"/>
+    [ObservableProperty]
+    public double PetHelpLeft { get; set; }
+
+    /// <inheritdoc cref="Setting.PetHelpTop"/>
+    [ObservableProperty]
+    public double PetHelpTop { get; set; }
+
+    /// <inheritdoc cref="Setting.Opacity"/>
+    [ObservableProperty]
+    [DefaultValue(1)]
+    public double Opacity { get; set; } = 1;
+
+    /// <inheritdoc cref="Setting.OpacityMain"/>
+    [ObservableProperty]
+    public bool OpacityMain { get; set; }
+
+    /// <inheritdoc cref="Setting.OpacityHitThrough"/>
+    [ObservableProperty]
+    public bool OpacityHitThrough { get; set; }
+
+    public void Load(Setting setting)
     {
-        get => _startRecordLast;
-        set => SetProperty(ref _startRecordLast, value);
+        this.MapFrom(setting);
     }
-    #endregion
-    //private Point _startRecordLastPoint;
 
-    ///// <summary>
-    ///// 记录上次退出位置
-    ///// </summary>
-    //public Point StartRecordLastPoint
-    //{
-    //    get => _startRecordLastPoint;
-    //    set => SetProperty(ref _startRecordLastPoint, value);
-    //}
-
-    #region StartRecordPoint
-    private ObservablePoint _startRecordPoint;
-
-    /// <summary>
-    /// 设置中桌宠启动的位置
-    /// </summary>
-    [ReflectionProperty]
-    [ReflectionPropertyConverter(typeof(ObservablePointToPointConverter))]
-    public ObservablePoint StartRecordPoint
+    public void Save(Setting setting)
     {
-        get => _startRecordPoint;
-        set => SetProperty(ref _startRecordPoint, value);
+        this.MapTo(setting);
     }
-    #endregion
+}
 
-    #region HideFromTaskControl
-    private bool _hideFromTaskControl;
-
-    /// <summary>
-    /// 在任务切换器(Alt+Tab)中隐藏窗口
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.HideFromTaskControl))]
-    public bool HideFromTaskControl
+public class ObservablePointToPointConverter : IMapConverter<ObservablePoint<double>, Point>
+{
+    public Point Convert(object source, ObservablePoint<double> value)
     {
-        get => _hideFromTaskControl;
-        set => SetProperty(ref _hideFromTaskControl, value);
+        return new(value.X, value.Y);
     }
-    #endregion
 
-    #region MessageBarOutside
-    private bool _messageBarOutside;
-
-    /// <summary>
-    /// 消息框外置
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.MessageBarOutside))]
-    public bool MessageBarOutside
+    public ObservablePoint<double> ConvertBack(object source, Point value)
     {
-        get => _messageBarOutside;
-        set => SetProperty(ref _messageBarOutside, value);
+        return new(value.X, value.Y);
     }
-    #endregion
+}
 
-    #region PetHelper
-    private bool _petHelper;
-
-    /// <summary>
-    /// 是否显示宠物帮助窗口
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.PetHelper))]
-    public bool PetHelper
+public class ZoomLevelToStorageZoomLevel : IMapConverter<double, double>
+{
+    public double Convert(object source, double value)
     {
-        get => _petHelper;
-        set => SetProperty(ref _petHelper, value);
+        return value / 2;
     }
-    #endregion
 
-    #region PetHelpLeft
-    private double _petHelpLeft;
-
-    // TODO 加入 PetHelpLeft
-
-    /// <summary>
-    /// 快捷穿透按钮X坐标
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.PetHelpLeft))]
-    public double PetHelpLeft
+    public double ConvertBack(object source, double value)
     {
-        get => _petHelpLeft;
-        set => SetProperty(ref _petHelpLeft, value);
+        return value * 2;
     }
-    #endregion
-
-    #region PetHelpTop
-    private double _petHelpTop;
-
-    // TODO 加入 PetHelpTop
-
-    /// <summary>
-    /// 快捷穿透按钮Y坐标
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.PetHelpTop))]
-    public double PetHelpTop
-    {
-        get => _petHelpTop;
-        set => SetProperty(ref _petHelpTop, value);
-    }
-    #endregion
 }

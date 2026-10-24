@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Dictionary;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
@@ -118,8 +118,9 @@ namespace VPet_Simulator.Windows
             Task.Run(async () =>
             {
                 //加载所有MOD
-                List<DirectoryInfo> Path = new List<DirectoryInfo>();
-                Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
+                List<(long, long, DirectoryInfo)> Path = new();
+                Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories()
+                    .Select(directory => (-2L, -2L, directory)));
 
                 bool NOCancel = true;
                 CancellationTokenSource source = new CancellationTokenSource();
@@ -127,8 +128,6 @@ namespace VPet_Simulator.Windows
                 {
                     if (IsSteamUser)//如果是steam用户,尝试加载workshop
                     {
-                        //Leaderboard? leaderboard = await SteamUserStats.FindLeaderboardAsync("chatgpt_auth");
-                        //leaderboard?.ReplaceScore(Function.Rnd.Next());
                         var workshop = new Line_D("workshop");
                         await Dispatcher.InvokeAsync(new Action(() =>
                         {
@@ -153,10 +152,13 @@ namespace VPet_Simulator.Windows
                                     {
                                         return;
                                     }
-                                    if (entry.Directory != null)
+                                    if (entry.Directory != null && entry.IsBanned == false)
                                     {
-                                        Path.Add(new DirectoryInfo(entry.Directory));
-                                        workshop.Add(new Sub(entry.Directory, ""));
+                                        Path.Add((
+                                            unchecked((long)entry.Id.Value),
+                                            unchecked((long)entry.Owner.Id.Value),
+                                            new DirectoryInfo(entry.Directory)));
+                                        workshop.Add(new Sub(entry.Directory, entry.Id.Value.ToString(), entry.Owner.Id.Value.ToString()));
                                     }
                                 }
                             }
@@ -173,7 +175,7 @@ namespace VPet_Simulator.Windows
                         var workshop = Set["workshop"];
                         foreach (Sub ws in workshop)
                         {
-                            Path.Add(new DirectoryInfo(ws.Name));
+                            Path.Add(GetWorkshopModPath(ws));
                         }
                     }
                 }, source.Token);
@@ -188,7 +190,7 @@ namespace VPet_Simulator.Windows
                     var workshop = Set["workshop"];
                     foreach (Sub ws in workshop)
                     {
-                        Path.Add(new DirectoryInfo(ws.Name));
+                        Path.Add(GetWorkshopModPath(ws));
                     }
                 }
 
@@ -568,6 +570,9 @@ namespace VPet_Simulator.Windows
                         w.Close();
                         Windows.Remove(w);
                     }
+                    buffViewer?.Dispose();
+                    ScheduleTask?.Dispose();
+                    Buff?.Dispose();
                     Main?.Dispose();
                     AutoSaveTimer?.Stop();
                     MusicTimer?.Stop();
@@ -584,7 +589,11 @@ namespace VPet_Simulator.Windows
                     }
 
                     if (IsSteamUser)
+                    {
+                        authKeyTicket?.Cancel();
+                        authKeyTicket = null;
                         SteamClient.Shutdown();//关掉和Steam的连线
+                    }
                     if (notifyIcon != null)
                     {
                         notifyIcon.Visible = false;
@@ -618,6 +627,9 @@ namespace VPet_Simulator.Windows
                 {
                     Windows[0].Close();
                 }
+                buffViewer?.Dispose();
+                ScheduleTask?.Dispose();
+                Buff?.Dispose();
                 Main?.Dispose();
                 AutoSaveTimer?.Stop();
                 MusicTimer?.Stop();
@@ -657,12 +669,9 @@ namespace VPet_Simulator.Windows
                 if (TryLoadSaveFile(latestsave))
                     return;
 
-            GameSavesData = new GameSave_v2(petname.Translate());
-            //看看有没有备份,和备份对比下 (新建游戏)
-            CheckBackupConsistency(GameSavesData, "New Game");
-            Core.Save = GameSavesData.GameSave;
-            HashCheck = HashCheck;
-            GameSavesData.GameSave.Event_LevelUp += LevelUP;
+            var newSave = new GameSave_v2(petname.Translate());
+            CheckBackupConsistency(newSave, "New Game");
+            SavesLoad(newSave.ToLPS());
         }
 
         /// <summary>
@@ -901,11 +910,11 @@ namespace VPet_Simulator.Windows
         public async Task<string> GetVPetRoom(string action, int fixID = 0, ulong lobbyid = 0)
         {
             var checkkey = await GenerateAuthKey();
-            string RequestURL = $"https://report.exlb.net/VPET/{action}?hoststeamid={SteamID}&fixid={fixID}&lobbyid={lobbyid}&checkkey={checkkey}";
+            string RequestURL = $"https://report.exlb.net/VPET/{action}?hoststeamid={SteamID}&fixid={fixID}&lobbyid={lobbyid}&checkkey={Uri.EscapeDataString(checkkey)}";
             using System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
             try
             {
-                return client.GetStringAsync(RequestURL).Result;
+                return await client.GetStringAsync(RequestURL);
             }
             catch (Exception e)
             {

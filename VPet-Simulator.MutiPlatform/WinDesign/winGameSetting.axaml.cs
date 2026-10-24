@@ -393,12 +393,12 @@ namespace VPet_Simulator.MutiPlatform
                 GameVer = gameVer;
                 Ver = ver;
                 Tag = tag;
-                HasTrustedCertificate = !IsPlugin || HasTrustedPluginCertificate(path);
+                HasTrustedCertificate = !IsPlugin || HasValidPluginSignatures(path);
             }
 
 
 
-            private static bool HasTrustedPluginCertificate(DirectoryInfo directory)
+            private static bool HasValidPluginSignatures(DirectoryInfo directory)
             {
                 string dllPath = System.IO.Path.Combine(directory.FullName, "plugin");
                 var loadfile = new LpsDocument();
@@ -406,7 +406,7 @@ namespace VPet_Simulator.MutiPlatform
                 if (File.Exists(loadFilePath))
                     loadfile = new LpsDocument(File.ReadAllText(loadFilePath));
 
-                foreach (FileInfo tmpfi in new DirectoryInfo(dllPath).EnumerateFiles("*.dll"))
+                foreach (FileInfo tmpfi in new DirectoryInfo(dllPath).EnumerateFiles().Where(file => file.Extension.Equals(".dll", StringComparison.OrdinalIgnoreCase)))
                 {
                     //要加载哪些 dll 的规则走共享后端, 与 CoreMOD 那边是同一份
                     if (PluginClassifier.ShouldSkip(tmpfi.Name, loadfile))
@@ -414,8 +414,7 @@ namespace VPet_Simulator.MutiPlatform
 
                     try
                     {
-                        var certificate = new X509Certificate2(tmpfi.FullName);
-                        if (!(CoreMOD.IsTrustedCertificate(certificate) || CoreMOD.IsLBGameCertificate(certificate)))
+                        if (!(OperatingSystem.IsWindows() && Win32.AuthenticodeHelper.Verify(tmpfi.FullName)))
                             return false;
                     }
                     catch
@@ -450,9 +449,18 @@ namespace VPet_Simulator.MutiPlatform
                 return terms.Any(term => searchPool.Contains(term, StringComparison.OrdinalIgnoreCase));
             }
 
-            public static ModInfo FromCoreMod(CoreMOD mod, int loadOrder) => new ModInfo(mod, loadOrder, mod.Name, mod.Author, mod.AuthorID, mod.ItemID, mod.Intro, mod.Path, mod.GameVer, mod.Ver, new HashSet<string>(mod.Tag));
+            public static ModInfo FromCoreMod(CoreMOD mod, int loadOrder)
+            {
+                long authorId = mod.sAuthorID > 0 ? mod.sAuthorID : mod.AuthorID;
+                ulong itemId = mod.sItemID > 0 ? checked((ulong)mod.sItemID) : mod.ItemID;
+                return new ModInfo(mod, loadOrder, mod.Name, mod.Author, authorId, itemId, mod.Intro,
+                    mod.Path, mod.GameVer, mod.Ver, new HashSet<string>(mod.Tag));
+            }
 
-            public static ModInfo FromDirectory(DirectoryInfo directory)
+            public static ModInfo FromDirectory(
+                DirectoryInfo directory,
+                long workshopAuthorId = 0,
+                ulong workshopItemId = 0)
             {
                 //info.lps 的解析走共享后端, 与 CoreMOD 那边是同一份实现
                 var meta = ModInfoReader.Parse(directory);
@@ -462,11 +470,136 @@ namespace VPet_Simulator.MutiPlatform
 
                 //没写 vupmod 的话退回目录名, 与原来一致
                 var name = string.IsNullOrEmpty(meta.Name) ? directory.Name : meta.Name;
-                return new ModInfo(null, int.MaxValue, name, meta.Author, meta.AuthorID, meta.ItemID,
+                return new ModInfo(null, int.MaxValue, name, meta.Author, workshopAuthorId > 0 ? workshopAuthorId : meta.AuthorID, workshopItemId > 0 ? workshopItemId : meta.ItemID,
                     meta.Intro, directory, meta.GameVer, meta.Ver, new HashSet<string>(meta.ContentTags));
             }
         }
 
+        private bool IsWorkshopMod(DirectoryInfo directory)
+        {
+            foreach (Sub workshop in mw.Set["workshop"])
+            {
+                try
+                {
+                    if (new DirectoryInfo(workshop.Name).FullName.Equals(
+                        directory.FullName, StringComparison.OrdinalIgnoreCase))
+                        return true;
+                }
+                catch
+                {
+                }
+            }
+
+            return false;
+        }
+
+private async void ShowWorkshopVerification(ModInfo modInfo)
+        {
+            int requestId = ++workshopVerificationRequestId;
+            WorkshopVerificationError.IsVisible = false;
+            WorkshopVerificationErrorText.Text = string.Empty;
+
+            string path = modInfo.Path.FullName;
+            string? error = await GetWorkshopVerificationErrorAsync(modInfo);
+
+            if (requestId != workshopVerificationRequestId ||
+                selectedModInfo?.Path.FullName.Equals(path, StringComparison.OrdinalIgnoreCase) != true ||
+                string.IsNullOrWhiteSpace(error))
+                return;
+
+            WorkshopVerificationErrorText.Text = error;
+            WorkshopVerificationError.IsVisible = true;
+        }
+
+private async Task<string?> GetWorkshopVerificationErrorAsync(ModInfo modInfo)
+        {
+            if (!IsWorkshopMod(modInfo.Path) || !WorkshopVerificationClient.HasCodePlugin(modInfo.Path))
+                return null;
+
+            string path = modInfo.Path.FullName;
+            if (workshopVerificationErrors.TryGetValue(path, out string? cachedError))
+                return cachedError;
+
+            if (!workshopVerificationTasks.TryGetValue(path, out Task<string?>? verificationTask))
+            {
+                verificationTask = VerifyWorkshopModAsync(modInfo);
+                workshopVerificationTasks[path] = verificationTask;
+            }
+
+            try
+            {
+                string? error = await verificationTask;
+                workshopVerificationErrors[path] = error;
+                return error;
+            }
+            finally
+            {
+                if (workshopVerificationTasks.TryGetValue(path, out Task<string?>? currentTask) &&
+                    ReferenceEquals(currentTask, verificationTask))
+                    workshopVerificationTasks.Remove(path);
+            }
+        }
+
+private async Task<string?> VerifyWorkshopModAsync(ModInfo modInfo)
+        {
+            try
+            {
+                WorkshopVerifyResponse response = await Task.Run(() =>
+                    WorkshopVerificationClient.VerifyAsync(
+                        modInfo.Path, checked((long)modInfo.ItemID), modInfo.AuthorID, mw.version));
+                string? error = WorkshopVerificationClient.GetVerificationErrorMessage(response);
+                return error == null ? null : $"{WorkshopVerificationClient.GetModDisplayName(modInfo.Path)}: {error}";
+            }
+            catch (Exception ex)
+            {
+                return $"{WorkshopVerificationClient.GetModDisplayName(modInfo.Path)}: {"无法完成创意工坊校验：{0}".Translate(ex.Message)}";
+            }
+        }
+
+private static string GetWorkshopUploadVerificationMessage(WorkshopUploadResponse response)
+        {
+            string message = response.Message switch
+            {
+                "NonAuthorMessage" => "该创意工坊作品已绑定其他作者，不能覆盖上传".Translate(),
+                "LowPlayTimeForCodePluginMessage" => "Steam 游戏时长不足，暂不能上传包含代码的 MOD".Translate(),
+                "Illegal calls" => "Steam 身份验证失败，请稍后重试".Translate(),
+                "Steam Server Down" => "Steam 验证服务暂时不可用，请稍后重试".Translate(),
+                "Steam Not purchased" => "当前 Steam 账号未通过游戏拥有验证".Translate(),
+                "Outdated Appid" => "当前游戏版本过旧，无法完成上传验证".Translate(),
+                _ => string.IsNullOrWhiteSpace(response.Message)
+                    ? "上传验证未通过".Translate()
+                    : response.Message.Translate()
+            };
+
+            if (response.Conflicts == null || response.Conflicts.Count == 0)
+                return message;
+
+            string conflicts = string.Join("\n", response.Conflicts.Select(x =>
+                $"{x.Type}: {x.Value} (Workshop {x.WorkshopId})"));
+            return $"{message}\n{conflicts}";
+        }
+
+private static async Task DeleteWorkshopDraftAsync(CoreMOD mods, ulong draftItemId, long originalAuthorId)
+        {
+            try
+            {
+                if (!await SteamUGC.DeleteFileAsync(draftItemId) || mods.ItemID != draftItemId)
+                    return;
+
+                mods.ItemID = 0;
+                mods.AuthorID = originalAuthorId;
+                mods.WriteFile();
+            }
+            catch (Exception ex)
+            {
+                // 草稿清理不应打断上传流程或向用户显示额外提示；保留 ID 以便下次复用。
+                Debug.WriteLine($"Failed to delete workshop draft {draftItemId}: {ex}");
+            }
+        }
+
+        private readonly Dictionary<string, string?> workshopVerificationErrors = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, Task<string?>> workshopVerificationTasks = new(StringComparer.OrdinalIgnoreCase);
+        private int workshopVerificationRequestId;
         private readonly List<ModInfo> modInfos = new List<ModInfo>();
         private ModInfo? selectedModInfo;
         CoreMOD? mod;
@@ -492,6 +625,25 @@ namespace VPet_Simulator.MutiPlatform
         {
             modInfos.Clear();
             var modInfoByPath = new Dictionary<string, ModInfo>(StringComparer.OrdinalIgnoreCase);
+            var workshopIdsByPath = new Dictionary<string, (long AuthorId, ulong ItemId)>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (Sub workshop in mw.Set["workshop"])
+            {
+                try
+                {
+                    string[] infos = workshop.GetInfos();
+                    if (infos.Length >= 2
+                        && ulong.TryParse(infos[0], out ulong itemId)
+                        && ulong.TryParse(infos[1], out ulong authorId))
+                    {
+                        workshopIdsByPath[new DirectoryInfo(workshop.Name).FullName] =
+                            (unchecked((long)authorId), itemId);
+                    }
+                }
+                catch
+                {
+                }
+            }
 
             for (int i = 0; i < mw.CoreMODs.Count; i++)
             {
@@ -504,7 +656,11 @@ namespace VPet_Simulator.MutiPlatform
                 if (!File.Exists(Path.Combine(di.FullName, "info.lps")))
                     continue;
                 if (!modInfoByPath.ContainsKey(di.FullName))
-                    modInfoByPath[di.FullName] = ModInfo.FromDirectory(di);
+                {
+                    workshopIdsByPath.TryGetValue(di.FullName, out var workshopIds);
+                    modInfoByPath[di.FullName] = ModInfo.FromDirectory(
+                        di, workshopIds.AuthorId, workshopIds.ItemId);
+                }
             }
 
             modInfos.AddRange(modInfoByPath.Values
@@ -550,6 +706,8 @@ namespace VPet_Simulator.MutiPlatform
             if (ListMod.Items.Count == 0)
             {
                 selectedModInfo = null;
+                workshopVerificationRequestId++;
+                WorkshopVerificationError.IsVisible = false;
                 mod = null;
                 return;
             }
@@ -586,8 +744,13 @@ namespace VPet_Simulator.MutiPlatform
 
                 foreach (Steamworks.Ugc.Item entry in page.Value.Entries)
                 {
-                    if (entry.Directory != null)
-                        workshop.Add(new Sub(entry.Directory, ""));
+                    if (entry.Directory != null && !entry.IsBanned)
+                    {
+                        workshop.Add(new Sub(
+                            entry.Directory,
+                            entry.Id.Value.ToString(),
+                            entry.Owner.Id.Value.ToString()));
+                    }
                 }
             }
 
@@ -630,6 +793,7 @@ namespace VPet_Simulator.MutiPlatform
         private void ShowMod(ModInfo modInfo)
         {
             selectedModInfo = modInfo;
+            ShowWorkshopVerification(modInfo);
             mod = modInfo.CoreMod;
 
             LabelModName.Content = modInfo.Name.Translate();
@@ -728,7 +892,7 @@ namespace VPet_Simulator.MutiPlatform
                     ButtonPublish.Text = "更新至Steam".Translate();
                     ButtonSteam.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimaryDarker);
                 }
-                if (modInfo.ItemID != 1 && (modInfo.AuthorID == SteamClient.SteamId.AccountId || modInfo.AuthorID == 0))
+                if (modInfo.ItemID != 1 && (modInfo.AuthorID == unchecked((long)SteamClient.SteamId.Value) || modInfo.AuthorID == SteamClient.SteamId.AccountId || modInfo.AuthorID == 0))
                 {
                     ButtonPublish.IsEnabled = true;
                     ButtonPublish.Foreground = Function.ResourcesBrush(Function.BrushType.DARKPrimaryDarker);
@@ -857,11 +1021,24 @@ namespace VPet_Simulator.MutiPlatform
             Process.Start(psi);
         }
 
-        private void ButtonEnable_MouseDown(object? sender, PointerPressedEventArgs e)
+        private async void ButtonEnable_MouseDown(object sender, PointerPressedEventArgs e)
         {
-            if (selectedModInfo == null)
+            ModInfo? modInfo = selectedModInfo;
+            if (modInfo == null)
                 return;
-            mw.Set.OnMod(selectedModInfo.Name);
+
+            string? verificationError = await GetWorkshopVerificationErrorAsync(modInfo);
+            if (selectedModInfo?.Path.FullName.Equals(modInfo.Path.FullName, StringComparison.OrdinalIgnoreCase) != true)
+                return;
+            if (!string.IsNullOrWhiteSpace(verificationError))
+            {
+                MessageBoxX.Show(
+                    "该 MOD 未通过创意工坊校验，无法启用：\n{0}".Translate(verificationError),
+                    "启用模组失败".Translate(), MessageBoxIcon.Warning);
+                return;
+            }
+
+            mw.Set.OnMod(modInfo.Name);
             ButtonRestart.IsVisible = true;
             ShowModList();
         }
@@ -893,7 +1070,7 @@ namespace VPet_Simulator.MutiPlatform
                 Dispatcher.UIThread.Invoke(() => pb.Value = (int)(lastvalue * 100));
             }
         }
-        private async void ButtonPublish_MouseDown(object? sender, PointerPressedEventArgs e)
+        private async void ButtonPublish_MouseDown(object sender, PointerPressedEventArgs e)
         {
             var mods = mod;
             if (mods == null)
@@ -919,54 +1096,88 @@ namespace VPet_Simulator.MutiPlatform
                 return;
             }
             mods.GameVer = mw.version;
-            mods.WriteFile();
 #if DEMO
             MessageBoxX.Show("经测试,除正式版均无创意工坊权限,此功能仅作为展示", "特殊版无法上传创意工坊");
 #endif
+
+            uint currentAuthorId = SteamClient.SteamId.AccountId;
+            if (mods.ItemID != 0 && mods.AuthorID != currentAuthorId)
+            {
+                MessageBoxX.Show("该 MOD 记录的作者与当前 Steam 账号不一致，无法更新".Translate(),
+                    "MOD上传失败".Translate(), MessageBoxIcon.Error);
+                return;
+            }
+
             ButtonPublish.IsEnabled = false;
-            ButtonPublish.Text = "正在上传".Translate();
+            ButtonPublish.Text = "正在验证".Translate();
             ProgressBarUpload.IsVisible = true;
             ProgressBarUpload.Value = 0;
-            if (mods.ItemID == 0)
+            bool createdPrivateDraft = false;
+            bool publishSubmissionStarted = false;
+            long originalAuthorId = mods.AuthorID;
+
+            try
             {
-                var result = Editor.NewCommunityFile
+                mods.AuthorID = currentAuthorId;
+                mods.WriteFile();
+
+                if (mods.ItemID == 0)
+                {
+                    // Steam 只有创建物品后才会分配 workshopId。先创建不可见草稿，
+                    // 完成服务端身份/名称绑定后再公开提交实际内容。
+                    ButtonPublish.Text = "正在准备上传".Translate();
+                    var draft = Editor.NewCommunityFile
                         .WithTitle(mods.Name)
                         .WithDescription(mods.Intro)
-                        .WithPublicVisibility()
+                        .WithPrivateVisibility()
                         .WithPreviewFile(Path.Combine(mods.Path.FullName, "icon.png"))
                         .WithContent(mods.Path.FullName);
-                foreach (string tag in mods.Tag)
-                    result = result.WithTag(tag);
-                var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
-                mods.AuthorID = SteamClient.SteamId.AccountId;
-                mods.WriteFile();
-                if (r.Success)
-                {
-                    mods.ItemID = r.FileId.Value;
-                    mods.WriteFile();
-                    //ProgressBarUpload.Value = 0;
-                    //await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
-                    if (MessageBoxX.Show("{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑详细介绍和图标?".Translate(mods.Name), "MOD上传成功".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
+                    foreach (string tag in mods.Tag)
+                        draft = draft.WithTag(tag);
+
+                    var draftResult = await draft.SubmitAsync(new ProgressClass(ProgressBarUpload));
+                    if (!draftResult.Success)
                     {
-                        ExtensionFunction.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
+                        mods.AuthorID = originalAuthorId;
+                        mods.WriteFile();
+                        MessageBoxX.Show("{0} 准备WorkShop上传失败\n请检查网络后重试\n失败原因:{1}"
+                            .Translate(mods.Name, draftResult.Result), "MOD上传失败 {0}".Translate(draftResult.Result));
+                        return;
                     }
+
+                    mods.ItemID = draftResult.FileId.Value;
+                    mods.WriteFile();
+                    createdPrivateDraft = true;
                 }
-                else
+
+                ButtonPublish.Text = "正在验证".Translate();
+                string checkKey = await mw.GenerateAuthKey();
+                WorkshopUploadResponse verification = await Task.Run(() => WorkshopVerificationClient.RegisterUploadAsync(
+                    mods.Path,
+                    mods.ItemID,
+                    SteamClient.SteamId.Value,
+                    checkKey,
+                    mw.version));
+
+                if (!verification.Ok || !verification.CanUpload)
                 {
-                    mods.AuthorID = 0; mods.WriteFile();
-                    MessageBoxX.Show("{0} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{1}"
-                        .Translate(mods.Name, r.Result), "MOD上传失败 {0}".Translate(r.Result));
+                    if (createdPrivateDraft)
+                        await DeleteWorkshopDraftAsync(mods, mods.ItemID, originalAuthorId);
+                    MessageBoxX.Show(GetWorkshopUploadVerificationMessage(verification),
+                        "MOD上传验证失败".Translate(), MessageBoxIcon.Warning);
+                    return;
                 }
-            }
-            else if (mods.AuthorID == SteamClient.SteamId.AccountId)
-            {
+
+                ButtonPublish.Text = "正在上传".Translate();
+                ProgressBarUpload.Value = 0;
                 var item = await Item.GetAsync(mods.ItemID);
                 Editor result;
-                if (item == null)
+                if (item == null || createdPrivateDraft)
                 {
                     result = new Editor(new Steamworks.Data.PublishedFileId() { Value = mods.ItemID })
                         .WithTitle(mods.Name)
                         .WithDescription(mods.Intro)
+                        .WithPublicVisibility()
                         .WithPreviewFile(Path.Combine(mods.Path.FullName, "icon.png"))
                         .WithContent(mods.Path);
                 }
@@ -975,29 +1186,52 @@ namespace VPet_Simulator.MutiPlatform
                     result = new Editor(new Steamworks.Data.PublishedFileId() { Value = mods.ItemID })
                         .WithTitle(item.Value.Title)
                         .WithDescription(item.Value.Description)
+                        .WithPublicVisibility()
                         .WithPreviewFile(Path.Combine(mods.Path.FullName, "icon.png"))
                         .WithContent(mods.Path);
                 }
 
                 foreach (string tag in mods.Tag)
                     result = result.WithTag(tag);
+                publishSubmissionStarted = true;
                 var r = await result.SubmitAsync(new ProgressClass(ProgressBarUpload));
+                publishSubmissionStarted = false;
                 if (r.Success)
                 {
-                    mods.AuthorID = SteamClient.SteamId.AccountId;
+                    bool isNewUpload = createdPrivateDraft;
+                    createdPrivateDraft = false;
+                    mods.AuthorID = currentAuthorId;
                     mods.ItemID = r.FileId.Value;
                     mods.WriteFile();
-                    if (MessageBoxX.Show("{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑新内容?".Translate(mods.Name)
-                        , "MOD更新成功".Translate(), MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
+                    string title = isNewUpload ? "MOD上传成功".Translate() : "MOD更新成功".Translate();
+                    string prompt = isNewUpload
+                        ? "{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑详细介绍和图标?".Translate(mods.Name)
+                        : "{0} 成功上传至WorkShop服务器\n是否跳转至创意工坊页面进行编辑新内容?".Translate(mods.Name);
+                    if (MessageBoxX.Show(prompt, title, MessageBoxButton.YesNo, MessageBoxIcon.Success) == MessageBoxResult.Yes)
                         ExtensionFunction.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + r.FileId);
                 }
                 else
+                {
+                    if (createdPrivateDraft)
+                        await DeleteWorkshopDraftAsync(mods, mods.ItemID, originalAuthorId);
                     MessageBoxX.Show("{0} 上传至WorkShop服务器失败\n请检查网络后重试\n请注意:上传和下载工坊物品可能需要良好的网络条件\n失败原因:{1}"
                         .Translate(mods.Name, r.Result), "MOD上传失败 {0}".Translate(r.Result));
+                }
             }
-            ButtonPublish.IsEnabled = true;
-            ButtonPublish.Text = "任务完成".Translate();
-            ProgressBarUpload.IsVisible = false;
+            catch (Exception ex)
+            {
+                // 若公开提交已发出但结果不明，保留物品 ID，避免误删已上传的作品。
+                if (createdPrivateDraft && !publishSubmissionStarted)
+                    await DeleteWorkshopDraftAsync(mods, mods.ItemID, originalAuthorId);
+                MessageBoxX.Show("无法连接创意工坊验证服务，已取消上传。\n{0}"
+                    .Translate(ex.Message), "MOD上传验证失败".Translate(), MessageBoxIcon.Error);
+            }
+            finally
+            {
+                ButtonPublish.IsEnabled = true;
+                ButtonPublish.Text = "任务完成".Translate();
+                ProgressBarUpload.IsVisible = false;
+            }
         }
 
         private void ButtonSteam_MouseDown(object? sender, PointerPressedEventArgs e)
@@ -1007,15 +1241,28 @@ namespace VPet_Simulator.MutiPlatform
             ExtensionFunction.StartURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" + selectedModInfo.ItemID);
         }
 
-        private void ButtonAllow_Click(object? sender, RoutedEventArgs e)
+        private async void ButtonAllow_Click(object sender, RoutedEventArgs e)
         {
-            if (selectedModInfo == null)
+            ModInfo? modInfo = selectedModInfo;
+            if (modInfo == null)
                 return;
-            if (MessageBoxX.Show("是否启用 {0} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查".Translate(selectedModInfo.Name),
-                "启用 {0} 的代码插件?".Translate(selectedModInfo.Name), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
+
+            string? verificationError = await GetWorkshopVerificationErrorAsync(modInfo);
+            if (selectedModInfo?.Path.FullName.Equals(modInfo.Path.FullName, StringComparison.OrdinalIgnoreCase) != true)
+                return;
+            if (!string.IsNullOrWhiteSpace(verificationError))
             {
-                mw.Set.PassMod(selectedModInfo.Name);
-                ShowMod(selectedModInfo);
+                MessageBoxX.Show(
+                    "该 MOD 未通过创意工坊校验，无法启用代码插件：\n{0}".Translate(verificationError),
+                    "启用代码插件失败".Translate(), MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBoxX.Show("是否启用 {0} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查".Translate(modInfo.Name),
+                "启用 {0} 的代码插件?".Translate(modInfo.Name), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
+            {
+                mw.Set.PassMod(modInfo.Name);
+                ShowMod(modInfo);
                 ButtonRestart.IsVisible = true;
             }
         }
@@ -1991,18 +2238,21 @@ namespace VPet_Simulator.MutiPlatform
             UpdateMoveAreaText();
         }
 
-        private void BC_Click(object? sender, RoutedEventArgs e)
+        private async void BC_Click(object? sender, RoutedEventArgs e)
         {
-            Task.Run(() => ExtensionFunction.StartURL($"https://bettercontribution.exlb.net/shop#steamid={mw.SteamID}&checkkey={mw.GenerateAuthKey().Result}&lang={LocalizeCore.CurrentCulture}"));
+            string checkKey = await mw.GenerateAuthKey();
+            ExtensionFunction.StartURL($"https://bettercontribution.exlb.net/shop#steamid={mw.SteamID}&checkkey={Uri.EscapeDataString(checkKey)}&lang={LocalizeCore.CurrentCulture}");
         }
 
-        private void VV_Click(object? sender, RoutedEventArgs e)
+        private async void VV_Click(object? sender, RoutedEventArgs e)
         {
-            Task.Run(() => ExtensionFunction.StartURL($"https://vpetvote.exlb.net/#steamid={mw.SteamID}&checkkey={mw.GenerateAuthKey().Result}&lang={LocalizeCore.CurrentCulture}"));
+            string checkKey = await mw.GenerateAuthKey();
+            ExtensionFunction.StartURL($"https://vpetvote.exlb.net/#steamid={mw.SteamID}&checkkey={Uri.EscapeDataString(checkKey)}&lang={LocalizeCore.CurrentCulture}");
         }
 
         private void ButtonReLS_Click(object? sender, RoutedEventArgs e)
         {
+            workshopVerificationErrors.Clear();
             ShowModList();
         }
 

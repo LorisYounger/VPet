@@ -9,20 +9,23 @@
   xmlns:pu="https://opensource.panuon.com/wpf-ui"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:VPet.Solution.ViewModels.SaveViewer"
+  xmlns:v="clr-namespace:VPet.Solution.Views.SaveViewer"
   Title="{ll:Str 'VPET 存档查看器'}"
-  Width="800"
-  Height="450"
+  Width="1000"
+  Height="600"
   MinWidth="400"
   MinHeight="200"
-  d:DataContext="{d:DesignInstance Type=vm:SaveWindowVM}"
   WindowStartupLocation="CenterScreen"
-  mc:Ignorable="d">
+  mc:Ignorable="d"
+  d:DataContext="{d:DesignInstance Type=vm:SaveViewModel}"
+>
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" MinWidth="100" />
-      <ColumnDefinition MinWidth="300" />
+      <ColumnDefinition Width="400" MinWidth="300" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" MinWidth="300" />
     </Grid.ColumnDefinitions>
-    <Grid>
+    <Grid Margin="10">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition />
@@ -32,18 +35,28 @@
       <TextBox
         pu:TextBoxHelper.Watermark="{ll:Str 搜索存档}"
         Style="{DynamicResource StandardTextBoxStyle}"
-        Text="{Binding SearchSave, UpdateSourceTrigger=PropertyChanged}" />
+        Text="{Binding SearchSave, UpdateSourceTrigger=PropertyChanged}"
+      />
       <DataGrid
-        x:Name="DataGrid_Saves"
+        x:Name="Saves"
         Grid.Row="1"
         d:ItemsSource="{d:SampleData ItemCount=5}"
         AutoGenerateColumns="False"
+        CanUserDeleteRows="False"
         CanUserAddRows="False"
-        ItemsSource="{Binding ShowSaves}"
-        SelectedItem="{Binding CurrentSave}">
+        CanUserResizeRows="False"
+        IsReadOnly="True"
+        ItemsSource="{Binding Saves.FilteredList}"
+        SelectedItem="{Binding CurrentSave}"
+        pu:DataGridHelper.RowSelectedBackground="{DynamicResource DARKPrimary}"
+        pu:DataGridHelper.RowSelectedForeground="{DynamicResource DARKPrimaryText}"
+      >
         <DataGrid.RowStyle>
           <Style BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="DataGridRow">
-            <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}" />
+            <Setter
+              Property="Tag"
+              Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
+            />
             <Setter Property="ToolTip" Value="{Binding FilePath}" />
             <Setter Property="ContextMenu">
               <Setter.Value>
@@ -51,11 +64,13 @@
                   <MenuItem
                     Command="{Binding PlacementTarget.Tag.OpenFileCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                     CommandParameter="{Binding}"
-                    Header="{ll:Str 打开文件}" />
+                    Header="{ll:Str 打开文件}"
+                  />
                   <MenuItem
                     Command="{Binding PlacementTarget.Tag.OpenFileInExplorerCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                     CommandParameter="{Binding}"
-                    Header="{ll:Str 从资源管理器打开文件}" />
+                    Header="{ll:Str 从资源管理器打开文件}"
+                  />
                 </ContextMenu>
               </Setter.Value>
             </Setter>
@@ -66,45 +81,54 @@
             Binding="{Binding Name}"
             ElementStyle="{DynamicResource TextBlock_LeftCenter}"
             Header="{ll:Str 名称}"
-            IsReadOnly="True" />
+            IsReadOnly="True"
+          />
           <DataGridTextColumn
             Binding="{Binding DateSaved, StringFormat='yyyy/MM/dd HH:mm:ss'}"
             ElementStyle="{DynamicResource TextBlock_LeftCenter}"
             Header="{ll:Str 保存时间}"
-            IsReadOnly="True" />
+            IsReadOnly="True"
+          />
           <DataGridTextColumn
             Binding="{Binding TotalTime}"
             ElementStyle="{DynamicResource TextBlock_LeftCenter}"
             Header="{ll:Str 游玩时长}"
-            IsReadOnly="True" />
+            IsReadOnly="True"
+          />
           <DataGridTextColumn
-            Binding="{Binding HashChecked}"
+            Binding="{Binding HashChecked, Converter={StaticResource TranslateConverter}}"
             ElementStyle="{DynamicResource TextBlock_LeftCenter}"
             Header="{ll:Str 哈希}"
-            IsReadOnly="True" />
+            IsReadOnly="True"
+          />
         </DataGrid.Columns>
       </DataGrid>
     </Grid>
-    <Grid Grid.Column="1" IsEnabled="{Binding SelectedItem, ElementName=DataGrid_Saves, Converter={StaticResource NullToFalse}}">
+    <Rectangle Grid.Column="1" Width="2" Fill="#06000000" />
+    <Grid
+      Margin="10"
+      Grid.Column="2"
+      IsEnabled="{Binding SelectedItem, ElementName=Saves, Converter={StaticResource NullToFalseConverter}}"
+    >
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition />
       </Grid.RowDefinitions>
-      <ListBox x:Name="ListBox_Pages" Style="{DynamicResource SideMenuListBoxStyle}">
+      <ListBox x:Name="Views" SelectedIndex="0" Style="{DynamicResource SideMenuListBoxStyle}">
         <ListBox.ItemsPanel>
           <ItemsPanelTemplate>
             <StackPanel Orientation="Horizontal" />
           </ItemsPanelTemplate>
         </ListBox.ItemsPanel>
-        <ListBoxItem x:Name="ListBoxItem_SaveData" Content="{ll:Str 数据}" />
-        <ListBoxItem x:Name="ListBoxItem_SaveStatistic" Content="{ll:Str 统计}" />
+        <ListBoxItem Content="{ll:Str 数据}" />
+        <ListBoxItem Content="{ll:Str 统计}" />
       </ListBox>
-      <Frame
-        x:Name="Frame_Main"
-        Grid.Row="1"
-        Content="{Binding SelectedItem.Tag, ElementName=ListBox_Pages}"
-        ContentRendered="Frame_Main_ContentRendered"
-        NavigationUIVisibility="Hidden" />
+      <ContentControl Grid.Row="1">
+        <Grid local:PanelHelper.ShowChildByIndex="{Binding SelectedIndex,ElementName=Views}">
+          <v:SaveDataView />
+          <v:SaveStatisticView Visibility="Hidden" />
+        </Grid>
+      </ContentControl>
       <!--<TabControl
           x:Name="MainTab"
           Grid.Column="1"

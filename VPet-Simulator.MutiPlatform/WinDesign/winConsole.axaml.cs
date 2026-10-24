@@ -1,3 +1,6 @@
+using System.Text.Json;
+using VPet_Simulator.Core.MutiPlatform.Display.Shell;
+using System.IO;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -23,6 +26,78 @@ namespace VPet_Simulator.MutiPlatform
     /// ComboBox.Text→选中项, Dispatcher→Dispatcher.UIThread, 其余逐行相同
     public partial class winConsole : Window
     {
+private sealed class WorkShopSessionExport
+        {
+            public long Sid { get; init; }
+            public DateTime UploadDate { get; init; }
+            public long WorkshopID { get; init; }
+            public long SteamID { get; init; }
+            public long FileHash { get; init; }
+            public int Version { get; set; }
+        }
+private async void Output_WorkShopSession(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            button.IsEnabled = false;
+
+            try
+            {
+                var workshopMods = new List<(DirectoryInfo Directory, ulong? WorkshopID, ulong? SteamID)>();
+                foreach (Sub workshop in mw.Set["workshop"])
+                {
+                    string[] infos = workshop.GetInfos();
+                    ulong? workshopID = infos.Length >= 1 && ulong.TryParse(infos[0], out ulong parsedWorkshopID)
+                        ? parsedWorkshopID
+                        : null;
+                    ulong? steamID = infos.Length >= 2 && ulong.TryParse(infos[1], out ulong parsedSteamID)
+                        ? parsedSteamID
+                        : null;
+                    workshopMods.Add((new DirectoryInfo(workshop.Name), workshopID, steamID));
+                }
+
+                DateTime uploadDate = DateTime.Now;
+                List<WorkShopSessionExport> sessions = await Task.Run(() =>
+                {
+                    var result = new List<WorkShopSessionExport>();
+                    foreach (var mod in workshopMods)
+                    {
+                        WorkshopMetadata metadata = WorkshopVerificationClient.ReadMetadata(
+                            mod.Directory, mod.WorkshopID, mod.SteamID);
+                        if (metadata.WorkshopId <= 0 || metadata.SteamId <= 0)
+                            continue;
+
+                        result.Add(new WorkShopSessionExport
+                        {
+                            Sid = 0,
+                            UploadDate = uploadDate,
+                            WorkshopID = metadata.WorkshopId,
+                            SteamID = metadata.SteamId,
+                            FileHash = metadata.FileHash,
+                            Version = mw.version
+                        });
+                    }
+                    return result;
+                });
+
+                LocalTextBox.Text = JsonSerializer.Serialize(sessions, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBoxX.Show(
+                    "导出创意工坊会话失败：{0}".Translate(ex.Message),
+                    "导出失败".Translate(),
+                    MessageBoxButton.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                button.IsEnabled = true;
+            }
+        }
+
         MainWindow mw;
         public winConsole(MainWindow mw)
         {

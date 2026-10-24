@@ -21,7 +21,7 @@ public partial class MainWindow
     /// <summary>
     /// 版本号
     /// </summary>
-    public int version { get; } = 11071;
+    public int version { get; } = 11074;
     /// <summary>
     /// 版本号
     /// </summary>
@@ -48,7 +48,7 @@ public partial class MainWindow
     public List<Photo> Photos { get; } = new List<Photo>();
 
     public GameSave_v2 GameSavesData { get; set; } = new GameSave_v2("VPET");
-
+    public List<Buff.Effect> BuffEffects { get; set; } = new List<Buff.Effect>();
     public static readonly string ModPath = ExtensionValue.BaseDirectory + @"\mod";
     public bool IsSteamUser { get; }
     public LPS_D Args { get; }
@@ -76,10 +76,11 @@ public partial class MainWindow
     public GameCore Core { get; set; } = new GameCore();
     public List<Window> Windows { get; set; } = new List<Window>();
     public Main Main { get; set; } = null!;
+    public Buff Buff { get; set; } = null!;
     public UIElement? TalkBox;
     public winGameSetting? winSetting { get; set; }
     public winBetterBuy? winBetterBuy { get; set; }
-    public winGallery? winGallery { get; set; } 
+    public winGallery? winGallery { get; set; }
     public winInventory? winInventory { get; set; }
 
     public winWorkMenu? winWorkMenu { get; set; }

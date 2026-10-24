@@ -1,4 +1,4 @@
-﻿//跨平台: 对应 VPet-Simulator.Windows.Interface/IMainWindow.cs, 成员逐条相同, 只把 WPF 的类型换成 Avalonia 的
+//跨平台: 对应 VPet-Simulator.Windows.Interface/IMainWindow.cs, 成员逐条相同, 只把 WPF 的类型换成 Avalonia 的
 //(Dispatcher / Window / Grid / ImageSource→Bitmap). 老式 MainPlugin 与 ITalkAPI 那几项没有: 旧 WPF MOD 在别的平台
 //跑不起来, 跨平台 MOD 走统一契约 (UnifiedPlugin).
 using Avalonia.Controls;
@@ -220,7 +220,11 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 生成验证密钥
         /// </summary>
-        Task<int> GenerateAuthKey();
+        Task<string> GenerateAuthKey();
+        Buff Buff { get; }
+        List<Buff.Effect> BuffEffects { get; }
+        PetActivity Activity { get; }
+        void AddEffect(string sourcekey, int time, string? source);
         /// <summary>
         /// 记录物品使用
         /// </summary>
@@ -241,5 +245,10 @@ namespace VPet_Simulator.Windows.Interface
         /// 上次使用物品时间
         /// </summary>
         public DateTime LastTakeItemTime { get; }
+    }
+    public interface IPetSceneAttachment : IDisposable
+    {
+        Avalonia.Thickness OriginalMargin { get; }
+        void SetPadding(double value);
     }
 }

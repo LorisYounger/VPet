@@ -1,4 +1,5 @@
-﻿using Avalonia;
+using System.Net.Http;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
@@ -199,9 +200,9 @@ public partial class MainWindow : Window
         try
         {
             //加载所有MOD
-            List<DirectoryInfo> Path = new List<DirectoryInfo>();
+            List<(long, long, DirectoryInfo)> Path = new();
             if (Directory.Exists(ModPath))
-                Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories());
+                Path.AddRange(new DirectoryInfo(ModPath).EnumerateDirectories().Select(di => (-2L, -2L, di)));
 
             //跨平台: Windows 版第一只桌宠和多开的桌宠是两个构造函数, 这边共用一个 Opened 处理器, 用 first 区分:
             //多开的那只只按设置里记的创意工坊目录加载, 不查 Steam、不改 CGPT 设置、不重复登记物品使用方法和访客表菜单
@@ -241,8 +242,8 @@ public partial class MainWindow : Window
                                 }
                                 if (entry.Directory != null)
                                 {
-                                    Path.Add(new DirectoryInfo(entry.Directory));
-                                    workshop.Add(new Sub(entry.Directory, ""));
+                                    Path.Add((unchecked((long)entry.Id.Value), unchecked((long)entry.Owner.Id.Value), new DirectoryInfo(entry.Directory)));
+                                    workshop.Add(new Sub(entry.Directory, entry.Id.Value.ToString(), entry.Owner.Id.Value.ToString()));
                                 }
                             }
                         }
@@ -259,7 +260,7 @@ public partial class MainWindow : Window
                     var workshop = Set["workshop"];
                     foreach (Sub ws in workshop)
                     {
-                        Path.Add(new DirectoryInfo(ws.Name));
+                        Path.Add(GetWorkshopModPath(ws));
                     }
                 }
             }, source.Token);
@@ -275,7 +276,7 @@ public partial class MainWindow : Window
                 var workshop = Set["workshop"];
                 foreach (Sub ws in workshop)
                 {
-                    Path.Add(new DirectoryInfo(ws.Name));
+                    Path.Add(GetWorkshopModPath(ws));
                 }
             }
 
@@ -508,25 +509,82 @@ public partial class MainWindow : Window
     }
 
     /// <summary>
-    /// 加载游戏
+    /// 从当前工坊记录读取 Steam 提供的作品和作者标识。
     /// </summary>
-    /// <param name="Path">MOD地址</param>
-    public async Task GameLoad(List<DirectoryInfo> Path)
+    private static (long, long, DirectoryInfo) GetWorkshopModPath(ISub workshop)
     {
-        MODPath = Path.GroupBy(x => x.FullName).Select(group => group.First()).ToList();
+        var infos = workshop.GetInfos();
+        return (long.Parse(infos[0]), long.Parse(infos[1]), new DirectoryInfo(workshop.Name));
+    }
+
+    /// <summary>加载游戏；路径同时携带工坊作品和作者标识，本地 MOD 使用 -2。</summary>
+    public async Task GameLoad(List<(long, long, DirectoryInfo)> Path)
+    {
+        Path = Path.GroupBy(x => x.Item3.FullName, StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First()).ToList();
+        MODPath = Path.Select(x => x.Item3).ToList();
         ShowLoading("Loading MOD");
-        //加载mod: 扫描 MOD 目录会读大量小文件, 放后台线程
-        await Task.Run(() =>
+        var blockedWorkshopMods = new List<string>();
+        bool workshopVerificationAvailable = true;
+        if (App.MainWindows[0] == this) WorkshopVerificationClient.Initialize(this);
+        await Task.Run(async () =>
         {
-            foreach (DirectoryInfo di in MODPath)
+            //加载mod
+            foreach (var modPath in Path)
             {
+                long sItemID = modPath.Item1;
+                long sAuthorID = modPath.Item2;
+                DirectoryInfo di = modPath.Item3;
                 if (!File.Exists(System.IO.Path.Combine(di.FullName, "info.lps")))
                     continue;
                 ShowLoading($"Loading MOD: {di.Name}");
-                CoreMODs.Add(new CoreMOD(di, this));
+
+                // 本地 MOD(-2)、未登录 Steam 或验证服务不可用时跳过校验。
+                if (sItemID > 0 && sAuthorID > 0 && IsSteamUser && workshopVerificationAvailable
+                    && SteamClient.IsValid && SteamClient.IsLoggedOn
+                    && WorkshopVerificationClient.HasCodePlugin(di))
+                {
+                    string modName = WorkshopVerificationClient.GetModDisplayName(di);
+                    try
+                    {
+                        WorkshopVerifyResponse verification = await WorkshopVerificationClient.VerifyAsync(
+                            di, sItemID, sAuthorID, version);
+                        string? reason = WorkshopVerificationClient.GetVerificationErrorMessage(verification);
+                        if (reason != null)
+                        {
+                            blockedWorkshopMods.Add($"{modName}: {reason}");
+                            continue;
+                        }
+                    }
+                    catch (Exception ex) when (ex is HttpRequestException or OperationCanceledException or InvalidDataException)
+                    {
+                        // 服务异常不代表 MOD 校验失败；当前及后续 MOD 继续正常加载。
+                        workshopVerificationAvailable = false;
+                        Trace.TraceWarning($"Workshop verification unavailable; skipping verification for this load: {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        blockedWorkshopMods.Add($"{modName}: {"无法完成创意工坊校验：{0}".Translate(ex.Message)}");
+                        continue;
+                    }
+                }
+
+                CoreMODs.Add(new CoreMOD(di, this, sItemID, sAuthorID));
             }
+
         });
         CoreMOD.NowLoading = null;
+
+        if (blockedWorkshopMods.Count > 0)
+        {
+            await Dispatcher.InvokeAsync(() => MessageBoxX.Show(
+                "以下创意工坊 MOD 未通过完整性或风险验证，已阻止加载：\n{0}"
+                    .Translate(string.Join("\n", blockedWorkshopMods)),
+                "创意工坊 MOD 验证失败".Translate(),
+                MessageBoxButton.OK,
+                MessageBoxIcon.Warning));
+        }
+
         //跨平台: Windows 版这里按 Set.LastCacheDate 清动画缓存目录; 这边的动画不落盘缓存 (GraphCore 直接解码), 没有这一步
         Log($"扫描到 {CoreMODs.Count} 个 MOD, 宠物 {Pets.Count} 只, 食物 {Foods.Count} 种");
         foreach (var mod in CoreMODs)
@@ -564,6 +622,16 @@ public partial class MainWindow : Window
         ClickTexts.RemoveAll(x => !x.FindTag(tag));
         SelectTexts.RemoveAll(x => !x.FindTag(tag));
 
+        Core.Save = GameSavesData.GameSave;
+        ShowLoading("尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate());
+        var started = DateTime.Now;
+        Core.Graph = await Task.Run(() => petloader.Graph(Set.Resolution));
+        Log($"动画扫描完成, 耗时={(DateTime.Now - started).TotalSeconds:0.0}秒 个数={petloader.GraphCount}");
+        Core.Graph.GraphFailed += Graph_GraphFailed;
+        Main = new Main(Core);
+        AttachVoicePlayer();
+        Main.Load_2_TouchEvent();
+
         ShowLoading("尝试加载游戏存档".Translate());
         //加载存档
         if (File.Exists(System.IO.Path.Combine(ExtensionValue.BaseDirectory, "Save.lps"))) //有老的旧存档,优先旧存档
@@ -591,6 +659,7 @@ public partial class MainWindow : Window
         {
             foreach (Food f in Foods)
             {
+                f.CalRealPrice(this);
                 if (f.IsOverLoad())
                 {
                     f.Price = Math.Max((int)f.RealPrice, 1);
@@ -699,20 +768,11 @@ public partial class MainWindow : Window
         };
         MusicTimer.Elapsed += MusicTimer_Elapsed;
 
-        ShowLoading("尝试加载动画和生成缓存\n该步骤可能会耗时比较长\n请耐心等待".Translate());
-        var started = DateTime.Now;
-        //跨平台: 跨平台的 PetLoader.Graph 没有 Dispatcher 参数; 解码宽度按设置里的渲染分辨率, 与 Windows 版同
-        Core.Graph = await Task.Run(() => petloader.Graph(Set.Resolution));
-        Log($"动画扫描完成, 耗时={(DateTime.Now - started).TotalSeconds:0.0}秒 个数={petloader.GraphCount}");
-        //跨平台: 这边按帧惰性解码, 坏帧要到播放时才暴露 (Windows 版在上面这一步就解码完了, 坏的在下面 Load_2_WaitGraph 里记进
-        //ErrorMessage, 游戏加载完弹 "动画加载错误"); 播放时才摘掉的动画在这里补上同样的提示
-        Core.Graph.GraphFailed += Graph_GraphFailed;
 
-        Main = new Main(Core);
-        //插件可能在桌宠建好之前就登记了语音播放器
-        AttachVoicePlayer();
-        //触摸区域是从宠物配置里读的, 必须在 Core.Graph 就绪之后注册
-        Main.Load_2_TouchEvent();
+
+
+
+
         Main.NoFunctionMOD = Set.CalFunState;
 
         //清空资源
@@ -908,6 +968,7 @@ public partial class MainWindow : Window
             Log($"加载失败: {message}");
         HideLoading();
 
+        InitializeEvaluationStatistics();
         Main.Load_4_Start();
         Log($"桌宠已启动, 当前动画={Main.DisplayType}");
         //成就和统计 
@@ -1506,6 +1567,9 @@ public partial class MainWindow : Window
                     w.Close();
                     Windows.Remove(w);
                 }
+                buffViewer?.Dispose();
+                ScheduleTask?.Dispose();
+                Buff?.Dispose();
                 Main?.Dispose();
                 AutoSaveTimer?.Stop();
                 MusicTimer?.Stop();
@@ -1522,7 +1586,11 @@ public partial class MainWindow : Window
                 }
 
                 if (IsSteamUser)
-                    SteamClient.Shutdown();//关掉和Steam的连线
+                {
+                    authKeyTicket?.Cancel();
+                    authKeyTicket = null;
+                    SteamClient.Shutdown();
+                }//关掉和Steam的连线
                 if (notifyIcon != null)
                 {
                     notifyIcon.IsVisible = false;
@@ -1560,6 +1628,9 @@ public partial class MainWindow : Window
             {
                 Windows[0].Close();
             }
+            buffViewer?.Dispose();
+            ScheduleTask?.Dispose();
+            Buff?.Dispose();
             Main?.Dispose();
             AutoSaveTimer?.Stop();
             MusicTimer?.Stop();
@@ -1650,6 +1721,7 @@ public partial class MainWindow : Window
     {
         //保存日程表
         ScheduleTask?.Save();
+        Buff?.Save();
 
         //保存物品栏
         foreach (var v in GameSavesData.Data.Assemblage.Keys.Where(x => x.StartsWith("item")).ToList())
@@ -1741,12 +1813,9 @@ public partial class MainWindow : Window
             if (TryLoadSaveFile(latestsave))
                 return;
 
-        GameSavesData = new GameSave_v2(petname.Translate());
-        //看看有没有备份,和备份对比下 (新建游戏)
-        CheckBackupConsistency(GameSavesData, "New Game");
-        Core.Save = GameSavesData.GameSave;
-        HashCheck = HashCheck;
-        GameSavesData.GameSave.Event_LevelUp += LevelUP;
+        var newSave = new GameSave_v2(petname.Translate());
+        CheckBackupConsistency(newSave, "New Game");
+        SavesLoad(newSave.ToLPS());
     }
 
     /// <summary>
@@ -1882,11 +1951,11 @@ public partial class MainWindow : Window
     public async Task<string> GetVPetRoom(string action, int fixID = 0, ulong lobbyid = 0)
     {
         var checkkey = await GenerateAuthKey();
-        string RequestURL = $"https://report.exlb.net/VPET/{action}?hoststeamid={SteamID}&fixid={fixID}&lobbyid={lobbyid}&checkkey={checkkey}";
+        string RequestURL = $"https://report.exlb.net/VPET/{action}?hoststeamid={SteamID}&fixid={fixID}&lobbyid={lobbyid}&checkkey={Uri.EscapeDataString(checkkey)}";
         using System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
         try
         {
-            return client.GetStringAsync(RequestURL).Result;
+            return await client.GetStringAsync(RequestURL);
         }
         catch (Exception e)
         {

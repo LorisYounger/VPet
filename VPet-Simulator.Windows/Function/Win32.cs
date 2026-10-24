@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
-
+using System.IO;
 namespace VPet_Simulator.Windows
 {
     static partial class Win32
@@ -665,4 +665,5 @@ namespace VPet_Simulator.Windows
             public int styleNew;
         }
     }
+
 }

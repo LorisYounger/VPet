@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Converter;
 using System;
 using System.Collections.Generic;
@@ -235,35 +235,65 @@ public partial class Photo
             }
             if (Time != null)
             {
-                if (!GalleryUnlockRules.InTimeWindow(Time.Value, now, TimeOffset))
+                var time = new DateTime(now.Year, now.Month, now.Day, Time.Value.Hour, Time.Value.Minute, Time.Value.Second);
+                if (time > now || time.AddMinutes(TimeOffset) < now)
                 {
                     return false;
                 }
             }
-            if (Holiday != HolidayType.None)
+            if (!GetHolidayCheck(Holiday, DateOffset, save))
             {
-                //节日日期表在共享后端里, 农历那几个也是
-                if (Holiday == HolidayType.Player_Birthday)
-                {
-                    if (!GalleryUnlockRules.IsBirthday(save.GetDateTime("HostBDay"), now))
-                        return false;
-                }
-                else
-                {
-                    var holidayDate = GalleryUnlockRules.HolidayDate((GalleryUnlockRules.HolidayKind)(int)Holiday, now);
-                    if (holidayDate != null && !CheckDate(holidayDate.Value))
-                        return false;
-                }
+                return false;
             }
             //统计数据检查
             foreach (var (stat, value) in StatCheck)
             {
-                var statvalue = save.Statistics!.GetInt(stat, GalleryUnlockRules.MissingStatValue);
-                if (!GalleryUnlockRules.StatSatisfied(statvalue, value))
+                var statvalue = save.Statistics!.GetInt(stat, -1);
+                if (statvalue < value)
                     return false;
             }
             return true;
         }
+        public static bool GetHolidayCheck(HolidayType holiday, int dateOffset, GameSave_v2 save)
+        {
+            DateTime now = DateTime.Now;
+            switch (holiday)
+            {
+                case HolidayType.Mid_Autumn_Festival:
+                    if (CheckDate(GetLunarDate(8, 15), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.Dragon_Boat_Festival:
+                    if (CheckDate(GetLunarDate(5, 5), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.New_Years_Day:
+                    if (CheckDate(new DateTime(now.Year, 1, 1), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.Spring_Festival:
+                    if (CheckDate(GetLunarDate(1, 1), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.Christmas:
+                    if (CheckDate(new DateTime(now.Year, 12, 25), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.Qixi_Festival:
+                    if (CheckDate(GetLunarDate(7, 7), dateOffset))
+                        return true;
+                    break;
+                case HolidayType.Player_Birthday: //玩家生日
+                    var bdt = save.GetDateTime("HostBDay");
+                    if (now.Month == bdt.Month && now.Day == bdt.Day)
+                        return true;
+                    break;
+                case HolidayType.None:
+                    return true;
+            }
+            return false;
+        }
+
         public string CheckReason(GameSave_v2 gamesave)
         {
             if (None) return string.Empty;
@@ -398,17 +428,14 @@ public partial class Photo
         /// <summary>
         /// 检查日期是否符合
         /// </summary>
-        public bool CheckDate(DateTime date)
-            => GalleryUnlockRules.InDateWindow(date, DateTime.Now, DateOffset);
-        /// <summary>
-        /// 检查农历日期偏差
-        /// </summary>
-        public static DateTime GetLunarDate(int month, int day)
-            => GalleryUnlockRules.LunarDate(month, day);
+        public bool CheckDate(DateTime date) => CheckDate(date, DateOffset);
+        public static bool CheckDate(DateTime date, int dateOffset)
+        {
+            var now = DateTime.Now;
+            return date < now && date.AddDays(dateOffset) > now;
+        }
+        public static DateTime GetLunarDate(int month, int day) => GalleryUnlockRules.LunarDate(month, day);
     }
-    /// <summary>
-    /// 解锁条件
-    /// </summary>
     public UnlockCondition UnlockAble { get; set; } = new UnlockCondition();
 
     /// <summary>

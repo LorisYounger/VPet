@@ -124,6 +124,7 @@
                 <StackPanel>
                     <Button Click="Output_No_Local" Content="{ll:Str 导出未翻译文档}" />
                     <Button Click="Output_Graph" Content="{ll:Str 导出动画详情}" />
+                    <Button Click="Output_WorkShopSession" Content="{ll:Str '导出创意工坊会话 JSON'}" />
                 </StackPanel>
                 <TextBox x:Name="LocalTextBox" Grid.Row="1" AcceptsReturn="True" IsReadOnly="True"
                         MouseDown="Local_SelectAll_Click" />

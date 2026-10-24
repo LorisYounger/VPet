@@ -1,4 +1,4 @@
-﻿using LinePutScript.Localization.WPF;
+using LinePutScript.Localization.WPF;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

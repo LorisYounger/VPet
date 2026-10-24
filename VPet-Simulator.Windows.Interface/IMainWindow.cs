@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using VPet_Simulator.Core;
 using static VPet_Simulator.Windows.Interface.ScheduleTask;
@@ -18,6 +19,7 @@ namespace VPet_Simulator.Windows.Interface
     /// </summary>
     public interface IMainWindow
     {
+
         /// <summary>
         /// 存档前缀, 用于多开游戏, 为空时使用默认存档, 不为空时前缀的前缀一般为'-'
         /// </summary>
@@ -63,6 +65,10 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         Main Main { get; }
         /// <summary>
+        /// 效果管理器。
+        /// </summary>
+        Buff Buff { get; }
+        /// <summary>
         /// 版本号
         /// </summary>
         int version { get; }
@@ -82,6 +88,10 @@ namespace VPet_Simulator.Windows.Interface
         /// 所有食物
         /// </summary>
         List<Food> Foods { get; }
+        /// <summary>
+        /// 预设的Buff效果. 方便其他事件/物品拉取
+        /// </summary>
+        List<Buff.Effect> BuffEffects { get; }
         /// <summary>
         /// 需要食物时会说的话
         /// </summary>
@@ -265,10 +275,10 @@ namespace VPet_Simulator.Windows.Interface
         Dictionary<string, object> DynamicResources { get; }
 
         /// <summary>
-        /// 生成授权码(仅用于LB相关服务验证)
+        /// 获取当前 Steam 会话的十六进制 Web API 票证(仅用于LB相关服务验证)
         /// </summary>
-        /// <returns></returns>
-        Task<int> GenerateAuthKey();
+        /// <returns>Web API 票证；失败或非 Steam 用户返回空字符串。</returns>
+        Task<string> GenerateAuthKey();
 
         /// <summary>
         /// 呼叫事件 Event_TakeItemHandle
@@ -297,5 +307,26 @@ namespace VPet_Simulator.Windows.Interface
         /// 上次吃食物的时间
         /// </summary>
         public DateTime LastTakeItemTime { get; }
+        /// <summary>
+        /// 宠物当前活动
+        /// </summary>
+        public PetActivity Activity { get; }
+        /// <summary>
+        /// 添加效果
+        /// </summary>
+        /// <param name="sourcekey">效果来源的稳定标识,使用逗号添加多个效果</param>
+        /// <param name="time">持续时间 (小时)</param>
+        /// <param name="source">效果来源描述</param>
+        public void AddEffect(string sourcekey, int time, string? source);
     }
+
+    /// <summary>
+    /// 场景句柄；UI 线程设置边距及释放，具体布局由本体实现。
+    /// </summary>
+    public interface IPetSceneAttachment : IDisposable
+    {
+        Thickness OriginalMargin { get; }
+        void SetPadding(double value);
+    }
+
 }

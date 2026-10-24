@@ -1,42 +1,45 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using HKW.HKWMapper;
+using HKW.MVVM;
 
 namespace VPet.Solution.Models.SettingEditor;
 
-public class SystemSettingModel : ObservableClass<SystemSettingModel>
+[MapTarget(typeof(Setting))]
+[MapTarget(typeof(SystemSettingModel))]
+public partial class SystemSettingModel : ObservableObjectEx, ISubSettingModel
 {
-    /// <summary>
-    /// 数据收集是否被禁止(当日)
-    /// </summary>
-    public bool DiagnosisDayEnable { get; } = true;
+    [MapIgnoreProperty]
+    public SubSettingModelType ModelType => SubSettingModelType.System;
 
-    #region AutoSaveInterval
-    private int _autoSaveInterval;
+    ///// <summary>
+    ///// 数据收集是否被禁止(当日)
+    ///// </summary>
+    //public bool DiagnosisDayEnable { get; set; }
 
-    /// <summary>
-    /// 自动保存频率 (min)
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.AutoSaveInterval))]
-    public int AutoSaveInterval
+    /// <inheritdoc cref="Setting.AutoSaveInterval"/>
+    [ObservableProperty]
+    public int AutoSaveInterval { get; set; }
+
+    public static ObservableCollection<int> AutoSaveIntervals { get; } = [10, 20, 30, 60];
+
+    /// <inheritdoc cref="Setting.BackupSaveMaxNum"/>
+    [ObservableProperty]
+    public int BackupSaveMaxNum { get; set; }
+
+    /// <inheritdoc cref="Setting.LastCacheDate"/>
+    [ObservableProperty]
+    public DateTime LastCacheDate { get; set; }
+
+    public void Load(Setting setting)
     {
-        get => _autoSaveInterval;
-        set => SetProperty(ref _autoSaveInterval, value);
+        this.MapFrom(setting);
     }
 
-    public static ObservableCollection<int> SaveIntervals { get; } =
-        new() { -1, 2, 5, 10, 20, 30, 60 };
-    #endregion
-
-    #region BackupSaveMaxNum
-    private int _backupSaveMaxNum;
-
-    /// <summary>
-    /// 备份保存最大数量
-    /// </summary>
-    [ReflectionProperty(nameof(Setting.BackupSaveMaxNum))]
-    public int BackupSaveMaxNum
+    public void Save(Setting setting)
     {
-        get => _backupSaveMaxNum;
-        set => SetProperty(ref _backupSaveMaxNum, value);
+        this.MapTo(setting);
     }
-    #endregion
 }

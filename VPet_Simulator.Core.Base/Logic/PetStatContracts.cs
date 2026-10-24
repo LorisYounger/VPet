@@ -80,6 +80,7 @@ namespace VPet_Simulator.Core
         /// 游戏数据
         /// </summary>
         IGameSave Save { get; }
+        AttributeModifiers? AttributeModifier { get; }
         /// <summary>
         /// 随机源
         /// </summary>
