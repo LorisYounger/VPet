@@ -18,6 +18,8 @@ namespace VPet_Simulator.Core
     /// 状态: 动画的状态 Save.GameSave.ModeType
     public class GraphInfo
     {
+        /// <summary>动画源目录相对角色动画根目录的路径；程序生成动画没有源目录。</summary>
+        public string? SourceFolder { get; set; }
         /// <summary>
         /// 用于Convert的空动画信息
         /// </summary>
@@ -46,6 +48,9 @@ namespace VPet_Simulator.Core
         /// <param name="info">信息</param>
         public GraphInfo(FileSystemInfo path, ILine info)
         {
+            var source = path is DirectoryInfo ? path.FullName : ((FileInfo)path).DirectoryName!;
+            var relative = Path.GetRelativePath(info[(gstr)"startuppath"]!, source);
+            SourceFolder = relative == "." ? "" : relative.Replace('\\', '/');
             string pn;
             if (path is DirectoryInfo)
                 pn = Sub.Split(path.FullName.ToLowerInvariant(), info[(gstr)"startuppath"]!.ToLowerInvariant()).Last();
