@@ -68,7 +68,22 @@ public partial class MainWindow : IMainWindow
     /// <summary>
     /// 游戏存档
     /// </summary>
-    public GameSave_v2 GameSavesData { get; set; } = new GameSave_v2("VPET");
+    private GameSave_v2 gameSavesData = new GameSave_v2("VPET");
+    public GameSave_v2 GameSavesData
+    {
+        get => gameSavesData;
+        set
+        {
+            var previous = gameSavesData.Statistics;
+            gameSavesData = value;
+            foreach (var host in UnifiedHosts)
+                host.OnSaveChanged(previous);
+        }
+    }
+
+    // 操作型包装器随窗口保存，避免多开时猜测物品和照片的归属。
+    internal readonly System.Runtime.CompilerServices.ConditionalWeakTable<Item, VPet_Simulator.Unified.Interface.IItemInfo> UnifiedItems = new();
+    internal readonly System.Runtime.CompilerServices.ConditionalWeakTable<Photo, VPet_Simulator.Unified.Interface.IPhotoInfo> UnifiedPhotos = new();
     /// <summary>
     /// MOD目录
     /// </summary>

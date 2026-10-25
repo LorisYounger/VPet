@@ -9,7 +9,7 @@ using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Core.MutiPlatform.Graph;
 
-public partial class GraphCore : IDisposable, IGraphCoreBase<IAvaloniaGraph>
+public partial class GraphCore : IDisposable
 {
     public int Resolution { get; set; } = 1000;
     public long IdleCacheTimeout = TimeSpan.FromMinutes(2).Ticks;
@@ -188,5 +188,4 @@ public partial class GraphCore : IDisposable, IGraphCoreBase<IAvaloniaGraph>
         CommConfig.Clear();
     }
 
-    long IGraphCoreBase<IAvaloniaGraph>.IdleCacheTimeout => IdleCacheTimeout;
 }

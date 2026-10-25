@@ -30,26 +30,18 @@ internal sealed class UnifiedItemRegistry : IItemRegistry
     private readonly Dictionary<string, Func<ILine, UnifiedItem?>> creators
         = new(StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>
-    /// 内置四种物品类型的使用处理器要等宿主先注册完
-    /// </summary>
-    /// MainWindow.xaml.cs:346-426 用的是 Dictionary.Add, 重复键会抛异常.
-    /// 插件构造函数跑在那之前, 所以先排队, 等宿主注册完再冲刷.
-    private static readonly List<(string Type, Func<IMainWindow, Item, bool> Action)> pendingUseActions = new();
-    private static bool useActionsReady;
-
     internal UnifiedItemRegistry(UnifiedPluginHost host, MainWindow mw)
     {
         this.host = host;
         this.mw = mw;
     }
 
-    public IReadOnlyList<IItemInfo> All => mw.Items.Select(UnifiedWrap.Of).ToList();
+    public IReadOnlyList<IItemInfo> All => mw.Items.Select(x => UnifiedWrap.Of(x, mw)).ToList();
 
     public void Add(UnifiedItem item)
     {
         var native = Materialize(item);
-        host.RunOnUI(() => native.LoadSource(mw));
+        native.LoadSource(mw);
         mw.ItemsAdd(native);
     }
 
@@ -74,37 +66,14 @@ internal sealed class UnifiedItemRegistry : IItemRegistry
         //不认窗口的话, 一件物品会被所有窗口的实例各处理一遍. 这里只认自己那个窗口,
         //别人的交回去让列表里下一个处理器接.
         bool Wrapped(IMainWindow imw, Item item)
-            => ReferenceEquals(imw, mw) && action(UnifiedWrap.Of(item));
+            => ReferenceEquals(imw, mw) && action(UnifiedWrap.Of(item, mw));
 
         if (Item.UseAction.TryGetValue(itemType, out var list))
         {
             list.Add(Wrapped);
             return;
         }
-        // 内置四种类型的列表要等宿主建好, 否则会和它的 Dictionary.Add 撞车
-        if (!useActionsReady && Item.ItemTypes.Contains(itemType))
-        {
-            pendingUseActions.Add((itemType, Wrapped));
-            return;
-        }
         Item.UseAction[itemType] = new List<Func<IMainWindow, Item, bool>> { Wrapped };
-    }
-
-    /// <summary>
-    /// 宿主的内置使用处理器已经注册完了
-    /// </summary>
-    /// 由 MainWindow.xaml.cs 在建完内置四种之后调一次
-    internal static void UseActionsReady()
-    {
-        useActionsReady = true;
-        foreach (var (type, action) in pendingUseActions)
-        {
-            if (Item.UseAction.TryGetValue(type, out var list))
-                list.Add(action);
-            else
-                Item.UseAction[type] = new List<Func<IMainWindow, Item, bool>> { action };
-        }
-        pendingUseActions.Clear();
     }
 
     /// <summary>
@@ -136,7 +105,7 @@ internal sealed class UnifiedItemRegistry : IItemRegistry
             if (made == null)
                 continue;
             var native = Materialize(made);
-            host.RunOnUI(() => native.LoadSource(mw));
+            native.LoadSource(mw);
             mw.Items[i] = native;
         }
     }
@@ -173,12 +142,17 @@ internal sealed class UnifiedItemRegistry : IItemRegistry
             mw.TakeItemHandle(native, count, from);
     }
 
-    public event Action<IFoodInfo>? TakeItem
+    public event Action<IFoodInfo>? TakeItem;
+
+    internal void Attach() => mw.Event_TakeItem += OnTakeItem;
+
+    internal void Detach()
     {
-        add { if (value != null) mw.Event_TakeItem += food => value(UnifiedWrap.Of(food)); }
-        // Windows 版自己也从不退订 Event_TakeItem; 包装之后没法精确摘掉某一个
-        remove { }
+        mw.Event_TakeItem -= OnTakeItem;
+        TakeItem = null;
     }
+
+    private void OnTakeItem(Food food) => TakeItem?.Invoke(UnifiedWrap.Of(food));
 
     public DateTime LastTakeItemTime => mw.LastTakeItemTime;
 }
@@ -256,8 +230,10 @@ internal sealed class UnifiedPetView : IPetView
         => M.Display((GraphInfo.GraphType)(int)type, (GraphInfo.AnimatType)(int)animat, endAction);
     public void DisplayToNomal() => M.DisplayToNomal();
     public void DisplayFoodAnimation(string graphName, string imagePath)
-        => mw.Dispatcher.Invoke(() => mw.DisplayFoodAnimation(graphName,
-            ImageResources.NewSafeBitmapImage(imagePath)));
+    {
+        var image = ImageResources.NewSafeBitmapImage(imagePath);
+        mw.Dispatcher.Invoke(() => mw.DisplayFoodAnimation(graphName, image));
+    }
 
     public void Say(string text, string? graphName = null, bool force = false, string? desc = null)
         => M.Say(text, graphName, force, desc);

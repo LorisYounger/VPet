@@ -13,7 +13,7 @@ using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Core.MutiPlatform.Graph;
 
-public class FoodAnimation : IAvaloniaRunImageGraph, IFoodAnimationGraphBase
+public class FoodAnimation : IAvaloniaRunImageGraph
 {
     private readonly GraphCore _graphCore;
     private int _nowId;

@@ -11,7 +11,7 @@ using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Core.MutiPlatform.Graph;
 
-public class Picture : IAvaloniaImageGraph, IPictureGraphBase
+public class Picture : IAvaloniaImageGraph
 {
     private GraphCore? _graphCore;
 

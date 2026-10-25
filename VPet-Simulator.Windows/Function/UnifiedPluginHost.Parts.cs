@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Converter;
 using System;
 using System.Collections.Generic;
@@ -41,7 +41,7 @@ internal sealed class UnifiedItemRegistry : IItemRegistry
         this.mw = mw;
     }
 
-    public IReadOnlyList<IItemInfo> All => mw.Items.Select(UnifiedWrap.Of).ToList();
+    public IReadOnlyList<IItemInfo> All => mw.Items.Select(x => UnifiedWrap.Of(x, mw)).ToList();
 
     public void Add(UnifiedItem item)
     {
@@ -71,7 +71,7 @@ internal sealed class UnifiedItemRegistry : IItemRegistry
         //不认窗口的话, 一件物品会被所有窗口的实例各处理一遍. 这里只认自己那个窗口,
         //别人的交回去让列表里下一个处理器接.
         bool Wrapped(IMainWindow imw, Item item)
-            => ReferenceEquals(imw, mw) && action(UnifiedWrap.Of(item));
+            => ReferenceEquals(imw, mw) && action(UnifiedWrap.Of(item, mw));
 
         if (Item.UseAction.TryGetValue(itemType, out var list))
         {
@@ -170,12 +170,17 @@ internal sealed class UnifiedItemRegistry : IItemRegistry
             mw.TakeItemHandle(native, count, from);
     }
 
-    public event Action<IFoodInfo>? TakeItem
+    public event Action<IFoodInfo>? TakeItem;
+
+    internal void Attach() => mw.Event_TakeItem += OnTakeItem;
+
+    internal void Detach()
     {
-        add { if (value != null) mw.Event_TakeItem += food => value(UnifiedWrap.Of(food)); }
-        // Windows 版自己也从不退订 Event_TakeItem; 包装之后没法精确摘掉某一个
-        remove { }
+        mw.Event_TakeItem -= OnTakeItem;
+        TakeItem = null;
     }
+
+    private void OnTakeItem(Food food) => TakeItem?.Invoke(UnifiedWrap.Of(food));
 
     public DateTime LastTakeItemTime => mw.LastTakeItemTime;
 }

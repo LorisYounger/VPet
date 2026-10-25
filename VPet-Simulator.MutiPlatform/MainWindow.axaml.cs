@@ -493,8 +493,6 @@ public partial class MainWindow : Window
                   }
                   return false;
               }]);
-            //内置的使用处理器都注册完了, 把插件排队的那些补上
-            UnifiedItemRegistry.UseActionsReady();
         }
         catch (Exception ex)
         {

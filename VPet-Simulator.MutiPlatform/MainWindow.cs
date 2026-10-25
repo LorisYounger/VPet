@@ -1542,7 +1542,7 @@ public partial class MainWindow
             ItemType = "Mail",
             Price = 15,
         };
-        Dispatcher.Invoke(() => itm.LoadSource(this));
+        itm.LoadSource(this);
         ItemsAdd(itm);
     }
 
@@ -1652,7 +1652,7 @@ public partial class MainWindow
             var itm = Item.CreateItem(this, line.Value);
             if (itm != null)
             {
-                Dispatcher.Invoke(() => itm.LoadSource(this));
+                itm.LoadSource(this);
                 ItemsAdd(itm);
             }
         }

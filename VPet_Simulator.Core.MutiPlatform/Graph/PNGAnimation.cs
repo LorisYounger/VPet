@@ -12,7 +12,7 @@ using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Core.MutiPlatform.Graph;
 
-public class PNGAnimation : IAvaloniaImageGraph, IFrameSequenceGraphBase
+public class PNGAnimation : IAvaloniaImageGraph
 {
     private readonly GraphCore _graphCore;
     /// <summary>

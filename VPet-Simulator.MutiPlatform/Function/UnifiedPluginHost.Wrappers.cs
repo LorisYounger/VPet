@@ -1,4 +1,4 @@
-﻿//跨平台: 原文复制自 VPet-Simulator.Windows/Function/UnifiedPluginHost.Wrappers.cs; ImageSource/BitmapImage 换成 Avalonia 的 Bitmap
+//跨平台: 原文复制自 VPet-Simulator.Windows/Function/UnifiedPluginHost.Wrappers.cs; ImageSource/BitmapImage 换成 Avalonia 的 Bitmap
 using LinePutScript;
 using LinePutScript.Converter;
 using System;
@@ -21,17 +21,15 @@ namespace VPet_Simulator.MutiPlatform;
 /// 宿主在 MOD 加载之后还会改这些对象(价格钳制、收藏状态、吃腻度), MOD 读到的必须是
 /// 当前值, MOD 改的也必须传得回去.
 ///
-/// 包装器按对象缓存, 这样同一个食物每次拿到的都是同一个包装器, 事件参数才能比较相等.
+/// 包装器保留对象身份；物品和照片的操作还绑定所属窗口，读档后也不转交给其他窗口。
 internal static class UnifiedWrap
 {
     private static readonly ConditionalWeakTable<Food, FoodView> foods = new();
-    private static readonly ConditionalWeakTable<Item, ItemView> items = new();
-    private static readonly ConditionalWeakTable<Photo, PhotoView> photos = new();
     private static readonly ConditionalWeakTable<Work, WorkView> works = new();
 
     public static IFoodInfo Of(Food food) => foods.GetValue(food, x => new FoodView(x));
-    public static IItemInfo Of(Item item) => items.GetValue(item, x => new ItemView(x));
-    public static IPhotoInfo Of(Photo photo) => photos.GetValue(photo, x => new PhotoView(x));
+    public static IItemInfo Of(Item item, MainWindow mw) => mw.UnifiedItems.GetValue(item, x => new ItemView(x, mw));
+    public static IPhotoInfo Of(Photo photo, MainWindow mw) => mw.UnifiedPhotos.GetValue(photo, x => new PhotoView(x, mw));
     public static IWorkInfo Of(Work work) => works.GetValue(work, x => new WorkView(x));
 
     /// <summary>
@@ -71,7 +69,8 @@ internal static class UnifiedWrap
     private sealed class ItemView : IItemInfo
     {
         private readonly Item target;
-        public ItemView(Item target) { this.target = target; }
+        private readonly MainWindow mw;
+        public ItemView(Item target, MainWindow mw) { this.target = target; this.mw = mw; }
 
         public Item Target => target;
         public string Name => target.Name;
@@ -89,15 +88,16 @@ internal static class UnifiedWrap
         public string? Image => target.Image;
         public string? ImagePath => target.ImagePath;
         public IFoodInfo? AsFood => target is Food food ? Of(food) : null;
-        public void Use() => target.Use(UnifiedPluginHost.WindowOf(target)!);
-        public void Consume(int count = 1) => target.Consume(UnifiedPluginHost.WindowOf(target)!, count);
+        public void Use() => target.Use(mw);
+        public void Consume(int count = 1) => target.Consume(mw, count);
         public ILine ToLine() => LPSConvert.SerializeObjectToLine<Line>(target, "item");
     }
 
     private sealed class PhotoView : IPhotoInfo
     {
         private readonly Photo target;
-        public PhotoView(Photo target) { this.target = target; }
+        private readonly MainWindow mw;
+        public PhotoView(Photo target, MainWindow mw) { this.target = target; this.mw = mw; }
 
         public string Name => target.Name;
         public string TranslateName => target.TranslateName;
@@ -106,7 +106,7 @@ internal static class UnifiedWrap
         public PetPhotoType Type => (PetPhotoType)(int)target.Type;
         public bool IsUnlock => target.IsUnlock;
         public bool IsStar { get => target.IsStar; set => target.IsStar = value; }
-        public void Unlock() => target.Unlock(UnifiedPluginHost.WindowOf(target)!);
+        public void Unlock() => target.Unlock(mw);
     }
 
     private sealed class WorkView : IWorkInfo
@@ -144,10 +144,10 @@ internal static class UnifiedWrap
     /// </summary>
     internal sealed class SaveView : IPetSave
     {
-        private readonly Func<IGameSave> resolve;
+        private readonly MainWindow mw;
         /// 每次都重新取: GameSavesData 会在读档时被整个替换掉, 缓存住就指向老对象了
-        public SaveView(Func<IGameSave> resolve) { this.resolve = resolve; }
-        private IGameSave S => resolve();
+        public SaveView(MainWindow mw) { this.mw = mw; }
+        private IGameSave S => mw.GameSavesData.GameSave;
 
         public string Name { get => S.Name; set => S.Name = value; }
         public string HostName { get => S.HostName; set => S.HostName = value; }
@@ -187,9 +187,9 @@ internal static class UnifiedWrap
     /// </summary>
     internal sealed class StatisticsView : IPetStatistics
     {
-        private readonly Func<Statistics> resolve;
-        public StatisticsView(Func<Statistics> resolve) { this.resolve = resolve; }
-        private Statistics S => resolve();
+        private readonly MainWindow mw;
+        public StatisticsView(MainWindow mw) { this.mw = mw; }
+        private Statistics S => mw.GameSavesData.Statistics;
 
         public int GetInt(string name, int defaultValue = 0) => S.Find(name) == null ? defaultValue : S[(gint)name];
         public void SetInt(string name, int value) => S[(gint)name] = value;
@@ -205,16 +205,15 @@ internal static class UnifiedWrap
         public void SetString(string name, string? value) => S[(gstr)name] = value;
         public IEnumerable<string> Keys => S.Data.Keys.ToList();
 
-        public event Action<string>? Changed
+        public event Action<string>? Changed;
+
+        internal void OnChanged(Statistics sender, string name, SetObject? value)
+            => Changed?.Invoke(name);
+
+        internal void Detach()
         {
-            add
-            {
-                if (value != null)
-                    S.StatisticChanged += (sender, name, obj) => value(name);
-            }
-            // Statistics 的事件是委托签名不同的另一种, 没法精确摘掉某一个包装,
-            // 这里只能不支持退订 —— 与 Windows 版自己的用法一致(它也从不退订)
-            remove { }
+            S.StatisticChanged -= OnChanged;
+            Changed = null;
         }
     }
 
@@ -224,11 +223,11 @@ internal static class UnifiedWrap
     internal sealed class PluginInfoView : IPluginInfo
     {
         private readonly IModInfo target;
-        private readonly Func<string, bool> isEnabled;
-        public PluginInfoView(IModInfo target, Func<string, bool> isEnabled)
+        private readonly MainWindow mw;
+        public PluginInfoView(IModInfo target, MainWindow mw)
         {
             this.target = target;
-            this.isEnabled = isEnabled;
+            this.mw = mw;
         }
 
         public string Name => target.Name;
@@ -240,6 +239,6 @@ internal static class UnifiedWrap
         public int Ver => target.Ver;
         public string Path => target.Path.FullName;
         public IReadOnlyCollection<string> Tag => target.Tag.ToList();
-        public bool IsEnabled => isEnabled(target.Name);
+        public bool IsEnabled => mw.OnModInfo.Any(x => x.Name == target.Name);
     }
 }

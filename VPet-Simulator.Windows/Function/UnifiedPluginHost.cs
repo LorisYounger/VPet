@@ -1,4 +1,4 @@
-﻿using LinePutScript;
+using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using System;
@@ -22,37 +22,6 @@ namespace VPet_Simulator.Windows;
 /// 所以所有跟存档有关的东西都必须每次调用时重新取, 不能在构造时缓存.
 internal sealed partial class UnifiedPluginHost : IPetHost
 {
-    /// <summary>
-    /// 最近一次在用的窗口
-    /// </summary>
-    /// 包装器里 Item.Use / Photo.Unlock 这些方法要求传 IMainWindow, 而包装器是按
-    /// 对象缓存的、不属于任何一个窗口. 认不出归属时用它兜底.
-    internal static MainWindow? CurrentWindow;
-
-    /// <summary>
-    /// 这件物品是哪个窗口的
-    /// </summary>
-    /// 多开时每个窗口有自己的背包和照片墙, 用错窗口会把效果结算到别的桌宠身上.
-    /// 物品对象只会待在一个窗口的列表里, 所以按归属找得回来.
-    internal static MainWindow? WindowOf(Item item)
-    {
-        foreach (var w in App.MainWindows)
-            if (w.Items.Contains(item))
-                return w;
-        return CurrentWindow;
-    }
-
-    /// <summary>
-    /// 这张照片是哪个窗口的
-    /// </summary>
-    internal static MainWindow? WindowOf(Photo photo)
-    {
-        foreach (var w in App.MainWindows)
-            if (w.Photos.Contains(photo))
-                return w;
-        return CurrentWindow;
-    }
-
     private readonly MainWindow mw;
     private readonly CoreMOD mod;
     private readonly List<IDisposable> closables = new();
@@ -75,9 +44,8 @@ internal sealed partial class UnifiedPluginHost : IPetHost
     {
         this.mw = mw;
         this.mod = mod;
-        CurrentWindow = mw;
-        saveView = new UnifiedWrap.SaveView(() => mw.GameSavesData.GameSave);
-        statisticsView = new UnifiedWrap.StatisticsView(() => mw.GameSavesData.Statistics);
+        saveView = new UnifiedWrap.SaveView(mw);
+        statisticsView = new UnifiedWrap.StatisticsView(mw);
         itemRegistry = new UnifiedItemRegistry(this, mw);
         petView = new UnifiedPetView(mw);
         steam = new SteamCapability(mw);
@@ -91,12 +59,22 @@ internal sealed partial class UnifiedPluginHost : IPetHost
     internal static UnifiedPluginHost? Create(MainWindow mw, CoreMOD mod, Type pluginType)
     {
         var host = new UnifiedPluginHost(mw, mod);
-        var plugin = Activator.CreateInstance(pluginType, host) as UnifiedPlugin;
-        if (plugin == null)
-            return null;
-        host.Plugin = plugin;
         mw.UnifiedHosts.Add(host);
-        return host;
+        mw.GameSavesData.Statistics.StatisticChanged += host.statisticsView.OnChanged;
+        host.itemRegistry.Attach();
+        try
+        {
+            host.Plugin = (UnifiedPlugin)Activator.CreateInstance(pluginType, host)!;
+            return host;
+        }
+        catch
+        {
+            // 构造函数也允许订阅和修改存档；构造失败时撤销本次接入。
+            mw.UnifiedHosts.Remove(host);
+            host.statisticsView.Detach();
+            host.itemRegistry.Detach();
+            throw;
+        }
     }
 
     // ---- 生命周期 ----
@@ -108,6 +86,12 @@ internal sealed partial class UnifiedPluginHost : IPetHost
         // 存档已经读完了, 这时才把挂起的物品行补上
         itemRegistry.FlushPending();
         Plugin.LoadPlugin();
+    }
+
+    internal void OnSaveChanged(Statistics previous)
+    {
+        previous.StatisticChanged -= statisticsView.OnChanged;
+        mw.GameSavesData.Statistics.StatisticChanged += statisticsView.OnChanged;
     }
 
     internal void OnEndGame()
@@ -126,6 +110,8 @@ internal sealed partial class UnifiedPluginHost : IPetHost
                 catch (Exception ex) { Log($"释放失败: {ex.Message}"); }
             }
             closables.Clear();
+            statisticsView.Detach();
+            itemRegistry.Detach();
         }
     }
 
@@ -163,15 +149,13 @@ internal sealed partial class UnifiedPluginHost : IPetHost
 
     // ---- 插件与 MOD ----
 
-    public IPluginInfo Info => new UnifiedWrap.PluginInfoView(mod, IsModEnabled);
-    public IEnumerable<IPluginInfo> Mods => mw.ModInfo.Select(x => (IPluginInfo)new UnifiedWrap.PluginInfoView(x, IsModEnabled));
-    public IEnumerable<IPluginInfo> OnMods => mw.OnModInfo.Select(x => (IPluginInfo)new UnifiedWrap.PluginInfoView(x, IsModEnabled));
+    public IPluginInfo Info => new UnifiedWrap.PluginInfoView(mod, mw);
+    public IEnumerable<IPluginInfo> Mods => mw.ModInfo.Select(x => (IPluginInfo)new UnifiedWrap.PluginInfoView(x, mw));
+    public IEnumerable<IPluginInfo> OnMods => mw.OnModInfo.Select(x => (IPluginInfo)new UnifiedWrap.PluginInfoView(x, mw));
     public IReadOnlyList<string> ModPaths => mw.MODPath.Select(x => x.FullName).ToList();
     public string DataDirectory => ExtensionValue.BaseDirectory;
     public string GetModStorage(string modName) => ExtensionValue.GetMODStorage(modName);
     public string PrefixSave => mw.PrefixSave;
-
-    private bool IsModEnabled(string name) => mw.OnModInfo.Any(x => x.Name == name);
 
     // ---- 设置与存档 ----
 
@@ -187,7 +171,7 @@ internal sealed partial class UnifiedPluginHost : IPetHost
     // ---- 数据表 ----
 
     public IReadOnlyList<IFoodInfo> Foods => mw.Foods.Select(UnifiedWrap.Of).ToList();
-    public IReadOnlyList<IPhotoInfo> Photos => mw.Photos.Select(UnifiedWrap.Of).ToList();
+    public IReadOnlyList<IPhotoInfo> Photos => mw.Photos.Select(x => UnifiedWrap.Of(x, mw)).ToList();
 
     public IReadOnlyList<ITextInfo> Texts(PetTextKind kind) => kind switch
     {
