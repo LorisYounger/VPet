@@ -336,21 +336,7 @@ namespace VPet_Simulator.MutiPlatform
                                 }
                                 if (LoadedDLL.Contains(path))
                                     continue;
-                                X509Certificate2? certificate;
-                                try
-                                {
-                                    if (OperatingSystem.IsWindows() && Win32.AuthenticodeHelper.Verify(tmpfi.FullName))
-#pragma warning disable SYSLIB0057 // 类型或成员已过时
-                                        certificate = new X509Certificate2(tmpfi.FullName);
-#pragma warning restore SYSLIB0057 // 类型或成员已过时
-
-                                    else
-                                        certificate = null;
-                                }
-                                catch
-                                {
-                                    certificate = null;
-                                }
+                                using var certificate = AuthenticodeHelper.GetVerifiedCertificate(tmpfi.FullName);
                                 if (certificate != null)
                                 {
                                     //LBGame 信任的证书
@@ -359,7 +345,6 @@ namespace VPet_Simulator.MutiPlatform
                                             authtype = "[认证]".Translate();
                                         else
                                             authtype = "[V]";
-                                    certificate.Dispose();
                                 }
                                 else
                                 {
@@ -443,10 +428,10 @@ namespace VPet_Simulator.MutiPlatform
 
         public static bool IsLBGameCertificate(X509Certificate2 certificate)
         {
-            return (certificate.Subject == "CN=\"Shenzhen Lingban Computer Technology Co., Ltd.\", O=\"Shenzhen Lingban Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN"
-                                        && certificate.Issuer == "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US")
-                                        || (certificate.Subject == "CN=\"Shenzhen Zero Edition Computer Technology Co., Ltd.\", O=\"Shenzhen Zero Edition Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong, OID.1.3.6.1.4.1.311.60.2.1.3=CN, OID.2.5.4.15=Private Organization"
-                                        && certificate.Issuer == "CN=Certum Extended Validation Code Signing 2021 CA, O=Asseco Data Systems S.A., C=PL");
+            return (AuthenticodeHelper.HasDistinguishedName(certificate.SubjectName, "CN=\"Shenzhen Lingban Computer Technology Co., Ltd.\", O=\"Shenzhen Lingban Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong Province, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong Province, OID.1.3.6.1.4.1.311.60.2.1.3=CN")
+                                        && AuthenticodeHelper.HasDistinguishedName(certificate.IssuerName, "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US"))
+                                        || (AuthenticodeHelper.HasDistinguishedName(certificate.SubjectName, "CN=\"Shenzhen Zero Edition Computer Technology Co., Ltd.\", O=\"Shenzhen Zero Edition Computer Technology Co., Ltd.\", L=Shenzhen, S=Guangdong, C=CN, SERIALNUMBER=91440300MA5H8REU3K, OID.1.3.6.1.4.1.311.60.2.1.1=Shenzhen, OID.1.3.6.1.4.1.311.60.2.1.2=Guangdong, OID.1.3.6.1.4.1.311.60.2.1.3=CN, OID.2.5.4.15=Private Organization")
+                                        && AuthenticodeHelper.HasDistinguishedName(certificate.IssuerName, "CN=Certum Extended Validation Code Signing 2021 CA, O=Asseco Data Systems S.A., C=PL"));
         }
     }
     /// <summary>

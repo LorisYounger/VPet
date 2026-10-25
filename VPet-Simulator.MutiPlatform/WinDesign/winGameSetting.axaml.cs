@@ -378,7 +378,7 @@ namespace VPet_Simulator.MutiPlatform
 
             public bool IsLoaded => CoreMod != null;
             public bool IsPlugin => Tag.Contains("plugin");
-            public bool HasTrustedCertificate { get; }
+            public bool HasTrustedCertificate { get; private set; }
 
             private ModInfo(CoreMOD? coreMod, int loadOrder, string name, string author, long authorID, ulong itemID, string intro, DirectoryInfo path, int gameVer, int ver, HashSet<string> tag)
             {
@@ -393,11 +393,15 @@ namespace VPet_Simulator.MutiPlatform
                 GameVer = gameVer;
                 Ver = ver;
                 Tag = tag;
-                HasTrustedCertificate = !IsPlugin || HasValidPluginSignatures(path);
+                HasTrustedCertificate = !IsPlugin;
             }
 
-
-
+            public void VerifySignatures()
+            {
+                try { HasTrustedCertificate = !IsPlugin || HasValidPluginSignatures(Path); }
+                catch (IOException) { HasTrustedCertificate = false; }
+                catch (UnauthorizedAccessException) { HasTrustedCertificate = false; }
+            }
             private static bool HasValidPluginSignatures(DirectoryInfo directory)
             {
                 string dllPath = System.IO.Path.Combine(directory.FullName, "plugin");
@@ -414,7 +418,7 @@ namespace VPet_Simulator.MutiPlatform
 
                     try
                     {
-                        if (!(OperatingSystem.IsWindows() && Win32.AuthenticodeHelper.Verify(tmpfi.FullName)))
+                        if (!AuthenticodeHelper.Verify(tmpfi.FullName))
                             return false;
                     }
                     catch
@@ -674,7 +678,6 @@ private static async Task DeleteWorkshopDraftAsync(CoreMOD mods, ulong draftItem
 
         private void RenderModList(string? selectedPath, string? searchText)
         {
-            RefreshModInfos();
             ListMod.Items.Clear();
 
             var visibleMods = modInfos.Where(x => x.MatchesSearch(searchText)).ToList();
@@ -769,10 +772,15 @@ private static async Task DeleteWorkshopDraftAsync(CoreMOD mods, ulong draftItem
             ButtonReLS.IsEnabled = false;
             try
             {
-                await RefreshWorkshopListFromSteamAsync();
-            }
-            catch
-            {
+                try { await RefreshWorkshopListFromSteamAsync(); }
+                catch { }
+                RefreshModInfos();
+                var pending = modInfos.ToArray();
+                await Task.Run(() =>
+                {
+                    foreach (var info in pending)
+                        info.VerifySignatures();
+                });
             }
             finally
             {

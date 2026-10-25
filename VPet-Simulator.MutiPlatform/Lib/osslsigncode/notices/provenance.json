@@ -1,0 +1,97 @@
+{
+  "version": "2.14",
+  "source": {
+    "url": "https://github.com/mtrojnar/osslsigncode/archive/refs/tags/2.14.tar.gz",
+    "sha256": "0F033FD6069387D2E489FBD2187E62F624764EB8C2758EE94E3E793E5150B5C5"
+  },
+  "windows": {
+    "url": "https://github.com/mtrojnar/osslsigncode/releases/download/2.14/osslsigncode-2.14-windows-x64-mingw.zip",
+    "sha256": "9A1722AAF62A27852C4EB9C35749A0248065052D0AE0A93D4ED6BB49DEF027F2"
+  },
+  "macOS": [
+    {
+      "tag": "2.14.sonoma",
+      "digest": "027a4f1cf8bc305f6b540386911467314840d6ebcaba2c45024166776d04afa6",
+      "openssl": "https://ghcr.io/v2/homebrew/core/openssl/3/blobs/sha256:f641a0a3028a7ba2ab247767a6961226ba8c1777dac6e986e6fc62ec09e4a62a",
+      "opensslSha": "f641a0a3028a7ba2ab247767a6961226ba8c1777dac6e986e6fc62ec09e4a62a"
+    },
+    {
+      "tag": "2.14.arm64_sonoma",
+      "digest": "7adf7b711352a655d0cc88b9ab0947b687f9b5adc54dcf51fbf62c32814411a6",
+      "openssl": "https://ghcr.io/v2/homebrew/core/openssl/3/blobs/sha256:79774ba3c854f0a9f94d939c628414c9b3dd2ff5eeb1dc61743199c979dd3490",
+      "opensslSha": "79774ba3c854f0a9f94d939c628414c9b3dd2ff5eeb1dc61743199c979dd3490"
+    }
+  ],
+  "files": [
+    {
+      "path": "win-x64/libcrypto-3-x64.dll",
+      "sha256": "B860CB15E2CF8FD102CDF5247F2CC513AD07DB157AEDF0ADDD38F7B4893D1C75",
+      "bytes": 4520960
+    },
+    {
+      "path": "win-x64/libssl-3-x64.dll",
+      "sha256": "10FE3F317FD4D9107152D2805D4F7ABF67296F685F392D0C23EC43F398A0FAF2",
+      "bytes": 551424
+    },
+    {
+      "path": "win-x64/osslsigncode.exe",
+      "sha256": "BC4BDEAC3EDC01983FA5DE241584C8D5630521DE1848D854028E025D78E8D00A",
+      "bytes": 324954
+    },
+    {
+      "path": "win-x64/vcruntime140.dll",
+      "sha256": "D1F4225DF2CD877DBF130D5668A021DCE3F94118455FF5EC952061C30AFC9CE7",
+      "bytes": 178616
+    },
+    {
+      "path": "win-x64/zlib1.dll",
+      "sha256": "09F2CD41E3F5BB18FE5F3F9D5F580560D45D498CC2EEAFBF453C52CBDB9D2D29",
+      "bytes": 90112
+    },
+    {
+      "path": "linux-x64/osslsigncode",
+      "sha256": "A19889EFE80E9E5525944072363FF7B7023B1100C8CB814E48EB0A33CE55E395",
+      "bytes": 5517496
+    },
+    {
+      "path": "osx-x64/libcrypto.3.dylib",
+      "sha256": "F9AADCEE9BD05A574C59FFBE1A822CDA4EFC3259FAA0B3C5C961972B1968BF7B",
+      "bytes": 5174800
+    },
+    {
+      "path": "osx-x64/libssl.3.dylib",
+      "sha256": "7EAA3782BA3701E8FD2C61BE47E6BF4B36906B40C401087819EAAC254DCF5355",
+      "bytes": 879712
+    },
+    {
+      "path": "osx-x64/osslsigncode",
+      "sha256": "12ECAFAD2A44BBBCEE20B91958CDAB9C13C86FA04D668E15CC7C53563AFFDB73",
+      "bytes": 202336
+    },
+    {
+      "path": "osx-arm64/libcrypto.3.dylib",
+      "sha256": "896D836110F68B5A0F026BD606D90335077B4CE3AE73EECCEF91C2D02223A16B",
+      "bytes": 4853136
+    },
+    {
+      "path": "osx-arm64/libssl.3.dylib",
+      "sha256": "F9C7A5365B12EDF098B80527BB2BFF25E9AA580A4DF9F2F618470E0D99FC9C3F",
+      "bytes": 900736
+    },
+    {
+      "path": "osx-arm64/osslsigncode",
+      "sha256": "31726E70D83CC44FA823283A5DB2281D1C0E4B36651E44A2D343FF4E655D392E",
+      "bytes": 222960
+    },
+    {
+      "path": "certs/microsoft-root-2010.pem",
+      "sha256": "DA8C74F39EC011783EA38CAF0E9F4849167D7A599FAF4D42F5057FB0B14D94B7",
+      "bytes": 2114
+    },
+    {
+      "path": "certs/microsoft-root-2011.pem",
+      "sha256": "4AE85DA33C1390F7733DBD8CEB8B7BE8B102EFBA999ACA69D4516A1C769221EC",
+      "bytes": 2114
+    }
+  ]
+}

@@ -39,6 +39,7 @@
 		<PlatformTarget Condition="'$(RuntimeIdentifier)' == 'osx-arm64'">ARM64</PlatformTarget>
 		<SteamworksBinding Condition="'$(RuntimeIdentifier)' == 'win-x64'">Win64</SteamworksBinding>
 		<SteamworksBinding Condition="'$(RuntimeIdentifier)' == 'linux-x64' or '$(RuntimeIdentifier)' == 'osx-x64' or '$(RuntimeIdentifier)' == 'osx-arm64'">Posix</SteamworksBinding>
+		<OsslSignCodeDirectory Condition="'$(OsslSignCodeDirectory)' == ''">$(MSBuildProjectDirectory)/Lib/osslsigncode/$(RuntimeIdentifier)</OsslSignCodeDirectory>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -50,6 +51,7 @@
 		<PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
 		<PackageReference Include="Avalonia.Themes.Simple" Version="12.1.1" />
 		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.1" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
 	</ItemGroup>
 
 	<!-- 官方 Facepunch.Steamworks 2.5.2 的 net6.0 程序集也可由 net8.0 宿主引用. -->
@@ -90,6 +92,25 @@
 
   <ItemGroup>
     <Compile Include="../VPet-Simulator.Windows/Function/WorkshopVerificationClient.cs" Link="Function/WorkshopVerificationClient.cs" />
-    <Compile Include="../VPet-Simulator.Windows/Function/AuthenticodeHelper.cs" Link="Function/AuthenticodeHelper.cs" />
+    <EmbeddedResource Include="Lib/osslsigncode/certs/microsoft-root-2010.pem" LogicalName="Authenticode.microsoft-root-2010.pem" />
+    <EmbeddedResource Include="Lib/osslsigncode/certs/microsoft-root-2011.pem" LogicalName="Authenticode.microsoft-root-2011.pem" />
+    <Content Include="$(OsslSignCodeDirectory)/**/*" Link="tools/osslsigncode/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Lib/osslsigncode/notices/**/*" Link="tools/osslsigncode/notices/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Lib/osslsigncode/sources/**/*" Link="tools/osslsigncode/sources/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
+
+  <Target Name="ValidateBundledOsslSignCode" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <OsslSignCodeName Condition="'$(RuntimeIdentifier)' == 'win-x64'">osslsigncode.exe</OsslSignCodeName>
+      <OsslSignCodeName Condition="'$(RuntimeIdentifier)' != 'win-x64'">osslsigncode</OsslSignCodeName>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(OsslSignCodeDirectory)/$(OsslSignCodeName)')" Text="缺少 $(RuntimeIdentifier) 内置 osslsigncode：$(OsslSignCodeDirectory)/$(OsslSignCodeName)" />
+  </Target>
+
+  <Target Name="MakeBundledOsslSignCodeExecutable" AfterTargets="CopyFilesToOutputDirectory" Condition="!$([MSBuild]::IsOSPlatform('Windows')) and '$(RuntimeIdentifier)' != 'win-x64'">
+    <Exec Command="chmod +x &quot;$(TargetDir)tools/osslsigncode/osslsigncode&quot;" />
+  </Target>
+  <Target Name="MakePublishedOsslSignCodeExecutable" AfterTargets="Publish" Condition="!$([MSBuild]::IsOSPlatform('Windows')) and '$(RuntimeIdentifier)' != 'win-x64'">
+    <Exec Command="chmod +x &quot;$(PublishDir)tools/osslsigncode/osslsigncode&quot;" />
+  </Target>
 </Project>

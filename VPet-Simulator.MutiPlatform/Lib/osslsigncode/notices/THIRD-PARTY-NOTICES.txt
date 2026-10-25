@@ -1,0 +1,43 @@
+Bundled Authenticode verifier: osslsigncode 2.14
+
+osslsigncode is a separate executable distributed under GPL-3.0-or-later,
+with the OpenSSL linking exception in osslsigncode-LICENSE.txt.
+The complete license is in GPL-3.0.txt. Corresponding upstream source and
+build information accompany the application in ../sources/.
+Upstream: https://github.com/mtrojnar/osslsigncode/releases/tag/2.14
+
+Windows x64: upstream osslsigncode-2.14-windows-x64-mingw.zip;
+OpenSSL 3.1.2 (Apache-2.0), zlib 1.2.13 (zlib license).
+The Microsoft-signed Visual C++ runtime vcruntime140.dll 14.51.36247.0 is
+included app-local, from the installed Microsoft Visual C++ Redistributable.
+Microsoft runtime redistribution is governed by the applicable Microsoft
+Software License Terms, not the osslsigncode GPL license:
+https://learn.microsoft.com/cpp/windows/redistributing-visual-cpp-files
+
+Linux x64: osslsigncode 2.14 built on Ubuntu 22.04 with GCC 11.4;
+OpenSSL 3.0.2 (Ubuntu libssl-dev 3.0.2-0ubuntu1.30) and zlib 1.2.11
+(Ubuntu zlib1g-dev 1:1.2.11.dfsg-2ubuntu9.2) are statically linked.
+Only the system glibc/ELF loader remain dynamic dependencies.
+
+macOS x64 / arm64: Homebrew osslsigncode 2.14 Sonoma bottles and matching
+OpenSSL 3.6.3 bottles, minimum macOS 14.0. The original signed binaries
+are preserved; the application sets DYLD_LIBRARY_PATH for the verifier
+child process to use the included OpenSSL dylibs without Homebrew.
+The Homebrew build formula (including its packaging-only patch) is in
+../sources/homebrew-osslsigncode.rb. Native macOS execution and final
+application signing/notarization have not been tested on this Windows host.
+
+OpenSSL: Apache-2.0; see OpenSSL-LICENSE.txt and OpenSSL-Windows-LICENSE.txt.
+zlib: see zlib-LICENSE.txt.
+Exact download locations, archive hashes and bundled file hashes are in
+provenance.json. No private signing keys are distributed.
+
+Microsoft root certificates embedded in the host are public certificates,
+cross-checked against https://www.microsoft.com/pkiops/docs/repository.htm
+on 2026-10-25:
+  Microsoft Root Certificate Authority 2011 (code signing):
+    SHA-1 8F43288AD272F3103B6FB1428485EA3014C0BCFE
+  Microsoft Root Certificate Authority 2010 (timestamping):
+    SHA-1 3B1EFD3A66EA28B16697394703A72CA340A05BD5
+These fingerprints identify the roots; they do not select a file digest
+algorithm or authorize trust based on certificate names.
