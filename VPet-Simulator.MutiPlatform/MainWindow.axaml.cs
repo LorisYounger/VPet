@@ -153,12 +153,13 @@ public partial class MainWindow : Window
             L = point.X; T = point.Y;
         }
 
-        Left = L;
-        Top = T;
+        WindowPositioning.SetPosition(this, L, T, Scaling);
 
         // control position inside bounds
         MWController = new MWController(this);
         Core.Controller = MWController;
+        Log($"窗口后端={TryGetPlatformHandle()?.HandleDescriptor ?? "Wayland"} 全局定位={MWController.CanPositionWindow}");
+        ApplyAllWorkspaces();
         _ = Task.Run(() =>
         {
             double dist;
@@ -591,9 +592,7 @@ public partial class MainWindow : Window
 
         ShowLoading("Loading Translate");
         //加载语言 (与 Windows 版同序: 各 MOD 先 AddCulture, 全部扫完再 LoadCulture)
-        if (App.LanguageOverride != null && App.UiWalk != null)
-            LocalizeCore.LoadCulture(App.LanguageOverride);
-        else if (Set.Language == "null")
+        if (Set.Language == "null")
         {
             LocalizeCore.LoadDefaultCulture();
             if (LocalizeCore.CurrentCulture == "null")
@@ -626,7 +625,7 @@ public partial class MainWindow : Window
         Core.Graph = await Task.Run(() => petloader.Graph(Set.Resolution));
         Log($"动画扫描完成, 耗时={(DateTime.Now - started).TotalSeconds:0.0}秒 个数={petloader.GraphCount}");
         Core.Graph.GraphFailed += Graph_GraphFailed;
-        Main = new Main(Core);
+        Main = new Main(Core) { UseSystemWindowDrag = !MWController.CanPositionWindow };
         AttachVoicePlayer();
         Main.Load_2_TouchEvent();
 
@@ -1300,14 +1299,6 @@ public partial class MainWindow : Window
         if (Set.DeBug)
             ActivityLogs.CollectionChanged += ActivityLogs_WriteFile;
 
-        // 界面走查 (调试参数): 桌宠跑起来之后再按脚本注入输入. 走查本身跑在 UI 线程上 (中间用 await 让出)
-        //走查脚本只由第一只桌宠跑 (脚本里多开出来的那只不能再跑一遍, 否则会一直多开下去)
-        if (App.UiWalk is { } walk && App.MainWindows[0] == this)
-            _ = Dispatcher.InvokeAsync(async () =>
-            {
-                await Task.Delay(1000);
-                await UiWalk.RunAsync(this, Main, walk.Script, walk.Output);
-            });
     }
 
     /// <summary>
@@ -1379,7 +1370,7 @@ public partial class MainWindow : Window
     /// 这四个属性把两边接起来, MWController 与各窗口的代码才能与 Windows 版逐字相同.
     /// 优先取屏幕自己的缩放而不是 RenderScaling: 窗口刚 Opened 时 RenderScaling 还可能是 1 (尚未落到具体屏幕上)
     /// 窗口关掉之后 (Closed 里的 Save 还要读 Left/Top 记退出位置) 原生窗口已经没了, 用最后一次记下的值 —— WPF 关了窗口 Left/Top 照样能读
-    private double Scaling
+    internal double Scaling
     {
         get
         {
@@ -1527,6 +1518,10 @@ public partial class MainWindow : Window
                 FileName = Environment.ProcessPath ?? System.IO.Path.ChangeExtension(System.Reflection.Assembly.GetExecutingAssembly().Location, "exe"),
                 UseShellExecute = true
             };
+            if (Path.GetFileNameWithoutExtension(psi.FileName) == "dotnet")
+                psi.ArgumentList.Add(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            if (OperatingSystem.IsLinux() && !MWController.CanPositionWindow)
+                psi.ArgumentList.Add("wayland");
             Process.Start(psi);
         }
         else
@@ -1750,7 +1745,8 @@ public partial class MainWindow : Window
                 Foods.FindAll(x => x.Star).ForEach(x => list.Add(x.Name));
                 Set["betterbuy"]["star"].info = string.Join(",", list);
             }
-            Set.StartRecordLastPoint = new Point(Dispatcher.Invoke(() => Left), Dispatcher.Invoke(() => Top));
+            if (MWController?.CanPositionWindow == true)
+                Set.StartRecordLastPoint = new Point(Dispatcher.Invoke(() => Left), Dispatcher.Invoke(() => Top));
             if (PrefixSave == "" && File.Exists(Path.Combine(ExtensionValue.BaseDirectory, "Setting.lps")))
             {//对于主设置的备份
                 if (new FileInfo(Path.Combine(ExtensionValue.BaseDirectory, "Setting.lps")).Length < 10)

@@ -262,6 +262,11 @@ public partial class Main : UserControl, GraphHelper.IMoveHost, IDisposable
     /// </summary>
     private bool SmartMove;
 
+    /// <summary>原生 Wayland 使用合成器拖拽，不启用依赖全局坐标的自动移动。</summary>
+    public bool UseSystemWindowDrag { get; set; }
+
+    private PointerPressedEventArgs? systemMovePress;
+
     /// <summary>
     /// 设置移动模式
     /// </summary>
@@ -271,6 +276,13 @@ public partial class Main : UserControl, GraphHelper.IMoveHost, IDisposable
     public void SetMoveMode(bool AllowMove, bool smartMove, int SmartMoveInterval)
     {
         MoveTimer.Enabled = false;
+        if (UseSystemWindowDrag)
+        {
+            MoveTimerSmartMove = false;
+            SmartMove = false;
+            SmartMoveTimer.Stop();
+            return;
+        }
         if (AllowMove)
         {
             MoveTimerSmartMove = true;
@@ -497,6 +509,7 @@ public partial class Main : UserControl, GraphHelper.IMoveHost, IDisposable
         MainGrid.PointerPressed += MainGrid_PointerPressed;
         MainGrid.PointerReleased += MainGrid_MouseLeftButtonUp;
         MainGrid.PointerMoved += MainGrid_PointerMoved;
+        MainGrid.PointerCaptureLost += MainGrid_PointerCaptureLost;
         MainGrid.PointerEntered += MainGrid_MouseEnter;
         MainGrid.PointerExited += MainGrid_MouseLeave;
     }
@@ -540,13 +553,16 @@ public partial class Main : UserControl, GraphHelper.IMoveHost, IDisposable
     private void MainGrid_MouseLeftButtonDown(object? sender, PointerPressedEventArgs e)
     {
         e.Pointer.Capture(MainGrid);
+        systemMovePress = UseSystemWindowDrag ? e : null;
         isPress = true;
         CountNomal = 0;
+        var pth = DateTime.Now.Ticks;
+        presstime = pth;
         Task.Run(() =>
         {
-            var pth = DateTime.Now.Ticks;
-            presstime = pth;
             Thread.Sleep(Core.Controller!.PressLength);
+            if (presstime != pth)
+                return; // 系统拖拽或丢失捕获后，不再补发点击/长按。
             var mp = lastPointerPosition;
             if (isPress && presstime == pth)
             {//历遍长按事件
@@ -583,6 +599,7 @@ public partial class Main : UserControl, GraphHelper.IMoveHost, IDisposable
         if (FromToolBar(e))
             return;
         isPress = false;
+        systemMovePress = null;
         e.Pointer.Capture(null);
         if (DisplayType != null && DisplayType.Type.ToString().StartsWith("Raised", StringComparison.Ordinal))
         {
@@ -613,6 +630,19 @@ public partial class Main : UserControl, GraphHelper.IMoveHost, IDisposable
         if (DisplayType == null || !DisplayType.Type.ToString().StartsWith("Raised", StringComparison.Ordinal))
             return;
 
+        if (systemMovePress is { } press && TopLevel.GetTopLevel(this) is Window window)
+        {
+            // 保留按下事件中的 Wayland serial，交给合成器移动。系统接管后未必再收到抬起事件，
+            // 因此先结束应用的提起状态，避免桌宠在拖动后卡住。
+            systemMovePress = null;
+            presstime = 0;
+            isPress = false;
+            rasetype = -1;
+            DisplayRaising();
+            window.BeginMoveDrag(press);
+            return;
+        }
+
         var x = lastPointerPosition.X - Core.Graph!.GraphConfig!.RaisePoint[(int)Core.Save!.Mode].X;
         var y = lastPointerPosition.Y - Core.Graph!.GraphConfig!.RaisePoint[(int)Core.Save!.Mode].Y;
         if (Math.Abs(x) < 1)
@@ -622,6 +652,20 @@ public partial class Main : UserControl, GraphHelper.IMoveHost, IDisposable
         Core.Controller!.MoveWindows(x, y);
         if (Math.Abs(x) + Math.Abs(y) > 20 && rasetype >= 1)
             rasetype = 0;
+    }
+
+    private void MainGrid_PointerCaptureLost(object? sender, PointerCaptureLostEventArgs e)
+    {
+        if (systemMovePress == null)
+            return;
+        systemMovePress = null;
+        presstime = 0;
+        isPress = false;
+        if (DisplayType?.Type.ToString().StartsWith("Raised", StringComparison.Ordinal) == true)
+        {
+            rasetype = -1;
+            DisplayRaising();
+        }
     }
 
     private int wavetimes = 0;

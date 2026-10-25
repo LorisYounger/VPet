@@ -394,6 +394,14 @@ public partial class MainWindow
     private NativeMenuItem NotifyIcon_HitThrough = null!;
     internal NativeMenuItem NotifyIcon_TopMost = null!;
 
+    internal void ApplyAllWorkspaces()
+    {
+        LinuxWorkspaces.Apply(this, Set.AllWorkspaces);
+        foreach (var window in Windows)
+            if (window is MPFriends visitor)
+                LinuxWorkspaces.Apply(visitor, Set.AllWorkspaces);
+    }
+
     /// <summary>
     /// 是否鼠标穿透
     /// </summary>

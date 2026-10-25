@@ -30,8 +30,30 @@ dotnet run --project VPet-Simulator.MutiPlatform
 **鼠标穿透 (托盘菜单 / 设置里的 "鼠标穿透") 在 Linux/macOS 上是空操作.** 菜单项和状态照旧, 但 Windows
 上靠的是 Win32 的 `WS_EX_TRANSPARENT`, 其他平台本期没有对应实现 (`MainWindow.SetTransparentHitThrough`).
 
-**原生 Wayland 会话下桌宠不能自己挪窗口.** Wayland 禁止应用自设全局坐标, 那种会话下 "移动 / 贴边 /
-重置位置" 都是空操作 (`MWController.CanPositionWindow`); 有 XWayland (`DISPLAY` 可用) 时一切正常.
+**Linux 默认使用 X11/XWayland。** 即使登录的是 GNOME Wayland 会话，默认也通过 XWayland 运行。
+主桌宠和联机访客的移动均成对提交 X/Y 坐标，避免 X11 异步更新位置时横向位移被下一次写入覆盖。
+
+**跨工作区显示：** Linux 的“设置 → 图形 → 在所有工作区显示桌宠和访客”默认开启，
+对主桌宠、已打开及随后加入的联机访客发送 EWMH `_NET_WM_DESKTOP` 请求。
+关闭时请求回到当前工作区；设置随存档保存。实际效果由窗口管理器决定，置顶是独立设置。
+
+**原生 Wayland 实验模式：** 按 VPet 的 LinePutScript 启动参数格式，传入 `wayland` 或 `wayland:|`：
+
+```bash
+./VPet-Simulator.MutiPlatform wayland
+./VPet-Simulator.MutiPlatform 'wayland:|'
+```
+
+Steam 启动选项填写 `wayland` 即可。该开关只在 Linux 生效，删除参数恢复 X11/XWayland。
+它显式选择 `Avalonia.Wayland`，没有 Wayland 服务时会启动失败，不会静默切回 X11。
+合成器需要支持 Avalonia 要求的协议版本（包括 `xdg_wm_base >= 3`）；老版本 WSLg/Weston 可能不满足。
+软件内部重启会保留原生 Wayland 模式。
+
+- 主桌宠和访客：长按可提起区域，出现提起动作后移动鼠标，由合成器拖动窗口。
+  系统接管时会结束应用内的提起状态；点击和其他长按交互仍保留。
+- 自动走动、贴边、程序定位、位置恢复以及程序置顶不可用。不会把无效全局坐标保存为退出位置。
+- 跨工作区开关不可用。在 GNOME 窗口菜单中选择“始终位于可见工作区”；自动设置需要桌面扩展配合。
+- 这不是对 #582 聊天框问题的独立修复；原生 Wayland 的透明窗口、弹出菜单和输入仍需实机验收。
 
 **设置 → 关于 里的鸣谢仍列着 Panuon.WPF.UI.** 页面文案与 Windows 版逐字相同 (文案对齐门禁要求如此),
 跨平台版实际没有引用 Panuon —— 它的样式由 `Core.MutiPlatform/Display/basestyle.axaml` 等样式表提供.
@@ -56,9 +78,4 @@ dotnet publish VPet-Simulator.MutiPlatform -c Release -r osx-arm64 --self-contai
 **旧式 WPF MOD (`MainPlugin`) 不在这里跑.** 跨平台 MOD 走统一契约 `VPet-Simulator.Unified` (命名空间 `VPet_Simulator.Unified.Interface`),
 同一个 dll 两个宿主都认; Windows 版的旧 MOD 不受影响.
 
-## 调试开关
-
-- `--ui-walk <脚本> <输出目录> [--language zh-Hans]`: 界面走查 (与 Windows 版 `Set.DeBug` / `winConsole`
-  同性质). 脚本每行一条命令 (`open winGameSetting 1` / `select` / `winclick` / `shotwindows` / `menutree` /
-  `getprop` / `dumpwin` / `quit` …), 见 `DevTools/UiWalk.cs`. 仓库外的门禁脚本用它导出菜单树和截图.
-- 运行日志在运行文件所在目录的 `vpet.log`.
+运行日志在运行文件所在目录的 `vpet.log`.

@@ -149,7 +149,7 @@ CLR 类型. 因为代码型 MOD 不需要跨平台, 两侧永不同时加载、�
 | `Core/Display/Theme.xaml` `basestyle.xaml`, `Interface/ResourceStyle.xaml` | `Core.MutiPlatform/Display/Theme.axaml` `basestyle.axaml` `ResourceStyle.axaml` | 键名不变; Windows 里带 `x:Key` 的 `Style` 在这边是同 Key 的 `ControlTheme` |
 | `Panuon.WPF.UI` | (无) | 不做替身工程. `pu:` 用法按下面的映射表机械替换成原生控件 + 预设样式, `Display/Shell/` 下补几个 Panuon 独有的控件 (`VPetWindow` / `Switch` / `Pagination` / `RingProgress` / `MessageBoxX`) |
 | `Facepunch.Steamworks` (Win64/Win32) | `aelsi2.Facepunch.Steamworks` (Posix 分支) | 托管 API 相同, `SteamCapability` / `SteamMultiplayer` / 访客表全部原文复制 |
-| `Set.DeBug` + `winConsole` | 同名, 另加 `DevTools/UiWalk.cs` | `--ui-walk <脚本> <输出目录>` 是仓库外门禁用的走查开关, 见"怎么验证" |
+| `Set.DeBug` + `winConsole` | 同名 | 使用现有开发控制台 |
 
 命名空间**不改** (`VPet_Simulator.Core.MutiPlatform` / `VPet_Simulator.MutiPlatform`), 所以每个文件
 里 `using` / `x:Class` 那一行是允许不同的"Windows 独有行". 旧式 WPF MOD (`MainPlugin`) 不在跨平台跑,
@@ -370,15 +370,11 @@ MOD 的动画悄悄不播.
 
 **7. 菜单对齐门禁**
 
-跨平台宿主用 `--ui-walk <脚本> <输出目录>` 启动真实程序 (真 `mod/0000_core`), 脚本里的 `menutree`
-命令把工具栏五个菜单 + 托盘的树按源语言导出, 与手工从 Windows 源码推导的 golden 逐行 diff.
+启动使用真实 `mod/0000_core` 的跨平台宿主，逐项对照 Windows 版的工具栏五个菜单和托盘菜单。
 
 **界面走查**
 
-`--ui-walk` 还带 `open <窗口>` / `select` / `winclick` / `shotwindows` 这类命令, 用进程内注入的指针
-事件走遍每个窗口每个页签并 `RenderTargetBitmap` 截图, 与 Windows 构建并排对照. 它不动真鼠标, 所以
-指针路由类的缺陷 (菜单叶子项按下被宿主抢走捕获之类) 要靠手工清单; 截图里翻倍的文字是透明窗口
-渲染到位图的假象, 不是缺陷. 访客表用同一个 Steam 账号开两个进程 (主持人 + `--prefix guest` 的访客)
-互相进房间来验 (`open winMutiPlayer <房间号>`), 好友桌宠窗口/访客条/给好友买的商店拿自己当访客画出来看.
+通过真实鼠标操作逐个检查窗口和页签，与 Windows 构建并排对照，特别检查菜单点击、拖拽和指针捕获。
+访客表通过实际 Steam 联机流程验证，检查好友桌宠窗口、访客条及给好友购买物品的商店。
 
 以前的 `--probe` 渲染探针画的是手搓的样例控件, 从没画过真实工具栏/菜单/桌宠, 已经删掉.

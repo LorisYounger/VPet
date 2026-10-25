@@ -66,6 +66,10 @@ namespace VPet_Simulator.MutiPlatform
             //跨平台: ColumnDefinition 不进名字域, 拿不到 SettingMenuWidth 字段, 按位置取
             ((Grid)Content!).ColumnDefinitions[0].Width = new GridLength(LocalizeCore.GetDouble("SettingMenuWidth", 150));
             TopMostBox.IsChecked = mw.Set.TopMost;
+            LinuxDesktopPanel.IsVisible = OperatingSystem.IsLinux();
+            AllWorkspacesBox.IsChecked = mw.Set.AllWorkspaces;
+            AllWorkspacesBox.IsEnabled = LinuxWorkspaces.IsSupported(mw);
+            WaylandNotice.IsVisible = !mw.MWController.CanPositionWindow;
             if (mw.Set.IsBiggerScreen)
             {
                 FullScreenBox.IsChecked = true;
@@ -270,6 +274,8 @@ namespace VPet_Simulator.MutiPlatform
             ListMenuItems.Add(listmenuswith("开机启动", 0, StartUpBox));
             ListMenuItems.Add(listmenuswith("宠物动画", 0, PetBox));
             ListMenuItems.Add(listmenuswith("隐藏窗口", 0, SwitchHideFromTaskControl));
+            if (OperatingSystem.IsLinux())
+                ListMenuItems.Add(listmenuswith("工作区", 0, AllWorkspacesBox));
 
             ListMenuItems.Add(listmenuswith("自动保存频率", 1, CBAutoSave));
             ListMenuItems.Add(listmenuswith("从备份中还原", 1, numBackupSaveMaxNum));
@@ -1324,8 +1330,7 @@ private static async Task DeleteWorkshopDraftAsync(CoreMOD mods, ulong draftItem
                 var rect = mwCtrl.ScreenBorder;
                 wma.Width = rect.Width;
                 wma.Height = rect.Height;
-                wma.Left = rect.X;
-                wma.Top = rect.Y;
+                WindowPositioning.SetPosition(wma, rect.X, rect.Y, wma.RenderScaling);
             }
             wma.ShowDialog();
         }
@@ -1353,6 +1358,14 @@ private static async Task DeleteWorkshopDraftAsync(CoreMOD mods, ulong draftItem
         }
 
         //跨平台: Avalonia 的 Switch 只有 IsCheckedChanged (勾上取消都触发), Windows 版分 Checked/Unchecked 两个处理器, 这里在入口分流
+        private void AllWorkspacesBox_Checked(object? sender, RoutedEventArgs e)
+        {
+            if (!AllowChange || !LinuxWorkspaces.IsSupported(mw))
+                return;
+            mw.Set.AllWorkspaces = AllWorkspacesBox.IsChecked == true;
+            mw.ApplyAllWorkspaces();
+        }
+
         private void TopMostBox_Checked(object? sender, RoutedEventArgs e)
         {
             if (!AllowChange)

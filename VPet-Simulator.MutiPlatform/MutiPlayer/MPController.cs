@@ -70,8 +70,7 @@ namespace VPet_Simulator.MutiPlatform
                 return;
             mp.Dispatcher.Invoke(() =>
             {
-                mp.Left += X * ZoomRatio;
-                mp.Top += Y * ZoomRatio;
+                WindowPositioning.MoveBy(mp, X * ZoomRatio, Y * ZoomRatio, mp.Scaling);
             });
         }
 
@@ -91,22 +90,25 @@ namespace VPet_Simulator.MutiPlatform
                 return;
             mp.Dispatcher.Invoke(() =>
             {
+                double x = 0, y = 0;
                 if (GetWindowsDistanceUp() < -0.25 * mp.ActualHeight && GetWindowsDistanceDown() < mw.MWController.PrimaryScreen.Height)
                 {
-                    MoveWindows(0, -GetWindowsDistanceUp() / ZoomRatio);
+                    y = -GetWindowsDistanceUp() / ZoomRatio;
                 }
                 else if (GetWindowsDistanceDown() < -0.25 * mp.ActualHeight && GetWindowsDistanceUp() < mw.MWController.PrimaryScreen.Height)
                 {
-                    MoveWindows(0, GetWindowsDistanceDown() / ZoomRatio);
+                    y = GetWindowsDistanceDown() / ZoomRatio;
                 }
                 if (GetWindowsDistanceLeft() < -0.25 * mp.ActualWidth && GetWindowsDistanceRight() < mw.MWController.PrimaryScreen.Width)
                 {
-                    MoveWindows(-GetWindowsDistanceLeft() / ZoomRatio, 0);
+                    x = -GetWindowsDistanceLeft() / ZoomRatio;
                 }
                 else if (GetWindowsDistanceRight() < -0.25 * mp.ActualWidth && GetWindowsDistanceLeft() < mw.MWController.PrimaryScreen.Width)
                 {
-                    MoveWindows(GetWindowsDistanceRight() / ZoomRatio, 0);
+                    x = GetWindowsDistanceRight() / ZoomRatio;
                 }
+                if (x != 0 || y != 0)
+                    MoveWindows(x, y);
             });
         }
         public bool CheckPosition() => mw.MWController.CanPositionWindow && mp.Dispatcher.Invoke(() =>

@@ -35,7 +35,7 @@ namespace VPet_Simulator.MutiPlatform;
 public partial class MPFriends : Window, IMPFriend
 {
     //跨平台: 与 MainWindow 相同的四个换算属性, 让 MPController 的代码与 Windows 版逐字相同
-    private double Scaling
+    internal double Scaling
     {
         get
         {
@@ -93,6 +93,7 @@ public partial class MPFriends : Window, IMPFriend
         try
         {
             InitializeComponent();
+            Opened += (_, _) => LinuxWorkspaces.Apply(this, mw.Set.AllWorkspaces);
             //跨平台: Avalonia 没有 PreviewKeyDown, 用隧道路由挂
             tbTalk.AddHandler(KeyDownEvent, tbTalk_KeyDown, RoutingStrategies.Tunnel);
 
@@ -116,8 +117,7 @@ public partial class MPFriends : Window, IMPFriend
                 L = point.X; T = point.Y;
             }
 
-            Left = L;
-            Top = T;
+            WindowPositioning.SetPosition(this, L, T, Scaling);
 
             // control position inside bounds
             Core.Controller = new MPController(this, mw);
@@ -403,7 +403,7 @@ public partial class MPFriends : Window, IMPFriend
 
             //跨平台: 跨平台的 PetLoader.Graph 没有 Dispatcher 参数; 消息栏/工具栏由 Main 的构造函数建好并挂在 UIGrid 上, 不用再建
             Core.Graph = petloader.Graph(mw.Set.Resolution);
-            Main = new Main(Core);
+            Main = new Main(Core) { UseSystemWindowDrag = !mw.MWController.CanPositionWindow };
             Core.TouchEvent.Add(new TouchArea(Core.Graph!.GraphConfig.TouchHeadLocate, Core.Graph!.GraphConfig.TouchHeadSize, () => { DisplayTouchHead(); return true; }));
             Core.TouchEvent.Add(new TouchArea(Core.Graph!.GraphConfig.TouchBodyLocate, Core.Graph!.GraphConfig.TouchBodySize, () => { DisplayTouchBody(); return true; }));
             for (int i = 0; i < 4; i++)
@@ -916,8 +916,8 @@ public partial class MPFriends : Window, IMPFriend
     {
         Main?.CleanState();
         Main?.DisplayToNomal();
-        Left = (mw.MWController.PrimaryScreen.Width - ActualWidth) / 2;
-        Top = (mw.MWController.PrimaryScreen.Height - ActualHeight) / 2;
+        WindowPositioning.SetPosition(this, (mw.MWController.PrimaryScreen.Width - ActualWidth) / 2,
+            (mw.MWController.PrimaryScreen.Height - ActualHeight) / 2, Scaling);
     }
     private Image? hashcheckimg;
 

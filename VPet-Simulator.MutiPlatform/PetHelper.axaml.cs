@@ -113,8 +113,7 @@ namespace VPet_Simulator.MutiPlatform
         }
         public void SetLocation()
         {
-            this.Left = mw.Left + x;
-            this.Top = mw.Top + y;
+            WindowPositioning.SetPosition(this, mw.Left + x, mw.Top + y, RenderScaling);
         }
 
         private void WindowX_MouseRightButtonDown(object? sender, PointerPressedEventArgs e)

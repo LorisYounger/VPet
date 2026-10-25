@@ -27,7 +27,7 @@ namespace VPet_Simulator.MutiPlatform
             this.mw = mw;
             _isPrimaryScreen = mw.Set.MoveAreaDefault;
             _screenBorder = mw.Set.MoveArea;
-            CanPositionWindow = DetectPositioningSupport();
+            CanPositionWindow = WindowPositioning.CanPosition(mw);
         }
 
         /// <summary>
@@ -42,22 +42,6 @@ namespace VPet_Simulator.MutiPlatform
         /// 用极大值会溢出成负无穷, 后续再参与运算就变成 NaN, 而 NaN 的比较全为 false,
         /// 可能走到意料之外的分支. 用一个有限的大数最安全.
         internal const double FarAway = 1e5;
-
-        /// <summary>
-        /// 探测当前平台能否自设窗口位置
-        /// </summary>
-        /// 判据是"有没有 X11 显示服务可用": Linux 上只要 DISPLAY 能连通(原生 X11 或
-        /// XWayland 都算), Avalonia 就会走 X11 后端, 绝对定位可用; 只有在纯原生
-        /// Wayland 会话下才需要降级.
-        private static bool DetectPositioningSupport()
-        {
-            if (OperatingSystem.IsWindows() || OperatingSystem.IsMacOS())
-                return true;
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DISPLAY")))
-                return true;
-            // 只有 WAYLAND_DISPLAY 而没有 DISPLAY, 说明没有 XWayland 兜底
-            return string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WAYLAND_DISPLAY"));
-        }
 
         private Rectangle _screenBorder;
         private bool _isPrimaryScreen = true;
@@ -166,8 +150,7 @@ namespace VPet_Simulator.MutiPlatform
                 return;
             mw.Dispatcher.Invoke(() =>
             {
-                mw.Left += X * ZoomRatio;
-                mw.Top += Y * ZoomRatio;
+                WindowPositioning.MoveBy(mw, X * ZoomRatio, Y * ZoomRatio, mw.Scaling);
             });
         }
 
@@ -268,22 +251,25 @@ namespace VPet_Simulator.MutiPlatform
                 return;
             mw.Dispatcher.Invoke(() =>
             {
+                double x = 0, y = 0;
                 if (GetWindowsDistanceUp() < -0.25 * mw.ActualHeight && GetWindowsDistanceDown() < PrimaryScreen.Height)
                 {
-                    MoveWindows(0, -GetWindowsDistanceUp() / ZoomRatio);
+                    y = -GetWindowsDistanceUp() / ZoomRatio;
                 }
                 else if (GetWindowsDistanceDown() < -0.25 * mw.ActualHeight && GetWindowsDistanceUp() < PrimaryScreen.Height)
                 {
-                    MoveWindows(0, GetWindowsDistanceDown() / ZoomRatio);
+                    y = GetWindowsDistanceDown() / ZoomRatio;
                 }
                 if (GetWindowsDistanceLeft() < -0.25 * mw.ActualWidth && GetWindowsDistanceRight() < PrimaryScreen.Width)
                 {
-                    MoveWindows(-GetWindowsDistanceLeft() / ZoomRatio, 0);
+                    x = -GetWindowsDistanceLeft() / ZoomRatio;
                 }
                 else if (GetWindowsDistanceRight() < -0.25 * mw.ActualWidth && GetWindowsDistanceLeft() < PrimaryScreen.Width)
                 {
-                    MoveWindows(GetWindowsDistanceRight() / ZoomRatio, 0);
+                    x = GetWindowsDistanceRight() / ZoomRatio;
                 }
+                if (x != 0 || y != 0)
+                    MoveWindows(x, y);
             });
         }
         public bool CheckPosition() => CanPositionWindow && mw.Dispatcher.Invoke(() =>

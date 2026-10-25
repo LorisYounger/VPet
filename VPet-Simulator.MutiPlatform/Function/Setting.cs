@@ -136,6 +136,12 @@ namespace VPet_Simulator.MutiPlatform
             get => !GetBool("topmost");
             set => SetBool("topmost", !value);
         }
+        /// <summary>Linux 桌宠和访客显示在所有工作区，默认开启。</summary>
+        public bool AllWorkspaces
+        {
+            get => !GetBool("currentworkspaceonly");
+            set => SetBool("currentworkspaceonly", !value);
+        }
         /// <summary>
         /// 是否显示宠物帮助窗口
         /// </summary>

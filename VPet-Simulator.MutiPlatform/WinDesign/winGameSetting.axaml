@@ -276,6 +276,12 @@
                                         Foreground="{DynamicResource DARKPrimaryDarker}"
                                         Text="{Binding #OpacitySlider.Value, StringFormat=p0}" />
                             </Grid>
+                            <StackPanel x:Name="LinuxDesktopPanel" Grid.Row="17" Grid.ColumnSpan="3" Margin="0,8,0,5">
+                                <CheckBox x:Name="AllWorkspacesBox" Content="{ll:Str 在所有工作区显示桌宠和访客}"
+                                          IsCheckedChanged="AllWorkspacesBox_Checked" />
+                                <TextBlock x:Name="WaylandNotice" Margin="0,5,0,0" TextWrapping="Wrap"
+                                           Text="{ll:Str '原生 Wayland 实验模式：长按提起后拖动。不支持自动走动、贴边、位置恢复和程序置顶；跨工作区显示请在桌面窗口菜单中设置。'}" />
+                            </StackPanel>
                         </Grid>
                     </ScrollViewer>
                     <Button x:Name="ButtonRestartGraph" VerticalAlignment="Bottom"

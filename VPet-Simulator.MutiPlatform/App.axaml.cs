@@ -35,16 +35,6 @@ public partial class App : Application
     /// </summary>
     internal static string[] Args { get; set; } = Array.Empty<string>();
 
-    /// <summary>
-    /// --ui-walk 脚本 与 输出目录; 没给这个参数时为 null
-    /// </summary>
-    internal static (string Script, string Output)? UiWalk { get; set; }
-
-    /// <summary>
-    /// --language 指定的语言; 只在界面走查时生效, 不写进设置
-    /// </summary>
-    internal static string? LanguageOverride { get; set; }
-
     public App() : base()
     {
         //没处理的异常先记进日志, 桌宠常驻后台, 不记的话崩了也不知道为什么
