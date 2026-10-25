@@ -545,6 +545,7 @@ namespace VPet_Simulator.Windows
         {
             if (winGallery != null)
             {
+                winGallery.RefreshList();
                 winGallery.Show();
                 winGallery.Focus();
             }
