@@ -70,5 +70,17 @@ public partial class MainViewModel : CloseableViewModel
                 "https://steamcommunity.com/games/1920960/announcements/detail/3681184905256253203"
             );
     }
+    [RelayCommand]
+    private void WantOpenVpet()
+    {
+        if (LocalizeCore.CurrentCulture == "zh-Hant")
+            NativeUtils.OpenLink("https://wiki.exlb.net/zh-hant/vpet/qa/startup#%E9%99%84%E4%B8%89_%E5%95%9F%E5%8B%95%E5%BE%8C%E5%87%BA%E7%8F%BE%E5%95%8F%E9%A1%8C%E8%A7%A3%E6%B1%BA%E5%B7%A5%E5%85%B7%E7%AA%97%E5%8F%A3_%E5%A6%82%E4%BD%95%E5%88%87%E6%8F%9B%E5%9B%9E%E6%A1%8C%E5%AF%B5");
+        else if(LocalizeCore.CurrentCulture.ToLowerInvariant().Contains("zh"))
+            NativeUtils.OpenLink("https://wiki.exlb.net/vpet/qa/startup#%E9%99%84%E4%B8%89_%E5%90%AF%E5%8A%A8%E5%90%8E%E5%87%BA%E7%8E%B0%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E5%B7%A5%E5%85%B7%E7%AA%97%E5%8F%A3_%E5%A6%82%E4%BD%95%E5%88%87%E6%8D%A2%E5%9B%9E%E6%A1%8C%E5%AE%A0");
+        else
+            NativeUtils.OpenLink(
+                "https://wiki.exlb.net/en/vpet/qa/startup#appendix_3the_troubleshooting_tool_opens_at_startup_how_to_switch_back_to_the_desktop_pet"
+            );
+    }
     #endregion
 }
