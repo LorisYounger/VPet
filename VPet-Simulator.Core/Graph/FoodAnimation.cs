@@ -83,7 +83,7 @@ namespace VPet_Simulator.Core
 
         public TaskControl? Control { get; set; }
 
-        int nowid;
+        private volatile bool disposed;
         /// <summary>
         /// 图片资源
         /// </summary>
@@ -147,69 +147,44 @@ namespace VPet_Simulator.Core
             /// </summary>
             public void Run(FrameworkElement This, TaskControl Control)
             {
-                //先显示该图层
-                This.Dispatcher.Invoke(() =>
+                int index = parent.Animations.IndexOf(this);
+                while (!parent.disposed && ReferenceEquals(parent.Control, Control) && Control.PlayState)
                 {
-                    if (IsVisiable)
+                    var animation = parent.Animations[index];
+                    This.Dispatcher.Invoke(() =>
                     {
-                        This.Visibility = Visibility.Visible;
-                        This.Margin = MarginWI;
-                        This.LayoutTransform = new RotateTransform(Rotate);
-                        This.Opacity = Opacity;
-                        This.Width = Width;
-                        This.Height = Width;
-                    }
-                    else
+                        if (parent.disposed || !ReferenceEquals(parent.Control, Control) || !Control.PlayState)
+                            return;
+                        // The shared food grid may have been moved to another pet.
+                        if (FoodGrid.Parent is not Decorator owner || owner.Tag != parent) return;
+                        if (animation.IsVisiable)
+                        {
+                            This.Visibility = Visibility.Visible;
+                            This.Margin = animation.MarginWI;
+                            This.LayoutTransform = new RotateTransform(animation.Rotate);
+                            This.Opacity = animation.Opacity;
+                            This.Width = animation.Width;
+                            This.Height = animation.Width;
+                        }
+                        else This.Visibility = Visibility.Collapsed;
+                    });
+                    Thread.Sleep(animation.Time);
+                    if (!Control.PlayState) break;
+                    if (++index < parent.Animations.Count) continue;
+                    if (parent.IsLoop) index = 0;
+                    else if (Control.Type == TaskControl.ControlType.Continue)
                     {
-                        This.Visibility = Visibility.Collapsed;
+                        Control.Type = TaskControl.ControlType.Status_Quo;
+                        index = 0;
                     }
-
-                });
-                //然后等待帧时间毫秒
-                Thread.Sleep(Time);
-                //判断是否要下一步
-                switch (Control.Type)
+                    else break;
+                }
+                Control.Type = TaskControl.ControlType.Status_Stoped;
+                if (!parent.disposed && ReferenceEquals(parent.Control, Control))
                 {
-                    case TaskControl.ControlType.Stop:
-                        Control.EndAction?.Invoke();
-                        return;
-                    case TaskControl.ControlType.Status_Stoped:
-                        return;
-                    case TaskControl.ControlType.Status_Quo:
-                    case TaskControl.ControlType.Continue:
-                        if (++parent.nowid >= parent.Animations.Count)
-                            if (parent.IsLoop)
-                            {
-                                parent.nowid = 0;
-                                //让循环动画重新开始立线程,不stackoverflow
-                                Task.Run(() => parent.Animations[0].Run(This, Control));
-                                return;
-                            }
-                            else if (Control.Type == TaskControl.ControlType.Continue)
-                            {
-                                Control.Type = TaskControl.ControlType.Status_Quo;
-                                parent.nowid = 0;
-                            }
-                            else
-                            {
-                                //parent.endwilldo = () => parent.Dispatcher.Invoke(Hidden);
-                                //parent.Dispatcher.Invoke(Hidden);
-                                Control.Type = TaskControl.ControlType.Status_Stoped;
-                                //等待其他两个动画完成
-                                Control.EndAction?.Invoke(); //运行结束动画时事件
-                                ////延时隐藏
-                                //Task.Run(() =>
-                                //{
-                                //    Thread.Sleep(25);
-                                //    parent.Dispatcher.Invoke(Hidden);
-                                //});
-                                return;
-                            }
-                        //要下一步,现在就隐藏图层
-                        //隐藏该图层
-                        //parent.Dispatcher.Invoke(Hidden);
-                        parent.Animations[parent.nowid].Run(This, Control);
-                        return;
+                    var endAction = Control.EndAction;
+                    Control.EndAction = null;
+                    endAction?.Invoke();
                 }
             }
         }
@@ -244,16 +219,17 @@ namespace VPet_Simulator.Core
 
         public void Run(Decorator parant, ImageSource? image, Action? EndAction = null)
         {
+            if (disposed) return;
             if (Control?.PlayState == true)
             {//如果当前正在运行,重置状态
-                Control.Stop(() => Run(parant, EndAction));
+                Control.Stop(() => Run(parant, image, EndAction));
                 return;
             }
-            nowid = 0;
             var NEWControl = new TaskControl(EndAction);
             Control = NEWControl;
             parant.Dispatcher.Invoke(() =>
             {
+                if (disposed) return;
                 parant.Tag = this;
                 if (parant.Child != FoodGrid)
                 {
@@ -282,8 +258,9 @@ namespace VPet_Simulator.Core
         }
         public void Dispose()
         {
-            Animations = [];
-            GraphCore = null;
+            disposed = true;
+            IsReady = false;
+            Control?.Stop();
         }
     }
 }

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
 using static VPet_Simulator.Core.GraphHelper;
@@ -37,16 +38,14 @@ namespace VPet_Simulator.Core
             Dispatcher = dispatcher;
             if (!Directory.Exists(CachePath))
                 Directory.CreateDirectory(CachePath);
-            CommConfig["Cache"] = new List<string>();
             Resolution = resolution;
             CleanTimer = new Timer((_) =>
             {
-                if (GraphsALL == null)
-                    return;
-                long cleanTicks = DateTime.Now.Ticks - IdleCacheTimeout;
-                for (int i = 0; i < GraphsALL.Count; i++)
+                lock (GraphsALL)
                 {
-                    GraphsALL[i].CleanupIdleCache(cleanTicks);
+                    long cleanTicks = DateTime.UtcNow.Ticks - IdleCacheTimeout;
+                    for (int i = 0; i < GraphsALL.Count; i++)
+                        GraphsALL[i].CleanupIdleCache(cleanTicks);
                 }
             }, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
             GraphConfig = config;
@@ -106,7 +105,7 @@ namespace VPet_Simulator.Core
                 d3.Add(graph.GraphInfo.Animat, l3);
             }
             l3.Add(graph);
-            GraphsALL.Add(graph);
+            lock (GraphsALL) GraphsALL.Add(graph);
         }
 
         /// <summary>
@@ -215,16 +214,26 @@ namespace VPet_Simulator.Core
         public void Dispose()
         {
             CleanTimer.Dispose();
-            if (GraphsALL != null)
+            lock (GraphsALL)
             {
                 foreach (var graph in GraphsALL)
                 {
+                    graph.Stop(true);
                     graph.Dispose();
                 }
                 GraphsALL.Clear();
             }
             GraphsList.Clear();
             GraphsName.Clear();
+            Dispatcher.Invoke(() =>
+            {
+                foreach (var element in CommUIElements.Values)
+                    if (element is Image image)
+                    {
+                        image.Source = null;
+                        image.Tag = null;
+                    }
+            });
             CommUIElements.Clear();
             CommConfig.Clear();
         }

@@ -80,6 +80,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public string Path { get; set; }
         private GraphCore? GraphCore;
+        private volatile bool disposed;
         public bool IsLoop { get; set; }
         /// <summary>
         /// 播放持续时间 毫秒
@@ -102,6 +103,7 @@ namespace VPet_Simulator.Core
 
         public void Run(Decorator parant, Action? EndAction = null)
         {
+            if (disposed) return;
             if (Control?.PlayState == true)
             {//如果当前正在运行,重置状态
                 Control.SetContinue();
@@ -113,6 +115,7 @@ namespace VPet_Simulator.Core
 
             parant.Dispatcher.Invoke(() =>
             {
+                if (disposed) return;
                 if (parant.Tag != this)
                 {
                     Image img;
@@ -155,52 +158,41 @@ namespace VPet_Simulator.Core
         /// <param name="Control"></param>
         public void Run(TaskControl Control)
         {
-            Thread.Sleep(Length);
-            //判断是否要下一步
-            switch (Control.Type)
+            while (!disposed && ReferenceEquals(this.Control, Control) && Control.PlayState)
             {
-                case TaskControl.ControlType.Stop:
-                    Control.EndAction?.Invoke();
-                    return;
-                case TaskControl.ControlType.Status_Stoped:
-                    return;
-                case TaskControl.ControlType.Continue:
+                Thread.Sleep(Length);
+                if (!Control.PlayState) break;
+                if (Control.Type == TaskControl.ControlType.Continue)
                     Control.Type = TaskControl.ControlType.Status_Quo;
-                    Run(Control);
-                    return;
-                case TaskControl.ControlType.Status_Quo:
-                    if (IsLoop)
-                    {
-                        Task.Run(() => Run(Control));
-                    }
-                    else
-                    {
-                        Control.Type = TaskControl.ControlType.Status_Stoped;
-                        Control.EndAction?.Invoke(); //运行结束动画时事件
-                    }
-                    return;
+                else if (!IsLoop) break;
+            }
+            Control.Type = TaskControl.ControlType.Status_Stoped;
+            if (!disposed && ReferenceEquals(this.Control, Control))
+            {
+                var endAction = Control.EndAction;
+                Control.EndAction = null;
+                endAction?.Invoke();
             }
         }
 
         public Task Run(Image img, Action? EndAction = null)
         {
+            if (disposed) return new Task(() => { });
             if (Control?.PlayState == true)
             {//如果当前正在运行,重置状态
                 Control.EndAction = null;
                 Control.Type = TaskControl.ControlType.Stop;
             }
-            Control = new TaskControl(EndAction);
-            return img.Dispatcher.Invoke(() =>
+            var newControl = new TaskControl(EndAction);
+            Control = newControl;
+            img.Dispatcher.Invoke(() =>
             {
-                if (img.Tag == this)
-                {
-                    return new Task(() => Run(Control));
-                }
+                if (disposed || img.Tag == this) return;
                 img.Tag = this;
                 img.Source = new BitmapImage(new Uri(Path));
                 img.Width = 500;
-                return new Task(() => Run(Control));
             });
+            return new Task(() => Run(newControl));
         }
         /// <summary>
         /// 可以通过图片模块运行该动画
@@ -217,7 +209,9 @@ namespace VPet_Simulator.Core
         }
         public void Dispose()
         {
-            GraphCore = null;
+            disposed = true;
+            IsReady = false;
+            Control?.Stop();
         }
     }
 

@@ -554,19 +554,6 @@ namespace VPet_Simulator.Windows
                 });
                 try
                 {
-                    if (Core != null && Core.Graph != null)
-                    {
-                        foreach (var igs in Core.Graph!.GraphsList.Values)
-                        {
-                            foreach (var ig2 in igs.Values)
-                            {
-                                foreach (var ig3 in ig2)
-                                {
-                                    ig3.Stop(true);
-                                }
-                            }
-                        }
-                    }
                     while (Windows.Count != 0)
                     {
                         var w = Windows[0];
@@ -577,13 +564,15 @@ namespace VPet_Simulator.Windows
                     ScheduleTask?.Dispose();
                     Buff?.Dispose();
                     Main?.Dispose();
-                    AutoSaveTimer?.Stop();
-                    MusicTimer?.Stop();
+                    Core?.Graph?.Dispose();
+                    AutoSaveTimer?.Dispose();
+                    MusicTimer?.Dispose();
                     petHelper?.Close();
                     winSetting?.Close();
                     winBetterBuy?.Close();
                     winWorkMenu?.Close();
                     winGallery?.Close();
+                    winInventory?.Close();
                     if (winMutiPlayer != null)
                     {
                         winMutiPlayer.lb.Leave();
@@ -613,19 +602,6 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                if (Core != null && Core.Graph != null)
-                {
-                    foreach (var igs in Core.Graph!.GraphsList.Values)
-                    {
-                        foreach (var ig2 in igs.Values)
-                        {
-                            foreach (var ig3 in ig2)
-                            {
-                                ig3.Stop(true);
-                            }
-                        }
-                    }
-                }
                 while (Windows.Count != 0)
                 {
                     Windows[0].Close();
@@ -634,13 +610,15 @@ namespace VPet_Simulator.Windows
                 ScheduleTask?.Dispose();
                 Buff?.Dispose();
                 Main?.Dispose();
-                AutoSaveTimer?.Stop();
-                MusicTimer?.Stop();
+                Core?.Graph?.Dispose();
+                AutoSaveTimer?.Dispose();
+                MusicTimer?.Dispose();
                 petHelper?.Close();
                 winSetting?.Close();
                 winBetterBuy?.Close();
                 winWorkMenu?.Close();
                 winGallery?.Close();
+                winInventory?.Close();
                 if (winMutiPlayer != null)
                 {
                     winMutiPlayer.lb.Leave();

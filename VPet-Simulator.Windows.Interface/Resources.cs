@@ -180,13 +180,13 @@ namespace VPet_Simulator.Windows.Interface
         /// <returns>BitmapImage</returns>
         public static BitmapImage NewSafeBitmapImage(Uri? source)
         {
-            if(source == null)
-                return new BitmapImage(new Uri("pack://application:,,,/Res/img/error.png"));
+            source ??= new Uri("pack://application:,,,/Res/img/error.png");
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
             bi.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
             bi.UriSource = source;
             bi.EndInit();
+            bi.Freeze();
             return bi;
         }
     }

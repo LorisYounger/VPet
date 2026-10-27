@@ -11,7 +11,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Threading;
 using VPet_Simulator.Windows.Interface;
 
 namespace VPet_Simulator.Windows
@@ -26,6 +25,8 @@ namespace VPet_Simulator.Windows
         private Run? rTotalValue;
         private Item? _detailItem;
         private int _detailCount = 1;
+        private int pageSize = 1;
+        private bool updatingPagination;
 
         /// <summary>
         /// 构造函数，初始化物品栏窗口
@@ -48,10 +49,8 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public new void Show()
         {
+            if (IsLoaded) UpdateList();
             base.Show();
-            // 首次打开时控件可能还未加载完，延迟刷新避免"打开不加载、切换后才加载"
-            Dispatcher.BeginInvoke(new Action(UpdateList), DispatcherPriority.Loaded);
-
         }
 
         private void winInventory_Loaded(object sender, RoutedEventArgs e)
@@ -65,7 +64,7 @@ namespace VPet_Simulator.Windows
         /// <remarks>
         /// 根据搜索条件、分类、排序规则更新显示的物品列表，并计算总价值
         /// </remarks>
-        private void UpdateList()
+        private void UpdateList(bool resetPage = false)
         {
             if (mw == null) return;
 
@@ -108,17 +107,20 @@ namespace VPet_Simulator.Windows
                     break;
             }
 
-            IcCommodity.ItemsSource = items;
+            var filtered = items.ToList();
+            updatingPagination = true;
+            pagination.MaxPage = Math.Max(1, (filtered.Count + pageSize - 1) / pageSize);
+            pagination.CurrentPage = resetPage ? 1 : Math.Max(1, Math.Min(pagination.CurrentPage, pagination.MaxPage));
+            updatingPagination = false;
+            IcCommodity.ItemsSource = filtered.Skip((pagination.CurrentPage - 1) * pageSize).Take(pageSize).ToList();
+            ItemsViewport.ScrollToTop();
 
             // 计算总价值（始终统计全部物品，不受分类影响）
             double totalValue = mw.Items.Sum(x => x.Price * x.Count);
             if (rTotalValue != null)
                 rTotalValue.Text = totalValue.ToString("f2");
 
-            if (!items.Any())
-                TbNone.Visibility = Visibility.Visible;
-            else
-                TbNone.Visibility = Visibility.Collapsed;
+            TbNone.Visibility = filtered.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         /// <summary>
@@ -138,7 +140,21 @@ namespace VPet_Simulator.Windows
         /// </summary>
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
-            UpdateList();
+            UpdateList(true);
+        }
+
+        private void ItemsViewport_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            int size = Math.Max(1, (int)(ItemsViewport.ActualWidth / 120))
+                * Math.Max(1, (int)(ItemsViewport.ActualHeight / 110));
+            if (size == pageSize) return;
+            pageSize = size;
+            if (IsLoaded) UpdateList();
+        }
+
+        private void pagination_CurrentPageChanged(object sender, SelectedValueChangedRoutedEventArgs<int> e)
+        {
+            if (IsLoaded && !updatingPagination) UpdateList();
         }
 
         /// <summary>
@@ -167,7 +183,7 @@ namespace VPet_Simulator.Windows
         private void LsbSortRule_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
-                UpdateList();
+                UpdateList(true);
         }
 
         ///// <summary>
@@ -372,7 +388,7 @@ namespace VPet_Simulator.Windows
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
-                UpdateList();
+                UpdateList(true);
         }
 
         private void TbtnStar_Checked(object sender, RoutedEventArgs e)

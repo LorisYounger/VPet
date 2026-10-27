@@ -3,6 +3,7 @@ using LinePutScript.Localization.WPF;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -525,6 +526,7 @@ namespace VPet_Simulator.Core
         /// <param name="EndAction">结束操作</param>
         public void Display(IGraph? graph, Action? EndAction = null)
         {
+            if (disposed) return;
             if (graph == null)
             {
                 if (nodisplayLoop++ > 20)
@@ -610,7 +612,7 @@ namespace VPet_Simulator.Core
                 });
             }
             petgridcrlf = !petgridcrlf;
-            GC.Collect();
+            Task.Run(GC.Collect);
         }
         /// <summary>
         /// 查找可用与显示的Border (自动多层切换)
@@ -655,7 +657,7 @@ namespace VPet_Simulator.Core
                     //PetGrid2.Tag = graph;
                 });
                 petgridcrlf = !petgridcrlf;
-                GC.Collect();
+                Task.Run(GC.Collect);
                 return PetGrid2;
             }
             else
@@ -668,7 +670,7 @@ namespace VPet_Simulator.Core
                     //PetGrid.Tag = graph;
                 });
                 petgridcrlf = !petgridcrlf;
-                GC.Collect();
+                Task.Run(GC.Collect);
                 return PetGrid;
             }
 

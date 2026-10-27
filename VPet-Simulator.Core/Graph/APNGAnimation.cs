@@ -46,7 +46,6 @@ namespace VPet_Simulator.Core
         }
 
         private const int DefaultFrameDuration = 100;
-        private const int FrameCacheAheadCount = 2;
         private static readonly byte[] PngSignature = new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 };
         private static readonly uint[] CrcTable = BuildCrcTable();
 
@@ -54,13 +53,13 @@ namespace VPet_Simulator.Core
         private BitmapSource? SpriteSheetSource;
         private Int32Rect[]? FrameRects;
         private readonly object SpriteSheetLock = new object();
-        private readonly object FrameCacheLock = new object();
-        private readonly Dictionary<int, BitmapSource> FrameCache = new Dictionary<int, BitmapSource>();
+        private BitmapSource? CurrentFrame;
+        private int CurrentFrameIndex = -1;
+        private volatile bool disposed;
         private readonly List<int> FrameDurations = new List<int>();
         private string SpriteSheetPath = string.Empty;
         private int FrameWidth;
         private int FrameHeight;
-        private int nowid;
 
         public bool IsLoop { get; set; }
         public bool IsReady { get; private set; }
@@ -112,10 +111,6 @@ namespace VPet_Simulator.Core
                 if (!File.Exists(Path))
                     throw new FileNotFoundException($"Can not find file: {Path}");
 
-                IsReady = false;
-                IsFail = false;
-                FailMessage = "";
-
                 var parsed = ParseApng(Path);
                 if (parsed.Frames.Count == 0)
                     throw new InvalidDataException("No APNG frames found.");
@@ -134,15 +129,10 @@ namespace VPet_Simulator.Core
                 }
 
                 FrameRects = new Int32Rect[parsed.Frames.Count];
-                lock (FrameCacheLock)
+                for (int i = 0; i < parsed.Frames.Count; i++)
                 {
-                    FrameCache.Clear();
-                    FrameDurations.Clear();
-                    for (int i = 0; i < parsed.Frames.Count; i++)
-                    {
-                        FrameRects[i] = new Int32Rect(FrameWidth * i, 0, FrameWidth, FrameHeight);
-                        FrameDurations.Add(GetFrameDuration(parsed.Frames[i]));
-                    }
+                    FrameRects[i] = new Int32Rect(FrameWidth * i, 0, FrameWidth, FrameHeight);
+                    FrameDurations.Add(GetFrameDuration(parsed.Frames[i]));
                 }
 
                 long lastWrite = File.GetLastWriteTimeUtc(Path).Ticks;
@@ -353,69 +343,29 @@ namespace VPet_Simulator.Core
 
         private BitmapSource? GetFrameSource(int frameIndex)
         {
-            Touch();
-            EnsureSpriteSheetLoaded();
-            if (FrameRects == null || frameIndex < 0 || frameIndex >= FrameRects.Length || SpriteSheetSource == null)
-                return null;
-            lock (FrameCacheLock)
-            {
-                if (FrameCache.TryGetValue(frameIndex, out var cacheFrame))
-                    return cacheFrame;
-
-                var frame = new CroppedBitmap(SpriteSheetSource, FrameRects[frameIndex]);
-                frame.Freeze();
-                FrameCache[frameIndex] = frame;
-
-                var keepKeys = GetForwardKeepKeys(frameIndex);
-                var removeKeys = new List<int>();
-                foreach (var key in FrameCache.Keys)
-                {
-                    if (!keepKeys.Contains(key))
-                        removeKeys.Add(key);
-                }
-                foreach (var key in removeKeys)
-                {
-                    FrameCache.Remove(key);
-                }
-
-                return frame;
-            }
-        }
-
-        private HashSet<int> GetForwardKeepKeys(int frameIndex)
-        {
-            var keep = new HashSet<int> { frameIndex };
-            int cursor = frameIndex;
-            for (int i = 0; i < FrameCacheAheadCount; i++)
-            {
-                cursor++;
-                if (FrameRects == null || cursor >= FrameRects.Length)
-                {
-                    if (!IsLoop)
-                        break;
-                    cursor = 0;
-                }
-                keep.Add(cursor);
-            }
-            return keep;
-        }
-
-        private void EnsureSpriteSheetLoaded()
-        {
-            if (SpriteSheetSource != null)
-                return;
             lock (SpriteSheetLock)
             {
-                if (SpriteSheetSource != null)
-                    return;
-                BitmapImage spriteSheet = new BitmapImage();
-                spriteSheet.BeginInit();
-                spriteSheet.CacheOption = BitmapCacheOption.OnDemand;
-                spriteSheet.CreateOptions = BitmapCreateOptions.DelayCreation;
-                spriteSheet.UriSource = new Uri(SpriteSheetPath);
-                spriteSheet.EndInit();
-                spriteSheet.Freeze();
-                SpriteSheetSource = spriteSheet;
+                if (disposed || FrameRects == null)
+                    return null;
+                Touch();
+                if (CurrentFrameIndex == frameIndex)
+                    return CurrentFrame;
+                if (SpriteSheetSource == null)
+                {
+                    var sheet = new BitmapImage();
+                    sheet.BeginInit();
+                    sheet.CacheOption = BitmapCacheOption.OnDemand;
+                    sheet.CreateOptions = BitmapCreateOptions.DelayCreation;
+                    sheet.UriSource = new Uri(SpriteSheetPath);
+                    sheet.EndInit();
+                    sheet.Freeze();
+                    SpriteSheetSource = sheet;
+                }
+                var frame = new CroppedBitmap(SpriteSheetSource, FrameRects[frameIndex]);
+                frame.Freeze();
+                CurrentFrame = frame;
+                CurrentFrameIndex = frameIndex;
+                return frame;
             }
         }
 
@@ -515,76 +465,51 @@ namespace VPet_Simulator.Core
 
         private void Play(FrameworkElement element, TaskControl control)
         {
-            Touch();
-            while (true)
+            int index = 0;
+            while (!disposed && ReferenceEquals(Control, control) && control.PlayState)
             {
-                int frameIndex;
-                int duration;
-                BitmapSource? frameSource;
-                lock (FrameCacheLock)
-                {
-                    if (FrameDurations.Count == 0)
-                    {
-                        control.Type = TaskControl.ControlType.Status_Stoped;
-                        Task.Run(() => control.EndAction?.Invoke());
-                        return;
-                    }
-                    frameIndex = nowid;
-                    duration = FrameDurations[frameIndex];
-                }
-                frameSource = GetFrameSource(frameIndex);
-
+                var frameSource = GetFrameSource(index);
                 element.Dispatcher.Invoke(() =>
                 {
-                    if (element is System.Windows.Controls.Image image)
-                    {
-                        image.Source = frameSource;
-                    }
-                    element.Margin = new Thickness(0, 0, 0, 0);
+                    if (disposed || !ReferenceEquals(Control, control) || !control.PlayState) return;
+                    if (element is System.Windows.Controls.Image image) image.Source = frameSource;
+                    element.Margin = new Thickness(0);
                 });
-
-                Thread.Sleep(duration);
-
-                switch (control.Type)
+                Thread.Sleep(FrameDurations[index]);
+                if (!control.PlayState) break;
+                if (++index < FrameDurations.Count) continue;
+                if (IsLoop) index = 0;
+                else if (control.Type == TaskControl.ControlType.Continue)
                 {
-                    case TaskControl.ControlType.Stop:
-                        control.Type = TaskControl.ControlType.Status_Stoped;
-                        control.EndAction?.Invoke();
-                        return;
-                    case TaskControl.ControlType.Status_Stoped:
-                        return;
-                    case TaskControl.ControlType.Status_Quo:
-                    case TaskControl.ControlType.Continue:
-                        if (++nowid >= FrameDurations.Count)
-                        {
-                            if (IsLoop)
-                            {
-                                nowid = 0;
-                            }
-                            else if (control.Type == TaskControl.ControlType.Continue)
-                            {
-                                control.Type = TaskControl.ControlType.Status_Quo;
-                                nowid = 0;
-                            }
-                            else
-                            {
-                                control.Type = TaskControl.ControlType.Status_Stoped;
-                                control.EndAction?.Invoke();
-                                return;
-                            }
-                        }
-                        break;
+                    control.Type = TaskControl.ControlType.Status_Quo;
+                    index = 0;
                 }
+                else break;
+            }
+            control.Type = TaskControl.ControlType.Status_Stoped;
+            if (!disposed && ReferenceEquals(Control, control))
+            {
+                lock (SpriteSheetLock)
+                {
+                    // Keep the last displayed frame, but release the animation's cache.
+                    CurrentFrame = null;
+                    CurrentFrameIndex = -1;
+                    SpriteSheetSource = null;
+                }
+                var endAction = control.EndAction;
+                control.EndAction = null;
+                endAction?.Invoke();
             }
         }
 
         public Task Run(System.Windows.Controls.Image img, Action? EndAction = null)
         {
+            if (disposed) return new Task(() => { });
             Touch();
             if (!IsReady)
             {
                 EndAction?.Invoke();
-                return Task.CompletedTask;
+                return new Task(() => { });
             }
             if (Control?.PlayState == true)
             {
@@ -592,23 +517,21 @@ namespace VPet_Simulator.Core
                 Control.Type = TaskControl.ControlType.Stop;
             }
 
-            nowid = 0;
-            Control = new TaskControl(EndAction);
-            return img.Dispatcher.Invoke(() =>
+            var newControl = new TaskControl(EndAction);
+            Control = newControl;
+            img.Dispatcher.Invoke(() =>
             {
-                if (img.Tag == this)
-                {
-                    return new Task(() => Play(img, Control));
-                }
+                if (disposed || img.Tag == this) return;
                 img.Tag = this;
                 img.Source = GetFrameSource(0);
                 img.Width = 500;
-                return new Task(() => Play(img, Control));
             });
+            return new Task(() => Play(img, newControl));
         }
 
         public void Run(Decorator parant, Action? EndAction = null)
         {
+            if (disposed) return;
             Touch();
             if (!IsReady)
             {
@@ -621,14 +544,15 @@ namespace VPet_Simulator.Core
                 return;
             }
 
-            nowid = 0;
             var newControl = new TaskControl(EndAction);
             Control = newControl;
             parant.Dispatcher.Invoke(() =>
             {
+                if (disposed) return;
                 if (parant.Tag == this)
                 {
-                    Task.Run(() => Play((System.Windows.Controls.Image)parant.Child, newControl));
+                    var target = (System.Windows.Controls.Image)parant.Child;
+                    Task.Run(() => Play(target, newControl));
                     return;
                 }
 
@@ -661,9 +585,10 @@ namespace VPet_Simulator.Core
                 }
 
                 parant.Tag = this;
+                img.Tag = this;
                 img.Source = GetFrameSource(0);
                 img.Width = 500;
-                Task.Run(() => Play((System.Windows.Controls.Image)parant.Child, newControl));
+                Task.Run(() => Play(img, newControl));
             });
         }
 
@@ -671,37 +596,30 @@ namespace VPet_Simulator.Core
 
         public void CleanupIdleCache(long cleanTicks)
         {
-            if (Control?.PlayState == true)
-                return;
-            if (SpriteSheetSource == null)
-                return;
-            long lastUse = Interlocked.Read(ref LastUseTimeTicks);
-            if (cleanTicks < lastUse)
-                return;
-
             lock (SpriteSheetLock)
             {
+                if (Control?.PlayState == true || cleanTicks < Interlocked.Read(ref LastUseTimeTicks))
+                    return;
+                CurrentFrame = null;
+                CurrentFrameIndex = -1;
                 SpriteSheetSource = null;
-            }
-            lock (FrameCacheLock)
-            {
-                FrameCache.Clear();
             }
         }
 
         public void Dispose()
         {
-            FrameRects = [];
+            disposed = true;
+            Control?.Stop();
             lock (SpriteSheetLock)
             {
+                IsReady = false;
+                CurrentFrame = null;
+                CurrentFrameIndex = -1;
                 SpriteSheetSource = null;
+                FrameRects = null;
             }
-            lock (FrameCacheLock)
-            {
-                FrameCache.Clear();
-                FrameDurations.Clear();
-            }
-            //GraphCore = null;
+            // Playback may still be leaving its final sleep. Keep its small frame
+            // metadata intact until that task exits; release all cached pixels now.
         }
     }
 }

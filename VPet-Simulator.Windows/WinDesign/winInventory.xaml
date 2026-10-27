@@ -309,7 +309,12 @@
 
         <!-- 网格背包 -->
         <Grid Grid.Row="2">
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible"
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ScrollViewer x:Name="ItemsViewport" SizeChanged="ItemsViewport_SizeChanged"
+                    HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
                     pu:ScrollBarHelper.ThumbBackground="#33FFFFFF" pu:ScrollBarHelper.HoverThumbBackground="#55FFFFFF">
                 <ItemsControl x:Name="IcCommodity">
                     <ItemsControl.ItemsPanel>
@@ -327,6 +332,9 @@
             </ScrollViewer>
             <TextBlock x:Name="TbNone" Text="{ll:Str 暂无物品}" Visibility="Collapsed" HorizontalAlignment="Center"
                     VerticalAlignment="Center" FontSize="20" Foreground="{DynamicResource PrimaryText}" />
+            <pu:Pagination x:Name="pagination" Grid.Row="1" Margin="0,8,0,0"
+                    Style="{DynamicResource StandardPaginationStyle}" HorizontalAlignment="Center"
+                    CurrentPageChanged="pagination_CurrentPageChanged" />
         </Grid>
     </Grid>
 </pu:WindowX>

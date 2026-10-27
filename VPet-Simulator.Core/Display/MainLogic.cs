@@ -495,6 +495,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void EventTimer_Elapsed()
         {
+            if (disposed) return;
             //所有Handle
             TimeHandle?.Invoke(this);
             if (Core.Controller!.EnableFunction)
