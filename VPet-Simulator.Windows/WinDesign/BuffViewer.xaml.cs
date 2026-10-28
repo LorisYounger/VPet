@@ -147,7 +147,6 @@ public partial class BuffViewer : Border, IDisposable
     private void Popup_Closed(object? sender, EventArgs e)
     {
         pinned = false;
-        popup.StaysOpen = true;
         hoverDelay.Stop();
         countdown.Stop();
         if (IsKeyboardFocusWithin) Entry.Focus();
@@ -165,7 +164,6 @@ public partial class BuffViewer : Border, IDisposable
         else
         {
             pinned = true;
-            popup.StaysOpen = false;
             popup.IsOpen = true;
             (category == 1 ? BenefitTab : category == 2 ? DebuffTab : category == 3 ? SpecialTab : AllTab).Focus();
         }

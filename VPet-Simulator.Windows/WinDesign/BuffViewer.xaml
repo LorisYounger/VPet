@@ -19,11 +19,11 @@
         <SolidColorBrush x:Key="BuffSpecialBackground" Color="#10899096" />
         <Style TargetType="TextBlock">
             <Setter Property="FontFamily" Value="{DynamicResource MainFont}" />
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="18" />
             <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
         </Style>
         <Style x:Key="BuffSecondaryText" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontSize" Value="15" />
             <Setter Property="Opacity" Value="0.65" />
         </Style>
         <Style x:Key="BuffCategory" TargetType="RadioButton">
@@ -132,7 +132,7 @@
                                 TextTrimming="CharacterEllipsis" FontWeight="SemiBold" Margin="0,0,10,0" />
                         <Border Grid.Column="2" CornerRadius="5" Padding="7,2" HorizontalAlignment="Right"
                                 Background="{Binding Background, RelativeSource={RelativeSource AncestorType=Expander}}">
-                            <TextBlock x:Name="TypeText" FontSize="13"
+                            <TextBlock x:Name="TypeText" FontSize="15"
                                     Foreground="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Expander}}" />
                         </Border>
                         <TextBlock x:Name="SummaryText" Grid.Column="1" Grid.Row="1" Text="{Binding Description}"
@@ -194,13 +194,13 @@
         </Grid>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
             <RadioButton x:Name="AllTab" Tag="0" GroupName="BuffCategory" IsChecked="True" Content="{ll:Str 全部}"
-                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="16" />
+                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="17" />
             <RadioButton x:Name="BenefitTab" Tag="1" GroupName="BuffCategory" Content="{ll:Str 增益}"
-                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="16" />
+                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="17" />
             <RadioButton x:Name="DebuffTab" Tag="2" GroupName="BuffCategory" Content="{ll:Str 减益}"
-                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="16" />
+                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="17" />
             <RadioButton x:Name="SpecialTab" Tag="3" GroupName="BuffCategory" Content="{ll:Str 特殊}"
-                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="16" />
+                    Style="{StaticResource BuffCategory}" Checked="Category_Checked" FontSize="17" />
         </StackPanel>
         <Grid Grid.Row="2" MinHeight="60">
             <ScrollViewer x:Name="ListScroll" MaxHeight="480" VerticalScrollBarVisibility="Auto"
