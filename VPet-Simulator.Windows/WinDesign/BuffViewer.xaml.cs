@@ -183,6 +183,32 @@ public partial class BuffViewer : Border, IDisposable
 
     private void RefreshEntry()
     {
+        var previous = mw.Buff.Effects.Find(effect => effect.SourceKey == "core:efficiency");
+        if (!mw.Main.Core.Controller!.EnableFunction || mw.Main.State != Main.WorkingState.Work || mw.Main.NowWork == null || mw.Main.WorkEfficiency == 0)
+        {
+            if (previous != null) mw.Buff.Effects.Remove(previous);
+        }
+        else
+        {
+            double percent = Math.Round((mw.Main.WorkEfficiency - 1) * 100);
+            string description = (percent >= 0
+                ? "{0} 当前状态很好! 工作／学习／娱乐效率提升{1}%"
+                : "{0} 当前状态不佳, 工作／学习／娱乐效率降低{1}%").Translate(mw.Main.Core.Save!.Name, Math.Abs(percent));
+            if (previous?.Description == description) return;
+            if (previous != null) mw.Buff.Effects.Remove(previous);
+            // 所有数值保持默认值，实际效率已在 FunctionSpend 中计算
+            mw.Buff.Effects.Add(new Buff.Effect
+            {
+                SourceKey = "core:efficiency",
+                Name = "状态效率".Translate(),
+                Source = "当前状态".Translate(),
+                Description = description,
+                IsDebuff = percent < 0,
+                Icon = percent < 0 ? "\uEC96" : "\uEC8D",
+                Activity = PetActivity.Work | PetActivity.Study | PetActivity.Play
+            });
+        }
+
         int count = 0, iconIndex = 0;
         for (int i = 0; i < mw.Buff.Effects.Count; i++)
         {

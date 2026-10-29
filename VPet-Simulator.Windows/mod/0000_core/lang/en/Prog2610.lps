@@ -52,3 +52,7 @@
 日程表开启期间的{0}#{0} while the schedule is active:|
 工作中介抽成#Job agency commission:|
 培训机构学习效率#Training institution learning efficiency:|
+{0} 当前状态很好! 工作／学习／娱乐效率提升{1}%#{0} Current status is good! Work/Study/Entertainment efficiency increased by {1}%:|
+{0} 当前状态不佳, 工作／学习／娱乐效率降低{1}%#{0} Current status is poor! Work/Study/Entertainment efficiency decreased by {1}%:|
+状态效率#Status Efficiency:|
+当前状态#Current Status:|

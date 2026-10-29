@@ -248,6 +248,8 @@ namespace VPet_Simulator.Core
         }
 
         public Work? NowWork;
+        /// <summary>最近一次工作、学习或娱乐结算的状态效率倍率，不含 Buff 加成。</summary>
+        public double WorkEfficiency { get; private set; } = 1;
         /// <summary>
         /// 根据消耗计算相关数据
         /// </summary>
@@ -355,7 +357,8 @@ namespace VPet_Simulator.Core
                     }
                     if (addhealth > 0)
                         Core.Save!.Health += addhealth * TimePass * attributes.Health;
-                    var addmoney = Math.Max(0, TimePass * NowWork.MoneyBase * (2 * efficiency - 0.5))
+                    WorkEfficiency = 2 * efficiency - 0.5;
+                    var addmoney = Math.Max(0, TimePass * NowWork.MoneyBase * WorkEfficiency)
                         * (NowWork.Type == Work.WorkType.Work ? attributes.Money : attributes.Experience);
                     if (NowWork.Type == Work.WorkType.Work)
                         Core.Save!.Money += addmoney;
