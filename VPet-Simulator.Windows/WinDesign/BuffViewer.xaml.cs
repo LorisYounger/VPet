@@ -184,7 +184,7 @@ public partial class BuffViewer : Border, IDisposable
     private void RefreshEntry()
     {
         var previous = mw.Buff.Effects.Find(effect => effect.SourceKey == "core:efficiency");
-        if (!mw.Main.Core.Controller!.EnableFunction || mw.Main.State != Main.WorkingState.Work || mw.Main.NowWork == null || mw.Main.WorkEfficiency == 0)
+        if (!mw.Main.Core.Controller!.EnableFunction || mw.Main.State != Main.WorkingState.Work || mw.Main.NowWork == null || mw.Main.WorkEfficiency == 1)
         {
             if (previous != null) mw.Buff.Effects.Remove(previous);
         }
