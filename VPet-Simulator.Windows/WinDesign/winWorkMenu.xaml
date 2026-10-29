@@ -9,6 +9,11 @@
         Background="{DynamicResource PrimaryLighter}" Width="{ll:Dbe WorkMenuWidth_650, DefValue=650}"
         ResizeMode="CanMinimize" Closed="Window_Closed">
     <pu:WindowX.Resources>
+        <Style x:Key="ScheduleIconButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FontFamily" Value="{StaticResource RemixIcon}" />
+            <Setter Property="FontSize" Value="20" />
+        </Style>
         <Style x:Key="IconButtonStyle" TargetType="Button"
                 BasedOn="{StaticResource {x:Static pu:StyleKeys.ButtonStyle}}">
             <Setter Property="Background" Value="Transparent" />
@@ -28,12 +33,9 @@
             </Grid.ColumnDefinitions>
             <Border Background="{DynamicResource DARKPrimaryText}" />
             <StackPanel Margin="12, 10">
-                <TextBlock Text="{ll:Str 工作面板}" FontSize="18" Margin="5" Foreground="{DynamicResource DARKPrimary}" />
+                <TextBlock Text="{ll:Str 工作面板}" Style="{StaticResource SectionTitleTextStyle}" Margin="5" />
 
-                <ListBox x:Name="LsbCategory" Grid.Row="1" Margin="-12,10,-12,0" Background="Transparent"
-                        BorderThickness="0" SelectedIndex="0" pu:ListBoxHelper.ItemsPadding="15,8"
-                        pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"
-                        pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
+                <ListBox x:Name="LsbCategory" Grid.Row="1" Margin="-12,10,-12,0" Style="{StaticResource CategoryListBoxStyle}" SelectedIndex="0" pu:ListBoxHelper.ItemsPadding="15,8"
                         SelectionChanged="LsbCategory_SelectionChanged">
                     <ListBoxItem x:Name="LsbiWork" Content="{ll:Str '工作'}" />
                     <ListBoxItem x:Name="LsbiStudy" Content="{ll:Str '学习'}" />
@@ -154,12 +156,7 @@
                     <Label HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" Content="&#xEE59;"
                             FontFamily="pack://application:,,,/Res/#remixicon"
                             Foreground="{DynamicResource PrimaryDarker}" FontSize="18" ToolTip="{ll:Str 'i_schedulenote'}" />
-                    <TabControl pu:TabControlHelper.ItemsCornerRadius="4" pu:TabControlHelper.ItemsHeight="NaN"
-                            pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
-                            pu:TabControlHelper.ItemsPadding="10,7"
-                            pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"
-                            pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
-                            Background="Transparent" BorderThickness="0" Foreground="{DynamicResource PrimaryText}"
+                    <TabControl Style="{StaticResource ThemedTabControlStyle}"
                             SelectedIndex="0">
                         <TabItem Header="{ll:Str '机构签署'}">
                             <Grid Margin="7,3">
@@ -331,14 +328,8 @@
                                                     HorizontalAlignment="Right"
                                                     Foreground="{DynamicResource DARKPrimary}" Text="05/27" />
                                             <TextBlock Grid.Row="4" Text="{ll:Str '自动续费'}" />
-                                            <pu:Switch x:Name="rpnAutoRenew" Grid.Row="4" Background="Transparent"
-                                                    BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18"
-                                                    BoxWidth="35" Foreground="{DynamicResource DARKPrimary}"
-                                                    IsChecked="False" CheckedBackground="{DynamicResource Primary}"
-                                                    CheckedBorderBrush="{DynamicResource Primary}"
-                                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                                    ToggleBrush="{DynamicResource PrimaryDark}"
-                                                    ToggleShadowColor="{x:Null}" ToggleSize="14" Grid.Column="2"
+                                            <pu:Switch x:Name="rpnAutoRenew" Grid.Row="4" Style="{StaticResource PrimarySwitchStyle}" Foreground="{DynamicResource DARKPrimary}"
+                                                    IsChecked="False" Grid.Column="2"
                                                     HorizontalAlignment="Right" ContentPlacement="Left"
                                                     Checked="rpnAutoRenew_Checked" Unchecked="rpnAutoRenew_Checked" />
                                             <TextBlock Grid.Row="5" Text="{ll:Str '描述'}" />
@@ -427,31 +418,26 @@
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Center"
                                                                                 ToolTip="{ll:Str '删除'}"
-                                                                                Background="Transparent" FontSize="20"
+                                                                                Style="{StaticResource ScheduleIconButtonStyle}"
                                                                                 Foreground="{DynamicResource DangerBrush}"
-                                                                                FontFamily="{StaticResource RemixIcon}"
                                                                                 Click="btn_removeSchedule_Click">&#xeb97;</Button>
                                                                             <Button Grid.Column="2" Margin="0,0,0,10"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Bottom"
                                                                                 ToolTip="{ll:Str '套餐等级不足'}"
-                                                                                FontWeight="Bold" FontSize="20"
-                                                                                Background="Transparent"
+                                                                                FontWeight="Bold" Style="{StaticResource ScheduleIconButtonStyle}"
                                                                                 Content="&#xECA1;"
                                                                                 Visibility="{Binding IsOKVisibility}"
                                                                                 Click="btn_removeSchedule_Click"
-                                                                                Foreground="{DynamicResource WarningBrush}"
-                                                                                FontFamily="{StaticResource RemixIcon}" />
+                                                                                Foreground="{DynamicResource WarningBrush}" />
                                                                             <Button Grid.Column="2" Margin="0,10,0,0"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Top"
                                                                                 ToolTip="{ll:Str '当前日程进度'}"
-                                                                                FontWeight="Bold" FontSize="20"
-                                                                                Background="Transparent"
+                                                                                FontWeight="Bold" Style="{StaticResource ScheduleIconButtonStyle}"
                                                                                 Content="&#xEC42;"
                                                                                 Visibility="{Binding IsNowVisibility}"
-                                                                                Foreground="{DynamicResource DARKPrimary}"
-                                                                                FontFamily="{StaticResource RemixIcon}" />
+                                                                                Foreground="{DynamicResource DARKPrimary}" />
                                                                         </Grid>
                                                                     </Border>
                                                                 </StackPanel>
@@ -505,31 +491,26 @@
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Center"
                                                                                 ToolTip="{ll:Str '删除'}"
-                                                                                Background="Transparent" FontSize="20"
+                                                                                Style="{StaticResource ScheduleIconButtonStyle}"
                                                                                 Foreground="{DynamicResource DangerBrush}"
-                                                                                FontFamily="{StaticResource RemixIcon}"
                                                                                 Click="btn_removeSchedule_Click">&#xeb97;</Button>
                                                                             <Button Grid.Column="2" Margin="0,0,0,10"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Bottom"
                                                                                 ToolTip="{ll:Str '套餐等级不足'}"
-                                                                                FontWeight="Bold" FontSize="20"
-                                                                                Background="Transparent"
+                                                                                FontWeight="Bold" Style="{StaticResource ScheduleIconButtonStyle}"
                                                                                 Content="&#xECA1;"
                                                                                 Visibility="{Binding IsOKVisibility}"
                                                                                 Click="btn_removeSchedule_Click"
-                                                                                Foreground="{DynamicResource WarningBrush}"
-                                                                                FontFamily="{StaticResource RemixIcon}" />
+                                                                                Foreground="{DynamicResource WarningBrush}" />
                                                                             <Button Grid.Column="2" Margin="0,10,0,0"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Top"
                                                                                 ToolTip="{ll:Str '当前日程进度'}"
-                                                                                FontWeight="Bold" FontSize="20"
-                                                                                Background="Transparent"
+                                                                                FontWeight="Bold" Style="{StaticResource ScheduleIconButtonStyle}"
                                                                                 Content="&#xEC42;"
                                                                                 Visibility="{Binding IsNowVisibility}"
-                                                                                Foreground="{DynamicResource DARKPrimary}"
-                                                                                FontFamily="{StaticResource RemixIcon}" />
+                                                                                Foreground="{DynamicResource DARKPrimary}" />
                                                                         </Grid>
                                                                     </Border>
                                                                 </StackPanel>
@@ -583,31 +564,26 @@
                                                                                 HorizontalAlignment="Right"
                                                                                 ToolTip="{ll:Str '删除'}"
                                                                                 VerticalAlignment="Center"
-                                                                                Background="Transparent" FontSize="20"
+                                                                                Style="{StaticResource ScheduleIconButtonStyle}"
                                                                                 Foreground="{DynamicResource DangerBrush}"
-                                                                                FontFamily="{StaticResource RemixIcon}"
                                                                                 Click="btn_removeSchedule_Click">&#xeb97;</Button>
                                                                             <Button Grid.Column="2" Margin="0,0,0,10"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Bottom"
                                                                                 ToolTip="{ll:Str '套餐等级不足'}"
-                                                                                FontWeight="Bold" FontSize="20"
-                                                                                Background="Transparent"
+                                                                                FontWeight="Bold" Style="{StaticResource ScheduleIconButtonStyle}"
                                                                                 Content="&#xECA1;"
                                                                                 Visibility="{Binding IsOKVisibility}"
                                                                                 Click="btn_removeSchedule_Click"
-                                                                                Foreground="{DynamicResource WarningBrush}"
-                                                                                FontFamily="{StaticResource RemixIcon}" />
+                                                                                Foreground="{DynamicResource WarningBrush}" />
                                                                             <Button Grid.Column="2" Margin="0,10,0,0"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Top"
                                                                                 ToolTip="{ll:Str '当前日程进度'}"
-                                                                                FontWeight="Bold" FontSize="20"
-                                                                                Background="Transparent"
+                                                                                FontWeight="Bold" Style="{StaticResource ScheduleIconButtonStyle}"
                                                                                 Content="&#xEC42;"
                                                                                 Visibility="{Binding IsNowVisibility}"
-                                                                                Foreground="{DynamicResource DARKPrimary}"
-                                                                                FontFamily="{StaticResource RemixIcon}" />
+                                                                                Foreground="{DynamicResource DARKPrimary}" />
 
                                                                         </Grid>
                                                                     </Border>
@@ -648,17 +624,14 @@
                                                                         </StackPanel>
                                                                         <Button Grid.Column="2" VerticalAlignment="Center"
                                                                             ToolTip="{ll:Str '删除'}"
-                                                                            Background="Transparent" FontSize="20"
+                                                                            Style="{StaticResource ScheduleIconButtonStyle}"
                                                                             Foreground="{DynamicResource DangerBrush}"
-                                                                            FontFamily="{StaticResource RemixIcon}"
                                                                             Click="btn_removeSchedule_Click">&#xeb97;</Button>
                                                                         <Button Grid.Column="1" VerticalAlignment="Center"
                                                                             ToolTip="{ll:Str '当前日程进度'}"
                                                                             Visibility="{Binding IsNowVisibility}"
-                                                                            FontWeight="Bold" FontSize="20"
-                                                                            Background="Transparent" Content="&#xEC42;"
-                                                                            Foreground="{DynamicResource DARKPrimary}"
-                                                                            FontFamily="{StaticResource RemixIcon}" />
+                                                                            FontWeight="Bold" Style="{StaticResource ScheduleIconButtonStyle}" Content="&#xEC42;"
+                                                                            Foreground="{DynamicResource DARKPrimary}" />
                                                                     </Grid>
                                                                 </Border>
                                                             </DataTemplate>

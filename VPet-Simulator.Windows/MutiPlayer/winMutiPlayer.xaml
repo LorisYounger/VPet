@@ -11,6 +11,22 @@
         Style="{DynamicResource BaseWindowXStyle}" Background="{DynamicResource PrimaryLighter}"
         FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}" MaxHeight="400"
         ResizeMode="CanMinimize" Closing="Window_Closing">
+    <pu:WindowX.Resources>
+        <Style x:Key="MultiplayerPermissionSwitchStyle" TargetType="pu:Switch" BasedOn="{StaticResource {x:Type pu:Switch}}">
+            <Setter Property="BorderBrush" Value="#AFAFAF" />
+            <Setter Property="ToggleBrush" Value="#AFAFAF" />
+            <Setter Property="Padding" Value="2,0,0,0" />
+            <Setter Property="BoxHeight" Value="13" />
+            <Setter Property="BoxWidth" Value="21" />
+            <Setter Property="Foreground" Value="#AFAFAF" />
+            <Setter Property="CheckedForeground" Value="{DynamicResource PrimaryText}" />
+            <Setter Property="CheckedBackground" Value="{DynamicResource PrimaryDarker}" />
+            <Setter Property="CheckedBorderBrush" Value="{DynamicResource PrimaryDarker}" />
+            <Setter Property="CheckedToggleBrush" Value="{DynamicResource DARKPrimaryText}" />
+            <Setter Property="ToggleShadowColor" Value="{x:Null}" />
+            <Setter Property="ToggleSize" Value="9" />
+        </Style>
+    </pu:WindowX.Resources>
     <TabControl x:Name="tabControl" TabStripPlacement="Left"
             pu:TabControlHelper.ItemsHorizontalHeaderAlignment="Stretch"
             pu:TabControlHelper.ItemsWidth="{ll:Dbe MutiPlayerItemsWidth_240, DefValue=240}"
@@ -67,21 +83,11 @@
                     </StackPanel>
                     <pu:Switch x:Name="swAllowJoin"
                             FontSize="{Binding FontSize, Converter={x:Static pu:Converters.DoublePlusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}"
-                            BorderBrush="#AFAFAF" ToggleBrush="#AFAFAF" Padding="2,0,0,0" BoxHeight="13" BoxWidth="21"
-                            Foreground="#AFAFAF" CheckedForeground="{DynamicResource PrimaryText}"
-                            CheckedBackground="{DynamicResource PrimaryDarker}"
-                            CheckedBorderBrush="{DynamicResource PrimaryDarker}" Content="{ll:Str 允许好友加入}"
-                            CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToggleShadowColor="{x:Null}"
-                            ToggleSize="9" IsChecked="True" Checked="swAllowJoin_Checked"
+                            Style="{StaticResource MultiplayerPermissionSwitchStyle}" Content="{ll:Str 允许好友加入}" IsChecked="True" Checked="swAllowJoin_Checked"
                             Unchecked="swAllowJoin_Unchecked" HorizontalAlignment="Left" />
                     <pu:Switch x:Name="swAllowTouch" HorizontalAlignment="Left"
                             FontSize="{Binding FontSize, Converter={x:Static pu:Converters.DoublePlusConverter}, ConverterParameter=2, Source={x:Static pu:GlobalSettings.Setting}}"
-                            BorderBrush="#AFAFAF" ToggleBrush="#AFAFAF" Padding="2,0,0,0" BoxHeight="13" BoxWidth="21"
-                            Foreground="#AFAFAF" CheckedForeground="{DynamicResource PrimaryText}"
-                            CheckedBackground="{DynamicResource PrimaryDarker}"
-                            CheckedBorderBrush="{DynamicResource PrimaryDarker}" Content="{ll:Str 允许好友交互}"
-                            CheckedToggleBrush="{DynamicResource DARKPrimaryText}" ToggleShadowColor="{x:Null}"
-                            ToggleSize="9" IsChecked="True" Checked="swAllowTouch_Checked"
+                            Style="{StaticResource MultiplayerPermissionSwitchStyle}" Content="{ll:Str 允许好友交互}" IsChecked="True" Checked="swAllowTouch_Checked"
                             Unchecked="swAllowTouch_Unchecked" />
                 </StackPanel>
             </Grid>

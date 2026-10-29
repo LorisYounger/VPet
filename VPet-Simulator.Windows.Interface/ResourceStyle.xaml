@@ -93,44 +93,6 @@
   </Style>
 
   <Style
-    x:Key="StandardSliderStyle"
-    BasedOn="{StaticResource {x:Type Slider}}"
-    TargetType="Slider">
-    <Setter Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
-    <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDark}" />
-    <Setter Property="pu:SliderHelper.ThumbShadowColor" Value="{DynamicResource ShadowColor}" />
-    <Setter Property="pu:SliderHelper.TrackThickness" Value="2.5" />
-    <Setter Property="pu:SliderHelper.ThumbBorderBrush" Value="{DynamicResource DARKPrimary}" />
-    <Setter Property="pu:SliderHelper.ThumbBorderThickness" Value="2.5" />
-    <Setter Property="pu:SliderHelper.CoveredBackground" Value="{DynamicResource DARKPrimary}" />
-    <Setter Property="pu:ShadowHelper.ShadowDepth" Value="3" />
-    <Setter Property="pu:ShadowHelper.Direction" Value="270" />
-    <Setter Property="pu:ShadowHelper.Opacity" Value="0.5" />
-  </Style>
-
-  <Style
-    x:Key="StandardRadioButtonStyle"
-    BasedOn="{StaticResource {x:Type RadioButton}}"
-    TargetType="RadioButton">
-    <Setter Property="pu:RadioButtonHelper.CheckedToggleBrush" Value="{DynamicResource DARKPrimary}" />
-    <Setter Property="pu:RadioButtonHelper.CheckedBorderBrush" Value="{DynamicResource DARKPrimary}" />
-  </Style>
-
-  <Style
-    x:Key="SideMenuListBoxStyle"
-    BasedOn="{StaticResource {x:Type ListBox}}"
-    TargetType="ListBox">
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="Background" Value="Transparent" />
-    <Setter Property="pu:ListBoxHelper.ItemsHeight" Value="30" />
-    <Setter Property="pu:ListBoxHelper.ItemsPadding" Value="15,0" />
-    <Setter Property="pu:ListBoxHelper.ItemsCornerRadius" Value="5" />
-    <Setter Property="pu:ListBoxHelper.ItemsHoverBackground" Value="{x:Null}" />
-    <Setter Property="pu:ListBoxHelper.ItemsSelectedBackground" Value="{DynamicResource DARKPrimary}" />
-    <Setter Property="pu:ListBoxHelper.ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
-  </Style>
-
-  <Style
     x:Key="ToolBarMenuStyle"
     BasedOn="{StaticResource {x:Type Menu}}"
     TargetType="Menu">

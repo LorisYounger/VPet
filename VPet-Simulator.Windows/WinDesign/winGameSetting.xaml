@@ -9,11 +9,23 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib" Width="{ll:Dbe SettingWidth_700, DefValue=700}"
         Height="{ll:Dbe SettingHeight_550, DefValue=550}" Closing="WindowX_Closing" FontSize="16"
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" mc:Ignorable="d">
-    <!--<pu:WindowX.Resources>
-        <DataTemplate x:Key="DIYDataTemplate">
-
-        </DataTemplate>
-    </pu:WindowX.Resources>-->
+    <pu:WindowX.Resources>
+        <Style x:Key="SettingHeadingRunStyle" TargetType="Run">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style x:Key="SettingHeadingTextStyle" TargetType="TextBlock">
+            <Setter Property="Background" Value="{x:Null}" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDarker}" />
+        </Style>
+        <Style x:Key="SettingLinkTextStyle" TargetType="TextBlock">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryDarker}" />
+        </Style>
+    </pu:WindowX.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="SettingMenuWidth" Width="180" />
@@ -37,12 +49,7 @@
             </GridSplitter.Template>
         </GridSplitter>
         <TabControl x:Name="MainTab" Margin="5" pu:TabControlHelper.CanHeaderPanelScroll="True"
-                pu:TabControlHelper.ItemsCornerRadius="4" pu:TabControlHelper.ItemsHeight="NaN"
-                pu:TabControlHelper.ItemsHoverBackground="{DynamicResource PrimaryLight}"
-                pu:TabControlHelper.ItemsPadding="10,7"
-                pu:TabControlHelper.ItemsSelectedBackground="{DynamicResource PrimaryDark}"
-                pu:TabControlHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}" Background="Transparent"
-                BorderThickness="0" Foreground="{DynamicResource PrimaryText}"
+                Style="{StaticResource ThemedTabControlStyle}"
                 SelectionChanged="MainTab_SelectionChanged" Grid.Column="1">
             <TabControl.ContentTemplate>
                 <DataTemplate>
@@ -88,21 +95,12 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <pu:Switch x:Name="TopMostBox" Grid.Column="0" Background="Transparent"
-                                        BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                        Checked="TopMostBox_Checked" CheckedBackground="{DynamicResource Primary}"
-                                        CheckedBorderBrush="{DynamicResource Primary}"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                        Content="{ll:Str 将桌宠置于顶层}" ToggleBrush="{DynamicResource PrimaryDark}"
-                                        ToggleShadowColor="{x:Null}" ToggleSize="14" ToolTip="{ll:Str 将桌宠置于顶层}"
+                                <pu:Switch x:Name="TopMostBox" Grid.Column="0" Style="{StaticResource PrimarySwitchStyle}"
+                                        Checked="TopMostBox_Checked"
+                                        Content="{ll:Str 将桌宠置于顶层}" ToolTip="{ll:Str 将桌宠置于顶层}"
                                         Unchecked="TopMostBox_Unchecked" />
-                                <pu:Switch x:Name="HitThroughBox" Grid.Column="1" Background="Transparent"
-                                        BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                        Checked="HitThroughBox_Checked" CheckedBackground="{DynamicResource Primary}"
-                                        CheckedBorderBrush="{DynamicResource Primary}"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str '鼠标穿透'}"
-                                        ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
-                                        ToggleSize="14" ToolTip="{ll:Str '鼠标将会穿过桌宠到下方内容,不打扰操作\&#13;该选项'}"
+                                <pu:Switch x:Name="HitThroughBox" Grid.Column="1" Style="{StaticResource PrimarySwitchStyle}"
+                                        Checked="HitThroughBox_Checked" Content="{ll:Str '鼠标穿透'}" ToolTip="{ll:Str '鼠标将会穿过桌宠到下方内容,不打扰操作\&#13;该选项'}"
                                         Unchecked="HitThroughBox_Checked" />
                             </Grid>
 
@@ -111,23 +109,14 @@
                                     SelectionChanged="LanguageBox_SelectionChanged"
                                     Style="{DynamicResource StandardComboBoxStyle}" />
 
-                            <pu:Switch x:Name="PetHelperBox" Grid.Row="1" Grid.Column="2" Background="Transparent"
-                                    BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                    Checked="PetHelperBox_Checked" CheckedBackground="{DynamicResource Primary}"
-                                    CheckedBorderBrush="{DynamicResource Primary}"
-                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                    Content="{ll:Str '添加小标,快速切换顶层或穿透'}" ToggleBrush="{DynamicResource PrimaryDark}"
-                                    ToggleShadowColor="{x:Null}" ToggleSize="14" ToolTip="{ll:Str '添加快速切换小标,切换顶层或穿透'}"
+                            <pu:Switch x:Name="PetHelperBox" Grid.Row="1" Grid.Column="2" Style="{StaticResource PrimarySwitchStyle}"
+                                    Checked="PetHelperBox_Checked"
+                                    Content="{ll:Str '添加小标,快速切换顶层或穿透'}" ToolTip="{ll:Str '添加快速切换小标,切换顶层或穿透'}"
                                     Unchecked="PetHelperBox_Checked" />
 
                             <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{ll:Str 更高缩放}" />
-                            <pu:Switch x:Name="FullScreenBox" Grid.Row="3" Grid.Column="2" Background="Transparent"
-                                    BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                    Checked="FullScreenBox_Check" CheckedBackground="{DynamicResource Primary}"
-                                    CheckedBorderBrush="{DynamicResource Primary}"
-                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str 支持更大缩放倍率}"
-                                    ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
-                                    ToggleSize="14" ToolTip="{ll:Str 解锁缩放限制}" Unchecked="FullScreenBox_Check" />
+                            <pu:Switch x:Name="FullScreenBox" Grid.Row="3" Grid.Column="2" Style="{StaticResource PrimarySwitchStyle}"
+                                    Checked="FullScreenBox_Check" Content="{ll:Str 支持更大缩放倍率}" ToolTip="{ll:Str 解锁缩放限制}" Unchecked="FullScreenBox_Check" />
                             <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="{ll:Str 缩放等级}" />
                             <Grid Grid.Row="4" Grid.RowSpan="2" Grid.Column="2">
                                 <Grid.ColumnDefinitions>
@@ -143,8 +132,7 @@
                                         SmallChange=".05" Style="{DynamicResource StandardSliderStyle}"
                                         TickFrequency="0.05" Value="1" />
                                 <TextBlock Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Center"
-                                        Background="{x:Null}" FontSize="18" FontWeight="Bold"
-                                        Foreground="{DynamicResource DARKPrimaryDarker}"
+                                        Style="{StaticResource SettingHeadingTextStyle}"
                                         Text="{Binding ElementName=ZoomSlider, Path=Value, StringFormat=f2}" />
                                 <Slider x:Name="SliderResolution" Grid.Row="1" VerticalAlignment="Center"
                                         IsSnapToTickEnabled="True" LargeChange="50" Maximum="1920" Minimum="200"
@@ -153,8 +141,7 @@
                                         ToolTip="{ll:Str '桌宠图形渲染的分辨率,越高图形越清晰\&#13;但是高分辨率会占用更多内存\&#13;重启后生效'}"
                                         Value="1000" />
                                 <TextBlock Grid.Row="1" Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Center"
-                                        Background="{x:Null}" FontSize="18" FontWeight="Bold"
-                                        Foreground="{DynamicResource DARKPrimaryDarker}"
+                                        Style="{StaticResource SettingHeadingTextStyle}"
                                         Text="{Binding ElementName=SliderResolution, Path=Value, StringFormat=f0}"
                                         ToolTip="{ll:Str '桌宠图形渲染的分辨率,越高图形越清晰\&#13;但是高分辨率会占用更多内存\&#13;重启后生效'}" />
                             </Grid>
@@ -176,13 +163,9 @@
                                     <ColumnDefinition Width="1*" />
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
-                                <pu:Switch x:Name="StartPlace" VerticalAlignment="Center" Background="Transparent"
-                                        BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                        Checked="StartPlace_Checked" CheckedBackground="{DynamicResource Primary}"
-                                        CheckedBorderBrush="{DynamicResource Primary}"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str 退出位置}"
-                                        IsChecked="True" ToggleBrush="{DynamicResource PrimaryDark}"
-                                        ToggleShadowColor="{x:Null}" ToggleSize="14"
+                                <pu:Switch x:Name="StartPlace" VerticalAlignment="Center" Style="{StaticResource PrimarySwitchStyle}"
+                                        Checked="StartPlace_Checked" Content="{ll:Str 退出位置}"
+                                        IsChecked="True"
                                         ToolTip="{ll:Str 游戏退出位置为下次桌宠启动出现的位置}" Unchecked="StartPlace_Checked" />
                                 <TextBox x:Name="TextBoxStartUpX" Grid.Column="1" Margin="0,0,5,0"
                                         pu:IconHelper.Margin="5,0,0,0" pu:TextBoxHelper.Icon="X"
@@ -195,43 +178,26 @@
                                         FontSize="16" Style="{DynamicResource StandardTextBoxStyle}"
                                         TextChanged="TextBoxStartUp_TextChanged" ToolTip="{ll:Str Y轴}" />
                                 <Button x:Name="BtnStartUpGet" Grid.Column="3" Height="30" HorizontalAlignment="Center"
-                                        VerticalAlignment="Center" pu:ButtonHelper.CornerRadius="4"
-                                        Background="{DynamicResource SecondaryLight}"
-                                        BorderBrush="{DynamicResource SecondaryDark}" BorderThickness="2"
+                                        VerticalAlignment="Center" Style="{StaticResource SecondaryBorderedButtonStyle}"
                                         Click="BtnStartUpGet_Click" Content="{ll:Str 当前位置}" />
 
                             </Grid>
                             <TextBlock Grid.Row="9" VerticalAlignment="Center" Text="{ll:Str 消息框}" />
-                            <pu:Switch x:Name="SwitchMsgOut" Grid.Row="9" Grid.Column="2" Background="Transparent"
-                                    BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                    Checked="SwitchMsgOut_Checked" CheckedBackground="{DynamicResource Primary}"
-                                    CheckedBorderBrush="{DynamicResource Primary}"
-                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str 将消息框置于外部}"
-                                    ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
-                                    ToggleSize="14" ToolTip="{ll:Str 将消息框置于外部}" Unchecked="SwitchMsgOut_Checked" />
+                            <pu:Switch x:Name="SwitchMsgOut" Grid.Row="9" Grid.Column="2" Style="{StaticResource PrimarySwitchStyle}"
+                                    Checked="SwitchMsgOut_Checked" Content="{ll:Str 将消息框置于外部}" ToolTip="{ll:Str 将消息框置于外部}" Unchecked="SwitchMsgOut_Checked" />
                             <TextBlock Grid.Row="10" VerticalAlignment="Center" Text="{ll:Str 开机启动}" />
                             <Grid Grid.Row="10" Grid.Column="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <pu:Switch x:Name="StartUpBox" Background="Transparent"
-                                        BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                        Checked="StartUpBox_Checked" CheckedBackground="{DynamicResource Primary}"
-                                        CheckedBorderBrush="{DynamicResource Primary}"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str 开机启动}"
-                                        ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
-                                        ToggleSize="14" ToolTip="{ll:Str '该游戏随着开机启动该程序\&#13;如需卸载游戏\&#13;请关闭该选项'}"
+                                <pu:Switch x:Name="StartUpBox" Style="{StaticResource PrimarySwitchStyle}"
+                                        Checked="StartUpBox_Checked" Content="{ll:Str 开机启动}" ToolTip="{ll:Str '该游戏随着开机启动该程序\&#13;如需卸载游戏\&#13;请关闭该选项'}"
                                         Unchecked="StartUpBox_Checked" />
-                                <pu:Switch x:Name="StartUpSteamBox" Grid.Column="1" Background="Transparent"
-                                        BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                        Checked="StartUpSteamBox_Checked" CheckedBackground="{DynamicResource Primary}"
-                                        CheckedBorderBrush="{DynamicResource Primary}"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
+                                <pu:Switch x:Name="StartUpSteamBox" Grid.Column="1" Style="{StaticResource PrimarySwitchStyle}"
+                                        Checked="StartUpSteamBox_Checked"
                                         Content="{ll:Str 从Steam启动}"
-                                        IsEnabled="{Binding ElementName=StartUpBox, Path=IsChecked}"
-                                        ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
-                                        ToggleSize="14" ToolTip="{ll:Str '从Steam启动该游戏, 统计时长不能停'}"
+                                        IsEnabled="{Binding ElementName=StartUpBox, Path=IsChecked}" ToolTip="{ll:Str '从Steam启动该游戏, 统计时长不能停'}"
                                         Unchecked="StartUpSteamBox_Checked" />
                             </Grid>
                             <TextBlock Grid.Row="11" VerticalAlignment="Center" Text="{ll:Str 宠物动画}" />
@@ -242,13 +208,8 @@
                                     Style="{DynamicResource StandardComboBoxStyle}" ToolTip="{ll:Str '加载的宠物动画,重启后生效'}" />
                             <TextBlock Grid.Row="13" VerticalAlignment="Center" Text="{ll:Str 隐藏窗口}" />
                             <pu:Switch x:Name="SwitchHideFromTaskControl" Grid.Row="13" Grid.Column="2"
-                                    Background="Transparent" BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18"
-                                    BoxWidth="35" Checked="SwitchHideFromTaskControl_OnChecked"
-                                    CheckedBackground="{DynamicResource Primary}"
-                                    CheckedBorderBrush="{DynamicResource Primary}"
-                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                    Content="{ll:Str '在任务切换器中隐藏窗口'}" ToggleBrush="{DynamicResource PrimaryDark}"
-                                    ToggleShadowColor="{x:Null}" ToggleSize="14" ToolTip="{ll:Str '在Alt+Tab中隐藏'}"
+                                    Style="{StaticResource PrimarySwitchStyle}" Checked="SwitchHideFromTaskControl_OnChecked"
+                                    Content="{ll:Str '在任务切换器中隐藏窗口'}" ToolTip="{ll:Str '在Alt+Tab中隐藏'}"
                                     Unchecked="SwitchHideFromTaskControl_OnChecked" />
                             <TextBlock Grid.Row="14" VerticalAlignment="Center" Text="{ll:Str 透明功能}" />
                             <TextBlock Grid.Row="15" VerticalAlignment="Center" Text="{ll:Str 透明度}" />
@@ -257,21 +218,12 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <pu:Switch x:Name="SwitchOpacity" Background="Transparent"
-                                        BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                        Checked="SwitchOpacity_Checked" CheckedBackground="{DynamicResource Primary}"
-                                        CheckedBorderBrush="{DynamicResource Primary}"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                        Content="{ll:Str '常态透明度'}" ToggleBrush="{DynamicResource PrimaryDark}"
-                                        ToggleShadowColor="{x:Null}" ToggleSize="14" ToolTip="{ll:Str '为桌宠整体启用透明度'}"
+                                <pu:Switch x:Name="SwitchOpacity" Style="{StaticResource PrimarySwitchStyle}"
+                                        Checked="SwitchOpacity_Checked"
+                                        Content="{ll:Str '常态透明度'}" ToolTip="{ll:Str '为桌宠整体启用透明度'}"
                                         Unchecked="SwitchOpacity_Checked" />
-                                <pu:Switch x:Name="SwitchOpacityHitThrough" Grid.Column="2" Background="Transparent"
-                                        BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                        CheckedBackground="{DynamicResource Primary}"
-                                        CheckedBorderBrush="{DynamicResource Primary}"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                        Content="{ll:Str '鼠标穿透透明度'}" ToggleBrush="{DynamicResource PrimaryDark}"
-                                        ToggleShadowColor="{x:Null}" ToggleSize="14" ToolTip="{ll:Str '仅在鼠标穿透时启用透明度功能'}"
+                                <pu:Switch x:Name="SwitchOpacityHitThrough" Grid.Column="2" Style="{StaticResource PrimarySwitchStyle}"
+                                        Content="{ll:Str '鼠标穿透透明度'}" ToolTip="{ll:Str '仅在鼠标穿透时启用透明度功能'}"
                                         Unchecked="SwitchOpacityHitThrough_Checked"
                                         Checked="SwitchOpacityHitThrough_Checked" />
                             </Grid>
@@ -285,8 +237,7 @@
                                         Style="{DynamicResource StandardSliderStyle}" TickFrequency="0.05" Value="0.6"
                                         PreviewMouseUp="OpacitySlider_PreviewMouseUp" />
                                 <TextBlock Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Center"
-                                        Background="{x:Null}" FontSize="18" FontWeight="Bold"
-                                        Foreground="{DynamicResource DARKPrimaryDarker}"
+                                        Style="{StaticResource SettingHeadingTextStyle}"
                                         Text="{Binding ElementName=OpacitySlider, Path=Value, StringFormat=p0}" />
                             </Grid>
                         </Grid>
@@ -302,7 +253,7 @@
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
                                 TextWrapping="Wrap">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 自动保存频率}" /><LineBreak />
+                            <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 自动保存频率}" /><LineBreak />
                             <Run Text="{ll:Str 在指定时间后自动保存游戏数据}" />
                         </TextBlock>
                         <ComboBox x:Name="CBAutoSave" Width="200" Margin="10,5,0,0" HorizontalAlignment="Left"
@@ -347,7 +298,7 @@
                         </ComboBox>
                         <TextBlock Margin="0,6,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 从备份中还原}" /><LineBreak />
+                            <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 从备份中还原}" /><LineBreak />
                             <Run Text="{ll:Str '虚拟桌宠模拟器在每次保存的时候都会备份上次储存的存档, 当原始存档丢失,受损或误操作时, 就可以还原他们'}" />
                         </TextBlock>
                         <Grid Margin="0,5,0,0">
@@ -367,14 +318,13 @@
                                     Minimum="1" ValueChanged="numBackupSaveMaxNum_ValueChanged" Value="20" />
                             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 存档管理}" />
                             <Button x:Name="BtnOpenSaveManager" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
-                                    Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                    Background="{DynamicResource SecondaryLight}" Click="BtnOpenSaveManager_Click"
+                                    Margin="5" Padding="1" Style="{StaticResource SecondaryButtonStyle}" Click="BtnOpenSaveManager_Click"
                                     Content="{ll:Str 打开存档管理器}" ToolTip="{ll:Str 查看并加载游戏存档}" />
                         </Grid>
 
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 聊天设置}" /><LineBreak />
+                            <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 聊天设置}" /><LineBreak />
                             <Run Text="{ll:Str 聊天框等相关设置}" />
                         </TextBlock>
                         <Grid>
@@ -429,29 +379,27 @@
                                 </RadioButton>
                             </Grid>
                             <Button x:Name="BtnCGPTReSet" Grid.Row="1" Grid.Column="2" Margin="4" Padding="1"
-                                    pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
                                     Click="ChatGPT_Reset_Click" Content="{ll:Str 初始化桌宠聊天程序}" />
                         </Grid>
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 游戏操作}" />
+                            <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 游戏操作}" />
                         </TextBlock>
-                        <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                Background="{DynamicResource SecondaryLight}" Click="save_click" Content="{ll:Str 保存游戏}"
+                        <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" Style="{StaticResource SecondaryButtonStyle}" Click="save_click" Content="{ll:Str 保存游戏}"
                                 ToolTip="{ll:Str '手动保存桌宠存档,就算不手动保存,桌宠也会在退出的时候自动保存'}" />
-                        <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                Background="{DynamicResource SecondaryLight}" Content="{ll:Str 重新开始}"
+                        <Button Grid.Row="1" Grid.Column="2" Margin="4" Padding="1" Style="{StaticResource SecondaryButtonStyle}" Content="{ll:Str 重新开始}"
                                 ToolTip="{ll:Str '重新开始新游戏,重置统计等信息\&#13;对于想要获得脱离超模从而获得成就非常有帮助'}" Click="restart_click" />
                         <Button x:Name="btn_cleancache" Grid.Row="1" Grid.Column="2" Margin="4" Padding="1"
-                                pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
+                                Style="{StaticResource SecondaryButtonStyle}"
                                 Click="cleancache_click" Content="{ll:Str 清理缓存}" ToolTip="{ll:Str '清理缓存的动画,声音文件'}" />
                         <Button x:Name="btn_fixdata" Grid.Row="1" Grid.Column="2" Margin="4" Padding="1"
-                                pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
+                                Style="{StaticResource SecondaryButtonStyle}"
                                 Content="{ll:Str 数据修复}" ToolTip="{ll:Str '校准玩家游玩时间数据\&#13;为失去超模计算(Hash检查)小标玩家重新获得小标'}"
                                 Click="btn_fixdata_Click" />
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 桌宠多开}" /> <LineBreak />
+                            <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 桌宠多开}" /> <LineBreak />
                             <Run Text="{ll:Str '支持多开多个桌宠, 这些桌宠将会有独立的设置与存档\&#13;如果画师能够足够勤奋,未来可以看到这些多开的桌宠之间的互动'}" />
                         </TextBlock>
                         <Grid Margin="0,5,0,0">
@@ -466,8 +414,7 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{ll:Str 新建多开}" />
-                            <Button Grid.Row="0" Grid.Column="3" Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str 新建}"
+                            <Button Grid.Row="0" Grid.Column="3" Margin="5" Padding="1" Style="{StaticResource SecondaryButtonStyle}" Content="{ll:Str 新建}"
                                     ToolTip="{ll:Str 新建一个多开}" Click="btn_mutinew_click" />
                             <TextBox x:Name="TBNew" Grid.Column="2" Margin="0,1,0,1" FontSize="16"
                                     pu:TextBoxHelper.Watermark="{ll:Str '新开的存档名称,一旦新建,则无法修改'}"
@@ -475,16 +422,14 @@
                                     Style="{DynamicResource StandardTextBoxStyle}"
                                     TextChanged="TextBoxPetName_TextChanged" />
                             <TextBlock Grid.Row="1" VerticalAlignment="Top" Text="{ll:Str 打开}" Margin="0,8,0,0" />
-                            <Button Grid.Row="1" Grid.Column="3" Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str 打开}"
+                            <Button Grid.Row="1" Grid.Column="3" Margin="5" Padding="1" Style="{StaticResource SecondaryButtonStyle}" Content="{ll:Str 打开}"
                                     ToolTip="{ll:Str 打开当前选择的多开存档}" VerticalAlignment="Top" Height="25"
                                     Click="btn_muti_open_click" />
-                            <Button Grid.Row="1" Grid.Column="3" Margin="5" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str 默认}"
+                            <Button Grid.Row="1" Grid.Column="3" Margin="5" Padding="1" Style="{StaticResource SecondaryButtonStyle}" Content="{ll:Str 默认}"
                                     ToolTip="{ll:Str 设置当前多开存档为默认启动项}" VerticalAlignment="Center" Height="25"
                                     Click="btn_muti_master_click" />
                             <Button x:Name="btn_mutidel" Grid.Row="1" Grid.Column="3" Margin="5" Padding="1"
-                                    pu:ButtonHelper.CornerRadius="4" Background="{DynamicResource SecondaryLight}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
                                     Content="{ll:Str 删除}" ToolTip="{ll:Str 删除当前选择的多开存档}" VerticalAlignment="Bottom"
                                     Height="25" Click="btn_mutidel_Click" />
                             <ListBox x:Name="LBHave" Grid.Row="1" Grid.Column="2" Margin="1,2,1,2"
@@ -497,16 +442,12 @@
                         </Grid>
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
-                                <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 开发者设置}" /><LineBreak />
+                                <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 开发者设置}" /><LineBreak />
                                 <Run Text="{ll:Str 启用开发者相关功能}" />
                         </TextBlock>
-                        <pu:Switch x:Name="ConsoleBox" Grid.Column="2" Background="Transparent"
-                                BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                Checked="ConsoleBox_Checked" CheckedBackground="{DynamicResource Primary}"
-                                CheckedBorderBrush="{DynamicResource Primary}"
-                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                Content="{ll:Str '启用开发者控制台, 重启后生效'}" ToggleBrush="{DynamicResource PrimaryDark}"
-                                ToggleShadowColor="{x:Null}" ToggleSize="14" Unchecked="ConsoleBox_Checked" />
+                        <pu:Switch x:Name="ConsoleBox" Grid.Column="2" Style="{StaticResource PrimarySwitchStyle}"
+                                Checked="ConsoleBox_Checked"
+                                Content="{ll:Str '启用开发者控制台, 重启后生效'}" Unchecked="ConsoleBox_Checked" />
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -515,7 +456,7 @@
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
                                 TextWrapping="Wrap">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 互动设置}" /><LineBreak />
+                            <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 互动设置}" /><LineBreak />
                             <Run Text="{ll:Str 游戏互动相关设置}" />
                         </TextBlock>
                         <Grid>
@@ -534,13 +475,9 @@
                                 <RowDefinition Height="35" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <pu:Switch x:Name="CalFunctionBox" Grid.Column="2" Background="Transparent"
-                                    BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                    Checked="CalFunctionBox_Checked" CheckedBackground="{DynamicResource Primary}"
-                                    CheckedBorderBrush="{DynamicResource Primary}"
-                                    CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                    Content="{ll:Str '启用后桌宠会有状态变化,需要按时投喂等'}" ToggleBrush="{DynamicResource PrimaryDark}"
-                                    ToggleShadowColor="{x:Null}" ToggleSize="14"
+                            <pu:Switch x:Name="CalFunctionBox" Grid.Column="2" Style="{StaticResource PrimarySwitchStyle}"
+                                    Checked="CalFunctionBox_Checked"
+                                    Content="{ll:Str '启用后桌宠会有状态变化,需要按时投喂等'}"
                                     ToolTip="{ll:Str '启用数据计算,桌宠会有状态变化,需要按时投喂等.\&#13;如果嫌麻烦可以关掉'}"
                                     Unchecked="CalFunctionBox_Checked" />
                             <Grid Grid.Row="1" Grid.Column="2">
@@ -569,24 +506,14 @@
                                     <RowDefinition Height="35" />
                                     <RowDefinition Height="35" />
                                 </Grid.RowDefinitions>
-                                <pu:Switch x:Name="MoveEventBox" Margin="10,0,0,0" Background="Transparent"
-                                        BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                        Checked="MoveEventBox_Checked" CheckedBackground="{DynamicResource Primary}"
-                                        CheckedBorderBrush="{DynamicResource Primary}"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str 启用桌宠移动}"
-                                        IsChecked="True" ToggleBrush="{DynamicResource PrimaryDark}"
-                                        ToggleShadowColor="{x:Null}" ToggleSize="14"
+                                <pu:Switch x:Name="MoveEventBox" Margin="10,0,0,0" Style="{StaticResource PrimarySwitchStyle}"
+                                        Checked="MoveEventBox_Checked" Content="{ll:Str 启用桌宠移动}"
+                                        IsChecked="True"
                                         ToolTip="{ll:Str '启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.\&#13;如果嫌麻烦可以关掉'}"
                                         Unchecked="MoveEventBox_Checked" />
                                 <pu:Switch x:Name="SmartMoveEventBox" Grid.Column="1" Margin="10,0,0,0"
-                                        Background="Transparent" BorderBrush="{DynamicResource PrimaryDark}"
-                                        BoxHeight="18" BoxWidth="35" Checked="SmartMoveEventBox_Checked"
-                                        CheckedBackground="{DynamicResource Primary}"
-                                        CheckedBorderBrush="{DynamicResource Primary}"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str '智能移动'}"
-                                        IsEnabled="{Binding ElementName=MoveEventBox, Path=IsChecked}"
-                                        ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
-                                        ToggleSize="14" ToolTip="{ll:Str '当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能\&#13;将在下次交互时解除'}"
+                                        Style="{StaticResource PrimarySwitchStyle}" Checked="SmartMoveEventBox_Checked" Content="{ll:Str '智能移动'}"
+                                        IsEnabled="{Binding ElementName=MoveEventBox, Path=IsChecked}" ToolTip="{ll:Str '当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能\&#13;将在下次交互时解除'}"
                                         Unchecked="SmartMoveEventBox_Checked" />
                                 <TextBlock Grid.Row="1" Text="{ll:Str '智能移动判断时间间隔'}"
                                         ToolTip="{ll:Str '当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能\&#13;将在下次交互时解除'}" />
@@ -658,15 +585,9 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <pu:Switch x:Name="AutoChangeWindowEvent" Margin="5" Background="Transparent"
-                                        BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
+                                <pu:Switch x:Name="AutoChangeWindowEvent" Margin="5" Style="{StaticResource PrimarySwitchStyle}"
                                         Checked="AutoChangeWindowEvent_Checked"
-                                        CheckedBackground="{DynamicResource Primary}"
-                                        CheckedBorderBrush="{DynamicResource Primary}"
-                                        CheckedToggleBrush="{DynamicResource DARKPrimaryText}"
-                                        Content="{ll:Str 启用窗口自动切换}" IsChecked="True"
-                                        ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}"
-                                        ToggleSize="14" ToolTip="{ll:Str '启用窗口切换，桌宠将能自主切换窗口'}"
+                                        Content="{ll:Str 启用窗口自动切换}" IsChecked="True" ToolTip="{ll:Str '启用窗口切换，桌宠将能自主切换窗口'}"
                                         Unchecked="AutoChangeWindowEvent_Checked" Grid.Row="0" Grid.ColumnSpan="3" />
                                 <WrapPanel Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="1">
                                     <TextBlock Text="{ll:Str '当前移动区域：'}" />
@@ -674,18 +595,15 @@
                                 </WrapPanel>
 
                                 <Button x:Name="BtnSetMoveArea_Default" Grid.Row="2" Grid.Column="0" Margin="5,5,5,5"
-                                        Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                        Background="{DynamicResource SecondaryLight}"
+                                        Padding="1" Style="{StaticResource SecondaryButtonStyle}"
                                         Click="BtnSetMoveArea_Default_Click" Content="{ll:Str 重置为主屏}"
                                         ToolTip="{ll:Str '设置桌宠只在主屏幕进行移动'}" />
                                 <Button x:Name="BtnSetMoveArea_DetectScreen" Grid.Row="2" Grid.Column="1"
-                                        Margin="5,5,5,5" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                        Background="{DynamicResource SecondaryLight}"
+                                        Margin="5,5,5,5" Padding="1" Style="{StaticResource SecondaryButtonStyle}"
                                         Click="BtnSetMoveArea_DetectScreen_Click" Content="{ll:Str 设为当前屏幕}"
                                         ToolTip="{ll:Str '设置桌宠只在当前桌宠所在的屏幕范围进行移动'}" />
                                 <Button x:Name="BtnSetMoveArea_Window" Grid.Row="2" Grid.Column="2" Margin="5,5,5,5"
-                                        Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                        Background="{DynamicResource SecondaryLight}"
+                                        Padding="1" Style="{StaticResource SecondaryButtonStyle}"
                                         Click="BtnSetMoveArea_Window_Click" Content="{ll:Str 自定移动范围}"
                                         ToolTip="{ll:Str '手动设置桌宠可移动范围'}" />
                             </Grid>
@@ -726,8 +644,7 @@
                                         Style="{DynamicResource StandardSliderStyle}" TickFrequency="1"
                                         ValueChanged="InteractionSlider_ValueChanged" Value="200" />
                                 <TextBlock Grid.Column="1" Width="60" Margin="10,0,0,0" VerticalAlignment="Center"
-                                        Background="{x:Null}" FontSize="18" FontWeight="Bold"
-                                        Foreground="{DynamicResource DARKPrimaryDarker}"
+                                        Style="{StaticResource SettingHeadingTextStyle}"
                                         Text="{Binding ElementName=InteractionSlider, Path=Value}" />
 
                             </Grid>
@@ -735,7 +652,7 @@
                         </Grid>
                         <TextBlock Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 操作设置}" /><LineBreak />
+                            <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 操作设置}" /><LineBreak />
                             <Run Text="{ll:Str 游戏操作相关设置}" />
                         </TextBlock>
                         <Grid>
@@ -785,7 +702,7 @@
                         </Grid>
                         <TextBlock Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                 Background="{x:Null}" TextWrapping="Wrap">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 音乐识别设置}" /><LineBreak />
+                            <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 音乐识别设置}" /><LineBreak />
                             <Run Text="{ll:Str 设置识别音乐播放特殊动作阈值}" /> <LineBreak />
                             <Run Text="{ll:Str 当前播放音量大小}" />
                             :<Run x:Name="RVoice" />
@@ -809,8 +726,7 @@
                                     ToolTip="{ll:Str 当实时播放音量达到该值时运行音乐动作}" ValueChanged="VoiceCatchSilder_ValueChanged"
                                     Value="0.3" />
                             <TextBlock Grid.Column="3" Margin="15,0,0,0" VerticalAlignment="Center"
-                                    Background="{x:Null}" FontSize="18" FontWeight="Bold"
-                                    Foreground="{DynamicResource DARKPrimaryDarker}"
+                                    Style="{StaticResource SettingHeadingTextStyle}"
                                     Text="{Binding ElementName=VoiceCatchSilder, Path=Value, StringFormat=p0}"
                                     ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" />
                             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{ll:Str 高潮音量}"
@@ -822,8 +738,7 @@
                                     ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" ValueChanged="VoiceCatchSilder_ValueChanged"
                                     Value="0.75" />
                             <TextBlock Grid.Row="1" Grid.Column="3" Margin="15,0,0,0" VerticalAlignment="Center"
-                                    Background="{x:Null}" FontSize="18" FontWeight="Bold"
-                                    Foreground="{DynamicResource DARKPrimaryDarker}"
+                                    Style="{StaticResource SettingHeadingTextStyle}"
                                     Text="{Binding ElementName=VoiceMaxSilder, Path=Value, StringFormat=p0}"
                                     ToolTip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}" />
                         </Grid>
@@ -833,7 +748,7 @@
             <TabItem BorderBrush="{DynamicResource PrimaryDarker}" Header="{ll:Str 自定}">
                 <StackPanel>
                     <TextBlock Background="{x:Null}" TextWrapping="Wrap">
-                        <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 自定义链接}" /><LineBreak />
+                        <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 自定义链接}" /><LineBreak />
                         <Run Text="{ll:Str '在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能'}" /><LineBreak />
                         <Run Text="{ll:Str '键盘快捷键编写方法请参考'}" /> <Hyperlink Click="sendkey_click">
                             <Run Text="{ll:Str '键盘快捷键 通用注解'}" />
@@ -845,11 +760,9 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="btn_DIY" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                Background="{DynamicResource SecondaryLight}" Click="DIY_ADD_Click"
+                        <Button x:Name="btn_DIY" Margin="4" Padding="1" Style="{StaticResource SecondaryButtonStyle}" Click="DIY_ADD_Click"
                                 Content="{ll:Str 添加新链接}" />
-                        <Button Grid.Column="1" Margin="4" Padding="1" pu:ButtonHelper.CornerRadius="4"
-                                Background="{DynamicResource SecondaryLight}" Click="DIY_Save_Click"
+                        <Button Grid.Column="1" Margin="4" Padding="1" Style="{StaticResource SecondaryButtonStyle}" Click="DIY_Save_Click"
                                 Content="{ll:Str 保存设置}" />
                     </Grid>
                     <ScrollViewer>
@@ -863,20 +776,15 @@
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
                                 TextWrapping="Wrap">
-                                <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 自动超模MOD优化}" /><LineBreak />
+                                <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 自动超模MOD优化}" /><LineBreak />
                                 <Run Text="{ll:Str '对于超模内容,游戏会自动计算合理价格\&#13;如果未使用任何超模数据,数据菜单栏将会显示图标方便您进行炫耀数据'}" />
                         </TextBlock>
-                        <pu:Switch x:Name="swAutoCal" Grid.Column="2" Background="Transparent"
-                                BorderBrush="{DynamicResource PrimaryDark}" BoxHeight="18" BoxWidth="35"
-                                CheckedBackground="{DynamicResource Primary}"
-                                CheckedBorderBrush="{DynamicResource Primary}"
-                                CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Content="{ll:Str '自动计算合理价格'}"
-                                ToggleBrush="{DynamicResource PrimaryDark}" ToggleShadowColor="{x:Null}" ToggleSize="14"
+                        <pu:Switch x:Name="swAutoCal" Grid.Column="2" Style="{StaticResource PrimarySwitchStyle}" Content="{ll:Str '自动计算合理价格'}"
                                 ToolTip="{ll:Str '该选项重启后生效'}" HorizontalAlignment="Left" Margin="20,0,0,0"
                                 Checked="swAutoCal_Checked" Unchecked="swAutoCal_Checked" />
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}"
                                 FontSize="13" TextWrapping="Wrap" Margin="0,20,0,0">
-                            <Run FontSize="18" FontWeight="Bold" Text="{ll:Str 诊断与反馈}" /> <LineBreak />
+                            <Run Style="{StaticResource SettingHeadingRunStyle}" Text="{ll:Str 诊断与反馈}" /> <LineBreak />
                             <Run Text="{ll:Str '选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.'}" /><LineBreak />
                             <Run Text="{ll:Str '无论选择哪个选项,游戏都可以安全正常地运行.'}" /> <Hyperlink Click="hyper_moreInfo">
                                 <Run Text="{ll:Str 获取有关这些设置的更多信息}" />
@@ -1013,18 +921,15 @@
                                     VerticalScrollBarVisibility="Auto">
                                 <StackPanel>
                                         <TextBlock x:Name="ButtonOpenModFolder" Margin="0,0,0,0"
-                                                HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="Hand"
-                                                FontSize="14" Foreground="{DynamicResource DARKPrimaryDarker}"
+                                                HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource SettingLinkTextStyle}"
                                                 MouseDown="ButtonOpenModFolder_MouseDown" Text="{ll:Str '所在文件夹'}"
                                                 TextDecorations="Underline" TextWrapping="Wrap" />
                                         <TextBlock x:Name="ButtonEnable" Margin="0,4,0,0" HorizontalAlignment="Left"
-                                                VerticalAlignment="Top" Cursor="Hand" FontSize="14"
-                                                Foreground="{DynamicResource DARKPrimaryDarker}"
+                                                VerticalAlignment="Top" Style="{StaticResource SettingLinkTextStyle}"
                                                 MouseDown="ButtonEnable_MouseDown" Text="{ll:Str '启用该模组'}"
                                                 TextDecorations="Underline" TextWrapping="Wrap" />
                                         <TextBlock x:Name="ButtonDisEnable" Margin="0,4,0,0" HorizontalAlignment="Left"
-                                                VerticalAlignment="Top" Cursor="Hand" FontSize="14"
-                                                Foreground="{DynamicResource DARKPrimaryDarker}"
+                                                VerticalAlignment="Top" Style="{StaticResource SettingLinkTextStyle}"
                                                 MouseDown="ButtonDisEnable_MouseDown" Text="{ll:Str '停用该模组'}"
                                                 TextDecorations="Underline" TextWrapping="Wrap" />
                                         <TextBlock x:Name="ButtonPublish" Margin="0,4,0,0" HorizontalAlignment="Left"
@@ -1043,8 +948,7 @@
                                                 Foreground="{DynamicResource DARKPrimary}" Visibility="Collapsed"
                                                 Value="60" />
                                         <TextBlock x:Name="ButtonSetting" Margin="0,4,0,0" HorizontalAlignment="Left"
-                                                VerticalAlignment="Top" Cursor="Hand" FontSize="14"
-                                                Foreground="{DynamicResource DARKPrimaryDarker}"
+                                                VerticalAlignment="Top" Style="{StaticResource SettingLinkTextStyle}"
                                                 MouseDown="ButtonSetting_MouseDown" Text="{ll:Str MOD设置}"
                                                 TextDecorations="Underline" TextWrapping="Wrap" />
                                         <Button x:Name="ButtonAllow" HorizontalAlignment="Left" VerticalAlignment="Top"
