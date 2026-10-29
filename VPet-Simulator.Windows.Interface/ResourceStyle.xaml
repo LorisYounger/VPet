@@ -59,6 +59,7 @@
     x:Key="StandardComboBoxStyle"
     BasedOn="{StaticResource {x:Type ComboBox}}"
     TargetType="{x:Type ComboBox}">
+    <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
     <Setter Property="FontSize" Value="14" />
     <Setter Property="Height" Value="30" />
     <Setter Property="Background" Value="{DynamicResource DARKPrimaryText}" />
