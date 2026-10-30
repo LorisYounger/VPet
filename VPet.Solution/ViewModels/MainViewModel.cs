@@ -7,6 +7,7 @@ using HKW.HKWUtils;
 using LinePutScript;
 using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
+using VPet.Solution.Models;
 using VPet.Solution.Models.SettingEditor;
 using VPet.Solution.ViewModels.SaveViewer;
 using VPet.Solution.ViewModels.SettingEditor;
@@ -26,7 +27,11 @@ public partial class MainViewModel : CloseableViewModel
                 : $"{x.EnumType.Name}_{x.Value}".Translate();
 
         LocalizeCore.StoreTranslation = true;
+        // 本体语言在 mod\0000_core\lang, 必须先注册再加载默认语言
+        ModLoader.LoadCoreLanguage();
         LocalizeCore.LoadDefaultCulture();
+        if (LocalizeCore.CurrentCulture == "null")
+            LocalizeCore.LoadCulture("zh-Hans");
     }
 
     #region Property

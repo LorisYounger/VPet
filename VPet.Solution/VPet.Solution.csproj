@@ -29,14 +29,15 @@
     <PackageReference Include="HKW.WPF" Version="1.2.0" />
     <PackageReference Include="HKW.CommonValueConverters" Version="0.2.0" />
     <PackageReference Include="HKW.MVVM" Version="0.1.2" />
-    <PackageReference Include="HKW.MVVM.SourceGenerator" Version="0.1.8" PrivateAssets="all" />
+    <!-- HKW.MVVM 运行时依赖该程序集, 不能设 PrivateAssets=all, 否则发布后不会写入 deps.json 导致自包含部署启动失败 -->
+    <PackageReference Include="HKW.MVVM.SourceGenerator" Version="0.1.8" />
     <PackageReference Include="Fody" Version="6.9.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" PrivateAssets="all" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
   </ItemGroup>
   <Target Name="DisableMvvmToolkitSourceGenerators" BeforeTargets="CoreCompile">
     <ItemGroup>

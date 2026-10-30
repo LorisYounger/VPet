@@ -167,24 +167,40 @@ public class ModLoader
                     break;
                 case "lang":
                     Tags.Add("lang");
-                    foreach (var langFile in Directory.EnumerateFiles(dir, "*.lps"))
-                    {
-                        LocalizeCore.AddCulture(
-                            Path.GetFileNameWithoutExtension(dir),
-                            new LPS_D(File.ReadAllText(langFile))
-                        );
-                    }
-                    foreach (var langDir in Directory.EnumerateDirectories(dir))
-                    {
-                        foreach (var langFile in Directory.EnumerateFiles(langDir, "*.lps"))
-                        {
-                            LocalizeCore.AddCulture(
-                                Path.GetFileNameWithoutExtension(langDir),
-                                new LPS_D(File.ReadAllText(langFile))
-                            );
-                        }
-                    }
+                    LoadLanguageDirectory(dir);
                     break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 加载本体语言 (部署后位于 mod\0000_core\lang), 需在加载默认语言前调用
+    /// </summary>
+    public static void LoadCoreLanguage()
+    {
+        var langDir = Path.Combine(Environment.CurrentDirectory, "mod", "0000_core", "lang");
+        if (Directory.Exists(langDir))
+            LoadLanguageDirectory(langDir);
+    }
+
+    // 规则与游戏本体 CoreMOD 一致: 根目录 *.lps 的文件名或子目录名为语言代码
+    private static void LoadLanguageDirectory(string langDir)
+    {
+        foreach (var langFile in Directory.EnumerateFiles(langDir, "*.lps"))
+        {
+            LocalizeCore.AddCulture(
+                Path.GetFileNameWithoutExtension(langFile),
+                new LPS_D(File.ReadAllText(langFile))
+            );
+        }
+        foreach (var langSubDir in Directory.EnumerateDirectories(langDir))
+        {
+            foreach (var langFile in Directory.EnumerateFiles(langSubDir, "*.lps"))
+            {
+                LocalizeCore.AddCulture(
+                    Path.GetFileName(langSubDir),
+                    new LPS_D(File.ReadAllText(langFile))
+                );
             }
         }
     }
