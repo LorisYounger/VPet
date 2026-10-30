@@ -52,7 +52,7 @@
           <TextBlock
             Grid.Column="1"
             Style="{DynamicResource TextBlock_LeftCenter}"
-            Text="{Binding CurrentSave.Exp}"
+            Text="{Binding CurrentSave.Level}"
           />
         </Grid>
       </Border>
@@ -62,7 +62,7 @@
           <TextBlock
             Grid.Column="1"
             Style="{DynamicResource TextBlock_LeftCenter}"
-            Text="{Binding CurrentSave.Money}"
+            Text="{Binding CurrentSave.Money, StringFormat=F2}"
           />
         </Grid>
       </Border>
@@ -72,7 +72,7 @@
           <TextBlock
             Grid.Column="1"
             Style="{DynamicResource TextBlock_LeftCenter}"
-            Text="{Binding CurrentSave.Level}"
+            Text="{Binding CurrentSave.Exp, StringFormat=F2}"
           />
         </Grid>
       </Border>
@@ -82,7 +82,7 @@
           <TextBlock
             Grid.Column="1"
             Style="{DynamicResource TextBlock_LeftCenter}"
-            Text="{Binding CurrentSave.Strength}"
+            Text="{Binding CurrentSave.Strength, StringFormat=F2}"
           />
         </Grid>
       </Border>
@@ -92,7 +92,7 @@
           <TextBlock
             Grid.Column="1"
             Style="{DynamicResource TextBlock_LeftCenter}"
-            Text="{Binding CurrentSave.Feeling}"
+            Text="{Binding CurrentSave.Feeling, StringFormat=F2}"
           />
         </Grid>
       </Border>
@@ -102,7 +102,7 @@
           <TextBlock
             Grid.Column="1"
             Style="{DynamicResource TextBlock_LeftCenter}"
-            Text="{Binding CurrentSave.StrengthFood}"
+            Text="{Binding CurrentSave.StrengthFood, StringFormat=F2}"
           />
         </Grid>
       </Border>
@@ -112,7 +112,7 @@
           <TextBlock
             Grid.Column="1"
             Style="{DynamicResource TextBlock_LeftCenter}"
-            Text="{Binding CurrentSave.StrengthDrink}"
+            Text="{Binding CurrentSave.StrengthDrink, StringFormat=F2}"
           />
         </Grid>
       </Border>
