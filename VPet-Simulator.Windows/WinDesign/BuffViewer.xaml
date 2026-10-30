@@ -135,7 +135,7 @@
                             <TextBlock x:Name="TypeText" FontSize="15"
                                     Foreground="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Expander}}" />
                         </Border>
-                        <TextBlock x:Name="SummaryText" Grid.Column="1" Grid.Row="1" Text="{Binding Description}"
+                        <TextBlock x:Name="SummaryText" Grid.Column="1" Grid.Row="1"
                                 Margin="0,5,10,0" TextTrimming="CharacterEllipsis"
                                 Style="{StaticResource BuffSecondaryText}" />
                         <TextBlock x:Name="DurationText" Grid.Column="2" Grid.Row="1" Margin="0,5,0,0"
@@ -147,7 +147,7 @@
                     </Grid>
                 </Expander.Header>
                 <StackPanel>
-                    <TextBlock x:Name="DescriptionText" Text="{Binding Description}" TextWrapping="Wrap"
+                    <TextBlock x:Name="DescriptionText" TextWrapping="Wrap"
                             Margin="0,0,0,7" />
                     <TextBlock x:Name="ActivityText" TextWrapping="Wrap" Style="{StaticResource BuffSecondaryText}" />
                     <TextBlock x:Name="ValuesText" TextWrapping="Wrap" Margin="0,7,0,0" />

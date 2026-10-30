@@ -268,6 +268,9 @@ public partial class BuffViewer : Border, IDisposable
 
     private void Refresh()
     {
+        // 日程和插件可能已翻译这些字段，查词失败时保留原文，避免把译文记入未翻译列表。
+        string TranslateEffectText(string text) => LocalizeCore.CurrentLPS != null
+            && LocalizeCore.CurrentLPS.Assemblage.TryGetValue(text, out var line) ? line.GetString() : text;
         int rowIndex = 0, benefits = 0, debuffs = 0, special = 0;
         bool finite = false;
         var template = (DataTemplate)Resources["BuffRow"];
@@ -299,14 +302,16 @@ public partial class BuffViewer : Border, IDisposable
                 row = (Expander)template.LoadContent();
                 row.DataContext = effect;
                 ((TextBlock)row.FindName("NameText")).Text = string.IsNullOrWhiteSpace(effect.Name)
-                    ? (string.IsNullOrWhiteSpace(effect.Source) ? "未命名效果".Translate() : effect.Source) : effect.Name;
+                    ? (string.IsNullOrWhiteSpace(effect.Source) ? "未命名效果".Translate() : TranslateEffectText(effect.Source)) : TranslateEffectText(effect.Name);
                 ((TextBlock)row.FindName("SourceText")).Text = "来源：{0}".Translate(
-                    string.IsNullOrWhiteSpace(effect.Source) ? "未知来源".Translate() : effect.Source);
+                    string.IsNullOrWhiteSpace(effect.Source) ? "未知来源".Translate() : TranslateEffectText(effect.Source));
                 ((TextBlock)row.FindName("TypeText")).Text = (effect.IsDebuff == true ? "减益" : effect.IsDebuff == null ? "特殊" : "增益").Translate();
                 ((TextBlock)row.FindName("ActivityText")).Text = "适用活动：{0}".Translate(ActivityName(effect.Activity));
                 var description = (TextBlock)row.FindName("DescriptionText");
+                description.Text = string.IsNullOrWhiteSpace(effect.Description) ? "" : TranslateEffectText(effect.Description);
                 description.Visibility = string.IsNullOrWhiteSpace(effect.Description) ? Visibility.Collapsed : Visibility.Visible;
                 var summary = (TextBlock)row.FindName("SummaryText");
+                summary.Text = description.Text;
                 if (string.IsNullOrWhiteSpace(effect.Description)) summary.Visibility = Visibility.Collapsed;
                 else
                 {

@@ -56,3 +56,20 @@
 {0} 当前状态不佳, 工作／学习／娱乐效率降低{1}%#{0} Current status is poor! Work/Study/Entertainment efficiency decreased by {1}%:|
 状态效率#Status Efficiency:|
 当前状态#Current Status:|
+效果#Effect:|
+持续#Duration:|
+刷新列表#Refresh List:|
+尝试启动桌宠#Try to Launch VPet:|
+流式说话测试#Streaming Speech Test:|
+体力获取倍率#Stamina Gain Multiplier:|
+饱腹度获取倍率#Fullness Gain Multiplier:|
+口渴值获取倍率#Thirst Gain Multiplier:|
+心情获取倍率#Mood Gain Multiplier:|
+健康获取倍率#Health Gain Multiplier:|
+饱腹度消耗倍率#Fullness Consumption Multiplier:|
+口渴值消耗倍率#Thirst Consumption Multiplier:|
+心情消耗倍率#Mood Consumption Multiplier:|
+健康消耗倍率#Health Consumption Multiplier:|
+经验获取倍率#Experience Gain Multiplier:|
+好感度获取倍率#Favorability Gain Multiplier:|
+宠物名称#Pet Name:|
