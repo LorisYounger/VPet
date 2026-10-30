@@ -59,7 +59,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="{ll:Str 工作内容}"
                                 FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}" />
-                        <ComboBox x:Name="detailTypes" Grid.Row="1" Margin="0,3,0,0"
+                        <ComboBox x:Name="detailTypes" Grid.Row="1" Margin="0,3,0,0" VirtualizingPanel.ScrollUnit="Item"
                                 Style="{DynamicResource StandardComboBoxStyle}"
                                 SelectionChanged="detailTypes_SelectionChanged" />
                         <Image x:Name="WorkViewImage" RenderOptions.BitmapScalingMode="HighQuality" Grid.Row="2"
@@ -223,7 +223,7 @@
                                             <RowDefinition />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <ComboBox x:Name="combTaskType" Margin="0,3,0,0"
+                                        <ComboBox x:Name="combTaskType" Margin="0,3,0,0" VirtualizingPanel.ScrollUnit="Item"
                                                 Style="{DynamicResource StandardComboBoxStyle}"
                                                 pu:ComboBoxHelper.Watermark="--请选择套餐--"
                                                 SelectionChanged="combTaskType_SelectionChanged" />
