@@ -178,7 +178,7 @@ public class ModLoader
     /// </summary>
     public static void LoadCoreLanguage()
     {
-        var langDir = Path.Combine(Environment.CurrentDirectory, "mod", "0000_core", "lang");
+        var langDir = Path.Combine(AppContext.BaseDirectory, "mod", "0000_core", "lang");
         if (Directory.Exists(langDir))
             LoadLanguageDirectory(langDir);
     }

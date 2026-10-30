@@ -32,6 +32,7 @@ public partial class MainViewModel : CloseableViewModel
         LocalizeCore.LoadDefaultCulture();
         if (LocalizeCore.CurrentCulture == "null")
             LocalizeCore.LoadCulture("zh-Hans");
+        CurrentCulture = LocalizeCore.CurrentCulture;
     }
 
     #region Property
@@ -39,6 +40,12 @@ public partial class MainViewModel : CloseableViewModel
 
     [ObservableProperty]
     public string CurrentCulture { get; set; } = string.Empty;
+
+    partial void OnCurrentCultureChanged(string oldValue, string newValue)
+    {
+        if (!string.IsNullOrEmpty(newValue))
+            LocalizeCore.LoadCulture(newValue);
+    }
     #endregion
 
     #region Command

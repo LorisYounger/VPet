@@ -35,7 +35,22 @@ public class SaveModel
                 && double.TryParse(text, out var number)
             )
                 shown = number.ToString("F2", CultureInfo.InvariantCulture);
-            Statistics.Add(new(data.Key, data.Key.Translate(), shown!));
+            var name = data.Key;
+            if (name.StartsWith("stat_", StringComparison.Ordinal))
+                name = name[5..].Translate();
+            else if (name.StartsWith("buy_", StringComparison.Ordinal))
+                name = "购买次数".Translate() + '_' + name[4..].Translate();
+            else if (name.StartsWith("eval_day_", StringComparison.Ordinal))
+                name = "eval_day".Translate() + '_' + name[9..];
+            else if (name.StartsWith("eval_month_", StringComparison.Ordinal))
+                name = "eval_month".Translate() + '_' + name[11..];
+            else if (name.StartsWith("eval_work_project_", StringComparison.Ordinal))
+                name = "eval_work_project".Translate() + '_' + Uri.UnescapeDataString(name[18..]).Translate();
+            else if (name.StartsWith("eval_study_project_", StringComparison.Ordinal))
+                name = "eval_study_project".Translate() + '_' + Uri.UnescapeDataString(name[19..]).Translate();
+            else
+                name = name.Translate();
+            Statistics.Add(new(data.Key, name, shown!));
         }
     }
 

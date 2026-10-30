@@ -42,7 +42,7 @@
           <TextBlock
             Grid.Column="1"
             Style="{DynamicResource TextBlock_LeftCenter}"
-            Text="{Binding CurrentSave.Mode}"
+            Text="{Binding CurrentSave.Mode, Converter={StaticResource TranslateConverter}}"
           />
         </Grid>
       </Border>

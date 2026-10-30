@@ -47,3 +47,56 @@ VPET 问题解决工具#VPET Problem Solving Tool:|
 哈希#Hash:|
 第一次启动桌宠打不开?#Can't open the first time you start the desktop pet?:|
 想打开桌宠本体?#Want to open the desktop pet itself?:|
+路径:"{0}" 异常:"{1}"#Path: "{0}" Error: "{1}":|
+修改#Edit:|
+最小值#Minimum:|
+最大值#Maximum:|
+确定清除全部模组吗#Remove all mods from the settings?:|
+确定清除全部失效模组吗#Remove all invalid mods from the settings?:|
+未找到模组\n路径: {0}#Mod not found.\nPath: {0}:|
+确定重置为默认设置吗\n名称: {0}\n路径: {1}#Reset to the default settings?\nName: {0}\nPath: {1}:|
+确定重置全部设置吗#Reset all settings to their defaults?:|
+设置载入失败\n[是]: 强制载入并重置	[否]: 取消载入\n名称: {0}\n路径: {1}\n异常: {2}#Failed to load settings.\n[Yes]: Force loading and reset/tab[No]: Cancel loading\nName: {0}\nPath: {1}\nError: {2}:|
+提示#Notice:|
+对于超模内容,游戏会自动计算合理价格.\r如果未使用任何超模数据,数据菜单栏将会显示图标方便您进行炫耀数据.#The game automatically calculates balanced prices for overpowered content.\rIf your save contains no overpowered data/com an icon will appear in the stats menu so you can show off your progress.:|
+发送诊断数据:\r发送游戏存档, 包括饱腹,状态等各种游戏内数据. 可能会包括该游戏内存和CPU使用情况#Send diagnostic data:\rSend your game save/com including satiety/com status/com and other in-game data. This may also include the game's memory and CPU usage.:|
+不发送诊断数据:\r适用于启用修改器,修改过游戏数据等不符合分析数据条件. 或不希望提供游戏数据的玩家#Do not send diagnostic data:\rFor players using trainers or modified game data that is unsuitable for analysis/com or who prefer not to share game data.:|
+反馈频率(每周期)#Feedback frequency (per cycle):|
+语言#Language:|
+外部消息框#External message window:|
+在任务切换器中和Alt+Tab中隐藏窗口#Hide the window from the task switcher and Alt+Tab:|
+缩放#Scale:|
+解锁缩放限制,支持更大缩放倍率#Unlock the scale limit to allow larger sizes:|
+启动#Startup:|
+设定#Set:|
+主题与动画#Theme and animation:|
+设置主题#Select a theme:|
+桌宠动画#Pet animation:|
+桌宠透明度#Pet opacity:|
+启用数据计算#Enable stat changes:|
+关闭数据计算时桌宠显示的状态#The pet's displayed state when stat changes are disabled:|
+固定桌宠状态#Fixed pet state:|
+长按间隔(毫秒)#Long-press duration (ms):|
+计算间隔(秒)#Update interval (seconds):|
+互动周期(秒)#Interaction cycle (seconds):|
+启动窗口切换，桌宠将能自动切换窗口#Allow the pet to automatically move between windows:|
+自动切换窗口#Auto-switch windows:|
+启用桌宠智能移动#Enable smart movement:|
+智能移动时间间隔#Smart movement interval:|
+状态#Status:|
+存档文件#Save files:|
+搜索文件#Search files:|
+当前设置未保存, 是否保存#The current settings have unsaved changes. Save them?:|
+自动保存频率(分钟)#Autosave interval (minutes):|
+清理#Clear:|
+清理缓存的动画，声音文件#Clear cached animation and audio files:|
+使用桌宠选项式聊天功能#Use choice-based pet chat:|
+聊天接口#Chat API:|
+SubSettingModelType_Graphics#Graphics:|
+SubSettingModelType_System#System:|
+SubSettingModelType_Interactive#Interaction:|
+SubSettingModelType_Customized#Custom:|
+SubSettingModelType_Diagnostic#Diagnostics:|
+SubSettingModelType_Mod#Mods:|
+True#Yes:|
+False#No:|

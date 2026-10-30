@@ -70,7 +70,7 @@
                   <LineBreak />
                   <Run FontWeight="Bold" Text="{ll:Str '当前存档Hash验证信息'}" />
                   <Run FontWeight="Bold" Text=":" />
-                  <Run x:Name="HashCheckState" FontWeight="Bold" Text="通过" />
+                  <Run x:Name="HashCheckState" FontWeight="Bold" Text="{ll:Str 通过}" />
                 </TextBlock>
                 <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
                   <TextBlock
