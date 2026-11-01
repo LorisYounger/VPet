@@ -1048,6 +1048,9 @@
                          <Hyperlink Click="BC_Click">
                              <Run x:Name="run_BC" Text="" />
                          </Hyperlink> <LineBreak />
+                        <Hyperlink Click="TC_Click">
+                            <Run x:Name="run_TC" Text="" />
+                        </Hyperlink><LineBreak />
                         <Hyperlink Click="VV_Click">
                             <Run x:Name="run_VV" Text="" />
                         </Hyperlink>

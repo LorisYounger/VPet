@@ -200,7 +200,8 @@ namespace VPet_Simulator.Windows
                 runUserName.Text = SteamClient.Name;
                 runActivate.Text = "已通过Steam[{0}]激活服务注册".Translate(SteamClient.SteamId.Value.ToString("x").Substring(6));
                 run_BC.Text = "前往 更好买:贡献兑换".Translate();
-                //run_VV.Text = "前往 生日会投票 页面".Translate();
+                // run_TC.Text = "前往 翻译贡献".Translate();
+                // run_VV.Text = "前往 生日会投票 页面".Translate();
             }
             else
             {
@@ -2278,6 +2279,12 @@ namespace VPet_Simulator.Windows
         {
             string checkKey = await mw.GenerateAuthKey();
             ExtensionFunction.StartURL($"https://bettercontribution.exlb.net/shop#steamid={mw.SteamID}&checkkey={Uri.EscapeDataString(checkKey)}&lang={LocalizeCore.CurrentCulture}");
+        }
+
+        private async void TC_Click(object sender, RoutedEventArgs e)
+        {
+            string checkKey = await mw.GenerateAuthKey();
+            ExtensionFunction.StartURL($"https://TransContribution.exlb.net/#steamid={mw.SteamID}&checkkey={Uri.EscapeDataString(checkKey)}&lang={LocalizeCore.CurrentCulture}");
         }
 
         private async void VV_Click(object sender, RoutedEventArgs e)
