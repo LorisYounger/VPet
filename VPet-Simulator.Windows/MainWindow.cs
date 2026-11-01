@@ -3001,25 +3001,26 @@ namespace VPet_Simulator.Windows
         }
         public System.Windows.Controls.MenuItem WorkStarMenu = null!;
 
-        public void LevelUP(GameSave_VPet.LevelUpEventArgs args)
+        public async void LevelUP(GameSave_VPet.LevelUpEventArgs args)
         {
-            var gf = Core.Graph!.FindGraph("levelup", GraphInfo.AnimatType.Single, GameSavesData.GameSave.Mode);
-            if (gf != null)
+            if (Main.DisplayType.Name != "levelup")
             {
-                Main.Display(gf, Main.DisplayToNomal);
-                Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
+                var gf = Core.Graph!.FindGraph("levelup", GraphInfo.AnimatType.Single, GameSavesData.GameSave.Mode);
+                if (gf != null)
+                {
+                    Main.Display(gf, Main.DisplayToNomal);
+                    Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
+                }
             }
             if (args.IsLevelMaxUp)
             {//告知用户上限等级上升
-                Task.Run(() =>
+                int levelMax = GameSavesData.GameSave.LevelMax;
+                string message = "系统提示\n您的桌宠等级已经突破\nLv{0}→LV{1} x{2}\n已突破为尊贵的x{3}阶".Translate(
+                    1000 + args.BeforeLevelMax * 100, 100 * levelMax, levelMax, levelMax);
+                await Task.Delay(5000).ConfigureAwait(false);
+                await Dispatcher.InvokeAsync(() =>
                 {
-                    Thread.Sleep(5000);
-                    Dispatcher.Invoke(() =>
-                    {
-                        MessageBoxX.Show("系统提示\n您的桌宠等级已经突破\nLv{0}→LV{1} x{2}\n已突破为尊贵的x{3}阶".Translate(
-                            1000 + args.BeforeLevelMax * 100, 100 * GameSavesData.GameSave.LevelMax, GameSavesData.GameSave.LevelMax),
-                            "桌宠等级突破".Translate());
-                    });
+                    MessageBoxX.Show(message, "桌宠等级突破".Translate());
                 });
             }
         }
