@@ -23,7 +23,14 @@
                 Theme="{DynamicResource StandardTextBoxStyle}" VerticalAlignment="Top" Margin="3,6,7,0"
                 TextChanged="tb_seach_menu_textchange" />
         <ListBox ItemContainerTheme="{StaticResource StandardListBoxItemStyle}" x:Name="ListMenu" ScrollViewer.HorizontalScrollBarVisibility="Auto" BorderThickness="0"
-                ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,40,5,3" />
+                ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,40,5,3">
+            <!-- 目录复用 ListBoxItem; 禁用虚拟化, 避免搜索移除后再加入的控件保留回收时的隐藏状态. -->
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
         <!-- 跨平台: WPF 的 GridSplitter 默认靠右占 5px, Avalonia 的默认撑满整格 (会把左边的菜单整个盖住), 要明说 -->
         <GridSplitter Margin="0,15" Background="LightGray" HorizontalAlignment="Right" Width="5">
             <GridSplitter.Template>
