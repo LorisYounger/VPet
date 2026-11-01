@@ -44,7 +44,13 @@
                                               ItemsSource="{Binding Source={x:Static m:InteractiveSettingModel.CalFunStates}}"
                                               SelectedItem="{Binding InteractiveSetting.CalFunState}"
                                               IsEnabled="{Binding IsChecked,ElementName=EnableFunction,Converter={StaticResource BoolInverter}}"
-                                              Style="{DynamicResource ComboBox_BaseStyle}" />
+                                              Style="{DynamicResource ComboBox_BaseStyle}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource TranslateConverter}}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 </Grid>
                             </Grid>
                         </Border>

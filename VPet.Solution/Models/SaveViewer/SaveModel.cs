@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using HKW.HKWMapper;
 using HKW.MVVM.SourceGenerator;
@@ -26,7 +27,30 @@ public class SaveModel
             TotalTime = time.GetInteger64();
         foreach (var data in save.Statistics.Data)
         {
-            Statistics.Add(new(data.Key, data.Key.Translate(), data.Value!));
+            // 统计值以文本存储, 浮点数由游戏用 double.ToString() (当前区域性) 写入, 这里按同样方式解析
+            object? shown = data.Value;
+            if (
+                data.Value?.Value is string text
+                && long.TryParse(text, out _) is false
+                && double.TryParse(text, out var number)
+            )
+                shown = number.ToString("F2", CultureInfo.InvariantCulture);
+            var name = data.Key;
+            if (name.StartsWith("stat_", StringComparison.Ordinal))
+                name = name[5..].Translate();
+            else if (name.StartsWith("buy_", StringComparison.Ordinal))
+                name = "购买次数".Translate() + '_' + name[4..].Translate();
+            else if (name.StartsWith("eval_day_", StringComparison.Ordinal))
+                name = "eval_day".Translate() + '_' + name[9..];
+            else if (name.StartsWith("eval_month_", StringComparison.Ordinal))
+                name = "eval_month".Translate() + '_' + name[11..];
+            else if (name.StartsWith("eval_work_project_", StringComparison.Ordinal))
+                name = "eval_work_project".Translate() + '_' + Uri.UnescapeDataString(name[18..]).Translate();
+            else if (name.StartsWith("eval_study_project_", StringComparison.Ordinal))
+                name = "eval_study_project".Translate() + '_' + Uri.UnescapeDataString(name[19..]).Translate();
+            else
+                name = name.Translate();
+            Statistics.Add(new(data.Key, name, shown!));
         }
     }
 
@@ -63,10 +87,15 @@ public class SaveModel
     [DefaultValue(100)]
     public double Money { get; set; }
 
-    [MapIgnoreProperty]
-    [NotifyPropertyChangeFrom(nameof(Exp))]
-    public int Level => Exp < 0 ? 1 : (int)(Math.Sqrt(Exp) / 10) + 1;
+    /// <summary>
+    /// 等级 (直接读取存档中的 Level, 经验值是当前等级内的进度, 不能反推等级)
+    /// </summary>
+    [DefaultValue(1)]
+    public int Level { get; set; } = 1;
 
+    /// <summary>
+    /// 当前等级内的经验值
+    /// </summary>
     public double Exp { get; set; }
 
     [DefaultValue(60)]

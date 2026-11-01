@@ -110,6 +110,7 @@ internal static class PetStatLogic
                     }
                     if (addhealth > 0)
                         Save.Health += addhealth * TimePass * attributes.Health;
+                    host.WorkEfficiency = 2 * efficiency - 0.5;
                     var addmoney = Math.Max(0, TimePass * NowWork.MoneyBase * (2 * efficiency - 0.5))
                         * (NowWork.Kind == PetWorkKind.Work ? attributes.Money : attributes.Experience);
                     if (NowWork.Kind == PetWorkKind.Work)

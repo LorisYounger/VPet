@@ -10,7 +10,8 @@
         Width="{ll:Dbe GalleryWidth_1000, DefValue=1000}" FontSize="14" WindowStartupLocation="CenterScreen"
         Background="{DynamicResource PrimaryLighter}" pu:WindowXCaption.Height="45"
         pu:WindowXCaption.Background="{DynamicResource DARKPrimary}" pu:WindowXCaption.Foreground="#FFFFFF"
-        Icon="/Res/Gallery.png" pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}" Closing="Window_Closed">
+        Icon="/Res/Gallery.png" pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}" Closing="Window_Closed"
+        pu:WindowXCaption.CloseButtonStyle="{StaticResource RoundedCaptionCloseButtonStyle}">
     <Window.Resources>
         <Style x:Key="TagToggleButtonStyle" TargetType="ToggleButton"
                 BasedOn="{StaticResource {x:Static pu:StyleKeys.ToggleButtonStyle}}">
@@ -52,19 +53,7 @@
             <Setter Property="pu:ButtonHelper.HoverForeground" Value="{DynamicResource DARKPrimary}" />
         </Style>
     </pu:WindowXCaption.MaximizeButtonStyle>
-    <pu:WindowXCaption.CloseButtonStyle>
-        <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
-            <Setter Property="Width" Value="28" />
-            <Setter Property="Height" Value="28" />
-            <Setter Property="Margin" Value="0,0,7,0" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="pu:ButtonHelper.CornerRadius" Value="14" />
-            <Setter Property="pu:ButtonHelper.HoverBackground" Value="White" />
-            <Setter Property="pu:ButtonHelper.ClickBackground" Value="{x:Null}" />
-            <Setter Property="pu:ButtonHelper.HoverForeground" Value="{DynamicResource DARKPrimary}" />
-        </Style>
-    </pu:WindowXCaption.CloseButtonStyle>
+
     <pu:WindowXCaption.HeaderTemplate>
         <DataTemplate>
             <Grid Margin="10,0">
@@ -79,15 +68,13 @@
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="TbTitleSearch" Grid.ColumnSpan="2" VerticalAlignment="Center" Padding="7,0"
-                                pu:TextBoxHelper.Watermark="{ll:Str 搜索图片}" FontSize="14" Background="#33FFFFFF"
-                                Height="30" BorderThickness="0" pu:TextBoxHelper.CornerRadius="5"
-                                Loaded="TbTitleSearch_Loaded" Foreground="{DynamicResource DARKPrimaryText}" />
+                        <TextBox x:Name="TbTitleSearch" Grid.ColumnSpan="2" VerticalAlignment="Center" Style="{StaticResource CaptionSearchTextBoxStyle}"
+                                pu:TextBoxHelper.Watermark="{ll:Str 搜索图片}"
+                                Height="30"
+                                Loaded="TbTitleSearch_Loaded" />
                         <Button Grid.Column="1" Margin="0,0,3,0" VerticalAlignment="Center" Height="28" Width="28"
                                 IsDefault="{Binding IsKeyboardFocusWithin, ElementName=TbTitleSearch}"
-                                BorderThickness="0" pu:ButtonHelper.CornerRadius="0,5,5,0" Background="Transparent"
-                                FontFamily="pack://application:,,,/Res/#remixicon" Content="&#xF0D1;" Padding="0"
-                                Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" Cursor="Hand"
+                                Style="{StaticResource CaptionSearchButtonStyle}" Content="&#xF0D1;"
                                 Click="BtnSearch_Click" />
                     </Grid>
                     <Label Content="{ll:Str '注: 照片图库内容禁止商用'}" Background="{x:Null}" Margin="30,0,0,0"
@@ -117,8 +104,7 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{ll:Str 图片详情}" FontSize="18" Margin="0, 5"
-                            Foreground="{DynamicResource DARKPrimary}" />
+                    <TextBlock Text="{ll:Str 图片详情}" Style="{StaticResource SectionTitleTextStyle}" Margin="0, 5" />
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
                         <Button Margin="7,0,0,0" VerticalAlignment="Center" Content="{ll:Str 复制到剪贴板}"
                                 Style="{DynamicResource ThemedButtonStyle}" Click="ButtonCopy_Click" />
@@ -163,7 +149,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <StackPanel>
-                <TextBlock Text="{ll:Str 筛选条件}" FontSize="18" Margin="0, 5" Foreground="{DynamicResource DARKPrimary}" />
+                <TextBlock Text="{ll:Str 筛选条件}" Style="{StaticResource SectionTitleTextStyle}" Margin="0, 5" />
 
                 <TextBlock Text="{ll:Str 类型}" Margin="0, 3, 0, 0" />
                 <StackPanel Margin="0, 3, 0, 0" Orientation="Horizontal">

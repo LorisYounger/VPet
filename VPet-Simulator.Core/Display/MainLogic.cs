@@ -28,6 +28,7 @@ namespace VPet_Simulator.Core
         Random IPetStatHost.Rnd => Function.Rnd;
         PetWorkingState IPetStatHost.WorkingState => (PetWorkingState)State;
         IWorkDefinition? IPetStatHost.CurrentWork => NowWork;
+        double IPetStatHost.WorkEfficiency { set => WorkEfficiency = value; }
         DateTime IPetStatHost.LastInteraction
         {
             get => LastInteractionTime;
@@ -259,6 +260,8 @@ namespace VPet_Simulator.Core
 
 
         public Work? NowWork;
+        /// <summary>最近一次工作、学习或娱乐结算的状态效率倍率，不含 Buff 加成。</summary>
+        public double WorkEfficiency { get; private set; } = 1;
         /// <summary>
         /// 根据消耗计算相关数据
         /// </summary>
@@ -315,6 +318,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void EventTimer_Elapsed()
         {
+            if (disposed) return;
             //所有Handle
             TimeHandle?.Invoke(this);
             if (Core.Controller!.EnableFunction)

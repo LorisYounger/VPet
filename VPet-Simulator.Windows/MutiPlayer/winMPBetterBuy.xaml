@@ -10,20 +10,9 @@
         Background="{DynamicResource PrimaryLighter}" pu:WindowXCaption.Height="45"
         pu:WindowXCaption.Background="{DynamicResource DARKPrimary}" pu:WindowXCaption.Foreground="#FFFFFF"
         pu:WindowXCaption.Buttons="Close" Icon="/Res/BetterBuy.png"
-        pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}" Closing="WindowX_Closing">
-    <pu:WindowXCaption.CloseButtonStyle>
-        <Style TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
-            <Setter Property="Width" Value="28" />
-            <Setter Property="Height" Value="28" />
-            <Setter Property="Margin" Value="0,0,7,0" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="pu:ButtonHelper.CornerRadius" Value="14" />
-            <Setter Property="pu:ButtonHelper.HoverBackground" Value="White" />
-            <Setter Property="pu:ButtonHelper.ClickBackground" Value="{x:Null}" />
-            <Setter Property="pu:ButtonHelper.HoverForeground" Value="{DynamicResource DARKPrimary}" />
-        </Style>
-    </pu:WindowXCaption.CloseButtonStyle>
+        pu:WindowXCaption.ShadowColor="{DynamicResource ShadowColor}" Closing="WindowX_Closing"
+        pu:WindowXCaption.CloseButtonStyle="{StaticResource RoundedCaptionCloseButtonStyle}">
+
     <pu:WindowXCaption.HeaderTemplate>
         <DataTemplate>
             <Grid Margin="10,0">
@@ -38,15 +27,13 @@
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="TbTitleSearch" Grid.ColumnSpan="2" VerticalAlignment="Center" Padding="7,0"
-                                pu:TextBoxHelper.Watermark="{ll:Str 搜索商品}" FontSize="14" Background="#33FFFFFF"
-                                Height="30" BorderThickness="0" pu:TextBoxHelper.CornerRadius="5"
-                                Loaded="TbTitleSearch_Loaded" Foreground="{DynamicResource DARKPrimaryText}" />
+                        <TextBox x:Name="TbTitleSearch" Grid.ColumnSpan="2" VerticalAlignment="Center" Style="{StaticResource CaptionSearchTextBoxStyle}"
+                                pu:TextBoxHelper.Watermark="{ll:Str 搜索商品}"
+                                Height="30"
+                                Loaded="TbTitleSearch_Loaded" />
                         <Button Grid.Column="1" Margin="0,0,3,0" VerticalAlignment="Center" Height="28" Width="28"
                                 IsDefault="{Binding IsKeyboardFocusWithin, ElementName=TbTitleSearch}"
-                                BorderThickness="0" pu:ButtonHelper.CornerRadius="0,5,5,0" Background="Transparent"
-                                FontFamily="pack://application:,,,/Res/#remixicon" Content="&#xF0D1;" Padding="0"
-                                Foreground="{DynamicResource DARKPrimaryText}" FontSize="16" Cursor="Hand"
+                                Style="{StaticResource CaptionSearchButtonStyle}" Content="&#xF0D1;"
                                 Click="BtnSearch_Click" />
                     </Grid>
                 </StackPanel>
@@ -98,8 +85,7 @@
                                 </Grid.RowDefinitions>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                                     <TextBlock x:Name="TxtPrice" VerticalAlignment="Bottom"
-                                            Text="{Binding Price, StringFormat='$ 0.0'}" FontWeight="Bold" FontSize="18"
-                                            Foreground="{DynamicResource DARKPrimary}" />
+                                            Text="{Binding Price, StringFormat='$ 0.0'}" FontWeight="Bold" Style="{StaticResource SectionTitleTextStyle}" />
                                     <!--<TextBlock x:Name="TxtDiscountPrice" Margin="5,0,0,0" FontWeight="Bold"
                                             FontSize="18" Foreground="{DynamicResource DARKPrimary}">
                                         <TextBlock.Text>
@@ -191,10 +177,8 @@
                         <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
                     </Border>
                     <ToggleButton x:Name="TbtnStar" Grid.ColumnSpan="2" Margin="0,5,32,0" HorizontalAlignment="Right"
-                            VerticalAlignment="Top" Width="30" Height="30" Padding="0" FontSize="22"
-                            Foreground="#FFB300" Background="Transparent" ToolTip="{ll:Str 收藏食物}"
-                            pu:ToggleButtonHelper.CornerRadius="5" pu:ToggleButtonHelper.CheckedContent="&#xF186;"
-                            pu:IconHelper.Margin="0" FontFamily="/VPet-Simulator.Windows;component/Res/#remixicon"
+                            VerticalAlignment="Top" Width="30" Height="30" Style="{StaticResource FavoriteToggleButtonStyle}" ToolTip="{ll:Str 收藏食物}" pu:ToggleButtonHelper.CheckedContent="&#xF186;"
+                            pu:IconHelper.Margin="0"
                             Content="&#xF18B;" IsChecked="{Binding Star}" />
                     <ToggleButton x:Name="TbtnDetail" Grid.ColumnSpan="2" Margin="0,5,8,0" HorizontalAlignment="Right"
                             VerticalAlignment="Top" Width="30" Height="30" Padding="0" FontSize="22"
@@ -231,11 +215,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="2*" />
             </Grid.RowDefinitions>
-            <TextBlock Text="{ll:Str 商品分类}" FontSize="18" Margin="5" Foreground="{DynamicResource DARKPrimary}" />
-            <ListBox x:Name="LsbCategory" Grid.Row="1" Margin="-12,10,-12,0" Background="Transparent"
-                    BorderThickness="0" SelectedIndex="0" pu:ListBoxHelper.ItemsPadding="15,8"
-                    pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"
-                    pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
+            <TextBlock Text="{ll:Str 商品分类}" Style="{StaticResource SectionTitleTextStyle}" Margin="5" />
+            <ListBox x:Name="LsbCategory" Grid.Row="1" Margin="-12,10,-12,0" Style="{StaticResource CategoryListBoxStyle}" SelectedIndex="0" pu:ListBoxHelper.ItemsPadding="15,8"
                     SelectionChanged="LsbSortRule_SelectionChanged">
                 <ListBoxItem Content="{ll:Str 全部}" />
                 <ListBoxItem Content="{ll:Str 收藏}" />
@@ -246,8 +227,7 @@
                 <ListBoxItem Content="{ll:Str 药品}" />
                 <ListBoxItem Content="{ll:Str 礼品}" />
             </ListBox>
-            <TextBlock Grid.Row="2" Text="{ll:Str 排序方式}" Margin="5" FontSize="18"
-                    Foreground="{DynamicResource DARKPrimary}" />
+            <TextBlock Grid.Row="2" Text="{ll:Str 排序方式}" Margin="5" Style="{StaticResource SectionTitleTextStyle}" />
             <Border Grid.Row="3" Margin="0,10,0,0" MinHeight="100" CornerRadius="5">
                 <Grid VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
@@ -255,10 +235,8 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ListBox x:Name="LsbSortRule" Background="Transparent" BorderThickness="0"
+                    <ListBox x:Name="LsbSortRule" Style="{StaticResource CategoryListBoxStyle}"
                             pu:ListBoxHelper.ItemsPadding="10,5" pu:ListBoxHelper.ItemsCornerRadius="4"
-                            pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"
-                            pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
                             SelectedIndex="0" SelectionChanged="LsbSortRule_SelectionChanged">
                         <ListBoxItem Content="{ll:Str 按名字}" />
                         <ListBoxItem Content="{ll:Str 按价格}" />
@@ -271,10 +249,8 @@
                         <ListBoxItem Content="{ll:Str 按好感度}" />
                     </ListBox>
                     <Rectangle Grid.Column="1" Margin="10,0,10,0" Width="1" Fill="{DynamicResource DARKPrimaryTrans4}" />
-                    <ListBox x:Name="LsbSortAsc" Grid.Column="2" Background="Transparent" BorderThickness="0"
+                    <ListBox x:Name="LsbSortAsc" Grid.Column="2" Style="{StaticResource CategoryListBoxStyle}"
                             pu:ListBoxHelper.ItemsPadding="10,5" pu:ListBoxHelper.ItemsCornerRadius="4"
-                            pu:ListBoxHelper.ItemsSelectedBackground="{DynamicResource DARKPrimary}"
-                            pu:ListBoxHelper.ItemsSelectedForeground="{DynamicResource DARKPrimaryText}"
                             SelectedIndex="0" SelectionChanged="LsbSortRule_SelectionChanged">
                         <ListBoxItem Content="{ll:Str 升序}" />
                         <ListBoxItem Content="{ll:Str 降序}" />

@@ -70,12 +70,9 @@
         </DataGrid>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Margin="0,0,8,0" Padding="16,4" Click="BtnRefresh_Click" pu:ButtonHelper.CornerRadius="4"
-                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str '刷新'}" />
-            <Button Margin="0,0,8,0" Padding="16,4" Click="BtnLoad_Click" pu:ButtonHelper.CornerRadius="4"
-                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str '加载'}" />
-            <Button Padding="16,4" Click="BtnClose_Click" pu:ButtonHelper.CornerRadius="4"
-                    Background="{DynamicResource SecondaryLight}" Content="{ll:Str '关闭'}" />
+            <Button Margin="0,0,8,0" Padding="16,4" Click="BtnRefresh_Click" Style="{StaticResource SecondaryButtonStyle}" Content="{ll:Str '刷新'}" />
+            <Button Margin="0,0,8,0" Padding="16,4" Click="BtnLoad_Click" Style="{StaticResource SecondaryButtonStyle}" Content="{ll:Str '加载'}" />
+            <Button Padding="16,4" Click="BtnClose_Click" Style="{StaticResource SecondaryButtonStyle}" Content="{ll:Str '关闭'}" />
         </StackPanel>
     </Grid>
 </pu:WindowX>

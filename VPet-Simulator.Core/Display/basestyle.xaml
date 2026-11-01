@@ -332,4 +332,84 @@
         <Setter Property="pu:CheckBoxHelper.CheckedGlyphBrush" Value="{DynamicResource DARKPrimaryText}"/>
         <Setter Property="pu:CheckBoxHelper.CheckedBorderThickness" Value="0"/>
     </Style>
+
+    <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="pu:ButtonHelper.CornerRadius" Value="4" />
+        <Setter Property="Background" Value="{DynamicResource SecondaryLight}" />
+    </Style>
+    <Style x:Key="SecondaryBorderedButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+        <Setter Property="BorderBrush" Value="{DynamicResource SecondaryDark}" />
+        <Setter Property="BorderThickness" Value="2" />
+    </Style>
+    <Style x:Key="PrimarySwitchStyle" TargetType="pu:Switch" BasedOn="{StaticResource {x:Type pu:Switch}}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryDark}" />
+        <Setter Property="BoxHeight" Value="18" />
+        <Setter Property="BoxWidth" Value="35" />
+        <Setter Property="CheckedBackground" Value="{DynamicResource Primary}" />
+        <Setter Property="CheckedBorderBrush" Value="{DynamicResource Primary}" />
+        <Setter Property="CheckedToggleBrush" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="ToggleBrush" Value="{DynamicResource PrimaryDark}" />
+        <Setter Property="ToggleShadowColor" Value="{x:Null}" />
+        <Setter Property="ToggleSize" Value="14" />
+    </Style>
+    <Style x:Key="CaptionSearchButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="pu:ButtonHelper.CornerRadius" Value="0,5,5,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Res/#remixicon" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style x:Key="CaptionSearchTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="Background" Value="#33FFFFFF" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimaryText}" />
+        <Setter Property="Padding" Value="7,0" />
+        <Setter Property="pu:TextBoxHelper.CornerRadius" Value="5" />
+    </Style>
+    <Style x:Key="FavoriteToggleButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="/VPet-Simulator.Windows;component/Res/#remixicon" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="Foreground" Value="#FFB300" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="pu:ToggleButtonHelper.CornerRadius" Value="5" />
+    </Style>
+    <Style x:Key="CategoryListBoxStyle" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="pu:ListBoxHelper.ItemsSelectedBackground" Value="{DynamicResource DARKPrimary}" />
+        <Setter Property="pu:ListBoxHelper.ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
+    </Style>
+    <Style x:Key="ThemedTabControlStyle" TargetType="TabControl" BasedOn="{StaticResource {x:Type TabControl}}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+        <Setter Property="pu:TabControlHelper.ItemsCornerRadius" Value="4" />
+        <Setter Property="pu:TabControlHelper.ItemsHeight" Value="NaN" />
+        <Setter Property="pu:TabControlHelper.ItemsHoverBackground" Value="{DynamicResource PrimaryLight}" />
+        <Setter Property="pu:TabControlHelper.ItemsPadding" Value="10,7" />
+        <Setter Property="pu:TabControlHelper.ItemsSelectedBackground" Value="{DynamicResource PrimaryDark}" />
+        <Setter Property="pu:TabControlHelper.ItemsSelectedForeground" Value="{DynamicResource DARKPrimaryText}" />
+    </Style>
+    <Style x:Key="SectionTitleTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Foreground" Value="{DynamicResource DARKPrimary}" />
+    </Style>
+
+    <Style x:Key="RoundedCaptionCloseButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Static pu:WindowXCaption.CloseButtonStyleKey}}">
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Margin" Value="0,0,7,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="pu:ButtonHelper.CornerRadius" Value="14" />
+        <Setter Property="pu:ButtonHelper.HoverBackground" Value="White" />
+        <Setter Property="pu:ButtonHelper.ClickBackground" Value="{x:Null}" />
+        <Setter Property="pu:ButtonHelper.HoverForeground" Value="{DynamicResource DARKPrimary}" />
+    </Style>
 </ResourceDictionary>

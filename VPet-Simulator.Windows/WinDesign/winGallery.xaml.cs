@@ -69,6 +69,23 @@ public partial class winGallery : WindowX
         RefreshList();
     }
 
+    /// <summary>打开指定图片的搜索结果；多个名称用 | 分隔，清除会遮蔽新奖励的旧筛选。</summary>
+    public void Search(string search)
+    {
+        process = true;
+        _searchTextBox!.Text = search;
+        ToggleButtonIllustration.IsChecked = ToggleButtonThumbnail.IsChecked = true;
+        ToggleButtonLocked.IsChecked = false;
+        ToggleButtonUnlocked.IsChecked = true;
+        CheckBoxFavorite.IsChecked = false;
+        ToggleButtonGroupTags.SelectedItems.Clear();
+        OrderBox.SelectedIndex = 2;
+        pagination.CurrentPage = 1;
+        IsMaskVisible = IsOverlayerVisible = false;
+        process = false;
+        RefreshList();
+    }
+
     private void ToggleButtonGroupTags_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         RefreshList();
@@ -94,7 +111,7 @@ public partial class winGallery : WindowX
 
         AutoUniformGridImages.Children.Clear();
 
-        var searchText = _searchTextBox?.Text;
+        var searchTerms = (_searchTextBox?.Text ?? "").Split('|', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
         //如果某个分类一个都没选中，那就等于全部选中
 
@@ -120,11 +137,11 @@ public partial class winGallery : WindowX
                 && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
                 && (!selectedTags.Any() || selectedTags.All(st => p.TagsTrans.Contains(st)))
                 && (
-                    string.IsNullOrWhiteSpace(searchText)
-                    || p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.TranslateName.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.Description.Translate().Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                    searchTerms.Length == 0 || searchTerms.Any(term =>
+                        p.Name.Contains(term, StringComparison.OrdinalIgnoreCase)
+                        || p.Description.Contains(term, StringComparison.OrdinalIgnoreCase)
+                        || p.TranslateName.Contains(term, StringComparison.OrdinalIgnoreCase)
+                        || p.Description.Translate().Contains(term, StringComparison.OrdinalIgnoreCase))
                 )
             );
             photos.AddRange(lockphoto);
@@ -139,11 +156,11 @@ public partial class winGallery : WindowX
                 && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
                 && (!selectedTags.Any() || selectedTags.All(st => p.TagsTrans.Contains(st)))
                 && (
-                    string.IsNullOrWhiteSpace(searchText)
-                    || p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.TranslateName.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.Description.Translate().Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                    searchTerms.Length == 0 || searchTerms.Any(term =>
+                        p.Name.Contains(term, StringComparison.OrdinalIgnoreCase)
+                        || p.Description.Contains(term, StringComparison.OrdinalIgnoreCase)
+                        || p.TranslateName.Contains(term, StringComparison.OrdinalIgnoreCase)
+                        || p.Description.Translate().Contains(term, StringComparison.OrdinalIgnoreCase))
                 )
             );
             photos.AddRange(unlockphoto);

@@ -71,6 +71,8 @@ public partial class Main : IPetStatHost
     /// 当前工作
     /// </summary>
     public GraphHelper.Work? NowWork;
+    /// <summary>最近一次工作、学习或娱乐结算的状态效率倍率，不含 Buff 加成。</summary>
+    public double WorkEfficiency { get; private set; } = 1;
 
     /// <summary>
     /// 工作计时器
@@ -386,6 +388,7 @@ public partial class Main : IPetStatHost
     PetWorkingState IPetStatHost.WorkingState => (PetWorkingState)State;
 
     IWorkDefinition? IPetStatHost.CurrentWork => NowWork;
+    double IPetStatHost.WorkEfficiency { set => WorkEfficiency = value; }
 
     DateTime IPetStatHost.LastInteraction
     {

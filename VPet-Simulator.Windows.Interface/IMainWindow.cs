@@ -151,7 +151,7 @@ namespace VPet_Simulator.Windows.Interface
         /// <summary>
         /// 显示照片图库
         /// </summary>
-        void ShowGallery();
+        void ShowGallery(string? search = null);
         /// <summary>
         /// 关闭桌宠
         /// </summary>

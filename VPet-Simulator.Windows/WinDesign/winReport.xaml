@@ -8,12 +8,21 @@
         Style="{DynamicResource BaseWindowXStyle}" WindowStartupLocation="CenterScreen" Width="500" MinHeight="250"
         Height="Auto" ResizeMode="NoResize" WindowState="Normal" Icon="../vpeticon.ico" SizeToContent="Height"
         Closed="WindowX_Closed">
+    <pu:WindowX.Resources>
+        <Style x:Key="ReportFormGroupStyle" TargetType="pu:FormGroup" BasedOn="{StaticResource {x:Type pu:FormGroup}}">
+            <Setter Property="HeaderPadding" Value="10,0,10,0" />
+            <Setter Property="HeaderHeight" Value="20" />
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="Margin" Value="0,2,0,0" />
+            <Setter Property="Padding" Value="1" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+    </pu:WindowX.Resources>
     <Grid Margin="10,10,15,10" VerticalAlignment="Top">
         <StackPanel x:Name="MainGrid">
             <Label Background="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left" Content="{ll:Str 反馈与错误提交}"
                     FontSize="24" Margin="10,0,0,0" />
-            <pu:FormGroup Header="{ll:Str '类型:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal"
-                    Margin="0,2,0,0" Padding="1" FontSize="16" ToolTip="{ll:Str 需要反馈的类型}" HeaderWidth="Auto">
+            <pu:FormGroup Header="{ll:Str '类型:'}" Style="{StaticResource ReportFormGroupStyle}" ToolTip="{ll:Str 需要反馈的类型}" HeaderWidth="Auto">
                 <ComboBox x:Name="tType" SelectedIndex="4" SelectionChanged="tType_SelectionChanged">
                     <ComboBoxItem Content="{ll:Str '游戏内报错'}" />
                     <ComboBoxItem Content="{ll:Str '逻辑计算错误'}" />
@@ -24,24 +33,20 @@
                     <ComboBoxItem Content="{ll:Str '向 聪明萝莉斯AI 询问问题'}" />
                 </ComboBox>
             </pu:FormGroup>
-            <pu:FormGroup Header="{ll:Str '描述:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal"
-                    Margin="0,2,0,0" Padding="1" FontSize="16" ToolTip="{ll:Str 对于反馈的详细描述}">
+            <pu:FormGroup Header="{ll:Str '描述:'}" Style="{StaticResource ReportFormGroupStyle}" ToolTip="{ll:Str 对于反馈的详细描述}">
                 <TextBox x:Name="tDescription" pu:TextBoxHelper.Watermark="{ll:Str '详细描述\&#13;eg:如何触发这个报错'}"
                         AcceptsReturn="True" MaxHeight="172" />
             </pu:FormGroup>
-            <pu:FormGroup Header="{ll:Str '内容:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal"
-                    Margin="0,2,0,0" Padding="1" FontSize="16" ToolTip="{ll:Str 详细内容信息}">
+            <pu:FormGroup Header="{ll:Str '内容:'}" Style="{StaticResource ReportFormGroupStyle}" ToolTip="{ll:Str 详细内容信息}">
                 <TextBox x:Name="tContent" pu:TextBoxHelper.Watermark="{ll:Str '详细描述\&#13;eg:报错详细信息'}"
                         AcceptsReturn="True" MaxHeight="172" HorizontalScrollBarVisibility="Auto"
                         VerticalScrollBarVisibility="Auto" />
             </pu:FormGroup>
-            <pu:FormGroup Header="{ll:Str '提交:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal"
-                    Margin="0,2,0,0" Padding="1" FontSize="16" ToolTip="{ll:Str 是否上传当前游戏存档}">
+            <pu:FormGroup Header="{ll:Str '提交:'}" Style="{StaticResource ReportFormGroupStyle}" ToolTip="{ll:Str 是否上传当前游戏存档}">
                 <CheckBox x:Name="tUpload" Content="{ll:Str '上传游戏存档'}" Margin="5,0,0,0" IsChecked="True"
                         Click="tUpload_Click" />
             </pu:FormGroup>
-            <pu:FormGroup Header="{ll:Str '联系:'}" HeaderPadding="10,0,10,0" HeaderHeight="20" Orientation="Horizontal"
-                    Margin="0,2,0,0" Padding="1" FontSize="16" ToolTip="{ll:Str '提供联系方式以获得反馈,可不填'}">
+            <pu:FormGroup Header="{ll:Str '联系:'}" Style="{StaticResource ReportFormGroupStyle}" ToolTip="{ll:Str '提供联系方式以获得反馈,可不填'}">
                 <TextBox x:Name="tContact" pu:TextBoxHelper.Watermark="{ll:Str '提供联系方式以获得反馈,可不填\&#13;eg:QQ430081239'}"
                         AcceptsReturn="True" MaxHeight="44" />
             </pu:FormGroup>

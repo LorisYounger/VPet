@@ -21,6 +21,7 @@ namespace VPet_Simulator.Core
         /// 游戏核心
         /// </summary>
         public GameCore Core = null!;
+        private volatile bool disposed;
         /// <summary>
         /// 菜单栏
         /// </summary>
@@ -75,89 +76,38 @@ namespace VPet_Simulator.Core
         }
         public List<string> ErrorMessage = new List<string>();
         /// <summary>
-        /// 支持在加载等待的时候显示等待计数器
+        /// 等待图像加载，统一统计进度，避免为每个动画单独启动轮询任务。
         /// </summary>
-        public async Task Load_2_WaitGraph()
+        public async Task Load_2_WaitGraph(Action<int>? WaitCountAction = null)
         {
-            //新功能:等待所有图像加载完成再跑
-            foreach (var igs in Core.Graph!.GraphsList.Values)
+            var graph = Core.Graph!;
+            var nextProgress = DateTime.UtcNow.AddSeconds(2);
+            while (true)
             {
-                foreach (var ig2 in igs.Values)
-                {
-                    for (int i = 0; i < ig2.Count; i++)
-                    {
-                        IGraph ig3 = ig2[i];
-                        while (!ig3.IsReady)
+                int count = ErrorMessage.Count;
+                bool pending = false;
+                foreach (var animations in graph.GraphsList.Values)
+                    foreach (var list in animations.Values)
+                        for (int i = 0; i < list.Count; i++)
                         {
-                            if (ig3.IsFail)
+                            var animation = list[i];
+                            if (animation.IsFail)
                             {
-                                ErrorMessage.Add(ig3.FailMessage);
-                                ig2.Remove(ig3);
-                                break;
+                                ErrorMessage.Add(animation.FailMessage);
+                                list.RemoveAt(i--);
+                                count++;
                             }
-                            else
-                                await Task.Delay(100);
+                            else if (animation.IsReady) count++;
+                            else pending = true;
                         }
-                    }
-                }
-            }
-        }
-        /// <summary>
-        /// 支持在加载等待的时候显示等待计数器
-        /// </summary>
-        /// <param name="WaitCountAction">当前已等待图像个数</param>
-        public async Task Load_2_WaitGraph(Action<int>? WaitCountAction)
-        {
-            if (WaitCountAction == null)
-            {
-                await Load_2_WaitGraph();
-                return;
-            }
-            int count = 0;
-            DateTime start = DateTime.Now.AddSeconds(2);
-            // 新功能: 等待所有图像加载完成再跑
-            var tasks = new List<Task>();
-
-            foreach (var igs in Core.Graph!.GraphsList.Values)
-            {
-                foreach (var ig2 in igs.Values)
+                if (DateTime.UtcNow >= nextProgress)
                 {
-                    for (int i = 0; i < ig2.Count; i++)
-                    {
-                        IGraph ig3 = ig2[i];
-                        tasks.Add(Task.Run(async () =>
-                        {
-                            while (!ig3.IsReady)
-                            {
-                                if (ig3.IsFail)
-                                {
-                                    lock (ErrorMessage) // 确保线程安全
-                                    {
-                                        ErrorMessage.Add(ig3.FailMessage);
-                                        ig2.Remove(ig3);
-                                    }
-                                    break;
-                                }
-                                else
-                                {
-                                    await Task.Delay(100);
-                                }
-                            }
-                            Interlocked.Increment(ref count);
-                            if (start < DateTime.Now)
-                            {
-                                start = DateTime.Now.AddSeconds(2);
-                                WaitCountAction.Invoke(count);
-                            }
-                        }));
-                    }
-
+                    WaitCountAction?.Invoke(count);
+                    nextProgress = DateTime.UtcNow.AddSeconds(2);
                 }
+                if (!pending) return;
+                await Task.Delay(100).ConfigureAwait(false);
             }
-
-            // 等待所有任务完成
-            await Task.WhenAll(tasks);
-
         }
         /// <summary>
         /// 开始运行
@@ -172,13 +122,7 @@ namespace VPet_Simulator.Core
                 MessageBox.Show("Did not find the Default animation, please check the graph configuration.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            Task.Run(() =>
-            {
-                ig.Run(PetGrid, () =>
-                {
-                    DisplayNomal();
-                });
-            });
+            Task.Run(() => ig.Run(PetGrid, () => DisplayNomal()));
 
             IsWorking = true;
         }
@@ -242,6 +186,7 @@ namespace VPet_Simulator.Core
 
         private void Labledisplaytimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
+            if (disposed) return;
             if (--labeldisplaycount <= 0)
             {
                 labeldisplaytimer.Enabled = false;
@@ -368,6 +313,7 @@ namespace VPet_Simulator.Core
 
         private void MoveTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
+            if (disposed) return;
             if (DisplayType.Type != GraphType.Move || !MoveTimerSmartMove)
             {
                 MoveTimer.Stop();
@@ -509,14 +455,35 @@ namespace VPet_Simulator.Core
 
         public void Dispose()
         {
+            disposed = true;
             EventTimer.Dispose();
             MoveTimer.Dispose();
+            SmartMoveTimer.Dispose();
+            labeldisplaytimer.Dispose();
             MsgBar?.Dispose();
             ToolBar?.Dispose();
-            if (PetGrid.Child is IGraph g)
-                g.Stop(true);
-            if (PetGrid2.Child is IGraph g2)
-                g2.Stop(true);
+            Dispatcher.Invoke(() =>
+            {
+                foreach (var container in new[] { PetGrid, PetGrid2 })
+                {
+                    (container.Tag as IGraph)?.Stop(true);
+                    if (container.Child is System.Windows.Controls.Image image)
+                    {
+                        image.Source = null;
+                        image.Tag = null;
+                    }
+                    else if (container.Child is FoodAnimation.FoodAnimatGrid food)
+                    {
+                        // Only the current owner may clear the shared food grid.
+                        (food.Front.Tag as IGraph)?.Stop(true);
+                        (food.Back.Tag as IGraph)?.Stop(true);
+                        food.Front.Source = food.Back.Source = food.Food.Source = null;
+                        food.Front.Tag = food.Back.Tag = null;
+                    }
+                    container.Tag = null;
+                    container.Child = null;
+                }
+            });
         }
         /// <summary>
         /// 清理所有状态

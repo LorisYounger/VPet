@@ -22,8 +22,7 @@
                     Height="Auto" pu:TextBoxHelper.Watermark="{ll:Str 和桌宠说}" FontSize="30" AcceptsReturn="True"
                     TextWrapping="WrapWithOverflow" PreviewKeyDown="tbTalk_KeyDown"
                     InputMethod.IsInputMethodEnabled="True" />
-            <Button x:Name="btnSend" pu:ButtonHelper.CornerRadius="4" Content="{ll:Str '发送'}" BorderThickness="2"
-                    Background="{DynamicResource SecondaryLight}" Grid.Column="2"
+            <Button x:Name="btnSend" Style="{StaticResource SecondaryButtonStyle}" Content="{ll:Str '发送'}" BorderThickness="2" Grid.Column="2"
                     BorderBrush="{DynamicResource DARKPrimaryDarker}" FontSize="30" ToolTip="{ll:Str '按 Ctrl+Enter 发送'}"
                     Click="Send_Click" x:FieldModifier="public" />
             <Grid x:Name="PublicGrid" Grid.Row="2" Grid.ColumnSpan="3" x:FieldModifier="public" />

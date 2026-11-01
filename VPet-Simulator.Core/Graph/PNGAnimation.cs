@@ -41,7 +41,6 @@ namespace VPet_Simulator.Core
 
         public TaskControl? Control { get; set; }
 
-        int nowid;
         /// <summary>
         /// 图片资源
         /// </summary>
@@ -50,13 +49,13 @@ namespace VPet_Simulator.Core
         private BitmapSource? SpriteSheetSource;
         private Int32Rect[]? FrameRects;
         private readonly object SpriteSheetLock = new object();
-        private readonly object FrameCacheLock = new object();
-        private readonly Dictionary<int, BitmapSource> FrameCache = new Dictionary<int, BitmapSource>();
+        private BitmapSource? CurrentFrame;
+        private int CurrentFrameIndex = -1;
+        private volatile bool disposed;
         private int FrameWidth;
         private int FrameHeight;
         public long LastUseTimeTicks = DateTime.UtcNow.Ticks;
 
-        private const int FrameCacheAheadCount = 2;
 
         public bool IsFail { get; set; } = false;
 
@@ -115,7 +114,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public static int MaxLoadMemory = 2000;
 
-        private async void startup(string path, FileInfo[] paths)
+        private async Task startup(string path, FileInfo[] paths)
         {
             while (Function.MemoryUsage() > MaxLoadMemory)
             {
@@ -130,9 +129,8 @@ namespace VPet_Simulator.Core
                 await sem.WaitAsync();
                 try
                 {
-                    if (!File.Exists(Path) && !((List<string>)GraphCore.CommConfig["Cache"]).Contains(path))
+                    if (!File.Exists(Path))
                     {
-                        ((List<string>)GraphCore.CommConfig["Cache"]).Add(path);
                         int w = 0;
                         int h = 0;
                         // Load the first image
@@ -227,7 +225,6 @@ namespace VPet_Simulator.Core
                     int time = int.Parse(noExtFileName.Substring(noExtFileName.LastIndexOf('_') + 1));
                     Animations.Add(new Animation(this, time, i));
                 }
-                //stream = new MemoryStream(File.ReadAllBytes(cp));
                 IsReady = true;
             }
             catch (Exception e)
@@ -271,50 +268,44 @@ namespace VPet_Simulator.Core
             /// <param name="This">显示的图层</param>
             public void Run(FrameworkElement This, TaskControl Control)
             {
-                var frameSource = parent.GetFrameSource(FrameIndex);
-                //先显示该图层
-                This.Dispatcher.Invoke(() =>
+                int index = FrameIndex;
+                while (!parent.disposed && ReferenceEquals(parent.Control, Control) && Control.PlayState)
                 {
-                    if (This is System.Windows.Controls.Image image)
+                    var animation = parent.Animations[index];
+                    var frameSource = parent.GetFrameSource(animation.FrameIndex);
+                    This.Dispatcher.Invoke(() =>
                     {
-                        image.Source = frameSource;
+                        if (parent.disposed || !ReferenceEquals(parent.Control, Control) || !Control.PlayState)
+                            return;
+                        if (This is System.Windows.Controls.Image image)
+                            image.Source = frameSource;
+                        This.Margin = new Thickness(0);
+                    });
+                    Thread.Sleep(animation.Time);
+                    if (!Control.PlayState) break;
+                    if (++index < parent.Animations.Count) continue;
+                    if (parent.IsLoop) index = 0;
+                    else if (Control.Type == TaskControl.ControlType.Continue)
+                    {
+                        Control.Type = TaskControl.ControlType.Status_Quo;
+                        index = 0;
                     }
-                    This.Margin = new Thickness(0, 0, 0, 0);
-                });
-                //然后等待帧时间毫秒
-                Thread.Sleep(Time);
-                //判断是否要下一步
-                switch (Control.Type)
+                    else break;
+                }
+                Control.Type = TaskControl.ControlType.Status_Stoped;
+                if (!parent.disposed && ReferenceEquals(parent.Control, Control))
                 {
-                    case TaskControl.ControlType.Stop:
-                        Control.EndAction?.Invoke();
-                        return;
-                    case TaskControl.ControlType.Status_Stoped:
-                        return;
-                    case TaskControl.ControlType.Status_Quo:
-                    case TaskControl.ControlType.Continue:
-                        if (++parent.nowid >= parent.Animations.Count)
-                            if (parent.IsLoop)
-                            {
-                                parent.nowid = 0;
-                                //让循环动画重新开始立线程,不stackoverflow
-                                Task.Run(() => parent.Animations[0].Run(This, Control));
-                                return;
-                            }
-                            else if (Control.Type == TaskControl.ControlType.Continue)
-                            {
-                                Control.Type = TaskControl.ControlType.Status_Quo;
-                                parent.nowid = 0;
-                            }
-                            else
-                            {
-                                Control.Type = TaskControl.ControlType.Status_Stoped;
-                                Control.EndAction?.Invoke(); //运行结束动画时事件                                
-                                return;
-                            }
-                        //要下一步
-                        parent.Animations[parent.nowid].Run(This, Control);
-                        return;
+                    lock (parent.SpriteSheetLock)
+                    {
+                        // The displayed Image keeps its last frame; stopped animations
+                        // need not retain another reference to the entire sprite sheet.
+                        parent.CurrentFrame = null;
+                        parent.CurrentFrameIndex = -1;
+                        parent.SpriteSheetSource = null;
+                    }
+                    var endAction = Control.EndAction;
+                    Control.EndAction = null;
+                    endAction?.Invoke();
                 }
             }
         }
@@ -323,6 +314,7 @@ namespace VPet_Simulator.Core
         /// </summary>
         public void Run(Decorator parant, Action? EndAction = null)
         {
+            if (disposed) return;
             Touch();
             if (!IsReady)
             {
@@ -334,14 +326,15 @@ namespace VPet_Simulator.Core
                 Control.Stop(() => Run(parant, EndAction));
                 return;
             }
-            nowid = 0;
             var NEWControl = new TaskControl(EndAction);
             Control = NEWControl;
             parant.Dispatcher.Invoke(() =>
             {
+                if (disposed) return;
                 if (parant.Tag == this)
                 {
-                    Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, NEWControl));
+                    var target = (System.Windows.Controls.Image)parant.Child;
+                    Task.Run(() => Animations[0].Run(target, NEWControl));
                     return;
                 }
                 System.Windows.Controls.Image img;
@@ -373,9 +366,10 @@ namespace VPet_Simulator.Core
                     }
                 }
                 parant.Tag = this;
+                img.Tag = this;
                 img.Source = GetFrameSource(0);
                 img.Width = 500;
-                Task.Run(() => Animations[0].Run((System.Windows.Controls.Image)parant.Child, NEWControl));
+                Task.Run(() => Animations[0].Run(img, NEWControl));
             });
         }
         /// <summary>
@@ -386,143 +380,87 @@ namespace VPet_Simulator.Core
         /// <returns>准备好的线程</returns>
         public Task Run(System.Windows.Controls.Image img, Action? EndAction = null)
         {
+            if (disposed) return new Task(() => { });
             Touch();
             if (!IsReady)
             {
                 EndAction?.Invoke();
-                return Task.CompletedTask;
+                return new Task(() => { });
             }
             if (Control?.PlayState == true)
             {//如果当前正在运行,重置状态
                 Control.EndAction = null;
                 Control.Type = TaskControl.ControlType.Stop;
             }
-            nowid = 0;
-            Control = new TaskControl(EndAction);
-            return img.Dispatcher.Invoke(() =>
+            var newControl = new TaskControl(EndAction);
+            Control = newControl;
+            img.Dispatcher.Invoke(() =>
             {
-                if (img.Tag == this)
-                {
-                    return new Task(() => Animations[0].Run(img, Control));
-                }
+                if (disposed || img.Tag == this) return;
                 img.Tag = this;
                 img.Source = GetFrameSource(0);
                 img.Width = 500;
-                return new Task(() => Animations[0].Run(img, Control));
             });
+            return new Task(() => Animations[0].Run(img, newControl));
         }
 
         private BitmapSource? GetFrameSource(int frameIndex)
         {
-            Touch();
-            EnsureSpriteSheetLoaded();
-            if (FrameRects == null || frameIndex < 0 || frameIndex >= FrameRects.Length || SpriteSheetSource == null)
-                return null;
-            lock (FrameCacheLock)
+            lock (SpriteSheetLock)
             {
-                if (FrameCache.TryGetValue(frameIndex, out var cacheFrame))
+                if (disposed || FrameRects == null)
+                    return null;
+                Touch();
+                if (CurrentFrameIndex == frameIndex)
+                    return CurrentFrame;
+                if (SpriteSheetSource == null)
                 {
-                    return cacheFrame;
+                    var sheet = new BitmapImage();
+                    sheet.BeginInit();
+                    sheet.CacheOption = BitmapCacheOption.OnDemand;
+                    sheet.CreateOptions = BitmapCreateOptions.DelayCreation;
+                    sheet.UriSource = new Uri(Path);
+                    sheet.EndInit();
+                    sheet.Freeze();
+                    SpriteSheetSource = sheet;
                 }
-
                 var frame = new CroppedBitmap(SpriteSheetSource, FrameRects[frameIndex]);
                 frame.Freeze();
-                FrameCache[frameIndex] = frame;
-
-                var keepKeys = GetForwardKeepKeys(frameIndex);
-                var removeKeys = new List<int>();
-                foreach (var key in FrameCache.Keys)
-                {
-                    if (!keepKeys.Contains(key))
-                    {
-                        removeKeys.Add(key);
-                    }
-                }
-                foreach (var key in removeKeys)
-                {
-                    FrameCache.Remove(key);
-                }
-
+                CurrentFrame = frame;
+                CurrentFrameIndex = frameIndex;
                 return frame;
             }
         }
 
-        private HashSet<int> GetForwardKeepKeys(int frameIndex)
-        {
-            var keep = new HashSet<int> { frameIndex };
-            int cursor = frameIndex;
-            if (FrameRects != null)
-                for (int i = 0; i < FrameCacheAheadCount; i++)
-                {
-                    cursor++;
-                    if (cursor >= FrameRects.Length)
-                    {
-                        if (!IsLoop)
-                            break;
-                        cursor = 0;
-                    }
-                    keep.Add(cursor);
-                }
-            return keep;
-        }
-
-        private void EnsureSpriteSheetLoaded()
-        {
-            if (SpriteSheetSource != null)
-                return;
-            lock (SpriteSheetLock)
-            {
-                if (SpriteSheetSource != null)
-                    return;
-                BitmapImage spriteSheet = new BitmapImage();
-                spriteSheet.BeginInit();
-                spriteSheet.CacheOption = BitmapCacheOption.OnDemand;
-                spriteSheet.CreateOptions = BitmapCreateOptions.DelayCreation;
-                spriteSheet.UriSource = new Uri(Path);
-                spriteSheet.EndInit();
-                spriteSheet.Freeze();
-                SpriteSheetSource = spriteSheet;
-            }
-        }
-        /// <summary>
-        /// 修改最后使用时间为当前时间，以便在清理空闲缓存时判断是否需要清理
-        /// </summary>
         public void Touch() => Interlocked.Exchange(ref LastUseTimeTicks, DateTime.UtcNow.Ticks);
 
 
         public void CleanupIdleCache(long cleanTicks)
         {
-            if (Control?.PlayState == true)
-                return;
-            if (SpriteSheetSource == null)
-                return;
-            long lastUse = Interlocked.Read(ref LastUseTimeTicks);
-            if (cleanTicks < lastUse)
-                return;
-
             lock (SpriteSheetLock)
             {
+                if (Control?.PlayState == true || cleanTicks < Interlocked.Read(ref LastUseTimeTicks))
+                    return;
+                CurrentFrame = null;
+                CurrentFrameIndex = -1;
                 SpriteSheetSource = null;
-            }
-            lock (FrameCacheLock)
-            {
-                FrameCache.Clear();
             }
         }
 
         public void Dispose()
         {
-            Animations.Clear();
-            FrameRects = [];
+            disposed = true;
+            Control?.Stop();
             lock (SpriteSheetLock)
             {
+                IsReady = false;
+                CurrentFrame = null;
+                CurrentFrameIndex = -1;
                 SpriteSheetSource = null;
+                FrameRects = null;
             }
-            lock (FrameCacheLock)
-            {
-                FrameCache.Clear();
-            }
-            //GraphCore = null;
+            // Playback may still be leaving its final sleep. Keep its small frame
+            // metadata intact until that task exits; release all cached pixels now.
         }
     }
 }

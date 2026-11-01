@@ -76,6 +76,7 @@ namespace VPet_Simulator.Core
     /// 公开字段挪到基类或改成属性, 已编译的 MOD 就会失效.
     internal interface IPetStatHost
     {
+        double WorkEfficiency { set; }
         /// <summary>
         /// 游戏数据
         /// </summary>

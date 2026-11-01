@@ -29,14 +29,15 @@
     <PackageReference Include="HKW.WPF" Version="1.2.0" />
     <PackageReference Include="HKW.CommonValueConverters" Version="0.2.0" />
     <PackageReference Include="HKW.MVVM" Version="0.1.2" />
-    <PackageReference Include="HKW.MVVM.SourceGenerator" Version="0.1.8" PrivateAssets="all" />
+    <!-- VPet.Solution 在运行时直接依赖该程序集；PrivateAssets=all 会将它排除出发布文件和 deps.json。 -->
+    <PackageReference Include="HKW.MVVM.SourceGenerator" Version="0.1.8" />
     <PackageReference Include="Fody" Version="6.9.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" PrivateAssets="all" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
   </ItemGroup>
   <Target Name="DisableMvvmToolkitSourceGenerators" BeforeTargets="CoreCompile">
     <ItemGroup>

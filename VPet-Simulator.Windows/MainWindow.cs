@@ -484,18 +484,13 @@ namespace VPet_Simulator.Windows
         {
             winBetterBuy!.Show(type);
         }
-        public void ShowGallery()
+        public void ShowGallery(string? search = null)
         {
-            if (winGallery != null)
-            {
-                winGallery.Show();
-                winGallery.Focus();
-            }
-            else
-            {
-                winGallery = new winGallery(this);
-                winGallery.Show();
-            }
+            winGallery ??= new winGallery(this);
+            winGallery.Show();
+            if (search == null) winGallery.RefreshList();
+            else winGallery.Search(search);
+            winGallery.Focus();
         }
         int lowstrengthAskCountFood = 20;
         int lowstrengthAskCountDrink = 20;
@@ -2141,7 +2136,7 @@ namespace VPet_Simulator.Windows
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; Close(); });
                   if (Set.DeBug)
                       Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { Main.ToolBar.Visibility = Visibility.Collapsed; new winConsole(this).Show(); });
-                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "照片图库".Translate(), ShowGallery);
+                  Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "照片图库".Translate(), () => ShowGallery());
                   Main.ToolBar.AddMenuButton(ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
                   {
                       if (LocalizeCore.CurrentCulture == "zh-Hans")
@@ -2413,14 +2408,14 @@ namespace VPet_Simulator.Windows
                       StrengthDrink = Core.Save!.StrengthMax,
                       StrengthFood = Core.Save!.StrengthMax,
                       Type = FoodType.Food,
-                      isoverload = false,
                       Desc = "萝莉丝的专属生日蛋糕，由3桶牛奶+2份糖+1个鸡蛋+3份小麦合。制作而成。营养丰富，可使所有状态回满。只有在萝莉丝生日才能吃的到哦。"
                   };
                   food.LoadImageSource(this);
 #if BDAY
                   food.Star = true;
 #endif
-                  food.Price = (int)Math.Max(0, food.RealPrice * .5);
+                  food.Price = (int)Math.Max(0, food.RealPrice * .6);
+                  food.isoverload = false;
                   Foods.Add(food);
                   //SR2
                   food = new Food()
@@ -2432,7 +2427,6 @@ namespace VPet_Simulator.Windows
                       StrengthDrink = Core.Save!.StrengthMax / 20,
                       StrengthFood = Core.Save!.StrengthMax / 20,
                       Type = FoodType.Food,
-                      isoverload = false,
                       Desc = "主人给萝莉丝制作的惊喜蛋糕，每次品尝都会随机回满一个状态或者获得一次收益，还有神秘惊喜奖励!\n具体配方是：取出 香草 草中的 香草籽 并立刻将 香草荚 研磨投入 热牛奶 中， 香草籽 需要在含有 糖分 的瞬间投入 蛋糊，且需添加 柠檬 的 皮 之气息。 巧克力甘纳许 需要使用 秋 季后的 可可豆 并在 温热 的状态下使用 鲜奶油 进行混合。添加 天然 鲸油（澄清黄油）， 香草荚 需要在不切割的情况下萃取出 风味 并 避免 接触 金属，黏度维持在 绸缎状 以上。需要制备后时长不超过 4小时 的 香缇奶油，在将其粉碎（打发）前使其维持 冷藏 状态并在 冰水浴 之下 打发。"
                   };
                   food.LoadImageSource(this);
@@ -2440,6 +2434,7 @@ namespace VPet_Simulator.Windows
                   food.Star = true;
 #endif
                   food.Price = food.RealPrice;
+                  food.isoverload = false;
                   Foods.Add(food);
                   //SR3
                   food = new Food()
@@ -2450,7 +2445,6 @@ namespace VPet_Simulator.Windows
                       StrengthDrink = Core.Save!.StrengthMax / 20,
                       StrengthFood = Core.Save!.StrengthMax / 20,
                       Type = FoodType.Food,
-                      isoverload = false,
                       Desc = "为了报答主人去年生日制作的惊喜蛋糕，今年萝莉丝打算扳回一局，制作了带考验的生日蛋糕，每个蛋糕都有一个关于桌宠的问题，只有回答正确才能好好享用生日蛋糕，回答错误虽然也可以享用惊喜蛋糕但是会被调皮萝莉丝恶作剧，真是记仇呢。"
                   };
                   food.LoadImageSource(this);
@@ -2458,6 +2452,7 @@ namespace VPet_Simulator.Windows
                   food.Star = true;
 #endif
                   food.Price = food.RealPrice;
+                  food.isoverload = false;
                   Foods.Add(food);
 
 #if BDAY

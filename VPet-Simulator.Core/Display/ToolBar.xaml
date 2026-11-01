@@ -12,6 +12,12 @@
                 <ResourceDictionary Source="Theme.xaml" />
                 <ResourceDictionary Source="basestyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="ToolbarProgressBarStyle" TargetType="ProgressBar" BasedOn="{StaticResource {x:Type ProgressBar}}">
+                <Setter Property="Height" Value="20" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="Foreground" Value="{DynamicResource ProgressBarForeground}" />
+                <Setter Property="pu:ProgressBarHelper.CornerRadius" Value="10" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid x:Name="MainGrid" x:FieldModifier="public">
@@ -58,52 +64,40 @@
                 <TextBlock x:Name="tMoney" Grid.Row="2" Grid.Column="2" Foreground="{DynamicResource DARKPrimary}"
                         Text="$100,000" />
                 <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="{ll:Str 经验}" />
-                <ProgressBar x:Name="pExp" Grid.Row="3" Grid.Column="2" Height="20" VerticalAlignment="Center"
-                        pu:ProgressBarHelper.CornerRadius="10"
+                <ProgressBar x:Name="pExp" Grid.Row="3" Grid.Column="2" Style="{StaticResource ToolbarProgressBarStyle}" VerticalAlignment="Center"
                         pu:ProgressBarHelper.GeneratingPercentText="PgbExperience_GeneratingPercentText"
-                        pu:ProgressBarHelper.IsPercentVisible="True" FontSize="20"
-                        Foreground="{DynamicResource ProgressBarForeground}" Value="40" />
+                        pu:ProgressBarHelper.IsPercentVisible="True" Value="40" />
                 <TextBlock x:Name="tExp" Grid.Row="3" Grid.Column="4" HorizontalAlignment="Right"
                         Foreground="{DynamicResource DARKPrimary}" Text="x1.0" />
                 <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="{ll:Str 体力}" />
-                <ProgressBar x:Name="pStrength" Grid.Row="4" Grid.Column="2" Height="20" VerticalAlignment="Center"
-                        pu:ProgressBarHelper.CornerRadius="10"
+                <ProgressBar x:Name="pStrength" Grid.Row="4" Grid.Column="2" Style="{StaticResource ToolbarProgressBarStyle}" VerticalAlignment="Center"
                         pu:ProgressBarHelper.GeneratingPercentText="PgbStrength_GeneratingPercentText"
-                        pu:ProgressBarHelper.IsPercentVisible="True" FontSize="20"
-                        Foreground="{DynamicResource ProgressBarForeground}" Maximum="100" Value="40" />
+                        pu:ProgressBarHelper.IsPercentVisible="True" Maximum="100" Value="40" />
                 <TextBlock x:Name="tStrength" Grid.Row="4" Grid.Column="4" HorizontalAlignment="Right"
                         Foreground="{DynamicResource DARKPrimary}" Text="+1/t" />
                 <TextBlock Grid.Row="5" VerticalAlignment="Center" Text="{ll:Str 心情}" />
-                <ProgressBar x:Name="pFeeling" Grid.Row="5" Grid.Column="2" Height="20" VerticalAlignment="Center"
-                        pu:ProgressBarHelper.CornerRadius="10"
+                <ProgressBar x:Name="pFeeling" Grid.Row="5" Grid.Column="2" Style="{StaticResource ToolbarProgressBarStyle}" VerticalAlignment="Center"
                         pu:ProgressBarHelper.GeneratingPercentText="PgbSpirit_GeneratingPercentText"
-                        pu:ProgressBarHelper.IsPercentVisible="True" FontSize="20"
-                        Foreground="{DynamicResource ProgressBarForeground}" Maximum="100" Value="60" />
+                        pu:ProgressBarHelper.IsPercentVisible="True" Maximum="100" Value="60" />
                 <TextBlock x:Name="tFeeling" Grid.Row="5" Grid.Column="4" HorizontalAlignment="Right"
                         Foreground="{DynamicResource DARKPrimary}" Text="+1/t" />
                 <TextBlock Grid.Row="6" VerticalAlignment="Center" Text="{ll:Str 饱腹度}" />
-                <ProgressBar x:Name="pStrengthFoodMax" Grid.Row="6" Grid.Column="2" Height="20"
-                        VerticalAlignment="Center" pu:ProgressBarHelper.CornerRadius="10" Background="#FFDDDDDD"
-                        FontSize="20" Foreground="{DynamicResource ProgressBarForeground}" Maximum="100" Opacity="0.5"
+                <ProgressBar x:Name="pStrengthFoodMax" Grid.Row="6" Grid.Column="2" Style="{StaticResource ToolbarProgressBarStyle}"
+                        VerticalAlignment="Center" Background="#FFDDDDDD" Maximum="100" Opacity="0.5"
                         Value="90" />
-                <ProgressBar x:Name="pStrengthFood" Grid.Row="6" Grid.Column="2" Height="20" VerticalAlignment="Center"
-                        pu:ProgressBarHelper.CornerRadius="10"
+                <ProgressBar x:Name="pStrengthFood" Grid.Row="6" Grid.Column="2" Style="{StaticResource ToolbarProgressBarStyle}" VerticalAlignment="Center"
                         pu:ProgressBarHelper.GeneratingPercentText="PgbHunger_GeneratingPercentText"
-                        pu:ProgressBarHelper.IsPercentVisible="True" Background="{x:Null}" FontSize="20"
-                        Foreground="{DynamicResource ProgressBarForeground}" Maximum="100" Value="80" />
+                        pu:ProgressBarHelper.IsPercentVisible="True" Background="{x:Null}" Maximum="100" Value="80" />
 
                 <TextBlock x:Name="tStrengthFood" Grid.Row="6" Grid.Column="4" HorizontalAlignment="Right"
                         Foreground="{DynamicResource DARKPrimary}" Text="+1/t" />
                 <TextBlock Grid.Row="7" VerticalAlignment="Center" Text="{ll:Str 口渴度}" />
-                <ProgressBar x:Name="pStrengthDrinkMax" Grid.Row="7" Grid.Column="2" Height="20"
-                        VerticalAlignment="Center" pu:ProgressBarHelper.CornerRadius="10" Background="#FFDDDDDD"
-                        FontSize="20" Foreground="{DynamicResource ProgressBarForeground}" Maximum="100" Opacity="0.5"
+                <ProgressBar x:Name="pStrengthDrinkMax" Grid.Row="7" Grid.Column="2" Style="{StaticResource ToolbarProgressBarStyle}"
+                        VerticalAlignment="Center" Background="#FFDDDDDD" Maximum="100" Opacity="0.5"
                         Value="90" />
-                <ProgressBar x:Name="pStrengthDrink" Grid.Row="7" Grid.Column="2" Height="20" VerticalAlignment="Center"
-                        pu:ProgressBarHelper.CornerRadius="10"
+                <ProgressBar x:Name="pStrengthDrink" Grid.Row="7" Grid.Column="2" Style="{StaticResource ToolbarProgressBarStyle}" VerticalAlignment="Center"
                         pu:ProgressBarHelper.GeneratingPercentText="PgbThirsty_GeneratingPercentText"
-                        pu:ProgressBarHelper.IsPercentVisible="True" Background="{x:Null}" FontSize="20"
-                        Foreground="{DynamicResource ProgressBarForeground}" Maximum="100" Value="20" />
+                        pu:ProgressBarHelper.IsPercentVisible="True" Background="{x:Null}" Maximum="100" Value="20" />
                 <TextBlock x:Name="tStrengthDrink" Grid.Row="7" Grid.Column="4" HorizontalAlignment="Right"
                         Foreground="{DynamicResource DARKPrimary}" Text="+1/t" />
             </Grid>

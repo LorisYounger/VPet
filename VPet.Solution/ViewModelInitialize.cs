@@ -11,6 +11,7 @@ using HKW.MVVM.SourceGenerator;
 using HKW.WPF.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using LinePutScript.Localization.WPF;
 using Panuon.WPF.UI;
 using VPet.Solution.ViewModels;
 using VPet.Solution.ViewModels.SaveViewer;
@@ -411,7 +412,7 @@ public class LPSTranslateConverter : System.Windows.Data.IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value?.ToString() is string str)
-            return str;
+            return str.Translate();
         return null!;
     }
 
