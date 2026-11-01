@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ public partial class GraphCore : IDisposable
         Resolution = resolution;
         CleanTimer = new Timer(_ =>
         {
-            long cleanTicks = DateTime.Now.Ticks - IdleCacheTimeout;
+            long cleanTicks = DateTime.UtcNow.Ticks - IdleCacheTimeout;
             for (int i = 0; i < GraphsALL.Count; i++)
             {
                 GraphsALL[i].CleanupIdleCache(cleanTicks);

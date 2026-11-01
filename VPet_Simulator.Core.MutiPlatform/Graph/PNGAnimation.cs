@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using VPet_Simulator.Core;
 
@@ -31,7 +30,6 @@ public class PNGAnimation : IAvaloniaImageGraph
     /// 更简单的办法 —— 播到哪一帧才解码哪一帧, 空闲超时后由 CleanupIdleCache 释放.
     private readonly Dictionary<int, Bitmap> _frames = new();
     private readonly object _framesLock = new();
-    private int _nowId;
 
     public static int MaxLoadMemory = 2000;
 
@@ -123,13 +121,13 @@ public class PNGAnimation : IAvaloniaImageGraph
         }
     }
 
-    public void Run(Decorator parent, Action? endAction = null)
+    public void Run(Decorator parent, Action? endAction = null, Action? firstFrame = null)
     {
-        Run(parent, null, endAction);
-    }
-
-    public void Run(Decorator parent, IImage? image, Action? endAction = null)
-    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(() => Run(parent, endAction, firstFrame));
+            return;
+        }
         Touch();
         //播放中途发现有帧解不出来的动画 (IsFail, 见 GetFrame) 已经从动画表里摘掉了, 手上还拿着它的调用方也按没就绪处理
         if (!IsReady || IsFail)
@@ -140,128 +138,59 @@ public class PNGAnimation : IAvaloniaImageGraph
                 Task.Run(endAction);
             return;
         }
-        if (ControlState?.PlayState == true)
-        {//如果当前正在运行,重置状态
-            // 必须走 Stop(回调) 让当前帧循环自己收尾后再重新进来, 而不是直接抢占:
-            // 否则新旧两个循环会同时往同一个 Image 上写 Source
-            ControlState.Stop(() => Run(parent, image, endAction));
-            return;
-        }
-
-        _nowId = 0;
+        // Replace the playback immediately; a pending Stop is not proof the old task exited.
+        ControlState?.Stop();
         var control = new GraphTaskControl(endAction);
         ControlState = control;
 
-        Dispatcher.UIThread.Post(() =>
+        if (ReferenceEquals(parent.Tag, this) && parent.Child is Image reuse)
         {
-            if (ReferenceEquals(parent.Tag, this) && parent.Child is Image reuse)
-            {
-                Task.Run(() => RunCore(reuse, control));
-                return;
-            }
-
-            var img = GraphImagePool.Attach(parent, _graphCore, "PNGAnimation");
-            // Tag 是双缓冲判断"这一层正在放哪个动画"的依据, 必须回写
-            parent.Tag = this;
-            if (_framePaths.Count > 0)
-            {
-                img.Source = GetFrame(0);
-            }
-            img.Width = 500;
-            Task.Run(() => RunCore(img, control));
-        });
-    }
-
-    public Task Run(Image image, Action? endAction = null)
-    {
-        if (ControlState?.PlayState == true)
-        {
-            ControlState.EndAction = null;
-            ControlState.Type = GraphTaskControl.ControlType.Stop;
+            _ = RunCore(reuse, control, firstFrame);
+            return;
         }
 
-        _nowId = 0;
+        var img = GraphImagePool.Attach(parent, _graphCore, "PNGAnimation");
+        // Tag 是双缓冲判断"这一层正在放哪个动画"的依据, 必须回写
+        parent.Tag = this;
+        img.Width = 500;
+        _ = RunCore(img, control, firstFrame);
+    }
+
+    public Task Run(Image image, Action? endAction = null, Action? firstFrame = null)
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+            return Dispatcher.UIThread.Invoke(() => Run(image, endAction, firstFrame));
+        ControlState?.Stop();
         var control = new GraphTaskControl(endAction);
         ControlState = control;
-        LastUseTimeTicks = DateTime.UtcNow.Ticks;
-
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (_framePaths.Count > 0)
-            {
-                image.Source = GetFrame(0);
-                image.Height = 500;
-            }
-        });
-
-        return Task.Run(() => RunCore(image, control));
+        Touch();
+        image.Height = 500;
+        return RunCore(image, control, firstFrame);
     }
 
-    /// <summary>
-    /// 播放单帧并推进到下一帧
-    /// </summary>
-    /// 与 Windows 版 PNGAnimation.Animation.Run 的语义一一对应:
-    /// 先显示当前帧, 再按该帧自己的时长等待, 最后才判断是否继续.
-    private void RunCore(Image image, GraphTaskControl control)
+    private Task RunCore(Image image, GraphTaskControl control, Action? firstFrame = null)
     {
-        if (_framePaths.Count == 0)
-        {
-            control.Type = GraphTaskControl.ControlType.Status_Stoped;
-            control.EndAction?.Invoke();
-            return;
-        }
+        return GraphPlayback.Run(image, this, control, _framePaths.Count,
+            GetFrameAsync, index => _frameTimes[index], firstFrame);
+    }
 
-        var index = _nowId;
-        var frame = GetFrame(index);
-        if (frame == null)
-        {//这一帧解不出来: 整个动画已标记失败并摘掉 (见 GetFrame), 本次播放按结束处理, 桌宠会换别的动画
-            control.Type = GraphTaskControl.ControlType.Status_Stoped;
-            control.EndAction?.Invoke();
-            return;
-        }
-        //先显示该帧
-        Dispatcher.UIThread.Post(() => image.Source = frame);
-        //然后等待这一帧自己的时长
-        Thread.Sleep(_frameTimes[index]);
-
-        //判断是否要下一步
-        switch (control.Type)
+    private Task<IImage?> GetFrameAsync(int index)
+    {
+        lock (_framesLock)
         {
-            case GraphTaskControl.ControlType.Stop:
-                control.EndAction?.Invoke();
-                return;
-            case GraphTaskControl.ControlType.Status_Stoped:
-                return;
-            case GraphTaskControl.ControlType.Status_Quo:
-            case GraphTaskControl.ControlType.Continue:
-                if (++_nowId >= _framePaths.Count)
-                {
-                    if (IsLoop)
-                    {
-                        _nowId = 0;
-                        // 循环动画必须重新起一个线程, 否则一直递归下去会栈溢出
-                        Task.Run(() => RunCore(image, control));
-                        return;
-                    }
-                    else if (control.Type == GraphTaskControl.ControlType.Continue)
-                    {
-                        control.Type = GraphTaskControl.ControlType.Status_Quo;
-                        _nowId = 0;
-                    }
-                    else
-                    {
-                        control.Type = GraphTaskControl.ControlType.Status_Stoped;
-                        control.EndAction?.Invoke(); //运行结束动画时事件
-                        return;
-                    }
-                }
-                RunCore(image, control);
-                return;
+            if (_frames.TryGetValue(index, out var cached))
+                return Task.FromResult<IImage?>(cached);
         }
+        return Task.Run<IImage?>(() => GetFrame(index));
     }
 
     public void Stop(bool stopEndAction)
     {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(() => Stop(stopEndAction));
+            return;
+        }
         if (ControlState == null)
             return;
         if (stopEndAction)
@@ -271,7 +200,12 @@ public class PNGAnimation : IAvaloniaImageGraph
 
     public void SetContinue()
     {
-        if (ControlState != null)
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(SetContinue);
+            return;
+        }
+        if (ControlState?.PlayState == true)
             ControlState.Type = GraphTaskControl.ControlType.Continue;
     }
 

@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -6,7 +6,6 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using VPet_Simulator.Core;
 
@@ -27,7 +26,6 @@ public class APNGAnimation : IAvaloniaRunImageGraph
     /// 每帧的显示时长(毫秒), 与 _frames 一一对应
     /// </summary>
     private readonly List<int> _frameTimes = new();
-    private int _nowId;
 
     public APNGAnimation(GraphCore graphCore, string path, GraphInfo graphInfo, bool isLoop = false)
     {
@@ -182,13 +180,18 @@ public class APNGAnimation : IAvaloniaRunImageGraph
             source.RowBytes);
     }
 
-    public void Run(Decorator parent, Action? endAction = null)
+    public void Run(Decorator parent, Action? endAction = null, Action? firstFrame = null)
     {
-        Run(parent, null, endAction);
+        Run(parent, null, endAction, firstFrame);
     }
 
-    public void Run(Decorator parent, IImage? image, Action? endAction = null)
+    public void Run(Decorator parent, IImage? image, Action? endAction = null, Action? firstFrame = null)
     {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(() => Run(parent, image, endAction, firstFrame));
+            return;
+        }
         Touch();
         if (!IsReady)
         {
@@ -198,115 +201,39 @@ public class APNGAnimation : IAvaloniaRunImageGraph
                 Task.Run(endAction);
             return;
         }
-        if (ControlState?.PlayState == true)
-        {//如果当前正在运行,重置状态
-            // 必须走 Stop(回调) 让当前帧循环自己收尾后再重新进来, 而不是直接抢占:
-            // 否则新旧两个循环会同时往同一个 Image 上写 Source
-            ControlState.Stop(() => Run(parent, image, endAction));
-            return;
-        }
-
+        // Replace the playback immediately; a pending Stop is not proof the old task exited.
+        ControlState?.Stop();
         var control = new GraphTaskControl(endAction);
         ControlState = control;
 
-        _nowId = 0;
-
-        Dispatcher.UIThread.Post(() =>
+        if (ReferenceEquals(parent.Tag, this) && parent.Child is Image reuse)
         {
-            if (ReferenceEquals(parent.Tag, this) && parent.Child is Image reuse)
-            {
-                Task.Run(() => RunCore(reuse, image, control));
-                return;
-            }
+            _ = RunCore(reuse, image, control, firstFrame);
+            return;
+        }
 
-            var img = GraphImagePool.Attach(parent, _graphCore, "APNGAnimation");
-            // Tag 是双缓冲判断"这一层正在放哪个动画"的依据, 必须回写
-            parent.Tag = this;
-            img.Width = 500;
-            Task.Run(() => RunCore(img, image, control));
-        });
+        var img = GraphImagePool.Attach(parent, _graphCore, "APNGAnimation");
+        // Tag 是双缓冲判断"这一层正在放哪个动画"的依据, 必须回写
+        parent.Tag = this;
+        img.Width = 500;
+        _ = RunCore(img, image, control, firstFrame);
     }
 
-    /// <summary>
-    /// 播放单帧并推进到下一帧
-    /// </summary>
-    /// 与 PNGAnimation 的帧循环语义一致: 先显示当前帧, 再按该帧自己的时长等待.
-    /// 解码不出多帧时(单帧 PNG 或畸形文件)退回显示静态图.
-    private void RunCore(Image target, IImage? overrideImage, GraphTaskControl control)
+    private Task RunCore(Image target, IImage? overrideImage, GraphTaskControl control, Action? firstFrame)
     {
-        if (overrideImage != null || _frames.Count == 0)
-        {
-            // 夹层动画或单帧: 显示一次就按固定节奏空转, 行为与之前一致
-            var still = overrideImage ?? _bitmap;
-            Dispatcher.UIThread.Post(() => target.Source = still);
-            Thread.Sleep(100);
-        }
-        else
-        {
-            var index = _nowId;
-            //先显示该帧
-            Dispatcher.UIThread.Post(() => target.Source = _frames[index]);
-            //然后等待这一帧自己的时长
-            Thread.Sleep(_frameTimes[index]);
-        }
-
-        //判断是否要下一步
-        switch (control.Type)
-        {
-            case GraphTaskControl.ControlType.Stop:
-                control.EndAction?.Invoke();
-                return;
-            case GraphTaskControl.ControlType.Status_Stoped:
-                return;
-            case GraphTaskControl.ControlType.Status_Quo:
-            case GraphTaskControl.ControlType.Continue:
-                if (_frames.Count == 0 || overrideImage != null)
-                {
-                    if (IsLoop)
-                    {
-                        // 循环必须重新起线程, 否则一直递归下去会栈溢出
-                        Task.Run(() => RunCore(target, overrideImage, control));
-                        return;
-                    }
-                    if (control.Type == GraphTaskControl.ControlType.Continue)
-                    {
-                        control.Type = GraphTaskControl.ControlType.Status_Quo;
-                        Task.Run(() => RunCore(target, overrideImage, control));
-                        return;
-                    }
-                    control.Type = GraphTaskControl.ControlType.Status_Stoped;
-                    control.EndAction?.Invoke();
-                    return;
-                }
-
-                if (++_nowId >= _frames.Count)
-                {
-                    if (IsLoop)
-                    {
-                        _nowId = 0;
-                        // 循环动画必须重新起一个线程, 否则一直递归下去会栈溢出
-                        Task.Run(() => RunCore(target, overrideImage, control));
-                        return;
-                    }
-                    else if (control.Type == GraphTaskControl.ControlType.Continue)
-                    {
-                        control.Type = GraphTaskControl.ControlType.Status_Quo;
-                        _nowId = 0;
-                    }
-                    else
-                    {
-                        control.Type = GraphTaskControl.ControlType.Status_Stoped;
-                        control.EndAction?.Invoke(); //运行结束动画时事件
-                        return;
-                    }
-                }
-                RunCore(target, overrideImage, control);
-                return;
-        }
+        bool still = overrideImage != null || _frames.Count == 0;
+        return GraphPlayback.Run(target, this, control, still ? 1 : _frames.Count,
+            index => Task.FromResult<IImage?>(still ? overrideImage ?? _bitmap : _frames[index]),
+            index => still ? 100 : _frameTimes[index], firstFrame);
     }
 
     public void Stop(bool stopEndAction)
     {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(() => Stop(stopEndAction));
+            return;
+        }
         if (ControlState == null)
             return;
         if (stopEndAction)
@@ -316,7 +243,12 @@ public class APNGAnimation : IAvaloniaRunImageGraph
 
     public void SetContinue()
     {
-        if (ControlState != null)
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(SetContinue);
+            return;
+        }
+        if (ControlState?.PlayState == true)
             ControlState.Type = GraphTaskControl.ControlType.Continue;
     }
 

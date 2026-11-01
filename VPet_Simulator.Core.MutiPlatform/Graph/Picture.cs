@@ -1,11 +1,10 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using SkiaSharp;
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using VPet_Simulator.Core;
 
@@ -74,8 +73,13 @@ public class Picture : IAvaloniaImageGraph
 
     public GraphTaskControl? ControlState { get; private set; }
 
-    public void Run(Decorator parent, Action? endAction = null)
+    public void Run(Decorator parent, Action? endAction = null, Action? firstFrame = null)
     {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(() => Run(parent, endAction, firstFrame));
+            return;
+        }
         if (ControlState?.PlayState == true)
         {
             ControlState.SetContinue();
@@ -83,78 +87,73 @@ public class Picture : IAvaloniaImageGraph
             return;
         }
 
-        ControlState = new GraphTaskControl(endAction);
+        var control = new GraphTaskControl(endAction);
+        ControlState = control;
         LastUseTimeTicks = DateTime.UtcNow.Ticks;
 
-        Dispatcher.UIThread.Post(() =>
+        if (!ReferenceEquals(parent.Tag, this))
         {
-            if (!ReferenceEquals(parent.Tag, this))
+            var image = GraphImagePool.Attach(parent, _graphCore!, "Picture");
+            image.Width = 500;
+            if (Path != null)
             {
-                var image = GraphImagePool.Attach(parent, _graphCore!, "Picture");
-                image.Width = 500;
-                if (Path != null)
-                {
-                    image.Source = new Bitmap(Path);
-                }
-                // Tag 是双缓冲判断"这一层正在放哪个动画"的依据, 必须回写
-                parent.Tag = this;
+                image.Source = new Bitmap(Path);
             }
-            Task.Run(() => RunCore(ControlState));
-        });
-    }
-
-    private void RunCore(GraphTaskControl control)
-    {
-        Thread.Sleep(Length);
-        switch (control.Type)
-        {
-            case GraphTaskControl.ControlType.Stop:
-                control.EndAction?.Invoke();
-                return;
-            case GraphTaskControl.ControlType.Status_Stoped:
-                return;
-            case GraphTaskControl.ControlType.Continue:
-                control.Type = GraphTaskControl.ControlType.Status_Quo;
-                RunCore(control);
-                return;
-            case GraphTaskControl.ControlType.Status_Quo:
-                if (IsLoop)
-                {
-                    Task.Run(() => RunCore(control));
-                }
-                else
-                {
-                    control.Type = GraphTaskControl.ControlType.Status_Stoped;
-                    control.EndAction?.Invoke();
-                }
-                return;
+            // Tag 是双缓冲判断"这一层正在放哪个动画"的依据, 必须回写
+            parent.Tag = this;
         }
+        if (parent.Child is Image rendered && rendered.Source != null)
+            firstFrame?.Invoke();
+        _ = RunCore(control);
     }
 
-    public Task Run(Image image, Action? endAction = null)
+    private async Task RunCore(GraphTaskControl control)
     {
+        do
+        {
+            await Task.Delay(Length);
+            if (!ReferenceEquals(ControlState, control)) return;
+            if (!control.PlayState) break;
+            if (control.Type == GraphTaskControl.ControlType.Continue)
+                control.Type = GraphTaskControl.ControlType.Status_Quo;
+            else if (!IsLoop) break;
+        } while (true);
+        var endAction = control.EndAction;
+        control.Type = GraphTaskControl.ControlType.Status_Stoped;
+        endAction?.Invoke();
+    }
+
+    public Task Run(Image image, Action? endAction = null, Action? firstFrame = null)
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+            return Dispatcher.UIThread.Invoke(() => Run(image, endAction, firstFrame));
         if (ControlState?.PlayState == true)
         {
             ControlState.EndAction = null;
             ControlState.Type = GraphTaskControl.ControlType.Stop;
         }
 
-        ControlState = new GraphTaskControl(endAction);
+        var control = new GraphTaskControl(endAction);
+        ControlState = control;
         LastUseTimeTicks = DateTime.UtcNow.Ticks;
-        Dispatcher.UIThread.Post(() =>
+        if (Path != null)
         {
-            if (Path != null)
-            {
-                image.Source = new Bitmap(Path);
-            }
-            image.Width = 500;
-        });
+            image.Source = new Bitmap(Path);
+        }
+        image.Width = 500;
 
-        return Task.Run(() => RunCore(ControlState));
+        if (image.Source != null)
+            firstFrame?.Invoke();
+        return RunCore(control);
     }
 
     public void Stop(bool stopEndAction)
     {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(() => Stop(stopEndAction));
+            return;
+        }
         if (ControlState == null)
             return;
         if (stopEndAction)
@@ -164,7 +163,12 @@ public class Picture : IAvaloniaImageGraph
 
     public void SetContinue()
     {
-        if (ControlState != null)
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(SetContinue);
+            return;
+        }
+        if (ControlState?.PlayState == true)
             ControlState.Type = GraphTaskControl.ControlType.Continue;
     }
 

@@ -12,10 +12,8 @@ namespace VPet_Simulator.Core.MutiPlatform.Display;
 /// 桌宠主体: 动画状态机与双缓冲渲染
 /// </summary>
 /// 对应 Windows 版的 VPet-Simulator.Core/Display/MainDisplay.cs.
-/// 查找与切换的逻辑逐行对应, 只替换了三处平台相关实现:
-///   Dispatcher.Invoke      -> RunOnUi
-///   Visibility.Visible/Hidden -> IsVisible (两层是重叠的同尺寸 Decorator, Hidden 与 Collapsed 在这里没有视觉差异)
-///   GC.Collect()           -> 不保留, 理由见 Display 方法内的说明
+/// 行为选择沿用 Windows 版; 跨平台切换在 UI 线程执行, 并按请求序号丢弃过期结束回调.
+/// 两层 Decorator 复用显示控件, 启动新动画前先停止旧播放任务.
 ///
 /// DisplayXXX 族决定了"什么时候播什么动画", 是桌宠行为的骨架. 里面大量用随机数配合
 /// looptimes/CountNomal 做权重, 数值和判定顺序都不能改 —— 改了桌宠的性格就变了.
@@ -393,6 +391,7 @@ public partial class Main
     /// </summary>
     public event Action<GraphInfo>? GraphDisplayHandler;
 
+    private long displayVersion;
     private bool petgridcrlf = true;
     private int nodisplayLoop = 0;
 
@@ -491,11 +490,15 @@ public partial class Main
     /// 找不到动画时不能把 endAction 吞掉, 否则桌宠会永远停在上一个动作上.
     public void Display(string name, IImage img, Action endAction)
     {
-        var ig = Core.Graph!.FindGraph(name, AnimatType.Single, Core.Save!.Mode);
-        if (ig is IAvaloniaRunImageGraph rig)
+        if (!Avalonia.Threading.Dispatcher.UIThread.CheckAccess())
         {
-            var b = FindDisplayBorder(ig);
-            rig.Run(b, img, endAction);
+            RunOnUi(() => Display(name, img, endAction));
+            return;
+        }
+        var ig = Core.Graph!.FindGraph(name, AnimatType.Single, Core.Save!.Mode);
+        if (ig is IAvaloniaRunImageGraph)
+        {
+            RunDisplay(ig, endAction, img);
         }
         else
         {
@@ -510,6 +513,11 @@ public partial class Main
     /// <param name="endAction">结束操作</param>
     public void Display(IAvaloniaGraph? graph, Action? endAction = null)
     {
+        if (!Avalonia.Threading.Dispatcher.UIThread.CheckAccess())
+        {
+            RunOnUi(() => Display(graph, endAction));
+            return;
+        }
         if (graph == null)
         {
             if (nodisplayLoop++ > 20)
@@ -535,120 +543,38 @@ public partial class Main
             nodisplayLoop = 0;
         }
 
-        DisplayType = graph.GraphInfo;
-        GraphDisplayHandler?.Invoke(graph.GraphInfo);
-        var petGridTag = RunOnUi(() => PetGrid.Tag);
-        var petGrid2Tag = RunOnUi(() => PetGrid2.Tag);
-        if (graph.Equals(petGridTag))
-        {
-            petgridcrlf = true;
-            if (petGrid2Tag is IAvaloniaGraph ig)
-                ig.Stop(true);
-            RunOnUi(() =>
-            {
-                PetGrid.IsVisible = true;
-                PetGrid2.IsVisible = false;
-            });
-            graph.Run(PetGrid, endAction);
-            return;
-        }
-        else if (graph.Equals(petGrid2Tag))
-        {
-            petgridcrlf = false;
-            if (petGridTag is IAvaloniaGraph ig)
-                ig.Stop(true);
-            RunOnUi(() =>
-            {
-                PetGrid2.IsVisible = true;
-                PetGrid.IsVisible = false;
-            });
-            graph.Run(PetGrid2, endAction);
-            return;
-        }
-
-        // 顺序不可调整: 先让新动画在隐藏的那一层上跑起来渲染出首帧, 再停掉旧动画,
-        // 最后才翻转可见性. 这是双缓冲不闪烁的关键.
-        if (petgridcrlf)
-        {
-            graph.Run(PetGrid2, endAction);
-            (petGridTag as IAvaloniaGraph)?.Stop(true);
-            RunOnUi(() =>
-            {
-                PetGrid.IsVisible = false;
-                PetGrid2.IsVisible = true;
-            });
-        }
-        else
-        {
-            graph.Run(PetGrid, endAction);
-            (petGrid2Tag as IAvaloniaGraph)?.Stop(true);
-            RunOnUi(() =>
-            {
-                PetGrid2.IsVisible = false;
-                PetGrid.IsVisible = true;
-            });
-        }
-        petgridcrlf = !petgridcrlf;
-        // Windows 版在这里有一次 GC.Collect(), 用来压制 WPF BitmapSource 的堆积.
-        // 跨平台侧的动画走的是共享一张雪碧图的 SkiaSharp 实现, 没有那个堆积来源,
-        // 而每次切换动画都强制 GC 在 Linux 上是明显的卡顿来源, 所以不保留.
+        RunDisplay(graph, endAction);
     }
 
-    /// <summary>
-    /// 查找可用与显示的 Decorator (自动多层切换)
-    /// </summary>
-    /// <param name="graph">动画</param>
-    public Decorator FindDisplayBorder(IAvaloniaGraph graph)
+    private void RunDisplay(IAvaloniaGraph graph, Action? endAction, IImage? image = null)
     {
+        StopCurrentGraphs();
+        long version = displayVersion;
+        var border = petgridcrlf ? PetGrid2 : PetGrid;
         DisplayType = graph.GraphInfo;
         GraphDisplayHandler?.Invoke(graph.GraphInfo);
-        var petGridTag = RunOnUi(() => PetGrid.Tag);
-        var petGrid2Tag = RunOnUi(() => PetGrid2.Tag);
-        if (ReferenceEquals(petGridTag, graph))
-        {
-            petgridcrlf = true;
-            (petGrid2Tag as IAvaloniaGraph)?.Stop(true);
-            RunOnUi(() =>
-            {
-                PetGrid.IsVisible = true;
-                PetGrid2.IsVisible = false;
-            });
-            return PetGrid;
-        }
-        else if (ReferenceEquals(petGrid2Tag, graph))
-        {
-            petgridcrlf = false;
-            (petGridTag as IAvaloniaGraph)?.Stop(true);
-            RunOnUi(() =>
-            {
-                PetGrid2.IsVisible = true;
-                PetGrid.IsVisible = false;
-            });
-            return PetGrid2;
-        }
+        if (version != displayVersion) return;
 
-        if (petgridcrlf)
+        void FirstFrame()
         {
-            (petGridTag as IAvaloniaGraph)?.Stop(true);
-            RunOnUi(() =>
-            {
-                PetGrid.IsVisible = false;
-                PetGrid2.IsVisible = true;
-            });
-            petgridcrlf = !petgridcrlf;
-            return PetGrid2;
+            if (version != displayVersion) return;
+            // Keep the old frame until the hidden layer has a Source. Commit both layers in one UI turn.
+            border.IsVisible = true;
+            (ReferenceEquals(border, PetGrid) ? PetGrid2 : PetGrid).IsVisible = false;
+            petgridcrlf = ReferenceEquals(border, PetGrid);
         }
+        bool completed = false;
+        void Complete() => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            // Check after dispatch: the animation may have been replaced while this callback was queued.
+            if (version != displayVersion || completed) return;
+            completed = true;
+            endAction?.Invoke();
+        });
+        if (image != null && graph is IAvaloniaRunImageGraph composite)
+            composite.Run(border, image, Complete, FirstFrame);
         else
-        {
-            (petGrid2Tag as IAvaloniaGraph)?.Stop(true);
-            RunOnUi(() =>
-            {
-                PetGrid2.IsVisible = false;
-                PetGrid.IsVisible = true;
-            });
-            petgridcrlf = !petgridcrlf;
-            return PetGrid;
-        }
+            graph.Run(border, Complete, FirstFrame);
     }
 
     /// <summary>
@@ -656,9 +582,15 @@ public partial class Main
     /// </summary>
     internal void StopCurrentGraphs()
     {
-        if (RunOnUi(() => PetGrid.Tag) is IAvaloniaGraph first)
-            first.Stop(true);
-        if (RunOnUi(() => PetGrid2.Tag) is IAvaloniaGraph second)
-            second.Stop(true);
+        if (!Avalonia.Threading.Dispatcher.UIThread.CheckAccess())
+        {
+            RunOnUi(() => StopCurrentGraphs());
+            return;
+        }
+        ++displayVersion;
+        var first = PetGrid.Tag as IAvaloniaGraph;
+        var second = PetGrid2.Tag as IAvaloniaGraph;
+        first?.Stop(true);
+        if (!ReferenceEquals(first, second)) second?.Stop(true);
     }
 }

@@ -157,13 +157,8 @@ public partial class Main : UserControl, GraphHelper.IMoveHost, IDisposable
             MessageBoxX.Show("Did not find the Default animation, please check the graph configuration.", "Error", MessageBoxButton.OK, MessageBoxIcon.Error);
             return;
         }
-        Task.Run(() =>
-        {
-            ig.Run(PetGrid, () =>
-            {
-                DisplayNomal();
-            });
-        });
+        // Startup must participate in the same switch/continuation ownership as all other animations.
+        Display(ig, DisplayNomal);
 
         IsWorking = true;
         EventTimer.Enabled = true;

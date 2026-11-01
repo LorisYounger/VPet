@@ -8,15 +8,15 @@ namespace VPet_Simulator.Core.MutiPlatform.Graph;
 
 public interface IAvaloniaGraph : IGraphBase
 {
-    void Run(Decorator parent, Action? endAction = null);
+    void Run(Decorator parent, Action? endAction = null, Action? firstFrame = null);
 }
 
 public interface IAvaloniaRunImageGraph : IAvaloniaGraph
 {
-    void Run(Decorator parent, IImage? image, Action? endAction = null);
+    void Run(Decorator parent, IImage? image, Action? endAction = null, Action? firstFrame = null);
 }
 
 public interface IAvaloniaImageGraph : IAvaloniaGraph
 {
-    Task Run(Image image, Action? endAction = null);
+    Task Run(Image image, Action? endAction = null, Action? firstFrame = null);
 }

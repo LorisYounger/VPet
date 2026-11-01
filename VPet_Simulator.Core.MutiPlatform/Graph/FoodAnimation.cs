@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -7,7 +7,6 @@ using LinePutScript;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using VPet_Simulator.Core;
 
@@ -16,7 +15,8 @@ namespace VPet_Simulator.Core.MutiPlatform.Graph;
 public class FoodAnimation : IAvaloniaRunImageGraph
 {
     private readonly GraphCore _graphCore;
-    private int _nowId;
+    private IAvaloniaGraph? _frontLayer;
+    private IAvaloniaGraph? _backLayer;
 
     public FoodAnimation(GraphCore graphCore, GraphInfo graphInfo, string frontLayer,
         string backLayer, ILine animations, bool isLoop = false)
@@ -32,7 +32,7 @@ public class FoodAnimation : IAvaloniaRunImageGraph
         ISub? sub = animations.Find("a" + i);
         while (sub != null)
         {
-            Animations.Add(new Animation(this, sub));
+            Animations.Add(new Animation(sub));
             sub = animations.Find("a" + ++i);
         }
 
@@ -63,7 +63,6 @@ public class FoodAnimation : IAvaloniaRunImageGraph
 
     public class Animation
     {
-        private readonly FoodAnimation _parent;
         public Thickness MarginWithImage;
         public double Rotate;
         public double Opacity = 1;
@@ -71,9 +70,8 @@ public class FoodAnimation : IAvaloniaRunImageGraph
         public double Width;
         public int Time;
 
-        public Animation(FoodAnimation parent, ISub sub)
+        public Animation(ISub sub)
         {
-            _parent = parent;
             var strs = sub.GetInfos();
             Time = int.Parse(strs[0]);
             if (strs.Length == 1)
@@ -93,86 +91,42 @@ public class FoodAnimation : IAvaloniaRunImageGraph
             }
         }
 
-        public void Run(Image target, GraphTaskControl control)
+        public void Apply(Image target)
         {
-            Dispatcher.UIThread.Post(() =>
-            {
-                if (IsVisible)
-                {
-                    target.IsVisible = true;
-                    target.Margin = MarginWithImage;
-                    target.RenderTransform = new RotateTransform(Rotate);
-                    target.Opacity = Opacity;
-                    target.Width = Width;
-                    target.Height = Width;
-                }
-                else
-                {
-                    target.IsVisible = false;
-                }
-            });
-
-            Thread.Sleep(Time);
-
-            switch (control.Type)
-            {
-                case GraphTaskControl.ControlType.Stop:
-                    control.EndAction?.Invoke();
-                    return;
-                case GraphTaskControl.ControlType.Status_Stoped:
-                    return;
-                case GraphTaskControl.ControlType.Status_Quo:
-                case GraphTaskControl.ControlType.Continue:
-                    if (++_parent._nowId >= _parent.Animations.Count)
-                    {
-                        if (_parent.IsLoop)
-                        {
-                            _parent._nowId = 0;
-                            Task.Run(() => _parent.Animations[0].Run(target, control));
-                            return;
-                        }
-                        if (control.Type == GraphTaskControl.ControlType.Continue)
-                        {
-                            control.Type = GraphTaskControl.ControlType.Status_Quo;
-                            _parent._nowId = 0;
-                        }
-                        else
-                        {
-                            control.Type = GraphTaskControl.ControlType.Status_Stoped;
-                            control.EndAction?.Invoke();
-                            return;
-                        }
-                    }
-                    _parent.Animations[_parent._nowId].Run(target, control);
-                    return;
-            }
+            target.IsVisible = IsVisible;
+            if (!IsVisible) return;
+            target.Margin = MarginWithImage;
+            target.RenderTransform = new RotateTransform(Rotate);
+            target.Opacity = Opacity;
+            target.Width = Width;
+            target.Height = Width;
         }
     }
 
-    private static Grid? foodGrid;
-
-    /// <summary>
-    /// 已经建出来的那一层 (没建就是 null, 不会顺手建)
-    /// </summary>
-    internal static Grid? FoodGridIfCreated => foodGrid;
-
-    /// <summary>
-    /// 所有食物动画共用的那一层可视树
-    /// </summary>
-    /// 与 Windows 版一样只建一份, 谁播就挂到谁下面.
-    ///
-    /// 刻意不写成静态字段初始化器: 静态构造会在第一次碰到 FoodAnimation 这个类型时
-    /// 触发, 而那通常是扫描动画的后台线程(FoodAnimation.LoadGraph). Avalonia 的
-    /// 控件在构造时就记下了创建它的 Dispatcher —— 这一层目前在后台线程建出来也能跑,
-    /// 但同一类问题在 MessageBar 的描述小字上已经真炸过一次(见 MainLogic 的注释),
-    /// 这里加上 VerifyAccess 把线程约定写死, 将来谁改坏了会当场报错而不是留个暗雷.
-    public static Grid FoodGrid
+    private async Task RunCore(Image target, GraphTaskControl control)
     {
-        get
+        target.Tag = control;
+        bool OwnsTarget() => ReferenceEquals(ControlState, control) && ReferenceEquals(target.Tag, control);
+        int index = 0;
+        while (Animations.Count > 0 && OwnsTarget() && control.PlayState)
         {
-            Dispatcher.UIThread.VerifyAccess();
-            return foodGrid ??= CreateGrid();
+            var frame = Animations[index];
+            frame.Apply(target);
+            await Task.Delay(frame.Time);
+            if (!OwnsTarget() || !control.PlayState) break;
+            if (++index == Animations.Count)
+            {
+                if (!IsLoop && control.Type != GraphTaskControl.ControlType.Continue) break;
+                if (!IsLoop) control.Type = GraphTaskControl.ControlType.Status_Quo;
+                index = 0;
+            }
         }
+        if (!OwnsTarget()) return;
+        _frontLayer?.Stop(true);
+        _backLayer?.Stop(true);
+        var endAction = control.EndAction;
+        control.Type = GraphTaskControl.ControlType.Status_Stoped;
+        endAction?.Invoke();
     }
 
     private static Grid CreateGrid()
@@ -197,68 +151,88 @@ public class FoodAnimation : IAvaloniaRunImageGraph
         return grid;
     }
 
-    public void Run(Decorator parent, Action? endAction = null) => Run(parent, null, endAction);
+    public void Run(Decorator parent, Action? endAction = null, Action? firstFrame = null) => Run(parent, null, endAction, firstFrame);
 
-    public void Run(Decorator parent, IImage? image, Action? endAction = null)
+    public void Run(Decorator parent, IImage? image, Action? endAction = null, Action? firstFrame = null)
     {
-        if (ControlState?.PlayState == true)
+        if (!Dispatcher.UIThread.CheckAccess())
         {
-            ControlState.Stop(() => Run(parent, image, endAction));
+            Dispatcher.UIThread.Invoke(() => Run(parent, image, endAction, firstFrame));
             return;
         }
-
-        _nowId = 0;
+        Stop(true);
         var control = new GraphTaskControl(endAction);
         ControlState = control;
         LastUseTimeTicks = DateTime.UtcNow.Ticks;
 
-        Dispatcher.UIThread.Post(() =>
+        var first = _graphCore.CommUIElements.TryGetValue("FoodGrid1", out var firstControl)
+            ? (Grid)firstControl : (Grid)(_graphCore.CommUIElements["FoodGrid1"] = CreateGrid());
+        var second = _graphCore.CommUIElements.TryGetValue("FoodGrid2", out var secondControl)
+            ? (Grid)secondControl : (Grid)(_graphCore.CommUIElements["FoodGrid2"] = CreateGrid());
+        var grid = ReferenceEquals(parent.Child, first) ? first
+            : ReferenceEquals(parent.Child, second) ? second
+            : first.Parent == null ? first : second;
+        parent.Tag = this;
+        parent.Child = grid;
+
+        var front = (Image)grid.Children[2];
+        var food = (Image)grid.Children[1];
+        var back = (Image)grid.Children[0];
+
+        var frontLayer = _graphCore.FindGraph(FrontLayerName, GraphInfo.Animat, GraphInfo.ModeType);
+        var backLayer = _graphCore.FindGraph(BackLayerName, GraphInfo.Animat, GraphInfo.ModeType);
+
+        front.Source = null;
+        back.Source = null;
+        food.Source = image;
+        _frontLayer = frontLayer;
+        _backLayer = backLayer;
+        int remaining = (frontLayer is IAvaloniaImageGraph ? 1 : 0)
+            + (backLayer is IAvaloniaImageGraph ? 1 : 0);
+        void StartWhenReady()
         {
-            var grid = FoodGrid;
-            if (parent.Child != grid)
+            if (!ReferenceEquals(ControlState, control) || !control.PlayState) return;
+            if (Animations.Count > 0) Animations[0].Apply(food);
+            firstFrame?.Invoke();
+            _ = RunCore(food, control);
+        }
+        void LayerReady()
+        {
+            if (--remaining == 0) StartWhenReady();
+        }
+        if (remaining == 0)
+        {
+            StartWhenReady();
+        }
+        else
+        {
+            void FailedBeforeFirstFrame()
             {
-                // 先从上一个宿主上摘下来: 这一层是所有食物动画共用的, 而桌宠是
-                // 双缓冲的(PetGrid / PetGrid2 轮流用). Windows 版这里必须摘,
-                // 否则 WPF 会因为"控件已经有父级了"抛异常; 实测 Avalonia 的
-                // Decorator.Child 会自己处理换父级, 不摘也不炸. 保留这一步是为了
-                // 和 Windows 版对着看的时候形状一致, 也不去依赖那个未写进文档的行为.
-                if (grid.Parent is Decorator old)
-                {
-                    old.Child = null;
-                }
-                parent.Child = grid;
+                if (!ReferenceEquals(ControlState, control) || !control.PlayState) return;
+                var completed = control.EndAction;
+                Stop(true);
+                completed?.Invoke();
             }
-
-            var front = (Image)grid.Children[2];
-            var food = (Image)grid.Children[1];
-            var back = (Image)grid.Children[0];
-
-            var frontLayer = _graphCore.FindGraph(FrontLayerName, GraphInfo.Animat, GraphInfo.ModeType);
-            var backLayer = _graphCore.FindGraph(BackLayerName, GraphInfo.Animat, GraphInfo.ModeType);
-
+            bool frontReady = false, backReady = false;
             if (frontLayer is IAvaloniaImageGraph f)
-                _ = f.Run(front);
-            if (backLayer is IAvaloniaImageGraph b)
-                _ = b.Run(back);
+                _ = f.Run(front, () => { if (!frontReady) FailedBeforeFirstFrame(); },
+                    () => { frontReady = true; LayerReady(); });
+            if (control.PlayState && backLayer is IAvaloniaImageGraph b)
+                _ = b.Run(back, () => { if (!backReady) FailedBeforeFirstFrame(); },
+                    () => { backReady = true; LayerReady(); });
+        }
 
-            if (image is Bitmap bmp)
-            {
-                food.Source = bmp;
-            }
-
-            if (Animations.Count > 0)
-            {
-                Task.Run(() => Animations[0].Run(food, control));
-            }
-            else
-            {
-                control.EndAction?.Invoke();
-            }
-        });
     }
 
     public void Stop(bool stopEndAction)
     {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(() => Stop(stopEndAction));
+            return;
+        }
+        _frontLayer?.Stop(true);
+        _backLayer?.Stop(true);
         if (ControlState == null)
             return;
         if (stopEndAction)
@@ -268,7 +242,12 @@ public class FoodAnimation : IAvaloniaRunImageGraph
 
     public void SetContinue()
     {
-        if (ControlState != null)
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(SetContinue);
+            return;
+        }
+        if (ControlState?.PlayState == true)
             ControlState.Type = GraphTaskControl.ControlType.Continue;
     }
 

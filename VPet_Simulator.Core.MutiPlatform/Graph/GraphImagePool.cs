@@ -35,6 +35,11 @@ internal static class GraphImagePool
         var second = Obtain(core, $"Image2.{kind}");
         var third = Obtain(core, $"Image3.{kind}");
 
+        // Attach is called when changing graphs. Do not expose a previous graph's frame
+        // while the new graph is asynchronously decoding its first frame.
+        if (parent.Child is Image previousImage)
+            previousImage.Source = null;
+
         // parent 上已经挂着池里的控件时直接复用, 避免不必要的重新挂载
         if (ReferenceEquals(parent.Child, first))
             return first;
@@ -47,6 +52,7 @@ internal static class GraphImagePool
         var target = second.Parent == null ? second : first;
         if (target.Parent is Decorator old && !ReferenceEquals(old, parent))
             old.Child = null;
+        target.Source = null;
         parent.Child = target;
         return target;
     }
@@ -80,14 +86,10 @@ internal static class GraphImagePool
             {
                 if (element is Image image && image.Source is Bitmap b && set.Contains(b))
                     image.Source = null;
-            }
-            if (FoodAnimation.FoodGridIfCreated is Grid foodGrid)
-            {
-                foreach (var child in foodGrid.Children)
-                {
-                    if (child is Image image && image.Source is Bitmap b && set.Contains(b))
-                        image.Source = null;
-                }
+                if (element is Grid composite)
+                    foreach (var child in composite.Children)
+                        if (child is Image layer && layer.Source is Bitmap bitmap && set.Contains(bitmap))
+                            layer.Source = null;
             }
             foreach (var bitmap in set)
                 bitmap.Dispose();
