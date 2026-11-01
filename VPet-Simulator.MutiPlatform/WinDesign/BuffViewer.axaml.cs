@@ -184,6 +184,34 @@ public partial class BuffViewer : Border, IDisposable
 
     private void RefreshEntry()
     {
+        var previous = mw.Buff.Effects.Find(effect => effect.SourceKey == "core:efficiency");
+        if (!mw.Main.Core.Controller!.EnableFunction || mw.Main.State != VPet_Simulator.Core.MutiPlatform.Display.Main.WorkingState.Work || mw.Main.NowWork == null || mw.Main.WorkEfficiency == 1)
+        {
+            if (previous != null) mw.Buff.Effects.Remove(previous);
+        }
+        else
+        {
+            double percent = Math.Round((mw.Main.WorkEfficiency - 1) * 100);
+            string description = (percent >= 0
+                ? "{0} 当前状态很好! 工作／学习／娱乐效率提升{1}%"
+                : "{0} 当前状态不佳, 工作／学习／娱乐效率降低{1}%").Translate(mw.Main.Core.Save!.Name, Math.Abs(percent));
+            if (previous?.Description != description)
+            {
+                if (previous != null) mw.Buff.Effects.Remove(previous);
+                // 所有数值保持默认值，实际效率已在 FunctionSpend 中计算
+                mw.Buff.Effects.Add(new Buff.Effect
+                {
+                    SourceKey = "core:efficiency",
+                    Name = "状态效率".Translate(),
+                    Source = "当前状态".Translate(),
+                    Description = description,
+                    IsDebuff = percent < 0,
+                    Icon = percent < 0 ? "\uEC96" : "\uEC8D",
+                    Activity = PetActivity.Work | PetActivity.Study | PetActivity.Play
+                });
+            }
+        }
+
         int count = 0, iconIndex = 0;
         for (int i = 0; i < mw.Buff.Effects.Count; i++)
         {
@@ -243,6 +271,9 @@ public partial class BuffViewer : Border, IDisposable
 
     private void Refresh()
     {
+        // 已翻译的日程和插件文本保留原文，不记入未翻译列表。
+        string TranslateEffectText(string text) => LocalizeCore.CurrentLPS != null
+            && LocalizeCore.CurrentLPS.Assemblage.TryGetValue(text, out var line) ? line.GetString() : text;
         int rowIndex = 0, benefits = 0, debuffs = 0, special = 0;
         bool finite = false;
         var template = (DataTemplate)Resources["BuffRow"]!;
@@ -276,14 +307,16 @@ public partial class BuffViewer : Border, IDisposable
                 NameScope.SetNameScope(row, built.NameScope);
                 row.DataContext = effect;
                 row.FindControl<TextBlock>("NameText")!.Text = string.IsNullOrWhiteSpace(effect.Name)
-                    ? (string.IsNullOrWhiteSpace(effect.Source) ? "未命名效果".Translate() : effect.Source) : effect.Name;
+                    ? (string.IsNullOrWhiteSpace(effect.Source) ? "未命名效果".Translate() : TranslateEffectText(effect.Source)) : TranslateEffectText(effect.Name);
                 row.FindControl<TextBlock>("SourceText")!.Text = "来源：{0}".Translate(
-                    string.IsNullOrWhiteSpace(effect.Source) ? "未知来源".Translate() : effect.Source);
+                    string.IsNullOrWhiteSpace(effect.Source) ? "未知来源".Translate() : TranslateEffectText(effect.Source));
                 row.FindControl<TextBlock>("TypeText")!.Text = (effect.IsDebuff == true ? "减益" : effect.IsDebuff == null ? "特殊" : "增益").Translate();
                 row.FindControl<TextBlock>("ActivityText")!.Text = "适用活动：{0}".Translate(ActivityName(effect.Activity));
                 var description = row.FindControl<TextBlock>("DescriptionText")!;
+                description.Text = string.IsNullOrWhiteSpace(effect.Description) ? "" : TranslateEffectText(effect.Description);
                 description.IsVisible = !string.IsNullOrWhiteSpace(effect.Description);
                 var summary = row.FindControl<TextBlock>("SummaryText")!;
+                summary.Text = description.Text;
                 if (string.IsNullOrWhiteSpace(effect.Description)) summary.IsVisible = false;
                 else
                 {

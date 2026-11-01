@@ -23,6 +23,7 @@ namespace VPet_Simulator.MutiPlatform;
 public partial class winGallery : VPetWindow
 {
     private TextBox? _searchTextBox;
+    private string? pendingSearch;
     MainWindow mw;
     private int _columns;
     private int _rows;
@@ -62,7 +63,35 @@ public partial class winGallery : VPetWindow
 
     private void TbTitleSearch_Loaded(object? sender, RoutedEventArgs e)
     {
-        _searchTextBox = sender as TextBox;
+        _searchTextBox = (TextBox)sender!;
+        if (pendingSearch != null)
+        {
+            Search(pendingSearch);
+            pendingSearch = null;
+        }
+        else RefreshList();
+    }
+
+    /// <summary>打开指定图片的搜索结果；多个名称用 | 分隔，清除会遮蔽新奖励的旧筛选。</summary>
+    public void Search(string search)
+    {
+        // 首次 Show 时标题模板可能尚未加载，搜索在输入框 Loaded 后应用。
+        if (_searchTextBox == null)
+        {
+            pendingSearch = search;
+            return;
+        }
+        process = true;
+        _searchTextBox.Text = search;
+        ToggleButtonIllustration.IsChecked = ToggleButtonThumbnail.IsChecked = true;
+        ToggleButtonLocked.IsChecked = false;
+        ToggleButtonUnlocked.IsChecked = true;
+        CheckBoxFavorite.IsChecked = false;
+        ToggleButtonGroupTags.SelectedItems.Clear();
+        OrderBox.SelectedIndex = 2;
+        pagination.CurrentPage = 1;
+        IsMaskVisible = IsOverlayerVisible = false;
+        process = false;
         RefreshList();
     }
 
@@ -91,7 +120,7 @@ public partial class winGallery : VPetWindow
 
         AutoUniformGridImages.Children.Clear();
 
-        var searchText = _searchTextBox?.Text;
+        var searchTerms = (_searchTextBox?.Text ?? "").Split('|', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
         //如果某个分类一个都没选中，那就等于全部选中
 
@@ -117,11 +146,11 @@ public partial class winGallery : VPetWindow
                 && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
                 && (!selectedTags.Any() || selectedTags.All(st => p.TagsTrans.Contains(st)))
                 && (
-                    string.IsNullOrWhiteSpace(searchText)
-                    || p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.TranslateName.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.Description.Translate().Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                    searchTerms.Length == 0 || searchTerms.Any(term =>
+                        p.Name.Contains(term, StringComparison.OrdinalIgnoreCase)
+                    || p.Description.Contains(term, StringComparison.OrdinalIgnoreCase)
+                    || p.TranslateName.Contains(term, StringComparison.OrdinalIgnoreCase)
+                    || p.Description.Translate().Contains(term, StringComparison.OrdinalIgnoreCase))
                 )
             );
             photos.AddRange(lockphoto);
@@ -136,11 +165,11 @@ public partial class winGallery : VPetWindow
                 && (isThumbnailChecked || p.Type != Photo.PhotoType.Thumbnail)
                 && (!selectedTags.Any() || selectedTags.All(st => p.TagsTrans.Contains(st)))
                 && (
-                    string.IsNullOrWhiteSpace(searchText)
-                    || p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.TranslateName.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                    || p.Description.Translate().Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                    searchTerms.Length == 0 || searchTerms.Any(term =>
+                        p.Name.Contains(term, StringComparison.OrdinalIgnoreCase)
+                    || p.Description.Contains(term, StringComparison.OrdinalIgnoreCase)
+                    || p.TranslateName.Contains(term, StringComparison.OrdinalIgnoreCase)
+                    || p.Description.Translate().Contains(term, StringComparison.OrdinalIgnoreCase))
                 )
             );
             photos.AddRange(unlockphoto);
@@ -158,7 +187,7 @@ public partial class winGallery : VPetWindow
         }
 
         var totalCount = photos.Count();
-        var pageSize = _rows * _columns;
+        var pageSize = Math.Max(1, _rows * _columns);
         pagination.MaxPage = (int)Math.Ceiling(totalCount * 1.0 / pageSize);
         var currentPage = Math.Max(0, Math.Min(pagination.MaxPage, pagination.CurrentPage) - 1);
         pagination.CurrentPage = currentPage + 1;

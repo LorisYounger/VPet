@@ -332,8 +332,9 @@
         </Border>
 
         <!-- 网格背包 -->
-        <Grid Grid.Row="2">
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
+        <Grid Grid.Row="2" RowDefinitions="*,Auto">
+            <ScrollViewer x:Name="ItemsViewport" SizeChanged="ItemsViewport_SizeChanged"
+                    HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="IcCommodity">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -350,6 +351,9 @@
             </ScrollViewer>
             <TextBlock x:Name="TbNone" Text="{ll:Str 暂无物品}" IsVisible="False" HorizontalAlignment="Center"
                     VerticalAlignment="Center" FontSize="20" Foreground="{DynamicResource PrimaryText}" />
+            <shell:Pagination x:Name="pagination" Grid.Row="1" Margin="0,8,0,0"
+                    Theme="{DynamicResource StandardPaginationStyle}" HorizontalAlignment="Center"
+                    CurrentPageChanged="pagination_CurrentPageChanged" />
         </Grid>
     </Grid>
 </shell:VPetWindow>

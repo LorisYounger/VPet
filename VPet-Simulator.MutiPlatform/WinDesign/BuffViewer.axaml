@@ -19,7 +19,7 @@
             <TextBlock Text="{Binding Icon}" FontFamily="{StaticResource RemixIcon}" FontSize="22" />
             <StackPanel Grid.Column="1" Spacing="3">
               <TextBlock x:Name="NameText" FontWeight="SemiBold" TextWrapping="Wrap" />
-              <TextBlock x:Name="SummaryText" Text="{Binding Description}" TextTrimming="CharacterEllipsis" MaxWidth="230" FontSize="13" Opacity="0.65" />
+              <TextBlock x:Name="SummaryText" TextTrimming="CharacterEllipsis" MaxWidth="230" FontSize="13" Opacity="0.65" />
               <TextBlock x:Name="InactiveText" Text="{ll:Str 当前未生效}" FontSize="12" Opacity="0.65" />
             </StackPanel>
             <TextBlock x:Name="DurationText" Grid.Column="2" FontSize="12" Margin="6,0,0,0" />
@@ -29,7 +29,7 @@
           <TextBlock x:Name="TypeText" FontSize="12" Opacity="0.65" />
           <TextBlock x:Name="SourceText" TextWrapping="Wrap" FontSize="13" />
           <TextBlock x:Name="ActivityText" TextWrapping="Wrap" FontSize="13" />
-          <TextBlock x:Name="DescriptionText" Text="{Binding Description}" TextWrapping="Wrap" />
+          <TextBlock x:Name="DescriptionText" TextWrapping="Wrap" />
           <TextBlock x:Name="ValuesText" TextWrapping="Wrap" FontSize="13" />
         </StackPanel>
       </Expander>

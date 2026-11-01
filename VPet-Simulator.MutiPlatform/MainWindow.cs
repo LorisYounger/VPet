@@ -506,7 +506,7 @@ public partial class MainWindow
         toolBar.AddMenuButton(ToolBar.MenuType.Setting, "退出桌宠".Translate(), () => { toolBar.Hide(); Close(); });
         if (Set.DeBug)
             toolBar.AddMenuButton(ToolBar.MenuType.Setting, "开发控制台".Translate(), () => { toolBar.Hide(); ShowConsole(); });
-        toolBar.AddMenuButton(ToolBar.MenuType.Setting, "照片图库".Translate(), ShowGallery);
+        toolBar.AddMenuButton(ToolBar.MenuType.Setting, "照片图库".Translate(), () => ShowGallery());
         toolBar.AddMenuButton(ToolBar.MenuType.Setting, "操作教程".Translate(), () =>
         {
             if (LocalizeCore.CurrentCulture == "zh-Hans")
@@ -1704,19 +1704,14 @@ public partial class MainWindow
         }
     }
 
-    // ---- 各窗口的入口: 移植到同名 winXxx 之前先记日志 (其余在窗口批 B/C) ----
-    public void ShowGallery()
+    // ---- 各窗口的入口 ----
+    public void ShowGallery(string? search = null)
     {
-        if (winGallery != null)
-        {
-            winGallery.Show();
-            winGallery.Focus();
-        }
-        else
-        {
-            winGallery = new winGallery(this);
-            winGallery.Show();
-        }
+        winGallery ??= new winGallery(this);
+        winGallery.Show();
+        if (search == null) winGallery.RefreshList();
+        else winGallery.Search(search);
+        winGallery.Focus();
     }
     public void ShowSetting(int page = -1)
     {
