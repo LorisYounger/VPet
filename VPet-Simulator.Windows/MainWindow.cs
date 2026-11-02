@@ -2651,8 +2651,12 @@ namespace VPet_Simulator.Windows
                   }
 #endif
                   //MOD报错
+                  var scanBlocked = CoreMODs.Where(cm => cm.PluginScan?.Blocked == true).ToList();
+                  if (scanBlocked.Count != 0)
+                      MessageBoxX.Show("以下 MOD 的代码未加载。普通资源仍可用；原因可在 MOD 管理中查看。".Translate()
+                          + "\n" + string.Join("\n", scanBlocked.Select(cm => cm.Name)), "代码插件检测".Translate());
                   foreach (CoreMOD cm in CoreMODs)
-                      if (!cm.SuccessLoad)
+                      if (!cm.SuccessLoad && cm.PluginScan?.Blocked != true)
                           if (cm.Tag.Contains("该模组已损坏"))
                               MessageBoxX.Show("模组 {0} 插件损坏\n虚拟桌宠模拟器未能成功加载该插件\n请联系MOD作者修复该问题".Translate(cm.Name) + '\n' + cm.ErrorMessage, "该模组已损坏".Translate());
                           else if (Set.IsPassMOD(cm.Name) || !string.IsNullOrEmpty(cm.ErrorMessage))

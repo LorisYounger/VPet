@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -368,7 +367,6 @@ namespace VPet_Simulator.Windows
 
             public bool IsLoaded => CoreMod != null;
             public bool IsPlugin => Tag.Contains("plugin");
-            public bool HasTrustedCertificate { get; }
 
             private ModInfo(CoreMOD? coreMod, int loadOrder, string name, string author, long authorID, ulong itemID, string intro, DirectoryInfo path, int gameVer, int ver, HashSet<string> tag)
             {
@@ -383,49 +381,6 @@ namespace VPet_Simulator.Windows
                 GameVer = gameVer;
                 Ver = ver;
                 Tag = tag;
-                HasTrustedCertificate = !IsPlugin || HasValidPluginSignatures(path);
-            }
-
-
-
-            private static bool HasValidPluginSignatures(DirectoryInfo directory)
-            {
-                string dllPath = System.IO.Path.Combine(directory.FullName, "plugin");
-                var loadfile = new LpsDocument();
-                string loadFilePath = System.IO.Path.Combine(dllPath, "load.lps");
-                if (File.Exists(loadFilePath))
-                    loadfile = new LpsDocument(File.ReadAllText(loadFilePath));
-
-                foreach (FileInfo tmpfi in new DirectoryInfo(dllPath).EnumerateFiles("*.dll"))
-                {
-#if X64
-                    if (tmpfi.Name.Contains("x86"))
-                        continue;
-                    string cputype = "x64";
-#else
-                    if (tmpfi.Name.Contains("x64"))
-                        continue;
-                    string cputype = "x86";
-#endif
-                    if (loadfile[tmpfi.Name][(gbol)"skip"])
-                        continue;
-
-                    string? dllcpu = loadfile[tmpfi.Name].GetString("cpu", "anycpu")?.ToLowerInvariant();
-                    if (dllcpu != "anycpu" && dllcpu != cputype)
-                        continue;
-
-                    try
-                    {
-                        if (!AuthenticodeHelper.Verify(tmpfi.FullName))
-                            return false;
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
             }
 
             public bool MatchesSearch(string? searchText)
@@ -631,8 +586,6 @@ namespace VPet_Simulator.Windows
                 }
             }
             ListMod.SelectedIndex = selectedIndex;
-            if (ListMod.SelectedItem is ListBoxItem item && item.Tag is ModInfo modInfo)
-                ShowMod(modInfo);
         }
 
         private async Task RefreshWorkshopListFromSteamAsync()
@@ -696,8 +649,9 @@ namespace VPet_Simulator.Windows
                 ShowMod(modInfo);
         }
 
-        private void ShowMod(ModInfo modInfo)
+        private async void ShowMod(ModInfo modInfo)
         {
+            if (selectedModInfo != modInfo) pluginCheck?.Cancel();
             selectedModInfo = modInfo;
             mod = modInfo.CoreMod;
             ShowWorkshopVerification(modInfo);
@@ -834,26 +788,17 @@ namespace VPet_Simulator.Windows
                 content += tag.Translate() + "\n";
             }
             GameHave.Text = content;
-            ButtonAllow.Visibility = ((mod?.SuccessLoad == false || (modInfo.IsPlugin && !modInfo.HasTrustedCertificate)) && !mw.Set.IsPassMOD(modInfo.Name)) ? Visibility.Visible : Visibility.Collapsed;
+            ButtonPluginScan.Visibility = modInfo.IsPlugin ? Visibility.Visible : Visibility.Collapsed;
+            ButtonSetting.Visibility = mod != null && mw.Plugins.Any(plugin =>
+                plugin.PluginName == mod.Name && plugin.GetType().GetMethod("Setting")!.DeclaringType != typeof(MainPlugin)
+                && plugin.GetType().Assembly.Location.Contains(mod.Path.FullName)) ? Visibility.Visible : Visibility.Collapsed;
 
-            if (mod != null)
-            {
-                foreach (var mainplug in mw.Plugins)
-                {
-                    try
-                    {
-                        if (mainplug.PluginName == mod.Name &&
-                            mainplug.GetType().GetMethod("Setting")!.DeclaringType != typeof(MainPlugin)
-                        && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
-                        {
-                            ButtonSetting.Visibility = Visibility.Visible;
-                            return;
-                        }
-                    }
-                    finally { }
-                }
-            }
-            ButtonSetting.Visibility = Visibility.Collapsed;
+            ButtonAllow.Visibility = Visibility.Collapsed;
+            if (!modInfo.IsPlugin || mw.Set.IsPassMOD(modInfo.Name)) return;
+            bool needsAuthorization = modInfo.CoreMod?.PluginScan?.Files.Exists(f => !f.Trusted) ??
+                await Task.Run(() => WorkshopProbablyCheck.HasUnsignedDll(modInfo.Path));
+            if (needsAuthorization && selectedModInfo == modInfo && !mw.Set.IsPassMOD(modInfo.Name))
+                ButtonAllow.Visibility = Visibility.Visible;
         }
 
         private bool IsWorkshopMod(DirectoryInfo directory)
@@ -1004,10 +949,8 @@ namespace VPet_Simulator.Windows
 
         private void ListMod_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!AllowChange || ListMod.SelectedItem is not ListBoxItem item || item.Tag is not ModInfo modInfo)
-                return;
-
-            ShowMod(modInfo);
+            if (ListMod.SelectedItem is ListBoxItem { Tag: ModInfo info })
+                ShowMod(info);
         }
 
         private void ButtonOpenModFolder_MouseDown(object sender, MouseButtonEventArgs e)
@@ -1028,17 +971,8 @@ namespace VPet_Simulator.Windows
             if (modInfo == null)
                 return;
 
-            string? verificationError = await GetWorkshopVerificationErrorAsync(modInfo);
-            if (selectedModInfo?.Path.FullName.Equals(modInfo.Path.FullName, StringComparison.OrdinalIgnoreCase) != true)
+            if (!await CheckPluginAsync(modInfo))
                 return;
-            if (!string.IsNullOrWhiteSpace(verificationError))
-            {
-                MessageBoxX.Show(
-                    "该 MOD 未通过创意工坊校验，无法启用：\n{0}".Translate(verificationError),
-                    "启用模组失败".Translate(), MessageBoxIcon.Warning);
-                return;
-            }
-
             mw.Set.OnMod(modInfo.Name);
             ButtonRestart.Visibility = Visibility.Visible;
             ShowModList();
@@ -1286,28 +1220,62 @@ namespace VPet_Simulator.Windows
 
         private async void ButtonAllow_Click(object sender, RoutedEventArgs e)
         {
-            ModInfo? modInfo = selectedModInfo;
-            if (modInfo == null)
-                return;
-
-            string? verificationError = await GetWorkshopVerificationErrorAsync(modInfo);
-            if (selectedModInfo?.Path.FullName.Equals(modInfo.Path.FullName, StringComparison.OrdinalIgnoreCase) != true)
-                return;
-            if (!string.IsNullOrWhiteSpace(verificationError))
+            if (selectedModInfo is ModInfo info && await CheckPluginAsync(info))
             {
-                MessageBoxX.Show(
-                    "该 MOD 未通过创意工坊校验，无法启用代码插件：\n{0}".Translate(verificationError),
-                    "启用代码插件失败".Translate(), MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (MessageBoxX.Show("是否启用 {0} 的代码插件?\n一经启用,该插件将会允许访问该系统(包括外部系统)的所有数据\n如果您不确定,请先使用杀毒软件查杀检查".Translate(modInfo.Name),
-                "启用 {0} 的代码插件?".Translate(modInfo.Name), MessageBoxButton.YesNo, MessageBoxIcon.Warning) == MessageBoxResult.Yes)
-            {
-                mw.Set.PassMod(modInfo.Name);
-                ShowMod(modInfo);
+                ButtonAllow.Visibility = Visibility.Collapsed;
                 ButtonRestart.Visibility = Visibility.Visible;
             }
+        }
+
+        private CancellationTokenSource? pluginCheck;
+
+        private async Task<bool> CheckPluginAsync(ModInfo modInfo, bool detailsOnly = false)
+        {
+            if (pluginCheck != null) return false;
+            using var cancellation = pluginCheck = new CancellationTokenSource();
+            bool IsStale() => cancellation.IsCancellationRequested || selectedModInfo != modInfo;
+            Cursor = Cursors.Wait;
+            try
+            {
+                if (!detailsOnly)
+                {
+                    string? verificationError = await GetWorkshopVerificationErrorAsync(modInfo);
+                    if (IsStale()) return false;
+                    if (!string.IsNullOrWhiteSpace(verificationError))
+                    {
+                        MessageBoxX.Show("该 MOD 未通过创意工坊校验，无法启用：\n{0}".Translate(verificationError),
+                            "启用模组失败".Translate(), MessageBoxIcon.Warning);
+                        return false;
+                    }
+                }
+                if (!modInfo.IsPlugin) return true;
+                var result = (detailsOnly ? modInfo.CoreMod?.PluginScan : null) ??
+                    await Task.Run(() => WorkshopProbablyCheck.Scan(modInfo.Path, cancellation.Token, mw.MODPath));
+                if (IsStale()) return false;
+                if (result.Blocked || detailsOnly)
+                {
+                    WorkshopProbablyCheck.ShowResult(this, modInfo.Name, result, false);
+                    return false;
+                }
+                if (result.Files.Any(file => !file.Trusted) && !mw.Set.IsPassMOD(modInfo.Name))
+                {
+                    if (!WorkshopProbablyCheck.ShowResult(this, modInfo.Name, result, true)) return false;
+                    // 确认只授权本次选中的 MOD；启动时仍重新检查 DLL。
+                    if (IsStale()) return false;
+                    mw.Set.PassMod(modInfo.Name);
+                }
+                return true;
+            }
+            finally
+            {
+                Cursor = null;
+                pluginCheck = null;
+            }
+        }
+
+        private async void ButtonPluginScan_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedModInfo is ModInfo info) await CheckPluginAsync(info, detailsOnly: true);
         }
 
         private void ButtonRestart_Click(object sender, RoutedEventArgs e)
@@ -1383,6 +1351,7 @@ namespace VPet_Simulator.Windows
         {
             mw.Topmost = mw.Set.TopMost;
             e.Cancel = mw.CloseConfirm;
+            pluginCheck?.Cancel();
             voicetimer.Stop();
             Hide();
         }

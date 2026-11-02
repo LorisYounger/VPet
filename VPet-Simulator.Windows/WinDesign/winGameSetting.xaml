@@ -955,6 +955,8 @@
                                                 Margin="0,4,0,0" Background="#FFFF2C2C" Click="ButtonAllow_Click"
                                                 Content="{ll:Str 启用代码插件}" FontSize="12" Foreground="White"
                                                 ToolTip="{ll:Str '启用该模组的代码内容,不能保证系统安全性'}" />
+                                    <Button x:Name="ButtonPluginScan" HorizontalAlignment="Left" Margin="0,4,0,0"
+                                            FontSize="12" Click="ButtonPluginScan_Click" Content="{ll:Str 查看代码检测结果}" />
                                 </StackPanel>
                             </ScrollViewer>
                         </Grid>

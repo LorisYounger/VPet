@@ -8,11 +8,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
-using static VPet_Simulator.Windows.Win32;
 
 namespace VPet_Simulator.Windows
 {
@@ -31,7 +29,7 @@ namespace VPet_Simulator.Windows
             "NAudio.Asio.dll", "libSkiaSharp.dll","NAudio.Core.dll","NAudio.dll", "SkiaSharp.dll","NAudio.Midi.dll",
             "NAudio.Wasapi.dll","NAudio.WinForms.dll", "NAudio.WinMM.dll", "WpfAnimatedGif.dll"
         };
-        public static Dictionary<string, Type> LoadPlug { get; } = new Dictionary<string, Type>();
+        public static Dictionary<string, (Type Type, string Hash)> LoadPlug { get; } = new(StringComparer.OrdinalIgnoreCase);
         public static string? NowLoading = null;
         public string Name { get; set; } = string.Empty;
         public string Author { get; set; } = string.Empty;
@@ -57,6 +55,7 @@ namespace VPet_Simulator.Windows
         public int Ver { get; set; }
         public HashSet<string> Tag { get; set; } = new HashSet<string>();
         public bool SuccessLoad = true;
+        public WorkshopProbablyCheck.PluginScanResult? PluginScan;
         public DateTime CacheDate;
         public string ErrorMessage = string.Empty;
         public static string INTtoVER(int ver) => ver < 10000 ? $"{ver / 100}.{ver % 100:00}" : $"{ver / 10000}.{ver % 10000 / 100}.{ver % 100:00}";
@@ -321,71 +320,40 @@ namespace VPet_Simulator.Windows
                         break;
                     case "plugin":
                         Tag.Add("plugin");
-                        SuccessLoad = true;
-                        LpsDocument loadfile = new LpsDocument();
-                        if (File.Exists(di.FullName + @"\load.lps"))
-                            loadfile = new LpsDocument(File.ReadAllText(di.FullName + @"\load.lps"));
-                        string authtype = "";
-                        foreach (FileInfo tmpfi in di.EnumerateFiles("*.dll"))
+                        PluginScan = WorkshopProbablyCheck.Scan(Path, modPaths: mw.MODPath);
+                        if (!WorkshopProbablyCheck.CheckBeforeLoad(Path, PluginScan))
                         {
+                            SuccessLoad = false;
+                            break;
+                        }
+                        var loadPath = System.IO.Path.Combine(di.FullName, "load.lps");
+                        var loadfile = File.Exists(loadPath) ? new LpsDocument(File.ReadAllText(loadPath)) : new LpsDocument();
+                        string authtype = "";
 #if X64
-                            if (tmpfi.Name.Contains("x86"))
-                            {
-                                continue;
-                            }
-                            string cputype = "x64";
+                        const string cpu = "x64", otherCpu = "x86";
 #else
-                            if (tmpfi.Name.Contains("x64"))
-                            {
-                                continue;
-                            }
-                             string cputype = "x86";
+                        const string cpu = "x86", otherCpu = "x64";
 #endif
-                            if (loadfile[tmpfi.Name][(gbol)"skip"])
+                        foreach (var scannedFile in PluginScan.Files)
+                        {
+                            string name = scannedFile.RelativePath;
+                            if (name.Contains(System.IO.Path.DirectorySeparatorChar) || name.Contains(otherCpu))
                                 continue;
-
-                            string? dllcpu = loadfile[tmpfi.Name].GetString("cpu", "anycpu")?.ToLowerInvariant();
-                            if (dllcpu != "anycpu" && dllcpu != cputype)
-                            {
+                            var options = loadfile[name];
+                            string? dllCpu = options.GetString("cpu", "anycpu")?.ToLowerInvariant();
+                            if (options[(gbol)"skip"] || (dllCpu != "anycpu" && dllCpu != cpu))
                                 continue;
-                            }
 
                             try
                             {
-                                var path = tmpfi.Name;
-                                if (LoadPlug.ContainsKey(path))
-                                {
-                                    var Instance = (MainPlugin?)Activator.CreateInstance(LoadPlug[path], mw);
-                                    if (Instance != null)
-                                        mw.Plugins.Add(Instance);
+                                bool reuse = LoadPlug.TryGetValue(name, out var loaded);
+                                if (!reuse && LoadedDLL.Contains(name))
                                     continue;
-                                }
-                                if (LoadedDLL.Contains(path))
-                                    continue;
-                                X509Certificate2? certificate;
-                                try
-                                {
-                                    if (AuthenticodeHelper.Verify(tmpfi.FullName))
-#pragma warning disable SYSLIB0057 // 类型或成员已过时
-                                        certificate = new X509Certificate2(tmpfi.FullName);
-#pragma warning restore SYSLIB0057 // 类型或成员已过时
-
-                                    else
-                                        certificate = null;
-                                }
-                                catch
-                                {
-                                    certificate = null;
-                                }
-                                if (certificate != null)
+                                if (scannedFile.Trusted)
                                 {
                                     //LBGame 信任的证书
                                     if (authtype != "FAIL" && authtype != "[V]")
-                                        if (IsLBGameCertificate(certificate))
-                                            authtype = "[认证]".Translate();
-                                        else
-                                            authtype = "[V]";
-                                    certificate.Dispose();
+                                        authtype = scannedFile.Official ? "[认证]".Translate() : "[V]";
                                 }
                                 else
                                 {
@@ -393,34 +361,37 @@ namespace VPet_Simulator.Windows
                                     if (!IsPassMOD(mw))
                                     {//不是通过模组,不加载
                                         SuccessLoad = false;
-                                        Author = modlps.FindSub("author")!.Info.Split('[').First();
                                         continue;
                                     }
                                 }
-                                LoadedDLL.Add(path);
-                                Assembly dll = Assembly.LoadFrom(tmpfi.FullName);
-                                var v = dll.GetExportedTypes();
-                                foreach (Type exportedType in v)
+                                if (reuse)
                                 {
-                                    if (exportedType.BaseType == typeof(MainPlugin))
-                                    {
-                                        if (exportedType == null) continue;
-                                        if (exportedType.FullName == null) continue;
-                                        var n = exportedType.FullName.ToLowerInvariant();
-                                        if (!(n.Contains("modmaker") || n.Contains("dlc")))
-                                            App.MODType.Add(exportedType.FullName);
-                                        LoadPlug.Add(path, exportedType);
-                                        var Instance = (MainPlugin?)Activator.CreateInstance(exportedType!, mw!);
-                                        if (Instance == null) continue;
-                                        mw.Plugins.Add(Instance);
-                                    }
+                                    mw.Plugins.Add((MainPlugin)Activator.CreateInstance(loaded.Type, mw)!);
+                                    continue;
+                                }
+                                Assembly dll = Assembly.LoadFrom(scannedFile.Path);
+                                var entries = dll.GetExportedTypes().Where(type => type.BaseType == typeof(MainPlugin));
+                                if (!string.Equals(dll.Location, scannedFile.Path, StringComparison.OrdinalIgnoreCase) && entries.Any())
+                                {
+                                    PluginScan.BlockEntryConflict(scannedFile, dll.Location);
+                                    SuccessLoad = false;
+                                    break;
+                                }
+                                LoadedDLL.Add(name);
+                                foreach (Type entry in entries)
+                                {
+                                    string fullName = entry.FullName!;
+                                    if (!fullName.Contains("modmaker", StringComparison.OrdinalIgnoreCase) && !fullName.Contains("dlc", StringComparison.OrdinalIgnoreCase))
+                                        App.MODType.Add(fullName);
+                                    LoadPlug.Add(name, (entry, scannedFile.Hash));
+                                    mw.Plugins.Add((MainPlugin)Activator.CreateInstance(entry, mw)!);
                                 }
                             }
                             catch (Exception e)
                             {
-                                if (loadfile[tmpfi.Name][(gbol)"ignoreError"])
+                                if (options[(gbol)"ignoreError"])
                                     continue;
-                                Console.WriteLine($"{Name}:Load DLL {tmpfi.FullName} failed: {e.Message}");
+                                Console.WriteLine($"{Name}:Load DLL {scannedFile.Path} failed: {e.Message}");
                                 ErrorMessage = e.ToString();
                                 SuccessLoad = false;
                             }

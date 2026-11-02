@@ -260,6 +260,7 @@
 			<HintPath>lib\Facepunch.Steamworks.2.5.2\Facepunch.Steamworks.Win32.dll</HintPath>
 		</Reference>
 		<PackageReference Include="LinePutScript" Version="1.11.9" />
+		<PackageReference Include="Mono.Cecil" Version="0.11.6" />
 		<PackageReference Include="LinePutScript.Localization.WPF" Version="1.0.7" />
 		<PackageReference Include="NAudio" Version="3.0.1" />
 		<PackageReference Include="Panuon.WPF" Version="1.1.3" />
