@@ -7,6 +7,7 @@ mklink /d "%~dp0\bin\x64\Release\net10.0-windows7.0\mod" "%~dp0\mod"
 mklink /d "%~dp0\..\VPet.Solution\bin\Debug\net10.0-windows7.0\mod" "%~dp0\mod"
 
 mklink /d "%~dp0\mod\0001_ModMaker" "%~dp0\..\..\VPet.ModMaker\0001_ModMaker"
+mklink /d "%~dp0\mod\1005_DLC_OnlineVPet" "%~dp0\..\..\OnlineVPet\VPet.Plugin.OnlineVPet\OnlineVPet"
 mklink /d "%~dp0\mod\1100_DemoClock" "%~dp0\..\..\VPet.Plugin.Demo\VPet.Plugin.DemoClock\1100_DemoClock"
 mklink /d "%~dp0\mod\1111_ChatGPTPlus" "%~dp0\..\..\VPet.Plugin.ChatGPTPlus\VPet.Plugin.ChatGPTPlus\1111_ChatGPTPlus"
 mklink /d "%~dp0\mod\1101_EdgeTTS" "%~dp0\..\..\VPet.Plugin.Demo\VPet.Plugin.EdgeTTS\1101_EdgeTTS"

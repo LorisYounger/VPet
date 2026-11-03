@@ -84,10 +84,10 @@ internal static class WorkshopProbablyCheck
             var text = new StringBuilder();
             text.AppendLine((Blocked ? "代码检测发现高危险项, 已阻止加载。" : "代码检测出以下结果:").Translate());
             var limited = new List<string>(3);
-            if (hasUnanalyzedContentBlock) limited.Add("高风险（未能检查的 DLL 或资源）".Translate());
-            if (Categories.Contains("调用原生函数") || Categories.Contains("包含原生代码")) limited.Add("中风险（原生代码）".Translate());
-            if (Categories.Contains("包含 WPF 界面资源")) limited.Add("低风险（WPF 界面资源）".Translate());
-            if (limited.Count != 0) text.AppendLine("【无法分析内部行为】".Translate() + " " + string.Join(", ", limited));
+            if (hasUnanalyzedContentBlock) limited.Add("高风险(未能检查的 DLL 或资源)".Translate());
+            if (Categories.Contains("调用原生函数") || Categories.Contains("包含原生代码")) limited.Add("中风险(原生代码)".Translate());
+            if (Categories.Contains("包含 WPF 界面资源")) limited.Add("低风险(WPF 界面资源)".Translate());
+            if (limited.Count != 0) text.AppendLine("[无法分析内部行为]".Translate() + " " + string.Join(", ", limited));
             if (Blocked)
             {
                 text.AppendLine("- " + "高危险行为".Translate() + ":\t");
@@ -128,7 +128,7 @@ internal static class WorkshopProbablyCheck
         "加载 XAML 或界面资源" or
         "保存游戏数据, 可能同步云存档" or "重启桌宠" or
         "导出图片文件" or "读取图片资源" or "访问桌宠设置" => 0,
-        "读取 MOD 目录" or "写入 MOD 数据目录" or "读取桌宠目录" or "写入桌宠目录" or "打开桌宠目录内的文件（读写方式不明）" or "写入系统临时目录" or "监视文件变化" or
+        "读取 MOD 目录" or "写入 MOD 数据目录" or "读取桌宠目录" or "写入桌宠目录" or "打开桌宠目录内的文件(读写方式不明)" or "写入系统临时目录" or "监视文件变化" or
         "包含 WPF 界面资源" or "读取注册表" or "访问网络" or "检查剪贴板格式" or "修改剪贴板" or
         "向其他玩家发送数据" or "通过 Steam 收发数据" or "使用 Steam 语音" => 1,
         _ => 2
@@ -684,7 +684,7 @@ internal static class WorkshopProbablyCheck
                 }
                 return null;
             }
-            // 未知单值（局部变量、参数等）仍可跳过，以定位更早的实参。
+            // 未知单值(局部变量、参数等)仍可跳过，以定位更早的实参。
             if (ins.OpCode.StackBehaviourPop != StackBehaviour.Pop0 ||
                 ins.OpCode.StackBehaviourPush is not (StackBehaviour.Push1 or StackBehaviour.Pushi or StackBehaviour.Pushref)) cursor = null;
             return null;
@@ -713,13 +713,13 @@ internal static class WorkshopProbablyCheck
                 if (write == false)
                     for (string? parent = Path.TrimEndingDirectorySeparator(full); parent != null; parent = Path.GetDirectoryName(parent))
                         if (modRoots.Contains(parent)) return "读取 MOD 目录";
-                if (Under(full, AppContext.BaseDirectory)) return write switch { true => "写入桌宠目录", false => "读取桌宠目录", null => "打开桌宠目录内的文件（读写方式不明）" };
+                if (Under(full, AppContext.BaseDirectory)) return write switch { true => "写入桌宠目录", false => "读取桌宠目录", null => "打开桌宠目录内的文件(读写方式不明)" };
                 if (write == true && Under(full, Path.GetTempPath())) return "写入系统临时目录";
-                return write switch { true => "写入桌宠目录外", false => "读取桌宠目录外", null => "打开桌宠目录外的文件（读写方式不明）" };
+                return write switch { true => "写入桌宠目录外", false => "读取桌宠目录外", null => "打开桌宠目录外的文件(读写方式不明)" };
             }
             catch (Exception ex) when (ex is ArgumentException or IOException or NotSupportedException) { }
         }
-        return write switch { true => "写入文件（目录不明）", false => "读取文件（目录不明）", null => "打开文件（目录和读写方式不明）" };
+        return write switch { true => "写入文件(目录不明)", false => "读取文件(目录不明)", null => "打开文件(目录和读写方式不明)" };
     }
 
     private static void CheckMember(MemberReference member, string file, string method, PluginScanResult result)
@@ -1039,6 +1039,29 @@ internal static class WorkshopProbablyCheck
         if (header.SequenceEqual("GIF8"u8)) return data[^1] == 0x3b;
         if (data[0] == 'B' && data[1] == 'M') return BitConverter.ToUInt32(data, 2) == data.Length;
         if (header.SequenceEqual("RIFF"u8)) return BitConverter.ToUInt32(data, 4) + 8 == data.Length && Encoding.ASCII.GetString(data, 8, 4) is "WEBP" or "WAVE";
+        // 静态 CUR：支持连续存放的 24/32 位无压缩位图和单色遮罩。
+        if (header.SequenceEqual(new byte[] { 0, 0, 2, 0 }))
+        {
+            int count = BitConverter.ToUInt16(data, 4);
+            int offset = 6 + count * 16;
+            if (count == 0 || offset > data.Length) return false;
+            for (int i = 0; i < count; i++)
+            {
+                int entry = 6 + i * 16;
+                int width = data[entry] == 0 ? 256 : data[entry], height = data[entry + 1] == 0 ? 256 : data[entry + 1];
+                if (BitConverter.ToUInt16(data, entry + 2) != 0 || BitConverter.ToUInt16(data, entry + 4) >= width ||
+                    BitConverter.ToUInt16(data, entry + 6) >= height || BitConverter.ToUInt32(data, entry + 12) != offset ||
+                    data.Length - offset < 40) return false;
+                int bits = BitConverter.ToUInt16(data, offset + 14);
+                if (BitConverter.ToInt32(data, offset) != 40 || BitConverter.ToInt32(data, offset + 4) != width ||
+                    BitConverter.ToInt32(data, offset + 8) != height * 2 || BitConverter.ToUInt16(data, offset + 12) != 1 ||
+                    bits is not (24 or 32) || BitConverter.ToInt32(data, offset + 16) != 0 || BitConverter.ToInt32(data, offset + 32) != 0) return false;
+                int length = 40 + (((width * bits + 31) / 32 + (width + 31) / 32) * 4 * height);
+                if (BitConverter.ToUInt32(data, entry + 8) != length || length > data.Length - offset) return false;
+                offset += length;
+            }
+            return offset == data.Length;
+        }
         if (data[0] == 0 && data[1] == 0 && data[2] == 1 && data[3] == 0)
         {
             int count = BitConverter.ToUInt16(data, 4);
