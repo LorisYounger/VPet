@@ -3013,11 +3013,12 @@ namespace VPet_Simulator.Windows
                 if (gf != null)
                 {
                     Main.Display(gf, Main.DisplayToNomal);
-                    Main.Say("邦邦咔邦,{0}等级突破了!".Translate(Name));
+                    Main.Say("邦邦咔邦,{0}等级突破了!".Translate(GameSavesData.GameSave.Name));
                 }
             }
             if (args.IsLevelMaxUp)
             {//告知用户上限等级上升
+                await Task.Delay(5000).ConfigureAwait(false);
                 int levelMax = GameSavesData.GameSave.LevelMax;
                 string message = "系统提示\n您的桌宠等级已经突破\nLv{0}→LV{1} x{2}\n已突破为尊贵的x{3}阶".Translate(
                     1000 + args.BeforeLevelMax * 100, 100 * levelMax, levelMax, levelMax);
