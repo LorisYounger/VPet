@@ -420,6 +420,7 @@ namespace VPet_Simulator.Windows
         private void WindowX_Closed(object sender, EventArgs e)
         {
             mw.GameSavesData.Statistics!.StatisticChanged -= Statistics_StatisticChanged;
+            mw.ActivityLogs.CollectionChanged -= ActivityLogs_CollectionChanged;
             mw.Windows.Remove(this);
         }
 
@@ -1097,15 +1098,19 @@ namespace VPet_Simulator.Windows
                 text = string.Join('\n', mw.ActivityLogs.Where(x => x.IsDebug == false).Select(x => x.ToString(mw.Main)).ToList());
             Dispatcher.Invoke(() =>
             {
+                if (!mw.Windows.Contains(this))
+                    return;
                 tb_log.Text = text;
+                mw.ActivityLogs.CollectionChanged += ActivityLogs_CollectionChanged;
             });
-            mw.ActivityLogs.CollectionChanged += ActivityLogs_CollectionChanged;
         }
 
         private void ActivityLogs_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs? e)
         {
-            Dispatcher.Invoke(() =>
+            Dispatcher.BeginInvoke(new Action(() =>
             {
+                if (!mw.Windows.Contains(this))
+                    return;
                 if (e != null)
                     if (e.NewItems != null)
                     {
@@ -1117,7 +1122,7 @@ namespace VPet_Simulator.Windows
                             }
                         }
                     }
-            });
+            }));
         }
     }
 }
