@@ -129,7 +129,19 @@ namespace VPet_Simulator.Core
                 await sem.WaitAsync();
                 try
                 {
-                    if (!File.Exists(Path))
+                    bool cacheValid = false;
+                    if (File.Exists(Path))
+                    {
+                        using var stream = File.OpenRead(Path);
+                        using var reader = new BinaryReader(stream);
+                        // 检查 PNG 签名和完整 IEND，筛掉空文件和常见的未写完缓存
+                        if (stream.Length >= 57 && reader.ReadBytes(8).AsSpan().SequenceEqual(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 }))
+                        {
+                            stream.Seek(-12, SeekOrigin.End);
+                            cacheValid = reader.ReadBytes(12).AsSpan().SequenceEqual(new byte[] { 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130 });
+                        }
+                    }
+                    if (!cacheValid)
                     {
                         int w = 0;
                         int h = 0;
@@ -186,7 +198,7 @@ namespace VPet_Simulator.Core
                             // Save the combined image to the cache path
                             using (var image = SKImage.FromBitmap(combinedBitmap))
                             using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
-                            using (var stream = File.OpenWrite(Path))
+                            using (var stream = File.Create(Path))
                             {
                                 data.SaveTo(stream);
                             }
