@@ -957,6 +957,11 @@ namespace VPet_Simulator.Windows
         {
             if (selectedModInfo == null)
                 return;
+            if (!Directory.Exists(selectedModInfo.Path.FullName))
+            {
+                MessageBoxX.Show("MOD 目录不存在，可能已被删除或取消订阅。".Translate(), "打开 MOD 目录失败".Translate());
+                return;
+            }
             var psi = new ProcessStartInfo
             {
                 FileName = selectedModInfo.Path.FullName,
