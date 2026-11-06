@@ -448,7 +448,7 @@ namespace VPet_Simulator.Windows
 
         private void SteamMatchmaking_OnLobbyInvite(Friend friend, Lobby lobby)
         {
-            if (Set["banuser"][(gbol)friend.Id.Value.ToString()])
+            if (!friend.IsFriend || Set["banuser"][(gbol)friend.Id.Value.ToString()])
                 return;
             if (!friend.IsPlayingThisGame)
             {
