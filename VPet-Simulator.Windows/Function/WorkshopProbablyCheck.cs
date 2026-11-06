@@ -15,8 +15,10 @@ using System.Resources;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
+using System.Xml;
 
 namespace VPet_Simulator.Windows;
 
@@ -222,16 +224,16 @@ internal static class WorkshopProbablyCheck
                         result.Add("包含原生代码", relative, compatibility: true);
                     stream.Position = 0;
                     using var module = ModuleDefinition.ReadModule(stream, new ReaderParameters { AssemblyResolver = new NoExternalAssemblyResolver() });
+                    // null 表示尚未见到引用。只有每个引用都用于数值表初始化，才可跳过高熵检查。
+                    var numericTables = new Dictionary<FieldDefinition, bool?>();
                     // GetTypes 包含嵌套、异步和初始化类型；不调用 Resolve/Assembly.Load。
                     foreach (var type in module.GetTypes())
                     {
                         budget.Check();
                         foreach (var field in type.Fields)
                         {
-                            byte[] data = field.InitialValue;
                             if (field.FieldType.IsPointer) result.Add("访问原生代码或内存", relative, type.FullName, field.FullName, true);
-                            if (data.Length >= 512 && !IsMedia(data) && (IsExecutable(data) || IsCompressed(data) || Entropy(data) > 7.5))
-                                CheckResource(data, field.FullName, relative, result, budget, 0);
+                            if (field.RVA != 0 && field.InitialValue.Length >= 512) numericTables.TryAdd(field, null);
                         }
                         foreach (var method in type.Methods)
                         {
@@ -258,15 +260,25 @@ internal static class WorkshopProbablyCheck
                                 if (instruction.Operand is MethodReference target)
                                     CheckCall(target, instruction, relative, methodName, result, modRoots, ref arguments);
                                 else if (instruction.Operand is FieldReference field)
+                                {
                                     CheckMember(field, relative, methodName, result);
+                                    if (field is FieldDefinition { RVA: not 0 } initialized && initialized.InitialValue.Length >= 512)
+                                        numericTables[initialized] = numericTables.GetValueOrDefault(initialized) != false && IsNumericArrayInitializer(instruction, initialized.InitialValue);
+                                }
                                 else if (instruction.Operand is string value)
-                                    CheckString(value, relative, methodName, result, budget);
+                                    CheckString(value, relative, methodName, result, budget, literal: instruction);
                                 else if (instruction.Operand == null && instruction.OpCode.OperandType != OperandType.InlineNone)
                                     throw new BadImageFormatException();
                             }
                             // Cecil 会把读过的方法体缓存在定义上。此方法已检查完，可以释放整组 IL 指令。
                             method.Body = null;
                         }
+                    }
+                    foreach (var (field, usedAsTable) in numericTables)
+                    {
+                        byte[] data = field.InitialValue;
+                        if (!IsMedia(data) && (HasPayloadHeader(data) || usedAsTable != true && Entropy(data) > 7.5))
+                            CheckResource(data, field.FullName, relative, result, budget, 0);
                     }
                     foreach (var resource in module.Resources)
                     {
@@ -602,8 +614,7 @@ internal static class WorkshopProbablyCheck
             }
             if (ins.OpCode.Code == Code.Nop) return ReadPathOperand(ref cursor, ref budget, ref first);
             if (ins.OpCode.Code == Code.Ldstr && ins.Operand is string literal) return literal.Length <= 4096 ? literal : null;
-            if (ins.OpCode.Code >= Code.Ldc_I4_0 && ins.OpCode.Code <= Code.Ldc_I4_8) return (int)ins.OpCode.Code - (int)Code.Ldc_I4_0;
-            if (ins.OpCode.Code is Code.Ldc_I4 or Code.Ldc_I4_S) return Convert.ToInt32(ins.Operand);
+            if (ConstantInt32(ins) is int number) return number;
             if (ins.OpCode.Code == Code.Ldsfld && ins.Operand is FieldReference field &&
                 field.DeclaringType.FullName == "VPet_Simulator.Windows.Interface.ExtensionValue" && field.Name == "BaseDirectory")
                 return AppContext.BaseDirectory;
@@ -754,15 +765,101 @@ internal static class WorkshopProbablyCheck
         if (category != null) result.Add(category, file, method, member: member);
     }
 
-    private static void CheckString(string value, string file, string method, PluginScanResult result, ScanBudget budget, int depth = 0)
+    private static int? ConstantInt32(Instruction? instruction) => instruction?.OpCode.Code switch
+    {
+        >= Code.Ldc_I4_0 and <= Code.Ldc_I4_8 => instruction.OpCode.Code - Code.Ldc_I4_0,
+        Code.Ldc_I4 or Code.Ldc_I4_S => Convert.ToInt32(instruction.Operand),
+        _ => null
+    };
+
+    private static bool IsNumericArrayInitializer(Instruction token, byte[] data)
+    {
+        // 编译器将数值数组的初值放在 RVA 字段里。字节数组也常用来装载文件，仍按原规则检查。
+        var array = token.Previous?.Previous;
+        if (token.OpCode.Code != Code.Ldtoken || token.Previous?.OpCode.Code != Code.Dup ||
+            array == null ||
+            token.Next?.OpCode.Code != Code.Call || token.Next.Operand is not MethodReference init ||
+            init.FullName != "System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)" ||
+            init.DeclaringType.Scope.Name is not ("mscorlib" or "System.Runtime" or "System.Private.CoreLib")) return false;
+        if (array.OpCode.Code == Code.Newobj && array.Operand is MethodReference { Name: ".ctor", DeclaringType: ArrayType { Rank: 2 } matrix } &&
+            matrix.ElementType.MetadataType == MetadataType.Byte && ConstantInt32(array.Previous) == 256 &&
+            ConstantInt32(array.Previous?.Previous) * 256L == data.Length)
+        {
+            // 每行恰好是 0..255 的一次排列，常见于密码算法的字节替换表。
+            Span<bool> seen = stackalloc bool[256];
+            for (int row = 0; row < data.Length; row += 256)
+            {
+                seen.Clear();
+                foreach (byte value in data.AsSpan(row, 256))
+                {
+                    if (seen[value]) return false;
+                    seen[value] = true;
+                }
+            }
+            return true;
+        }
+        if (array.OpCode.Code != Code.Newarr || array.Operand is not TypeReference element) return false;
+        int width = element.MetadataType switch
+        {
+            MetadataType.Int16 or MetadataType.UInt16 => 2,
+            MetadataType.Int32 or MetadataType.UInt32 or MetadataType.Single => 4,
+            MetadataType.Int64 or MetadataType.UInt64 or MetadataType.Double => 8,
+            _ => 0
+        };
+        return ConstantInt32(array.Previous) * (long)width == data.Length;
+    }
+
+    private static bool IsHexIntegerArgument(Instruction literal)
+    {
+        // 只沿相邻的字段读写和本模块有限层数的包装调用追踪第一个参数。
+        var use = literal.Next;
+        if (use?.OpCode.Code == Code.Stsfld)
+        {
+            var field = use.Operand;
+            use = use.Next;
+            for (int i = 0; i < 8 && use != null && use.Operand != field && use.OpCode.FlowControl is FlowControl.Next or FlowControl.Call; i++)
+                use = use.Next;
+            if (use?.OpCode.Code != Code.Ldsfld || use.Operand != field) return false;
+            use = use.Next;
+        }
+        if (ConstantInt32(use) is (int)System.Globalization.NumberStyles.HexNumber or (int)System.Globalization.NumberStyles.AllowHexSpecifier &&
+            use?.Next?.OpCode.Code == Code.Call && use.Next.Operand is MethodReference parse &&
+            parse.FullName == "System.Numerics.BigInteger System.Numerics.BigInteger::Parse(System.String,System.Globalization.NumberStyles)") return true;
+        if (use?.OpCode.Code is Code.Ldstr or Code.Ldsfld) use = use.Next;
+        for (int hop = 0; hop < 4 && use?.OpCode.Code == Code.Call && use.Operand is MethodDefinition { IsStatic: true, HasBody: true } method; hop++)
+        {
+            var first = method.Body.Instructions.FirstOrDefault();
+            var decodeCall = first?.Next?.Next;
+            var construct = decodeCall?.Next;
+            if (first?.OpCode.Code == Code.Ldc_I4_1 && first.Next?.OpCode.Code == Code.Ldarg_0 &&
+                decodeCall?.OpCode.Code == Code.Call && decodeCall.Operand is MethodReference decode && decode.ReturnType.FullName == "System.Byte[]" &&
+                (decode.FullName == "System.Byte[] System.Convert::FromHexString(System.String)" || decode.DeclaringType.Name == "Hex" && decode.Name is "Decode" or "DecodeStrict") &&
+                construct?.OpCode.Code == Code.Newobj && construct.Operand is MethodReference ctor &&
+                ctor.DeclaringType.Name == "BigInteger" && ctor.Parameters.Count == 2 &&
+                ctor.Parameters[0].ParameterType.MetadataType == MetadataType.Int32 && ctor.Parameters[1].ParameterType.FullName == "System.Byte[]" &&
+                construct.Next?.OpCode.Code == Code.Ret) return true;
+            if (first?.OpCode.Code != Code.Ldarg_0) break;
+            use = first.Next;
+            if (use?.OpCode.Code == Code.Ldc_I4_0) use = use.Next;
+        }
+        return false;
+    }
+
+    private static void CheckString(string value, string file, string method, PluginScanResult result, ScanBudget budget, int depth = 0, Instruction? literal = null)
     {
         // 不在报告中输出原字符串、网址、票据或查询参数。
-        string lower = value.Length < 4096 ? value.ToLowerInvariant() : "";
-        if (lower.Contains("login data") || lower.Contains("local state") || lower.Contains("cookies") || lower.Contains("wallet.dat") ||
-            lower.Contains("discord") || lower.Contains("loginusers.vdf") || lower.Contains("ssfn"))
+        bool Contains(string fragment) => value.Contains(fragment, StringComparison.OrdinalIgnoreCase);
+        if (value.Length < 4096 && (Contains("login data") || Contains("local state") || Contains("cookies") || Contains("wallet.dat") ||
+            Contains("discord") || Contains("loginusers.vdf") || Contains("ssfn")))
             result.Add("包含浏览器, 钱包或账号数据的路径特征", file, method);
         if (value.Length < 1024 || value.Length % 4 != 0 || !value.All(c => char.IsAsciiLetterOrDigit(c) || c is '+' or '/' or '=')) return;
         if (value.Length > MaxResourceBytes) throw new InvalidDataException("SCAN_LIMIT");
+        if (literal != null && value.All(char.IsAsciiHexDigit) && IsHexIntegerArgument(literal))
+        {
+            byte[] number = Convert.FromHexString(value);
+            if (HasPayloadHeader(number)) CheckResource(number, "Hex", file, result, budget, depth);
+            return;
+        }
         byte[] decoded;
         try { decoded = Convert.FromBase64String(value); }
         catch (FormatException) { return; }
@@ -776,6 +873,7 @@ internal static class WorkshopProbablyCheck
         budget.Check();
         if (depth > 4 || data.Length > MaxResourceBytes) throw new InvalidDataException("SCAN_LIMIT");
         string Label() => SafeText(file) + " — " + SafeText(name);
+        void CheckText(string text) => CheckString(text, file, "resource", result, budget, depth + 1);
         using var stream = new MemoryStream(data, false);
         if (name == "ILRepack.List")
         {
@@ -818,7 +916,21 @@ internal static class WorkshopProbablyCheck
         }
         if (data.Length >= 4 && BitConverter.ToUInt32(data, 0) == 0xBEEFCACE)
         {
+            using var header = new BinaryReader(stream, StrictUtf8, true);
+            stream.Position = 4;
+            if (header.ReadInt32() != 1) throw new InvalidDataException();
+            int headerSize = header.ReadInt32();
+            bool extended = header.ReadString().StartsWith("System.Resources.Extensions.DeserializingResourceReader, System.Resources.Extensions,", StringComparison.Ordinal);
+            if (extended)
+            {
+                if (!header.ReadString().StartsWith("System.Resources.Extensions.RuntimeResourceSet, System.Resources.Extensions,", StringComparison.Ordinal) ||
+                    stream.Position != 12L + headerSize || header.ReadInt32() != 2) throw new InvalidDataException();
+                // 两种 reader 共用 v2 索引。让 ResourceReader 跳过已验证的扩展头，只取原始字节，不调用类型转换器。
+                data[4] = 2;
+            }
+            stream.Position = 0;
             using var reader = new ResourceReader(stream);
+            if (extended) data[4] = 1;
             var entries = reader.GetEnumerator();
             while (entries.MoveNext())
             {
@@ -828,15 +940,29 @@ internal static class WorkshopProbablyCheck
                 budget.Check();
                 if (resourceType == "ResourceTypeCode.String")
                 {
-                    using var valueStream = new MemoryStream(raw, false);
-                    using var valueReader = new BinaryReader(valueStream, Encoding.UTF8);
-                    CheckString(valueReader.ReadString(), file, "resource", result, budget, depth + 1);
-                    if (valueStream.Position != valueStream.Length) throw new InvalidDataException();
+                    CheckText(ReadResourceString(raw, 0, Encoding.UTF8));
                 }
                 else if (resourceType is "ResourceTypeCode.ByteArray" or "ResourceTypeCode.Stream")
                 {
                     if (BinaryPrimitives.ReadInt32LittleEndian(raw) != raw.Length - sizeof(int)) throw new InvalidDataException();
                     CheckResource(raw[sizeof(int)..], key, file, result, budget, depth + 1);
+                }
+                else if (extended && raw.Length >= 2 && raw[0] == 3 && !resourceType.StartsWith("ResourceTypeCode.", StringComparison.Ordinal))
+                {
+                    // TypeConverterString: 标记后只有一个带长度的 UTF-8 字符串；二进制对象仍然拦截。
+                    string text = ReadResourceString(raw, 1, StrictUtf8);
+                    if (text.Any(char.IsControl)) throw new InvalidDataException();
+                    string[] typeName = resourceType.Split(',', 3, StringSplitOptions.TrimEntries);
+                    bool knownValue = typeName switch
+                    {
+                        ["System.Drawing.Size" or "System.Drawing.Point", "System.Drawing" or "System.Drawing.Primitives", ..] =>
+                            text.Split(',', 2) is [var x, var y] && int.TryParse(x, out _) && int.TryParse(y, out _),
+                        ["System.CodeDom.MemberAttributes", "System" or "System.CodeDom", ..] => text is "Private" or "Public" or "Family" or "Assembly" or "FamilyOrAssembly",
+                        ["System.Globalization.CultureInfo", "mscorlib" or "System.Private.CoreLib" or "System.Runtime", ..] => text == "(Default)" || text.Length is > 0 and <= 85 &&
+                            new System.Globalization.CultureInfo(text).Name.Equals(text, StringComparison.OrdinalIgnoreCase),
+                        _ => false
+                    };
+                    if (!knownValue) result.BlockUnanalyzedContent("RESOURCE_OBJECT: " + Label() + ": " + "包含自定义序列化资源".Translate());
                 }
                 else
                 {
@@ -895,17 +1021,120 @@ internal static class WorkshopProbablyCheck
             return;
         }
         string extension = Path.GetExtension(name).ToLowerInvariant();
-        if (extension is ".txt" or ".json" or ".xml" or ".lps" or ".csv" or ".xaml")
+        if (extension is ".xshd" or ".xsd")
         {
-            string value = StrictUtf8.GetString(data);
-            if (value.All(c => !char.IsControl(c) || c is '\r' or '\n' or '\t'))
+            using var xml = XmlReader.Create(stream, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null, MaxCharactersInDocument = MaxResourceBytes });
+            xml.MoveToContent();
+            if (extension == ".xsd" ? xml.LocalName == "schema" && xml.NamespaceURI == "http://www.w3.org/2001/XMLSchema" :
+                xml.LocalName == "SyntaxDefinition" && xml.NamespaceURI is "" or "http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008")
             {
-                CheckString(value, file, "resource", result, budget, depth + 1);
-                if (extension == ".xaml") result.Add("包含 WPF 界面资源", file, api: SafeText(name), compatibility: true);
+                string formatNamespace = xml.NamespaceURI;
+                do
+                {
+                    if (xml.NodeType == XmlNodeType.ProcessingInstruction || xml.NodeType == XmlNodeType.Element &&
+                        (xml.NamespaceURI != formatNamespace || xml.LocalName.Equals("script", StringComparison.OrdinalIgnoreCase)))
+                        throw new InvalidDataException();
+                    while (xml.MoveToNextAttribute()) CheckText(xml.Value);
+                    xml.MoveToElement();
+                    if (xml.NodeType is XmlNodeType.Text or XmlNodeType.CDATA)
+                        CheckText(xml.Value);
+                } while (xml.Read());
                 return;
             }
         }
+        if (extension is ".cs" or ".lng" or ".afm" or ".txt" or ".json" or ".xml" or ".lps" or ".csv" or ".xaml")
+        {
+            string text = StrictUtf8.GetString(data);
+            if (text.All(c => !char.IsControl(c) || c is '\r' or '\n' or '\t'))
+            {
+                switch (extension)
+                {
+                    case ".cs":
+                        text = text.TrimStart('\uFEFF');
+                        // 只识别源码文本，不编译或执行。长编码串仍走载荷检查。
+                        var declaration = text.AsSpan(MatchPrefixLength(text, @"\G(?:\s+|//[^\r\n]*|(?s:/\*.*?\*/)|#[^\r\n]*)"));
+                        declaration = declaration[MatchPrefixLength(declaration, @"\G(?:public|internal|static|sealed|abstract|partial|readonly|file|unsafe|global)\s+")..];
+                        if (!Regex.IsMatch(declaration, @"\A(?:using|namespace|class|interface|struct|enum|record|delegate)\s+[@\w]")) break;
+                        foreach (var run in Regex.EnumerateMatches(text, "[A-Za-z0-9+/=]+"))
+                            if (run.Length >= 1024) CheckText(text.Substring(run.Index, run.Length));
+                        result.Add("附带 C# 源码，运行时可能编译执行", file, api: SafeText(name));
+                        return;
+                    case ".afm":
+                        if (IsFontMetrics(new StringReader(text.TrimStart('\uFEFF')))) return;
+                        break;
+                    case ".lng":
+                        var lines = new StringReader(text.TrimStart('\uFEFF'));
+                        bool hasEntry = false;
+                        string? line;
+                        while ((line = lines.ReadLine()) != null)
+                        {
+                            line = line.Trim();
+                            if (line.Length == 0 || line[0] == '#') continue;
+                            int separator = line.IndexOf('=');
+                            if (separator <= 0) break;
+                            CheckText(line[(separator + 1)..].Trim());
+                            hasEntry = true;
+                        }
+                        if (hasEntry && line == null) return;
+                        break;
+                    default:
+                        CheckText(text);
+                        if (extension == ".xaml") result.Add("包含 WPF 界面资源", file, api: SafeText(name), compatibility: true);
+                        return;
+                }
+            }
+        }
         result.BlockUnanalyzedContent("UNKNOWN_RESOURCE: " + Label() + ": " + "无法识别资源内容, 未完成检查".Translate());
+    }
+
+    private static string ReadResourceString(byte[] raw, int offset, Encoding encoding)
+    {
+        using var stream = new MemoryStream(raw, false) { Position = offset };
+        using var reader = new BinaryReader(stream, encoding);
+        string value = reader.ReadString();
+        if (stream.Position != stream.Length) throw new InvalidDataException();
+        return value;
+    }
+
+    // 每次匹配一个前缀项，避免缓存的正则为整段注释或字形连写列表保留回溯栈。
+    private static int MatchPrefixLength(ReadOnlySpan<char> text, string anchoredPattern)
+    {
+        int length = 0;
+        foreach (var match in Regex.EnumerateMatches(text, anchoredPattern)) length += match.Length;
+        return length;
+    }
+
+    private static bool IsFontMetrics(StringReader lines)
+    {
+        if (lines.ReadLine() is not string start || !start.StartsWith("StartFontMetrics ", StringComparison.Ordinal) ||
+            !Version.TryParse(start[17..], out _)) return false;
+        string? line;
+        while ((line = lines.ReadLine()) != null && !line.StartsWith("StartCharMetrics ", StringComparison.Ordinal))
+        {
+            int space = line.IndexOf(' ');
+            if (space < 1 || line[..space] is not ("Comment" or "FontName" or "FullName" or "FamilyName" or "Weight" or "ItalicAngle" or
+                "IsFixedPitch" or "CharacterSet" or "FontBBox" or "UnderlinePosition" or "UnderlineThickness" or "Version" or "Notice" or
+                "EncodingScheme" or "CapHeight" or "XHeight" or "Ascender" or "Descender" or "StdHW" or "StdVW")) return false;
+        }
+        if (line == null || !int.TryParse(line.AsSpan(17), out int count) || count < 1) return false;
+        for (int i = 0; i < count; i++)
+        {
+            var glyph = lines.ReadLine().AsSpan().TrimEnd();
+            int metrics = MatchPrefixLength(glyph, @"\AC -?\d+ ; WX -?\d+ ; N [\w.]+ ; B -?\d+ -?\d+ -?\d+ -?\d+ ;");
+            if (metrics == 0 || metrics + MatchPrefixLength(glyph[metrics..], @"\G L [\w.]+ [\w.]+ ;") != glyph.Length) return false;
+        }
+        if (lines.ReadLine() != "EndCharMetrics") return false;
+        line = lines.ReadLine();
+        if (line == "StartKernData")
+        {
+            line = lines.ReadLine();
+            if (line == null || !line.StartsWith("StartKernPairs ", StringComparison.Ordinal) || !int.TryParse(line.AsSpan(15), out count) || count < 0) return false;
+            for (int i = 0; i < count; i++)
+                if (lines.ReadLine() is not string pair || !Regex.IsMatch(pair, @"^KPX [\w.]+ [\w.]+ -?\d+\s*$")) return false;
+            if (lines.ReadLine() != "EndKernPairs" || lines.ReadLine() != "EndKernData") return false;
+            line = lines.ReadLine();
+        }
+        return line == "EndFontMetrics" && string.IsNullOrWhiteSpace(lines.ReadToEnd());
     }
 
     private static bool IsExecutable(byte[] data)
@@ -917,8 +1146,10 @@ internal static class WorkshopProbablyCheck
             prefix.StartsWith("powershell", StringComparison.OrdinalIgnoreCase) || prefix.StartsWith("<script", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool IsCompressed(byte[] data) => data.Length >= 4 &&
-        ((data[0] == 'P' && data[1] == 'K' && data[2] == 3 && data[3] == 4) || (data[0] == 0x1f && data[1] == 0x8b));
+    // 只对至少 512 字节的字段初值和解码后的长整数调用。
+    private static bool HasPayloadHeader(byte[] data) =>
+        BinaryPrimitives.ReadUInt32LittleEndian(data) is 0x04034b50 or 0xBEEFCACE or 0xfeedface or 0xfeedfacf ||
+        (data[0] == 0x1f && data[1] == 0x8b) || IsExecutable(data);
 
     // 独立与内嵌 PE 共用结构检查；只为原生 DLL 提供兼容性提示，不信任文件名。
     private static bool CheckNativePe(PEReader pe, long length, string file, string resource, PluginScanResult result)
@@ -1039,7 +1270,7 @@ internal static class WorkshopProbablyCheck
         if (header.SequenceEqual("GIF8"u8)) return data[^1] == 0x3b;
         if (data[0] == 'B' && data[1] == 'M') return BitConverter.ToUInt32(data, 2) == data.Length;
         if (header.SequenceEqual("RIFF"u8)) return BitConverter.ToUInt32(data, 4) + 8 == data.Length && Encoding.ASCII.GetString(data, 8, 4) is "WEBP" or "WAVE";
-        // 静态 CUR：支持连续存放的 24/32 位无压缩位图和单色遮罩。
+        // 静态 CUR：连续存放的无压缩位图、索引色调色板和单色遮罩。
         if (header.SequenceEqual(new byte[] { 0, 0, 2, 0 }))
         {
             int count = BitConverter.ToUInt16(data, 4);
@@ -1049,14 +1280,19 @@ internal static class WorkshopProbablyCheck
             {
                 int entry = 6 + i * 16;
                 int width = data[entry] == 0 ? 256 : data[entry], height = data[entry + 1] == 0 ? 256 : data[entry + 1];
-                if (BitConverter.ToUInt16(data, entry + 2) != 0 || BitConverter.ToUInt16(data, entry + 4) >= width ||
+                if (data[entry + 3] != 0 || BitConverter.ToUInt16(data, entry + 4) >= width ||
                     BitConverter.ToUInt16(data, entry + 6) >= height || BitConverter.ToUInt32(data, entry + 12) != offset ||
                     data.Length - offset < 40) return false;
                 int bits = BitConverter.ToUInt16(data, offset + 14);
                 if (BitConverter.ToInt32(data, offset) != 40 || BitConverter.ToInt32(data, offset + 4) != width ||
                     BitConverter.ToInt32(data, offset + 8) != height * 2 || BitConverter.ToUInt16(data, offset + 12) != 1 ||
-                    bits is not (24 or 32) || BitConverter.ToInt32(data, offset + 16) != 0 || BitConverter.ToInt32(data, offset + 32) != 0) return false;
-                int length = 40 + (((width * bits + 31) / 32 + (width + 31) / 32) * 4 * height);
+                    bits is not (1 or 4 or 8 or 24 or 32) || BitConverter.ToInt32(data, offset + 16) != 0) return false;
+                int maxColors = bits <= 8 ? 1 << bits : 0;
+                uint colors = BitConverter.ToUInt32(data, offset + 32);
+                if (colors > maxColors) return false;
+                int palette = colors == 0 ? maxColors : (int)colors;
+                if (data[entry + 2] != 0 && data[entry + 2] != palette) return false;
+                int length = 40 + palette * 4 + (((width * bits + 31) / 32 + (width + 31) / 32) * 4 * height);
                 if (BitConverter.ToUInt32(data, entry + 8) != length || length > data.Length - offset) return false;
                 offset += length;
             }
