@@ -249,6 +249,7 @@ namespace VPet_Simulator.Windows
             IsMaskVisible = true;
             IsOverlayerVisible = true;
             BtnDetailUse.Visibility = item.CanUse ? Visibility.Visible : Visibility.Collapsed;
+            BtnDetailSell.Visibility = !item.IsSingle && item.Price > 0 ? Visibility.Visible : Visibility.Collapsed;
 
             if (item.IsSingle)
             {
@@ -257,7 +258,7 @@ namespace VPet_Simulator.Windows
             }
             else
             {
-                spUseEnter.Visibility = item.CanUse ? Visibility.Visible : Visibility.Collapsed;
+                spUseEnter.Visibility = item.CanUse || item.Price > 0 ? Visibility.Visible : Visibility.Collapsed;
                 BorderIsSingle.Visibility = Visibility.Collapsed;
             }
         }
@@ -377,6 +378,20 @@ namespace VPet_Simulator.Windows
             ApplyDetailCountFromText();
             UseItem(_detailItem, _detailCount);
             HideDetail();
+        }
+
+        private void BtnDetailSell_Click(object sender, RoutedEventArgs e)
+        {
+            var item = _detailItem;
+            if (item is { IsSingle: false, Price: > 0, Count: > 0 } && mw.Items.Contains(item))
+            {
+                ApplyDetailCountFromText();
+                double proceeds = item.Price * _detailCount;
+                item.Consume(mw, _detailCount);
+                mw.GameSavesData.GameSave.Money += proceeds;
+            }
+            HideDetail();
+            UpdateList();
         }
 
         private CheckBox? _puswitch;

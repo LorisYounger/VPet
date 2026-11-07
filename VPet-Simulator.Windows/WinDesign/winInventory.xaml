@@ -144,10 +144,14 @@
                             </TextBlock>
                         </StackPanel>
 
-                        <Button Grid.Row="5" x:Name="BtnDetailUse" Margin="0,14,0,0" Padding="16,8"
-                                HorizontalAlignment="Left" Cursor="Hand" Style="{DynamicResource ThemedButtonStyle}"
-                                Content="{ll:Str 使用}" Background="{DynamicResource Primary}" Foreground="White"
-                                Click="BtnDetailUse_Click" />
+                        <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,14,0,0">
+                            <Button x:Name="BtnDetailUse" Margin="0,0,8,0" Padding="16,8" Cursor="Hand"
+                                    Style="{DynamicResource ThemedButtonStyle}" Content="{ll:Str 使用}"
+                                    Background="{DynamicResource Primary}" Foreground="White" Click="BtnDetailUse_Click" />
+                            <Button x:Name="BtnDetailSell" Padding="16,8" Cursor="Hand"
+                                    Style="{DynamicResource ThemedButtonStyle}" Content="{ll:Str 出售}"
+                                    Background="{DynamicResource Primary}" Foreground="White" Click="BtnDetailSell_Click" />
+                        </StackPanel>
                     </Grid>
                 </Grid>
             </Grid>
