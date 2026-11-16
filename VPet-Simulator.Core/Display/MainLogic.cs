@@ -251,6 +251,37 @@ namespace VPet_Simulator.Core
         /// <summary>最近一次工作、学习或娱乐结算的状态效率倍率，不含 Buff 加成。</summary>
         public double WorkEfficiency { get; private set; } = 1;
         /// <summary>
+        /// 饮食心情和口渴的缓冲结算 (Store版本)
+        /// </summary>
+        public void ChangeActivityNeeds(double food = 0, double drink = 0, double feeling = 0)
+        {
+            var save = Core.Save!;
+            double foodDebt = Math.Min(0, save.StrengthFood + food);
+            double drinkDebt = Math.Min(0, save.StrengthDrink + drink);
+            double feelingDebt = Math.Min(0, save.Feeling + feeling);
+            save.StrengthChangeFood(food - foodDebt);
+            save.StrengthChangeDrink(drink - drinkDebt);
+            save.FeelingChange(feeling - feelingDebt);
+            save.Health += (foodDebt + drinkDebt + feelingDebt / 2) * (AttributeModifier?.HealthCost ?? 1);
+            save.Likability += feelingDebt / 2;
+        }
+
+        /// <summary>
+        /// 摸头、摸身体和`捏脸` 交互也计算buff增益 和统一提示
+        /// </summary>
+        public void ApplyTouchAttributes()
+        {
+            var save = Core.Save!;
+            if (!Core.Controller!.EnableFunction || save.Strength < 10 || save.Feeling >= save.FeelingMax) return;
+            double strength = save.Strength, feeling = save.Feeling;
+            save.StrengthChange(-2 * (AttributeModifier?.StrengthCost ?? 1));
+            save.FeelingChange(AttributeModifier?.Feeling ?? 1);
+            save.Mode = save.CalMode();
+            LabelDisplayShowChangeNumber(Sub.TextDeReplace(LocalizeCore.Translate(Sub.TextReplace("体力-{0:0.#} 心情+{1:0.#}"))),
+                strength - save.Strength, save.Feeling - feeling);
+        }
+
+        /// <summary>
         /// 根据消耗计算相关数据
         /// </summary>
         /// <param name="TimePass">过去时间倍率</param>
@@ -315,7 +346,7 @@ namespace VPet_Simulator.Core
 
                     if (Core.Save!.StrengthFood <= sm25)
                     {//低状态低效率
-                        Core.Save!.StrengthChangeFood(-needfood / 2 * attributes.FoodCost);
+                        ChangeActivityNeeds(food: -needfood / 2 * attributes.FoodCost);
                         efficiency += 0.2;
                         if (Core.Save!.Strength >= needfood)
                         {
@@ -326,7 +357,7 @@ namespace VPet_Simulator.Core
                     }
                     else
                     {
-                        Core.Save!.StrengthChangeFood(-needfood * attributes.FoodCost);
+                        ChangeActivityNeeds(food: -needfood * attributes.FoodCost);
                         efficiency += 0.4;
                         if (Core.Save!.StrengthFood >= sm60)
                         {
@@ -336,7 +367,7 @@ namespace VPet_Simulator.Core
                     }
                     if (Core.Save!.StrengthDrink <= sm25)
                     {//低状态低效率
-                        Core.Save!.StrengthChangeDrink(-needdrink / 2 * attributes.DrinkCost);
+                        ChangeActivityNeeds(drink: -needdrink / 2 * attributes.DrinkCost);
                         efficiency += 0.2;
                         if (Core.Save!.Strength >= needdrink)
                         {
@@ -347,7 +378,7 @@ namespace VPet_Simulator.Core
                     }
                     else
                     {
-                        Core.Save!.StrengthChangeDrink(-needdrink * attributes.DrinkCost);
+                        ChangeActivityNeeds(drink: -needdrink * attributes.DrinkCost);
                         efficiency += 0.4;
                         if (Core.Save!.StrengthDrink >= sm60)
                         {
@@ -369,18 +400,18 @@ namespace VPet_Simulator.Core
                     if (NowWork.Type == Work.WorkType.Play)
                     {
                         LastInteractionTime = DateTime.Now;
-                        Core.Save!.FeelingChange(-NowWork.Feeling * TimePass
+                        ChangeActivityNeeds(feeling: -NowWork.Feeling * TimePass
                             * (NowWork.Feeling > 0 ? attributes.FeelingCost : attributes.Feeling));
                     }
                     else
-                        Core.Save!.FeelingChange(-freedrop * (0.5 + NowWork.Feeling / 2) * attributes.FeelingCost);
+                        ChangeActivityNeeds(feeling: -freedrop * (0.5 + NowWork.Feeling / 2) * attributes.FeelingCost);
                     break;
                 default://默认
                     //饮食等乱七八糟的消耗
                     addhealth = -2;
                     if (Core.Save!.StrengthFood >= sm50)
                     {
-                        Core.Save!.StrengthChangeFood(-TimePass * attributes.FoodCost);
+                        ChangeActivityNeeds(food: -TimePass * attributes.FoodCost);
                         Core.Save!.StrengthChange(TimePass * attributes.Strength);
                         if (Core.Save!.StrengthFood >= sm75)
                             addhealth += Function.Rnd.Next(1, 3);
@@ -392,7 +423,7 @@ namespace VPet_Simulator.Core
                     }
                     if (Core.Save!.StrengthDrink >= sm50)
                     {
-                        Core.Save!.StrengthChangeDrink(-TimePass * attributes.DrinkCost);
+                        ChangeActivityNeeds(drink: -TimePass * attributes.DrinkCost);
                         Core.Save!.StrengthChange(TimePass * attributes.Strength);
                         if (Core.Save!.StrengthDrink >= sm75)
                             addhealth += Function.Rnd.Next(1, 3);
@@ -404,9 +435,8 @@ namespace VPet_Simulator.Core
                     }
                     if (addhealth > 0)
                         Core.Save!.Health += addhealth * TimePass * attributes.Health;
-                    Core.Save!.StrengthChangeFood(-TimePass * attributes.FoodCost);
-                    Core.Save!.StrengthChangeDrink(-TimePass * attributes.DrinkCost);
-                    Core.Save!.FeelingChange(-freedrop * attributes.FeelingCost);
+                    ChangeActivityNeeds(food: -TimePass * attributes.FoodCost, drink: -TimePass * attributes.DrinkCost,
+                        feeling: -freedrop * attributes.FeelingCost);
                     break;
             }
 

@@ -2943,13 +2943,7 @@ namespace VPet_Simulator.Windows
             }
             Main.CountNomal = 0;
 
-            if (Core.Controller!.EnableFunction && Core.Save!.Strength >= 10 && Core.Save!.Feeling < Core.Save!.FeelingMax)
-            {
-                Core.Save!.StrengthChange(-2);
-                Core.Save!.FeelingChange(1);
-                Core.Save!.Mode = Core.Save!.CalMode();
-                Main.LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
-            }
+            Main.ApplyTouchAttributes();
             if (Main.DisplayType.Name == "pinch")
             {
                 if (Main.DisplayType.Animat == AnimatType.A_Start)
@@ -2976,13 +2970,7 @@ namespace VPet_Simulator.Windows
         {
             if (Main.isPress && Main.DisplayType.Name == "pinch" && Main.DisplayType.Animat == AnimatType.B_Loop)
             {
-                if (Core.Controller!.EnableFunction && Core.Save!.Strength >= 10 && Core.Save!.Feeling < Core.Save!.FeelingMax)
-                {
-                    Core.Save!.StrengthChange(-2);
-                    Core.Save!.FeelingChange(1);
-                    Core.Save!.Mode = Core.Save!.CalMode();
-                    Main.LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
-                }
+                Main.ApplyTouchAttributes();
                 Main.Display("pinch", AnimatType.B_Loop, DisplayPinch_loop);
             }
             else

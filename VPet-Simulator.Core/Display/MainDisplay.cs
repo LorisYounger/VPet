@@ -141,13 +141,7 @@ namespace VPet_Simulator.Core
         public void DisplayToTouchHead()
         {
             CountNomal = 0;
-            if (Core.Controller!.EnableFunction && Core.Save!.Strength >= 10 && Core.Save!.Feeling < Core.Save!.FeelingMax)
-            {
-                Core.Save!.StrengthChange(-2);
-                Core.Save!.FeelingChange(1);
-                Core.Save!.Mode = Core.Save!.CalMode();
-                LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
-            }
+            ApplyTouchAttributes();
             if (DisplayType.Type == GraphType.Touch_Head)
             {
                 if (DisplayType.Animat == AnimatType.A_Start)
@@ -179,13 +173,7 @@ namespace VPet_Simulator.Core
         public void DisplayToTouchBody()
         {
             CountNomal = 0;
-            if (Core.Controller!.EnableFunction && Core.Save!.Strength >= 10 && Core.Save!.Feeling < Core.Save!.FeelingMax)
-            {
-                Core.Save!.StrengthChange(-2);
-                Core.Save!.FeelingChange(1);
-                Core.Save!.Mode = Core.Save!.CalMode();
-                LabelDisplayShowChangeNumber(LocalizeCore.Translate("体力-{0:f0} 心情+{1:f0}"), 2, 1);
-            }
+            ApplyTouchAttributes();
             if (DisplayType.Type == GraphType.Touch_Body)
             {
                 if (DisplayType.Animat == AnimatType.A_Start)
