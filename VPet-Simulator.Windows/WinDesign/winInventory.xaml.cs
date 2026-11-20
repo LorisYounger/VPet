@@ -172,7 +172,7 @@ namespace VPet_Simulator.Windows
         {
             rTotalValue = sender as Run;
             var totalValue = mw.Items.Sum(x => x.Price * x.Count);
-            if(rTotalValue != null)
+            if (rTotalValue != null)
                 rTotalValue.Text = totalValue.ToString("f2");
         }
 
@@ -383,10 +383,10 @@ namespace VPet_Simulator.Windows
         private void BtnDetailSell_Click(object sender, RoutedEventArgs e)
         {
             var item = _detailItem;
-            if (item is { IsSingle: false, Price: > 0, Count: > 0 } && mw.Items.Contains(item))
+            if (item is { IsSingle: false, Price: >= 0, Count: > 0 } && mw.Items.Contains(item))
             {
                 ApplyDetailCountFromText();
-                double proceeds = item.Price * _detailCount;
+                double proceeds = item.Price * _detailCount * .5;
                 item.Consume(mw, _detailCount);
                 mw.GameSavesData.GameSave.Money += proceeds;
             }
