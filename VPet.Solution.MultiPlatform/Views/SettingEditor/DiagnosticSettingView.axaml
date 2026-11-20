@@ -1,0 +1,111 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:m="using:VPet.Solution.MultiPlatform.Models.SettingEditor"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels.SettingEditor"
+  x:Class="VPet.Solution.MultiPlatform.Views.SettingEditor.DiagnosticSettingView"
+  x:DataType="vm:DiagnosticSettingViewModel"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d"
+>
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel>
+      <Border Classes="SettingGroup">
+        <StackPanel>
+          <TextBlock Classes="GroupHeader" Text="{ll:Str 自动超模MOD优化}" />
+          <Border Classes="SettingGroupItem">
+            <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+              <TextBlock
+                VerticalAlignment="Center"
+                Classes="Wrap"
+                Text="{ll:Str '对于超模内容,游戏会自动计算合理价格.&#10;如果未使用任何超模数据,数据菜单栏将会显示图标方便您进行炫耀数据.'}"
+              />
+              <Grid Grid.Row="1" MinHeight="46" ColumnDefinitions="*,Auto">
+                <TextBlock Classes="SettingName" Text="{ll:Str '自动计算合理价格'}" />
+                <ToggleSwitch
+                  x:Name="AutoCal"
+                  Grid.Column="1"
+                  IsChecked="{Binding DiagnosticSetting.AutoCal}"
+                  Classes="SwitchOnly"
+                />
+              </Grid>
+            </Grid>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <Border Classes="SettingGroup">
+        <StackPanel>
+          <TextBlock Classes="GroupHeader" Text="{ll:Str 诊断与反馈}" />
+          <Border Classes="SettingGroupItem">
+            <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+              <StackPanel Spacing="2">
+                <TextBlock
+                  FontSize="13"
+                  Classes="Wrap"
+                  Text="{ll:Str '选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.'}"
+                />
+                <WrapPanel Orientation="Horizontal">
+                  <TextBlock
+                    FontSize="13"
+                    VerticalAlignment="Center"
+                    Text="{ll:Str '无论选择哪个选项,游戏都可以安全正常地运行.'}"
+                  />
+                  <Button
+                    Margin="4,0,0,0"
+                    Padding="0"
+                    FontSize="13"
+                    Classes="Link"
+                    Command="{Binding HyperMoreInfoCommand}"
+                    Content="{ll:Str 获取有关这些设置的更多信息}"
+                  />
+                </WrapPanel>
+                <TextBlock FontSize="13">
+                  <Run FontWeight="Bold" Text="{ll:Str '当前存档Hash验证信息'}" />
+                  <Run FontWeight="Bold" Text=":" />
+                  <Run x:Name="HashCheckState" FontWeight="Bold" Text="{ll:Str 通过}" />
+                </TextBlock>
+              </StackPanel>
+              <Grid Grid.Row="1" MinHeight="50" ColumnDefinitions="*,Auto">
+                <TextBlock
+                  IsVisible="{Binding #Diagnosis.IsChecked}"
+                  Classes="SettingName Wrap"
+                  Text="{ll:Str '发送诊断数据:&#10;发送游戏存档, 包括饱腹,状态等各种游戏内数据. 可能会包括该游戏内存和CPU使用情况'}"
+                />
+                <TextBlock
+                  IsVisible="{Binding #Diagnosis.IsChecked, Converter={StaticResource BoolInverter}}"
+                  Classes="SettingName Wrap"
+                  Text="{ll:Str '不发送诊断数据:&#10;适用于启用修改器,修改过游戏数据等不符合分析数据条件. 或不希望提供游戏数据的玩家'}"
+                />
+                <ToggleSwitch
+                  Grid.Column="1"
+                  x:Name="Diagnosis"
+                  IsChecked="{Binding DiagnosticSetting.Diagnosis}"
+                  Classes="SwitchOnly"
+                />
+              </Grid>
+            </Grid>
+          </Border>
+
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="{ll:Str '反馈频率(每周期)'}" Classes="SettingName" />
+              <ComboBox
+                ItemsSource="{x:Static m:DiagnosticSettingModel.DiagnosisIntervals}"
+                Grid.Column="1"
+                x:Name="DiagnosisIntervals"
+                SelectedItem="{Binding DiagnosticSetting.DiagnosisInterval}"
+                Width="200"
+                Classes="Base"
+              />
+            </Grid>
+          </Border>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

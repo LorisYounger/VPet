@@ -1,0 +1,51 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:m="using:VPet.Solution.MultiPlatform.Models.SaveViewer"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels.SaveViewer"
+  x:Class="VPet.Solution.MultiPlatform.Views.SaveViewer.SaveStatisticView"
+  x:DataType="vm:SaveViewModel"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d"
+>
+  <Grid RowDefinitions="Auto,*">
+    <TextBox
+      x:Name="TextBox_Search"
+      PlaceholderText="{ll:Str 搜索统计}"
+      Text="{Binding SearchStatistic}"
+    />
+    <DataGrid
+      x:Name="Statistics"
+      Grid.Row="1"
+      Margin="0,5,0,0"
+      AutoGenerateColumns="False"
+      CanUserResizeColumns="True"
+      IsReadOnly="True"
+      ItemsSource="{Binding Statistics.FilteredList}"
+    >
+      <DataGrid.Styles>
+        <Style Selector="DataGridRow" x:DataType="m:StatisticModel">
+          <Setter Property="ToolTip.Tip" Value="{Binding Id}" />
+        </Style>
+      </DataGrid.Styles>
+      <DataGrid.Columns>
+        <DataGridTextColumn
+          Width="300"
+          Binding="{Binding Name}"
+          Header="{ll:Str 名称}"
+          IsReadOnly="True"
+        />
+        <DataGridTextColumn
+          Width="200"
+          Binding="{Binding Value}"
+          Header="{ll:Str 值}"
+          IsReadOnly="True"
+        />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

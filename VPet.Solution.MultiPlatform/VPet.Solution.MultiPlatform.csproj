@@ -1,0 +1,92 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>VPet.Solution.MultiPlatform</RootNamespace>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VPet_Simulator.Core.MutiPlatform\VPet_Simulator.Core.MutiPlatform.csproj" />
+  </ItemGroup>
+
+  <!-- 链接平台无关的存档与设置共享源码, 与 VPet-Simulator.MutiPlatform 保持一致 -->
+  <ItemGroup>
+    <Compile
+      Include="..\VPet-Simulator.Windows.Interface\Base\Save\GameSave_VPet.cs"
+      Link="Interface\Base\Save\GameSave_VPet.cs"
+    />
+    <Compile
+      Include="..\VPet-Simulator.Windows.Interface\Base\Save\GameSave_v2.cs"
+      Link="Interface\Base\Save\GameSave_v2.cs"
+    />
+    <Compile
+      Include="..\VPet-Simulator.Windows.Interface\Base\Save\ISetting.cs"
+      Link="Interface\Base\Save\ISetting.cs"
+    />
+    <Compile
+      Include="..\VPet-Simulator.Windows.Interface\Base\Save\Statistics.cs"
+      Link="Interface\Base\Save\Statistics.cs"
+    />
+    <Compile
+      Include="..\VPet-Simulator.MutiPlatform\Interface\ISetting.cs"
+      Link="Interface\ISetting.cs"
+    />
+    <Compile
+      Include="..\VPet-Simulator.MutiPlatform\Interface\GameSave_v2.MutiPlatform.cs"
+      Link="Interface\GameSave_v2.MutiPlatform.cs"
+    />
+    <Using Include="LinePutScript.Localization" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.1.6" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.6" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.6" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.6" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.1" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <PackageReference Include="HanumanInstitute.MvvmDialogs" Version="2.4.0" />
+    <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.4.0" />
+    <PackageReference Include="HKW.Mapper" Version="0.3.7" />
+    <PackageReference Include="HKW.Utils" Version="2.0.0" />
+    <PackageReference Include="HKW.CommonValueConverters" Version="0.2.2" />
+    <PackageReference Include="HKW.CommonValueConverters.Avalonia" Version="0.2.2" />
+    <PackageReference Include="HKW.MVVM" Version="0.2.1" />
+    <PackageReference Include="HKW.MVVM.SourceGenerator" Version="0.2.0" />
+    <PackageReference Include="Fody" Version="6.9.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+  <Target Name="DisableMvvmToolkitSourceGenerators" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <_MvvmToolkitAnalyzers
+        Include="@(Analyzer)"
+        Condition="$([System.String]::Copy('%(Analyzer.Filename)').Contains('CommunityToolkit.Mvvm.SourceGenerators'))"
+      />
+
+      <Analyzer Remove="@(_MvvmToolkitAnalyzers)" />
+    </ItemGroup>
+  </Target>
+</Project>

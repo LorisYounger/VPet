@@ -1,0 +1,79 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:m="using:VPet.Solution.MultiPlatform.Models.SettingEditor"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels.SettingEditor"
+  x:Class="VPet.Solution.MultiPlatform.Views.SettingEditor.CustomizedSettingView"
+  x:DataType="vm:CustomizedSettingViewModel"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d"
+>
+  <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <StackPanel Spacing="2" Margin="0,0,0,6">
+      <TextBlock FontSize="18" FontWeight="Bold" Text="{ll:Str 自定义链接}" />
+      <TextBlock
+        Classes="Wrap"
+        Text="{ll:Str '在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能'}"
+      />
+      <WrapPanel Orientation="Horizontal">
+        <TextBlock VerticalAlignment="Center" Text="{ll:Str '键盘快捷键编写方法请参考'}" />
+        <Button
+          Margin="4,0,0,0"
+          Padding="0"
+          Classes="Link"
+          Command="{Binding SendKeyCommand}"
+          Content="{ll:Str '键盘快捷键 通用注解'}"
+        />
+      </WrapPanel>
+    </StackPanel>
+    <Grid Grid.Row="1" ColumnDefinitions="*,*" Margin="0,0,0,6">
+      <Button
+        Padding="20,5,20,5"
+        x:Name="AddLink"
+        Command="{Binding AddLinkCommand}"
+        Content="{ll:Str 添加新链接}"
+        Classes="Base"
+      />
+      <Button
+        Grid.Column="1"
+        Padding="20,5,20,5"
+        x:Name="ClearLinks"
+        Command="{Binding ClearLinksCommand}"
+        Content="{ll:Str 清空全部}"
+        Classes="Base"
+      />
+    </Grid>
+    <TextBox
+      x:Name="SearchLink"
+      Grid.Row="2"
+      Margin="0,0,0,6"
+      Text="{Binding SearchLink}"
+      PlaceholderText="{ll:Str 搜索名称}"
+    />
+    <DataGrid
+      Grid.Row="3"
+      AutoGenerateColumns="False"
+      CanUserResizeColumns="True"
+      x:Name="Links"
+      ItemsSource="{Binding Links.FilteredList}"
+    >
+      <DataGrid.ContextMenu>
+        <ContextMenu>
+          <MenuItem
+            Command="{Binding RemoveLinkCommand}"
+            CommandParameter="{Binding #Links.SelectedItem}"
+            Header="{ll:Str 删除}"
+          />
+        </ContextMenu>
+      </DataGrid.ContextMenu>
+      <DataGrid.Columns>
+        <DataGridTextColumn Width="*" Binding="{Binding Name}" Header="{ll:Str 名称}" />
+        <DataGridTextColumn Width="2*" Binding="{Binding Link}" Header="{ll:Str 链接}" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

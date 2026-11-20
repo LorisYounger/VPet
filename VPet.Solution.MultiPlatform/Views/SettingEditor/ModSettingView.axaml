@@ -1,0 +1,184 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:m="using:VPet.Solution.MultiPlatform.Models.SettingEditor"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels.SettingEditor"
+  x:Class="VPet.Solution.MultiPlatform.Views.SettingEditor.ModSettingView"
+  x:DataType="vm:ModSettingViewModel"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d"
+>
+  <Grid ColumnDefinitions="220,8,*">
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
+      <TextBox
+        x:Name="SearchMod"
+        Text="{Binding SearchMod}"
+        PlaceholderText="{ll:Str 搜索模组}"
+        Margin="0,0,0,6"
+      />
+      <DataGrid
+        ItemsSource="{Binding Mods.FilteredList}"
+        SelectedItem="{Binding CurrentMod}"
+        x:Name="Mods"
+        Grid.Row="1"
+        AutoGenerateColumns="False"
+        IsReadOnly="True"
+      >
+        <DataGrid.Columns>
+          <DataGridTextColumn Binding="{Binding State}" Header="{ll:Str 状态}" IsReadOnly="True" />
+          <DataGridTextColumn Binding="{Binding Name}" Header="{ll:Str 名称}" IsReadOnly="True" />
+        </DataGrid.Columns>
+      </DataGrid>
+      <Button
+        Grid.Row="2"
+        Margin="0,6,0,2"
+        x:Name="ClearFailMods"
+        HorizontalAlignment="Stretch"
+        Command="{Binding ClearFailModsCommand}"
+        Content="{ll:Str 清除失效模组}"
+        Classes="Base"
+      />
+      <Button
+        Grid.Row="3"
+        Margin="0,2,0,0"
+        HorizontalAlignment="Stretch"
+        x:Name="ClearMods"
+        Command="{Binding ClearModsCommand}"
+        Content="{ll:Str 清除全部模组}"
+        Classes="Base"
+      />
+    </Grid>
+
+    <Grid
+      Grid.Column="2"
+      RowDefinitions="Auto,*,*"
+      IsEnabled="{Binding CurrentMod, Converter={StaticResource NullToFalseConverter}}"
+    >
+      <Grid ColumnDefinitions="Auto,*">
+        <Image
+          Width="150"
+          Height="150"
+          Source="{Binding CurrentMod.Image}"
+          Stretch="UniformToFill"
+        />
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+          <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*">
+            <Label Margin="0" Content="{ll:Str '模组名称:'}" Classes="Base" />
+            <TextBlock Grid.Column="1" Classes="LeftCenter" Text="{Binding CurrentMod.Name}" />
+            <Label Margin="0" Grid.Row="1" Content="{ll:Str '作者:'}" Classes="Base" />
+            <TextBlock
+              Grid.Row="1"
+              Grid.Column="1"
+              Classes="LeftCenter"
+              Text="{Binding CurrentMod.Author}"
+            />
+            <Label Margin="0" Grid.Row="2" Content="{ll:Str '模组版本:'}" Classes="Base" />
+            <TextBlock
+              Grid.Row="2"
+              Grid.Column="1"
+              Classes="LeftCenter"
+              Text="{Binding CurrentMod.ModVersion}"
+            />
+            <Label Margin="0" Grid.Row="3" Content="{ll:Str '游戏版本:'}" Classes="Base" />
+            <TextBlock
+              Grid.Row="3"
+              Grid.Column="1"
+              Classes="LeftCenter"
+              Text="{Binding CurrentMod.GameVersion}"
+            />
+            <Label Margin="0" Grid.Row="4" Content="{ll:Str '模组路径:'}" Classes="Base" />
+            <TextBlock
+              Grid.Row="4"
+              Grid.Column="1"
+              Classes="LeftCenter Wrap"
+              Text="{Binding CurrentMod.ModPath}"
+            />
+          </Grid>
+        </ScrollViewer>
+      </Grid>
+
+      <Grid Grid.Row="1" RowDefinitions="Auto,*">
+        <Label
+          HorizontalAlignment="Left"
+          Content="{ll:Str MOD介绍}"
+          FontSize="18"
+          FontWeight="Bold"
+          Classes="Base"
+        />
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+          <TextBlock
+            x:Name="GameInfo"
+            FontSize="14"
+            Classes="Wrap"
+            Text="{Binding CurrentMod.Description}"
+          />
+        </ScrollViewer>
+      </Grid>
+
+      <Grid Grid.Row="2" ColumnDefinitions="*,*">
+        <Grid RowDefinitions="Auto,*">
+          <Label
+            HorizontalAlignment="Left"
+            Content="{ll:Str 内容}"
+            FontSize="18"
+            FontWeight="Bold"
+            Classes="Base"
+          />
+          <ItemsControl Grid.Row="1" ItemsSource="{Binding CurrentMod.Tags}" />
+        </Grid>
+
+        <Grid
+          Grid.Column="1"
+          RowDefinitions="Auto,*"
+          IsEnabled="{Binding CurrentMod.IsEnabled, Converter={StaticResource NullToFalseConverter}, FallbackValue=False}"
+        >
+          <Label
+            HorizontalAlignment="Left"
+            Content="{ll:Str 操作}"
+            FontSize="18"
+            FontWeight="Bold"
+            Classes="Base"
+          />
+          <Grid Grid.Row="1" ColumnDefinitions="*,*">
+            <StackPanel Spacing="6">
+              <ToggleSwitch
+                x:Name="ModIsEnabled"
+                Content="{ll:Str 启用模组}"
+                IsChecked="{Binding CurrentMod.IsEnabled}"
+              />
+              <ToggleSwitch
+                x:Name="ModIsPass"
+                IsCheckedChanged="ModIsPass_IsCheckedChanged"
+                Content="{ll:Str 启用代码插件}"
+                IsChecked="{Binding CurrentMod.IsPass, Mode=OneWay}"
+                IsEnabled="{Binding CurrentMod.IsMsg, FallbackValue=False}"
+              />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Spacing="4">
+              <Button
+                x:Name="OpenModPath"
+                HorizontalAlignment="Stretch"
+                CommandParameter="{Binding CurrentMod}"
+                Content="{ll:Str '打开所在文件夹'}"
+                Command="{Binding OpenModPathCommand}"
+                Classes="Base"
+              />
+              <Button
+                x:Name="OpenSteamCommunity"
+                HorizontalAlignment="Stretch"
+                CommandParameter="{Binding CurrentMod}"
+                Command="{Binding OpenSteamCommunityCommand}"
+                Content="{ll:Str 打开创意工坊页面}"
+                Classes="Base"
+              />
+            </StackPanel>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

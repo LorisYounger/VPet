@@ -1,0 +1,237 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:core="using:VPet_Simulator.Core"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:m="using:VPet.Solution.MultiPlatform.Models.SettingEditor"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels.SettingEditor"
+  x:Class="VPet.Solution.MultiPlatform.Views.SettingEditor.InteractiveSettingView"
+  x:DataType="vm:InteractiveSettingViewModel"
+  d:DesignHeight="800"
+  d:DesignWidth="800"
+  mc:Ignorable="d"
+>
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel>
+      <Border Classes="SettingGroup">
+        <StackPanel>
+          <TextBlock Classes="GroupHeader" Text="{ll:Str '桌宠设置'}" />
+          <Border Classes="SettingGroupItem">
+            <Grid RowDefinitions="Auto,Auto">
+              <Grid
+                MinHeight="46"
+                ColumnDefinitions="*,Auto"
+                ToolTip.Tip="{ll:Str '启用数据计算,桌宠会有状态变化,需要按时投喂等.&#10;如果嫌麻烦可以关掉'}"
+              >
+                <TextBlock Text="{ll:Str 启用数据计算}" Classes="SettingName" />
+                <ToggleSwitch
+                  x:Name="EnableFunction"
+                  IsChecked="{Binding InteractiveSetting.EnableFunction}"
+                  Grid.Column="1"
+                  Classes="SwitchOnly"
+                />
+              </Grid>
+              <Grid
+                Grid.Row="1"
+                MinHeight="46"
+                ColumnDefinitions="*,Auto"
+                ToolTip.Tip="{ll:Str '关闭数据计算时桌宠显示的状态'}"
+              >
+                <TextBlock Text="{ll:Str '固定桌宠状态'}" Classes="SettingName" />
+                <ComboBox
+                  x:Name="CalFunStates"
+                  Grid.Column="1"
+                  Width="200"
+                  ItemsSource="{x:Static m:InteractiveSettingModel.CalFunStates}"
+                  SelectedItem="{Binding InteractiveSetting.CalFunState}"
+                  IsEnabled="{Binding #EnableFunction.IsChecked, Converter={StaticResource BoolInverter}}"
+                  Classes="Base"
+                >
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="core:IGameSave+ModeType">
+                      <TextBlock Text="{Binding Converter={StaticResource TranslateConverter}}" />
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+              </Grid>
+            </Grid>
+          </Border>
+
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="{ll:Str '长按间隔(毫秒)'}" Classes="SettingName" />
+              <NumericUpDown
+                x:Name="PressLength"
+                Grid.Column="1"
+                Width="140"
+                Increment="1"
+                Maximum="5000"
+                Minimum="50"
+                Value="{Binding InteractiveSetting.PressLength, Converter={StaticResource IntToDecimalConverter}}"
+                Classes="Base"
+              />
+            </Grid>
+          </Border>
+
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid
+              ColumnDefinitions="*,Auto"
+              ToolTip.Tip="{ll:Str '数据计算和互动计算时间间隔,间隔越短需要互动的频率可能会增加.&#10;间隔越大越不容易打扰到当前工作'}"
+            >
+              <TextBlock Text="{ll:Str '计算间隔(秒)'}" Classes="SettingName" />
+              <NumericUpDown
+                x:Name="LogicInterval"
+                Grid.Column="1"
+                Width="140"
+                Increment="0.5"
+                Minimum="5"
+                Maximum="2147483647"
+                Value="{Binding InteractiveSetting.LogicInterval, Converter={StaticResource DoubleToDecimalConverter}}"
+                Classes="Base"
+              />
+            </Grid>
+          </Border>
+
+          <Border MinHeight="60" Classes="SettingGroupItem">
+            <Grid
+              ColumnDefinitions="*,Auto"
+              ToolTip.Tip="{ll:Str '互动周期决定在交互结束后大约经历多少计算间隔后再次进行自主行动'}"
+            >
+              <Grid RowDefinitions="Auto,Auto">
+                <TextBlock Text="{ll:Str '互动周期(秒)'}" Classes="SettingName" />
+                <TextBlock Grid.Row="1" HorizontalAlignment="Left" Margin="0,2,0,0" Classes="Wrap">
+                  <Run Text="{ll:Str 每分钟计算}" />
+                  <Run x:Name="rTimeMinute" Text="4" />
+                  <Run Text="{ll:Str 次数值变化}" />
+                  <Run Text="{ll:Str 大约}" />
+                  <Run x:Name="RInter" Text="4" />
+                  <Run Text="{ll:Str '分钟左右主动进行一次互动 (走路发呆爬墙等) '}" />
+                </TextBlock>
+              </Grid>
+              <NumericUpDown
+                x:Name="InteractionCycle"
+                Grid.Column="1"
+                Width="140"
+                Increment="1"
+                Maximum="1000"
+                Minimum="30"
+                Value="{Binding InteractiveSetting.InteractionCycle, Converter={StaticResource IntToDecimalConverter}}"
+                Classes="Base"
+              />
+            </Grid>
+          </Border>
+
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid
+              ColumnDefinitions="*,Auto"
+              ToolTip.Tip="{ll:Str '启用移动互动,桌宠会在屏幕上乱动,移动互动概率为普通互动的一半.&#10;如果嫌麻烦可以关掉'}"
+            >
+              <TextBlock Text="{ll:Str 启用桌宠移动}" Classes="SettingName" />
+              <ToggleSwitch
+                x:Name="AllowMove"
+                Grid.Column="1"
+                IsChecked="{Binding InteractiveSetting.AllowMove}"
+                Classes="SwitchOnly"
+              />
+            </Grid>
+          </Border>
+
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid
+              ColumnDefinitions="*,Auto"
+              ToolTip.Tip="{ll:Str '启动窗口切换，桌宠将能自动切换窗口'}"
+            >
+              <TextBlock Text="{ll:Str 自动切换窗口}" Classes="SettingName" />
+              <ToggleSwitch
+                x:Name="AutoChangeWindow"
+                Grid.Column="1"
+                IsChecked="{Binding InteractiveSetting.AutoChangeWindow}"
+                Classes="SwitchOnly"
+              />
+            </Grid>
+          </Border>
+
+          <Border Classes="SettingGroupItem">
+            <Grid RowDefinitions="Auto,Auto">
+              <Grid
+                MinHeight="46"
+                ColumnDefinitions="*,Auto"
+                ToolTip.Tip="{ll:Str '当玩家在指定时间未对桌宠进行交互的时候,智能禁用移动功能&#10;将在下次交互时解除'}"
+              >
+                <TextBlock Text="{ll:Str 启用桌宠智能移动}" Classes="SettingName" />
+                <ToggleSwitch
+                  x:Name="SmartMove"
+                  Grid.Column="1"
+                  IsChecked="{Binding InteractiveSetting.SmartMove}"
+                  IsEnabled="{Binding #AllowMove.IsChecked}"
+                  Classes="SwitchOnly"
+                />
+              </Grid>
+              <Grid
+                Grid.Row="1"
+                MinHeight="46"
+                ColumnDefinitions="*,Auto"
+                ToolTip.Tip="{ll:Str 智能移动判断时间间隔}"
+              >
+                <TextBlock Text="{ll:Str 智能移动时间间隔}" Classes="SettingName" />
+                <ComboBox
+                  x:Name="SmartMoveIntervals"
+                  Grid.Column="1"
+                  Width="200"
+                  ItemsSource="{x:Static m:InteractiveSettingModel.SmartMoveIntervals}"
+                  SelectedItem="{Binding InteractiveSetting.SmartMoveInterval}"
+                  IsEnabled="{Binding #SmartMove.IsChecked}"
+                  Classes="Base"
+                />
+              </Grid>
+            </Grid>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <Border Classes="SettingGroup">
+        <StackPanel>
+          <TextBlock Classes="GroupHeader" Text="{ll:Str '音乐识别设置'}" />
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid
+              ColumnDefinitions="*,Auto"
+              ToolTip.Tip="{ll:Str 当实时播放音量达到该值时运行音乐动作}"
+            >
+              <TextBlock Text="{ll:Str 触发音量}" Classes="SettingName" />
+              <NumericUpDown
+                Grid.Column="1"
+                Width="140"
+                Increment="1"
+                Maximum="100"
+                Minimum="0"
+                x:Name="MusicCatch"
+                Value="{Binding InteractiveSetting.MusicCatch, Converter={StaticResource IntToDecimalConverter}}"
+                Classes="Base"
+              />
+            </Grid>
+          </Border>
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid
+              ColumnDefinitions="*,Auto"
+              ToolTip.Tip="{ll:Str 当实时播放音量达到该值时运行特殊音乐动作}"
+            >
+              <TextBlock Text="{ll:Str 高潮音量}" Classes="SettingName" />
+              <NumericUpDown
+                x:Name="MusicMax"
+                Grid.Column="1"
+                Width="140"
+                Increment="1"
+                Minimum="0"
+                Maximum="100"
+                Value="{Binding InteractiveSetting.MusicMax, Converter={StaticResource IntToDecimalConverter}}"
+                Classes="Base"
+              />
+            </Grid>
+          </Border>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

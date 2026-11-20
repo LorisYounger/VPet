@@ -1,0 +1,177 @@
+using System.ComponentModel;
+using Avalonia;
+using CommunityToolkit.Mvvm.ComponentModel;
+using HKW.HKWUtils.Observable;
+using HKW.Mapper;
+using HKW.MVVM;
+using LinePutScript.Localization;
+
+namespace VPet.Solution.MultiPlatform.Models.SettingEditor;
+
+[MapTarget(typeof(Setting))]
+[MapTarget(typeof(GraphicsSettingModel))]
+public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
+{
+    public GraphicsSettingModel()
+    {
+        this.WhenAnyValue(x => x.IsBiggerScreen)
+            .Subscribe(value => ZoomLevelMaximum = value ? 8 : 3);
+    }
+
+    [MapIgnoreProperty]
+    public SubSettingModelType ModelType => SubSettingModelType.Graphics;
+
+    /// <inheritdoc cref="Setting.ZoomLevel"/>
+    [ObservableProperty]
+    [DefaultValue(1)]
+    [MapProperty(typeof(Setting), nameof(ZoomLevel), typeof(ZoomLevelToStorageZoomLevel))]
+    public double ZoomLevel { get; set; } = 1;
+
+    [ObservableProperty]
+    [DefaultValue(0.5)]
+    [MapIgnoreProperty]
+    public double ZoomLevelMinimum { get; set; } = 0.5;
+
+    [ObservableProperty]
+    [DefaultValue(3)]
+    [MapIgnoreProperty]
+    public double ZoomLevelMaximum { get; set; } = 3;
+
+    /// <inheritdoc cref="Setting.Resolution"/>
+    [ObservableProperty]
+    [DefaultValue(1000)]
+    public int Resolution { get; set; } = 1000;
+
+    [ObservableProperty]
+    [DefaultValue(1920)]
+    [MapIgnoreProperty]
+    public int ResolutionMaximum { get; set; } = 1920;
+
+    [ObservableProperty]
+    [DefaultValue(200)]
+    [MapIgnoreProperty]
+    public int ResolutionMinimum { get; set; } = 200;
+
+    /// <inheritdoc cref="Setting.IsBiggerScreen"/>
+    [ObservableProperty]
+    public bool IsBiggerScreen { get; set; }
+
+    /// <inheritdoc cref="Setting.TopMost"/>
+    [ObservableProperty]
+    public bool TopMost { get; set; }
+
+    /// <inheritdoc cref="Setting.HitThrough"/>
+    [ObservableProperty]
+    public bool HitThrough { get; set; }
+
+    /// <inheritdoc cref="Setting.Language"/>
+    [ObservableProperty]
+    public string Language { get; set; } = string.Empty;
+
+    public static string[] Languages => LocalizeCore.AvailableCultures;
+
+    /// <inheritdoc cref="Setting.Font"/>
+    [ObservableProperty]
+    public string Font { get; set; } = string.Empty;
+
+    public static List<string> Fonts => ModSettingModel.Fonts;
+
+    /// <inheritdoc cref="Setting.Theme"/>
+    [ObservableProperty]
+    public string Theme { get; set; } = string.Empty;
+
+    public static List<string> Themes => ModSettingModel.Themes;
+
+    /// <inheritdoc cref="Setting.PetGraph"/>
+    [ObservableProperty]
+    public string PetGraph { get; set; } = string.Empty;
+
+    public static List<string> PetGraphs => ModSettingModel.PetGraphs;
+
+    /// <inheritdoc cref="Setting.StartUPBoot"/>
+    [ObservableProperty]
+    public bool StartUPBoot { get; set; }
+
+    /// <inheritdoc cref="Setting.StartUPBootSteam"/>
+    [ObservableProperty]
+    public bool StartUPBootSteam { get; set; }
+
+    /// <inheritdoc cref="Setting.StartRecordLast"/>
+    [ObservableProperty]
+    [DefaultValue(true)]
+    public bool StartRecordLast { get; set; } = true;
+
+    /// <inheritdoc cref="Setting.StartRecordPoint"/>
+    [ObservableProperty]
+    [MapProperty(typeof(Setting), typeof(ObservablePointToPointConverter))]
+    public ObservablePoint<double> StartRecordPoint { get; set; } = new();
+
+    /// <inheritdoc cref="Setting.HideFromTaskControl"/>
+    [ObservableProperty]
+    public bool HideFromTaskControl { get; set; }
+
+    /// <inheritdoc cref="Setting.MessageBarOutside"/>
+    [ObservableProperty]
+    public bool MessageBarOutside { get; set; }
+
+    /// <inheritdoc cref="Setting.PetHelper"/>
+    [ObservableProperty]
+    public bool PetHelper { get; set; }
+
+    /// <inheritdoc cref="Setting.PetHelpLeft"/>
+    [ObservableProperty]
+    public double PetHelpLeft { get; set; }
+
+    /// <inheritdoc cref="Setting.PetHelpTop"/>
+    [ObservableProperty]
+    public double PetHelpTop { get; set; }
+
+    /// <inheritdoc cref="Setting.Opacity"/>
+    [ObservableProperty]
+    [DefaultValue(1)]
+    public double Opacity { get; set; } = 1;
+
+    /// <inheritdoc cref="Setting.OpacityMain"/>
+    [ObservableProperty]
+    public bool OpacityMain { get; set; }
+
+    /// <inheritdoc cref="Setting.OpacityHitThrough"/>
+    [ObservableProperty]
+    public bool OpacityHitThrough { get; set; }
+
+    public void Load(Setting setting)
+    {
+        this.MapFrom(setting);
+    }
+
+    public void Save(Setting setting)
+    {
+        this.MapTo(setting);
+    }
+}
+
+public class ObservablePointToPointConverter : IMapConverter<ObservablePoint<double>, Point>
+{
+    public Point Convert(ObservablePoint<double> value, MapConvertArgs args)
+    {
+        return new Point(value.X, value.Y);
+    }
+
+    public ObservablePoint<double> ConvertBack(Point value, MapConvertArgs args)
+    {
+        return new ObservablePoint<double>(value.X, value.Y);
+    }
+}
+
+public class ZoomLevelToStorageZoomLevel : IMapConverter<double, double>
+{
+    public double Convert(double value, MapConvertArgs args)
+    {
+        return value / 2;
+    }
+
+    public double ConvertBack(double value, MapConvertArgs args)
+    {
+        return value * 2;
+    }
+}

@@ -1,0 +1,110 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels.SaveViewer"
+  x:Class="VPet.Solution.MultiPlatform.Views.SaveViewer.SaveDataView"
+  x:DataType="vm:SaveViewModel"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d"
+>
+  <ScrollViewer HorizontalScrollBarVisibility="Auto">
+    <StackPanel>
+      <Border Height="40" Classes="SettingItem">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 保存日期}" Classes="SettingName" />
+          <TextBlock
+            Grid.Column="1"
+            Classes="LeftCenter"
+            Text="{Binding CurrentSave.DateSaved, StringFormat='yyyy/MM/dd HH:mm:ss'}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Classes="SettingItem">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 宠物名称}" Classes="SettingName" />
+          <TextBlock Grid.Column="1" Classes="LeftCenter" Text="{Binding CurrentSave.PetName}" />
+        </Grid>
+      </Border>
+      <Border Height="40" Classes="SettingItem">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 模式}" Classes="SettingName" />
+          <TextBlock
+            Grid.Column="1"
+            Classes="LeftCenter"
+            Text="{Binding CurrentSave.Mode, Converter={StaticResource TranslateConverter}}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Classes="SettingItem">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 等级}" Classes="SettingName" />
+          <TextBlock Grid.Column="1" Classes="LeftCenter" Text="{Binding CurrentSave.Level}" />
+        </Grid>
+      </Border>
+      <Border Height="40" Classes="SettingItem">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 金钱}" Classes="SettingName" />
+          <TextBlock
+            Grid.Column="1"
+            Classes="LeftCenter"
+            Text="{Binding CurrentSave.Money, StringFormat=F2}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Classes="SettingItem">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 经验}" Classes="SettingName" />
+          <TextBlock
+            Grid.Column="1"
+            Classes="LeftCenter"
+            Text="{Binding CurrentSave.Exp, StringFormat=F2}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Classes="SettingItem">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 体力}" Classes="SettingName" />
+          <TextBlock
+            Grid.Column="1"
+            Classes="LeftCenter"
+            Text="{Binding CurrentSave.Strength, StringFormat=F2}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Classes="SettingItem">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 心情}" Classes="SettingName" />
+          <TextBlock
+            Grid.Column="1"
+            Classes="LeftCenter"
+            Text="{Binding CurrentSave.Feeling, StringFormat=F2}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Classes="SettingItem">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 饱腹度}" Classes="SettingName" />
+          <TextBlock
+            Grid.Column="1"
+            Classes="LeftCenter"
+            Text="{Binding CurrentSave.StrengthFood, StringFormat=F2}"
+          />
+        </Grid>
+      </Border>
+      <Border Height="40" Classes="SettingItem">
+        <Grid ColumnDefinitions="*,Auto" Height="40">
+          <TextBlock Text="{ll:Str 口渴度}" Classes="SettingName" />
+          <TextBlock
+            Grid.Column="1"
+            Classes="LeftCenter"
+            Text="{Binding CurrentSave.StrengthDrink, StringFormat=F2}"
+          />
+        </Grid>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

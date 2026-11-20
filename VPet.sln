@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.MutiPlatform
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet-Simulator.Unified", "VPet-Simulator.Unified\VPet-Simulator.Unified.csproj", "{3A32FA4C-A134-49B9-A32C-741819C88735}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPet.Solution.MultiPlatform", "VPet.Solution.MultiPlatform\VPet.Solution.MultiPlatform.csproj", "{0D147D25-D83A-4F25-AF59-18494CFE29C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -144,6 +146,18 @@ Global
 		{3A32FA4C-A134-49B9-A32C-741819C88735}.Release|x64.Build.0 = Release|Any CPU
 		{3A32FA4C-A134-49B9-A32C-741819C88735}.Release|x86.ActiveCfg = Release|Any CPU
 		{3A32FA4C-A134-49B9-A32C-741819C88735}.Release|x86.Build.0 = Release|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Debug|x64.Build.0 = Debug|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Debug|x86.Build.0 = Debug|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Release|x64.ActiveCfg = Release|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Release|x64.Build.0 = Release|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Release|x86.ActiveCfg = Release|Any CPU
+		{0D147D25-D83A-4F25-AF59-18494CFE29C8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

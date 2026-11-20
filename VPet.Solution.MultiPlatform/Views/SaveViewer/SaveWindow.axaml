@@ -1,0 +1,89 @@
+<Window
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:local="using:VPet.Solution.MultiPlatform"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:v="using:VPet.Solution.MultiPlatform.Views.SaveViewer"
+  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels.SaveViewer"
+  x:Class="VPet.Solution.MultiPlatform.Views.SaveViewer.SaveWindow"
+  x:DataType="vm:SaveViewModel"
+  Title="{ll:Str 'VPET 存档查看器'}"
+  Icon="/Assets/icon.ico"
+  Width="1000"
+  Height="600"
+  MinWidth="400"
+  MinHeight="200"
+  WindowStartupLocation="CenterScreen"
+  mc:Ignorable="d"
+>
+  <Grid ColumnDefinitions="400,Auto,*">
+    <Grid Margin="10" RowDefinitions="Auto,*">
+      <TextBox PlaceholderText="{ll:Str 搜索存档}" Text="{Binding SearchSave}" Margin="0,0,0,6" />
+      <DataGrid
+        x:Name="Saves"
+        Grid.Row="1"
+        AutoGenerateColumns="False"
+        CanUserResizeColumns="True"
+        IsReadOnly="True"
+        ItemsSource="{Binding Saves.FilteredList}"
+        SelectedItem="{Binding CurrentSave}"
+      >
+        <DataGrid.ContextMenu>
+          <ContextMenu>
+            <MenuItem
+              Command="{Binding OpenFileCommand}"
+              CommandParameter="{Binding CurrentSave}"
+              Header="{ll:Str 打开文件}"
+            />
+            <MenuItem
+              Command="{Binding OpenFileInExplorerCommand}"
+              CommandParameter="{Binding CurrentSave}"
+              Header="{ll:Str 从资源管理器打开文件}"
+            />
+          </ContextMenu>
+        </DataGrid.ContextMenu>
+        <DataGrid.Columns>
+          <DataGridTextColumn Binding="{Binding Name}" Header="{ll:Str 名称}" IsReadOnly="True" />
+          <DataGridTextColumn
+            Binding="{Binding DateSaved, StringFormat='yyyy/MM/dd HH:mm:ss'}"
+            Header="{ll:Str 保存时间}"
+            IsReadOnly="True"
+          />
+          <DataGridTextColumn
+            Binding="{Binding TotalTime}"
+            Header="{ll:Str 游玩时长}"
+            IsReadOnly="True"
+          />
+          <DataGridTextColumn
+            Binding="{Binding HashChecked, Converter={StaticResource TranslateConverter}}"
+            Header="{ll:Str 哈希}"
+            IsReadOnly="True"
+          />
+        </DataGrid.Columns>
+      </DataGrid>
+    </Grid>
+    <Border Grid.Column="1" Width="2" Background="#14000000" />
+    <Grid
+      Margin="10"
+      Grid.Column="2"
+      RowDefinitions="Auto,*"
+      IsEnabled="{Binding CurrentSave, Converter={StaticResource NullToFalseConverter}}"
+    >
+      <ListBox x:Name="Views" SelectedIndex="0" Classes="HorizontalNav" Margin="0,0,0,6">
+        <ListBox.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal" />
+          </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+        <ListBoxItem Content="{ll:Str 数据}" />
+        <ListBoxItem Content="{ll:Str 统计}" />
+      </ListBox>
+      <Grid Grid.Row="1" local:PanelHelper.ShowChildByIndex="{Binding #Views.SelectedIndex}">
+        <v:SaveDataView />
+        <v:SaveStatisticView IsVisible="False" />
+      </Grid>
+    </Grid>
+  </Grid>
+</Window>

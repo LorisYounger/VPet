@@ -1,0 +1,118 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:m="using:VPet.Solution.MultiPlatform.Models.SettingEditor"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels.SettingEditor"
+  x:Class="VPet.Solution.MultiPlatform.Views.SettingEditor.SystemSettingView"
+  x:DataType="vm:SystemSettingViewModel"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d"
+>
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel>
+      <Border Classes="SettingGroup">
+        <StackPanel>
+          <TextBlock Classes="GroupHeader" Text="{ll:Str 保存设置}" />
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock
+                Text="{ll:Str '自动保存频率(分钟)'}"
+                Classes="SettingName"
+                ToolTip.Tip="{ll:Str 在指定时间后自动保存游戏数据}"
+              />
+              <ComboBox
+                x:Name="AutoSaveIntervals"
+                ItemsSource="{x:Static m:SystemSettingModel.AutoSaveIntervals}"
+                Grid.Column="1"
+                Width="200"
+                SelectedItem="{Binding SystemSetting.AutoSaveInterval}"
+                Classes="Base"
+              />
+            </Grid>
+          </Border>
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Classes="SettingName" Text="{ll:Str 备份数量}" />
+              <NumericUpDown
+                x:Name="BackupSaveMaxNum"
+                Grid.Column="1"
+                Minimum="1"
+                Maximum="2147483647"
+                Increment="1"
+                Width="140"
+                Classes="Base"
+                Value="{Binding SystemSetting.BackupSaveMaxNum, Converter={StaticResource IntToDecimalConverter}}"
+              />
+            </Grid>
+          </Border>
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Classes="SettingName" Text="{ll:Str '清理缓存'}" />
+              <Button
+                x:Name="CacheClear"
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                Width="150"
+                Content="{ll:Str 清理}"
+                Classes="Base"
+                ToolTip.Tip="{ll:Str '清理缓存的动画，声音文件'}"
+                Command="{Binding CacheCleanCommand}"
+              />
+            </Grid>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <Border Classes="SettingGroup">
+        <StackPanel>
+          <TextBlock Classes="GroupHeader" Text="{ll:Str 聊天设置}" />
+          <!-- TODO: SystemSettingModel 聊天设置数据暂未实现 -->
+          <Border Classes="SettingGroupItem">
+            <StackPanel Spacing="6">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Classes="SettingName" Text="{ll:Str '关闭聊天框'}" />
+                <RadioButton x:Name="RBCGPTClose" Grid.Column="1" GroupName="cgpttype" />
+              </Grid>
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Classes="SettingName" Text="{ll:Str '使用桌宠选项式聊天功能'}" />
+                <RadioButton
+                  x:Name="RBCGPTUseLB"
+                  GroupName="cgpttype"
+                  Grid.Column="1"
+                  ToolTip.Tip="{ll:Str 支持MOD与创意工坊添加聊天内容}"
+                />
+              </Grid>
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Classes="SettingName" Text="{ll:Str '自定义聊天接口'}" />
+                <RadioButton x:Name="RBCGPTDIY" GroupName="cgpttype" Grid.Column="1" />
+              </Grid>
+            </StackPanel>
+          </Border>
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid ColumnDefinitions="*,Auto" IsEnabled="{Binding #RBCGPTDIY.IsChecked}">
+              <TextBlock Classes="SettingName" Text="{ll:Str '聊天接口'}" />
+              <ComboBox Width="200" x:Name="cbChatAPISelect" Grid.Column="1" Classes="Base" />
+            </Grid>
+          </Border>
+          <Border MinHeight="50" Classes="SettingGroupItem">
+            <Grid ColumnDefinitions="*,Auto" IsEnabled="{Binding #RBCGPTDIY.IsChecked}">
+              <TextBlock Classes="SettingName" Text="{ll:Str '初始化桌宠聊天程序'}" />
+              <Button
+                x:Name="BtnCGPTReSet"
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                MinWidth="150"
+                Content="{ll:Str 初始化桌宠聊天程序}"
+                Classes="Base"
+              />
+            </Grid>
+          </Border>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

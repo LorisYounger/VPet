@@ -1,0 +1,134 @@
+using HKW.MVVM;
+using LinePutScript;
+using LinePutScript.Localization;
+
+namespace VPet.Solution.MultiPlatform.Models.SettingEditor;
+
+public partial class ModSettingModel : ObservableObjectEx, ISubSettingModel
+{
+    public SubSettingModelType ModelType => SubSettingModelType.Mod;
+    public const string OnModLineName = "onmod";
+    public const string PassModLineName = "passmod";
+    public const string MsgModLineName = "msgmod";
+    public const string WorkShopLineName = "workshop";
+    public static readonly string ModDirectory = Path.Combine(Environment.CurrentDirectory, "mod");
+    public static Dictionary<string, ModLoader> LocalMods { get; private set; } = null!;
+
+    public List<ModModel> Mods { get; } = [];
+
+    public static List<string> Fonts { get; } = [];
+
+    public static List<string> Themes { get; } = [];
+
+    public static List<string> PetGraphs { get; } = [];
+
+    public List<string> Errors { get; } = [];
+
+    public ModSettingModel()
+    {
+        LocalMods ??= GetLocalMods();
+    }
+
+    private Dictionary<string, ModLoader> GetLocalMods()
+    {
+        var dic = new Dictionary<string, ModLoader>(StringComparer.OrdinalIgnoreCase);
+        if (Directory.Exists(ModDirectory) is false)
+            return dic;
+        foreach (var dir in Directory.EnumerateDirectories(ModDirectory))
+        {
+            try
+            {
+                var loader = new ModLoader(dir);
+                dic.TryAdd(loader.Name, loader);
+                foreach (var font in loader.Fonts)
+                {
+                    if (Fonts.Contains(font.Translate()) is false)
+                        Fonts.Add(font.Translate());
+                }
+                foreach (var theme in loader.Themes)
+                {
+                    if (Themes.Contains(theme.Translate()) is false)
+                        Themes.Add(theme.Translate());
+                }
+                foreach (var petGraph in loader.PetGraphs)
+                {
+                    if (PetGraphs.Contains(petGraph.Translate()) is false)
+                        PetGraphs.Add(petGraph.Translate());
+                }
+            }
+            catch (Exception ex)
+            {
+                Errors.Add("路径:\"{0}\" 异常:\"{1}\"".Translate(dir, ex.Message));
+            }
+        }
+        return dic;
+    }
+
+    public void Load(Setting setting)
+    {
+        Mods.Clear();
+        if (Directory.Exists(ModDirectory))
+        {
+            foreach (var dir in Directory.GetDirectories(ModDirectory))
+            {
+                var loader = new ModLoader(dir);
+                if (loader.IsSuccesses)
+                {
+                    var modModel = new ModModel(loader);
+                    modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
+                    modModel.IsPass = setting[PassModLineName]
+                        .Contains(modModel.ID.ToLowerInvariant());
+                    if (modModel.ID.Equals("Core", StringComparison.OrdinalIgnoreCase))
+                    {
+                        modModel.IsEnabled = true;
+                    }
+                    else
+                    {
+                        modModel.IsEnabled = setting[OnModLineName]
+                            .Contains(modModel.ID.ToLowerInvariant());
+                    }
+
+                    Mods.Add(modModel);
+                }
+                else
+                {
+                    Mods.Add(new() { Name = loader.Name, ModPath = loader.ModPath });
+                }
+            }
+        }
+
+        foreach (var modPath in setting[WorkShopLineName])
+        {
+            var loader = new ModLoader(modPath.Name);
+            if (loader.IsSuccesses)
+            {
+                var modModel = new ModModel(loader);
+                modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
+                modModel.IsPass = setting[PassModLineName].Contains(modModel.ID.ToLowerInvariant());
+                modModel.IsEnabled = setting[OnModLineName]
+                    .Contains(modModel.ID.ToLowerInvariant());
+                Mods.Add(modModel);
+            }
+            else
+            {
+                Mods.Add(new() { Name = loader.Name, ModPath = loader.ModPath });
+            }
+        }
+    }
+
+    public void Save(Setting setting)
+    {
+        setting.Remove(OnModLineName);
+        setting.Remove(PassModLineName);
+        setting.Remove(MsgModLineName);
+        foreach (var mod in Mods)
+        {
+            if (mod.IsEnabled is not true)
+                continue;
+            setting[OnModLineName].Add(new Sub(mod.ID.ToLowerInvariant()));
+            setting[MsgModLineName].Add(new Sub(mod.ID, "True"));
+            if (mod.IsPass)
+                setting[PassModLineName].Add(new Sub(mod.ID.ToLowerInvariant()));
+        }
+    }
+}
