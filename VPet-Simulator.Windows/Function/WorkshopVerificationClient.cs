@@ -1,6 +1,10 @@
 using LinePutScript;
 using LinePutScript.Converter;
+#if VPET_AVALONIA
+using LinePutScript.Localization;
+#else
 using LinePutScript.Localization.WPF;
+#endif
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -14,7 +18,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+#if VPET_AVALONIA
+namespace VPet_Simulator.MutiPlatform
+#else
 namespace VPet_Simulator.Windows
+#endif
 {
     /// <summary>
     /// 创意工坊上传登记和本地内容一致性校验。
@@ -52,7 +60,8 @@ namespace VPet_Simulator.Windows
                 ModNameEN = ReadLocalizedName(document, modId, "en"),
                 ModNameHans = ReadLocalizedName(document, modId, "zh-Hans"),
                 FileHash = CalculateDirectoryHash(directory),
-                DllFiles = directory.EnumerateFiles("*.dll", SearchOption.AllDirectories)
+                DllFiles = directory.EnumerateFiles("*", SearchOption.AllDirectories)
+                    .Where(file => file.Extension.Equals(".dll", StringComparison.OrdinalIgnoreCase))
                     .Select(file => Path.GetRelativePath(directory.FullName, file.FullName).Replace('\\', '/'))
                     .OrderBy(file => file, StringComparer.Ordinal)
                     .ToList()
@@ -166,7 +175,8 @@ namespace VPet_Simulator.Windows
             try
             {
                 // CoreMOD 只会从 plugin 文件夹的当前层加载 DLL。
-                return pluginDirectory.EnumerateFiles("*.dll", SearchOption.TopDirectoryOnly).Any();
+                return pluginDirectory.EnumerateFiles("*", SearchOption.TopDirectoryOnly)
+                    .Any(file => file.Extension.Equals(".dll", StringComparison.OrdinalIgnoreCase));
             }
             catch
             {
@@ -280,8 +290,9 @@ namespace VPet_Simulator.Windows
             byte[] separator = [0];
             byte[] buffer = new byte[81920];
 
-            foreach (FileInfo file in directory.EnumerateFiles("*.dll", SearchOption.AllDirectories)
-                         .OrderBy(file => Path.GetRelativePath(directory.FullName, file.FullName), StringComparer.Ordinal))
+            foreach (FileInfo file in directory.EnumerateFiles("*", SearchOption.AllDirectories)
+                    .Where(file => file.Extension.Equals(".dll", StringComparison.OrdinalIgnoreCase))
+                         .OrderBy(file => Path.GetRelativePath(directory.FullName, file.FullName).Replace('/', '\\'), StringComparer.Ordinal))
             {
                 string relativePath = Path.GetRelativePath(directory.FullName, file.FullName).Replace('\\', '/');
                 hash.AppendData(Encoding.UTF8.GetBytes(relativePath));

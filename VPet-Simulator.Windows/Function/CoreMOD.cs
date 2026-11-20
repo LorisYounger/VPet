@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using VPet_Simulator.Unified.Interface;
 using System.Security.Cryptography.X509Certificates;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
@@ -25,7 +26,7 @@ namespace VPet_Simulator.Windows
         {
             "Panuon.WPF.dll","steam_api.dll","Panuon.WPF.UI.dll","steam_api64.dll",
             "LinePutScript.dll","Facepunch.Steamworks.Win32.dll", "Facepunch.Steamworks.Win64.dll",
-            "VPet-Simulator.Core.dll","VPet-Simulator.Windows.Interface.dll","LinePutScript.Localization.WPF.dll",
+            "VPet-Simulator.Unified.dll","VPet-Simulator.Core.dll","VPet-Simulator.Windows.Interface.dll","LinePutScript.Localization.WPF.dll",
             "NAudio.Asio.dll", "libSkiaSharp.dll","NAudio.Core.dll","NAudio.dll", "SkiaSharp.dll","NAudio.Midi.dll",
             "NAudio.Wasapi.dll","NAudio.WinForms.dll", "NAudio.WinMM.dll", "WpfAnimatedGif.dll"
         };
@@ -95,6 +96,14 @@ namespace VPet_Simulator.Windows
                 LoadFile(mw, fordi, pre + fordi.Name + "_");
             }
         }
+        private void CreatePlugin(Type entry, MainWindow mw)
+        {
+            if (entry.BaseType == typeof(UnifiedPlugin))
+                UnifiedPluginHost.Create(mw, this, entry);
+            else
+                mw.Plugins.Add((MainPlugin)Activator.CreateInstance(entry, mw)!);
+        }
+
         public CoreMOD(DirectoryInfo directory, MainWindow mw, long steamItemId = 0, long steamAuthorId = 0)
         {
 #if !DEBUG
@@ -366,11 +375,11 @@ namespace VPet_Simulator.Windows
                                 }
                                 if (reuse)
                                 {
-                                    mw.Plugins.Add((MainPlugin)Activator.CreateInstance(loaded.Type, mw)!);
+                                    CreatePlugin(loaded.Type, mw);
                                     continue;
                                 }
                                 Assembly dll = Assembly.LoadFrom(scannedFile.Path);
-                                var entries = dll.GetExportedTypes().Where(type => type.BaseType == typeof(MainPlugin));
+                                var entries = dll.GetExportedTypes().Where(type => type.BaseType == typeof(MainPlugin) || type.BaseType == typeof(UnifiedPlugin));
                                 if (!string.Equals(dll.Location, scannedFile.Path, StringComparison.OrdinalIgnoreCase) && entries.Any())
                                 {
                                     PluginScan.BlockEntryConflict(scannedFile, dll.Location);
@@ -384,7 +393,7 @@ namespace VPet_Simulator.Windows
                                     if (!fullName.Contains("modmaker", StringComparison.OrdinalIgnoreCase) && !fullName.Contains("dlc", StringComparison.OrdinalIgnoreCase))
                                         App.MODType.Add(fullName);
                                     LoadPlug.Add(name, (entry, scannedFile.Hash));
-                                    mw.Plugins.Add((MainPlugin)Activator.CreateInstance(entry, mw)!);
+                                    CreatePlugin(entry, mw);
                                 }
                             }
                             catch (Exception e)

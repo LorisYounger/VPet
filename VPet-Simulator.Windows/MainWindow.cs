@@ -275,6 +275,8 @@ namespace VPet_Simulator.Windows
                 //保存插件
                 foreach (MainPlugin mp in Plugins)
                     mp.Save();
+                foreach (var uh in UnifiedHosts)
+                    uh.Plugin.Save();
             }
             catch (Exception e)
             {
@@ -346,13 +348,6 @@ namespace VPet_Simulator.Windows
                     File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves\\Save{PrefixSave}_{st}.lps", savesdata);
                     //备份
                     File.WriteAllText(ExtensionValue.BaseDirectory + $"\\Saves_BKP\\Save{PrefixSave}_{hash:X}.lps", savesdata);
-
-                    if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps"))
-                    {
-                        if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.bkp"))
-                            File.Delete(ExtensionValue.BaseDirectory + @"\Save.bkp");
-                        File.Move(ExtensionValue.BaseDirectory + @"\Save.lps", ExtensionValue.BaseDirectory + @"\Save.bkp");
-                    }
 
                     //Steam云存档
                     if (IsSteamUser)
@@ -440,6 +435,15 @@ namespace VPet_Simulator.Windows
                 catch (Exception e)
                 {
                     MessageBoxX.Show(e.ToString(), "由于插件引起的自定按钮加载错误".Translate() + '-' + mp.PluginName);
+                }
+            foreach (var uh in UnifiedHosts)
+                try
+                {
+                    uh.Plugin.LoadDIY();
+                }
+                catch (Exception e)
+                {
+                    MessageBoxX.Show(e.ToString(), "由于插件引起的自定按钮加载错误".Translate() + '-' + uh.Plugin.PluginName);
                 }
             Main.ToolBar.LoadDIY();
         }
@@ -1728,26 +1732,7 @@ namespace VPet_Simulator.Windows
                 + $"\n  {c} / {petloader.GraphCount}")).Wait();
 
             await Dispatcher.InvokeAsync(new Action(() => LoadingText.Content = "尝试加载游戏存档".Translate()));
-            //加载存档
-            if (File.Exists(ExtensionValue.BaseDirectory + @"\Save.lps")) //有老的旧存档,优先旧存档
-                try
-                {
-                    if (!SavesLoad(new LpsDocument(File.ReadAllText(ExtensionValue.BaseDirectory + @"\Save.lps"))))
-                    {
-                        //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
-                        LoadLatestSave(petloader.PetName);
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBoxX.Show("存档损毁,无法加载该存档\n可能是数据溢出/超模导致的" + '\n' + ex.Message, "存档损毁".Translate());
-                    //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
-                    LoadLatestSave(petloader.PetName);
-                }
-            else
-                //如果加载存档失败了,试试加载备份,如果没备份,就新建一个
-                LoadLatestSave(petloader.PetName);
+            LoadLatestSave(petloader.PetName);
 
             //加载数据合理化:文本
             if (!Set["gameconfig"].GetBool("noAutoCal"))
@@ -2007,6 +1992,15 @@ namespace VPet_Simulator.Windows
                       catch (Exception e)
                       {
                           NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName);
+                      }
+                  foreach (var uh in UnifiedHosts)
+                      try
+                      {
+                          uh.OnLoadPlugin();
+                      }
+                      catch (Exception e)
+                      {
+                          NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + uh.Plugin.PluginName);
                       }
                   Foods.ForEach(item => item.LoadImageSource(this));
                   //加载数据合理化:食物
@@ -2689,6 +2683,15 @@ namespace VPet_Simulator.Windows
                       {
                           NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + mp.PluginName);
                       }
+                  foreach (var uh in UnifiedHosts)
+                      try
+                      {
+                          uh.Plugin.GameLoaded();
+                      }
+                      catch (Exception e)
+                      {
+                          NoticeBox.Show("由于插件引起的游戏启动错误".Translate() + "\n" + e.ToString(), "由于插件引起的游戏启动错误".Translate() + '-' + uh.Plugin.PluginName);
+                      }
 
                   //这里写的都是共通的功能, 如果限定第一个MW使用的功能, 请前往
 
@@ -2798,6 +2801,7 @@ namespace VPet_Simulator.Windows
         public void MutiPlayerStart(IMPWindows mp)
         {
             MutiPlayerHandle?.Invoke(mp);
+            UnifiedPluginHost.MutiPlayerStart(UnifiedHosts, mp);
         }
 
         private void MWUIHandle(Main main)

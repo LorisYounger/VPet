@@ -47,7 +47,22 @@ public partial class MainWindow
     public List<Food> Foods { get; } = new List<Food>();
     public List<Photo> Photos { get; } = new List<Photo>();
 
-    public GameSave_v2 GameSavesData { get; set; } = new GameSave_v2("VPET");
+    private GameSave_v2 gameSavesData = new GameSave_v2("VPET");
+    public GameSave_v2 GameSavesData
+    {
+        get => gameSavesData;
+        set
+        {
+            var previous = gameSavesData.Statistics;
+            gameSavesData = value;
+            foreach (var host in UnifiedHosts)
+                host.OnSaveChanged(previous);
+        }
+    }
+
+    // 每个窗口单独保存物品和照片视图，使用物品或解锁照片时作用于该窗口。
+    internal readonly System.Runtime.CompilerServices.ConditionalWeakTable<Item, VPet_Simulator.Unified.Interface.IItemInfo> UnifiedItems = new();
+    internal readonly System.Runtime.CompilerServices.ConditionalWeakTable<Photo, VPet_Simulator.Unified.Interface.IPhotoInfo> UnifiedPhotos = new();
     public List<Buff.Effect> BuffEffects { get; set; } = new List<Buff.Effect>();
     public static readonly string ModPath = ExtensionValue.BaseDirectory + @"\mod";
     public bool IsSteamUser { get; }
@@ -96,6 +111,7 @@ public partial class MainWindow
     /// 所有三方插件
     /// </summary>
     public List<MainPlugin> Plugins { get; } = new List<MainPlugin>();
+    internal List<UnifiedPluginHost> UnifiedHosts { get; } = new();
     /// <summary>
     /// 所有字体(位置)
     /// </summary>

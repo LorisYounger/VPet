@@ -106,22 +106,6 @@ namespace VPet_Simulator.Windows
                 IsSteamUser = false;
             }
 
-            //更新存档系统
-            if (Directory.Exists(ExtensionValue.BaseDirectory + @"\BackUP"))
-            {
-                if (!Directory.Exists(ExtensionValue.BaseDirectory + @"\Saves"))
-                    Directory.Move(ExtensionValue.BaseDirectory + @"\BackUP", ExtensionValue.BaseDirectory + @"\Saves");
-                else
-                {
-                    foreach (var file in new DirectoryInfo(ExtensionValue.BaseDirectory + @"\BackUP").GetFiles())
-                        if (!File.Exists(ExtensionValue.BaseDirectory + @"\Saves\" + file.Name))
-                            file.MoveTo(ExtensionValue.BaseDirectory + @"\Saves\" + file.Name);
-                        else
-                            file.Delete();
-                    Directory.Delete(ExtensionValue.BaseDirectory + @"\BackUP", true);
-                }
-            }
-
             _dwmEnabled = Win32.Dwmapi.DwmIsCompositionEnabled();
             _hwnd = new WindowInteropHelper(this).EnsureHandle();
 
@@ -426,6 +410,8 @@ namespace VPet_Simulator.Windows
                       }
                       return false;
                   }]);
+                // 内置处理器先执行，随后才轮到提前注册的插件处理器。
+                UnifiedItemRegistry.UseActionsReady();
             });
         }
 
@@ -527,6 +513,13 @@ namespace VPet_Simulator.Windows
                     mp.EndGame();
             }
             catch { }
+            // 单个插件退出失败时，继续清理其余插件。
+            foreach (var uh in UnifiedHosts)
+                try
+                {
+                    uh.OnEndGame();
+                }
+                catch { }
             Save();
             if (App.MainWindows.Count == 1)
             {
@@ -793,6 +786,13 @@ namespace VPet_Simulator.Windows
                     mp.EndGame();
             }
             catch { }
+            // 单个插件退出失败时，继续清理其余插件。
+            foreach (var uh in UnifiedHosts)
+                try
+                {
+                    uh.OnEndGame();
+                }
+                catch { }
             Save();
             Exit();
         }

@@ -24,6 +24,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
+using VPet_Simulator.Unified.Interface;
 using static VPet_Simulator.Windows.Win32;
 using Item = Steamworks.Ugc.Item;
 
@@ -789,9 +790,7 @@ namespace VPet_Simulator.Windows
             }
             GameHave.Text = content;
             ButtonPluginScan.Visibility = modInfo.IsPlugin ? Visibility.Visible : Visibility.Collapsed;
-            ButtonSetting.Visibility = mod != null && mw.Plugins.Any(plugin =>
-                plugin.PluginName == mod.Name && plugin.GetType().GetMethod("Setting")!.DeclaringType != typeof(MainPlugin)
-                && plugin.GetType().Assembly.Location.Contains(mod.Path.FullName)) ? Visibility.Visible : Visibility.Collapsed;
+            ButtonSetting.Visibility = mod != null && FindPluginSetting(mod) != null ? Visibility.Visible : Visibility.Collapsed;
 
             ButtonAllow.Visibility = Visibility.Collapsed;
             if (!modInfo.IsPlugin || mw.Set.IsPassMOD(modInfo.Name)) return;
@@ -1740,23 +1739,24 @@ namespace VPet_Simulator.Windows
             }
         }
 
+        private Action? FindPluginSetting(CoreMOD selectedMod)
+        {
+            foreach (var plugin in mw.Plugins)
+                if (plugin.PluginName == selectedMod.Name && plugin.GetType().GetMethod(nameof(MainPlugin.Setting))!.DeclaringType != typeof(MainPlugin)
+                    && plugin.GetType().Assembly.Location.Contains(selectedMod.Path.FullName))
+                    return plugin.Setting;
+
+            foreach (var host in mw.UnifiedHosts)
+                if (host.Plugin.PluginName == selectedMod.Name && host.Plugin.GetType().GetMethod(nameof(UnifiedPlugin.Setting))!.DeclaringType != typeof(UnifiedPlugin)
+                    && host.Plugin.GetType().Assembly.Location.Contains(selectedMod.Path.FullName))
+                    return host.Plugin.Setting;
+            return null;
+        }
+
         private void ButtonSetting_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (mod == null)
-                return;
-            foreach (var mainplug in mw.Plugins)
-            {
-                try
-                {
-                    if (mainplug.PluginName == mod.Name && mainplug.GetType().GetMethod("Setting")!.DeclaringType != typeof(MainPlugin)
-                    && mainplug.GetType().Assembly.Location.Contains(mod.Path.FullName))
-                    {
-                        mainplug.Setting();
-                        return;
-                    }
-                }
-                finally { }
-            }
+            if (mod != null)
+                FindPluginSetting(mod)?.Invoke();
         }
 
         private void StartPlace_Checked(object sender, RoutedEventArgs e)
