@@ -5,9 +5,9 @@ using HKW.HKWUtils.Collections;
 using HKW.MVVM;
 using LinePutScript;
 using VPet_Simulator.Windows.Interface;
-using VPet.Solution.MultiPlatform.Models.SaveViewer;
+using VPet.Solution.MultiPlatform.Models;
 
-namespace VPet.Solution.MultiPlatform.ViewModels.SaveViewer;
+namespace VPet.Solution.MultiPlatform.ViewModels;
 
 public partial class SaveViewModel : ViewModelBase
 {

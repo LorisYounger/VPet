@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using HKW.MVVM;
 
-namespace VPet.Solution.MultiPlatform.Models.SettingEditor;
+namespace VPet.Solution.MultiPlatform.Models;
 
 public partial class SettingModel : ObservableObjectEx
 {

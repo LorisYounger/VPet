@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace VPet.Solution.MultiPlatform.Views.SettingEditor;
+namespace VPet.Solution.MultiPlatform.Views;
 
 /// <summary>
 /// DiagnosticSettingView.axaml 的交互逻辑

@@ -1,0 +1,92 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels"
+  x:DataType="vm:MainViewModel"
+  mc:Ignorable="d"
+  d:DesignWidth="800"
+  d:DesignHeight="450"
+  x:Class="VPet.Solution.MultiPlatform.Views.MainView"
+>
+  <Design.DataContext>
+    <vm:MainViewModel />
+  </Design.DataContext>
+  <Grid Margin="10">
+    <Grid RowDefinitions="Auto,Auto,*">
+      <Grid>
+        <ComboBox
+          x:Name="Languages"
+          MinWidth="150"
+          HorizontalAlignment="Right"
+          VerticalAlignment="Top"
+          ItemsSource="{Binding AvailableCultures}"
+          SelectedItem="{Binding CurrentCulture}"
+          Classes="Base"
+        >
+          <ComboBox.ContextMenu>
+            <ContextMenu>
+              <MenuItem
+                x:Name="OpenLocalText"
+                Header="{ll:Str 打开翻译文本}"
+                Command="{Binding OpenLocalTextCommand}"
+              />
+            </ContextMenu>
+          </ComboBox.ContextMenu>
+        </ComboBox>
+      </Grid>
+      <Grid Grid.Row="1">
+        <Label
+          HorizontalAlignment="Center"
+          MinHeight="200"
+          Content="{ll:Str 'VPET 问题解决工具'}"
+          FontSize="32"
+          Classes="Base"
+        />
+      </Grid>
+      <Grid Grid.Row="2" RowDefinitions="*,Auto,Auto">
+        <StackPanel HorizontalAlignment="Center">
+          <Button
+            x:Name="OpenSettingEditor"
+            MinWidth="150"
+            Content="{ll:Str 打开设置编辑器}"
+            FontSize="16"
+            Command="{Binding OpenSettingEditorCommand}"
+            Classes="Base"
+          />
+          <Button
+            x:Name="OpenSaveViewer"
+            MinWidth="150"
+            Content="{ll:Str 打开存档查看器}"
+            Command="{Binding OpenSaveViewerCommand}"
+            FontSize="16"
+            Classes="Base"
+          />
+        </StackPanel>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+          <Button
+            HorizontalAlignment="Center"
+            x:Name="WantOpenVpet"
+            Height="30"
+            Command="{Binding WantOpenVpetCommand}"
+            Classes="Link"
+            Content="{ll:Str '想打开桌宠本体?'}"
+            FontSize="16"
+          />
+          <Button
+            HorizontalAlignment="Center"
+            x:Name="FirstStartFailed"
+            Grid.Row="2"
+            Height="30"
+            Command="{Binding FirstStartFailedCommand}"
+            Classes="Link"
+            Content="{ll:Str '第一次启动桌宠打不开?'}"
+            FontSize="16"
+          />
+        </StackPanel>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

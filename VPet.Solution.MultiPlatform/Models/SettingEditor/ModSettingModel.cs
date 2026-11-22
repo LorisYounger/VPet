@@ -2,7 +2,7 @@ using HKW.MVVM;
 using LinePutScript;
 using LinePutScript.Localization;
 
-namespace VPet.Solution.MultiPlatform.Models.SettingEditor;
+namespace VPet.Solution.MultiPlatform.Models;
 
 public partial class ModSettingModel : ObservableObjectEx, ISubSettingModel
 {

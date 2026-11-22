@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using HKW.MVVM;
 using LinePutScript;
 
-namespace VPet.Solution.MultiPlatform.Models.SettingEditor;
+namespace VPet.Solution.MultiPlatform.Models;
 
 public partial class CustomizedSettingModel : ObservableObjectEx, ISubSettingModel
 {

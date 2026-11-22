@@ -1,8 +1,8 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using VPet.Solution.MultiPlatform.ViewModels.SettingEditor;
+using VPet.Solution.MultiPlatform.ViewModels;
 
-namespace VPet.Solution.MultiPlatform.Views.SettingEditor;
+namespace VPet.Solution.MultiPlatform.Views;
 
 /// <summary>
 /// ModSettingView.axaml 的交互逻辑

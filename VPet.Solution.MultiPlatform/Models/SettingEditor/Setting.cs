@@ -4,7 +4,7 @@ using LinePutScript.Dictionary;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 
-namespace VPet.Solution.MultiPlatform.Models.SettingEditor;
+namespace VPet.Solution.MultiPlatform.Models;
 
 /// <summary>
 /// 游戏设置

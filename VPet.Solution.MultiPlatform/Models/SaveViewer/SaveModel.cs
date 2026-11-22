@@ -4,7 +4,7 @@ using HKW.Mapper;
 using LinePutScript.Localization;
 using VPet_Simulator.Windows.Interface;
 
-namespace VPet.Solution.MultiPlatform.Models.SaveViewer;
+namespace VPet.Solution.MultiPlatform.Models;
 
 /// <summary>
 /// 存档模型

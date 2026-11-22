@@ -6,7 +6,7 @@ using HKW.Mapper;
 using HKW.MVVM;
 using VPet_Simulator.Core;
 
-namespace VPet.Solution.MultiPlatform.Models.SettingEditor;
+namespace VPet.Solution.MultiPlatform.Models;
 
 [MapTarget(typeof(Setting))]
 [MapTarget(typeof(InteractiveSettingModel))]

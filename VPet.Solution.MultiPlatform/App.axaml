@@ -1,13 +1,13 @@
 <Application
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:sty="using:FluentAvalonia.Styling"
   x:Class="VPet.Solution.MultiPlatform.App"
   RequestedThemeVariant="Default"
 >
+  <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
   <Application.Styles>
-    <FluentTheme />
-    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
-    <StyleInclude Source="avares://VPet.Solution.MultiPlatform/Styles.axaml" />
+    <sty:FluentAvaloniaTheme />
   </Application.Styles>
   <Application.Resources>
     <ResourceDictionary>

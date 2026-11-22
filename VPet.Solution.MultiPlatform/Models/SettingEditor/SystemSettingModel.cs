@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using HKW.Mapper;
 using HKW.MVVM;
 
-namespace VPet.Solution.MultiPlatform.Models.SettingEditor;
+namespace VPet.Solution.MultiPlatform.Models;
 
 [MapTarget(typeof(Setting))]
 [MapTarget(typeof(SystemSettingModel))]

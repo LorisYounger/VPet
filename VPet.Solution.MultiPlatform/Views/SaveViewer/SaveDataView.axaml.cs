@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace VPet.Solution.MultiPlatform.Views.SaveViewer;
+namespace VPet.Solution.MultiPlatform.Views;
 
 /// <summary>
 /// SaveDataView.axaml 的交互逻辑

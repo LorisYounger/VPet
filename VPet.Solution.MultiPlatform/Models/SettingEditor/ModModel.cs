@@ -5,7 +5,7 @@ using HKW.MVVM;
 using HKW.MVVM.SourceGenerator;
 using LinePutScript.Localization;
 
-namespace VPet.Solution.MultiPlatform.Models.SettingEditor;
+namespace VPet.Solution.MultiPlatform.Models;
 
 [MapTarget(typeof(ModLoader))]
 public partial class ModModel : ObservableObjectEx

@@ -2,11 +2,11 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
-  xmlns:m="using:VPet.Solution.MultiPlatform.Models.SettingEditor"
+  xmlns:m="using:VPet.Solution.MultiPlatform.Models"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels.SettingEditor"
-  x:Class="VPet.Solution.MultiPlatform.Views.SettingEditor.SettingWindow"
+  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels"
+  x:Class="VPet.Solution.MultiPlatform.Views.SettingWindow"
   x:DataType="vm:SettingViewModel"
   Title="{ll:Str 'VPET 设置编辑器'}"
   Icon="/Assets/icon.ico"
@@ -16,145 +16,4 @@
   MinHeight="200"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d"
->
-  <Window.Styles>
-    <Style Selector="Button.remind">
-      <Style.Animations>
-        <Animation Duration="0:0:1.5" IterationCount="INFINITE">
-          <KeyFrame Cue="0%">
-            <Setter Property="Background" Value="Aqua" />
-          </KeyFrame>
-          <KeyFrame Cue="66%">
-            <Setter Property="Background" Value="Transparent" />
-          </KeyFrame>
-        </Animation>
-      </Style.Animations>
-    </Style>
-  </Window.Styles>
-  <Grid ColumnDefinitions="200,Auto,*">
-    <Grid Margin="10" RowDefinitions="Auto,Auto,*,Auto">
-      <Label
-        Margin="0"
-        Content="{ll:Str 存档文件}"
-        FontSize="16"
-        FontWeight="Bold"
-        Classes="Base"
-      />
-      <TextBox
-        Grid.Row="1"
-        x:Name="SearchSetting"
-        PlaceholderText="{ll:Str 搜索文件}"
-        Text="{Binding SearchSetting}"
-        Margin="0,4,0,4"
-      />
-      <ListBox
-        x:Name="Settings"
-        Grid.Row="2"
-        SelectionChanged="Settings_SelectionChanged"
-        ItemsSource="{Binding Settings.FilteredList}"
-        SelectedItem="{Binding CurrentSetting}"
-      >
-        <ListBox.ContextMenu>
-          <ContextMenu>
-            <MenuItem
-              Header="{ll:Str 打开文件}"
-              Command="{Binding OpenFileCommand}"
-              CommandParameter="{Binding CurrentSetting}"
-            />
-            <MenuItem
-              Header="{ll:Str 从资源管理器打开文件}"
-              Command="{Binding OpenFileFromExplorerCommand}"
-              CommandParameter="{Binding CurrentSetting}"
-            />
-          </ContextMenu>
-        </ListBox.ContextMenu>
-        <ListBox.ItemTemplate>
-          <DataTemplate x:DataType="m:SettingModel">
-            <TextBlock Text="{Binding Name}" ToolTip.Tip="{Binding FilePath}" />
-          </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
-      <StackPanel Grid.Row="3" Spacing="2" Margin="0,6,0,0">
-        <Button
-          Margin="1"
-          IsEnabled="{Binding CurrentSetting, Converter={StaticResource NullToFalseConverter}}"
-          HorizontalAlignment="Stretch"
-          x:Name="SaveSetting"
-          Content="{ll:Str 保存}"
-          Classes="Base"
-          Classes.remind="{Binding CurrentSetting.IsChanged, FallbackValue=False}"
-          Command="{Binding SaveSettingCommand}"
-          CommandParameter="{Binding CurrentSetting}"
-        />
-        <Button
-          Margin="1"
-          IsEnabled="{Binding CurrentSetting, Converter={StaticResource NullToFalseConverter}}"
-          x:Name="ResetSetting"
-          HorizontalAlignment="Stretch"
-          Content="{ll:Str 重置}"
-          Classes="Base"
-          Command="{Binding ResetSettingCommand}"
-          CommandParameter="{Binding CurrentSetting}"
-        />
-        <Button
-          Margin="1"
-          x:Name="SaveAllSetting"
-          HorizontalAlignment="Stretch"
-          Content="{ll:Str 全部保存}"
-          Classes="Base"
-          Command="{Binding SaveAllSettingCommand}"
-        />
-        <Button
-          Margin="1"
-          x:Name="ResetAllSetting"
-          HorizontalAlignment="Stretch"
-          Content="{ll:Str 全部重置}"
-          Classes="Base"
-          Command="{Binding ResetAllSettingCommand}"
-        />
-      </StackPanel>
-    </Grid>
-    <Border Grid.Column="1" Width="2" Background="#14000000" />
-    <Grid Margin="10" Grid.Column="2" RowDefinitions="Auto,*">
-      <Grid ColumnDefinitions="*,Auto,Auto" MinHeight="34" Margin="0,0,0,6">
-        <ListBox
-          x:Name="SubSettingTypes"
-          Classes="HorizontalNav"
-          ItemsSource="{x:Static vm:SettingViewModel.SubSettingTypes}"
-          SelectedItem="{Binding CurrentSubSettingType}"
-        >
-          <ListBox.ItemsPanel>
-            <ItemsPanelTemplate>
-              <StackPanel Orientation="Horizontal" />
-            </ItemsPanelTemplate>
-          </ListBox.ItemsPanel>
-        </ListBox>
-        <Button
-          x:Name="LastSubSettingType"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch"
-          Grid.Column="1"
-          Width="28"
-          Margin="2,0"
-          Padding="0"
-          Click="LastSubSettingType_Click"
-          Classes="Base"
-          Content="《"
-        />
-        <Button
-          x:Name="NextSubSettingType"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch"
-          Grid.Column="2"
-          Width="28"
-          Margin="2,0"
-          Padding="0"
-          Click="NextSubSettingType_Click"
-          Classes="Base"
-          Content="》"
-        />
-      </Grid>
-      <ContentControl x:Name="SettingView" Grid.Row="1" />
-    </Grid>
-  </Grid>
-</Window>
+></Window>

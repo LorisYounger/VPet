@@ -1,19 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>VPet.Solution.MultiPlatform</RootNamespace>
-    <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
 
@@ -47,6 +43,12 @@
       Include="..\VPet-Simulator.MutiPlatform\Interface\GameSave_v2.MutiPlatform.cs"
       Link="Interface\GameSave_v2.MutiPlatform.cs"
     />
+    <!-- StartURL 等与界面无关的扩展方法; 链接共享源码而不是引用 VPet-Simulator.MutiPlatform,
+         后者是可执行程序, 引用它会拖进整个宿主并与上面链接的源码重复定义类型. -->
+    <Compile
+      Include="..\VPet-Simulator.Windows.Interface\Base\Save\ExtensionFunction.Shared.cs"
+      Link="Interface\Base\Save\ExtensionFunction.Shared.cs"
+    />
     <Using Include="LinePutScript.Localization" />
   </ItemGroup>
 
@@ -62,9 +64,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
     <PackageReference Include="HanumanInstitute.MvvmDialogs" Version="2.4.0" />
     <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.4.0" />
+    <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia.Fluent" Version="2.4.0" />
+    <PackageReference Include="FluentAvaloniaUI" Version="3.1.0" />
     <PackageReference Include="HKW.Mapper" Version="0.3.7" />
     <PackageReference Include="HKW.Utils" Version="2.0.0" />
     <PackageReference Include="HKW.CommonValueConverters" Version="0.2.2" />

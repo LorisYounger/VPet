@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.Input;
-using VPet.Solution.MultiPlatform.Models.SettingEditor;
+using VPet.Solution.MultiPlatform.Models;
 
-namespace VPet.Solution.MultiPlatform.ViewModels.SettingEditor;
+namespace VPet.Solution.MultiPlatform.ViewModels;
 
 public partial class DiagnosticSettingViewModel : ViewModelBase, ISubSettingViewModel
 {

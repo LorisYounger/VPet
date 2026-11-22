@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.VPet.Solution.MultiPlatform" android:versionName="0.1.0">
+	<uses-permission android:name="android.permission.INTERNET" />
+	<application android:label="VPet.Solution.MultiPlatform" android:icon="@drawable/icon" />
+</manifest>

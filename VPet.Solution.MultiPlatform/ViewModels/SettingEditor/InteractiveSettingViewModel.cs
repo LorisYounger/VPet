@@ -1,6 +1,6 @@
-using VPet.Solution.MultiPlatform.Models.SettingEditor;
+using VPet.Solution.MultiPlatform.Models;
 
-namespace VPet.Solution.MultiPlatform.ViewModels.SettingEditor;
+namespace VPet.Solution.MultiPlatform.ViewModels;
 
 public partial class InteractiveSettingViewModel : ViewModelBase, ISubSettingViewModel
 {

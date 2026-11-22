@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using HKW.HKWUtils.Drawing;
-using VPet.Solution.MultiPlatform.ViewModels.SettingEditor;
+using VPet.Solution.MultiPlatform.ViewModels;
 
-namespace VPet.Solution.MultiPlatform.Views.SettingEditor;
+namespace VPet.Solution.MultiPlatform.Views;
 
 /// <summary>
 /// GraphicsSettingView.axaml 的交互逻辑

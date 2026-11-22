@@ -14,47 +14,55 @@ using LinePutScript.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using VPet.Solution.MultiPlatform.ViewModels;
-using VPet.Solution.MultiPlatform.ViewModels.SaveViewer;
-using VPet.Solution.MultiPlatform.ViewModels.SettingEditor;
 using VPet.Solution.MultiPlatform.Views;
-using VPet.Solution.MultiPlatform.Views.SaveViewer;
-using VPet.Solution.MultiPlatform.Views.SettingEditor;
 
 namespace VPet.Solution.MultiPlatform;
 
 internal partial class AppServices : DIConfigurationBase
 {
-    public AppViewLocator ViewLocator { get; } = new();
+    public ViewLocator ViewLocator { get; } = new();
 
     protected override void Configure(IServiceCollection services)
     {
         services.AddSingleton<IDialogService>(sp => new DialogService(
-            new DialogManagerX(ViewLocator, dialogFactory: new DialogFactory()),
+            new DialogManagerX(
+                ViewLocator,
+                dialogFactory: new DialogFactory().AddFluent(FluentMessageBoxType.ContentDialog)
+            ),
             viewModelFactory: x => sp.GetService(x)
         ));
 
-        RegisterMVVM<MainViewModel, MainWindow>();
-        RegisterMVVM<SettingViewModel, SettingWindow>();
-        RegisterMVVM<GraphicsSettingViewModel, GraphicsSettingView>();
-        RegisterMVVM<SystemSettingViewModel, SystemSettingView>();
-        RegisterMVVM<DiagnosticSettingViewModel, DiagnosticSettingView>();
-        RegisterMVVM<InteractiveSettingViewModel, InteractiveSettingView>();
-        RegisterMVVM<CustomizedSettingViewModel, CustomizedSettingView>();
-        RegisterMVVM<ModSettingViewModel, ModSettingView>();
+        RegisterWindow<MainViewModel, MainView, MainWindow>();
+        //RegisterView<SettingViewModel, SettingWindow>();
+        RegisterView<GraphicsSettingViewModel, GraphicsSettingView>();
+        RegisterView<SystemSettingViewModel, SystemSettingView>();
+        RegisterView<DiagnosticSettingViewModel, DiagnosticSettingView>();
+        RegisterView<InteractiveSettingViewModel, InteractiveSettingView>();
+        RegisterView<CustomizedSettingViewModel, CustomizedSettingView>();
+        RegisterView<ModSettingViewModel, ModSettingView>();
 
-        RegisterMVVM<SaveViewModel, SaveWindow>();
+        //RegisterView<SaveViewModel, SaveWindow>();
     }
 
     [DICustomServiceRegistrar(nameof(TViewModel))]
-    public void RegisterMVVM<TViewModel, TView>()
+    public void RegisterView<TViewModel, TView>()
         where TViewModel : class, INotifyPropertyChanged
-        where TView : Control, new()
+        where TView : UserControl, new()
     {
         ViewLocator.RegisterView<TViewModel, TView>();
     }
+
+    [DICustomServiceRegistrar(nameof(TViewModel))]
+    public void RegisterWindow<TViewModel, TView, TWindow>()
+        where TViewModel : class, INotifyPropertyChanged
+        where TView : UserControl, new()
+        where TWindow : Window, new()
+    {
+        ViewLocator.Register<TViewModel, TView, TWindow>();
+    }
 }
 
-public class AppViewLocator : StrongViewLocator
+public class ViewLocator : StrongViewLocator
 {
     public void RegisterView<TViewModel, TView>()
         where TViewModel : class, INotifyPropertyChanged
@@ -74,21 +82,31 @@ public class DialogManagerX : DialogManager
     )
         : base(viewLocator, dialogFactory, logger, dispatcher) { }
 
-    private static IReadOnlyList<Window> Windows =>
-        Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
-            ? desktop.Windows
-            : [];
-
     public override IView? FindViewByViewModel(INotifyPropertyChanged viewModel)
     {
+        // 否则开始寻找窗口
         var view = base.FindViewByViewModel(viewModel);
         if (view is not null)
             return view;
-        foreach (var window in Windows)
-        {
-            if (window.GetVisualDescendants().Any(v => ReferenceEquals(v.DataContext, viewModel)))
-                return AsWrapper(window);
-        }
+
+        // 如果是单例视图, 直接返回主视图
+        if (
+            Application.Current?.ApplicationLifetime is ISingleViewApplicationLifetime singleView
+            && singleView.MainView is ContentControl mainView
+        )
+            return AsWrapper(mainView);
+
+        // 寻找嵌套视图
+        if (
+            Application.Current?.ApplicationLifetime
+                is IClassicDesktopStyleApplicationLifetime desktop
+            && desktop.Windows.FirstOrDefault(window =>
+                window.GetVisualDescendants().Any(v => ReferenceEquals(v.DataContext, viewModel))
+            )
+                is { } window
+        )
+            return AsWrapper(window);
+
         return null;
     }
 }

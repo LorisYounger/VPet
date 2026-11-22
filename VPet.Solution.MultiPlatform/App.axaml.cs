@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using HanumanInstitute.MvvmDialogs;
 using Microsoft.Extensions.DependencyInjection;
+using VPet_Simulator.Windows.Interface;
 using VPet.Solution.MultiPlatform.ViewModels;
 using VPet.Solution.MultiPlatform.Views;
 
@@ -16,47 +17,62 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        Services = new AppServices().BuildServiceProvider();
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
+        // 如果有参数, 则按要求走
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var args = desktop.Args;
-            if (args is null || args.Length <= 0)
+            if (args is not null && args.Length > 0)
             {
-                Services = new AppServices().Build().BuildServiceProvider();
-                var mainViewModel = Services.GetService<MainViewModel>()!;
-                desktop.MainWindow = new MainWindow { DataContext = mainViewModel };
-                // TODO: DialogService 显示主窗口
-                // Services.GetService<IDialogService>()!.Show(null, mainViewModel);
+                switch (args[0].ToLowerInvariant())
+                {
+                    case "removestarup":
+                        if (OperatingSystem.IsWindows())
+                        {
+                            var path = Path.Combine(
+                                Environment.GetFolderPath(Environment.SpecialFolder.Startup),
+                                "VPET_Simulator.lnk"
+                            );
+                            if (File.Exists(path))
+                            {
+                                File.Delete(path);
+                            }
+                        }
+                        break;
+                    case "launchsteam":
+                        ExtensionFunction.StartURL("steam://rungameid/1920960");
+                        break;
+                }
+
+                desktop.Shutdown();
                 base.OnFrameworkInitializationCompleted();
                 return;
             }
-
-            switch (args[0].ToLowerInvariant())
-            {
-                case "removestarup":
-                    if (OperatingSystem.IsWindows())
-                    {
-                        var path = Path.Combine(
-                            Environment.GetFolderPath(Environment.SpecialFolder.Startup),
-                            "VPET_Simulator.lnk"
-                        );
-                        if (File.Exists(path))
-                        {
-                            File.Delete(path);
-                        }
-                    }
-                    break;
-                case "launchsteam":
-                    // TODO: 跨平台启动 Steam 链接
-                    // NativeUtils.OpenLink("steam://rungameid/1920960");
-                    break;
-            }
-
-            desktop.Shutdown();
         }
+
+        // 直接显示, 此方式支持桌面和单页
+        Services
+            .GetRequiredService<IDialogService>()
+            .Show(null, Services.GetRequiredService<MainViewModel>());
+
+        //if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        //{
+        //    desktop.MainWindow = new MainWindow
+        //    {
+        //        DataContext = Services.GetRequiredService<MainViewModel>(),
+        //    };
+        //}
+        //else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+        //{
+        //    singleViewPlatform.MainView = new MainView
+        //    {
+        //        DataContext = Services.GetRequiredService<MainViewModel>(),
+        //    };
+        //}
 
         base.OnFrameworkInitializationCompleted();
     }

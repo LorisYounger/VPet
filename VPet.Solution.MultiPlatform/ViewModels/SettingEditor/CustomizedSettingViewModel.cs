@@ -3,9 +3,9 @@ using CommunityToolkit.Mvvm.Input;
 using HKW.HKWUtils.Collections;
 using HKW.HKWUtils.Observable;
 using HKW.MVVM;
-using VPet.Solution.MultiPlatform.Models.SettingEditor;
+using VPet.Solution.MultiPlatform.Models;
 
-namespace VPet.Solution.MultiPlatform.ViewModels.SettingEditor;
+namespace VPet.Solution.MultiPlatform.ViewModels;
 
 public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettingViewModel
 {
