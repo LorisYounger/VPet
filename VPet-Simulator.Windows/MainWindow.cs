@@ -9,6 +9,7 @@ using Steamworks.Data;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -252,6 +253,15 @@ namespace VPet_Simulator.Windows
 
 
 
+        internal static DateTime ParseSteamSaveTime(string steamFilePath)
+        {
+            var suffix = Path.GetFileNameWithoutExtension(steamFilePath).Split('_').Last();
+            if (long.TryParse(suffix, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var timestamp)
+                && timestamp >= 0 && timestamp <= DateTime.MaxValue.Ticks / 60000)
+                return new DateTime(timestamp * 60000);
+            return DateTime.MinValue;
+        }
+
         //private DateTime timecount = DateTime.Now;
         /// <summary>
         /// 保存设置
@@ -357,12 +367,7 @@ namespace VPet_Simulator.Windows
                             var steamsave = SteamRemoteStorage.Files.Where(x => x.StartsWith($"VPetCloud/Save{PrefixSave}_")).ToList();
                             if (steamsave.Count > Set.BackupSaveMaxNum)
                             {
-                                steamsave = steamsave.OrderBy(x =>
-                                {
-                                    if (int.TryParse(x.Split('_').Last().Split('.')[0], out int i))
-                                        return i;
-                                    return 0;
-                                }).ToList();
+                                steamsave = steamsave.OrderBy(ParseSteamSaveTime).ToList();
                                 while (steamsave.Count > Set.BackupSaveMaxNum)
                                 {
                                     SteamRemoteStorage.FileDelete(steamsave[0]);

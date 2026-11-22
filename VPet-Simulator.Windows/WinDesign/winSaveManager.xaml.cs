@@ -212,7 +212,7 @@ namespace VPet_Simulator.Windows
                 try
                 {
                     var gs = new GameSave_v2(new LPS(lpsText));
-                    var saveTime = ParseSteamSaveTime(file);
+                    var saveTime = MainWindow.ParseSteamSaveTime(file);
                     entries.Add(new SaveEntry()
                     {
                         Source = SaveEntry.SourceType.Steam,
@@ -231,27 +231,6 @@ namespace VPet_Simulator.Windows
                 }
             }
             return entries;
-        }
-
-        private static DateTime ParseSteamSaveTime(string steamFilePath)
-        {
-            try
-            {
-                var fileName = Path.GetFileNameWithoutExtension(steamFilePath);
-                var suffix = fileName.Split('_').LastOrDefault();
-                if (string.IsNullOrEmpty(suffix))
-                    return DateTime.MinValue;
-
-                if (long.TryParse(suffix, System.Globalization.NumberStyles.HexNumber, null, out var ticksDivMinute))
-                {
-                    var ticks = ticksDivMinute * 60000;
-                    return new DateTime(ticks);
-                }
-            }
-            catch
-            {
-            }
-            return DateTime.MinValue;
         }
 
         private void LoadSelectedSave()
