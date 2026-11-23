@@ -303,6 +303,9 @@ namespace VPet_Simulator.Windows.Interface
         /// </summary>
         /// <param name="item">物品</param>
         public void ItemsAdd(Item item);
+
+        /// <summary>在物品栏选择物品。关闭窗口返回 null，确认后返回所选库存条目。</summary>
+        List<Item>? SelectInventoryItems(Window owner, string? category, bool multiple, Predicate<Item>? filter = null);
         /// <summary>
         /// 上次吃食物的时间
         /// </summary>

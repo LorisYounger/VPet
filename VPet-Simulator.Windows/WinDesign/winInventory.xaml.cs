@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using VPet_Simulator.Windows.Interface;
@@ -20,29 +21,24 @@ namespace VPet_Simulator.Windows
     /// </summary>
     public partial class winInventory : WindowX
     {
-        MainWindow mw;
+        private readonly IMainWindow mw;
         private TextBox? _searchTextBox;
         private Run? rTotalValue;
         private Item? _detailItem;
         private int _detailCount = 1;
         private int pageSize = 1;
         private bool updatingPagination;
+        private string? fixedCategory;
+        private Predicate<Item>? selectionFilter;
+        private bool multiple;
+        public List<Item> SelectedItems { get; } = new();
+
 
         /// <summary>
         /// 构造函数，初始化物品栏窗口
         /// </summary>
         /// <param name="mw">主窗口实例</param>
-        public winInventory(MainWindow mw)
-        {
-            InitializeComponent();
-            this.mw = mw;
-            Loaded += winInventory_Loaded;
-            for (int i = 1; i < Item.ItemTypes.Count; i++)
-            {
-                LsbCategory.Items.Add(new ListBoxItem() { Content = ("Item_" + Item.ItemTypes[i]).Translate() });
-            }
-            //mw.ItemsAdd(mw.Foods[2].Clone());
-        }
+        public winInventory(MainWindow mw) : this(mw, null) { }
 
         /// <summary>
         /// 显示物品栏窗口
@@ -52,6 +48,52 @@ namespace VPet_Simulator.Windows
             if (IsLoaded) UpdateList();
             base.Show();
         }
+
+        /// <summary>限定分类浏览，或在指定单选、多选模式下返回库存条目。</summary>
+        public winInventory(IMainWindow mw, string? category, bool? multiple = null, Predicate<Item>? filter = null)
+        {
+            this.mw = mw;
+            fixedCategory = category;
+            selectionFilter = filter;
+            InitializeComponent();
+            Loaded += winInventory_Loaded;
+            if (category == null)
+            {
+                for (int i = 1; i < Item.ItemTypes.Count; i++)
+                    LsbCategory.Items.Add(new ListBoxItem { Content = ("Item_" + Item.ItemTypes[i]).Translate() });
+            }
+            else
+            {
+                LsbCategory.Visibility = Visibility.Collapsed;
+                CategoryLabel.Text = ("Item_" + category).Translate();
+            }
+            if (multiple == null) return;
+            this.multiple = multiple.Value;
+            Title = "选择物品".Translate();
+            IcCommodity.ItemTemplate = (DataTemplate)Resources["InventorySelectCellTemplate"];
+            SelectionBar.Visibility = Visibility.Visible;
+            SelectionCountPanel.Visibility = this.multiple ? Visibility.Visible : Visibility.Collapsed;
+            ConfirmSelection.Visibility = this.multiple ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void SelectionCellChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var cell = (ToggleButton)sender;
+            cell.IsChecked = e.NewValue is Item item && SelectedItems.Contains(item);
+        }
+
+        private void SelectionCellClicked(object sender, RoutedEventArgs e)
+        {
+            var cell = (ToggleButton)sender;
+            var item = (Item)cell.DataContext;
+            if (!multiple) SelectedItems.Clear();
+            if (cell.IsChecked == true) SelectedItems.Add(item);
+            else SelectedItems.Remove(item);
+            SelectionCount.Text = SelectedItems.Count.ToString();
+            if (!multiple) DialogResult = true;
+        }
+
+        private void ConfirmSelectionClicked(object sender, RoutedEventArgs e) => DialogResult = true;
 
         private void winInventory_Loaded(object sender, RoutedEventArgs e)
         {
@@ -85,7 +127,9 @@ namespace VPet_Simulator.Windows
 
             // 分类
             // 0: 全部（显示所有物品）
-            if (LsbCategory.SelectedIndex != 0)
+            if (selectionFilter != null) items = items.Where(item => selectionFilter(item));
+            if (fixedCategory != null) items = items.Where(item => item.ItemType == fixedCategory);
+            else if (LsbCategory.SelectedIndex > 0)
             {
                 items = items.Where(x => x.ItemType == Item.ItemTypes[LsbCategory.SelectedIndex]);
             }

@@ -25,6 +25,12 @@ namespace VPet_Simulator.Windows;
 // 一些桌宠功能的实现函数
 public partial class MainWindow : IMainWindow
 {
+    public List<Item>? SelectInventoryItems(Window owner, string? category, bool multiple, Predicate<Item>? filter = null)
+    {
+        var picker = new winInventory(this, category, multiple, filter) { Owner = owner };
+        return picker.ShowDialog() == true ? picker.SelectedItems : null;
+    }
+
     /// <summary>
     /// 场景布局的所有权。统一处理图层顺序、宠物周围留白及桌面位置补偿。
     /// 所有方法在 UI 线程调用；同一个 PetGrid 同时只能挂载一个场景。

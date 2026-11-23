@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VPet_Simulator.Windows" mc:Ignorable="d"
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
-        Title="{ll:Str 物品栏}" Icon="/Res/Inventory.png" Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}"
+        Title="{ll:Str 物品栏}" Icon="/VPet-Simulator.Windows;component/Res/Inventory.png" Height="{ll:Dbe BetterBuyHeight_550, DefValue=550}"
         Width="{ll:Dbe BetterBuyWidth_800, DefValue=800}" FontSize="14" WindowStartupLocation="CenterScreen"
         Background="{DynamicResource PrimaryLighter}" pu:WindowXCaption.Height="45"
         pu:WindowXCaption.Background="{DynamicResource DARKPrimary}" pu:WindowXCaption.Foreground="#FFFFFF"
@@ -20,9 +20,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal">
-                    <Image x:Name="ImageWHY" Width="28" Height="28" Source="/Res/Inventory.png"
+                    <Image x:Name="ImageWHY" Width="28" Height="28" Source="/VPet-Simulator.Windows;component/Res/Inventory.png"
                             VerticalAlignment="Center" Margin="30,0,0,0" />
-                    <TextBlock Text="{ll:Str 物品栏}" Foreground="{DynamicResource DARKPrimaryText}"
+                    <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" Foreground="{DynamicResource DARKPrimaryText}"
                             VerticalAlignment="Center" FontSize="20" Margin="10,0,0,0" />
                     <Grid Grid.Column="1" Margin="15,0,0,0" pu:WindowX.IsDragMoveArea="False" Width="200">
                         <Grid.ColumnDefinitions>
@@ -210,21 +210,74 @@
                 </Trigger>
             </DataTemplate.Triggers>
         </DataTemplate>
+        <DataTemplate x:Key="InventorySelectCellTemplate">
+            <ToggleButton Margin="0,0,10,10" Cursor="Hand" Style="{x:Null}"
+                    DataContextChanged="SelectionCellChanged" Click="SelectionCellClicked">
+                <ToggleButton.Template>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid Width="100" Height="100" Background="Transparent">
+                            <ContentPresenter />
+                            <Border x:Name="SelectBorder" CornerRadius="6" BorderThickness="0"
+                                    BorderBrush="{DynamicResource DARKPrimary}" IsHitTestVisible="False" />
+                            <Border x:Name="SelectBadge" Visibility="Collapsed" HorizontalAlignment="Left"
+                                    VerticalAlignment="Bottom" Margin="5" Width="22" Height="22" CornerRadius="11"
+                                    Background="{DynamicResource DARKPrimary}" IsHitTestVisible="False">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        Foreground="{DynamicResource DARKPrimaryText}"
+                                        FontFamily="/VPet-Simulator.Windows;component/Res/#remixicon" FontSize="14"
+                                        Text="&#xEB7B;" />
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="SelectBorder" Property="BorderThickness" Value="1.5" />
+                                <Setter TargetName="SelectBorder" Property="Background" Value="{DynamicResource PrimaryTrans4}" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="SelectBorder" Property="BorderThickness" Value="2.5" />
+                                <Setter TargetName="SelectBorder" Property="Background" Value="{DynamicResource DARKPrimaryTrans4}" />
+                                <Setter TargetName="SelectBadge" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ToggleButton.Template>
+                <ContentControl Content="{Binding}" IsHitTestVisible="False" KeyboardNavigation.TabNavigation="None"
+                                ContentTemplate="{StaticResource InventoryGridCellTemplate}"/>
+            </ToggleButton>
+        </DataTemplate>
     </Window.Resources>
     <Grid Margin="12,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <Border x:Name="SelectionBar" Grid.Row="3" Margin="0,8,0,0" Padding="10,8" CornerRadius="6"
+                Background="{DynamicResource SecondaryTrans4}" Visibility="Collapsed">
+            <Grid>
+                <TextBlock x:Name="SelectionCountPanel" VerticalAlignment="Center"
+                        Foreground="{DynamicResource DARKPrimary}" FontSize="15">
+                    <Run Text="{ll:Str 已选择}" />
+                    <Run x:Name="SelectionCount" Text="0" FontSize="16" FontWeight="Bold" />
+                </TextBlock>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button x:Name="ConfirmSelection" Content="{ll:Str 确认}" Padding="16,6" Cursor="Hand"
+                            Style="{DynamicResource ThemedButtonStyle}" Click="ConfirmSelectionClicked" />
+                    <Button Content="{ll:Str 取消}" Padding="16,6" Margin="8,0,0,0" Cursor="Hand"
+                            Style="{DynamicResource SecondaryBorderedButtonStyle}" pu:ButtonHelper.CornerRadius="5"
+                            Foreground="{DynamicResource PrimaryText}" IsCancel="True" />
+                </StackPanel>
+            </Grid>
+        </Border>
         <!-- 分类 Tab -->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="{ll:Str 物品分类}" Style="{StaticResource SectionTitleTextStyle}" Margin="5,6,10,6"
+            <TextBlock x:Name="CategoryLabel" Text="{ll:Str 物品分类}" Style="{StaticResource SectionTitleTextStyle}" Margin="5,6,10,6"
                     VerticalAlignment="Center" />
             <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
                 <ListBox x:Name="LsbCategory" Style="{StaticResource CategoryListBoxStyle}" SelectedIndex="0"
