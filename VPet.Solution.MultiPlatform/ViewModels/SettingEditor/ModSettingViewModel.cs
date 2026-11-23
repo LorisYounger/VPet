@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using HanumanInstitute.MvvmDialogs;
+using HanumanInstitute.MvvmDialogs.FrameworkDialogs;
 using HKW.HKWUtils.Collections;
 using HKW.HKWUtils.Observable;
 using HKW.MVVM;
@@ -7,7 +9,7 @@ using VPet.Solution.MultiPlatform.Models;
 
 namespace VPet.Solution.MultiPlatform.ViewModels;
 
-public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewModel
+public partial class ModSettingViewModel : DisposableViewModel, ISubSettingViewModel
 {
     public ModSettingViewModel()
     {
@@ -49,18 +51,17 @@ public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewMo
     public ModModel? CurrentMod { get; set; }
 
     [RelayCommand]
-    private void ClearMods()
+    private async Task ClearMods()
     {
-        // TODO: DialogService 确认清除全部模组
-        // var result = DialogService.ShowMessageBox(
-        //     this,
-        //     "确定清除全部模组吗".Translate(),
-        //     "",
-        //     MessageBoxButton.YesNo,
-        //     MessageBoxImage.Warning
-        // );
-        // if (result is not true)
-        //     return;
+        var result = await DialogService.ShowMessageBoxAsync(
+            this,
+            "确定清除全部模组吗".Translate(),
+            "",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning
+        );
+        if (result is not true)
+            return;
         Mods.BatchUpdate(l =>
         {
             l.Clear();
@@ -70,18 +71,17 @@ public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewMo
     }
 
     [RelayCommand]
-    private void ClearFailMods()
+    private async Task ClearFailMods()
     {
-        // TODO: DialogService 确认清除全部失效模组
-        // var result = DialogService.ShowMessageBox(
-        //     this,
-        //     "确定清除全部失效模组吗".Translate(),
-        //     "",
-        //     MessageBoxButton.YesNo,
-        //     MessageBoxImage.Warning
-        // );
-        // if (result is not true)
-        //     return;
+        var result = await DialogService.ShowMessageBoxAsync(
+            this,
+            "确定清除全部失效模组吗".Translate(),
+            "",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning
+        );
+        if (result is not true)
+            return;
         Mods.BatchUpdate(l =>
         {
             for (var i = 0; i < l.Count; i++)
@@ -99,28 +99,22 @@ public partial class ModSettingViewModel : CloseableViewModel, ISubSettingViewMo
     {
         if (parameter is null)
             return;
-        // TODO: OpenLink 打开 Steam 创意工坊页面
-        // NativeUtils.OpenLink(
-        //     "https://steamcommunity.com/sharedfiles/filedetails/?id=" + parameter.ItemID
-        // );
+        NativeUtils.Launch(
+            "https://steamcommunity.com/sharedfiles/filedetails/?id=" + parameter.ItemID
+        );
     }
 
     [RelayCommand]
-    private void OpenModPath(ModModel? parameter)
+    private async Task OpenModPath(ModModel? parameter)
     {
         if (parameter is null)
             return;
-        // TODO: OpenLink 打开模组所在文件夹, 失败时通过 DialogService 提示
-        // try
-        // {
-        //     NativeUtils.OpenLink(parameter.ModPath);
-        // }
-        // catch
-        // {
-        //     DialogService.ShowMessageBox(
-        //         this,
-        //         "未找到模组\n路径: {0}".Translate(parameter.ModPath)
-        //     );
-        // }
+        if (await NativeUtils.LaunchAsync(parameter.ModPath) is false)
+        {
+            await DialogService.ShowMessageBoxAsync(
+                this,
+                "未找到模组\n路径: {0}".Translate(parameter.ModPath)
+            );
+        }
     }
 }

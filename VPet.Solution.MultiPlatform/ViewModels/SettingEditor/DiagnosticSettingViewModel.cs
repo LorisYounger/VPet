@@ -3,7 +3,7 @@ using VPet.Solution.MultiPlatform.Models;
 
 namespace VPet.Solution.MultiPlatform.ViewModels;
 
-public partial class DiagnosticSettingViewModel : ViewModelBase, ISubSettingViewModel
+public partial class DiagnosticSettingViewModel : DisposableViewModel, ISubSettingViewModel
 {
     public SettingModel Setting { get; set; } = null!;
 
@@ -12,7 +12,6 @@ public partial class DiagnosticSettingViewModel : ViewModelBase, ISubSettingView
     [RelayCommand]
     public static void HyperMoreInfo()
     {
-        // TODO: OpenLink 打开诊断说明文档
-        // NativeUtils.OpenLink("https://www.exlb.net/Diagnosis");
+        NativeUtils.Launch("https://www.exlb.net/Diagnosis");
     }
 }

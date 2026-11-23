@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using HanumanInstitute.MvvmDialogs.FileSystem;
 using HKW.MVVM;
 
 namespace VPet.Solution.MultiPlatform.Models;
@@ -14,6 +15,11 @@ public partial class SettingModel : ObservableObjectEx
     /// 文件路径
     /// </summary>
     public string FilePath { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 存储文件句柄
+    /// </summary>
+    public IDialogStorageFile? StorageFile { get; set; }
 
     /// <summary>
     /// 已更改
@@ -96,7 +102,7 @@ public partial class SettingModel : ObservableObjectEx
         };
     }
 
-    public void Save()
+    public async Task SaveAsync()
     {
         GraphicsSetting.Save(_setting);
         SystemSetting.Save(_setting);
@@ -105,7 +111,15 @@ public partial class SettingModel : ObservableObjectEx
         CustomizedSetting.Save(_setting);
         ModSetting.Save(_setting);
 
-        File.WriteAllText(FilePath, _setting.ToString());
+        var content = _setting.ToString();
+        if (StorageFile is not null)
+        {
+            await StorageFile.WriteAllTextAsync(content);
+        }
+        else if (string.IsNullOrWhiteSpace(FilePath) is false)
+        {
+            await File.WriteAllTextAsync(FilePath, content);
+        }
         IsChanged = false;
     }
 }

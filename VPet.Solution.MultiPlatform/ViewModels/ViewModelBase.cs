@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HanumanInstitute.MvvmDialogs;
 using HKW.MVVM;
 using HKW.MVVM.SourceGenerator;
@@ -10,20 +11,9 @@ public partial class ViewModelBase : ObservableObjectEx
     public required IDialogService DialogService { get; init; }
 }
 
-public partial class CloseableViewModel : ViewModelBase, IDisposable, IViewClosed
+public partial class DisposableViewModel : ViewModelBase, IDisposable
 {
-    /// <summary>
-    /// 一次性关闭事件
-    /// </summary>
-    public event EventHandler? Closed;
-
-    public virtual void OnClosed()
-    {
-        Closed?.Invoke(this, EventArgs.Empty);
-        Closed = null;
-    }
-
-    internal MultipleDisposable Disposables { get; } = [];
+    protected MultipleDisposable Disposables { get; } = [];
 
     public void Dispose()
     {
@@ -39,5 +29,34 @@ public partial class CloseableViewModel : ViewModelBase, IDisposable, IViewClose
         {
             Disposables.Dispose();
         }
+    }
+}
+
+public partial class CloseableViewModel : DisposableViewModel, IViewClosing, ICloseable
+{
+    /// <summary>
+    /// 执行关闭事件
+    /// </summary>
+    public event EventHandler? RequestClose;
+
+    /// <summary>
+    /// 关闭
+    /// </summary>
+    public virtual void Close()
+    {
+        RequestClose?.Invoke(this, EventArgs.Empty);
+        Dispose();
+    }
+
+    public void OnClosing(CancelEventArgs e)
+    {
+        // Avalonia 框架为异步, 同步的 OnClosing 方法无法停止 UI 响应
+        // 先将 Cancel 设为 true 拦截退出, 框架随后会自动调用 OnClosingAsync
+        e.Cancel = true;
+    }
+
+    public virtual async Task OnClosingAsync(CancelEventArgs e)
+    {
+        e.Cancel = false;
     }
 }

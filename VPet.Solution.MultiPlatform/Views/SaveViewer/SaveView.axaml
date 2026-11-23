@@ -1,0 +1,81 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:local="using:VPet.Solution.MultiPlatform"
+  xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:v="using:VPet.Solution.MultiPlatform.Views"
+  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels"
+  mc:Ignorable="d"
+  d:DesignWidth="800"
+  d:DesignHeight="450"
+  x:DataType="vm:SaveViewModel"
+  x:Class="VPet.Solution.MultiPlatform.Views.SaveView"
+>
+  <Grid ColumnDefinitions="400,Auto,*">
+    <Grid Margin="10" RowDefinitions="Auto,*">
+      <TextBox PlaceholderText="{ll:Str 搜索存档}" Text="{Binding SearchSave}" Margin="0,0,0,6" />
+      <DataGrid
+        x:Name="Saves"
+        Grid.Row="1"
+        AutoGenerateColumns="False"
+        CanUserResizeColumns="True"
+        IsReadOnly="True"
+        ItemsSource="{Binding Saves.FilteredList}"
+        SelectedItem="{Binding CurrentSave}"
+      >
+        <DataGrid.ContextMenu>
+          <ContextMenu>
+            <MenuItem
+              Command="{Binding OpenFileCommand}"
+              CommandParameter="{Binding CurrentSave}"
+              Header="{ll:Str 打开文件}"
+            />
+          </ContextMenu>
+        </DataGrid.ContextMenu>
+        <DataGrid.Columns>
+          <DataGridTextColumn Binding="{Binding Name}" Header="{ll:Str 名称}" IsReadOnly="True" />
+          <DataGridTextColumn
+            Binding="{Binding DateSaved, StringFormat='yyyy/MM/dd HH:mm:ss'}"
+            Header="{ll:Str 保存时间}"
+            IsReadOnly="True"
+          />
+          <DataGridTextColumn
+            Binding="{Binding TotalTime}"
+            Header="{ll:Str 游玩时长}"
+            IsReadOnly="True"
+          />
+          <DataGridTextColumn
+            Binding="{Binding HashChecked, Converter={StaticResource TranslateConverter}}"
+            Header="{ll:Str 哈希}"
+            IsReadOnly="True"
+          />
+        </DataGrid.Columns>
+      </DataGrid>
+    </Grid>
+    <Separator Margin="0,10,0,10" Grid.Column="1" Height="NaN" Width="2" />
+    <Grid
+      Margin="10"
+      Grid.Column="2"
+      IsEnabled="{Binding CurrentSave, Converter={StaticResource NullToFalseConverter}}"
+    >
+      <TabbedPage IsGestureEnabled="True">
+        <TabbedPage.Styles>
+          <Style Selector="TabItem">
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="Padding" Value="0,5,0,10" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+            <Setter Property="FontWeight" Value="Bold" />
+          </Style>
+        </TabbedPage.Styles>
+        <ContentPage Header="{ll:Str 数据}">
+          <v:SaveDataView />
+        </ContentPage>
+        <ContentPage Header="{ll:Str 统计}">
+          <v:SaveStatisticView />
+        </ContentPage>
+      </TabbedPage>
+    </Grid>
+  </Grid>
+</UserControl>

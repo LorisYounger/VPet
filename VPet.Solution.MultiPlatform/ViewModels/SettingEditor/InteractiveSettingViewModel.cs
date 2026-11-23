@@ -2,7 +2,7 @@ using VPet.Solution.MultiPlatform.Models;
 
 namespace VPet.Solution.MultiPlatform.ViewModels;
 
-public partial class InteractiveSettingViewModel : ViewModelBase, ISubSettingViewModel
+public partial class InteractiveSettingViewModel : DisposableViewModel, ISubSettingViewModel
 {
     public SettingModel Setting { get; set; } = null!;
 

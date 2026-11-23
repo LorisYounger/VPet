@@ -6,12 +6,16 @@
   xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
   xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels"
   xmlns:m="using:VPet.Solution.MultiPlatform.Models"
+  xmlns:v="using:VPet.Solution.MultiPlatform.Views"
   mc:Ignorable="d"
   d:DesignWidth="800"
   d:DesignHeight="450"
   x:Class="VPet.Solution.MultiPlatform.Views.SettingView"
   x:DataType="vm:SettingViewModel"
 >
+  <Design.DataContext>
+    <vm:SettingViewModel />
+  </Design.DataContext>
   <UserControl.Styles>
     <Style Selector="Button.remind">
       <Style.Animations>
@@ -45,7 +49,6 @@
       <ListBox
         x:Name="Settings"
         Grid.Row="2"
-        SelectionChanged="Settings_SelectionChanged"
         ItemsSource="{Binding Settings.FilteredList}"
         SelectedItem="{Binding CurrentSetting}"
       >
@@ -112,7 +115,35 @@
     <Border Grid.Column="1" Width="2" Background="#14000000" />
     <Grid Margin="10" Grid.Column="2" RowDefinitions="Auto,*">
       <Grid ColumnDefinitions="*,Auto,Auto" MinHeight="34" Margin="0,0,0,6">
-        <ListBox
+        <TabbedPage>
+          <TabbedPage.Styles>
+            <Style Selector="TabItem">
+              <Setter Property="MinHeight" Value="30" />
+              <Setter Property="Padding" Value="0,5,0,10" />
+              <Setter Property="Margin" Value="0,0,0,10" />
+              <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+          </TabbedPage.Styles>
+          <ContentPage Header="{ll:Str 图像}">
+            <v:GraphicsSettingView DataContext="{Binding SubSettingViewModels[Graphics]}" />
+          </ContentPage>
+          <ContentPage Header="{ll:Str 系统}">
+            <v:SystemSettingView DataContext="{Binding SubSettingViewModels[System]}" />
+          </ContentPage>
+          <ContentPage Header="{ll:Str 诊断}">
+            <v:DiagnosticSettingView DataContext="{Binding SubSettingViewModels[Diagnostic]}" />
+          </ContentPage>
+          <ContentPage Header="{ll:Str 互动}">
+            <v:InteractiveSettingView DataContext="{Binding SubSettingViewModels[Interactive]}" />
+          </ContentPage>
+          <ContentPage Header="{ll:Str 定制}">
+            <v:CustomizedSettingView DataContext="{Binding SubSettingViewModels[Customized]}" />
+          </ContentPage>
+          <ContentPage Header="{ll:Str 模组}">
+            <v:ModSettingView DataContext="{Binding SubSettingViewModels[Mod]}" />
+          </ContentPage>
+        </TabbedPage>
+        <!--<ListBox
           x:Name="SubSettingTypes"
           Classes="HorizontalNav"
           ItemsSource="{x:Static vm:SettingViewModel.SubSettingTypes}"
@@ -123,31 +154,29 @@
               <StackPanel Orientation="Horizontal" />
             </ItemsPanelTemplate>
           </ListBox.ItemsPanel>
-        </ListBox>
-        <Button
+        </ListBox>-->
+        <!--        <Button
           x:Name="LastSubSettingType"
           HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
           Grid.Column="1"
-          Width="28"
-          Margin="2,0"
+          Width="20"
           Padding="0"
           Click="LastSubSettingType_Click"
           Classes="Base"
-          Content="《"
+          Content="《 "
         />
         <Button
           x:Name="NextSubSettingType"
           HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
           Grid.Column="2"
-          Width="28"
-          Margin="2,0"
+          Width="20"
           Padding="0"
           Click="NextSubSettingType_Click"
           Classes="Base"
-          Content="》"
-        />
+          Content=" 》"
+        />-->
       </Grid>
       <ContentControl x:Name="SettingContentControl" Grid.Row="1" />
     </Grid>

@@ -1,10 +1,8 @@
-using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using HanumanInstitute.MvvmDialogs;
 using Microsoft.Extensions.DependencyInjection;
-using VPet_Simulator.Windows.Interface;
 using VPet.Solution.MultiPlatform.ViewModels;
 using VPet.Solution.MultiPlatform.Views;
 
@@ -44,7 +42,7 @@ public partial class App : Application
                         }
                         break;
                     case "launchsteam":
-                        ExtensionFunction.StartURL("steam://rungameid/1920960");
+                        NativeUtils.Launch("steam://rungameid/1920960");
                         break;
                 }
 
@@ -52,9 +50,11 @@ public partial class App : Application
                 base.OnFrameworkInitializationCompleted();
                 return;
             }
+            if (VPetSolution.BaseFolder is null)
+                VPetSolution.SetLocalBaseDirectory(Environment.CurrentDirectory);
         }
 
-        // 直接显示, 此方式支持桌面和单页
+        // 用 DialogService 显示, 此方式支持桌面和单页
         Services
             .GetRequiredService<IDialogService>()
             .Show(null, Services.GetRequiredService<MainViewModel>());

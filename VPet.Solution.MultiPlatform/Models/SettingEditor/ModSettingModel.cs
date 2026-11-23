@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using HanumanInstitute.MvvmDialogs.FileSystem;
 using HKW.MVVM;
 using LinePutScript;
 using LinePutScript.Localization;
@@ -6,99 +8,138 @@ namespace VPet.Solution.MultiPlatform.Models;
 
 public partial class ModSettingModel : ObservableObjectEx, ISubSettingModel
 {
+    private static IDialogStorageFolder? _loadedBaseFolder;
+
     public SubSettingModelType ModelType => SubSettingModelType.Mod;
     public const string OnModLineName = "onmod";
     public const string PassModLineName = "passmod";
     public const string MsgModLineName = "msgmod";
     public const string WorkShopLineName = "workshop";
-    public static readonly string ModDirectory = Path.Combine(Environment.CurrentDirectory, "mod");
-    public static Dictionary<string, ModLoader> LocalMods { get; private set; } = null!;
+    public static Dictionary<string, ModLoader> LocalMods { get; private set; } =
+        new(StringComparer.OrdinalIgnoreCase);
+
+    public static List<ModLoader> LocalModList { get; } = [];
 
     public List<ModModel> Mods { get; } = [];
 
-    public static List<string> Fonts { get; } = [];
+    public static ObservableCollection<string> Fonts { get; } = [];
 
-    public static List<string> Themes { get; } = [];
+    public static ObservableCollection<string> Themes { get; } = [];
 
-    public static List<string> PetGraphs { get; } = [];
+    public static ObservableCollection<string> PetGraphs { get; } = [];
+
+    public static List<string> StaticErrors { get; } = [];
 
     public List<string> Errors { get; } = [];
 
-    public ModSettingModel()
+    /// <summary>
+    /// 确保当前根目录下的本地模组已加载
+    /// </summary>
+    public static async Task EnsureLocalModsLoadedAsync()
     {
-        LocalMods ??= GetLocalMods();
-    }
+        var baseFolder = VPetSolution.BaseFolder;
+        if (ReferenceEquals(_loadedBaseFolder, baseFolder))
+            return;
 
-    private Dictionary<string, ModLoader> GetLocalMods()
-    {
-        var dic = new Dictionary<string, ModLoader>(StringComparer.OrdinalIgnoreCase);
-        if (Directory.Exists(ModDirectory) is false)
-            return dic;
-        foreach (var dir in Directory.EnumerateDirectories(ModDirectory))
+        _loadedBaseFolder = baseFolder;
+        LocalMods = new(StringComparer.OrdinalIgnoreCase);
+        LocalModList.Clear();
+        Fonts.Clear();
+        Themes.Clear();
+        PetGraphs.Clear();
+        StaticErrors.Clear();
+
+        if (baseFolder is null)
+            return;
+
+        using var modFolder = await baseFolder.TryGetFolderAsync("mod");
+        if (modFolder is null)
+            return;
+
+        await foreach (var item in modFolder.GetItemsAsync())
         {
-            try
+            using (item)
             {
-                var loader = new ModLoader(dir);
-                dic.TryAdd(loader.Name, loader);
-                foreach (var font in loader.Fonts)
+                if (item is not IDialogStorageFolder dir)
+                    continue;
+
+                try
                 {
-                    if (Fonts.Contains(font.Translate()) is false)
-                        Fonts.Add(font.Translate());
+                    var loader = await ModLoader.LoadAsync(dir);
+                    LocalModList.Add(loader);
+                    if (string.IsNullOrEmpty(loader.Name) is false)
+                        LocalMods.TryAdd(loader.Name, loader);
+                    if (loader.IsSuccesses is false)
+                        continue;
+
+                    foreach (var font in loader.Fonts)
+                    {
+                        var translated = font.Translate();
+                        if (Fonts.Contains(translated) is false)
+                            Fonts.Add(translated);
+                    }
+                    foreach (var theme in loader.Themes)
+                    {
+                        var translated = theme.Translate();
+                        if (Themes.Contains(translated) is false)
+                            Themes.Add(translated);
+                    }
+                    foreach (var petGraph in loader.PetGraphs)
+                    {
+                        var translated = petGraph.Translate();
+                        if (PetGraphs.Contains(translated) is false)
+                            PetGraphs.Add(translated);
+                    }
                 }
-                foreach (var theme in loader.Themes)
+                catch (Exception ex)
                 {
-                    if (Themes.Contains(theme.Translate()) is false)
-                        Themes.Add(theme.Translate());
+                    StaticErrors.Add(
+                        "路径:\"{0}\" 异常:\"{1}\"".Translate(dir.GetDisplayPath(), ex.Message)
+                    );
                 }
-                foreach (var petGraph in loader.PetGraphs)
-                {
-                    if (PetGraphs.Contains(petGraph.Translate()) is false)
-                        PetGraphs.Add(petGraph.Translate());
-                }
-            }
-            catch (Exception ex)
-            {
-                Errors.Add("路径:\"{0}\" 异常:\"{1}\"".Translate(dir, ex.Message));
             }
         }
-        return dic;
     }
 
     public void Load(Setting setting)
     {
         Mods.Clear();
-        if (Directory.Exists(ModDirectory))
-        {
-            foreach (var dir in Directory.GetDirectories(ModDirectory))
-            {
-                var loader = new ModLoader(dir);
-                if (loader.IsSuccesses)
-                {
-                    var modModel = new ModModel(loader);
-                    modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
-                    modModel.IsPass = setting[PassModLineName]
-                        .Contains(modModel.ID.ToLowerInvariant());
-                    if (modModel.ID.Equals("Core", StringComparison.OrdinalIgnoreCase))
-                    {
-                        modModel.IsEnabled = true;
-                    }
-                    else
-                    {
-                        modModel.IsEnabled = setting[OnModLineName]
-                            .Contains(modModel.ID.ToLowerInvariant());
-                    }
+        Errors.Clear();
+        Errors.AddRange(StaticErrors);
 
-                    Mods.Add(modModel);
+        foreach (var loader in LocalModList)
+        {
+            if (loader.IsSuccesses)
+            {
+                var modModel = new ModModel(loader);
+                modModel.IsMsg = setting[MsgModLineName].GetBool(modModel.ID);
+                modModel.IsPass = setting[PassModLineName].Contains(modModel.ID.ToLowerInvariant());
+                if (modModel.ID.Equals("Core", StringComparison.OrdinalIgnoreCase))
+                {
+                    modModel.IsEnabled = true;
                 }
                 else
                 {
-                    Mods.Add(new() { Name = loader.Name, ModPath = loader.ModPath });
+                    modModel.IsEnabled = setting[OnModLineName]
+                        .Contains(modModel.ID.ToLowerInvariant());
                 }
+
+                Mods.Add(modModel);
+            }
+            else
+            {
+                Mods.Add(new() { Name = loader.Name, ModPath = loader.ModPath });
             }
         }
 
         foreach (var modPath in setting[WorkShopLineName])
         {
+            if (OperatingSystem.IsBrowser())
+            {
+                Mods.Add(new() { Name = Path.GetFileName(modPath.Name), ModPath = modPath.Name });
+                continue;
+            }
+
             var loader = new ModLoader(modPath.Name);
             if (loader.IsSuccesses)
             {

@@ -2,12 +2,10 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-  xmlns:m="using:VPet.Solution.MultiPlatform.Models"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
-  xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels"
+  xmlns:v="using:VPet.Solution.MultiPlatform.Views"
   x:Class="VPet.Solution.MultiPlatform.Views.SettingWindow"
-  x:DataType="vm:SettingViewModel"
   Title="{ll:Str 'VPET 设置编辑器'}"
   Icon="/Assets/icon.ico"
   Width="1000"
@@ -16,4 +14,6 @@
   MinHeight="200"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d"
-></Window>
+>
+  <v:SettingView />
+</Window>

@@ -22,6 +22,7 @@
       x:Name="Statistics"
       Grid.Row="1"
       Margin="0,5,0,0"
+      ScrollViewer.VerticalScrollBarVisibility="Visible"
       AutoGenerateColumns="False"
       CanUserResizeColumns="True"
       IsReadOnly="True"
@@ -35,12 +36,14 @@
       <DataGrid.Columns>
         <DataGridTextColumn
           Width="300"
+          CanUserSort="False"
           Binding="{Binding Name}"
           Header="{ll:Str 名称}"
           IsReadOnly="True"
         />
         <DataGridTextColumn
           Width="200"
+          CanUserSort="False"
           Binding="{Binding Value}"
           Header="{ll:Str 值}"
           IsReadOnly="True"

@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using HanumanInstitute.MvvmDialogs;
+using HanumanInstitute.MvvmDialogs.FrameworkDialogs;
 using HKW.HKWUtils.Collections;
 using HKW.HKWUtils.Observable;
 using HKW.MVVM;
@@ -7,7 +9,7 @@ using VPet.Solution.MultiPlatform.Models;
 
 namespace VPet.Solution.MultiPlatform.ViewModels;
 
-public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettingViewModel
+public partial class CustomizedSettingViewModel : DisposableViewModel, ISubSettingViewModel
 {
     public CustomizedSettingViewModel()
     {
@@ -46,18 +48,17 @@ public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettin
     > Links { get; set; } = null!;
 
     [RelayCommand]
-    private void ClearLinks()
+    private async Task ClearLinks()
     {
-        // TODO: DialogService 确认清空全部自定义链接
-        // var result = DialogService.ShowMessageBox(
-        //     this,
-        //     "确定清空吗".Translate(),
-        //     "",
-        //     MessageBoxButton.YesNo,
-        //     MessageBoxImage.Warning
-        // );
-        // if (result is not true)
-        //     return;
+        var result = await DialogService.ShowMessageBoxAsync(
+            this,
+            "确定清空吗".Translate(),
+            "",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning
+        );
+        if (result is not true)
+            return;
 
         SearchLink = string.Empty;
         Links.Clear();
@@ -85,22 +86,19 @@ public partial class CustomizedSettingViewModel : CloseableViewModel, ISubSettin
     {
         if (Setting.GraphicsSetting.Language.StartsWith("zh"))
         {
-            // TODO: OpenLink 打开中文 SendKeys 文档
-            // NativeUtils.OpenLink("https://www.exlb.net/SendKeys");
+            NativeUtils.Launch("https://www.exlb.net/SendKeys");
         }
         else if (Setting.GraphicsSetting.Language == "null")
         {
-            // TODO: OpenLink 打开英文 SendKeys 文档
-            // NativeUtils.OpenLink(
-            //     "https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks"
-            // );
+            NativeUtils.Launch(
+                "https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks"
+            );
         }
         else
         {
-            // TODO: OpenLink 打开对应语言 SendKeys 文档
-            // NativeUtils.OpenLink(
-            //     $"https://learn.microsoft.com/{Setting.GraphicsSetting.Language}/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks"
-            // );
+            NativeUtils.Launch(
+                $"https://learn.microsoft.com/{Setting.GraphicsSetting.Language}/dotnet/api/system.windows.forms.sendkeys?view=windowsdesktop-7.0#remarks"
+            );
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using HanumanInstitute.MvvmDialogs.FileSystem;
 using HKW.HKWUtils.Collections;
 using HKW.MVVM;
 using LinePutScript;
@@ -9,7 +10,7 @@ using VPet.Solution.MultiPlatform.Models;
 
 namespace VPet.Solution.MultiPlatform.ViewModels;
 
-public partial class SaveViewModel : ViewModelBase
+public partial class SaveViewModel : CloseableViewModel
 {
     public SaveViewModel()
     {
@@ -24,30 +25,81 @@ public partial class SaveViewModel : ViewModelBase
             .Throttle(TimeSpan.FromSeconds(0.5), ObservableSchedulers.ThreadPool)
             .DistinctUntilChanged()
             .ObserveOn(ObservableSchedulers.Current)
-            .Subscribe(_ => Saves?.Refresh());
+            .Subscribe(_ => Saves?.Refresh())
+            .DisposeWith(Disposables);
 
         this.WhenAnyValue(x => x.SearchStatistic)
             .Throttle(TimeSpan.FromSeconds(0.5), ObservableSchedulers.ThreadPool)
             .DistinctUntilChanged()
             .ObserveOn(ObservableSchedulers.Current)
-            .Subscribe(_ => Statistics?.Refresh());
+            .Subscribe(_ => Statistics?.Refresh())
+            .DisposeWith(Disposables);
 
-        Saves.BatchUpdate(static l =>
+        _ = InitializeSavesAsync();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            var saveDirectory = Path.Combine(Environment.CurrentDirectory, "Saves");
-            if (Directory.Exists(saveDirectory) is false)
-                return;
-            foreach (
-                var file in Directory.EnumerateFiles(saveDirectory).Where(s => s.EndsWith(".lps"))
-            )
-            {
-                var lps = new LPS(File.ReadAllText(file));
-                var save = new GameSave_v2(lps);
-                var saveModel = new SaveModel(file, save);
-                l.Add(saveModel);
-            }
+            foreach (var save in Saves)
+                save.StorageFile?.Dispose();
+        }
+        base.Dispose(disposing);
+    }
+
+    private async Task InitializeSavesAsync()
+    {
+        var loaded = new List<SaveModel>();
+        await LoadSavesAsync(loaded);
+        Saves.BatchUpdate(l =>
+        {
+            l.Clear();
+            l.AddRange(loaded);
         });
         CurrentSave = Saves.FirstOrDefault();
+    }
+
+    private static async Task LoadSavesAsync(List<SaveModel> saves)
+    {
+        var baseFolder = VPetSolution.BaseFolder;
+        if (baseFolder is null)
+            return;
+
+        using var saveFolder = await baseFolder.TryGetFolderAsync("Saves");
+        if (saveFolder is null)
+            return;
+
+        await foreach (var item in saveFolder.GetItemsAsync())
+        {
+            if (
+                item is not IDialogStorageFile file
+                || file.Name.EndsWith(".lps", StringComparison.OrdinalIgnoreCase) is false
+            )
+            {
+                item.Dispose();
+                continue;
+            }
+
+            try
+            {
+                var text = await file.ReadAllTextAsync();
+                var lps = new LPS(text);
+                var save = new GameSave_v2(lps);
+                var props = await file.GetBasicPropertiesAsync();
+                var dateSaved = props.DateModified?.LocalDateTime ?? DateTime.MinValue;
+                var saveModel = new SaveModel(file.GetDisplayPath(), save, dateSaved)
+                {
+                    StorageFile = file,
+                };
+                saves.Add(saveModel);
+            }
+            catch
+            {
+                file.Dispose();
+                throw;
+            }
+        }
     }
 
     [ObservableProperty]
@@ -89,20 +141,13 @@ public partial class SaveViewModel : ViewModelBase
     public string SearchStatistic { get; set; } = string.Empty;
 
     [RelayCommand]
-    private static void OpenFileInExplorer(SaveModel? parameter)
+    private static async Task OpenFile(SaveModel? parameter)
     {
         if (parameter is null)
             return;
-        // TODO: 跨平台从文件管理器打开文件
-        // NativeUtils.OpenFileFromExplorer(parameter.FilePath);
-    }
-
-    [RelayCommand]
-    private static void OpenFile(SaveModel? parameter)
-    {
-        if (parameter is null)
-            return;
-        // TODO: OpenLink 打开存档文件
-        // NativeUtils.OpenLink(parameter.FilePath);
+        if (parameter.StorageFile is not null)
+            await NativeUtils.LaunchAsync(parameter.StorageFile);
+        else
+            await NativeUtils.LaunchAsync(parameter.FilePath);
     }
 }

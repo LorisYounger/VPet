@@ -15,4 +15,9 @@
   <local:LPSTranslateConverter x:Key="TranslateConverter" />
   <local:DoubleToDecimalConverter x:Key="DoubleToDecimalConverter" />
   <local:IntToDecimalConverter x:Key="IntToDecimalConverter" />
+  <c:StringCheckConverter
+    x:Key="StringIsNotNullOrWhiteSpace"
+    IsInverted="True"
+    StringCheckType="NullOrWhiteSpace"
+  />
 </ResourceDictionary>

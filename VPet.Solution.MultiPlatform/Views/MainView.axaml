@@ -8,7 +8,7 @@
   x:DataType="vm:MainViewModel"
   mc:Ignorable="d"
   d:DesignWidth="800"
-  d:DesignHeight="450"
+  d:DesignHeight="500"
   x:Class="VPet.Solution.MultiPlatform.Views.MainView"
 >
   <Design.DataContext>
@@ -16,8 +16,23 @@
   </Design.DataContext>
   <Grid Margin="10">
     <Grid RowDefinitions="Auto,Auto,*">
-      <Grid>
+      <Grid HorizontalAlignment="Right" ColumnDefinitions="Auto,Auto">
         <ComboBox
+          x:Name="ThemeVariant"
+          MinWidth="100"
+          HorizontalAlignment="Right"
+          VerticalAlignment="Top"
+          SelectedIndex="0"
+          Classes="Base"
+          SelectionChanged="ThemeVariant_SelectionChanged"
+          Margin="0,0,10,0"
+        >
+          <ComboBoxItem Tag="Auto" Content="{ll:Str 默认}" />
+          <ComboBoxItem Tag="Light" Content="{ll:Str 亮色}" />
+          <ComboBoxItem Tag="Dark" Content="{ll:Str 暗色}" />
+        </ComboBox>
+        <ComboBox
+          Grid.Column="1"
           x:Name="Languages"
           MinWidth="150"
           HorizontalAlignment="Right"
@@ -25,65 +40,75 @@
           ItemsSource="{Binding AvailableCultures}"
           SelectedItem="{Binding CurrentCulture}"
           Classes="Base"
-        >
-          <ComboBox.ContextMenu>
-            <ContextMenu>
-              <MenuItem
-                x:Name="OpenLocalText"
-                Header="{ll:Str 打开翻译文本}"
-                Command="{Binding OpenLocalTextCommand}"
-              />
-            </ContextMenu>
-          </ComboBox.ContextMenu>
-        </ComboBox>
+        />
       </Grid>
-      <Grid Grid.Row="1">
+      <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto">
         <Label
           HorizontalAlignment="Center"
-          MinHeight="200"
           Content="{ll:Str 'VPET 问题解决工具'}"
           FontSize="32"
           Classes="Base"
         />
+        <StackPanel Grid.Row="2">
+          <TextBlock HorizontalAlignment="Center" Text="{ll:Str 目标目录}" Margin="5" />
+          <TextBlock
+            HorizontalAlignment="Center"
+            Width="100"
+            Text="{Binding BaseDirectory}"
+            Margin="5"
+          />
+          <Button
+            HorizontalAlignment="Center"
+            Margin="5"
+            Content="{ll:Str 设置目录}"
+            Grid.Column="1"
+            Command="{Binding SetBaseDirectoryCommand}"
+          />
+        </StackPanel>
       </Grid>
       <Grid Grid.Row="2" RowDefinitions="*,Auto,Auto">
-        <StackPanel HorizontalAlignment="Center">
+        <StackPanel
+          HorizontalAlignment="Center"
+          IsEnabled="{Binding BaseDirectory, Converter={StaticResource StringIsNotNullOrWhiteSpace}}"
+        >
           <Button
+            Margin="5"
             x:Name="OpenSettingEditor"
-            MinWidth="150"
+            MinWidth="200"
             Content="{ll:Str 打开设置编辑器}"
             FontSize="16"
             Command="{Binding OpenSettingEditorCommand}"
             Classes="Base"
           />
           <Button
+            Margin="5"
             x:Name="OpenSaveViewer"
-            MinWidth="150"
+            MinWidth="200"
             Content="{ll:Str 打开存档查看器}"
             Command="{Binding OpenSaveViewerCommand}"
             FontSize="16"
             Classes="Base"
           />
         </StackPanel>
-        <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+        <StackPanel x:Name="BottomToolbar" Grid.Row="1" HorizontalAlignment="Center">
           <Button
+            Margin="5"
             HorizontalAlignment="Center"
             x:Name="WantOpenVpet"
             Height="30"
             Command="{Binding WantOpenVpetCommand}"
-            Classes="Link"
+            Classes="Base"
             Content="{ll:Str '想打开桌宠本体?'}"
-            FontSize="16"
           />
           <Button
+            Margin="5"
             HorizontalAlignment="Center"
             x:Name="FirstStartFailed"
             Grid.Row="2"
             Height="30"
             Command="{Binding FirstStartFailedCommand}"
-            Classes="Link"
+            Classes="Base"
             Content="{ll:Str '第一次启动桌宠打不开?'}"
-            FontSize="16"
           />
         </StackPanel>
       </Grid>

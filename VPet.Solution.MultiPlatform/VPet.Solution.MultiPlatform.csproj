@@ -19,36 +19,15 @@
 
   <!-- 链接平台无关的存档与设置共享源码, 与 VPet-Simulator.MutiPlatform 保持一致 -->
   <ItemGroup>
-    <Compile
-      Include="..\VPet-Simulator.Windows.Interface\Base\Save\GameSave_VPet.cs"
-      Link="Interface\Base\Save\GameSave_VPet.cs"
-    />
-    <Compile
-      Include="..\VPet-Simulator.Windows.Interface\Base\Save\GameSave_v2.cs"
-      Link="Interface\Base\Save\GameSave_v2.cs"
-    />
-    <Compile
-      Include="..\VPet-Simulator.Windows.Interface\Base\Save\ISetting.cs"
-      Link="Interface\Base\Save\ISetting.cs"
-    />
-    <Compile
-      Include="..\VPet-Simulator.Windows.Interface\Base\Save\Statistics.cs"
-      Link="Interface\Base\Save\Statistics.cs"
-    />
-    <Compile
-      Include="..\VPet-Simulator.MutiPlatform\Interface\ISetting.cs"
-      Link="Interface\ISetting.cs"
-    />
-    <Compile
-      Include="..\VPet-Simulator.MutiPlatform\Interface\GameSave_v2.MutiPlatform.cs"
-      Link="Interface\GameSave_v2.MutiPlatform.cs"
-    />
+    <Compile Include="..\VPet-Simulator.Windows.Interface\Base\Save\GameSave_VPet.cs" Link="Interface\Base\Save\GameSave_VPet.cs" />
+    <Compile Include="..\VPet-Simulator.Windows.Interface\Base\Save\GameSave_v2.cs" Link="Interface\Base\Save\GameSave_v2.cs" />
+    <Compile Include="..\VPet-Simulator.Windows.Interface\Base\Save\ISetting.cs" Link="Interface\Base\Save\ISetting.cs" />
+    <Compile Include="..\VPet-Simulator.Windows.Interface\Base\Save\Statistics.cs" Link="Interface\Base\Save\Statistics.cs" />
+    <Compile Include="..\VPet-Simulator.MutiPlatform\Interface\ISetting.cs" Link="Interface\ISetting.cs" />
+    <Compile Include="..\VPet-Simulator.MutiPlatform\Interface\GameSave_v2.MutiPlatform.cs" Link="Interface\GameSave_v2.MutiPlatform.cs" />
     <!-- StartURL 等与界面无关的扩展方法; 链接共享源码而不是引用 VPet-Simulator.MutiPlatform,
          后者是可执行程序, 引用它会拖进整个宿主并与上面链接的源码重复定义类型. -->
-    <Compile
-      Include="..\VPet-Simulator.Windows.Interface\Base\Save\ExtensionFunction.Shared.cs"
-      Link="Interface\Base\Save\ExtensionFunction.Shared.cs"
-    />
+    <Compile Include="..\VPet-Simulator.Windows.Interface\Base\Save\ExtensionFunction.Shared.cs" Link="Interface\Base\Save\ExtensionFunction.Shared.cs" />
     <Using Include="LinePutScript.Localization" />
   </ItemGroup>
 
@@ -57,7 +36,7 @@
     <PackageReference Include="Avalonia.Desktop" Version="12.1.6" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.6" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.6" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.1" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.2" />
     <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
@@ -68,12 +47,12 @@
     <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.4.0" />
     <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia.Fluent" Version="2.4.0" />
     <PackageReference Include="FluentAvaloniaUI" Version="3.1.0" />
-    <PackageReference Include="HKW.Mapper" Version="0.3.7" />
+    <PackageReference Include="HKW.Mapper" Version="0.3.8" />
     <PackageReference Include="HKW.Utils" Version="2.0.0" />
     <PackageReference Include="HKW.CommonValueConverters" Version="0.2.2" />
     <PackageReference Include="HKW.CommonValueConverters.Avalonia" Version="0.2.2" />
     <PackageReference Include="HKW.MVVM" Version="0.2.1" />
-    <PackageReference Include="HKW.MVVM.SourceGenerator" Version="0.2.0" />
+    <PackageReference Include="HKW.MVVM.SourceGenerator" Version="0.2.2" />
     <PackageReference Include="Fody" Version="6.9.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -84,10 +63,7 @@
   </ItemGroup>
   <Target Name="DisableMvvmToolkitSourceGenerators" BeforeTargets="CoreCompile">
     <ItemGroup>
-      <_MvvmToolkitAnalyzers
-        Include="@(Analyzer)"
-        Condition="$([System.String]::Copy('%(Analyzer.Filename)').Contains('CommunityToolkit.Mvvm.SourceGenerators'))"
-      />
+      <_MvvmToolkitAnalyzers Include="@(Analyzer)" Condition="$([System.String]::Copy('%(Analyzer.Filename)').Contains('CommunityToolkit.Mvvm.SourceGenerators'))" />
 
       <Analyzer Remove="@(_MvvmToolkitAnalyzers)" />
     </ItemGroup>

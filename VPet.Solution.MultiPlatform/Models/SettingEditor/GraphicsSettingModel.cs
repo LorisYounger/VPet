@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Avalonia;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -74,19 +75,19 @@ public partial class GraphicsSettingModel : ObservableObjectEx, ISubSettingModel
     [ObservableProperty]
     public string Font { get; set; } = string.Empty;
 
-    public static List<string> Fonts => ModSettingModel.Fonts;
+    public static ObservableCollection<string> Fonts => ModSettingModel.Fonts;
 
     /// <inheritdoc cref="Setting.Theme"/>
     [ObservableProperty]
     public string Theme { get; set; } = string.Empty;
 
-    public static List<string> Themes => ModSettingModel.Themes;
+    public static ObservableCollection<string> Themes => ModSettingModel.Themes;
 
     /// <inheritdoc cref="Setting.PetGraph"/>
     [ObservableProperty]
     public string PetGraph { get; set; } = string.Empty;
 
-    public static List<string> PetGraphs => ModSettingModel.PetGraphs;
+    public static ObservableCollection<string> PetGraphs => ModSettingModel.PetGraphs;
 
     /// <inheritdoc cref="Setting.StartUPBoot"/>
     [ObservableProperty]

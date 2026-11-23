@@ -12,11 +12,12 @@ namespace VPet.Solution.MultiPlatform.Models;
 [MapTarget(typeof(GameSave_VPet))]
 public partial class SaveModel
 {
-    public SaveModel(string filePath, GameSave_v2 save)
+    public SaveModel(string filePath, GameSave_v2 save, DateTime? dateSaved = null)
     {
         Name = Path.GetFileNameWithoutExtension(filePath);
         FilePath = filePath;
-        DateSaved = File.GetLastWriteTime(filePath);
+        DateSaved = dateSaved
+            ?? (File.Exists(filePath) ? File.GetLastWriteTime(filePath) : DateTime.MinValue);
         this.MapFrom(save.GameSave);
         HashChecked = save.HashCheck;
 
@@ -68,6 +69,12 @@ public partial class SaveModel
     /// </summary>
     [MapIgnoreProperty]
     public string FilePath { get; private set; }
+
+    /// <summary>
+    /// 存储文件句柄
+    /// </summary>
+    [MapIgnoreProperty]
+    public HanumanInstitute.MvvmDialogs.FileSystem.IDialogStorageFile? StorageFile { get; set; }
 
     /// <summary>
     /// 统计数据

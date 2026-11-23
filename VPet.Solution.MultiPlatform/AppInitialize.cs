@@ -1,14 +1,18 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
+using System.Text;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Converters;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.Avalonia;
+using HanumanInstitute.MvvmDialogs.FileSystem;
 using HKW.MVVM.SourceGenerator;
 using LinePutScript.Localization;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +37,8 @@ internal partial class AppServices : DIConfigurationBase
         ));
 
         RegisterWindow<MainViewModel, MainView, MainWindow>();
-        //RegisterView<SettingViewModel, SettingWindow>();
+
+        RegisterWindow<SettingViewModel, SettingView, SettingWindow>();
         RegisterView<GraphicsSettingViewModel, GraphicsSettingView>();
         RegisterView<SystemSettingViewModel, SystemSettingView>();
         RegisterView<DiagnosticSettingViewModel, DiagnosticSettingView>();
@@ -41,7 +46,7 @@ internal partial class AppServices : DIConfigurationBase
         RegisterView<CustomizedSettingViewModel, CustomizedSettingView>();
         RegisterView<ModSettingViewModel, ModSettingView>();
 
-        //RegisterView<SaveViewModel, SaveWindow>();
+        RegisterWindow<SaveViewModel, SaveView, SaveWindow>();
     }
 
     [DICustomServiceRegistrar(nameof(TViewModel))]
@@ -84,7 +89,7 @@ public class DialogManagerX : DialogManager
 
     public override IView? FindViewByViewModel(INotifyPropertyChanged viewModel)
     {
-        // 否则开始寻找窗口
+        // 开始寻找窗口
         var view = base.FindViewByViewModel(viewModel);
         if (view is not null)
             return view;
@@ -100,81 +105,15 @@ public class DialogManagerX : DialogManager
         if (
             Application.Current?.ApplicationLifetime
                 is IClassicDesktopStyleApplicationLifetime desktop
-            && desktop.Windows.FirstOrDefault(window =>
-                window.GetVisualDescendants().Any(v => ReferenceEquals(v.DataContext, viewModel))
+            && desktop.Windows.FirstOrDefault(w =>
+                w.IsActive
+                && w.GetVisualDescendants().Any(v => ReferenceEquals(v.DataContext, viewModel))
             )
                 is { } window
         )
             return AsWrapper(window);
 
         return null;
-    }
-}
-
-public static class MVVMDialogExtensions
-{
-    private static readonly Dictionary<Type, INotifyPropertyChanged> _displayedViewModelByType = [];
-
-    extension(IDialogService dialogService)
-    {
-        /// <summary>
-        /// 显示单例窗口
-        /// </summary>
-        /// <typeparam name="TViewModel">视图模型类型</typeparam>
-        /// <param name="ownerViewModel">主视图模型</param>
-        /// <param name="viewModel">视图模型</param>
-        public void ShowInstance<TViewModel>(
-            INotifyPropertyChanged? ownerViewModel,
-            TViewModel? viewModel = null
-        )
-            where TViewModel : class, INotifyPropertyChanged
-        {
-            // TODO: 接入跨平台 DialogService 单例窗口显示逻辑
-            if (_displayedViewModelByType.TryGetValue(typeof(TViewModel), out var value))
-            {
-                var view = dialogService.DialogManager.FindViewByViewModel(value);
-                if (view?.RefObj is Window window)
-                {
-                    if (window.WindowState == WindowState.Minimized)
-                        window.WindowState = WindowState.Normal;
-                    window.Activate();
-                }
-                return;
-            }
-            _displayedViewModelByType[typeof(TViewModel)] = (
-                viewModel ??= dialogService.CreateViewModel<TViewModel>()
-            );
-            dialogService.Show(ownerViewModel, viewModel);
-            var v = dialogService.DialogManager.FindViewByViewModel(viewModel);
-            if (v?.RefObj is Window w)
-                w.Closed += W_Closed;
-
-            void W_Closed(object? sender, EventArgs e)
-            {
-                _displayedViewModelByType.Remove(typeof(TViewModel));
-                w.Closed -= W_Closed;
-            }
-        }
-
-        /// <summary>
-        /// 关闭单例窗口
-        /// </summary>
-        /// <typeparam name="TViewModel">视图模型类型</typeparam>
-        public void CloseInstance<TViewModel>()
-            where TViewModel : INotifyPropertyChanged
-        {
-            if (_displayedViewModelByType.Remove(typeof(TViewModel), out var viewModel) is false)
-                return;
-            dialogService.Close(viewModel);
-        }
-
-        public TViewModel CreateViewModel<TViewModel>(Action<TViewModel> action)
-        {
-            ArgumentNullException.ThrowIfNull(action);
-            var vm = dialogService.CreateViewModel<TViewModel>();
-            action(vm);
-            return vm;
-        }
     }
 }
 
@@ -204,6 +143,20 @@ public static class NativeUtils
     }
 
     /// <summary>
+    /// 从存储文件异步载入图片到内存位图
+    /// </summary>
+    /// <param name="file">图片存储文件</param>
+    /// <returns>位图对象</returns>
+    public static async Task<Bitmap?> LoadImageToStreamAsync(IDialogStorageFile file)
+    {
+        await using var stream = await file.OpenReadAsync();
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+        memoryStream.Position = 0;
+        return new Bitmap(memoryStream);
+    }
+
+    /// <summary>
     /// 载入图片至内存流并按宽度解码
     /// </summary>
     /// <param name="imagePath">图片路径</param>
@@ -226,29 +179,219 @@ public static class NativeUtils
     }
 
     /// <summary>
-    /// 打开链接或文件
+    /// 获取当前应用的顶层容器
     /// </summary>
-    /// <param name="filePath">文件或链接路径</param>
-    public static void OpenLink(string filePath)
+    /// <returns>顶层容器或 null</returns>
+    public static TopLevel? GetTopLevel()
     {
-        // TODO: 跨平台实现 OpenLink
+        return Application.Current?.ApplicationLifetime switch
+        {
+            IClassicDesktopStyleApplicationLifetime desktop => desktop.Windows.FirstOrDefault(w =>
+                w.IsActive
+            ) ?? desktop.MainWindow,
+            ISingleViewApplicationLifetime singleView => TopLevel.GetTopLevel(singleView.MainView),
+            _ => null,
+        };
     }
 
     /// <summary>
-    /// 从文件管理器定位并打开文件
+    /// 跨平台打开网页链接或本地路径
+    /// </summary>
+    /// <param name="target">网页链接或本地文件/目录路径</param>
+    public static void Launch(string? target)
+    {
+        _ = LaunchAsync(target);
+    }
+
+    /// <summary>
+    /// 跨平台异步打开网页链接或本地路径
+    /// </summary>
+    /// <param name="target">网页链接或本地文件/目录路径</param>
+    /// <returns>是否成功发起打开操作</returns>
+    public static async Task<bool> LaunchAsync(string? target)
+    {
+        if (string.IsNullOrWhiteSpace(target))
+            return false;
+
+        var launcher = GetTopLevel()?.Launcher;
+        if (launcher is not null)
+        {
+            if (File.Exists(target))
+            {
+                if (await launcher.LaunchFileInfoAsync(new FileInfo(target)))
+                    return true;
+            }
+            else if (Directory.Exists(target))
+            {
+                if (await launcher.LaunchDirectoryInfoAsync(new DirectoryInfo(target)))
+                    return true;
+            }
+            else if (Uri.TryCreate(target, UriKind.Absolute, out var uri))
+            {
+                if (await launcher.LaunchUriAsync(uri))
+                    return true;
+            }
+        }
+
+        if (OperatingSystem.IsBrowser() || OperatingSystem.IsAndroid() || OperatingSystem.IsIOS())
+            return false;
+
+        return LaunchWithProcess(target);
+    }
+
+    /// <summary>
+    /// 跨平台异步打开存储文件或文件夹 (在 Web 端对文件会在新标签页打开文本预览)
+    /// </summary>
+    /// <param name="item">存储文件或文件夹</param>
+    /// <returns>是否成功发起打开操作</returns>
+    public static async Task<bool> LaunchAsync(IDialogStorageItem? item)
+    {
+        if (item is null)
+            return false;
+
+        var launcher = GetTopLevel()?.Launcher;
+        if (launcher is not null)
+        {
+            if (item is AvaloniaDialogStorageFile avaloniaFile)
+            {
+                if (await launcher.LaunchFileAsync(avaloniaFile.Source))
+                    return true;
+            }
+            else if (item is AvaloniaDialogStorageFolder avaloniaFolder)
+            {
+                if (await launcher.LaunchFileAsync(avaloniaFolder.Source))
+                    return true;
+            }
+        }
+
+        if (item.TryGetLocalPath() is { Length: > 0 } localPath)
+            return await LaunchAsync(localPath);
+
+        if (
+            OperatingSystem.IsBrowser()
+            && launcher is not null
+            && item is IDialogStorageFile storageFile
+        )
+        {
+            try
+            {
+                var text = await storageFile.ReadAllTextAsync();
+                var dataUri = new Uri(
+                    $"data:text/plain;charset=utf-8,{Uri.EscapeDataString(text)}",
+                    UriKind.Absolute
+                );
+                return await launcher.LaunchUriAsync(dataUri);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// 跨平台在系统文件管理器中定位文件或打开所在目录
     /// </summary>
     /// <param name="filePath">文件路径</param>
-    public static void OpenFileFromExplorer(string filePath)
+    public static void RevealInFileExplorer(string? filePath)
     {
-        // TODO: 跨平台实现 OpenFileFromExplorer
+        if (string.IsNullOrWhiteSpace(filePath))
+            return;
+
+        if (OperatingSystem.IsBrowser() || OperatingSystem.IsAndroid() || OperatingSystem.IsIOS())
+            return;
+
+        try
+        {
+            var fullPath = Path.GetFullPath(filePath);
+            if (OperatingSystem.IsWindows())
+            {
+                Process.Start("explorer.exe", $"/select,\"{fullPath}\"")?.Dispose();
+                return;
+            }
+            if (OperatingSystem.IsMacOS())
+            {
+                using var process = Process.Start(
+                    new ProcessStartInfo
+                    {
+                        FileName = "open",
+                        UseShellExecute = false,
+                        ArgumentList = { "-R", fullPath },
+                    }
+                );
+                return;
+            }
+            var dir = Path.GetDirectoryName(fullPath);
+            if (string.IsNullOrWhiteSpace(dir) is false)
+                LaunchWithProcess(dir);
+        }
+        catch
+        {
+            // 忽略文件管理器启动失败
+        }
+    }
+
+    /// <summary>
+    /// 桌面端通过系统进程打开链接或本地路径的兜底方法
+    /// </summary>
+    /// <param name="target">网页链接或本地路径</param>
+    /// <returns>是否成功启动</returns>
+    private static bool LaunchWithProcess(string target)
+    {
+        try
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                using var process = Process.Start(
+                    new ProcessStartInfo { FileName = target, UseShellExecute = true }
+                );
+                return true;
+            }
+            if (OperatingSystem.IsMacOS())
+            {
+                using var process = Process.Start(
+                    new ProcessStartInfo
+                    {
+                        FileName = "open",
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        ArgumentList = { target },
+                    }
+                );
+                return true;
+            }
+            if (OperatingSystem.IsLinux())
+            {
+                using var process = Process.Start(
+                    new ProcessStartInfo
+                    {
+                        FileName = "xdg-open",
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        ArgumentList = { target },
+                    }
+                );
+                return true;
+            }
+        }
+        catch
+        {
+            // 忽略外部程序启动失败
+        }
+        return false;
     }
 }
 
 /// <summary>
-/// 面板按索引控制子元素可见性的附加属性辅助类
+/// 面板辅助类
 /// </summary>
 public static class PanelHelper
 {
+    /// <summary>
+    /// 按索引控制子元素可见性的附加属性
+    /// </summary>
     public static readonly AttachedProperty<int> ShowChildByIndexProperty =
         AvaloniaProperty.RegisterAttached<Panel, int>("ShowChildByIndex", typeof(PanelHelper));
 
@@ -362,5 +505,188 @@ public class IntToDecimalConverter : IValueConverter
         if (value is decimal m)
             return System.Convert.ToInt32(m);
         return value;
+    }
+}
+
+public static class VPetSolution
+{
+    private static IDialogStorageFolder? _baseFolder;
+
+    /// <summary>
+    /// 当前根目录文件夹
+    /// </summary>
+    public static IDialogStorageFolder? BaseFolder
+    {
+        get => _baseFolder;
+        set
+        {
+            if (ReferenceEquals(_baseFolder, value))
+                return;
+            _baseFolder?.Dispose();
+            _baseFolder = value;
+            BaseDirectory = value?.GetDisplayPath() ?? string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// 当前目录显示文本
+    /// </summary>
+    public static string BaseDirectory { get; private set; } = string.Empty;
+
+    /// <summary>
+    /// 通过本地路径设置根目录
+    /// </summary>
+    /// <param name="directoryPath">本地目录路径</param>
+    public static void SetLocalBaseDirectory(string directoryPath)
+    {
+        if (string.IsNullOrWhiteSpace(directoryPath) || Directory.Exists(directoryPath) is false)
+            return;
+        BaseFolder = new DesktopDialogStorageFolder(directoryPath);
+    }
+}
+
+/// <summary>
+/// 跨平台对话框存储扩展方法
+/// </summary>
+public static class DialogStorageExtensions
+{
+    /// <summary>
+    /// 获取存储项的本地路径, 不支持本地路径的平台返回 null
+    /// </summary>
+    /// <param name="item">存储项</param>
+    /// <returns>本地路径或 null</returns>
+    public static string? TryGetLocalPath(this IDialogStorageItem item)
+    {
+        return item switch
+        {
+            AvaloniaDialogStorageFolder folder => folder.Source.TryGetLocalPath(),
+            AvaloniaDialogStorageFile file => file.Source.TryGetLocalPath(),
+            DesktopDialogStorageItem desktopItem => desktopItem.LocalPath,
+            _ => item.Path.IsAbsoluteUri && item.Path.IsFile ? item.Path.LocalPath : null,
+        };
+    }
+
+    /// <summary>
+    /// 获取存储项用于展示的路径或名称
+    /// </summary>
+    /// <param name="item">存储项</param>
+    /// <returns>展示文本</returns>
+    public static string GetDisplayPath(this IDialogStorageItem item)
+    {
+        if (item.TryGetLocalPath() is { Length: > 0 } localPath)
+            return localPath;
+        return item.Name;
+    }
+
+    /// <summary>
+    /// 获取指定名称的子文件夹
+    /// </summary>
+    /// <param name="folder">父文件夹</param>
+    /// <param name="name">子文件夹名称</param>
+    /// <returns>子文件夹或 null</returns>
+    public static async Task<IDialogStorageFolder?> TryGetFolderAsync(
+        this IDialogStorageFolder folder,
+        string name
+    )
+    {
+        if (folder is AvaloniaDialogStorageFolder avaloniaFolder)
+        {
+            var subFolder = await avaloniaFolder.Source.GetFolderAsync(name);
+            if (subFolder is not null)
+                return subFolder.ToDialog();
+        }
+        else if (folder is DesktopDialogStorageFolder desktopFolder)
+        {
+            var subPath = Path.Combine(desktopFolder.LocalPath, name);
+            if (Directory.Exists(subPath))
+                return new DesktopDialogStorageFolder(subPath);
+            return null;
+        }
+
+        await foreach (var item in folder.GetItemsAsync())
+        {
+            if (
+                item is IDialogStorageFolder sub
+                && string.Equals(sub.Name, name, StringComparison.OrdinalIgnoreCase)
+            )
+            {
+                return sub;
+            }
+            item.Dispose();
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// 获取指定名称的子文件
+    /// </summary>
+    /// <param name="folder">父文件夹</param>
+    /// <param name="name">文件名</param>
+    /// <returns>子文件或 null</returns>
+    public static async Task<IDialogStorageFile?> TryGetFileAsync(
+        this IDialogStorageFolder folder,
+        string name
+    )
+    {
+        if (folder is AvaloniaDialogStorageFolder avaloniaFolder)
+        {
+            var subFile = await avaloniaFolder.Source.GetFileAsync(name);
+            if (subFile is not null)
+                return subFile.ToDialog();
+        }
+        else if (folder is DesktopDialogStorageFolder desktopFolder)
+        {
+            var subPath = Path.Combine(desktopFolder.LocalPath, name);
+            if (File.Exists(subPath))
+                return new DesktopDialogStorageFile(subPath);
+            return null;
+        }
+
+        await foreach (var item in folder.GetItemsAsync())
+        {
+            if (
+                item is IDialogStorageFile file
+                && string.Equals(file.Name, name, StringComparison.OrdinalIgnoreCase)
+            )
+            {
+                return file;
+            }
+            item.Dispose();
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// 异步读取文件的全部文本内容
+    /// </summary>
+    /// <param name="file">存储文件</param>
+    /// <returns>文本内容</returns>
+    public static async Task<string> ReadAllTextAsync(this IDialogStorageFile file)
+    {
+        await using var stream = await file.OpenReadAsync();
+        using var reader = new StreamReader(
+            stream,
+            Encoding.UTF8,
+            detectEncodingFromByteOrderMarks: true
+        );
+        return await reader.ReadToEndAsync();
+    }
+
+    /// <summary>
+    /// 异步将文本内容覆写到文件
+    /// </summary>
+    /// <param name="file">存储文件</param>
+    /// <param name="content">文本内容</param>
+    public static async Task WriteAllTextAsync(this IDialogStorageFile file, string content)
+    {
+        var bytes = Encoding.UTF8.GetBytes(content);
+        await using var stream = await file.OpenWriteAsync();
+        if (stream.CanSeek)
+        {
+            stream.Position = 0;
+            stream.SetLength(0);
+        }
+        await stream.WriteAsync(bytes);
+        await stream.FlushAsync();
     }
 }
