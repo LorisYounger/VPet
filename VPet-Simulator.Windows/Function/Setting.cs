@@ -38,7 +38,7 @@ namespace VPet_Simulator.Windows
             enablefunction = !this["gameconfig"].GetBool("nofunction");
             autobuy = this["gameconfig"].GetBool("autobuy");
             autogift = this["gameconfig"].GetBool("autogift");
-            autochangewindow = !this["gameconfig"].GetBool("autochangewindow");
+            autochangewindow = this["gameconfig"].GetBool("autochangewindow");
             this.mw = mw;
         }
 
@@ -306,10 +306,10 @@ namespace VPet_Simulator.Windows
         private bool autochangewindow;
         public bool AutoChangeWindow
         {
-            get => !autochangewindow;
+            get => autochangewindow;
             set
             {
-                autochangewindow = !value;
+                autochangewindow = value;
                 this["gameconfig"].SetBool("autochangewindow", value);
             }
         }
@@ -496,6 +496,24 @@ namespace VPet_Simulator.Windows
                 line.SetInt("y", value.Y);
                 line.SetInt("w", value.Width);
                 line.SetInt("h", value.Height);
+            }
+        }
+        /// <summary>
+        /// 锁定的目标屏幕设备名（为空表示未锁定特定屏幕，使用主屏或自定义矩形）
+        /// </summary>
+        public string MoveAreaScreen
+        {
+            get
+            {
+                var line = FindLine("movearea");
+                if (line == null)
+                    return string.Empty;
+                return line.GetString("screen", string.Empty) ?? string.Empty;
+            }
+            set
+            {
+                var line = FindorAddLine("movearea");
+                line.SetString("screen", value ?? string.Empty);
             }
         }
         /// <summary>

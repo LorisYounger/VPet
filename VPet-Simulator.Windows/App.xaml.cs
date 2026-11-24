@@ -66,6 +66,12 @@ namespace VPet_Simulator.Windows
             }
 
         }
+        protected override void OnExit(ExitEventArgs e)
+        {
+            ScreenTopology.Shutdown();
+            base.OnExit(e);
+        }
+
         HashSet<string> ErrorReport = new HashSet<string>();
         private void UnhandledException(Exception e, bool isFatality)
         {

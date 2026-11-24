@@ -1517,30 +1517,10 @@ namespace VPet_Simulator.Windows
                 // control position inside bounds
                 MWController = new MWController(this);
                 Core.Controller = MWController;
-                Task.Run(() =>
-                {
-                    double dist;
-                    if ((dist = Core.Controller!.GetWindowsDistanceLeft()) < 0)
-                    {
-                        Thread.Sleep(100);
-                        Dispatcher.Invoke(() => Left -= dist);
-                    }
-                    if ((dist = Core.Controller!.GetWindowsDistanceRight()) < 0)
-                    {
-                        Thread.Sleep(100);
-                        Dispatcher.Invoke(() => Left += dist);
-                    }
-                    if ((dist = Core.Controller!.GetWindowsDistanceUp()) < 0)
-                    {
-                        Thread.Sleep(100);
-                        Dispatcher.Invoke(() => Top -= dist);
-                    }
-                    if ((dist = Core.Controller!.GetWindowsDistanceDown()) < 0)
-                    {
-                        Thread.Sleep(100);
-                        Dispatcher.Invoke(() => Top += dist);
-                    }
-                });
+                MWController.ValidateAndRepairMoveArea();
+                MWController.EnsureWindowInBounds();
+                ContentRendered += MainWindow_InitialBoundsCheck;
+                ScreenTopology.DisplayChanged += OnDisplaySettingsChanged;
                 if (Set.TopMost)
                 {
                     Topmost = true;
@@ -2316,8 +2296,20 @@ namespace VPet_Simulator.Windows
                   {
                       Main.CleanState();
                       Main.DisplayToNomal();
-                      Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-                      Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+                      var primary = ScreenTopology.GetPrimaryScreenRect(this);
+                      double w = MWController.GetWindowWidth();
+                      double h = MWController.GetWindowHeight();
+                      Left = primary.Left + (primary.Width - w) / 2;
+                      Top = primary.Top + (primary.Height - h) / 2;
+                      if (!MWController.AutoChangeWindow && !MWController.IsPrimaryScreen)
+                      {
+                          var bounds = MWController.GetEffectiveBounds();
+                          if (!bounds.Contains(new Point(Left + w / 2, Top + h / 2)))
+                          {
+                              MWController.ResetScreenBorder();
+                              winSetting?.UpdateMoveAreaText();
+                          }
+                      }
                   }));
                   m_menu.Items.Add(new MenuItem("反馈中心".Translate(), null, (x, y) => { new winReport(this).Show(); }));
                   if (Set.DeBug)

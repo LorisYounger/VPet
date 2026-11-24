@@ -45,8 +45,25 @@ namespace VPet_Simulator.Windows
                     (int)Width, (int)Height
                 );
             }
-            mwCtrl!.ScreenBorder = bounds;
-            mw.winSetting!.UpdateMoveAreaText();
+            if (mwCtrl == null)
+            {
+                Close();
+                return;
+            }
+            var screens = ScreenTopology.GetScreens(mw);
+            var rect = ScreenTopology.FromDrawingRectangle(bounds);
+            if (ScreenTopology.TryRepairMoveArea(screens, rect, out var repaired))
+            {
+                if (repaired.IsEmpty)
+                {
+                    repaired = ScreenTopology.GetPrimaryScreenRect(screens);
+                }
+                bounds = ScreenTopology.ToDrawingRectangle(repaired);
+            }
+            mw.Set.AutoChangeWindow = false;
+            mwCtrl.ScreenBorder = bounds;
+            mwCtrl.EnsureWindowInBounds();
+            mw.winSetting?.UpdateMoveAreaText();
             Close();
         }
 

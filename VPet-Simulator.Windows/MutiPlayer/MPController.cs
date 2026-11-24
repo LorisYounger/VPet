@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Windows;
 using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows
 {
     /// <summary>
-    /// 窗体控制器实现
+    /// 联机好友窗体控制器实现
     /// </summary>
     public class MPController : IController
     {
@@ -16,12 +17,82 @@ namespace VPet_Simulator.Windows
             this.mw = mw;
         }
 
+        private double GetWindowWidth()
+        {
+            if (mp.ActualWidth > 0)
+                return mp.ActualWidth;
+            if (mp.Width > 0 && !double.IsNaN(mp.Width))
+                return mp.Width;
+            return 500 * ZoomRatio;
+        }
+
+        private double GetWindowHeight()
+        {
+            if (mp.ActualHeight > 0)
+                return mp.ActualHeight;
+            if (mp.Height > 0 && !double.IsNaN(mp.Height))
+                return mp.Height;
+            return 500 * ZoomRatio;
+        }
+
+        private Rect GetEffectiveBounds()
+        {
+            var screens = ScreenTopology.GetScreens(mp);
+            var winRect = new Rect(mp.Left, mp.Top, GetWindowWidth(), GetWindowHeight());
+
+            if (AutoChangeWindow)
+                return ScreenTopology.GetUnionBounds(screens, winRect);
+
+            if (mw.MWController.IsPrimaryScreen)
+                return ScreenTopology.GetPrimaryScreenRect(screens);
+
+            var lockedName = mw.Set.MoveAreaScreen;
+            if (!string.IsNullOrEmpty(lockedName))
+            {
+                var screen = ScreenTopology.FindScreenByDeviceName(screens, lockedName);
+                if (screen.HasValue)
+                    return screen.Value.LogicalBounds;
+                return ScreenTopology.GetPrimaryScreenRect(screens);
+            }
+
+            return ScreenTopology.GetCustomAreaBounds(
+                screens,
+                ScreenTopology.FromDrawingRectangle(mw.MWController.ScreenBorder),
+                winRect
+            );
+        }
+
+        /// <summary>
+        /// 确保好友窗口位于当前有效边界之内
+        /// </summary>
+        public void EnsureWindowInBounds()
+        {
+            if (mp.Dispatcher.HasShutdownStarted || mp.Dispatcher.HasShutdownFinished)
+                return;
+
+            mp.Dispatcher.Invoke(() =>
+            {
+                var bounds = GetEffectiveBounds();
+                var clamped = ScreenTopology.ClampWindowPosition(
+                    bounds,
+                    mp.Left,
+                    mp.Top,
+                    GetWindowWidth(),
+                    GetWindowHeight()
+                );
+                if (Math.Abs(mp.Left - clamped.X) > 0.5)
+                    mp.Left = clamped.X;
+                if (Math.Abs(mp.Top - clamped.Y) > 0.5)
+                    mp.Top = clamped.Y;
+            });
+        }
+
         public double GetWindowsDistanceLeft()
         {
             return mp.Dispatcher.Invoke(() =>
             {
-                if (mw.MWController.IsPrimaryScreen) return mp.Left;
-                return mp.Left - mw.MWController.ScreenBorder.X;
+                var bounds = GetEffectiveBounds();
+                return mp.Left - bounds.Left;
             });
         }
 
@@ -29,8 +100,8 @@ namespace VPet_Simulator.Windows
         {
             return mp.Dispatcher.Invoke(() =>
             {
-                if (mw.MWController.IsPrimaryScreen) return mp.Top;
-                return mp.Top - mw.MWController.ScreenBorder.Y;
+                var bounds = GetEffectiveBounds();
+                return mp.Top - bounds.Top;
             });
         }
 
@@ -38,8 +109,8 @@ namespace VPet_Simulator.Windows
         {
             return mp.Dispatcher.Invoke(() =>
             {
-                if (mw.MWController.IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenWidth - mp.Left - mp.ActualWidth;
-                return mw.MWController.ScreenBorder.Width + mw.MWController.ScreenBorder.X - mp.Left - mp.ActualWidth;
+                var bounds = GetEffectiveBounds();
+                return bounds.Right - mp.Left - GetWindowWidth();
             });
         }
 
@@ -47,8 +118,8 @@ namespace VPet_Simulator.Windows
         {
             return mp.Dispatcher.Invoke(() =>
             {
-                if (mw.MWController.IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenHeight - mp.Top - mp.ActualHeight;
-                return mw.MWController.ScreenBorder.Height + mw.MWController.ScreenBorder.Y - mp.Top - mp.ActualHeight;
+                var bounds = GetEffectiveBounds();
+                return bounds.Bottom - mp.Top - GetWindowHeight();
             });
         }
 
@@ -75,30 +146,45 @@ namespace VPet_Simulator.Windows
         {
             mp.Dispatcher.Invoke(() =>
             {
-                if (GetWindowsDistanceUp() < -0.25 * mp.ActualHeight && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight)
+                var bounds = GetEffectiveBounds();
+                double w = GetWindowWidth();
+                double h = GetWindowHeight();
+                double maxLeft = Math.Max(bounds.Left, bounds.Right - w);
+                double maxTop = Math.Max(bounds.Top, bounds.Bottom - h);
+
+                if (mp.Top < bounds.Top - 0.25 * h)
                 {
-                    MoveWindows(0, -GetWindowsDistanceUp() / ZoomRatio);
+                    mp.Top = bounds.Top;
                 }
-                else if (GetWindowsDistanceDown() < -0.25 * mp.ActualHeight && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight)
+                else if (mp.Top > maxTop + 0.25 * h)
                 {
-                    MoveWindows(0, GetWindowsDistanceDown() / ZoomRatio);
+                    mp.Top = maxTop;
                 }
-                if (GetWindowsDistanceLeft() < -0.25 * mp.ActualWidth && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth)
+
+                if (mp.Left < bounds.Left - 0.25 * w)
                 {
-                    MoveWindows(-GetWindowsDistanceLeft() / ZoomRatio, 0);
+                    mp.Left = bounds.Left;
                 }
-                else if (GetWindowsDistanceRight() < -0.25 * mp.ActualWidth && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth)
+                else if (mp.Left > maxLeft + 0.25 * w)
                 {
-                    MoveWindows(GetWindowsDistanceRight() / ZoomRatio, 0);
+                    mp.Left = maxLeft;
                 }
             });
         }
+
         public bool CheckPosition() => mp.Dispatcher.Invoke(() =>
-               GetWindowsDistanceUp() < -0.25 * mp.ActualHeight && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight
-            || GetWindowsDistanceDown() < -0.25 * mp.ActualHeight && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight
-            || GetWindowsDistanceLeft() < -0.25 * mp.ActualWidth && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth
-            || GetWindowsDistanceRight() < -0.25 * mp.ActualWidth && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth
-        );
+        {
+            var bounds = GetEffectiveBounds();
+            double w = GetWindowWidth();
+            double h = GetWindowHeight();
+            double maxLeft = Math.Max(bounds.Left, bounds.Right - w);
+            double maxTop = Math.Max(bounds.Top, bounds.Bottom - h);
+
+            return mp.Top < bounds.Top - 0.25 * h
+                || mp.Top > maxTop + 0.25 * h
+                || mp.Left < bounds.Left - 0.25 * w
+                || mp.Left > maxLeft + 0.25 * w;
+        });
 
         public bool RePositionActive { get; set; } = true;
 
@@ -114,31 +200,29 @@ namespace VPet_Simulator.Windows
 
         public bool IfInActivateScreen()
         {
-            try
-            {
-                if (mp.Dispatcher.HasShutdownStarted || mp.Dispatcher.HasShutdownFinished) return false;
-            }
-            catch { }
+            if (mp.Dispatcher.HasShutdownStarted || mp.Dispatcher.HasShutdownFinished)
+                return true;
+
+            if (AutoChangeWindow)
+                return true;
+
             return mp.Dispatcher.Invoke(() =>
             {
-
                 try
                 {
-                    var screen = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(mp).Handle);
-                    var screens = System.Windows.Forms.Screen.AllScreens;
-                    for (int i = 0; i < screens.Length; i++)
+                    var screens = ScreenTopology.GetScreens(mp);
+                    var current = ScreenTopology.FindContainingOrNearestScreen(
+                        screens,
+                        new Rect(mp.Left, mp.Top, GetWindowWidth(), GetWindowHeight())
+                    );
+                    for (int i = 0; i < screens.Count; i++)
                     {
-                        if (screens[i].DeviceName == screen.DeviceName)
-                        {
-                            if (i == mw.Set.GameScreenIndex)
-                            {
-                                return true;
-                            }
-                        }
+                        if (string.Equals(screens[i].DeviceName, current.DeviceName, StringComparison.OrdinalIgnoreCase))
+                            return i == mw.Set.GameScreenIndex;
                     }
                     return false;
                 }
-                catch (Exception)
+                catch
                 {
                     return true;
                 }
@@ -147,7 +231,8 @@ namespace VPet_Simulator.Windows
 
         public void SetNowScreenActivate()
         {
-            
+            ScreenTopology.InvalidateCache();
+            EnsureWindowInBounds();
         }
     }
 }

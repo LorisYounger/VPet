@@ -1,10 +1,6 @@
-﻿using Panuon.WPF.UI;
-using System;
+﻿using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Interop;
 using VPet_Simulator.Core;
 
 namespace VPet_Simulator.Windows
@@ -46,21 +42,167 @@ namespace VPet_Simulator.Windows
             {
                 _screenBorder = value;
                 mw.Set.MoveArea = value;
+                mw.Set.MoveAreaScreen = string.Empty;
+                mw.Set.AutoChangeWindow = false;
                 IsPrimaryScreen = false;
             }
         }
 
         public void ResetScreenBorder()
         {
+            mw.Set.MoveAreaScreen = string.Empty;
             IsPrimaryScreen = true;
+        }
+
+        internal double GetWindowWidth()
+        {
+            if (mw.ActualWidth > 0)
+                return mw.ActualWidth;
+            if (mw.Width > 0 && !double.IsNaN(mw.Width))
+                return mw.Width;
+            return 500 * ZoomRatio;
+        }
+
+        internal double GetWindowHeight()
+        {
+            if (mw.ActualHeight > 0)
+                return mw.ActualHeight;
+            if (mw.Height > 0 && !double.IsNaN(mw.Height))
+                return mw.Height;
+            return 500 * ZoomRatio;
+        }
+
+        private Rect GetCurrentWindowRect()
+            => new Rect(mw.Left, mw.Top, GetWindowWidth(), GetWindowHeight());
+
+        /// <summary>
+        /// 计算桌宠当前位置对应的实时有效移动边界（必须在 UI 线程调用）
+        /// </summary>
+        internal Rect GetEffectiveBounds()
+        {
+            var screens = ScreenTopology.GetScreens(mw);
+            var winRect = GetCurrentWindowRect();
+
+            // 1. 多屏自由跨屏模式：使用实时多屏并集可达边界
+            if (AutoChangeWindow)
+                return ScreenTopology.GetUnionBounds(screens, winRect);
+
+            // 2. 仅主屏模式
+            if (IsPrimaryScreen)
+                return ScreenTopology.GetPrimaryScreenRect(screens);
+
+            // 3. 锁定指定屏幕模式：按设备名实时查找当前边界
+            var lockedName = mw.Set.MoveAreaScreen;
+            if (!string.IsNullOrEmpty(lockedName))
+            {
+                var screen = ScreenTopology.FindScreenByDeviceName(screens, lockedName);
+                if (screen.HasValue)
+                {
+                    var rect = ScreenTopology.ToDrawingRectangle(screen.Value.LogicalBounds);
+                    if (rect != _screenBorder)
+                    {
+                        _screenBorder = rect;
+                        mw.Set.MoveArea = rect;
+                    }
+                    return screen.Value.LogicalBounds;
+                }
+                // 目标显示器已断开，回退主屏
+                return ScreenTopology.GetPrimaryScreenRect(screens);
+            }
+
+            // 4. 自定义矩形 / 历史 movearea：与真实显示器集合求交，杜绝进入虚空
+            return ScreenTopology.GetCustomAreaBounds(
+                screens,
+                ScreenTopology.FromDrawingRectangle(_screenBorder),
+                winRect
+            );
+        }
+
+        /// <summary>
+        /// 校验并修复过期/落入虚空的移动区域配置（在启动与显示器变更时调用）
+        /// </summary>
+        public void ValidateAndRepairMoveArea()
+        {
+            mw.Dispatcher.Invoke(() =>
+            {
+                ScreenTopology.InvalidateCache();
+                var screens = ScreenTopology.GetScreens(mw);
+
+                if (AutoChangeWindow || IsPrimaryScreen)
+                    return;
+
+                var lockedName = mw.Set.MoveAreaScreen;
+                if (!string.IsNullOrEmpty(lockedName))
+                {
+                    var screen = ScreenTopology.FindScreenByDeviceName(screens, lockedName);
+                    if (screen.HasValue)
+                    {
+                        var rect = ScreenTopology.ToDrawingRectangle(screen.Value.LogicalBounds);
+                        _screenBorder = rect;
+                        mw.Set.MoveArea = rect;
+                    }
+                    else
+                    {
+                        // 锁定的显示器已不存在，回退到主屏幕
+                        ResetScreenBorder();
+                    }
+                    return;
+                }
+
+                // 自定义矩形或旧版快照：检查是否存在虚空区域
+                var currentRect = ScreenTopology.FromDrawingRectangle(_screenBorder);
+                if (ScreenTopology.TryRepairMoveArea(screens, currentRect, out var repaired))
+                {
+                    if (repaired.IsEmpty)
+                    {
+                        ResetScreenBorder();
+                    }
+                    else
+                    {
+                        var fixedRect = ScreenTopology.ToDrawingRectangle(repaired);
+                        _screenBorder = fixedRect;
+                        mw.Set.MoveArea = fixedRect;
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// 确保桌宠窗口位于当前有效边界之内（启动与显示器热插拔后调用）
+        /// </summary>
+        public void EnsureWindowInBounds()
+        {
+            mw.Dispatcher.Invoke(() =>
+            {
+                var bounds = GetEffectiveBounds();
+                var clamped = ScreenTopology.ClampWindowPosition(
+                    bounds,
+                    mw.Left,
+                    mw.Top,
+                    GetWindowWidth(),
+                    GetWindowHeight()
+                );
+                if (Math.Abs(mw.Left - clamped.X) > 0.5)
+                    mw.Left = clamped.X;
+                if (Math.Abs(mw.Top - clamped.Y) > 0.5)
+                    mw.Top = clamped.Y;
+            });
+        }
+
+        /// <summary>
+        /// 将当前桌宠所在屏幕设为锁定活动屏幕（供设置页「设为当前屏幕」按钮显式调用）
+        /// </summary>
+        public void LockToCurrentScreen()
+        {
+            SetNowScreenActivateCore(ignoreOpenDialogs: true, lockSingleScreen: true);
         }
 
         public double GetWindowsDistanceLeft()
         {
             return mw.Dispatcher.Invoke(() =>
             {
-                if (IsPrimaryScreen) return mw.Left;
-                return mw.Left - ScreenBorder.X;
+                var bounds = GetEffectiveBounds();
+                return mw.Left - bounds.Left;
             });
         }
 
@@ -68,8 +210,8 @@ namespace VPet_Simulator.Windows
         {
             return mw.Dispatcher.Invoke(() =>
             {
-                if (IsPrimaryScreen) return mw.Top;
-                return mw.Top - ScreenBorder.Y;
+                var bounds = GetEffectiveBounds();
+                return mw.Top - bounds.Top;
             });
         }
 
@@ -77,8 +219,8 @@ namespace VPet_Simulator.Windows
         {
             return mw.Dispatcher.Invoke(() =>
             {
-                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenWidth - mw.Left - mw.ActualWidth;
-                return ScreenBorder.Width + ScreenBorder.X - mw.Left - mw.ActualWidth;
+                var bounds = GetEffectiveBounds();
+                return bounds.Right - mw.Left - GetWindowWidth();
             });
         }
 
@@ -86,8 +228,8 @@ namespace VPet_Simulator.Windows
         {
             return mw.Dispatcher.Invoke(() =>
             {
-                if (IsPrimaryScreen) return System.Windows.SystemParameters.PrimaryScreenHeight - mw.Top - mw.ActualHeight;
-                return ScreenBorder.Height + ScreenBorder.Y - mw.Top - mw.ActualHeight;
+                var bounds = GetEffectiveBounds();
+                return bounds.Bottom - mw.Top - GetWindowHeight();
             });
         }
 
@@ -100,40 +242,52 @@ namespace VPet_Simulator.Windows
             });
         }
 
+        private bool HasBlockingDialogOpen()
+        {
+            if ((mw.winSetting != null && mw.winSetting.Visibility == Visibility.Visible)
+                || (mw.winBetterBuy != null && mw.winBetterBuy.Visibility == Visibility.Visible)
+                || (mw.winWorkMenu != null && mw.winWorkMenu.Visibility == Visibility.Visible)
+                || (mw.winMutiPlayer != null && mw.winMutiPlayer.Visibility == Visibility.Visible))
+            {
+                return true;
+            }
+            for (int i = 0; i < mw.Windows.Count; i++)
+            {
+                if (mw.Windows[i] != null && mw.Windows[i].Visibility == Visibility.Visible)
+                    return true;
+            }
+            return false;
+        }
+
         public bool IfInActivateScreen()
         {
-            try
-            {
-                if (mw.Dispatcher.HasShutdownStarted || mw.Dispatcher.HasShutdownFinished) return false;
-                if (mw.winSetting != null && mw.winSetting.Visibility == Visibility.Visible) return false;
-                if (mw.winBetterBuy != null && mw.winBetterBuy.Visibility == Visibility.Visible) return false;
-                if (mw.winWorkMenu != null && mw.winWorkMenu.Visibility == Visibility.Visible) return false;
-                if (mw.winMutiPlayer != null && mw.winMutiPlayer.Visibility == Visibility.Visible) return false;
-                for (int i = 0; i < mw.Windows.Count; i++)
-                {
-                    if (mw.Windows[i] != null && mw.Windows[i].Visibility == Visibility.Visible) return false;
-                }
-            }
-            catch { }
+            if (mw.Dispatcher.HasShutdownStarted || mw.Dispatcher.HasShutdownFinished)
+                return true;
+
             return mw.Dispatcher.Invoke(() =>
             {
                 try
                 {
-                    var screen = Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(mw).Handle);
-                    var screens = Screen.AllScreens;
-                    for (int i = 0; i < screens.Length; i++)
+                    if (HasBlockingDialogOpen())
+                        return true;
+
+                    // 多屏并集模式下所有真实屏幕均实时处于活动状态，无需切换单屏矩形
+                    if (AutoChangeWindow)
                     {
-                        if (screens[i].DeviceName == screen.DeviceName)
-                        {
-                            if(i == mw.Set.GameScreenIndex)
-                            {
-                                return true;
-                            }
-                        }
+                        SyncGameScreenIndex();
+                        return true;
+                    }
+
+                    var screens = ScreenTopology.GetScreens(mw);
+                    var current = ScreenTopology.FindContainingOrNearestScreen(screens, GetCurrentWindowRect());
+                    for (int i = 0; i < screens.Count; i++)
+                    {
+                        if (string.Equals(screens[i].DeviceName, current.DeviceName, StringComparison.OrdinalIgnoreCase))
+                            return i == mw.Set.GameScreenIndex;
                     }
                     return false;
                 }
-                catch(Exception)
+                catch
                 {
                     return true;
                 }
@@ -142,52 +296,59 @@ namespace VPet_Simulator.Windows
 
         public void SetNowScreenActivate()
         {
+            SetNowScreenActivateCore(ignoreOpenDialogs: false, lockSingleScreen: !AutoChangeWindow);
+        }
+
+        private void SetNowScreenActivateCore(bool ignoreOpenDialogs, bool lockSingleScreen)
+        {
+            if (mw.Dispatcher.HasShutdownStarted || mw.Dispatcher.HasShutdownFinished)
+                return;
+
             mw.Dispatcher.Invoke(() =>
             {
-                if (!mw.IsLoaded) return;
-                if (mw.winSetting != null && mw.winSetting.Visibility == Visibility.Visible) return;
-                if (mw.winBetterBuy != null && mw.winBetterBuy.Visibility == Visibility.Visible) return;
-                if (mw.winWorkMenu != null && mw.winWorkMenu.Visibility == Visibility.Visible) return;
-                if (mw.winMutiPlayer != null && mw.winMutiPlayer.Visibility == Visibility.Visible) return;
-                var helper = new WindowInteropHelper(mw);
-                var currentScreen = Screen.FromHandle(helper.Handle);
-                var hwndSource = HwndSource.FromHwnd(helper.Handle);
+                if (!mw.IsLoaded)
+                    return;
+                if (!ignoreOpenDialogs && HasBlockingDialogOpen())
+                    return;
 
-                Rectangle logicalBounds;
+                ScreenTopology.InvalidateCache();
+                var screens = ScreenTopology.GetScreens(mw);
+                var currentScreen = ScreenTopology.FindContainingOrNearestScreen(screens, GetCurrentWindowRect());
 
-                if (hwndSource?.CompositionTarget != null)
+                for (int i = 0; i < screens.Count; i++)
                 {
-                    var dpi = hwndSource.CompositionTarget.TransformToDevice;
-
-                    logicalBounds = new Rectangle(
-                        (int)(currentScreen.Bounds.X / dpi.M11),
-                        (int)(currentScreen.Bounds.Y / dpi.M22),
-                        (int)(currentScreen.Bounds.Width / dpi.M11),
-                        (int)(currentScreen.Bounds.Height / dpi.M22)
-                    );
-                }
-                else
-                {
-                    logicalBounds = new Rectangle(
-                        currentScreen.Bounds.X,
-                        currentScreen.Bounds.Y,
-                        currentScreen.Bounds.Width,
-                        currentScreen.Bounds.Height
-                    );
-                }
-
-                ScreenBorder = logicalBounds;
-
-                var screens = Screen.AllScreens;
-                for (int i = 0; i < screens.Length; i++)
-                {
-                    if (screens[i].DeviceName == currentScreen.DeviceName)
+                    if (string.Equals(screens[i].DeviceName, currentScreen.DeviceName, StringComparison.OrdinalIgnoreCase))
                     {
                         mw.Set.GameScreenIndex = i;
                         break;
                     }
                 }
+
+                if (lockSingleScreen)
+                {
+                    var rect = ScreenTopology.ToDrawingRectangle(currentScreen.LogicalBounds);
+                    _screenBorder = rect;
+                    mw.Set.MoveArea = rect;
+                    mw.Set.MoveAreaScreen = currentScreen.DeviceName;
+                    mw.Set.AutoChangeWindow = false;
+                    IsPrimaryScreen = false;
+                }
             });
+        }
+
+        private void SyncGameScreenIndex()
+        {
+            var screens = ScreenTopology.GetScreens(mw);
+            var current = ScreenTopology.FindContainingOrNearestScreen(screens, GetCurrentWindowRect());
+            for (int i = 0; i < screens.Count; i++)
+            {
+                if (string.Equals(screens[i].DeviceName, current.DeviceName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (mw.Set.GameScreenIndex != i)
+                        mw.Set.GameScreenIndex = i;
+                    break;
+                }
+            }
         }
 
         public void ShowSetting()
@@ -206,30 +367,45 @@ namespace VPet_Simulator.Windows
         {
             mw.Dispatcher.Invoke(() =>
             {
-                if (GetWindowsDistanceUp() < -0.25 * mw.ActualHeight && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight)
+                var bounds = GetEffectiveBounds();
+                double w = GetWindowWidth();
+                double h = GetWindowHeight();
+                double maxLeft = Math.Max(bounds.Left, bounds.Right - w);
+                double maxTop = Math.Max(bounds.Top, bounds.Bottom - h);
+
+                if (mw.Top < bounds.Top - 0.25 * h)
                 {
-                    MoveWindows(0, -GetWindowsDistanceUp() / ZoomRatio);
+                    mw.Top = bounds.Top;
                 }
-                else if (GetWindowsDistanceDown() < -0.25 * mw.ActualHeight && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight)
+                else if (mw.Top > maxTop + 0.25 * h)
                 {
-                    MoveWindows(0, GetWindowsDistanceDown() / ZoomRatio);
+                    mw.Top = maxTop;
                 }
-                if (GetWindowsDistanceLeft() < -0.25 * mw.ActualWidth && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth)
+
+                if (mw.Left < bounds.Left - 0.25 * w)
                 {
-                    MoveWindows(-GetWindowsDistanceLeft() / ZoomRatio, 0);
+                    mw.Left = bounds.Left;
                 }
-                else if (GetWindowsDistanceRight() < -0.25 * mw.ActualWidth && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth)
+                else if (mw.Left > maxLeft + 0.25 * w)
                 {
-                    MoveWindows(GetWindowsDistanceRight() / ZoomRatio, 0);
+                    mw.Left = maxLeft;
                 }
             });
         }
+
         public bool CheckPosition() => mw.Dispatcher.Invoke(() =>
-               GetWindowsDistanceUp() < -0.25 * mw.ActualHeight && GetWindowsDistanceDown() < System.Windows.SystemParameters.PrimaryScreenHeight
-            || GetWindowsDistanceDown() < -0.25 * mw.ActualHeight && GetWindowsDistanceUp() < System.Windows.SystemParameters.PrimaryScreenHeight
-            || GetWindowsDistanceLeft() < -0.25 * mw.ActualWidth && GetWindowsDistanceRight() < System.Windows.SystemParameters.PrimaryScreenWidth
-            || GetWindowsDistanceRight() < -0.25 * mw.ActualWidth && GetWindowsDistanceLeft() < System.Windows.SystemParameters.PrimaryScreenWidth
-        );
+        {
+            var bounds = GetEffectiveBounds();
+            double w = GetWindowWidth();
+            double h = GetWindowHeight();
+            double maxLeft = Math.Max(bounds.Left, bounds.Right - w);
+            double maxTop = Math.Max(bounds.Top, bounds.Bottom - h);
+
+            return mw.Top < bounds.Top - 0.25 * h
+                || mw.Top > maxTop + 0.25 * h
+                || mw.Left < bounds.Left - 0.25 * w
+                || mw.Left > maxLeft + 0.25 * w;
+        });
 
         public bool RePositionActive { get; set; } = true;
 

@@ -1290,17 +1290,34 @@ namespace VPet_Simulator.Windows
             }
         }
 
+        public void SyncAutoChangeWindowUI()
+        {
+            bool prev = AllowChange;
+            AllowChange = false;
+            try
+            {
+                AutoChangeWindowEvent.IsChecked = mw.Set.AutoChangeWindow;
+            }
+            finally
+            {
+                AllowChange = prev;
+            }
+        }
+
         public void UpdateMoveAreaText()
         {
             var mwCtrl = mw.Core.Controller as MWController;
-            if (mwCtrl!.IsPrimaryScreen && !mwCtrl.AutoChangeWindow)
-            {
-                textMoveArea.Text = "主屏幕".Translate();
+            if (mwCtrl == null)
                 return;
-            }
-            else if (mwCtrl.AutoChangeWindow)
+            SyncAutoChangeWindowUI();
+            if (mwCtrl.AutoChangeWindow)
             {
                 textMoveArea.Text = "自动选择窗口".Translate();
+                return;
+            }
+            if (mwCtrl.IsPrimaryScreen)
+            {
+                textMoveArea.Text = "主屏幕".Translate();
                 return;
             }
             var rect = mwCtrl.ScreenBorder;
@@ -1310,14 +1327,21 @@ namespace VPet_Simulator.Windows
         private void BtnSetMoveArea_Default_Click(object sender, RoutedEventArgs e)
         {
             var mwCtrl = mw.Core.Controller as MWController;
-            mwCtrl!.ResetScreenBorder();
+            if (mwCtrl == null)
+                return;
+            mw.Set.AutoChangeWindow = false;
+            mwCtrl.ResetScreenBorder();
+            mwCtrl.EnsureWindowInBounds();
             UpdateMoveAreaText();
         }
 
         private void BtnSetMoveArea_DetectScreen_Click(object sender, RoutedEventArgs e)
         {
             var mwCtrl = mw.Core.Controller as MWController;
-            mwCtrl!.SetNowScreenActivate();
+            if (mwCtrl == null)
+                return;
+            mwCtrl.LockToCurrentScreen();
+            mwCtrl.EnsureWindowInBounds();
             UpdateMoveAreaText();
         }
 
@@ -1326,13 +1350,26 @@ namespace VPet_Simulator.Windows
         {
             var wma = new winMoveArea(mw);
             var mwCtrl = mw.Core.Controller as MWController;
-            if (!mwCtrl!.IsPrimaryScreen)
+            if (mwCtrl == null)
+                return;
+            var screens = ScreenTopology.GetScreens(mw);
+            var savedRect = ScreenTopology.FromDrawingRectangle(mwCtrl.ScreenBorder);
+            if (!mwCtrl.IsPrimaryScreen && ScreenTopology.HasValidScreenIntersection(screens, savedRect))
             {
-                var rect = mwCtrl.ScreenBorder;
-                wma.Width = rect.Width;
-                wma.Height = rect.Height;
-                wma.Left = rect.X;
-                wma.Top = rect.Y;
+                wma.Width = savedRect.Width;
+                wma.Height = savedRect.Height;
+                wma.Left = savedRect.X;
+                wma.Top = savedRect.Y;
+            }
+            else
+            {
+                var primary = ScreenTopology.GetPrimaryScreenRect(screens);
+                double defaultW = Math.Min(800, primary.Width * 0.6);
+                double defaultH = Math.Min(600, primary.Height * 0.6);
+                wma.Width = defaultW;
+                wma.Height = defaultH;
+                wma.Left = primary.Left + (primary.Width - defaultW) / 2;
+                wma.Top = primary.Top + (primary.Height - defaultH) / 2;
             }
             wma.ShowDialog();
         }
@@ -2238,13 +2275,11 @@ namespace VPet_Simulator.Windows
         {
             if (!AllowChange)
                 return;
-            if (AutoChangeWindowEvent.IsChecked == true)
+            mw.Set.AutoChangeWindow = AutoChangeWindowEvent.IsChecked == true;
+            if (mw.Core.Controller is MWController mwCtrl)
             {
-                mw.Set.AutoChangeWindow = true;
-            }
-            else
-            {
-                mw.Set.AutoChangeWindow = false;
+                mwCtrl.ValidateAndRepairMoveArea();
+                mwCtrl.EnsureWindowInBounds();
             }
             UpdateMoveAreaText();
         }

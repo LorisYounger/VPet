@@ -776,8 +776,38 @@ namespace VPet_Simulator.Windows
         }
 
 
+        private void MainWindow_InitialBoundsCheck(object? sender, EventArgs e)
+        {
+            ContentRendered -= MainWindow_InitialBoundsCheck;
+            MWController?.ValidateAndRepairMoveArea();
+            MWController?.EnsureWindowInBounds();
+        }
+
+        private void OnDisplaySettingsChanged()
+        {
+            if (Dispatcher.HasShutdownStarted || Dispatcher.HasShutdownFinished)
+                return;
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (MWController == null)
+                    return;
+                MWController.ValidateAndRepairMoveArea();
+                MWController.EnsureWindowInBounds();
+                if (Main != null && (Main.DisplayType.Type == GraphType.SideHide_Left_Main
+                    || Main.DisplayType.Type == GraphType.SideHide_Left_Rise
+                    || Main.DisplayType.Type == GraphType.SideHide_Right_Main
+                    || Main.DisplayType.Type == GraphType.SideHide_Right_Rise))
+                {
+                    Main.DisplayToNomal();
+                }
+                winSetting?.UpdateMoveAreaText();
+            }));
+        }
+
         private void Window_Closed(object? sender, EventArgs? e)
         {
+            ScreenTopology.DisplayChanged -= OnDisplaySettingsChanged;
+            ContentRendered -= MainWindow_InitialBoundsCheck;
             CloseConfirm = false;
             try
             {

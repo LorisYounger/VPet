@@ -83,31 +83,11 @@ public partial class MPFriends : WindowX, IMPFriend
             Top = T;
 
             // control position inside bounds
-            Core.Controller = new MPController(this, mw);
-            Task.Run(() =>
-            {
-                double dist;
-                if ((dist = Core.Controller!.GetWindowsDistanceLeft()) < 0)
-                {
-                    Thread.Sleep(100);
-                    Dispatcher.Invoke(() => Left -= dist);
-                }
-                if ((dist = Core.Controller!.GetWindowsDistanceRight()) < 0)
-                {
-                    Thread.Sleep(100);
-                    Dispatcher.Invoke(() => Left += dist);
-                }
-                if ((dist = Core.Controller!.GetWindowsDistanceUp()) < 0)
-                {
-                    Thread.Sleep(100);
-                    Dispatcher.Invoke(() => Top -= dist);
-                }
-                if ((dist = Core.Controller!.GetWindowsDistanceDown()) < 0)
-                {
-                    Thread.Sleep(100);
-                    Dispatcher.Invoke(() => Top += dist);
-                }
-            });
+            var mpController = new MPController(this, mw);
+            Core.Controller = mpController;
+            mpController.EnsureWindowInBounds();
+            ContentRendered += MPFriends_InitialBoundsCheck;
+            ScreenTopology.DisplayChanged += OnDisplaySettingsChanged;
             if (mw.Set.TopMost)
             {
                 Topmost = true;
@@ -786,8 +766,26 @@ public partial class MPFriends : WindowX, IMPFriend
                 break;
         }
     }
+    private void MPFriends_InitialBoundsCheck(object? sender, EventArgs e)
+    {
+        ContentRendered -= MPFriends_InitialBoundsCheck;
+        (Core?.Controller as MPController)?.EnsureWindowInBounds();
+    }
+
+    private void OnDisplaySettingsChanged()
+    {
+        if (Dispatcher.HasShutdownStarted || Dispatcher.HasShutdownFinished)
+            return;
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            (Core?.Controller as MPController)?.EnsureWindowInBounds();
+        }));
+    }
+
     private void WindowX_Closed(object sender, EventArgs e)
     {
+        ScreenTopology.DisplayChanged -= OnDisplaySettingsChanged;
+        ContentRendered -= MPFriends_InitialBoundsCheck;
         SteamMatchmaking.OnLobbyMemberDataChanged -= SteamMatchmaking_OnLobbyMemberDataChanged;
         winMPBetterBuy?.Close();
         Main?.Dispose();
@@ -873,8 +871,9 @@ public partial class MPFriends : WindowX, IMPFriend
     {
         Main?.CleanState();
         Main?.DisplayToNomal();
-        Left = (SystemParameters.PrimaryScreenWidth - ActualWidth) / 2;
-        Top = (SystemParameters.PrimaryScreenHeight - ActualHeight) / 2;
+        var primary = ScreenTopology.GetPrimaryScreenRect(this);
+        Left = primary.Left + (primary.Width - ActualWidth) / 2;
+        Top = primary.Top + (primary.Height - ActualHeight) / 2;
     }
     private System.Windows.Controls.Image? hashcheckimg;
 
