@@ -10,7 +10,9 @@
   <c:StringFormatMultiConverter x:Key="StringFormatMultiConverter" />
   <c:EqualsConverter x:Key="EqualsConverter" />
   <c:EqualsConverter x:Key="NotEqualsConverter" IsInverted="True" />
+  <c:NumberCompareByConverter x:Key="Int32CompareByConverter" />
   <c:NullToTrueConverter x:Key="NullToFalseConverter" IsInverted="True" />
+  <c:NullToTrueConverter x:Key="NullToTrueConverter" />
   <c:BoolInverterConverter x:Key="BoolInverter" />
   <local:LPSTranslateConverter x:Key="TranslateConverter" />
   <local:DoubleToDecimalConverter x:Key="DoubleToDecimalConverter" />
@@ -20,4 +22,6 @@
     IsInverted="True"
     StringCheckType="NullOrWhiteSpace"
   />
+  <c:StringCheckConverter x:Key="StringIsNullOrWhiteSpace" StringCheckType="NullOrWhiteSpace" />
+  <c:CollectionCountCompareConverter x:Key="CollectionCountCompareConverter" />
 </ResourceDictionary>

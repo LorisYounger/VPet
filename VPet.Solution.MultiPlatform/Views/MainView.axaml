@@ -4,114 +4,197 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:local="using:VPet.Solution.MultiPlatform"
+  xmlns:ui="using:FluentAvalonia.UI.Controls"
   xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels"
   x:DataType="vm:MainViewModel"
   mc:Ignorable="d"
-  d:DesignWidth="800"
-  d:DesignHeight="500"
+  d:DesignWidth="600"
+  d:DesignHeight="520"
   x:Class="VPet.Solution.MultiPlatform.Views.MainView"
 >
   <Design.DataContext>
     <vm:MainViewModel />
   </Design.DataContext>
-  <Grid Margin="10">
-    <Grid RowDefinitions="Auto,Auto,*">
-      <Grid HorizontalAlignment="Right" ColumnDefinitions="Auto,Auto">
-        <ComboBox
-          x:Name="ThemeVariant"
-          MinWidth="100"
-          HorizontalAlignment="Right"
-          VerticalAlignment="Top"
-          SelectedIndex="0"
-          Classes="Base"
-          SelectionChanged="ThemeVariant_SelectionChanged"
-          Margin="0,0,10,0"
-        >
-          <ComboBoxItem Tag="Auto" Content="{ll:Str 默认}" />
-          <ComboBoxItem Tag="Light" Content="{ll:Str 亮色}" />
-          <ComboBoxItem Tag="Dark" Content="{ll:Str 暗色}" />
-        </ComboBox>
-        <ComboBox
-          Grid.Column="1"
-          x:Name="Languages"
-          MinWidth="150"
-          HorizontalAlignment="Right"
-          VerticalAlignment="Top"
-          ItemsSource="{Binding AvailableCultures}"
-          SelectedItem="{Binding CurrentCulture}"
-          Classes="Base"
-        />
-      </Grid>
-      <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto">
-        <Label
-          HorizontalAlignment="Center"
-          Content="{ll:Str 'VPET 问题解决工具'}"
-          FontSize="32"
-          Classes="Base"
-        />
-        <StackPanel Grid.Row="2">
-          <TextBlock HorizontalAlignment="Center" Text="{ll:Str 目标目录}" Margin="5" />
-          <TextBlock
-            HorizontalAlignment="Center"
-            Width="100"
-            Text="{Binding BaseDirectory}"
-            Margin="5"
-          />
-          <Button
-            HorizontalAlignment="Center"
-            Margin="5"
-            Content="{ll:Str 设置目录}"
-            Grid.Column="1"
-            Command="{Binding SetBaseDirectoryCommand}"
+
+  <UserControl.Styles>
+    <Style Selector="Grid.compact UniformGrid#ActionGrid">
+      <Setter Property="Columns" Value="1" />
+    </Style>
+  </UserControl.Styles>
+
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+    <Grid
+      local:ResponsiveHelper.Enable="True"
+      local:ResponsiveHelper.Breakpoint="520"
+      MaxWidth="640"
+      HorizontalAlignment="Stretch"
+      Margin="16"
+      RowDefinitions="Auto,*,Auto"
+    >
+      <!-- 顶部主题与语言切换栏 -->
+      <WrapPanel
+        Grid.Row="0"
+        HorizontalAlignment="Right"
+        Orientation="Horizontal"
+        Margin="0,0,0,12"
+      >
+        <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,4,12,4">
+          <ui:FASymbolIcon Symbol="Highlight" FontSize="16" VerticalAlignment="Center" />
+          <ComboBox
+            x:Name="ThemeVariant"
+            MinWidth="100"
+            SelectedIndex="0"
+            VerticalAlignment="Center"
+            SelectionChanged="ThemeVariant_SelectionChanged"
+          >
+            <ComboBoxItem Tag="Default" Content="{ll:Str 默认}" />
+            <ComboBoxItem Tag="Light" Content="{ll:Str 亮色}" />
+            <ComboBoxItem Tag="Dark" Content="{ll:Str 暗色}" />
+          </ComboBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,4,0,4">
+          <ui:FASymbolIcon Symbol="Globe" FontSize="16" VerticalAlignment="Center" />
+          <ComboBox
+            x:Name="Languages"
+            MinWidth="140"
+            VerticalAlignment="Center"
+            ItemsSource="{Binding AvailableCultures}"
+            SelectedItem="{Binding CurrentCulture}"
           />
         </StackPanel>
-      </Grid>
-      <Grid Grid.Row="2" RowDefinitions="*,Auto,Auto">
-        <StackPanel
-          HorizontalAlignment="Center"
+      </WrapPanel>
+
+      <!-- 主体居中内容 -->
+      <StackPanel Grid.Row="1" VerticalAlignment="Center" Spacing="16">
+        <!-- 头部英雄区 -->
+        <StackPanel HorizontalAlignment="Center" Spacing="8" Margin="0,8">
+          <Image Source="/Assets/icon.ico" Width="48" Height="48" HorizontalAlignment="Center" />
+          <TextBlock
+            HorizontalAlignment="Center"
+            TextAlignment="Center"
+            Text="{ll:Str 'VPET 问题解决工具'}"
+            Classes="PageTitle"
+          />
+        </StackPanel>
+
+        <!-- 目标目录卡片 -->
+        <Border Classes="SurfaceCard">
+          <Grid
+            ColumnDefinitions="*,Auto"
+            RowDefinitions="Auto,Auto"
+            ColumnSpacing="12"
+            RowSpacing="8"
+          >
+            <TextBlock
+              Grid.Row="0"
+              Grid.Column="0"
+              Text="{ll:Str 目标目录}"
+              Classes="SectionHeader"
+              Margin="0"
+              VerticalAlignment="Center"
+            />
+            <Button
+              Grid.Row="0"
+              Grid.Column="1"
+              Content="{ll:Str 设置目录}"
+              Command="{Binding SetBaseDirectoryCommand}"
+            />
+            <ScrollViewer
+              Grid.Row="1"
+              Grid.Column="0"
+              Grid.ColumnSpan="2"
+              local:AutoScrollHelper.Enable="True"
+              ToolTip.Tip="{Binding BaseDirectory}"
+            >
+              <TextBlock
+                Classes="CaptionText"
+                Text="{Binding BaseDirectory}"
+                TextWrapping="NoWrap"
+              />
+            </ScrollViewer>
+          </Grid>
+        </Border>
+
+        <!-- 未选择目录提示 -->
+        <ui:FAInfoBar
+          IsOpen="{Binding BaseDirectory, Converter={StaticResource StringIsNullOrWhiteSpace}}"
+          IsVisible="{Binding BaseDirectory, Converter={StaticResource StringIsNullOrWhiteSpace}}"
+          IsClosable="False"
+          Severity="Informational"
+          Message="{ll:Str '请先设置桌宠目标目录以启用工具功能'}"
+        />
+
+        <!-- 主功能入口区 -->
+        <UniformGrid
+          x:Name="ActionGrid"
+          Columns="2"
           IsEnabled="{Binding BaseDirectory, Converter={StaticResource StringIsNotNullOrWhiteSpace}}"
         >
           <Button
-            Margin="5"
             x:Name="OpenSettingEditor"
-            MinWidth="200"
-            Content="{ll:Str 打开设置编辑器}"
-            FontSize="16"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Margin="4"
+            Padding="16,14"
             Command="{Binding OpenSettingEditorCommand}"
-            Classes="Base"
-          />
+          >
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <ui:FASymbolIcon Symbol="Setting" FontSize="20" VerticalAlignment="Center" />
+              <TextBlock
+                Text="{ll:Str 打开设置编辑器}"
+                FontSize="15"
+                FontWeight="SemiBold"
+                VerticalAlignment="Center"
+                TextWrapping="Wrap"
+              />
+            </StackPanel>
+          </Button>
           <Button
-            Margin="5"
             x:Name="OpenSaveViewer"
-            MinWidth="200"
-            Content="{ll:Str 打开存档查看器}"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Margin="4"
+            Padding="16,14"
             Command="{Binding OpenSaveViewerCommand}"
-            FontSize="16"
-            Classes="Base"
-          />
-        </StackPanel>
-        <StackPanel x:Name="BottomToolbar" Grid.Row="1" HorizontalAlignment="Center">
-          <Button
-            Margin="5"
-            HorizontalAlignment="Center"
-            x:Name="WantOpenVpet"
-            Height="30"
-            Command="{Binding WantOpenVpetCommand}"
-            Classes="Base"
-            Content="{ll:Str '想打开桌宠本体?'}"
-          />
-          <Button
-            Margin="5"
-            HorizontalAlignment="Center"
-            x:Name="FirstStartFailed"
-            Grid.Row="2"
-            Height="30"
-            Command="{Binding FirstStartFailedCommand}"
-            Classes="Base"
-            Content="{ll:Str '第一次启动桌宠打不开?'}"
-          />
-        </StackPanel>
-      </Grid>
+          >
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <ui:FASymbolIcon Symbol="Save" FontSize="20" VerticalAlignment="Center" />
+              <TextBlock
+                Text="{ll:Str 打开存档查看器}"
+                FontSize="15"
+                FontWeight="SemiBold"
+                VerticalAlignment="Center"
+                TextWrapping="Wrap"
+              />
+            </StackPanel>
+          </Button>
+        </UniformGrid>
+      </StackPanel>
+
+      <!-- 底部帮助区 -->
+      <WrapPanel
+        x:Name="BottomToolbar"
+        Grid.Row="2"
+        HorizontalAlignment="Center"
+        Orientation="Horizontal"
+        Margin="0,16,0,0"
+      >
+        <Button
+          x:Name="WantOpenVpet"
+          Margin="4"
+          Command="{Binding WantOpenVpetCommand}"
+          Classes="Link"
+          Content="{ll:Str '想打开桌宠本体?'}"
+        />
+        <Button
+          x:Name="FirstStartFailed"
+          Margin="4"
+          Command="{Binding FirstStartFailedCommand}"
+          Classes="Link"
+          Content="{ll:Str '第一次启动桌宠打不开?'}"
+        />
+      </WrapPanel>
     </Grid>
-  </Grid>
+  </ScrollViewer>
 </UserControl>

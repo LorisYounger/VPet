@@ -1,4 +1,7 @@
 using System.ComponentModel;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
 using HKW.MVVM;
 using HKW.MVVM.SourceGenerator;
@@ -9,6 +12,12 @@ public partial class ViewModelBase : ObservableObjectEx
 {
     [DIProperty]
     public required IDialogService DialogService { get; init; }
+
+    /// <summary>
+    /// 是否为单视图生命周期 (Web / Android)
+    /// </summary>
+    public bool IsSingleView =>
+        Application.Current?.ApplicationLifetime is ISingleViewApplicationLifetime;
 }
 
 public partial class DisposableViewModel : ViewModelBase, IDisposable
@@ -46,6 +55,19 @@ public partial class CloseableViewModel : DisposableViewModel, IViewClosing, ICl
     {
         RequestClose?.Invoke(this, EventArgs.Empty);
         Dispose();
+    }
+
+    /// <summary>
+    /// 返回上一页 (关闭前触发未保存校验)
+    /// </summary>
+    [RelayCommand]
+    public async Task NavigateBack()
+    {
+        var args = new CancelEventArgs(false);
+        await OnClosingAsync(args);
+        if (args.Cancel)
+            return;
+        Close();
     }
 
     public void OnClosing(CancelEventArgs e)

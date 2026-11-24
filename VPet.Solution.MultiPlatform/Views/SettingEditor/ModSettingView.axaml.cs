@@ -18,6 +18,22 @@ public partial class ModSettingView : UserControl
     public ModSettingView()
     {
         InitializeComponent();
+        ModRootGrid.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ResponsiveHelper.IsCompactProperty && e.NewValue is true)
+                ModSplitView.IsPaneOpen = false;
+        };
+    }
+
+    private void ToggleModPaneButton_Click(object? sender, RoutedEventArgs e)
+    {
+        ModSplitView.IsPaneOpen = ModSplitView.IsPaneOpen is false;
+    }
+
+    private void Mods_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (ResponsiveHelper.GetIsCompact(ModRootGrid))
+            ModSplitView.IsPaneOpen = false;
     }
 
     private void ModIsPass_IsCheckedChanged(object? sender, RoutedEventArgs e)

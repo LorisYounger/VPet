@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs.FileSystem;
 using HKW.HKWUtils.Collections;
+using HKW.HKWUtils.Extensions;
 using HKW.MVVM;
 using LinePutScript;
 using VPet_Simulator.Windows.Interface;
@@ -124,7 +125,7 @@ public partial class SaveViewModel : CloseableViewModel
 
     public FilteredListWrapper<
         SaveModel,
-        List<SaveModel>,
+        ObservableCollection<SaveModel>,
         ObservableCollection<SaveModel>
     > Saves { get; }
 

@@ -173,6 +173,6 @@ public class ZoomLevelToStorageZoomLevel : IMapConverter<double, double>
 
     public double ConvertBack(double value, MapConvertArgs args)
     {
-        return value * 2;
+        return Math.Round(value * 2, 10, MidpointRounding.AwayFromZero);
     }
 }

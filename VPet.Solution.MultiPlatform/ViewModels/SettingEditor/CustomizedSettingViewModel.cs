@@ -5,6 +5,7 @@ using HanumanInstitute.MvvmDialogs.FrameworkDialogs;
 using HKW.HKWUtils.Collections;
 using HKW.HKWUtils.Observable;
 using HKW.MVVM;
+using HKW.MVVM.SourceGenerator;
 using VPet.Solution.MultiPlatform.Models;
 
 namespace VPet.Solution.MultiPlatform.ViewModels;
@@ -35,7 +36,8 @@ public partial class CustomizedSettingViewModel : DisposableViewModel, ISubSetti
         SearchLink = string.Empty;
     }
 
-    public CustomizedSettingModel CustomizedSetting => Setting.CustomizedSetting;
+    [NotifyPropertyChangeFrom(nameof(Setting))]
+    public CustomizedSettingModel CustomizedSetting => Setting?.CustomizedSetting!;
 
     [ObservableProperty]
     public string SearchLink { get; set; } = string.Empty;

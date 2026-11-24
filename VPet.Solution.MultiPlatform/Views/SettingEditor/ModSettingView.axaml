@@ -3,182 +3,343 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:local="using:VPet.Solution.MultiPlatform"
   xmlns:m="using:VPet.Solution.MultiPlatform.Models"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:ui="using:FluentAvalonia.UI.Controls"
   xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels"
   x:Class="VPet.Solution.MultiPlatform.Views.ModSettingView"
   x:DataType="vm:ModSettingViewModel"
-  d:DesignHeight="450"
+  d:DesignHeight="600"
   d:DesignWidth="800"
   mc:Ignorable="d"
 >
-  <Grid ColumnDefinitions="220,8,*">
-    <Grid RowDefinitions="Auto,*,Auto,Auto">
-      <TextBox
-        x:Name="SearchMod"
-        Text="{Binding SearchMod}"
-        PlaceholderText="{ll:Str 搜索模组}"
-        Margin="0,0,0,6"
-      />
-      <DataGrid
-        ItemsSource="{Binding Mods.FilteredList}"
-        SelectedItem="{Binding CurrentMod}"
-        x:Name="Mods"
-        Grid.Row="1"
-        AutoGenerateColumns="False"
-        IsReadOnly="True"
-      >
-        <DataGrid.Columns>
-          <DataGridTextColumn Binding="{Binding State}" Header="{ll:Str 状态}" IsReadOnly="True" />
-          <DataGridTextColumn Binding="{Binding Name}" Header="{ll:Str 名称}" IsReadOnly="True" />
-        </DataGrid.Columns>
-      </DataGrid>
-      <Button
-        Grid.Row="2"
-        Margin="0,6,0,2"
-        x:Name="ClearFailMods"
-        HorizontalAlignment="Stretch"
-        Command="{Binding ClearFailModsCommand}"
-        Content="{ll:Str 清除失效模组}"
-        Classes="Base"
-      />
-      <Button
-        Grid.Row="3"
-        Margin="0,2,0,0"
-        HorizontalAlignment="Stretch"
-        x:Name="ClearMods"
-        Command="{Binding ClearModsCommand}"
-        Content="{ll:Str 清除全部模组}"
-        Classes="Base"
-      />
-    </Grid>
+  <UserControl.Styles>
+    <Style Selector="Grid#ModRootGrid.expanded SplitView#ModSplitView">
+      <Setter Property="DisplayMode" Value="Inline" />
+      <Setter Property="IsPaneOpen" Value="True" />
+    </Style>
+    <Style Selector="Grid#ModRootGrid.compact SplitView#ModSplitView">
+      <Setter Property="DisplayMode" Value="Overlay" />
+    </Style>
+    <Style Selector="Grid#ModRootGrid.expanded Border#ModCompactBar">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="Grid#ModRootGrid.compact Border#ModCompactBar">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="Grid#ModRootGrid.compact Border#ModImageBorder">
+      <Setter Property="Grid.ColumnSpan" Value="2" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+    <Style Selector="Grid#ModRootGrid.compact Grid#ModMetaGrid">
+      <Setter Property="Grid.Row" Value="1" />
+      <Setter Property="Grid.Column" Value="0" />
+      <Setter Property="Grid.ColumnSpan" Value="2" />
+    </Style>
+    <Style Selector="Grid#ModRootGrid.compact Border#ModTagsCard">
+      <Setter Property="Grid.ColumnSpan" Value="2" />
+    </Style>
+    <Style Selector="Grid#ModRootGrid.compact Border#ModActionsCard">
+      <Setter Property="Grid.Row" Value="1" />
+      <Setter Property="Grid.Column" Value="0" />
+      <Setter Property="Grid.ColumnSpan" Value="2" />
+    </Style>
+  </UserControl.Styles>
 
-    <Grid
-      Grid.Column="2"
-      RowDefinitions="Auto,*,*"
-      IsEnabled="{Binding CurrentMod, Converter={StaticResource NullToFalseConverter}}"
-    >
-      <Grid ColumnDefinitions="Auto,*">
-        <Image
-          Width="150"
-          Height="150"
-          Source="{Binding CurrentMod.Image}"
-          Stretch="UniformToFill"
-        />
-        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
-          <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*">
-            <Label Margin="0" Content="{ll:Str '模组名称:'}" Classes="Base" />
-            <TextBlock Grid.Column="1" Classes="LeftCenter" Text="{Binding CurrentMod.Name}" />
-            <Label Margin="0" Grid.Row="1" Content="{ll:Str '作者:'}" Classes="Base" />
-            <TextBlock
-              Grid.Row="1"
-              Grid.Column="1"
-              Classes="LeftCenter"
-              Text="{Binding CurrentMod.Author}"
-            />
-            <Label Margin="0" Grid.Row="2" Content="{ll:Str '模组版本:'}" Classes="Base" />
-            <TextBlock
-              Grid.Row="2"
-              Grid.Column="1"
-              Classes="LeftCenter"
-              Text="{Binding CurrentMod.ModVersion}"
-            />
-            <Label Margin="0" Grid.Row="3" Content="{ll:Str '游戏版本:'}" Classes="Base" />
-            <TextBlock
-              Grid.Row="3"
-              Grid.Column="1"
-              Classes="LeftCenter"
-              Text="{Binding CurrentMod.GameVersion}"
-            />
-            <Label Margin="0" Grid.Row="4" Content="{ll:Str '模组路径:'}" Classes="Base" />
-            <TextBlock
-              Grid.Row="4"
-              Grid.Column="1"
-              Classes="LeftCenter Wrap"
-              Text="{Binding CurrentMod.ModPath}"
-            />
-          </Grid>
-        </ScrollViewer>
-      </Grid>
-
-      <Grid Grid.Row="1" RowDefinitions="Auto,*">
-        <Label
-          HorizontalAlignment="Left"
-          Content="{ll:Str MOD介绍}"
-          FontSize="18"
-          FontWeight="Bold"
-          Classes="Base"
-        />
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-          <TextBlock
-            x:Name="GameInfo"
-            FontSize="14"
-            Classes="Wrap"
-            Text="{Binding CurrentMod.Description}"
-          />
-        </ScrollViewer>
-      </Grid>
-
-      <Grid Grid.Row="2" ColumnDefinitions="*,*">
-        <Grid RowDefinitions="Auto,*">
-          <Label
-            HorizontalAlignment="Left"
-            Content="{ll:Str 内容}"
-            FontSize="18"
-            FontWeight="Bold"
-            Classes="Base"
-          />
-          <ItemsControl Grid.Row="1" ItemsSource="{Binding CurrentMod.Tags}" />
-        </Grid>
-
-        <Grid
-          Grid.Column="1"
-          RowDefinitions="Auto,*"
-          IsEnabled="{Binding CurrentMod.IsEnabled, Converter={StaticResource NullToFalseConverter}, FallbackValue=False}"
+  <Grid
+    x:Name="ModRootGrid"
+    local:ResponsiveHelper.Enable="True"
+    local:ResponsiveHelper.Breakpoint="640"
+    RowDefinitions="Auto,*"
+  >
+    <!-- 窄屏模组选择顶栏 -->
+    <Border x:Name="ModCompactBar" Grid.Row="0" Classes="ToolbarHeader">
+      <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+        <Button
+          x:Name="ToggleModPaneButton"
+          Click="ToggleModPaneButton_Click"
+          Classes="IconAction"
+          ToolTip.Tip="{ll:Str 搜索模组}"
         >
-          <Label
-            HorizontalAlignment="Left"
-            Content="{ll:Str 操作}"
-            FontSize="18"
-            FontWeight="Bold"
-            Classes="Base"
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <ui:FASymbolIcon Symbol="List" FontSize="14" VerticalAlignment="Center" />
+            <TextBlock Text="{ll:Str 模组}" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+        <TextBlock
+          Text="{Binding CurrentMod.Name, FallbackValue=''}"
+          FontWeight="SemiBold"
+          VerticalAlignment="Center"
+          TextTrimming="CharacterEllipsis"
+        />
+      </StackPanel>
+    </Border>
+
+    <SplitView
+      x:Name="ModSplitView"
+      Grid.Row="1"
+      OpenPaneLength="240"
+      CompactPaneLength="0"
+      PaneBackground="{DynamicResource LayerFillColorDefaultBrush}"
+    >
+      <SplitView.Pane>
+        <Grid Margin="10" RowDefinitions="Auto,*,Auto,Auto" RowSpacing="5">
+          <TextBox
+            x:Name="SearchMod"
+            Grid.Row="0"
+            Text="{Binding SearchMod}"
+            PlaceholderText="{ll:Str 搜索模组}"
+          >
+            <TextBox.InnerLeftContent>
+              <ui:FASymbolIcon
+                Symbol="Find"
+                FontSize="14"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center"
+              />
+            </TextBox.InnerLeftContent>
+          </TextBox>
+          <DataGrid
+            x:Name="Mods"
+            Grid.Row="1"
+            ItemsSource="{Binding Mods.FilteredList}"
+            SelectedItem="{Binding CurrentMod}"
+            SelectionChanged="Mods_SelectionChanged"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+          >
+            <DataGrid.Columns>
+              <DataGridTextColumn
+                Width="Auto"
+                Binding="{Binding State}"
+                Header="{ll:Str 状态}"
+                IsReadOnly="True"
+              />
+              <DataGridTextColumn
+                Width="*"
+                Binding="{Binding Name}"
+                Header="{ll:Str 名称}"
+                IsReadOnly="True"
+              />
+            </DataGrid.Columns>
+          </DataGrid>
+          <Button
+            Grid.Row="2"
+            x:Name="ClearFailMods"
+            HorizontalAlignment="Stretch"
+            Command="{Binding ClearFailModsCommand}"
+            Content="{ll:Str 清除失效模组}"
           />
-          <Grid Grid.Row="1" ColumnDefinitions="*,*">
-            <StackPanel Spacing="6">
-              <ToggleSwitch
-                x:Name="ModIsEnabled"
-                Content="{ll:Str 启用模组}"
-                IsChecked="{Binding CurrentMod.IsEnabled}"
-              />
-              <ToggleSwitch
-                x:Name="ModIsPass"
-                IsCheckedChanged="ModIsPass_IsCheckedChanged"
-                Content="{ll:Str 启用代码插件}"
-                IsChecked="{Binding CurrentMod.IsPass, Mode=OneWay}"
-                IsEnabled="{Binding CurrentMod.IsMsg, FallbackValue=False}"
-              />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Spacing="4">
-              <Button
-                x:Name="OpenModPath"
-                HorizontalAlignment="Stretch"
-                CommandParameter="{Binding CurrentMod}"
-                Content="{ll:Str '打开所在文件夹'}"
-                Command="{Binding OpenModPathCommand}"
-                Classes="Base"
-              />
-              <Button
-                x:Name="OpenSteamCommunity"
-                HorizontalAlignment="Stretch"
-                CommandParameter="{Binding CurrentMod}"
-                Command="{Binding OpenSteamCommunityCommand}"
-                Content="{ll:Str 打开创意工坊页面}"
-                Classes="Base"
-              />
-            </StackPanel>
-          </Grid>
+          <Button
+            Grid.Row="3"
+            x:Name="ClearMods"
+            HorizontalAlignment="Stretch"
+            Command="{Binding ClearModsCommand}"
+            Content="{ll:Str 清除全部模组}"
+          />
         </Grid>
-      </Grid>
-    </Grid>
+      </SplitView.Pane>
+
+      <SplitView.Content>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+          <StackPanel
+            HorizontalAlignment="Stretch"
+            Margin="10"
+            Spacing="5"
+            IsEnabled="{Binding CurrentMod, Converter={StaticResource NullToFalseConverter}}"
+          >
+            <!-- 头部信息卡片 -->
+            <Border Classes="SurfaceCard">
+              <Grid
+                ColumnDefinitions="Auto,*"
+                RowDefinitions="Auto,Auto"
+                ColumnSpacing="10"
+                RowSpacing="5"
+              >
+                <Border
+                  x:Name="ModImageBorder"
+                  Grid.Row="0"
+                  Grid.Column="0"
+                  Width="150"
+                  Height="150"
+                  CornerRadius="8"
+                  ClipToBounds="True"
+                  Background="{DynamicResource SubtleFillColorSecondaryBrush}"
+                >
+                  <Image Source="{Binding CurrentMod.Image}" Stretch="UniformToFill" />
+                </Border>
+                <Grid
+                  x:Name="ModMetaGrid"
+                  Grid.Row="0"
+                  Grid.Column="1"
+                  RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                  ColumnDefinitions="Auto,*"
+                  ColumnSpacing="10"
+                  RowSpacing="5"
+                  VerticalAlignment="Center"
+                >
+                  <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Classes="CaptionText"
+                    Text="{ll:Str '模组名称:'}"
+                    VerticalAlignment="Center"
+                  />
+                  <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Classes="BodyText"
+                    FontWeight="SemiBold"
+                    Text="{Binding CurrentMod.Name}"
+                  />
+                  <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Classes="CaptionText"
+                    Text="{ll:Str '作者:'}"
+                    VerticalAlignment="Center"
+                  />
+                  <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Classes="BodyText"
+                    Text="{Binding CurrentMod.Author}"
+                  />
+                  <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Classes="CaptionText"
+                    Text="{ll:Str '模组版本:'}"
+                    VerticalAlignment="Center"
+                  />
+                  <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Classes="BodyText"
+                    Text="{Binding CurrentMod.ModVersion}"
+                  />
+                  <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Classes="CaptionText"
+                    Text="{ll:Str '游戏版本:'}"
+                    VerticalAlignment="Center"
+                  />
+                  <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Classes="BodyText"
+                    Text="{Binding CurrentMod.GameVersion}"
+                  />
+                  <TextBlock
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Classes="CaptionText"
+                    Text="{ll:Str '模组路径:'}"
+                    VerticalAlignment="Top"
+                  />
+                  <TextBlock
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Classes="CaptionText"
+                    Text="{Binding CurrentMod.ModPath}"
+                  />
+                </Grid>
+              </Grid>
+            </Border>
+
+            <!-- MOD 介绍 -->
+            <Border Classes="SurfaceCard">
+              <StackPanel Spacing="5">
+                <TextBlock Classes="SectionHeader" Margin="0" Text="{ll:Str MOD介绍}" />
+                <TextBlock
+                  x:Name="GameInfo"
+                  Classes="BodyText"
+                  Text="{Binding CurrentMod.Description}"
+                />
+              </StackPanel>
+            </Border>
+
+            <!-- 内容标签与操作 -->
+            <Grid
+              ColumnDefinitions="*,*"
+              RowDefinitions="Auto,Auto"
+              ColumnSpacing="5"
+              RowSpacing="5"
+            >
+              <Border x:Name="ModTagsCard" Grid.Row="0" Grid.Column="0" Classes="SurfaceCard">
+                <StackPanel Spacing="5">
+                  <TextBlock Classes="SectionHeader" Margin="0" Text="{ll:Str 内容}" />
+                  <ItemsControl ItemsSource="{Binding CurrentMod.Tags}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <Border Classes="TagBadge">
+                          <TextBlock Text="{Binding}" Classes="CaptionText" />
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </Border>
+
+              <Border
+                x:Name="ModActionsCard"
+                Grid.Row="0"
+                Grid.Column="1"
+                Classes="SurfaceCard"
+                IsEnabled="{Binding CurrentMod.IsEnabled, Converter={StaticResource NullToFalseConverter}, FallbackValue=False}"
+              >
+                <StackPanel Spacing="10">
+                  <TextBlock Classes="SectionHeader" Margin="0" Text="{ll:Str 操作}" />
+                  <ToggleSwitch
+                    x:Name="ModIsEnabled"
+                    Content="{ll:Str 启用模组}"
+                    IsChecked="{Binding CurrentMod.IsEnabled}"
+                  />
+                  <ToggleSwitch
+                    x:Name="ModIsPass"
+                    IsCheckedChanged="ModIsPass_IsCheckedChanged"
+                    Content="{ll:Str 启用代码插件}"
+                    IsChecked="{Binding CurrentMod.IsPass, Mode=OneWay}"
+                    IsEnabled="{Binding CurrentMod.IsMsg, FallbackValue=False}"
+                  />
+                  <WrapPanel Orientation="Horizontal">
+                    <Button
+                      x:Name="OpenModPath"
+                      Margin="0,4,8,4"
+                      CommandParameter="{Binding CurrentMod}"
+                      Command="{Binding OpenModPathCommand}"
+                    >
+                      <StackPanel Orientation="Horizontal" Spacing="6">
+                        <ui:FASymbolIcon Symbol="Folder" FontSize="14" VerticalAlignment="Center" />
+                        <TextBlock Text="{ll:Str '打开所在文件夹'}" VerticalAlignment="Center" />
+                      </StackPanel>
+                    </Button>
+                    <Button
+                      x:Name="OpenSteamCommunity"
+                      Margin="0,4,0,4"
+                      CommandParameter="{Binding CurrentMod}"
+                      Command="{Binding OpenSteamCommunityCommand}"
+                    >
+                      <StackPanel Orientation="Horizontal" Spacing="6">
+                        <ui:FASymbolIcon Symbol="Link" FontSize="14" VerticalAlignment="Center" />
+                        <TextBlock Text="{ll:Str 打开创意工坊页面}" VerticalAlignment="Center" />
+                      </StackPanel>
+                    </Button>
+                  </WrapPanel>
+                </StackPanel>
+              </Border>
+            </Grid>
+          </StackPanel>
+        </ScrollViewer>
+      </SplitView.Content>
+    </SplitView>
   </Grid>
 </UserControl>

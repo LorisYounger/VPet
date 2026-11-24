@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
@@ -34,8 +35,6 @@ public partial class SettingViewModel : CloseableViewModel
     internal void InitializeSubSettingViewModels()
     {
         SubSettingViewModels = CreateSubSettingViewModels();
-        foreach (var vm in SubSettingViewModels.Values)
-            vm.Setting = CurrentSetting!;
     }
 
     private async Task InitializeSettingsAsync()
@@ -47,6 +46,7 @@ public partial class SettingViewModel : CloseableViewModel
             l.Clear();
             l.AddRange(loaded);
         });
+
         CurrentSetting = Settings.FirstOrDefault();
     }
 
@@ -133,12 +133,9 @@ public partial class SettingViewModel : CloseableViewModel
     public EnumInfo<SubSettingModelType> CurrentSubSettingType { get; set; } =
         SubSettingModelType.Graphics.GetInfo();
 
-    [NotifyPropertyChangeFrom(nameof(CurrentSetting), nameof(CurrentSubSettingType))]
-    public ISubSettingViewModel? CurrentSubSettingViewModel => GetSubSettingViewModel();
-
     public FilteredListWrapper<
         SettingModel,
-        List<SettingModel>,
+        ObservableList<SettingModel>,
         ObservableList<SettingModel>
     > Settings { get; }
 
@@ -314,12 +311,36 @@ public partial class SettingViewModel : CloseableViewModel
         };
     }
 
-    private ISubSettingViewModel? GetSubSettingViewModel()
+    public override async Task OnClosingAsync(CancelEventArgs e)
     {
-        if (CurrentSetting is null)
-            return null;
-        var vm = SubSettingViewModels[CurrentSubSettingType];
-        vm.Setting = CurrentSetting;
-        return vm;
+        var changedSettings = Settings.Where(s => s.IsChanged).ToList();
+        if (changedSettings.Count == 0)
+        {
+            e.Cancel = false;
+            return;
+        }
+
+        var result = await DialogService.ShowMessageBoxAsync(
+            this,
+            "当前设置未保存 确定要保存吗".Translate(),
+            "",
+            MessageBoxButton.YesNoCancel,
+            MessageBoxImage.Warning
+        );
+
+        if (result is true)
+        {
+            foreach (var setting in changedSettings)
+                await setting.SaveAsync();
+            e.Cancel = false;
+        }
+        else if (result is false)
+        {
+            e.Cancel = false;
+        }
+        else
+        {
+            e.Cancel = true;
+        }
     }
 }

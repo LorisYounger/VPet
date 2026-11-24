@@ -5,6 +5,7 @@
   xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
   xmlns:m="using:VPet.Solution.MultiPlatform.Models"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:ui="using:FluentAvalonia.UI.Controls"
   xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels"
   x:Class="VPet.Solution.MultiPlatform.Views.CustomizedSettingView"
   x:DataType="vm:CustomizedSettingViewModel"
@@ -12,52 +13,73 @@
   d:DesignWidth="800"
   mc:Ignorable="d"
 >
-  <Grid RowDefinitions="Auto,Auto,Auto,*">
-    <StackPanel Spacing="2" Margin="0,0,0,6">
-      <TextBlock FontSize="18" FontWeight="Bold" Text="{ll:Str 自定义链接}" />
-      <TextBlock
-        Classes="Wrap"
-        Text="{ll:Str '在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能'}"
-      />
-      <WrapPanel Orientation="Horizontal">
-        <TextBlock VerticalAlignment="Center" Text="{ll:Str '键盘快捷键编写方法请参考'}" />
-        <Button
-          Margin="4,0,0,0"
-          Padding="0"
-          Classes="Link"
-          Command="{Binding SendKeyCommand}"
-          Content="{ll:Str '键盘快捷键 通用注解'}"
+  <Grid HorizontalAlignment="Stretch" Margin="10" RowDefinitions="Auto,Auto,Auto,*" RowSpacing="5">
+    <Border Grid.Row="0" Classes="SurfaceCard">
+      <StackPanel Spacing="5">
+        <TextBlock Classes="SectionHeader" Margin="0" Text="{ll:Str 自定义链接}" />
+        <TextBlock
+          Classes="CaptionText"
+          Text="{ll:Str '在自定栏添加快捷方式/网页/快捷键, 可以便携启动想要的功能'}"
         />
-      </WrapPanel>
-    </StackPanel>
-    <Grid Grid.Row="1" ColumnDefinitions="*,*" Margin="0,0,0,6">
+        <WrapPanel Orientation="Horizontal">
+          <TextBlock
+            Classes="CaptionText"
+            VerticalAlignment="Center"
+            Text="{ll:Str '键盘快捷键编写方法请参考'}"
+          />
+          <HyperlinkButton
+            Margin="4,0,0,0"
+            Padding="4,2"
+            Command="{Binding SendKeyCommand}"
+            Content="{ll:Str '键盘快捷键 通用注解'}"
+          />
+        </WrapPanel>
+      </StackPanel>
+    </Border>
+
+    <WrapPanel Grid.Row="1" Orientation="Horizontal">
+      <Button x:Name="AddLink" Margin="0,4,8,4" Classes="accent" Command="{Binding AddLinkCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <ui:FASymbolIcon Symbol="Add" FontSize="14" VerticalAlignment="Center" />
+          <TextBlock Text="{ll:Str 添加新链接}" VerticalAlignment="Center" />
+        </StackPanel>
+      </Button>
       <Button
-        Padding="20,5,20,5"
-        x:Name="AddLink"
-        Command="{Binding AddLinkCommand}"
-        Content="{ll:Str 添加新链接}"
-        Classes="Base"
-      />
-      <Button
-        Grid.Column="1"
-        Padding="20,5,20,5"
-        x:Name="ClearLinks"
-        Command="{Binding ClearLinksCommand}"
-        Content="{ll:Str 清空全部}"
-        Classes="Base"
-      />
-    </Grid>
+        x:Name="RemoveSelectedLink"
+        Margin="0,4,8,4"
+        IsEnabled="{Binding #Links.SelectedItem, Converter={StaticResource NullToFalseConverter}}"
+        Command="{Binding RemoveLinkCommand}"
+        CommandParameter="{Binding #Links.SelectedItem}"
+      >
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <ui:FASymbolIcon Symbol="Delete" FontSize="14" VerticalAlignment="Center" />
+          <TextBlock Text="{ll:Str 删除}" VerticalAlignment="Center" />
+        </StackPanel>
+      </Button>
+      <Button x:Name="ClearLinks" Margin="0,4,0,4" Command="{Binding ClearLinksCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <ui:FASymbolIcon Symbol="Clear" FontSize="14" VerticalAlignment="Center" />
+          <TextBlock Text="{ll:Str 清空全部}" VerticalAlignment="Center" />
+        </StackPanel>
+      </Button>
+    </WrapPanel>
+
     <TextBox
       x:Name="SearchLink"
       Grid.Row="2"
-      Margin="0,0,0,6"
       Text="{Binding SearchLink}"
       PlaceholderText="{ll:Str 搜索名称}"
-    />
+    >
+      <TextBox.InnerLeftContent>
+        <ui:FASymbolIcon Symbol="Find" FontSize="14" Margin="8,0,0,0" VerticalAlignment="Center" />
+      </TextBox.InnerLeftContent>
+    </TextBox>
+
     <DataGrid
       Grid.Row="3"
       AutoGenerateColumns="False"
       CanUserResizeColumns="True"
+      ScrollViewer.HorizontalScrollBarVisibility="Auto"
       x:Name="Links"
       ItemsSource="{Binding Links.FilteredList}"
     >
@@ -71,8 +93,18 @@
         </ContextMenu>
       </DataGrid.ContextMenu>
       <DataGrid.Columns>
-        <DataGridTextColumn Width="*" Binding="{Binding Name}" Header="{ll:Str 名称}" />
-        <DataGridTextColumn Width="2*" Binding="{Binding Link}" Header="{ll:Str 链接}" />
+        <DataGridTextColumn
+          Width="*"
+          MinWidth="120"
+          Binding="{Binding Name}"
+          Header="{ll:Str 名称}"
+        />
+        <DataGridTextColumn
+          Width="2*"
+          MinWidth="160"
+          Binding="{Binding Link}"
+          Header="{ll:Str 链接}"
+        />
       </DataGrid.Columns>
     </DataGrid>
   </Grid>

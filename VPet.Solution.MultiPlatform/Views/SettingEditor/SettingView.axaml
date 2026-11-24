@@ -4,181 +4,309 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:local="using:VPet.Solution.MultiPlatform"
+  xmlns:ui="using:FluentAvalonia.UI.Controls"
   xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels"
   xmlns:m="using:VPet.Solution.MultiPlatform.Models"
   xmlns:v="using:VPet.Solution.MultiPlatform.Views"
   mc:Ignorable="d"
-  d:DesignWidth="800"
-  d:DesignHeight="450"
+  d:DesignWidth="1000"
+  d:DesignHeight="640"
   x:Class="VPet.Solution.MultiPlatform.Views.SettingView"
   x:DataType="vm:SettingViewModel"
 >
   <Design.DataContext>
     <vm:SettingViewModel />
   </Design.DataContext>
+
   <UserControl.Styles>
-    <Style Selector="Button.remind">
-      <Style.Animations>
-        <Animation Duration="0:0:1.5" IterationCount="INFINITE">
-          <KeyFrame Cue="0%">
-            <Setter Property="Background" Value="Aqua" />
-          </KeyFrame>
-          <KeyFrame Cue="66%">
-            <Setter Property="Background" Value="Transparent" />
-          </KeyFrame>
-        </Animation>
-      </Style.Animations>
+    <Style Selector="Grid#RootGrid.expanded SplitView#MainSplitView">
+      <Setter Property="DisplayMode" Value="Inline" />
+      <Setter Property="IsPaneOpen" Value="True" />
+    </Style>
+    <Style Selector="Grid#RootGrid.compact SplitView#MainSplitView">
+      <Setter Property="DisplayMode" Value="Overlay" />
+    </Style>
+    <Style Selector="Grid#RootGrid.expanded Button#TogglePaneButton">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="Grid#RootGrid.compact Button#TogglePaneButton">
+      <Setter Property="IsVisible" Value="True" />
     </Style>
   </UserControl.Styles>
-  <Grid ColumnDefinitions="200,Auto,*">
-    <Grid Margin="10" RowDefinitions="Auto,Auto,*,Auto">
-      <Label
-        Margin="0"
-        Content="{ll:Str 存档文件}"
-        FontSize="16"
-        FontWeight="Bold"
-        Classes="Base"
-      />
-      <TextBox
-        Grid.Row="1"
-        x:Name="SearchSetting"
-        PlaceholderText="{ll:Str 搜索文件}"
-        Text="{Binding SearchSetting}"
-        Margin="0,4,0,4"
-      />
-      <ListBox
-        x:Name="Settings"
-        Grid.Row="2"
-        ItemsSource="{Binding Settings.FilteredList}"
-        SelectedItem="{Binding CurrentSetting}"
-      >
-        <ListBox.ContextMenu>
-          <ContextMenu>
-            <MenuItem
-              Header="{ll:Str 打开文件}"
-              Command="{Binding OpenFileCommand}"
-              CommandParameter="{Binding CurrentSetting}"
-            />
-            <MenuItem
-              Header="{ll:Str 从资源管理器打开文件}"
-              Command="{Binding OpenFileFromExplorerCommand}"
-              CommandParameter="{Binding CurrentSetting}"
-            />
-          </ContextMenu>
-        </ListBox.ContextMenu>
-        <ListBox.ItemTemplate>
-          <DataTemplate x:DataType="m:SettingModel">
-            <TextBlock Text="{Binding Name}" ToolTip.Tip="{Binding FilePath}" />
-          </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
-      <StackPanel Grid.Row="3" Spacing="2" Margin="0,6,0,0">
+
+  <Grid
+    x:Name="RootGrid"
+    local:ResponsiveHelper.Enable="True"
+    local:ResponsiveHelper.Breakpoint="720"
+    RowDefinitions="Auto,*"
+  >
+    <!-- 顶部应用栏 -->
+    <Border Grid.Row="0" Classes="ToolbarHeader">
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <Button
+            IsVisible="{Binding IsSingleView}"
+            Classes="IconAction"
+            Command="{Binding NavigateBackCommand}"
+            ToolTip.Tip="{ll:Str 返回}"
+          >
+            <ui:FASymbolIcon Symbol="Back" FontSize="16" />
+          </Button>
+          <Button
+            x:Name="TogglePaneButton"
+            Classes="IconAction"
+            Click="TogglePaneButton_Click"
+            ToolTip.Tip="{ll:Str 设置文件}"
+          >
+            <ui:FASymbolIcon Symbol="GlobalNavigationButton" FontSize="16" />
+          </Button>
+          <TextBlock
+            Text="{Binding CurrentSetting.Name, FallbackValue=''}"
+            FontSize="15"
+            FontWeight="SemiBold"
+            VerticalAlignment="Center"
+            TextTrimming="CharacterEllipsis"
+          />
+          <ui:FAInfoBadge
+            IsVisible="{Binding CurrentSetting.IsChanged, FallbackValue=False}"
+            VerticalAlignment="Center"
+            ToolTip.Tip="{ll:Str 未保存}"
+          />
+        </StackPanel>
+
         <Button
-          Margin="1"
+          Grid.Column="1"
           IsEnabled="{Binding CurrentSetting, Converter={StaticResource NullToFalseConverter}}"
-          HorizontalAlignment="Stretch"
-          x:Name="SaveSetting"
-          Content="{ll:Str 保存}"
-          Classes="Base"
-          Classes.remind="{Binding CurrentSetting.IsChanged, FallbackValue=False}"
+          Classes.accent="{Binding CurrentSetting.IsChanged, FallbackValue=False}"
           Command="{Binding SaveSettingCommand}"
           CommandParameter="{Binding CurrentSetting}"
-        />
-        <Button
-          Margin="1"
-          IsEnabled="{Binding CurrentSetting, Converter={StaticResource NullToFalseConverter}}"
-          x:Name="ResetSetting"
-          HorizontalAlignment="Stretch"
-          Content="{ll:Str 重置}"
-          Classes="Base"
-          Command="{Binding ResetSettingCommand}"
-          CommandParameter="{Binding CurrentSetting}"
-        />
-        <Button
-          Margin="1"
-          x:Name="SaveAllSetting"
-          HorizontalAlignment="Stretch"
-          Content="{ll:Str 全部保存}"
-          Classes="Base"
-          Command="{Binding SaveAllSettingCommand}"
-        />
-        <Button
-          Margin="1"
-          x:Name="ResetAllSetting"
-          HorizontalAlignment="Stretch"
-          Content="{ll:Str 全部重置}"
-          Classes="Base"
-          Command="{Binding ResetAllSettingCommand}"
-        />
-      </StackPanel>
-    </Grid>
-    <Border Grid.Column="1" Width="2" Background="#14000000" />
-    <Grid Margin="10" Grid.Column="2" RowDefinitions="Auto,*">
-      <Grid ColumnDefinitions="*,Auto,Auto" MinHeight="34" Margin="0,0,0,6">
-        <TabbedPage>
-          <TabbedPage.Styles>
-            <Style Selector="TabItem">
-              <Setter Property="MinHeight" Value="30" />
-              <Setter Property="Padding" Value="0,5,0,10" />
-              <Setter Property="Margin" Value="0,0,0,10" />
-              <Setter Property="FontWeight" Value="Bold" />
-            </Style>
-          </TabbedPage.Styles>
-          <ContentPage Header="{ll:Str 图像}">
-            <v:GraphicsSettingView DataContext="{Binding SubSettingViewModels[Graphics]}" />
-          </ContentPage>
-          <ContentPage Header="{ll:Str 系统}">
-            <v:SystemSettingView DataContext="{Binding SubSettingViewModels[System]}" />
-          </ContentPage>
-          <ContentPage Header="{ll:Str 诊断}">
-            <v:DiagnosticSettingView DataContext="{Binding SubSettingViewModels[Diagnostic]}" />
-          </ContentPage>
-          <ContentPage Header="{ll:Str 互动}">
-            <v:InteractiveSettingView DataContext="{Binding SubSettingViewModels[Interactive]}" />
-          </ContentPage>
-          <ContentPage Header="{ll:Str 定制}">
-            <v:CustomizedSettingView DataContext="{Binding SubSettingViewModels[Customized]}" />
-          </ContentPage>
-          <ContentPage Header="{ll:Str 模组}">
-            <v:ModSettingView DataContext="{Binding SubSettingViewModels[Mod]}" />
-          </ContentPage>
-        </TabbedPage>
-        <!--<ListBox
-          x:Name="SubSettingTypes"
-          Classes="HorizontalNav"
-          ItemsSource="{x:Static vm:SettingViewModel.SubSettingTypes}"
-          SelectedItem="{Binding CurrentSubSettingType}"
         >
-          <ListBox.ItemsPanel>
-            <ItemsPanelTemplate>
-              <StackPanel Orientation="Horizontal" />
-            </ItemsPanelTemplate>
-          </ListBox.ItemsPanel>
-        </ListBox>-->
-        <!--        <Button
-          x:Name="LastSubSettingType"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch"
-          Grid.Column="1"
-          Width="20"
-          Padding="0"
-          Click="LastSubSettingType_Click"
-          Classes="Base"
-          Content="《 "
-        />
-        <Button
-          x:Name="NextSubSettingType"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch"
-          Grid.Column="2"
-          Width="20"
-          Padding="0"
-          Click="NextSubSettingType_Click"
-          Classes="Base"
-          Content=" 》"
-        />-->
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <ui:FASymbolIcon Symbol="Save" FontSize="14" VerticalAlignment="Center" />
+            <TextBlock Text="{ll:Str 保存}" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
       </Grid>
-      <ContentControl x:Name="SettingContentControl" Grid.Row="1" />
-    </Grid>
+    </Border>
+
+    <!-- 主体抽屉主从布局 -->
+    <SplitView
+      x:Name="MainSplitView"
+      Grid.Row="1"
+      OpenPaneLength="240"
+      CompactPaneLength="0"
+      PaneBackground="{DynamicResource LayerFillColorDefaultBrush}"
+    >
+      <SplitView.Pane>
+        <Grid
+          IsEnabled="{Binding Settings.SourceList.Count,Converter={StaticResource Int32CompareByConverter},ConverterParameter='>0'}"
+          Margin="10"
+          RowDefinitions="Auto,Auto,*,Auto"
+          RowSpacing="5"
+        >
+          <TextBlock
+            Grid.Row="0"
+            Text="{ll:Str 存档文件}"
+            FontWeight="Bold"
+            Classes="SectionHeader"
+            Margin="0"
+          />
+          <TextBox
+            Grid.Row="1"
+            x:Name="SearchSetting"
+            PlaceholderText="{ll:Str 搜索文件}"
+            Text="{Binding SearchSetting}"
+          >
+            <TextBox.InnerLeftContent>
+              <ui:FASymbolIcon
+                Symbol="Find"
+                FontSize="14"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center"
+              />
+            </TextBox.InnerLeftContent>
+          </TextBox>
+          <ListBox
+            x:Name="Settings"
+            Grid.Row="2"
+            ItemsSource="{Binding Settings.FilteredList}"
+            SelectedItem="{Binding CurrentSetting}"
+            SelectionChanged="Settings_SelectionChanged"
+          >
+            <ListBox.ContextMenu>
+              <ContextMenu>
+                <MenuItem
+                  Header="{ll:Str 打开文件}"
+                  Command="{Binding OpenFileCommand}"
+                  CommandParameter="{Binding CurrentSetting}"
+                />
+                <MenuItem
+                  Header="{ll:Str 从资源管理器打开文件}"
+                  Command="{Binding OpenFileFromExplorerCommand}"
+                  CommandParameter="{Binding CurrentSetting}"
+                />
+              </ContextMenu>
+            </ListBox.ContextMenu>
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="m:SettingModel">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6" ToolTip.Tip="{Binding FilePath}">
+                  <TextBlock
+                    Grid.Column="0"
+                    Text="{Binding Name}"
+                    TextTrimming="CharacterEllipsis"
+                    VerticalAlignment="Center"
+                  />
+                  <ui:FAInfoBadge
+                    Grid.Column="1"
+                    IsVisible="{Binding IsChanged}"
+                    VerticalAlignment="Center"
+                  />
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+
+          <!-- 底部操作组 2x2 网格 -->
+          <UniformGrid Grid.Row="3" Columns="2" Margin="0,4,0,0">
+            <Button
+              Margin="2"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              IsEnabled="{Binding CurrentSetting, Converter={StaticResource NullToFalseConverter}}"
+              x:Name="SaveSetting"
+              Content="{ll:Str 保存}"
+              Classes.accent="{Binding CurrentSetting.IsChanged, FallbackValue=False}"
+              Command="{Binding SaveSettingCommand}"
+              CommandParameter="{Binding CurrentSetting}"
+            />
+            <Button
+              Margin="2"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              IsEnabled="{Binding CurrentSetting, Converter={StaticResource NullToFalseConverter}}"
+              x:Name="ResetSetting"
+              Content="{ll:Str 重置}"
+              Command="{Binding ResetSettingCommand}"
+              CommandParameter="{Binding CurrentSetting}"
+            />
+            <Button
+              Margin="2"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              x:Name="SaveAllSetting"
+              Content="{ll:Str 全部保存}"
+              Command="{Binding SaveAllSettingCommand}"
+            />
+            <Button
+              Margin="2"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              x:Name="ResetAllSetting"
+              Content="{ll:Str 全部重置}"
+              Command="{Binding ResetAllSettingCommand}"
+            />
+          </UniformGrid>
+        </Grid>
+      </SplitView.Pane>
+
+      <SplitView.Content>
+        <Grid>
+          <StackPanel
+            IsVisible="{Binding CurrentSetting, Converter={StaticResource NullToTrueConverter}}"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Spacing="8"
+            Margin="24"
+          >
+            <ui:FASymbolIcon
+              Symbol="Setting"
+              FontSize="36"
+              HorizontalAlignment="Center"
+              Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            />
+            <TextBlock
+              Classes="CaptionText"
+              TextAlignment="Center"
+              Text="{ll:Str '没有设置或未选择设置'}"
+            />
+          </StackPanel>
+
+          <ui:FANavigationView
+            x:Name="SubNavView"
+            IsVisible="{Binding CurrentSetting, Converter={StaticResource NullToFalseConverter}}"
+            PaneDisplayMode="Top"
+            IsSettingsVisible="False"
+            IsBackButtonVisible="False"
+            SelectionChanged="SubNavView_SelectionChanged"
+          >
+            <ui:FANavigationView.MenuItems>
+              <ui:FANavigationViewItem Content="{ll:Str 图像}" Tag="Graphics" IsSelected="True">
+                <ui:FANavigationViewItem.IconSource>
+                  <ui:FASymbolIconSource Symbol="Pictures" />
+                </ui:FANavigationViewItem.IconSource>
+              </ui:FANavigationViewItem>
+              <ui:FANavigationViewItem Content="{ll:Str 系统}" Tag="System">
+                <ui:FANavigationViewItem.IconSource>
+                  <ui:FASymbolIconSource Symbol="Setting" />
+                </ui:FANavigationViewItem.IconSource>
+              </ui:FANavigationViewItem>
+              <ui:FANavigationViewItem Content="{ll:Str 诊断}" Tag="Diagnostic">
+                <ui:FANavigationViewItem.IconSource>
+                  <ui:FASymbolIconSource Symbol="Repair" />
+                </ui:FANavigationViewItem.IconSource>
+              </ui:FANavigationViewItem>
+              <ui:FANavigationViewItem Content="{ll:Str 互动}" Tag="Interactive">
+                <ui:FANavigationViewItem.IconSource>
+                  <ui:FASymbolIconSource Symbol="People" />
+                </ui:FANavigationViewItem.IconSource>
+              </ui:FANavigationViewItem>
+              <ui:FANavigationViewItem Content="{ll:Str 定制}" Tag="Customized">
+                <ui:FANavigationViewItem.IconSource>
+                  <ui:FASymbolIconSource Symbol="Link" />
+                </ui:FANavigationViewItem.IconSource>
+              </ui:FANavigationViewItem>
+              <ui:FANavigationViewItem Content="{ll:Str 模组}" Tag="Mod">
+                <ui:FANavigationViewItem.IconSource>
+                  <ui:FASymbolIconSource Symbol="AllApps" />
+                </ui:FANavigationViewItem.IconSource>
+              </ui:FANavigationViewItem>
+            </ui:FANavigationView.MenuItems>
+
+            <Grid>
+              <v:GraphicsSettingView
+                x:Name="GraphicsView"
+                DataContext="{Binding SubSettingViewModels[Graphics]}"
+              />
+              <v:SystemSettingView
+                x:Name="SystemView"
+                IsVisible="False"
+                DataContext="{Binding SubSettingViewModels[System]}"
+              />
+              <v:DiagnosticSettingView
+                x:Name="DiagnosticView"
+                IsVisible="False"
+                DataContext="{Binding SubSettingViewModels[Diagnostic]}"
+              />
+              <v:InteractiveSettingView
+                x:Name="InteractiveView"
+                IsVisible="False"
+                DataContext="{Binding SubSettingViewModels[Interactive]}"
+              />
+              <v:CustomizedSettingView
+                x:Name="CustomizedView"
+                IsVisible="False"
+                DataContext="{Binding SubSettingViewModels[Customized]}"
+              />
+              <v:ModSettingView
+                x:Name="ModView"
+                IsVisible="False"
+                DataContext="{Binding SubSettingViewModels[Mod]}"
+              />
+            </Grid>
+          </ui:FANavigationView>
+        </Grid>
+      </SplitView.Content>
+    </SplitView>
   </Grid>
 </UserControl>

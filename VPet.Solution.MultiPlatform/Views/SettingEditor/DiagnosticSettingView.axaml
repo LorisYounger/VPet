@@ -5,6 +5,7 @@
   xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
   xmlns:m="using:VPet.Solution.MultiPlatform.Models"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:ui="using:FluentAvalonia.UI.Controls"
   xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels"
   x:Class="VPet.Solution.MultiPlatform.Views.DiagnosticSettingView"
   x:DataType="vm:DiagnosticSettingViewModel"
@@ -12,100 +13,89 @@
   d:DesignWidth="800"
   mc:Ignorable="d"
 >
-  <ScrollViewer VerticalScrollBarVisibility="Auto">
-    <StackPanel>
-      <Border Classes="SettingGroup">
-        <StackPanel>
-          <TextBlock Classes="GroupHeader" Text="{ll:Str 自动超模MOD优化}" />
-          <Border Classes="SettingGroupItem">
-            <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel HorizontalAlignment="Stretch" Margin="10" Spacing="5">
+      <!-- 自动超模 MOD 优化 -->
+      <ui:FASettingsExpander
+        Header="{ll:Str 自动超模MOD优化}"
+        Description="{ll:Str '对于超模内容,游戏会自动计算合理价格.&#10;如果未使用任何超模数据,数据菜单栏将会显示图标方便您进行炫耀数据.'}"
+        IsExpanded="True"
+      >
+        <ui:FASettingsExpander.IconSource>
+          <ui:FASymbolIconSource Symbol="Repair" />
+        </ui:FASettingsExpander.IconSource>
+        <ui:FASettingsExpanderItem Content="{ll:Str '自动计算合理价格'}">
+          <ui:FASettingsExpanderItem.Footer>
+            <ToggleSwitch
+              x:Name="AutoCal"
+              IsChecked="{Binding DiagnosticSetting.AutoCal}"
+              Classes="SwitchOnly"
+            />
+          </ui:FASettingsExpanderItem.Footer>
+        </ui:FASettingsExpanderItem>
+      </ui:FASettingsExpander>
+
+      <!-- 诊断与反馈 -->
+      <ui:FASettingsExpander
+        Header="{ll:Str 诊断与反馈}"
+        Description="{ll:Str '选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.'}"
+        IsExpanded="True"
+      >
+        <ui:FASettingsExpander.IconSource>
+          <ui:FASymbolIconSource Symbol="Document" />
+        </ui:FASettingsExpander.IconSource>
+        <ui:FASettingsExpanderItem
+          Content="{ll:Str '当前存档Hash验证信息'}"
+          Description="{ll:Str '无论选择哪个选项,游戏都可以安全正常地运行.'}"
+        >
+          <ui:FASettingsExpanderItem.Footer>
+            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
               <TextBlock
+                x:Name="HashCheckState"
+                FontWeight="SemiBold"
+                Text="{ll:Str 通过}"
                 VerticalAlignment="Center"
-                Classes="Wrap"
-                Text="{ll:Str '对于超模内容,游戏会自动计算合理价格.&#10;如果未使用任何超模数据,数据菜单栏将会显示图标方便您进行炫耀数据.'}"
               />
-              <Grid Grid.Row="1" MinHeight="46" ColumnDefinitions="*,Auto">
-                <TextBlock Classes="SettingName" Text="{ll:Str '自动计算合理价格'}" />
-                <ToggleSwitch
-                  x:Name="AutoCal"
-                  Grid.Column="1"
-                  IsChecked="{Binding DiagnosticSetting.AutoCal}"
-                  Classes="SwitchOnly"
-                />
-              </Grid>
-            </Grid>
-          </Border>
-        </StackPanel>
-      </Border>
-
-      <Border Classes="SettingGroup">
-        <StackPanel>
-          <TextBlock Classes="GroupHeader" Text="{ll:Str 诊断与反馈}" />
-          <Border Classes="SettingGroupItem">
-            <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
-              <StackPanel Spacing="2">
-                <TextBlock
-                  FontSize="13"
-                  Classes="Wrap"
-                  Text="{ll:Str '选择要发送给 LBGame 的诊断数据,诊断数据用于保护和及时更新 虚拟桌宠模拟器, 解决问题并改进产品.'}"
-                />
-                <WrapPanel Orientation="Horizontal">
-                  <TextBlock
-                    FontSize="13"
-                    VerticalAlignment="Center"
-                    Text="{ll:Str '无论选择哪个选项,游戏都可以安全正常地运行.'}"
-                  />
-                  <Button
-                    Margin="4,0,0,0"
-                    Padding="0"
-                    FontSize="13"
-                    Classes="Link"
-                    Command="{Binding HyperMoreInfoCommand}"
-                    Content="{ll:Str 获取有关这些设置的更多信息}"
-                  />
-                </WrapPanel>
-                <TextBlock FontSize="13">
-                  <Run FontWeight="Bold" Text="{ll:Str '当前存档Hash验证信息'}" />
-                  <Run FontWeight="Bold" Text=":" />
-                  <Run x:Name="HashCheckState" FontWeight="Bold" Text="{ll:Str 通过}" />
-                </TextBlock>
-              </StackPanel>
-              <Grid Grid.Row="1" MinHeight="50" ColumnDefinitions="*,Auto">
-                <TextBlock
-                  IsVisible="{Binding #Diagnosis.IsChecked}"
-                  Classes="SettingName Wrap"
-                  Text="{ll:Str '发送诊断数据:&#10;发送游戏存档, 包括饱腹,状态等各种游戏内数据. 可能会包括该游戏内存和CPU使用情况'}"
-                />
-                <TextBlock
-                  IsVisible="{Binding #Diagnosis.IsChecked, Converter={StaticResource BoolInverter}}"
-                  Classes="SettingName Wrap"
-                  Text="{ll:Str '不发送诊断数据:&#10;适用于启用修改器,修改过游戏数据等不符合分析数据条件. 或不希望提供游戏数据的玩家'}"
-                />
-                <ToggleSwitch
-                  Grid.Column="1"
-                  x:Name="Diagnosis"
-                  IsChecked="{Binding DiagnosticSetting.Diagnosis}"
-                  Classes="SwitchOnly"
-                />
-              </Grid>
-            </Grid>
-          </Border>
-
-          <Border MinHeight="50" Classes="SettingGroupItem">
-            <Grid ColumnDefinitions="*,Auto">
-              <TextBlock Text="{ll:Str '反馈频率(每周期)'}" Classes="SettingName" />
-              <ComboBox
-                ItemsSource="{x:Static m:DiagnosticSettingModel.DiagnosisIntervals}"
-                Grid.Column="1"
-                x:Name="DiagnosisIntervals"
-                SelectedItem="{Binding DiagnosticSetting.DiagnosisInterval}"
-                Width="200"
-                Classes="Base"
+              <HyperlinkButton
+                Padding="4,2"
+                Command="{Binding HyperMoreInfoCommand}"
+                Content="{ll:Str 获取有关这些设置的更多信息}"
               />
-            </Grid>
-          </Border>
-        </StackPanel>
-      </Border>
+            </StackPanel>
+          </ui:FASettingsExpanderItem.Footer>
+        </ui:FASettingsExpanderItem>
+        <ui:FASettingsExpanderItem>
+          <Grid RowDefinitions="Auto">
+            <TextBlock
+              IsVisible="{Binding #Diagnosis.IsChecked}"
+              Classes="BodyText"
+              Text="{ll:Str '发送诊断数据:&#10;发送游戏存档, 包括饱腹,状态等各种游戏内数据. 可能会包括该游戏内存和CPU使用情况'}"
+            />
+            <TextBlock
+              IsVisible="{Binding #Diagnosis.IsChecked, Converter={StaticResource BoolInverter}}"
+              Classes="BodyText"
+              Text="{ll:Str '不发送诊断数据:&#10;适用于启用修改器,修改过游戏数据等不符合分析数据条件. 或不希望提供游戏数据的玩家'}"
+            />
+          </Grid>
+          <ui:FASettingsExpanderItem.Footer>
+            <ToggleSwitch
+              x:Name="Diagnosis"
+              IsChecked="{Binding DiagnosticSetting.Diagnosis}"
+              Classes="SwitchOnly"
+            />
+          </ui:FASettingsExpanderItem.Footer>
+        </ui:FASettingsExpanderItem>
+        <ui:FASettingsExpanderItem Content="{ll:Str '反馈频率(每周期)'}">
+          <ui:FASettingsExpanderItem.Footer>
+            <ComboBox
+              x:Name="DiagnosisIntervals"
+              ItemsSource="{x:Static m:DiagnosticSettingModel.DiagnosisIntervals}"
+              SelectedItem="{Binding DiagnosticSetting.DiagnosisInterval}"
+              Classes="SettingControl"
+            />
+          </ui:FASettingsExpanderItem.Footer>
+        </ui:FASettingsExpanderItem>
+      </ui:FASettingsExpander>
     </StackPanel>
   </ScrollViewer>
 </UserControl>

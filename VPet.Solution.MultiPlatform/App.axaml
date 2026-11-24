@@ -7,7 +7,9 @@
 >
   <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
   <Application.Styles>
-    <sty:FluentAvaloniaTheme />
+    <sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+    <StyleInclude Source="avares://VPet.Solution.MultiPlatform/Styles.axaml" />
   </Application.Styles>
   <Application.Resources>
     <ResourceDictionary>

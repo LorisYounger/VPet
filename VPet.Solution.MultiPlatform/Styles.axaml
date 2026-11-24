@@ -2,12 +2,13 @@
   xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 >
+  <!-- 排版语义类 -->
   <Style Selector="TextBlock.Wrap">
     <Setter Property="TextWrapping" Value="Wrap" />
   </Style>
 
   <Style Selector="TextBlock.Base">
-    <Setter Property="Margin" Value="5" />
+    <Setter Property="Margin" Value="4" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="HorizontalAlignment" Value="Center" />
   </Style>
@@ -17,28 +18,108 @@
     <Setter Property="HorizontalAlignment" Value="Left" />
   </Style>
 
+  <Style Selector="TextBlock.PageTitle">
+    <Setter Property="FontSize" Value="24" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+
+  <Style Selector="TextBlock.SectionHeader">
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    <Setter Property="Margin" Value="0,12,0,6" />
+  </Style>
+
+  <Style Selector="TextBlock.BodyText">
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+
+  <Style Selector="TextBlock.CaptionText">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+
   <Style Selector="TextBlock.SettingName">
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="FontSize" Value="14" />
+    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
   </Style>
 
   <Style Selector="TextBlock.GroupHeader">
     <Setter Property="FontSize" Value="16" />
-    <Setter Property="FontWeight" Value="Bold" />
-    <Setter Property="Margin" Value="12,8,12,6" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    <Setter Property="Margin" Value="4,12,4,6" />
   </Style>
 
   <Style Selector="Label.Base">
     <Setter Property="FontSize" Value="14" />
-    <Setter Property="Margin" Value="10,5,10,5" />
+    <Setter Property="Margin" Value="8,4" />
     <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
   </Style>
 
+  <!-- 容器语义类 (0 硬编码色彩, 全面使用 FluentAvalonia 动态主题资源) -->
+  <Style Selector="Border.SurfaceCard">
+    <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Padding" Value="16" />
+  </Style>
+
+  <Style Selector="Border.ToolbarHeader">
+    <Setter Property="Background" Value="{DynamicResource LayerFillColorDefaultBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource DividerStrokeColorDefaultBrush}" />
+    <Setter Property="BorderThickness" Value="0,0,0,1" />
+    <Setter Property="Padding" Value="12,8" />
+  </Style>
+
+  <Style Selector="Border.SettingGroup">
+    <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Padding" Value="8" />
+    <Setter Property="Margin" Value="0,6,0,0" />
+  </Style>
+
+  <Style Selector="Border.SettingGroupItem">
+    <Setter Property="Background" Value="{DynamicResource SubtleFillColorTransparentBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource DividerStrokeColorDefaultBrush}" />
+    <Setter Property="BorderThickness" Value="0,0,0,1" />
+    <Setter Property="Padding" Value="12,8" />
+  </Style>
+
+  <Style Selector="Border.SettingItem">
+    <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Padding" Value="12,8" />
+    <Setter Property="Margin" Value="0,3" />
+  </Style>
+
+  <Style Selector="Border.TagBadge">
+    <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="Padding" Value="8,3" />
+    <Setter Property="Margin" Value="0,0,6,6" />
+  </Style>
+
+  <!-- 按钮与链接样式 -->
   <Style Selector="Button.Base">
-    <Setter Property="Margin" Value="5" />
-    <Setter Property="Padding" Value="10,5" />
+    <Setter Property="Margin" Value="4" />
+    <Setter Property="Padding" Value="12,6" />
     <Setter Property="HorizontalAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -50,21 +131,45 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Cursor" Value="Hand" />
-    <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentTextFillColorPrimaryBrush}" />
     <Setter Property="HorizontalAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
 
+  <Style Selector="Button.IconAction">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="8" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <!-- 表单控件自适应约束 -->
   <Style Selector="ComboBox.Base">
-    <Setter Property="Margin" Value="5" />
+    <Setter Property="Margin" Value="4" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="ComboBox.SettingControl">
+    <Setter Property="MinWidth" Value="120" />
+    <Setter Property="MaxWidth" Value="220" />
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
 
   <Style Selector="NumericUpDown.Base">
     <Setter Property="Height" Value="32" />
-    <Setter Property="Margin" Value="5" />
+    <Setter Property="Margin" Value="4" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="FontSize" Value="14" />
+    <Setter Property="Minimum" Value="-2147483648" />
+    <Setter Property="Maximum" Value="2147483647" />
+  </Style>
+
+  <Style Selector="NumericUpDown.SettingControl">
+    <Setter Property="MinWidth" Value="120" />
+    <Setter Property="MaxWidth" Value="220" />
+    <Setter Property="Height" Value="32" />
+    <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Minimum" Value="-2147483648" />
     <Setter Property="Maximum" Value="2147483647" />
   </Style>
@@ -72,39 +177,46 @@
   <Style Selector="ToggleSwitch.SwitchOnly">
     <Setter Property="HorizontalAlignment" Value="Right" />
     <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="Margin" Value="5" />
+    <Setter Property="Margin" Value="4" />
     <Setter Property="OnContent" Value="" />
     <Setter Property="OffContent" Value="" />
-  </Style>
-
-  <Style Selector="Border.SettingGroup">
-    <Setter Property="Background" Value="#06000000" />
-    <Setter Property="BorderBrush" Value="#14000000" />
-    <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="4" />
-    <Setter Property="Margin" Value="0,6,0,0" />
-  </Style>
-
-  <Style Selector="Border.SettingGroupItem">
-    <Setter Property="BorderBrush" Value="#0C000000" />
-    <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="10,4,10,4" />
-    <Setter Property="Margin" Value="1,2,1,2" />
-  </Style>
-
-  <Style Selector="Border.SettingItem">
-    <Setter Property="BorderBrush" Value="#14000000" />
-    <Setter Property="Background" Value="#06000000" />
-    <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="10,4,10,4" />
-    <Setter Property="Margin" Value="1,2,1,2" />
   </Style>
 
   <Style Selector="ListBox.HorizontalNav">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
+  </Style>
+
+  <!-- DataGrid 适配 FluentAvalonia 语义主题色 -->
+  <Style Selector="DataGrid">
+    <Setter Property="GridLinesVisibility" Value="Horizontal" />
+    <Setter
+      Property="HorizontalGridLinesBrush"
+      Value="{DynamicResource DividerStrokeColorDefaultBrush}"
+    />
+    <Setter
+      Property="VerticalGridLinesBrush"
+      Value="{DynamicResource DividerStrokeColorDefaultBrush}"
+    />
+    <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+
+  <Style Selector="DataGridColumnHeader">
+    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource DividerStrokeColorDefaultBrush}" />
+    <Setter Property="BorderThickness" Value="0,0,0,1" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="MinHeight" Value="36" />
+    <Setter Property="Padding" Value="12,6" />
+  </Style>
+
+  <Style Selector="DataGridColumnHeader /template/ ContentPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+  </Style>
+
+  <Style Selector="DataGridCell">
+    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
   </Style>
 </Styles>

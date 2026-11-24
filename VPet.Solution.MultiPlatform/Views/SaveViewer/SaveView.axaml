@@ -5,77 +5,217 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:local="using:VPet.Solution.MultiPlatform"
   xmlns:ll="using:VPet_Simulator.Core.MutiPlatform.Localization"
+  xmlns:m="using:VPet.Solution.MultiPlatform.Models"
+  xmlns:ui="using:FluentAvalonia.UI.Controls"
   xmlns:v="using:VPet.Solution.MultiPlatform.Views"
   xmlns:vm="using:VPet.Solution.MultiPlatform.ViewModels"
   mc:Ignorable="d"
-  d:DesignWidth="800"
-  d:DesignHeight="450"
+  d:DesignWidth="900"
+  d:DesignHeight="600"
   x:DataType="vm:SaveViewModel"
   x:Class="VPet.Solution.MultiPlatform.Views.SaveView"
 >
-  <Grid ColumnDefinitions="400,Auto,*">
-    <Grid Margin="10" RowDefinitions="Auto,*">
-      <TextBox PlaceholderText="{ll:Str 搜索存档}" Text="{Binding SearchSave}" Margin="0,0,0,6" />
-      <DataGrid
-        x:Name="Saves"
-        Grid.Row="1"
-        AutoGenerateColumns="False"
-        CanUserResizeColumns="True"
-        IsReadOnly="True"
-        ItemsSource="{Binding Saves.FilteredList}"
-        SelectedItem="{Binding CurrentSave}"
-      >
-        <DataGrid.ContextMenu>
-          <ContextMenu>
-            <MenuItem
-              Command="{Binding OpenFileCommand}"
-              CommandParameter="{Binding CurrentSave}"
-              Header="{ll:Str 打开文件}"
-            />
-          </ContextMenu>
-        </DataGrid.ContextMenu>
-        <DataGrid.Columns>
-          <DataGridTextColumn Binding="{Binding Name}" Header="{ll:Str 名称}" IsReadOnly="True" />
-          <DataGridTextColumn
-            Binding="{Binding DateSaved, StringFormat='yyyy/MM/dd HH:mm:ss'}"
-            Header="{ll:Str 保存时间}"
-            IsReadOnly="True"
+  <UserControl.Styles>
+    <Style Selector="Grid#SaveRootGrid.expanded SplitView#SaveSplitView">
+      <Setter Property="DisplayMode" Value="Inline" />
+      <Setter Property="IsPaneOpen" Value="True" />
+      <Setter Property="OpenPaneLength" Value="320" />
+    </Style>
+    <Style Selector="Grid#SaveRootGrid.compact SplitView#SaveSplitView">
+      <Setter Property="DisplayMode" Value="Overlay" />
+      <Setter Property="OpenPaneLength" Value="280" />
+    </Style>
+    <Style Selector="Grid#SaveRootGrid.expanded Button#ToggleSavePaneButton">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="Grid#SaveRootGrid.compact Button#ToggleSavePaneButton">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid
+    x:Name="SaveRootGrid"
+    local:ResponsiveHelper.Enable="True"
+    local:ResponsiveHelper.Breakpoint="720"
+    RowDefinitions="Auto,*"
+  >
+    <!-- 顶部应用栏 -->
+    <Border Grid.Row="0" Classes="ToolbarHeader">
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <Button
+            IsVisible="{Binding IsSingleView}"
+            Classes="IconAction"
+            Command="{Binding NavigateBackCommand}"
+            ToolTip.Tip="{ll:Str 返回}"
+          >
+            <ui:FASymbolIcon Symbol="Back" FontSize="16" />
+          </Button>
+          <Button
+            x:Name="ToggleSavePaneButton"
+            Classes="IconAction"
+            Click="ToggleSavePaneButton_Click"
+            ToolTip.Tip="{ll:Str 搜索存档}"
+          >
+            <ui:FASymbolIcon Symbol="GlobalNavigationButton" FontSize="16" />
+          </Button>
+          <TextBlock
+            Text="{Binding CurrentSave.Name, FallbackValue=''}"
+            FontSize="15"
+            FontWeight="SemiBold"
+            VerticalAlignment="Center"
+            TextTrimming="CharacterEllipsis"
           />
-          <DataGridTextColumn
-            Binding="{Binding TotalTime}"
-            Header="{ll:Str 游玩时长}"
-            IsReadOnly="True"
-          />
-          <DataGridTextColumn
-            Binding="{Binding HashChecked, Converter={StaticResource TranslateConverter}}"
-            Header="{ll:Str 哈希}"
-            IsReadOnly="True"
-          />
-        </DataGrid.Columns>
-      </DataGrid>
-    </Grid>
-    <Separator Margin="0,10,0,10" Grid.Column="1" Height="NaN" Width="2" />
-    <Grid
-      Margin="10"
-      Grid.Column="2"
-      IsEnabled="{Binding CurrentSave, Converter={StaticResource NullToFalseConverter}}"
+        </StackPanel>
+
+        <Button
+          Grid.Column="1"
+          IsEnabled="{Binding CurrentSave, Converter={StaticResource NullToFalseConverter}}"
+          Command="{Binding OpenFileCommand}"
+          CommandParameter="{Binding CurrentSave}"
+        >
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <ui:FASymbolIcon Symbol="OpenFile" FontSize="14" VerticalAlignment="Center" />
+            <TextBlock Text="{ll:Str 打开文件}" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+      </Grid>
+    </Border>
+
+    <!-- 主体抽屉主从布局 -->
+    <SplitView
+      x:Name="SaveSplitView"
+      Grid.Row="1"
+      OpenPaneLength="320"
+      CompactPaneLength="0"
+      PaneBackground="{DynamicResource LayerFillColorDefaultBrush}"
     >
-      <TabbedPage IsGestureEnabled="True">
-        <TabbedPage.Styles>
-          <Style Selector="TabItem">
-            <Setter Property="MinHeight" Value="30" />
-            <Setter Property="Padding" Value="0,5,0,10" />
-            <Setter Property="Margin" Value="0,0,0,10" />
-            <Setter Property="FontWeight" Value="Bold" />
-          </Style>
-        </TabbedPage.Styles>
-        <ContentPage Header="{ll:Str 数据}">
-          <v:SaveDataView />
-        </ContentPage>
-        <ContentPage Header="{ll:Str 统计}">
-          <v:SaveStatisticView />
-        </ContentPage>
-      </TabbedPage>
-    </Grid>
+      <SplitView.Pane>
+        <Grid
+          IsEnabled="{Binding Saves.SourceList.Count,Converter={StaticResource Int32CompareByConverter},ConverterParameter='>0'}"
+          Margin="12"
+          RowDefinitions="Auto,*"
+          RowSpacing="8"
+        >
+          <TextBox Grid.Row="0" PlaceholderText="{ll:Str 搜索存档}" Text="{Binding SearchSave}">
+            <TextBox.InnerLeftContent>
+              <ui:FASymbolIcon
+                Symbol="Find"
+                FontSize="14"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center"
+              />
+            </TextBox.InnerLeftContent>
+          </TextBox>
+          <ListBox
+            x:Name="Saves"
+            Grid.Row="1"
+            ItemsSource="{Binding Saves.FilteredList}"
+            SelectedItem="{Binding CurrentSave}"
+            SelectionChanged="Saves_SelectionChanged"
+          >
+            <ListBox.ContextMenu>
+              <ContextMenu>
+                <MenuItem
+                  Command="{Binding OpenFileCommand}"
+                  CommandParameter="{Binding CurrentSave}"
+                  Header="{ll:Str 打开文件}"
+                />
+              </ContextMenu>
+            </ListBox.ContextMenu>
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="m:SaveModel">
+                <Grid
+                  RowDefinitions="Auto,Auto"
+                  ColumnDefinitions="*,Auto"
+                  ColumnSpacing="8"
+                  RowSpacing="4"
+                  Margin="0,4"
+                >
+                  <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="{Binding Name}"
+                    FontWeight="SemiBold"
+                    TextTrimming="CharacterEllipsis"
+                    VerticalAlignment="Center"
+                  />
+                  <Border Grid.Row="0" Grid.Column="1" Classes="TagBadge" Margin="0" Padding="6,2">
+                    <TextBlock
+                      Classes="CaptionText"
+                      Text="{Binding HashChecked, Converter={StaticResource TranslateConverter}}"
+                    />
+                  </Border>
+                  <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Classes="CaptionText"
+                    Text="{Binding DateSaved, StringFormat='yyyy/MM/dd HH:mm:ss'}"
+                  />
+                  <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Classes="CaptionText"
+                    HorizontalAlignment="Right"
+                    Text="{Binding TotalTime}"
+                  />
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Grid>
+      </SplitView.Pane>
+
+      <SplitView.Content>
+        <Grid>
+          <StackPanel
+            IsVisible="{Binding CurrentSave, Converter={StaticResource NullToTrueConverter}}"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Spacing="8"
+            Margin="24"
+          >
+            <ui:FASymbolIcon
+              Symbol="Save"
+              FontSize="36"
+              HorizontalAlignment="Center"
+              Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            />
+            <TextBlock
+              Classes="CaptionText"
+              TextAlignment="Center"
+              Text="{ll:Str '暂无存档或未选择存档'}"
+            />
+          </StackPanel>
+
+          <ui:FANavigationView
+            x:Name="SaveNavView"
+            IsVisible="{Binding CurrentSave, Converter={StaticResource NullToFalseConverter}}"
+            PaneDisplayMode="Top"
+            IsSettingsVisible="False"
+            IsBackButtonVisible="False"
+            SelectionChanged="SaveNavView_SelectionChanged"
+          >
+            <ui:FANavigationView.MenuItems>
+              <ui:FANavigationViewItem Content="{ll:Str 数据}" Tag="Data" IsSelected="True">
+                <ui:FANavigationViewItem.IconSource>
+                  <ui:FASymbolIconSource Symbol="Document" />
+                </ui:FANavigationViewItem.IconSource>
+              </ui:FANavigationViewItem>
+              <ui:FANavigationViewItem Content="{ll:Str 统计}" Tag="Statistic">
+                <ui:FANavigationViewItem.IconSource>
+                  <ui:FASymbolIconSource Symbol="List" />
+                </ui:FANavigationViewItem.IconSource>
+              </ui:FANavigationViewItem>
+            </ui:FANavigationView.MenuItems>
+
+            <Grid>
+              <v:SaveDataView x:Name="SaveDataContent" />
+              <v:SaveStatisticView x:Name="SaveStatisticContent" IsVisible="False" />
+            </Grid>
+          </ui:FANavigationView>
+        </Grid>
+      </SplitView.Content>
+    </SplitView>
   </Grid>
 </UserControl>

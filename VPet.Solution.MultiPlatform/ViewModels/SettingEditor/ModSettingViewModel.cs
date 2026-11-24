@@ -5,6 +5,7 @@ using HanumanInstitute.MvvmDialogs.FrameworkDialogs;
 using HKW.HKWUtils.Collections;
 using HKW.HKWUtils.Observable;
 using HKW.MVVM;
+using HKW.MVVM.SourceGenerator;
 using VPet.Solution.MultiPlatform.Models;
 
 namespace VPet.Solution.MultiPlatform.ViewModels;
@@ -35,7 +36,8 @@ public partial class ModSettingViewModel : DisposableViewModel, ISubSettingViewM
         SearchMod = string.Empty;
     }
 
-    public ModSettingModel ModSetting => Setting.ModSetting;
+    [NotifyPropertyChangeFrom(nameof(Setting))]
+    public ModSettingModel ModSetting => Setting?.ModSetting!;
 
     [ObservableProperty]
     public string SearchMod { get; set; } = string.Empty;

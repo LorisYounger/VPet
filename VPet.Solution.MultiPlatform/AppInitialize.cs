@@ -690,3 +690,285 @@ public static class DialogStorageExtensions
         await stream.FlushAsync();
     }
 }
+
+/// <summary>
+/// 响应式布局附加属性辅助类
+/// </summary>
+public static class ResponsiveHelper
+{
+    /// <summary>
+    /// 默认窄屏断点宽度
+    /// </summary>
+    public const double DefaultBreakpoint = 720.0;
+
+    /// <summary>
+    /// 是否启用响应式监听
+    /// </summary>
+    public static readonly AttachedProperty<bool> EnableProperty =
+        AvaloniaProperty.RegisterAttached<Control, bool>(
+            "Enable",
+            typeof(ResponsiveHelper),
+            defaultValue: false
+        );
+
+    /// <summary>
+    /// 窄屏断点宽度阈值
+    /// </summary>
+    public static readonly AttachedProperty<double> BreakpointProperty =
+        AvaloniaProperty.RegisterAttached<Control, double>(
+            "Breakpoint",
+            typeof(ResponsiveHelper),
+            defaultValue: DefaultBreakpoint
+        );
+
+    /// <summary>
+    /// 当前是否处于紧凑 (窄屏) 模式
+    /// </summary>
+    public static readonly AttachedProperty<bool> IsCompactProperty =
+        AvaloniaProperty.RegisterAttached<Control, bool>(
+            "IsCompact",
+            typeof(ResponsiveHelper),
+            defaultValue: false,
+            defaultBindingMode: Avalonia.Data.BindingMode.TwoWay
+        );
+
+    static ResponsiveHelper()
+    {
+        EnableProperty.Changed.AddClassHandler<Control>(OnEnableChanged);
+        BreakpointProperty.Changed.AddClassHandler<Control>(OnBreakpointChanged);
+    }
+
+    public static bool GetEnable(Control element) => element.GetValue(EnableProperty);
+
+    public static void SetEnable(Control element, bool value) =>
+        element.SetValue(EnableProperty, value);
+
+    public static double GetBreakpoint(Control element) => element.GetValue(BreakpointProperty);
+
+    public static void SetBreakpoint(Control element, double value) =>
+        element.SetValue(BreakpointProperty, value);
+
+    public static bool GetIsCompact(Control element) => element.GetValue(IsCompactProperty);
+
+    public static void SetIsCompact(Control element, bool value) =>
+        element.SetValue(IsCompactProperty, value);
+
+    private static void OnEnableChanged(Control control, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.NewValue is true)
+        {
+            control.SizeChanged += OnControlSizeChanged;
+            control.Loaded += OnControlLoaded;
+            UpdateState(control, control.Bounds.Width);
+        }
+        else
+        {
+            control.SizeChanged -= OnControlSizeChanged;
+            control.Loaded -= OnControlLoaded;
+        }
+    }
+
+    private static void OnBreakpointChanged(Control control, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (GetEnable(control))
+            UpdateState(control, control.Bounds.Width);
+    }
+
+    private static void OnControlLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (sender is Control control)
+            UpdateState(control, control.Bounds.Width);
+    }
+
+    private static void OnControlSizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        if (sender is Control control)
+            UpdateState(control, e.NewSize.Width);
+    }
+
+    private static void UpdateState(Control control, double width)
+    {
+        if (width <= 0)
+            return;
+
+        var isCompact = width < GetBreakpoint(control);
+        SetIsCompact(control, isCompact);
+        control.Classes.Set("compact", isCompact);
+        control.Classes.Set("narrow", isCompact);
+        control.Classes.Set("expanded", isCompact is false);
+        control.Classes.Set("wide", isCompact is false);
+    }
+}
+
+/// <summary>
+/// 无滚动条自动往返滚动附加属性辅助类
+/// </summary>
+public static class AutoScrollHelper
+{
+    private sealed class AutoScrollState
+    {
+        public DispatcherTimer? Timer;
+        public double PauseSeconds;
+        public int Direction = 1;
+    }
+
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<
+        ScrollViewer,
+        AutoScrollState
+    > States = new();
+
+    /// <summary>
+    /// 是否启用无滚动条自动往返滚动
+    /// </summary>
+    public static readonly AttachedProperty<bool> EnableProperty =
+        AvaloniaProperty.RegisterAttached<ScrollViewer, bool>(
+            "Enable",
+            typeof(AutoScrollHelper),
+            defaultValue: false
+        );
+
+    /// <summary>
+    /// 自动滚动速度 (像素/秒)
+    /// </summary>
+    public static readonly AttachedProperty<double> SpeedProperty =
+        AvaloniaProperty.RegisterAttached<ScrollViewer, double>(
+            "Speed",
+            typeof(AutoScrollHelper),
+            defaultValue: 45.0
+        );
+
+    /// <summary>
+    /// 首尾停顿时间 (秒)
+    /// </summary>
+    public static readonly AttachedProperty<double> PauseSecondsProperty =
+        AvaloniaProperty.RegisterAttached<ScrollViewer, double>(
+            "PauseSeconds",
+            typeof(AutoScrollHelper),
+            defaultValue: 1.5
+        );
+
+    static AutoScrollHelper()
+    {
+        EnableProperty.Changed.AddClassHandler<ScrollViewer>(OnEnableChanged);
+    }
+
+    public static bool GetEnable(ScrollViewer element) => element.GetValue(EnableProperty);
+
+    public static void SetEnable(ScrollViewer element, bool value) =>
+        element.SetValue(EnableProperty, value);
+
+    public static double GetSpeed(ScrollViewer element) => element.GetValue(SpeedProperty);
+
+    public static void SetSpeed(ScrollViewer element, double value) =>
+        element.SetValue(SpeedProperty, value);
+
+    public static double GetPauseSeconds(ScrollViewer element) =>
+        element.GetValue(PauseSecondsProperty);
+
+    public static void SetPauseSeconds(ScrollViewer element, double value) =>
+        element.SetValue(PauseSecondsProperty, value);
+
+    private static void OnEnableChanged(
+        ScrollViewer scrollViewer,
+        AvaloniaPropertyChangedEventArgs e
+    )
+    {
+        if (e.NewValue is true)
+        {
+            scrollViewer.HorizontalScrollBarVisibility = Avalonia
+                .Controls
+                .Primitives
+                .ScrollBarVisibility
+                .Hidden;
+            scrollViewer.VerticalScrollBarVisibility = Avalonia
+                .Controls
+                .Primitives
+                .ScrollBarVisibility
+                .Disabled;
+            scrollViewer.AttachedToVisualTree += OnAttachedToVisualTree;
+            scrollViewer.DetachedFromVisualTree += OnDetachedFromVisualTree;
+            if (TopLevel.GetTopLevel(scrollViewer) is not null)
+                Start(scrollViewer);
+        }
+        else
+        {
+            scrollViewer.AttachedToVisualTree -= OnAttachedToVisualTree;
+            scrollViewer.DetachedFromVisualTree -= OnDetachedFromVisualTree;
+            Stop(scrollViewer);
+        }
+    }
+
+    private static void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        if (sender is ScrollViewer scrollViewer)
+            Start(scrollViewer);
+    }
+
+    private static void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        if (sender is ScrollViewer scrollViewer)
+            Stop(scrollViewer);
+    }
+
+    private static void Start(ScrollViewer scrollViewer)
+    {
+        var state = States.GetOrCreateValue(scrollViewer);
+        if (state.Timer is not null)
+            return;
+
+        state.Direction = 1;
+        state.PauseSeconds = GetPauseSeconds(scrollViewer);
+        state.Timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(30) };
+        state.Timer.Tick += (_, _) => OnTick(scrollViewer, state);
+        state.Timer.Start();
+    }
+
+    private static void Stop(ScrollViewer scrollViewer)
+    {
+        if (States.TryGetValue(scrollViewer, out var state) is false || state.Timer is null)
+            return;
+
+        state.Timer.Stop();
+        state.Timer = null;
+    }
+
+    private static void OnTick(ScrollViewer scrollViewer, AutoScrollState state)
+    {
+        var maxOffset = scrollViewer.Extent.Width - scrollViewer.Viewport.Width;
+        if (maxOffset <= 1)
+        {
+            if (scrollViewer.Offset.X != 0)
+                scrollViewer.Offset = new Vector(0, 0);
+            state.Direction = 1;
+            state.PauseSeconds = GetPauseSeconds(scrollViewer);
+            return;
+        }
+
+        if (scrollViewer.IsPointerOver)
+            return;
+
+        const double dt = 0.03;
+        if (state.PauseSeconds > 0)
+        {
+            state.PauseSeconds -= dt;
+            return;
+        }
+
+        var speed = GetSpeed(scrollViewer);
+        var nextX = scrollViewer.Offset.X + (state.Direction * speed * dt);
+        if (nextX >= maxOffset)
+        {
+            nextX = maxOffset;
+            state.Direction = -1;
+            state.PauseSeconds = GetPauseSeconds(scrollViewer);
+        }
+        else if (nextX <= 0)
+        {
+            nextX = 0;
+            state.Direction = 1;
+            state.PauseSeconds = GetPauseSeconds(scrollViewer);
+        }
+
+        scrollViewer.Offset = new Vector(nextX, 0);
+    }
+}
