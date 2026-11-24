@@ -13,7 +13,7 @@
   mc:Ignorable="d"
 >
   <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-    <StackPanel MaxWidth="880" HorizontalAlignment="Stretch" Margin="16" Spacing="8">
+    <StackPanel HorizontalAlignment="Stretch" Margin="10" Spacing="5">
       <ui:FASettingsExpander Header="{ll:Str 数据}" IsExpanded="True">
         <ui:FASettingsExpander.IconSource>
           <ui:FASymbolIconSource Symbol="Document" />

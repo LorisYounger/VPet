@@ -82,7 +82,7 @@
       Grid.Row="1"
       OpenPaneLength="240"
       CompactPaneLength="0"
-      PaneBackground="{DynamicResource LayerFillColorDefaultBrush}"
+      PaneBackground="{DynamicResource SolidBackgroundFillColorBaseBrush}"
     >
       <SplitView.Pane>
         <Grid Margin="10" RowDefinitions="Auto,*,Auto,Auto" RowSpacing="5">

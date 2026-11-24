@@ -96,22 +96,11 @@
       Grid.Row="1"
       OpenPaneLength="240"
       CompactPaneLength="0"
-      PaneBackground="{DynamicResource LayerFillColorDefaultBrush}"
+      PaneBackground="{DynamicResource SolidBackgroundFillColorBaseBrush}"
     >
       <SplitView.Pane>
-        <Grid
-          IsEnabled="{Binding Settings.SourceList.Count,Converter={StaticResource Int32CompareByConverter},ConverterParameter='>0'}"
-          Margin="10"
-          RowDefinitions="Auto,Auto,*,Auto"
-          RowSpacing="5"
-        >
-          <TextBlock
-            Grid.Row="0"
-            Text="{ll:Str 存档文件}"
-            FontWeight="Bold"
-            Classes="SectionHeader"
-            Margin="0"
-          />
+        <Grid Margin="12" RowDefinitions="Auto,Auto,*,Auto" RowSpacing="8">
+          <TextBlock Grid.Row="0" Text="{ll:Str 存档文件}" Classes="SectionHeader" Margin="0" />
           <TextBox
             Grid.Row="1"
             x:Name="SearchSetting"

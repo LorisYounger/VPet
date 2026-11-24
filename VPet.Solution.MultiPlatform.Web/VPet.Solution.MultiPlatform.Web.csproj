@@ -7,6 +7,11 @@
     <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <RunAOTCompilation>true</RunAOTCompilation>
+    <WasmStripILAfterAOT>true</WasmStripILAfterAOT>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Avalonia.Browser" Version="12.1.6" />
   </ItemGroup>
