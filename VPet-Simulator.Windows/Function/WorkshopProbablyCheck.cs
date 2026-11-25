@@ -291,7 +291,9 @@ internal static class WorkshopProbablyCheck
                         if (data.Length > MaxResourceBytes) throw new InvalidDataException("SCAN_LIMIT");
                         byte[] bytes = new byte[(int)data.Length];
                         data.ReadExactly(bytes);
-                        CheckResource(bytes, resource.Name, relative, result, budget, 0);
+                        // 嵌入模板可使用 Namespace.SystemTemplate 之类的逻辑名，省略原文件的 .txt。
+                        CheckResource(bytes, resource.Name, relative, result, budget, 0,
+                            textTemplate: resource.Name.EndsWith("Template", StringComparison.OrdinalIgnoreCase));
                     }
                     if (module.HasExportedTypes && module.ExportedTypes.Any(x => x.Scope is ModuleReference))
                         result.BlockUnanalyzedContent($"EXTERNAL_MODULE: {SafeText(relative)}: " + "包含额外托管模块, 无法在 DLL 范围内完成检查".Translate());
@@ -866,7 +868,7 @@ internal static class WorkshopProbablyCheck
         CheckResource(decoded, "Base64", file, result, budget, depth);
     }
 
-    private static void CheckResource(byte[] data, string name, string file, PluginScanResult result, ScanBudget budget, int depth)
+    private static void CheckResource(byte[] data, string name, string file, PluginScanResult result, ScanBudget budget, int depth, bool textTemplate = false)
     {
         budget.Resources++;
         budget.ResourceBytes += data.Length;
@@ -1042,7 +1044,8 @@ internal static class WorkshopProbablyCheck
                 return;
             }
         }
-        if (extension is ".cs" or ".lng" or ".afm" or ".txt" or ".json" or ".xml" or ".lps" or ".csv" or ".xaml")
+        if (extension is ".cs" or ".lng" or ".afm" or ".txt" or ".json" or ".xml" or ".lps" or ".csv" or ".xaml" ||
+            (textTemplate && System.Text.Unicode.Utf8.IsValid(data)))
         {
             string text = StrictUtf8.GetString(data);
             if (text.All(c => !char.IsControl(c) || c is '\r' or '\n' or '\t'))
