@@ -40,6 +40,7 @@ using MenuItem = System.Windows.Forms.ToolStripMenuItem;
 using MessageBox = System.Windows.MessageBox;
 using Timer = System.Timers.Timer;
 using ToolBar = VPet_Simulator.Core.ToolBar;
+using WpfMenuItem = System.Windows.Controls.MenuItem;
 
 namespace VPet_Simulator.Windows
 {
@@ -1881,72 +1882,33 @@ namespace VPet_Simulator.Windows
                   Main.ToolBar?.LoadClean();
                   Main.WorkList(out List<Work> ws, out List<Work> ss, out List<Work> ps);
 
-                  if (ws.Count == 0)
+                  void BindWorkCategory(WpfMenuItem menu, Work.WorkType type, int count)
                   {
-                      Main.ToolBar!.MenuWork.Visibility = Visibility.Collapsed;
-                  }
-                  else
-                  {
-                      Main.ToolBar!.MenuWork.MouseDoubleClick += (x, y) =>
+                      if (count == 0)
+                      {
+                          menu.Visibility = Visibility.Collapsed;
+                          return;
+                      }
+                      menu.MouseDoubleClick += (s, e) =>
                       {
                           Main.ToolBar.Visibility = Visibility.Collapsed;
-                          ShowWorkMenu(Work.WorkType.Work);
+                          ShowWorkMenu(type);
                       };
-                      Main.ToolBar.MenuWork.Click += (x, y) =>
+                      menu.Click += (s, e) =>
                       {
                           Main.ToolBar.Visibility = Visibility.Collapsed;
-                          if (Main.ToolBar.MenuWork.Items.Count == 0)
-                              ShowWorkMenu(Work.WorkType.Work);
+                          if (!menu.HasItems) ShowWorkMenu(type);
                       };
                   }
-                  if (ss.Count == 0)
-                  {
-                      Main.ToolBar.MenuStudy.Visibility = Visibility.Collapsed;
-                  }
-                  else
-                  {
-                      Main.ToolBar.MenuStudy.MouseDoubleClick += (x, y) =>
-                      {
-                          Main.ToolBar.Visibility = Visibility.Collapsed;
-                          ShowWorkMenu(Work.WorkType.Study);
-                      };
-                      Main.ToolBar.MenuStudy.Click += (x, y) =>
-                      {
-                          Main.ToolBar.Visibility = Visibility.Collapsed;
-                          if (Main.ToolBar.MenuStudy.Items.Count == 0) ShowWorkMenu(Work.WorkType.Study);
-                      };
-                  }
-                  if (ps.Count == 0)
-                  {
-                      Main.ToolBar.MenuPlay.Visibility = Visibility.Collapsed;
-                  }
-                  else
-                  {
-                      Main.ToolBar.MenuPlay.MouseDoubleClick += (x, y) =>
-                      {
-                          Main.ToolBar.Visibility = Visibility.Collapsed;
-                          ShowWorkMenu(Work.WorkType.Play);
-                      };
-                      Main.ToolBar.MenuPlay.Click += (x, y) =>
-                      {
-                          Main.ToolBar.Visibility = Visibility.Collapsed;
-                          if (Main.ToolBar.MenuPlay.Items.Count == 0) ShowWorkMenu(Work.WorkType.Play);
-                      };
-                  }
-                  WorkStarMenu = new System.Windows.Controls.MenuItem()
+                  BindWorkCategory(Main.ToolBar!.MenuWork, Work.WorkType.Work, ws.Count);
+                  BindWorkCategory(Main.ToolBar.MenuStudy, Work.WorkType.Study, ss.Count);
+                  BindWorkCategory(Main.ToolBar.MenuPlay, Work.WorkType.Play, ps.Count);
+                  WorkStarMenu = new WpfMenuItem()
                   {
                       Header = "收藏".Translate(),
                       HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center,
                   };
-                  foreach (var w in WorkStar())
-                  {
-                      var mi = new System.Windows.Controls.MenuItem()
-                      {
-                          Header = w.NameTrans
-                      };
-                      mi.Click += (s, e) => Main.ToolBar.StartWork(w.Double(Set["workmenu"].GetInt("double_" + w.Name, 1)));
-                      WorkStarMenu.Items.Add(mi);
-                  }
+                  RefreshWorkStarMenus(WorkStar());
                   Main.ToolBar.MenuInteract.Items.Add(WorkStarMenu);
 
                   //加载主题:
@@ -2992,15 +2954,50 @@ namespace VPet_Simulator.Windows
         /// </summary>
         public List<Work> WorkStar()
         {
-            List<Work> works = new List<Work>();
-            foreach (var work in Core.Graph!.GraphConfig.Works)
-            {
-                if (Set["work_star"].GetBool(work.Name))
-                    works.Add(work);
-            }
-            return works;
+            var stars = Set["work_star"];
+            return Core.Graph!.GraphConfig.Works.FindAll(work => stars.GetBool(work.Name));
         }
-        public System.Windows.Controls.MenuItem WorkStarMenu = null!;
+        public WpfMenuItem WorkStarMenu = null!;
+
+        internal int GetWorkMultiplier(Work work, out int maximum)
+        {
+            int level = Math.Min(4000, GameSavesData.GameSave.Level);
+            maximum = (int)Math.Max(1, level / (Math.Max(0L, work.LevelLimit) + 10));
+            return Math.Clamp(Set["workmenu"].GetInt("double_" + work.Name, 1), 1, maximum);
+        }
+
+        internal void RefreshWorkStarMenus(List<Work> favorites)
+        {
+            var toolbar = Main.ToolBar!;
+            WorkStarMenu.Items.Clear();
+            foreach (var menu in new[] { toolbar.MenuWork, toolbar.MenuStudy, toolbar.MenuPlay })
+            {
+                for (int i = menu.Items.Count - 1; i >= 0; i--)
+                    if (menu.Items[i] is WpfMenuItem item && item.Tag == WorkStarMenu)
+                        menu.Items.RemoveAt(i);
+            }
+
+            foreach (var work in favorites)
+            {
+                var category = work.Type switch
+                {
+                    Work.WorkType.Work => toolbar.MenuWork,
+                    Work.WorkType.Study => toolbar.MenuStudy,
+                    Work.WorkType.Play => toolbar.MenuPlay,
+                    _ => null
+                };
+                var item = new WpfMenuItem { Header = work.NameTrans };
+                void Start(object sender, RoutedEventArgs e) => toolbar.StartWork(work.Double(GetWorkMultiplier(work, out _)));
+                item.Click += Start;
+                WorkStarMenu.Items.Add(item);
+                if (category != null)
+                {
+                    var shortcut = new WpfMenuItem { Header = work.NameTrans, Tag = WorkStarMenu };
+                    shortcut.Click += Start;
+                    category.Items.Add(shortcut);
+                }
+            }
+        }
 
         public async void LevelUP(GameSave_VPet.LevelUpEventArgs args)
         {

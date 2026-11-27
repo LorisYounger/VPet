@@ -35,7 +35,7 @@
             <StackPanel Margin="12, 10">
                 <TextBlock Text="{ll:Str 工作面板}" Style="{StaticResource SectionTitleTextStyle}" Margin="5" />
 
-                <ListBox x:Name="LsbCategory" Grid.Row="1" Margin="-12,10,-12,0" Style="{StaticResource CategoryListBoxStyle}" SelectedIndex="0" pu:ListBoxHelper.ItemsPadding="15,8"
+                <ListBox x:Name="LsbCategory" Grid.Row="1" Margin="-12,10,-12,0" Style="{StaticResource CategoryListBoxStyle}" pu:ListBoxHelper.ItemsPadding="15,8"
                         SelectionChanged="LsbCategory_SelectionChanged">
                     <ListBoxItem x:Name="LsbiWork" Content="{ll:Str '工作'}" />
                     <ListBoxItem x:Name="LsbiStudy" Content="{ll:Str '学习'}" />
@@ -60,7 +60,7 @@
                         <TextBlock Text="{ll:Str 工作内容}"
                                 FontSize="{Binding FontSize, Source={x:Static pu:GlobalSettings.Setting}}" />
                         <ComboBox x:Name="detailTypes" Grid.Row="1" Margin="0,3,0,0" VirtualizingPanel.ScrollUnit="Item"
-                                Style="{DynamicResource StandardComboBoxStyle}"
+                                Style="{DynamicResource StandardComboBoxStyle}" DisplayMemberPath="NameTrans"
                                 SelectionChanged="detailTypes_SelectionChanged" />
                         <Image x:Name="WorkViewImage" RenderOptions.BitmapScalingMode="HighQuality" Grid.Row="2"
                                 Margin="-20,0" Stretch="Uniform" Source="/Res/img/r_singlemoney_1.png" />

@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using System.Windows.Threading;
 using VPet_Simulator.Core;
 using VPet_Simulator.Windows.Interface;
 using static VPet_Simulator.Core.GraphHelper;
@@ -26,20 +25,10 @@ public partial class winWorkMenu : WindowX
     List<Work> ss;
     List<Work> ps;
 
-    private readonly ObservableCollection<string> _workDetails = new ObservableCollection<string>();
-    private readonly ObservableCollection<string> _studyDetails = new ObservableCollection<string>();
-    private readonly ObservableCollection<string> _playDetails = new ObservableCollection<string>();
-    private readonly ObservableCollection<string> _starDetails = new ObservableCollection<string>();
     private readonly ObservableCollection<ScheduleItemBase> _schedules;
     public void ShowImageDefault(Work.WorkType type)
     {
-        Dispatcher.BeginInvoke(() =>
-        {
-            WorkViewImage.Source = mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_t_" + type.ToString(), "work_" + type.ToString());
-        }, DispatcherPriority.Loaded);
-
-        _schedules.CollectionChanged += Schedules_CollectionChanged;
-        icSchedule.ItemsSource = _schedules;
+        WorkViewImage.Source = mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_t_" + type, "work_" + type);
     }
 
     public winWorkMenu(MainWindow mw, Work.WorkType type)
@@ -48,39 +37,19 @@ public partial class winWorkMenu : WindowX
         this.mw = mw;
         mw.Main.WorkList(out ws, out ss, out ps);
         if (ws.Count == 0)
-            LsbCategory.Items.Remove(LsbiWork);
-        else
-            foreach (var v in ws)
-            {
-                _workDetails.Add(v.NameTrans);
-            }
+            LsbiWork.Visibility = Visibility.Collapsed;
         if (ss.Count == 0)
-            LsbCategory.Items.Remove(LsbiStudy);
-        else
-            foreach (var v in ss)
-            {
-                _studyDetails.Add(v.NameTrans);
-            }
+            LsbiStudy.Visibility = Visibility.Collapsed;
         if (ps.Count == 0)
-            LsbCategory.Items.Remove(LsbiPlay);
-        else
-            foreach (var v in ps)
-            {
-                _playDetails.Add(v.NameTrans);
-            }
-        foreach (var v in mw.WorkStar())
-        {
-            _starDetails.Add(v.NameTrans);
-        }
-        LsbCategory.SelectedIndex = (int)type;
+            LsbiPlay.Visibility = Visibility.Collapsed;
         _schedules = mw.ScheduleTask.ScheduleItems;
-        ShowImageDefault(type);
+        _schedules.CollectionChanged += Schedules_CollectionChanged;
+        icSchedule.ItemsSource = _schedules;
         CalculateSceduleTime();
         imgAgency.Source = mw.ImageSources.FindImage("work_" + mw.Set.PetGraph + "_agency_job", "work_agency_job");
         tbtnAgencyTraning.IsChecked = false;
         rTaskType.Text = "抽成".Translate();
         cbDIYName.IsChecked = mw.Set["workmenu"].GetBool("DIY_Enable");
-        tbDIYName.Text = mw.Set["workmenu"].GetString("DIY_TEXT" + LsbCategory.SelectedIndex);
         foreach (var v in mw.SchedulePackage.FindAll(x => x.WorkType == Work.WorkType.Work))
             combTaskType.Items.Add(v);
 
@@ -97,56 +66,33 @@ public partial class winWorkMenu : WindowX
 
         AllowChange = true;
         combTaskType.SelectedIndex = 0;
-
-
-        ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "---");
-
+        LsbCategory.SelectedIndex = (int)type;
         ComboBoxHelper.SetWatermark(combTaskType, "---" + "请选择".Translate() + "套餐".Translate() + "---");
 
     }
     public bool IsWorkStar(Work work) => mw.Set["work_star"].GetBool(work.Name);
     public void SetWorkStar(Work work, bool setvalue) => mw.Set["work_star"].SetBool(work.Name, setvalue);
     private bool AllowChange = false;
-    Work? nowwork;
+    Work? nowwork => detailTypes.SelectedItem as Work;
     Work? nowworkdisplay;
     public void ShowWork()
     {
         if (nowwork == null) return;
         AllowChange = false;
         btnStart.IsEnabled = true;
-        //判断倍率
-        if (nowwork.LevelLimit > mw.GameSavesData.GameSave.Level)
-        {
-            wDouble.Visibility = Visibility.Collapsed;
-            wDouble.Value = 1;
-        }
-        else
-        {
-            int max = Math.Min(4000, mw.GameSavesData.GameSave.Level) / (nowwork.LevelLimit + 10);
-            if (max <= 1)
-            {
-                wDouble.Visibility = Visibility.Collapsed;
-                wDouble.Value = 1;
-            }
-            else
-            {
-                wDouble.Visibility = Visibility.Visible;
-                wDouble.Maximum = max;
-                if (max > 25)
-                    wDouble.TickFrequency = max / 25;
-                else
-                    wDouble.TickFrequency = 1;
-                wDouble.Value = mw.Set["workmenu"].GetInt("double_" + nowwork.Name, 1);
-            }
-        }
-        if (wDouble.Value == 1)
-            ShowWork((Work)nowwork.Clone());
-        else
-            ShowWork(nowwork.Double((int)wDouble.Value));
+        int multiplier = mw.GetWorkMultiplier(nowwork, out int maximum);
+        wDouble.Visibility = maximum > 1 ? Visibility.Visible : Visibility.Collapsed;
+        wDouble.Maximum = maximum;
+        wDouble.TickFrequency = Math.Max(1, maximum / 25);
+        wDouble.Value = multiplier;
+        ShowWork(nowwork.Double(multiplier));
         AllowChange = true;
     }
     public void ShowWork(Work work)
     {
+        // 1 倍时 Double 返回原工作，面板的数值调整和自定义名称只应用于本次工作。
+        if (work == nowwork)
+            work = (Work)work.Clone();
         if (!mw.Set["gameconfig"].GetBool("noAutoCal") && work.IsOverLoad())
         {
             work.FixOverLoad();
@@ -184,110 +130,79 @@ public partial class winWorkMenu : WindowX
 
     private void LsbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        Dispatcher.BeginInvoke(() =>
+        if (LsbCategory.SelectedIndex < 3)
+            ShowImageDefault((Work.WorkType)LsbCategory.SelectedIndex);
+        gdWork.Visibility = Visibility.Visible;
+        gdSchedule.Visibility = Visibility.Collapsed;
+
+        tbDIYName.Text = mw.Set["workmenu"].GetString("DIY_TEXT" + LsbCategory.SelectedIndex);
+
+        var previousWork = nowwork;
+        switch (LsbCategory.SelectedIndex)
         {
-            var lastIndex = detailTypes.SelectedIndex;
-            if (LsbCategory.SelectedIndex < 3)
-                ShowImageDefault((Work.WorkType)LsbCategory.SelectedIndex);
-            gdWork.Visibility = Visibility.Visible;
-            gdSchedule.Visibility = Visibility.Collapsed;
-
-            tbDIYName.Text = mw.Set["workmenu"].GetString("DIY_TEXT" + LsbCategory.SelectedIndex);
-
-            switch (LsbCategory.SelectedIndex)
-            {
-                case 0:
-                    detailTypes.ItemsSource = _workDetails;
-                    btnStart.Content = "开始工作".Translate();
-                    ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "工作".Translate() + "---");
-                    TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate("工作".Translate()));
-                    break;
-                case 1:
-                    detailTypes.ItemsSource = _studyDetails;
-                    btnStart.Content = "开始学习".Translate();
-                    ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "学习".Translate() + "---");
-                    TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate("学习".Translate()));
-                    break;
-                case 2:
-                    detailTypes.ItemsSource = _playDetails;
-                    btnStart.Content = "开始玩耍".Translate();
-                    ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "玩耍".Translate() + "---");
-                    TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate("玩耍".Translate()));
-                    break;
-                case 3:
-                    detailTypes.ItemsSource = _starDetails;
-                    btnStart.Content = "开始活动".Translate();
-                    ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "---");
-                    TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate(""));
-                    break;
-                case 4:
-                    gdWork.Visibility = Visibility.Collapsed;
-                    gdSchedule.Visibility = Visibility.Visible;
-                    return;
-            }
-            //detailTypes.IsDropDownOpen = true;
-            detailTypes_SelectionChanged(null, null);
-        }, DispatcherPriority.Loaded);
+            case 0:
+                detailTypes.ItemsSource = ws;
+                btnStart.Content = "开始工作".Translate();
+                ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "工作".Translate() + "---");
+                TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate("工作".Translate()));
+                break;
+            case 1:
+                detailTypes.ItemsSource = ss;
+                btnStart.Content = "开始学习".Translate();
+                ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "学习".Translate() + "---");
+                TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate("学习".Translate()));
+                break;
+            case 2:
+                detailTypes.ItemsSource = ps;
+                btnStart.Content = "开始玩耍".Translate();
+                ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "玩耍".Translate() + "---");
+                TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate("玩耍".Translate()));
+                break;
+            case 3:
+                detailTypes.ItemsSource = mw.WorkStar();
+                btnStart.Content = "开始活动".Translate();
+                ComboBoxHelper.SetWatermark(detailTypes, "---" + "请选择".Translate() + "---");
+                TextBoxHelper.SetWatermark(tbDIYName, "自定义{0}名称".Translate(""));
+                break;
+            case 4:
+                gdWork.Visibility = Visibility.Collapsed;
+                gdSchedule.Visibility = Visibility.Visible;
+                return;
+        }
+        if (nowwork == previousWork) detailTypes_SelectionChanged(null, null);
     }
 
     private void wDouble_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (!AllowChange || nowwork == null) return;
-        mw.Set["workmenu"].SetInt("double_" + nowwork.Name, (int)wDouble.Value);
-        ShowWork(nowwork.Double((int)wDouble.Value));
+        int multiplier = (int)e.NewValue;
+        mw.Set["workmenu"].SetInt("double_" + nowwork.Name, multiplier);
+        ShowWork(nowwork.Double(multiplier));
     }
 
     private void detailTypes_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
     {
-        Dispatcher.BeginInvoke(() =>
+        if (nowwork == null)
         {
-            if (detailTypes.SelectedIndex < 0)
-            {
-                btnStart.IsEnabled = false;
-                btnAddAuto.IsEnabled = false;
-                tbtn_star.IsChecked = false;
-                tbGain.Text = "??";
-                tbSpeed.Text = "??";
-                tbFood.Text = "??";
-                tbDrink.Text = "??";
-                tbSpirit.Text = "??";
-                tbLvLimit.Text = "??";
-                tbTime.Text = "??";
-                tbBonus.Text = "??";
-                tbRatio.Text = "??";
-                return;
-            }
-            btnStart.IsEnabled = true;
-            switch (LsbCategory.SelectedIndex)
-            {
-                case 0:
-                    nowwork = (ws[detailTypes.SelectedIndex]);
-                    btnAddAuto.IsEnabled = mw.ScheduleTask.PackageWork?.IsActive() == true;
-                    break;
-                case 1:
-                    nowwork = (ss[detailTypes.SelectedIndex]);
-                    btnAddAuto.IsEnabled = mw.ScheduleTask.PackageStudy?.IsActive() == true;
-                    break;
-                case 2:
-                    nowwork = (ps[detailTypes.SelectedIndex]);
-                    btnAddAuto.IsEnabled = mw.Core.Save!.Level >= 15;
-                    break;
-                case 3:
-                    if (!AllowChange) return;
-                    var works = mw.WorkStar();
-                    if (works.Count <= detailTypes.SelectedIndex) return;
-                    nowwork = (works[detailTypes.SelectedIndex]);
-                    btnAddAuto.IsEnabled = mw.Core.Save!.Level >= 15;
-                    break;
-                case 4:
-                    return;
-            }
-            ShowWork();
-        }, DispatcherPriority.Loaded);
+            nowworkdisplay = null;
+            btnStart.IsEnabled = btnAddAuto.IsEnabled = false;
+            tbtn_star.IsChecked = false;
+            tbGain.Text = tbSpeed.Text = tbFood.Text = tbDrink.Text = tbSpirit.Text = "??";
+            tbLvLimit.Text = tbTime.Text = tbBonus.Text = tbRatio.Text = "??";
+            return;
+        }
+        btnAddAuto.IsEnabled = LsbCategory.SelectedIndex switch
+        {
+            0 => mw.ScheduleTask.PackageWork?.IsActive() == true,
+            1 => mw.ScheduleTask.PackageStudy?.IsActive() == true,
+            _ => mw.Core.Save!.Level >= 15
+        };
+        ShowWork();
     }
 
     private void Window_Closed(object sender, EventArgs e)
     {
+        _schedules.CollectionChanged -= Schedules_CollectionChanged;
         mw.winWorkMenu = null;
     }
 
@@ -313,45 +228,10 @@ public partial class winWorkMenu : WindowX
         if (nowwork == null)
             return;
         SetWorkStar(nowwork, tbtn_star.IsChecked == true);
-        AllowChange = false;
-        _starDetails.Clear();
-        mw.WorkStarMenu.Items.Clear();
-        mw.Main.ToolBar!.MenuStudy.Items.Clear();
-        mw.Main.ToolBar.MenuWork.Items.Clear();
-        mw.Main.ToolBar.MenuPlay.Items.Clear();
-        //更新星标
-        foreach (var v in mw.WorkStar())
-        {
-            _starDetails.Add(v.NameTrans);
-            var mi = new MenuItem()
-            {
-                Header = v.NameTrans
-            };
-            mi.Click += (s, e) => mw.Main.ToolBar.StartWork(v.Double(mw.Set["workmenu"].GetInt("double_" + v.Name, 1)));
-            mw.WorkStarMenu.Items.Add(mi);
-            mi = new MenuItem()
-            {
-                Header = v.NameTrans
-            };
-            mi.Click += (s, e) => mw.Main.ToolBar.StartWork(v.Double(mw.Set["workmenu"].GetInt("double_" + v.Name, 1)));
-            switch (v.Type)
-            {
-                case Work.WorkType.Work:
-                    mw.Main.ToolBar.MenuWork.Items.Add(mi);
-                    break;
-                case Work.WorkType.Study:
-                    mw.Main.ToolBar.MenuStudy.Items.Add(mi);
-                    break;
-                case Work.WorkType.Play:
-                    mw.Main.ToolBar.MenuPlay.Items.Add(mi);
-                    break;
-            }
-        }
-        if (detailTypes.ItemsSource == _starDetails)
-        {
-            detailTypes_SelectionChanged(null, null);
-        }
-        AllowChange = true;
+        var favorites = mw.WorkStar();
+        mw.RefreshWorkStarMenus(favorites);
+        if (LsbCategory.SelectedItem == LsbiStar)
+            detailTypes.ItemsSource = favorites;
     }
 
     private void btnStartSchedule_Click(object sender, RoutedEventArgs e)
