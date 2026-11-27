@@ -139,6 +139,15 @@ namespace VPet_Simulator.Windows.Interface
                 }
             }
         }
+        /// <summary>当前等级能使用的最高倍率。开启数据计算时，尚未解锁的活动返回 0。</summary>
+        public static int GetMaxMultiplier(this Work work, GameCore core)
+        {
+            int level = core.Save!.Level;
+            if (core.Controller!.EnableFunction && level < work.LevelLimit)
+                return 0;
+            return (int)Math.Max(1, Math.Min(4000, level) / (Math.Max(0L, work.LevelLimit) + 10));
+        }
+
         /// <summary>
         /// 将工作的属性值翻倍
         /// </summary>

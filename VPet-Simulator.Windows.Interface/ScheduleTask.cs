@@ -266,47 +266,38 @@ public class ScheduleTask : IDisposable
 
             if (ScheduleItems[NowIndex] is WorkScheduleItem wsi)
             {
-                //判断能否工作
-                if (wsi.Work.Type == WorkType.Work)
+                mw.Dispatcher.Invoke(() =>
                 {
-                    if (PackageWork?.IsActive() != true)
+                    int maximum = wsi.Work.GetMaxMultiplier(mw.Core);
+                    if (maximum == 0)
                     {
-                        mw.Dispatcher.Invoke(() => MessageBoxX.Show("工作套餐未激活,请前往日程表签署工作中介套餐".Translate(), "套餐未激活".Translate()));
-                        IsOn = false;
+                        Stop();
                         return;
                     }
-                    else if (PackageWork.Level < wsi.Work.LevelLimit)
+                    if (wsi.Work.Type is WorkType.Work or WorkType.Study)
                     {
-                        mw.Dispatcher.Invoke(() => MessageBoxX.Show("工作套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的工作或前往日程表签署新的工作中介套餐".Translate(PackageWork.Level,
-                        wsi.Work.LevelLimit), "套餐等级不足".Translate()));
-                        IsOn = false;
-                        return;
+                        bool isWork = wsi.Work.Type == WorkType.Work;
+                        var package = isWork ? PackageWork : PackageStudy;
+                        if (package?.IsActive() != true)
+                        {
+                            var message = isWork ? "工作套餐未激活,请前往日程表签署工作中介套餐" : "学习套餐未激活,请前往日程表签署培训机构套餐";
+                            MessageBoxX.Show(message.Translate(), "套餐未激活".Translate());
+                            IsOn = false;
+                            return;
+                        }
+                        if (package.Level < wsi.Work.LevelLimit)
+                        {
+                            var message = isWork ? "工作套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的工作或前往日程表签署新的工作中介套餐"
+                                : "学习套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的学习或前往日程表签署新的培训机构套餐";
+                            MessageBoxX.Show(message.Translate(package.Level, wsi.Work.LevelLimit), "套餐等级不足".Translate());
+                            IsOn = false;
+                            return;
+                        }
                     }
-                }
-                else if (wsi.Work.Type == WorkType.Study)
-                {
-                    if (PackageStudy?.IsActive() != true)
-                    {
-                        mw.Dispatcher.Invoke(() => MessageBoxX.Show("学习套餐未激活,请前往日程表签署培训机构套餐".Translate(), "套餐未激活".Translate()));
-                        IsOn = false;
-                        return;
-                    }
-                    else if (PackageStudy.Level < wsi.Work.LevelLimit)
-                    {
-                        mw.Dispatcher.Invoke(() => MessageBoxX.Show("学习套餐等级不足({0}/{1}),\n请选择更低等级要求/倍率的学习或前往日程表签署新的培训机构套餐".Translate(PackageStudy.Level,
-                        wsi.Work.LevelLimit), "套餐等级不足".Translate()));
-                        IsOn = false;
-                        return;
-                    }
-                }
-                var newwork = wsi.Work.Double(wsi.DBL);
-                while (mw.GameSavesData.GameSave.Level < newwork.LevelLimit && wsi.DBL > 1)
-                {
-                    wsi.DBL = wsi.DBL - 1;
-                    newwork = wsi.Work.Double(wsi.DBL);
-                }
-                mw.Dispatcher.Invoke(() => mw.Main.StartWork(newwork));
-                NowIndex++;
+                    int multiplier = Math.Clamp(wsi.DBL, 1, maximum);
+                    mw.Main.StartWork(wsi.Work.Double(multiplier));
+                    NowIndex++;
+                });
             }
             else if (ScheduleItems[NowIndex] is RestScheduleItem rsi)
             {

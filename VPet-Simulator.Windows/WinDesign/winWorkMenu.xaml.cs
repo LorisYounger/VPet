@@ -79,27 +79,17 @@ public partial class winWorkMenu : WindowX
     {
         if (nowwork == null) return;
         AllowChange = false;
-        btnStart.IsEnabled = true;
         int multiplier = mw.GetWorkMultiplier(nowwork, out int maximum);
+        btnStart.IsEnabled = maximum > 0;
         wDouble.Visibility = maximum > 1 ? Visibility.Visible : Visibility.Collapsed;
-        wDouble.Maximum = maximum;
+        wDouble.Maximum = Math.Max(1, maximum);
         wDouble.TickFrequency = Math.Max(1, maximum / 25);
-        wDouble.Value = multiplier;
-        ShowWork(nowwork.Double(multiplier));
+        wDouble.Value = Math.Max(1, multiplier);
+        ShowWork(nowwork.Double((int)wDouble.Value));
         AllowChange = true;
     }
     public void ShowWork(Work work)
     {
-        // 1 倍时 Double 返回原工作，面板的数值调整和自定义名称只应用于本次工作。
-        if (work == nowwork)
-            work = (Work)work.Clone();
-        if (!mw.Set["gameconfig"].GetBool("noAutoCal") && work.IsOverLoad())
-        {
-            work.FixOverLoad();
-        }
-        nowworkdisplay = work;
-
-        //显示图像
         string? source = mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Graph) ?? mw.ImageSources.FindSource("work_" + mw.Set.PetGraph + "_" + work.Name);
         if (source == null)
         {
@@ -110,6 +100,17 @@ public partial class winWorkMenu : WindowX
         {
             WorkViewImage.Source = Interface.ImageResources.NewSafeBitmapImage(source);
         }
+        UpdateWorkDetails(work);
+    }
+
+    private void UpdateWorkDetails(Work work)
+    {
+        // 1 倍时 Double 返回原工作，面板的数值调整和自定义名称只应用于本次工作。
+        if (work == nowwork)
+            work = (Work)work.Clone();
+        if (!mw.Set["gameconfig"].GetBool("noAutoCal") && work.IsOverLoad())
+            work.FixOverLoad();
+        nowworkdisplay = work;
         if (work.Type == Work.WorkType.Work)
             tbGain.Text = "金钱".Translate();
         else
@@ -177,7 +178,10 @@ public partial class winWorkMenu : WindowX
         if (!AllowChange || nowwork == null) return;
         int multiplier = (int)e.NewValue;
         mw.Set["workmenu"].SetInt("double_" + nowwork.Name, multiplier);
-        ShowWork(nowwork.Double(multiplier));
+        if (nowwork.GetMaxMultiplier(mw.Core) != wDouble.Maximum)
+            ShowWork();
+        else
+            UpdateWorkDetails(nowwork.Double(multiplier));
     }
 
     private void detailTypes_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
@@ -213,8 +217,15 @@ public partial class winWorkMenu : WindowX
 
     private void btnStart_Click(object sender, RoutedEventArgs e)
     {
-        if (nowworkdisplay != null)
+        if (nowwork != null && nowworkdisplay != null)
         {
+            // 窗口打开后可能切换存档或发生等级突破。
+            int maximum = nowwork.GetMaxMultiplier(mw.Core);
+            if (wDouble.Value > maximum)
+            {
+                ShowWork();
+                if (maximum == 0) return;
+            }
             mw.Set["workmenu"].SetString("DIY_TEXT" + LsbCategory.SelectedIndex, tbDIYName.Text);
             if (cbDIYName.IsChecked == true && !string.IsNullOrWhiteSpace(tbDIYName.Text))
                 nowworkdisplay.nametrans = tbDIYName.Text;

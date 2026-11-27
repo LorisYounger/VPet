@@ -2961,8 +2961,8 @@ namespace VPet_Simulator.Windows
 
         internal int GetWorkMultiplier(Work work, out int maximum)
         {
-            int level = Math.Min(4000, GameSavesData.GameSave.Level);
-            maximum = (int)Math.Max(1, level / (Math.Max(0L, work.LevelLimit) + 10));
+            maximum = work.GetMaxMultiplier(Core);
+            if (maximum == 0) return 0;
             return Math.Clamp(Set["workmenu"].GetInt("double_" + work.Name, 1), 1, maximum);
         }
 
@@ -2987,7 +2987,12 @@ namespace VPet_Simulator.Windows
                     _ => null
                 };
                 var item = new WpfMenuItem { Header = work.NameTrans };
-                void Start(object sender, RoutedEventArgs e) => toolbar.StartWork(work.Double(GetWorkMultiplier(work, out _)));
+                void Start(object sender, RoutedEventArgs e)
+                {
+                    int multiplier = GetWorkMultiplier(work, out _);
+                    if (multiplier > 0)
+                        toolbar.StartWork(work.Double(multiplier));
+                }
                 item.Click += Start;
                 WorkStarMenu.Items.Add(item);
                 if (category != null)
