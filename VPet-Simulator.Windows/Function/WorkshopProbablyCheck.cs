@@ -7,6 +7,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -29,6 +30,8 @@ internal static class WorkshopProbablyCheck
     private const long MaxTotalBytes = 1024L * 1024 * 1024;
     private const int MaxResourceBytes = 32 * 1024 * 1024, MaxDetails = 1000;
     private static readonly UTF8Encoding StrictUtf8 = new(false, true);
+    private static readonly Lazy<HashSet<string>> TemplateCultures = new(() =>
+        CultureInfo.GetCultures(CultureTypes.AllCultures).Select(c => c.Name).ToHashSet(StringComparer.OrdinalIgnoreCase));
 
     internal sealed class PluginFile
     {
@@ -291,9 +294,7 @@ internal static class WorkshopProbablyCheck
                         if (data.Length > MaxResourceBytes) throw new InvalidDataException("SCAN_LIMIT");
                         byte[] bytes = new byte[(int)data.Length];
                         data.ReadExactly(bytes);
-                        // 嵌入模板可使用 Namespace.SystemTemplate 之类的逻辑名，省略原文件的 .txt。
-                        CheckResource(bytes, resource.Name, relative, result, budget, 0,
-                            textTemplate: resource.Name.EndsWith("Template", StringComparison.OrdinalIgnoreCase));
+                        CheckResource(bytes, resource.Name, relative, result, budget, 0, embeddedResource: true);
                     }
                     if (module.HasExportedTypes && module.ExportedTypes.Any(x => x.Scope is ModuleReference))
                         result.BlockUnanalyzedContent($"EXTERNAL_MODULE: {SafeText(relative)}: " + "包含额外托管模块, 无法在 DLL 范围内完成检查".Translate());
@@ -868,7 +869,7 @@ internal static class WorkshopProbablyCheck
         CheckResource(decoded, "Base64", file, result, budget, depth);
     }
 
-    private static void CheckResource(byte[] data, string name, string file, PluginScanResult result, ScanBudget budget, int depth, bool textTemplate = false)
+    private static void CheckResource(byte[] data, string name, string file, PluginScanResult result, ScanBudget budget, int depth, bool embeddedResource = false)
     {
         budget.Resources++;
         budget.ResourceBytes += data.Length;
@@ -1044,6 +1045,10 @@ internal static class WorkshopProbablyCheck
                 return;
             }
         }
+        // bin 也是语言代码，.bin 仍按二进制资源处理。
+        bool textTemplate = embeddedResource && (name.EndsWith("Template", StringComparison.OrdinalIgnoreCase) ||
+            extension is not ("" or ".bin") && name.AsSpan(..^extension.Length).EndsWith("Template", StringComparison.OrdinalIgnoreCase) &&
+            TemplateCultures.Value.Contains(extension[1..]));
         if (extension is ".cs" or ".lng" or ".afm" or ".txt" or ".json" or ".xml" or ".lps" or ".csv" or ".xaml" ||
             (textTemplate && System.Text.Unicode.Utf8.IsValid(data)))
         {
